@@ -1,0 +1,27 @@
+    private static final String[] LATEX_TMP_FILES = new String[] {
+        "aux",
+        "bbl",
+        "blg",
+        "ind",
+        "ilg",
+        "lof",
+        "log",
+        "lot",
+        "nav",
+        "out",
+        "snm",
+        "tex",
+        "toc",
+        "vrb" };
+
+    private static final String[] TEX4HT_TMP_FILES = new String[] {
+        "4ct",
+        "4tc",
+        "cfg",
+        "dvi",
+        "idv",
+        "lg",
+        "pdf",
+        "ps",
+        "tmp",
+        "xref" };

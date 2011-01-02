@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Maven">
+  <bannerLeft>
+    <name>Maven</name>
+    <src>http://maven.apache.org/images/apache-maven-project.png</src>
+    <href>http://maven.apache.org/</href>
+  </bannerLeft>
+  <bannerRight>
+    <src>http://maven.apache.org/images/maven-small.gif</src>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="Apache" href="http://www.apache.org/" />
+      <item name="Maven 1.0" href="http://maven.apache.org/"/>
+      <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
+    </links>
+
+	<menu name="Documents">
+	  <item name="Document 1 PDF" href="pdf/Doc1.pdf"/>
+	  <item name="Document 1 HTML single page" href="html_singlepage/Doc1.html"/>
+	  <item name="Document 1 HTML multi page" href="html_multipage/Doc1.html"/>
+	  <item name="Document 2 PDF" href="pdf/Doc2.pdf"/>
+	  <item name="Document 2 HTML single page" href="html_singlepage/Doc2.html"/>
+	  <item name="Document 2 HTML multi page" href="html_multipage/Doc2.html"/>
+	  <item name="Document 3 PDF" href="pdf/subfolder/Doc3.pdf"/>
+	  <item name="Document 3 HTML single page" href="html_singlepage/subfolder/Doc3.html"/>
+	  <item name="Document 3 HTML multi page" href="html_multipage/subfolder/Doc3.html"/>
+	</menu>
+	
+    <menu name="Maven 2.0">
+      <item name="APT Format" href="format.html"/>
+      <item name="FAQ" href="faq.html"/>
+      <item name="Xdoc Example" href="xdoc.html"/>      
+    </menu>
+  </body>
+</project>

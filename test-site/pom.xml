@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.akquinet.maven</groupId>
+	<artifactId>test-site</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<name>Maven LaTeX Plugin - Test Site</name>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<locales>en,de</locales>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>de.akquinet.maven</groupId>
+				<artifactId>maven-latex-plugin</artifactId>
+				<version>LATEST</version>
+				<configuration>
+					<settings>
+						<cleanUp>false</cleanUp>
+					</settings>
+				</configuration>
+				<executions>
+					<execution>
+						<configuration>
+							<settings>
+								<outputDirectory>pdf</outputDirectory>
+							</settings>
+						</configuration>
+						<phase>site</phase>
+						<goals>
+							<goal>latex</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>HTML multipage</id>
+						<configuration>
+							<settings>
+								<outputDirectory>html_multipage</outputDirectory>
+								<tex4htCommandArgs>
+									<tex4htCommandArg>tex4ht,2</tex4htCommandArg>
+									<tex4htCommandArg></tex4htCommandArg>
+									<tex4htCommandArg></tex4htCommandArg>
+									<tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
+								</tex4htCommandArgs>
+							</settings>
+						</configuration>
+						<phase>site</phase>
+						<goals>
+							<goal>tex4ht</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>HTML singlepage</id>
+						<configuration>
+							<settings>
+								<outputDirectory>html_singlepage</outputDirectory>
+								<tex4htCommandArgs>
+									<tex4htCommandArg>tex4ht,1</tex4htCommandArg>
+									<tex4htCommandArg></tex4htCommandArg>
+									<tex4htCommandArg></tex4htCommandArg>
+									<tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
+								</tex4htCommandArgs>
+							</settings>
+						</configuration>
+						<phase>site</phase>
+						<goals>
+							<goal>tex4ht</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
