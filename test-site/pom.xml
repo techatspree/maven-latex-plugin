@@ -3,9 +3,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.akquinet.maven</groupId>
 	<artifactId>test-site</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>Maven LaTeX Plugin - Test Site</name>
-	<build>
+	<pluginRepositories>
+        <pluginRepository>
+            <id>maven-latex-plugin-repo</id>
+            <url>http://akquinet.github.com/maven-latex-plugin/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+	</pluginRepositories>
+    <build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-site-plugin</artifactId>
