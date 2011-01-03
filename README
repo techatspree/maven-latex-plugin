@@ -1,0 +1,10 @@
+maven-latex-plugin
+
+You can use the maven-latex-plugin in your Maven2 projects to automatically create pdf or html documents from your
+ LaTeX sources during the Maven site phase. The plugin will call the LaTeX and TeX4Ht scripts to do necessary work.
+
+Homepage: http://akquinet.github.com/maven-latex-plugin
+
+Maven2 repository: http://akquinet.github.com/maven-latex-plugin/maven2
+
+Project on GitHub: https://github.com/akquinet/maven-latex-plugin/
