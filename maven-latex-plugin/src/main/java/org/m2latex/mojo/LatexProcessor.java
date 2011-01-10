@@ -1,18 +1,33 @@
+/*
+ * The akquinet maven-latex-plugin project
+ *
+ * Copyright (c) 2011 by akquinet tech@spree GmbH
+ *
+ * The maven-latex-plugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The maven-latex-plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with the maven-latex-plugin. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.m2latex.mojo;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
+import java.io.File;
+
 public class LatexProcessor
 {
-    public static final String TEX4HT_OUTPUT_DIR = "m2latex_tex4ht_out";
-
     static final String PATTERN_NEED_ANOTHER_LATEX_RUN = "(Rerun (LaTeX|to get cross-references right)|There were undefined references|Package natbib Warning: Citation\\(s\\) may have changed)";
 
     private final Settings settings;
@@ -32,7 +47,7 @@ public class LatexProcessor
     }
 
     public void processLatex( File texFile )
-        throws CommandLineException, MojoExecutionException
+            throws CommandLineException, MojoExecutionException
     {
         log.info( "Processing LaTeX file " + texFile );
 
@@ -51,14 +66,14 @@ public class LatexProcessor
     }
 
     public void processTex4ht( File texFile )
-        throws MojoExecutionException, CommandLineException
+            throws MojoExecutionException, CommandLineException
     {
         processLatex( texFile );
         runTex4ht( texFile );
     }
 
     private void runTex4ht( File texFile )
-        throws CommandLineException, MojoExecutionException
+            throws CommandLineException, MojoExecutionException
     {
         log.debug( "Running " + settings.getTex4htCommand() + " on file " + texFile.getName() );
         File workingDir = texFile.getParentFile();
@@ -67,24 +82,9 @@ public class LatexProcessor
     }
 
     private String[] buildHtlatexArguments( File texFile )
-        throws MojoExecutionException
+            throws MojoExecutionException
     {
-        File tex4htOutdir = new File( settings.getTempDirectory(), TEX4HT_OUTPUT_DIR );
-        if ( tex4htOutdir.exists() )
-        {
-            try
-            {
-                FileUtils.cleanDirectory( tex4htOutdir );
-            }
-            catch ( IOException e )
-            {
-                throw new MojoExecutionException( "Could not clean TeX4ht output dir: " + tex4htOutdir, e );
-            }
-        }
-        else
-        {
-            tex4htOutdir.mkdirs();
-        }
+        File tex4htOutdir = fileUtils.createTex4htOutputDir( settings.getTempDirectory() );
 
         final String argOutputDir = " -d" + tex4htOutdir.getAbsolutePath() + File.separatorChar;
         String[] tex4htCommandArgs = settings.getTex4htCommandArgs();
@@ -111,7 +111,7 @@ public class LatexProcessor
     }
 
     private boolean needAnotherLatexRun( File texFile )
-        throws MojoExecutionException
+            throws MojoExecutionException
     {
         String reRunPattern = PATTERN_NEED_ANOTHER_LATEX_RUN;
         boolean needRun = fileUtils.matchInCorrespondingLogFile( texFile, reRunPattern );
@@ -120,7 +120,7 @@ public class LatexProcessor
     }
 
     private boolean needBibtexRun( File texFile )
-        throws MojoExecutionException
+            throws MojoExecutionException
     {
         String namePrefixTexFile = fileUtils.getFileNameWithoutSuffix( texFile );
         String pattern = "No file " + namePrefixTexFile + ".bbl";
@@ -128,27 +128,24 @@ public class LatexProcessor
     }
 
     private void runBibtex( File texFile )
-        throws CommandLineException
+            throws CommandLineException
     {
         log.debug( "Running BibTeX on file " + texFile.getName() );
         File workingDir = texFile.getParentFile();
 
-        String[] args = new String[] { fileUtils.getCorrespondingAuxFile( texFile ).getPath() };
+        String[] args = new String[]{fileUtils.getCorrespondingAuxFile( texFile ).getPath()};
         executor.execute( workingDir, settings.getTexPath(), settings.getBibtexCommand(), args );
     }
 
     private void runLatex( File texFile )
-        throws CommandLineException
+            throws CommandLineException
     {
         log.debug( "Running " + settings.getTexCommand() + " on file " + texFile.getName() );
         File workingDir = texFile.getParentFile();
 
         String[] texCommandArgs = settings.getTexCommandArgs();
         String[] args = new String[texCommandArgs.length + 1];
-        for ( int i = 0; i < texCommandArgs.length; i++ )
-        {
-            args[i] = texCommandArgs[i];
-        }
+        System.arraycopy( texCommandArgs, 0, args, 0, texCommandArgs.length );
         args[texCommandArgs.length] = texFile.getName();
         executor.execute( workingDir, settings.getTexPath(), settings.getTexCommand(), args );
     }

@@ -1,3 +1,22 @@
+/*
+ * The akquinet maven-latex-plugin project
+ *
+ * Copyright (c) 2011 by akquinet tech@spree GmbH
+ *
+ * The maven-latex-plugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The maven-latex-plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with the maven-latex-plugin. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.m2latex.mojo;
 
 import java.io.BufferedReader;
@@ -153,13 +172,14 @@ public class TexFileUtilsImpl
     public void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
         throws MojoExecutionException
     {
-        if ( tempDirectory.exists() )
-        {
-            log.info( "Deleting existing directory " + tempDirectory.getPath() );
-            tempDirectory.delete();
-        }
         try
         {
+            if ( tempDirectory.exists() )
+            {
+                log.info( "Deleting existing directory " + tempDirectory.getPath() );
+                FileUtils.deleteDirectory( tempDirectory );
+            }
+
             log.debug( "Copying TeX source directory (" + texDirectory.getPath() + ") to temporary directory ("
                 + tempDirectory + ")" );
             FileUtils.copyDirectory( texDirectory, tempDirectory );
@@ -283,6 +303,27 @@ public class TexFileUtilsImpl
         {
             throw new MojoExecutionException( "File " + logFile.getPath() + " does not exist after running LaTeX." );
         }
+    }
+
+    public File createTex4htOutputDir( File tempDir ) throws MojoExecutionException
+    {
+        File tex4htOutdir = new File( tempDir, TEX4HT_OUTPUT_DIR );
+        if ( tex4htOutdir.exists() )
+        {
+            try
+            {
+                FileUtils.cleanDirectory( tex4htOutdir );
+            }
+            catch ( IOException e )
+            {
+                throw new MojoExecutionException( "Could not clean TeX4ht output dir: " + tex4htOutdir, e );
+            }
+        }
+        else
+        {
+            tex4htOutdir.mkdirs();
+        }
+        return tex4htOutdir;
     }
 
     private void copyFileToDirectory( File file, File targetDir )

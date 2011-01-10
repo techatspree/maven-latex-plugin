@@ -1,9 +1,28 @@
+/*
+ * The akquinet maven-latex-plugin project
+ *
+ * Copyright (c) 2011 by akquinet tech@spree GmbH
+ *
+ * The maven-latex-plugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The maven-latex-plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with the maven-latex-plugin. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.m2latex.mojo;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.util.Arrays;
-
-import org.apache.commons.lang.StringUtils;
 
 public class Settings
 {
@@ -27,8 +46,9 @@ public class Settings
 
     /**
      * @parameter
+     * @readonly
      */
-    private File tempDirectory = null;
+    private String tempDirectory = null;
 
     /**
      * @parameter
@@ -68,16 +88,18 @@ public class Settings
     /**
      * @parameter
      */
-    private String[] texCommandArgs = new String[] { "-interaction=nonstopmode", "--src-specials" };
+    private String[] texCommandArgs = new String[]{"-interaction=nonstopmode", "--src-specials"};
 
     /**
      * TODO move to different fields; take latex args from texCommandArgs
-     * 
+     *
      * @parameter
      */
-    private String[] tex4htCommandArgs = new String[] { "html,2", "", "", "-interaction=nonstopmode --src-specials" };
+    private String[] tex4htCommandArgs = new String[]{"html,2", "", "", "-interaction=nonstopmode --src-specials"};
 
     private File outputDirectoryFile = null;
+
+    private File tempDirectoryFile = null;
 
     public File getBaseDirectory()
     {
@@ -117,17 +139,14 @@ public class Settings
 
     public File getTempDirectory()
     {
-        if ( tempDirectory == null )
+        if (tempDirectoryFile == null)
         {
-            // the default
-            tempDirectory = new File( targetDirectory, "m2latex" );
+            String dirName = StringUtils.isBlank( tempDirectory ) ? "m2latex" : tempDirectory;
+            tempDirectoryFile = new File( targetDirectory, dirName );
         }
-        return tempDirectory;
+        return tempDirectoryFile;
     }
 
-    /**
-     * @parameter
-     */
     public String getTex4htCommand()
     {
         return tex4htCommand;
@@ -203,7 +222,7 @@ public class Settings
         return this;
     }
 
-    public Settings setTempDirectory( File tempDirectory )
+    public Settings setTempDirectory( String tempDirectory )
     {
         this.tempDirectory = tempDirectory;
         return this;
