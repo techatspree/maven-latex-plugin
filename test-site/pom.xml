@@ -5,6 +5,9 @@
 	<artifactId>test-site</artifactId>
 	<version>1.0</version>
 	<name>Maven LaTeX Plugin - Test Site</name>
+   <properties>
+       <maven-latex-plugin.version>1.1</maven-latex-plugin.version>
+   </properties>
 	<pluginRepositories>
         <pluginRepository>
             <id>maven-latex-plugin-repo</id>
@@ -25,7 +28,7 @@
 			<plugin>
 				<groupId>de.akquinet.maven</groupId>
 				<artifactId>maven-latex-plugin</artifactId>
-				<version>1.1-SNAPSHOT</version>
+				<version>${maven-latex-plugin.version}</version>
 				<configuration>
 					<settings>
 						<cleanUp>false</cleanUp>

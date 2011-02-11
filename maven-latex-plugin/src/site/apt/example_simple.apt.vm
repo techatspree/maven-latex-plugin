@@ -11,6 +11,7 @@ Simple Example
 
     * a pdf version of each TeX document under $project/target/site.
 
+    []
 
 +--
 <project>
@@ -19,7 +20,7 @@ Simple Example
             <plugin>
                 <groupId>de.akquinet.maven</groupId>
                 <artifactId>maven-latex-plugin</artifactId>
-                <version>1.0</version>
+                <version>${project.version}</version>
                 <inherited>false</inherited>
                 <executions>
                     <execution>

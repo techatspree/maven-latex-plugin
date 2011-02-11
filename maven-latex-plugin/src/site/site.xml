@@ -1,4 +1,17 @@
 <project name="maven-latex-plugin">
+    <bannerRight>
+        <name>akquinet</name>
+        <src>images/akquinet-logo.jpg</src>
+        <href>http://www.akquinet.de/en.html</href>
+    </bannerRight>
+
+    <poweredBy>
+        <logo name="Github" href="http://github.com/"
+              img="http://github.com/images/modules/header/logov3.png"/>
+        <logo name="Maven" href="http://maven.apache.org/"
+              img="http://maven.apache.org/images/logos/maven-feather.png"/>
+    </poweredBy>
+
     <skin>
         <groupId>com.googlecode.fluido-skin</groupId>
         <artifactId>fluido-skin</artifactId>
@@ -19,6 +32,4 @@
         </menu>
         <menu ref="reports"/>
     </body>
-
-
 </project>

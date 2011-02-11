@@ -16,16 +16,32 @@ git://github.com/akquinet/maven-latex-plugin.git
 * Maven repository
 
 +--
-http://akquinet.github.com/maven-latex-plugin/maven2
+<project>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-latex-plugin-repo</id>
+            <url>http://akquinet.github.com/maven-latex-plugin/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
 +--
 
-* Maven plugin dependeny
+* Maven plugin dependency
 
 +--
-<plugin>
-    <groupId>de.akquinet.maven</groupId>
-    <artifactId>maven-latex-plugin</artifactId>
-    <version>${project.version}</version>
-</plugin>
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.akquinet.maven</groupId>
+                <artifactId>maven-latex-plugin</artifactId>
+                <version>${project.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
 +--
 

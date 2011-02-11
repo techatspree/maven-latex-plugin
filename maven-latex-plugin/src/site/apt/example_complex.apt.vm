@@ -15,6 +15,7 @@ Complex Example
 
     * an html single-page version under $project/target/site/reference/html_singlepage.
 
+    []
 
 +--
 <project>
@@ -23,7 +24,7 @@ Complex Example
             <plugin>
                 <groupId>de.akquinet.maven</groupId>
                 <artifactId>maven-latex-plugin</artifactId>
-                <version>1.0</version>
+                <version>${project.version}</version>
                 <inherited>false</inherited>
                 <executions>
                     <execution>

@@ -13,7 +13,7 @@ Configuration
 <plugin>
     <groupId>de.akquinet.maven</groupId>
     <artifactId>maven-latex-plugin</artifactId>
-    <version>1.0</version>
+    <version>${project.version}</version>
     <configuration>
         <settings>
             <!-- all tex main documents in this folder (including subfolders) will be processed -->
@@ -24,8 +24,8 @@ Configuration
             <tempDirectory>${project.build.directory}/m2latex</tempDirectory>
             <!-- clean up the working directory in the end? May be used for debugging -->
             <cleanUp>true</cleanUp>
-            <!-- path to the TeX scripts -->
-            <texPath>/usr/texbin</texPath>
+            <!-- path to the TeX scripts, if none, it must be on the system path -->
+            <texPath/>
             <!-- the latex command -->
             <texCommand>pdflatex</texCommand>
             <!-- the bibtex command -->
@@ -39,7 +39,10 @@ Configuration
             <tex4htCommand>htlatex</tex4htCommand>
             <!-- the argumants to use when calling tex4ht -->
             <tex4htCommandArgs>
-                <tex4htCommandArg>"html,2,info"</tex4htCommandArg>
+                <tex4htCommandArg>html,2</tex4htCommandArg>
+                <tex4htCommandArg></tex4htCommandArg>
+                <tex4htCommandArg></tex4htCommandArg>
+                <tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
             </tex4htCommandArgs>
         </settings>
     </configuration>
