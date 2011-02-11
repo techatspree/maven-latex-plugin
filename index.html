@@ -1,226 +1,211 @@
-<html>
-<head>
-    <title>maven-latex-plugin</title>
-</head>
-<body>
 
-<h1>maven-latex-plugin</h1>
 
-<h2>Features</h2>
-<ul>
-    <li>Transform LaTeX documents into pdf and/or html during the maven site phase by calling the standard LaTeX
-        scripts
-    </li>
-    <li>Find TeX main documents underneath a tex directory in the maven site (e.g.
-        <code>src/site/tex/doc/Doc.tex</code>)
-    </li>
-    <li>Goal to create pdf or dvi files in the target folder (e.g <code>target/site/doc/Doc.pdf</code>)</li>
-    <li>Goal to create html files using tex4ht in the target folder (e.g.
-        <code>target/site/doc/Doc.html</code>)
-    </li>
-    <ul>
-        <li>Configurable, for which level of sections an own html file will be created (multi-page / single-page)</li>
-        <li>Using CSS stylesheets.</li>
-    </ul>
-    <li>Dynamic execution of the latex operations by analyzing log information created by the LaTeX scripts</li>
-    <ul>
-        <li>Execute <code>latex</code> as many times as needed</li>
-        <li>Execute <code>bibtex</code> if needed</li>
-    </ul>
-</ul>
 
-<h2>To Do</h2>
-<ul>
-    <li>Execute <code>makeindex</code> if needed</li>
-    <li>Execute <code>glosstex</code> if needed</li>
-    <li>Usage of the multibib macros</li>
-</ul>
 
-<h2>Usage</h2>
 
-<h3>Source code repository</h3>
 
-<p>
-    git://github.com/akquinet/maven-latex-plugin.git
-</p>
 
-<h3>Maven repository</h3>
 
-<p>
-    http://akquinet.github.com/maven-latex-plugin/maven2
-</p>
 
-<pre>
-&lt;project&gt;
-    &lt;pluginRepositories&gt;
-        &lt;pluginRepository&gt;
-            &lt;id&gt;maven-latex-plugin-repo&lt;/id&gt;
-            &lt;url&gt;http://akquinet.github.com/maven-latex-plugin/maven2&lt;/url&gt;
-            &lt;releases&gt;
-                &lt;enabled&gt;true&lt;/enabled&gt;
-            &lt;/releases&gt;
-        &lt;/pluginRepository&gt;
-    &lt;/pluginRepositories&gt;
-&lt;/project&gt;
-</pre>
 
-<h3>Maven plugin dependeny</h3>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>maven-latex-plugin - maven-latex-plugin</title>
+    <link rel="stylesheet" href="./css/maven-theme.css" type="text/css" />
+    <link rel="stylesheet" href="./css/maven-base.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/prettify.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+    <script type="text/javascript" src="./js/prettify.js"></script>
+    <script type="text/javascript" src="./js/niftycube.js"></script>
+    <script type="text/javascript">
+        window.onload=function() {
+            Nifty("div\#wrapper", "big");
+            Nifty("div#breadcrumbs", "small");
+            Nifty("div\#navcolumn", "small");
+            Nifty("div.source", "medium");
+            prettyPrint();
+        }
+    </script>
+          <meta name="author" content="Carsten Erker" />
+          </head>
+  <body>
+    <div id="wrapper">
+        <div id="banner">
+                        <div id="bannerLeft">
+    
+            Maven LaTeX Plugin
+    
+            </div>
+                            <a href="http://www.akquinet.de/en.html" id="bannerRight"  >
+    
+                                            <img src="images/akquinet-logo.jpg" alt="akquinet" />
+    
+            </a>
+                <div class="clear">
+            <hr/>
+          </div>
+        </div>
+        <div id="breadcrumbs">
+              
+  
 
-<pre>
-&lt;plugin&gt;
-    &lt;groupId&gt;de.akquinet.maven&lt;/groupId&gt;
-    &lt;artifactId&gt;maven-latex-plugin&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-&lt;/plugin&gt;
-</pre>
+  
+    
+    
+  
+    
+            <div class="xleft">
+        <span id="publishDate">Last Published: 2011-02-11</span>
+                  &nbsp;| <span id="projectVersion">Version: 1.1</span>
+                      </div>
+                <div class="xright">      
+  
 
-<h3>Goals</h3>
+  
+    
+    
+  
+    
+  </div>
+          <div class="clear">
+            <hr/>
+          </div>
+        </div>
+        <div id="leftColumn">
+          <div id="navcolumn">
+               
+  
 
-<dl>
-    <dt>latex</dt>
-    <dd>Run latex to create pdf or dvi</dd>
-    <dt>tex4ht</dt>
-    <dd>Run tex4ht to create html</dd>
-</dl>
+  
+    
+    
+  
+    
+                       <h5>Overview</h5>
+            <ul>
+              
+    <li class="none">
+              <strong>Introduction</strong>
+        </li>
+              
+    <li class="none">
+                    <a href="features.html">Features</a>
+          </li>
+              
+    <li class="none">
+                    <a href="goals.html">Goals</a>
+          </li>
+              
+    <li class="none">
+                    <a href="usage.html">Usage</a>
+          </li>
+              
+    <li class="none">
+                    <a href="configuration.html">Configuration</a>
+          </li>
+          </ul>
+              <h5>Examples</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="example_simple.html">Simple Example</a>
+          </li>
+              
+    <li class="none">
+                    <a href="example_complex.html">Complex Example</a>
+          </li>
+          </ul>
+              <h5>Project Documentation</h5>
+            <ul>
+              
+                
+                    
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+              
+        <li class="collapsed">
+                    <a href="project-info.html">Project Information</a>
+                </li>
+              
+                
+                    
+                  
+              
+        <li class="collapsed">
+                    <a href="project-reports.html">Project Reports</a>
+                </li>
+          </ul>
+                                                     
+                        
+                        
+            <a href="http://github.com/" title="Github" class="poweredBy">
+                            <img  class="poweredBy"
+                    alt="Github"
+                    src="http://github.com/images/modules/header/logov3.png"
+                    width="90"
+                    height="30"
+              />
+            </a>
+                                
+                        
+                        
+            <a href="http://maven.apache.org/" title="Maven" class="poweredBy">
+                            <img  class="poweredBy"
+                    alt="Maven"
+                    src="http://maven.apache.org/images/logos/maven-feather.png"
+                    width="90"
+                    height="30"
+              />
+            </a>
+                                   
+  
 
-Example with default configuration:
+  
+    
+    
+  
+    
+            </div>
+        </div>
+        <div id="bodyColumn">
+          <div id="contentBox">
+            <p>The maven-latex-plugin can be used to translate LaTeX documents into PDF, HTML or other LaTeX output formats like DVI or Postscript, during the maven site lifecycle. Internally, the plugin calls the standard LaTeX macros, like pdflatex for PDF and tex4ht for HTML output. Hence, a LaTeX distribution has to be installed on the computer running the maven build.</p>
+<p>By default, LaTeX documents and resources like graphics files are assumed to reside in the maven project's <tt>src/site/tex</tt> folder. The resulting files will be in the folder <tt>target/site/tex</tt>, making them a part of the maven site. Thus, other maven site artifacts (like HTML pages build from apt files) may link to them.</p>
+<p>The maven-latex-plugin tries to be smart by analyzing the LaTeX macros' output and running the macros as often as needed (running LaTeX more than once is needed when e.g. building a table of contents or when using bibtex to maintain a bibliography and citations).</p>
 
-<pre>
-myproject
-|-- src
-|   `-- site
-|       `-- tex
-|           |-- doc1.tex
-|           `-- somefolder
-|               |-- doc2main.tex
-|               |-- doc2chapter1.tex
-|               `-- doc2chapter2.tex
-`-- target
-    `-- site
-        |-- doc1.pdf
-        `-- somefolder
-            `-- doc2main.pdf
-</pre>
+          </div>
+        </div>
+        <div class="clear">
+          <hr/>
+        </div>
+        <div id="footer">
+          <div class="xright">Copyright &#169;          
+   
+          2011
+    
+                    <a href="http://www.akquinet.de">akquinet tech@spree GmbH</a>.
+            All Rights Reserved.    
+  
 
-<h2>Configuration (with defaults)</h2>
-<pre>
-&lt;plugin&gt;
-    &lt;groupId&gt;de.akquinet.maven&lt;/groupId&gt;
-    &lt;artifactId&gt;maven-latex-plugin&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
-    &lt;configuration&gt;
-        &lt;settings&gt;
-            &lt;!-- all tex main documents in this folder (including subfolders) will be processed --&gt;
-            &lt;texDirectory&gt;${basedir}/src/site/tex&lt;/texDirectory&gt;
-            &lt;!-- the generated artifacts underneath ${project.reporting.outputDirectory} (normally target/site) will be copied to this folder --&gt;
-            &lt;outputDirectory&gt;.&lt;/outputDirectory&gt;
-            &lt;!-- the working directory, for temporary files and LaTeX processing --&gt;
-            &lt;tempDirectory&gt;${project.build.directory}/m2latex&lt;/tempDirectory&gt;
-            &lt;!-- clean up the working directory in the end? May be used for debugging --&gt;
-            &lt;cleanUp&gt;true&lt;/cleanUp&gt;
-            &lt;!-- path to the TeX scripts --&gt;
-            &lt;texPath&gt;/usr/texbin&lt;/texPath&gt;
-            &lt;!-- the latex command --&gt;
-            &lt;texCommand&gt;pdflatex&lt;/texCommand&gt;
-            &lt;!-- the bibtex command --&gt;
-            &lt;bibtexCommand&gt;bibtex&lt;/bibtexCommand&gt;
-            &lt;!-- the arguments to use when calling latex --&gt;
-            &lt;texCommandArgs&gt;
-                &lt;texCommandArg&gt;-interaction=nonstopmode&lt;/texCommandArg&gt;
-                &lt;texCommandArg&gt;--src-specials&lt;/texCommandArg&gt;
-            &lt;/texCommandArgs&gt;
-            &lt;!-- the tex4ht command --&gt;
-            &lt;tex4htCommand&gt;htlatex&lt;/tex4htCommand&gt;
-            &lt;!-- the argumants to use when calling tex4ht --&gt;
-            &lt;tex4htCommandArgs&gt;
-                &lt;tex4htCommandArg&gt;"html,2,info"&lt;/tex4htCommandArg&gt;
-            &lt;/tex4htCommandArgs&gt;
-        &lt;/settings&gt;
-    &lt;/configuration&gt;
-    &lt;executions&gt;
-        &lt;!-- execute latex goal automatically during the site phase --&gt;
-        &lt;execution&gt;
-            &lt;phase&gt;site&lt;/phase&gt;
-            &lt;goals&gt;
-                &lt;goal&gt;latex&lt;/goal&gt;
-                &lt;goal&gt;tex4ht&lt;/goal&gt;
-            &lt;/goals&gt;
-        &lt;/execution&gt;
-    &lt;/executions&gt;
-&lt;/plugin&gt;
-</pre>
-
-<h2>Example</h2>
-
-<p>
-    The following configuration contains three executions which will create
-</p>
-<ul>
-    <li>a pdf version of each TeX document under <code>$project/target/site</code>,</li>
-    <li>an html multi-page version under <code>$project/target/site/reference/html_multipage</code>,</li>
-    <li>an html single-page version under <code>$project/target/site/reference/html_singlepage</code>.</li>
-</ul>
-
-<pre>
-&lt;project&gt;
-    &lt;build&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;de.akquinet.maven&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-latex-plugin&lt;/artifactId&gt;
-                &lt;version&gt;1.0&lt;/version&gt;
-                &lt;inherited&gt;false&lt;/inherited&gt;
-                &lt;executions&gt;
-                    &lt;execution&gt;
-                        &lt;phase&gt;site&lt;/phase&gt;
-                        &lt;goals&gt;
-                            &lt;goal&gt;latex&lt;/goal&gt;
-                        &lt;/goals&gt;
-                    &lt;/execution&gt;
-                    &lt;execution&gt;
-                        &lt;id&gt;HTML multipage&lt;/id&gt;
-                        &lt;configuration&gt;
-                            &lt;settings&gt;
-                                &lt;outputDirectory&gt;reference/html_multipage&lt;/outputDirectory&gt;
-                                &lt;tex4htCommandArgs&gt;
-                                    &lt;tex4htCommandArg&gt;tex4ht,2&lt;/tex4htCommandArg&gt;
-                                    &lt;tex4htCommandArg&gt;&lt;/tex4htCommandArg&gt;
-                                    &lt;tex4htCommandArg&gt;&lt;/tex4htCommandArg&gt;
-                                    &lt;tex4htCommandArg&gt;-interaction=nonstopmode --src-specials&lt;/tex4htCommandArg&gt;
-                                &lt;/tex4htCommandArgs&gt;
-                            &lt;/settings&gt;
-                        &lt;/configuration&gt;
-                        &lt;phase&gt;site&lt;/phase&gt;
-                        &lt;goals&gt;
-                            &lt;goal&gt;tex4ht&lt;/goal&gt;
-                        &lt;/goals&gt;
-                    &lt;/execution&gt;
-                    &lt;execution&gt;
-                        &lt;id&gt;HTML singlepage&lt;/id&gt;
-                        &lt;configuration&gt;
-                            &lt;settings&gt;
-                                &lt;outputDirectory&gt;reference/html_singlepage&lt;/outputDirectory&gt;
-                                &lt;tex4htCommandArgs&gt;
-                                    &lt;tex4htCommandArg&gt;tex4ht,1&lt;/tex4htCommandArg&gt;
-                                    &lt;tex4htCommandArg&gt;&lt;/tex4htCommandArg&gt;
-                                    &lt;tex4htCommandArg&gt;&lt;/tex4htCommandArg&gt;
-                                    &lt;tex4htCommandArg&gt;-interaction=nonstopmode --src-specials&lt;/tex4htCommandArg&gt;
-                                &lt;/tex4htCommandArgs&gt;
-                            &lt;/settings&gt;
-                        &lt;/configuration&gt;
-                        &lt;phase&gt;site&lt;/phase&gt;
-                        &lt;goals&gt;
-                            &lt;goal&gt;tex4ht&lt;/goal&gt;
-                        &lt;/goals&gt;
-                    &lt;/execution&gt;
-                &lt;/executions&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-&lt;/project&gt;
-</pre>
-
-<h2>Links</h2>
-TeX4ht: <a href="http://www.cse.ohio-state.edu/~gurari/TeX4ht/">http://www.cse.ohio-state.edu/~gurari/TeX4ht/</a>
-</body>
+  
+    
+    
+  
+    
+  </div>
+          <div class="clear">
+            <hr/>
+          </div>
+        </div>
+    </div>
+  </body>
 </html>
