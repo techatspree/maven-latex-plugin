@@ -17,7 +17,7 @@ Configuration
     <configuration>
         <settings>
             <!-- all tex main documents in this folder (including subfolders) will be processed -->
-            <texDirectory>\${basedir}/src/site/tex</texDirectory>
+            <texDirectory>${basedir}/src/site/tex</texDirectory>
             <!-- the generated artifacts will be copied to this folder relative to \${project.reporting.outputDirectory} -->
             <outputDirectory>.</outputDirectory>
             <!-- the working directory, for temporary files and LaTeX processing -->
