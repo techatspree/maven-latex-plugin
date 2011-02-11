@@ -11,7 +11,7 @@
         Automatically create pdf or html documents from LaTeX sources during the Maven site phase.
     </description>
 
-    <url>https://github.com/akquinet/maven-latex-plugin</url>
+    <url>http://akquinet.github.com/maven-latex-plugin/</url>
 
     <mailingLists>
         <mailingList>
