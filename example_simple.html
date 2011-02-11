@@ -1,0 +1,234 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>maven-latex-plugin - maven-latex-plugin Simple Example</title>
+    <link rel="stylesheet" href="./css/maven-theme.css" type="text/css" />
+    <link rel="stylesheet" href="./css/maven-base.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/prettify.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+    <script type="text/javascript" src="./js/prettify.js"></script>
+    <script type="text/javascript" src="./js/niftycube.js"></script>
+    <script type="text/javascript">
+        window.onload=function() {
+            Nifty("div\#wrapper", "big");
+            Nifty("div#breadcrumbs", "small");
+            Nifty("div\#navcolumn", "small");
+            Nifty("div.source", "medium");
+            prettyPrint();
+        }
+    </script>
+          <meta name="author" content="Carsten Erker" />
+          </head>
+  <body>
+    <div id="wrapper">
+        <div id="banner">
+                        <div id="bannerLeft">
+    
+            Maven LaTeX Plugin
+    
+            </div>
+                            <a href="http://www.akquinet.de/en.html" id="bannerRight"  >
+    
+                                            <img src="images/akquinet-logo.jpg" alt="akquinet" />
+    
+            </a>
+                <div class="clear">
+            <hr/>
+          </div>
+        </div>
+        <div id="breadcrumbs">
+              
+  
+
+  
+    
+    
+  
+    
+            <div class="xleft">
+        <span id="publishDate">Last Published: 2011-02-11</span>
+                  &nbsp;| <span id="projectVersion">Version: 1.1</span>
+                      </div>
+                <div class="xright">      
+  
+
+  
+    
+    
+  
+    
+  </div>
+          <div class="clear">
+            <hr/>
+          </div>
+        </div>
+        <div id="leftColumn">
+          <div id="navcolumn">
+               
+  
+
+  
+    
+    
+  
+    
+                       <h5>Overview</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="index.html">Introduction</a>
+          </li>
+              
+    <li class="none">
+                    <a href="features.html">Features</a>
+          </li>
+              
+    <li class="none">
+                    <a href="goals.html">Goals</a>
+          </li>
+              
+    <li class="none">
+                    <a href="usage.html">Usage</a>
+          </li>
+              
+    <li class="none">
+                    <a href="configuration.html">Configuration</a>
+          </li>
+          </ul>
+              <h5>Examples</h5>
+            <ul>
+              
+    <li class="none">
+              <strong>Simple Example</strong>
+        </li>
+              
+    <li class="none">
+                    <a href="example_complex.html">Complex Example</a>
+          </li>
+          </ul>
+              <h5>Project Documentation</h5>
+            <ul>
+              
+                
+                    
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+              
+        <li class="collapsed">
+                    <a href="project-info.html">Project Information</a>
+                </li>
+              
+                
+                    
+                  
+              
+        <li class="collapsed">
+                    <a href="project-reports.html">Project Reports</a>
+                </li>
+          </ul>
+                                                     
+                        
+                        
+            <a href="http://github.com/" title="Github" class="poweredBy">
+                            <img  class="poweredBy"
+                    alt="Github"
+                    src="http://github.com/images/modules/header/logov3.png"
+                    width="90"
+                    height="30"
+              />
+            </a>
+                                
+                        
+                        
+            <a href="http://maven.apache.org/" title="Maven" class="poweredBy">
+                            <img  class="poweredBy"
+                    alt="Maven"
+                    src="http://maven.apache.org/images/logos/maven-feather.png"
+                    width="90"
+                    height="30"
+              />
+            </a>
+                                   
+  
+
+  
+    
+    
+  
+    
+            </div>
+        </div>
+        <div id="bodyColumn">
+          <div id="contentBox">
+            <div class="section"><h2>Simple Example</h2>
+<p>The following configuration contains one execution which will create</p>
+<ul><li>a pdf version of each TeX document under PROJECT_HOME/target/site.</li>
+</ul>
+<div class="source"><pre>&lt;project&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;de.akquinet.maven&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-latex-plugin&lt;/artifactId&gt;
+                &lt;version&gt;1.1&lt;/version&gt;
+                &lt;inherited&gt;false&lt;/inherited&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;phase&gt;site&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;latex&lt;/goal&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</pre>
+</div>
+</div>
+
+          </div>
+        </div>
+        <div class="clear">
+          <hr/>
+        </div>
+        <div id="footer">
+          <div class="xright">Copyright &#169;          
+   
+          2011
+    
+                    <a href="http://www.akquinet.de">akquinet tech@spree GmbH</a>.
+            All Rights Reserved.    
+  
+
+  
+    
+    
+  
+    
+  </div>
+          <div class="clear">
+            <hr/>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>
