@@ -9,11 +9,11 @@ Complex Example
 
     The following configuration contains three executions which will create
 
-    * a pdf version of each TeX document under $project/target/site,
+    * a pdf version of each TeX document under PROJECT_HOME/target/site,
 
-    * an html multi-page version under $project/target/site/reference/html_multipage,
+    * an html multi-page version under PROJECT_HOME/target/site/reference/html_multipage,
 
-    * an html single-page version under $project/target/site/reference/html_singlepage.
+    * an html single-page version under PROJECT_HOME/target/site/reference/html_singlepage.
 
     []
 

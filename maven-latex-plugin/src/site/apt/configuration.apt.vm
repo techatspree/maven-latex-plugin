@@ -17,11 +17,11 @@ Configuration
     <configuration>
         <settings>
             <!-- all tex main documents in this folder (including subfolders) will be processed -->
-            <texDirectory>${basedir}/src/site/tex</texDirectory>
-            <!-- the generated artifacts will be copied to this folder relative to ${project.reporting.outputDirectory} -->
+            <texDirectory>\${basedir}/src/site/tex</texDirectory>
+            <!-- the generated artifacts will be copied to this folder relative to \${project.reporting.outputDirectory} -->
             <outputDirectory>.</outputDirectory>
             <!-- the working directory, for temporary files and LaTeX processing -->
-            <tempDirectory>${project.build.directory}/m2latex</tempDirectory>
+            <tempDirectory>\${project.build.directory}/m2latex</tempDirectory>
             <!-- clean up the working directory in the end? May be used for debugging -->
             <cleanUp>true</cleanUp>
             <!-- path to the TeX scripts, if none, it must be on the system path -->

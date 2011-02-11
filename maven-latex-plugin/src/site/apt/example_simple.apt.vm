@@ -9,7 +9,7 @@ Simple Example
 
     The following configuration contains one execution which will create
 
-    * a pdf version of each TeX document under $project/target/site.
+    * a pdf version of each TeX document under PROJECT_HOME/target/site.
 
     []
 
