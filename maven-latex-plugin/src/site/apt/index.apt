@@ -1,0 +1,20 @@
+    ------
+    maven-latex-plugin
+    ------
+    Carsten Erker
+    ------
+    ------
+
+
+    The maven-latex-plugin can be used to translate LaTeX documents into PDF, HTML or other LaTeX output formats
+    like DVI or Postscript, during the maven site lifecycle. Internally, the plugin calls the standard LaTeX macros,
+    like pdflatex for PDF and tex4ht for HTML output. Hence, a LaTeX distribution has to be installed on the
+    computer running the maven build.
+
+    By default, LaTeX documents and resources like graphics files are assumed to reside in the maven project's
+    <<<src/site/tex>>> folder. The resulting files will be in the folder <<<target/site/tex>>>, making them a part
+    of the maven site. Thus, other maven site artifacts (like HTML pages build from apt files) may link to them.
+
+    The maven-latex-plugin tries to be smart by analyzing the LaTeX macros' output and running the macros as often
+    as needed (running LaTeX more than once is needed when e.g. building a table of contents or when using bibtex
+    to maintain a bibliography and citations).

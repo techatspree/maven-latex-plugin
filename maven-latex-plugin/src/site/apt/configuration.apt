@@ -1,0 +1,57 @@
+    ------
+    maven-latex-plugin Configuration
+    ------
+    Carsten Erker
+    ------
+    ------
+
+Configuration
+
+    The following code snippet shows all possible configuration settings with their default values.
+
++---
+<plugin>
+    <groupId>de.akquinet.maven</groupId>
+    <artifactId>maven-latex-plugin</artifactId>
+    <version>1.0</version>
+    <configuration>
+        <settings>
+            <!-- all tex main documents in this folder (including subfolders) will be processed -->
+            <texDirectory>${basedir}/src/site/tex</texDirectory>
+            <!-- the generated artifacts will be copied to this folder relative to ${project.reporting.outputDirectory} -->
+            <outputDirectory>.</outputDirectory>
+            <!-- the working directory, for temporary files and LaTeX processing -->
+            <tempDirectory>${project.build.directory}/m2latex</tempDirectory>
+            <!-- clean up the working directory in the end? May be used for debugging -->
+            <cleanUp>true</cleanUp>
+            <!-- path to the TeX scripts -->
+            <texPath>/usr/texbin</texPath>
+            <!-- the latex command -->
+            <texCommand>pdflatex</texCommand>
+            <!-- the bibtex command -->
+            <bibtexCommand>bibtex</bibtexCommand>
+            <!-- the arguments to use when calling latex -->
+            <texCommandArgs>
+                <texCommandArg>-interaction=nonstopmode</texCommandArg>
+                <texCommandArg>--src-specials</texCommandArg>
+            </texCommandArgs>
+            <!-- the tex4ht command -->
+            <tex4htCommand>htlatex</tex4htCommand>
+            <!-- the argumants to use when calling tex4ht -->
+            <tex4htCommandArgs>
+                <tex4htCommandArg>"html,2,info"</tex4htCommandArg>
+            </tex4htCommandArgs>
+        </settings>
+    </configuration>
+    <executions>
+        <!-- execute latex goal automatically during the site phase -->
+        <execution>
+            <phase>site</phase>
+            <goals>
+                <goal>latex</goal>
+                <goal>tex4ht</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
++---

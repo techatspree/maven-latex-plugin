@@ -1,0 +1,76 @@
+    ------
+    maven-latex-plugin Complex Example
+    ------
+    Carsten Erker
+    ------
+    ------
+
+Complex Example
+
+    The following configuration contains three executions which will create
+
+    * a pdf version of each TeX document under $project/target/site,
+
+    * an html multi-page version under $project/target/site/reference/html_multipage,
+
+    * an html single-page version under $project/target/site/reference/html_singlepage.
+
+
++--
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.akquinet.maven</groupId>
+                <artifactId>maven-latex-plugin</artifactId>
+                <version>1.0</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>latex</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>HTML multipage</id>
+                        <configuration>
+                            <settings>
+                                <outputDirectory>reference/html_multipage</outputDirectory>
+                                <tex4htCommandArgs>
+                                    <tex4htCommandArg>tex4ht,2</tex4htCommandArg>
+                                    <tex4htCommandArg></tex4htCommandArg>
+                                    <tex4htCommandArg></tex4htCommandArg>
+                                    <tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
+                                </tex4htCommandArgs>
+                            </settings>
+                        </configuration>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>tex4ht</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>HTML singlepage</id>
+                        <configuration>
+                            <settings>
+                                <outputDirectory>reference/html_singlepage</outputDirectory>
+                                <tex4htCommandArgs>
+                                    <tex4htCommandArg>tex4ht,1</tex4htCommandArg>
+                                    <tex4htCommandArg></tex4htCommandArg>
+                                    <tex4htCommandArg></tex4htCommandArg>
+                                    <tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
+                                </tex4htCommandArgs>
+                            </settings>
+                        </configuration>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>tex4ht</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
++--

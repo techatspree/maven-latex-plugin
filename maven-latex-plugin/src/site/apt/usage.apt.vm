@@ -1,0 +1,31 @@
+    ------
+    maven-latex-plugin Usage
+    ------
+    Carsten Erker
+    ------
+    ------
+
+Usage
+
+* Source code repository
+
++--
+git://github.com/akquinet/maven-latex-plugin.git
++--
+
+* Maven repository
+
++--
+http://akquinet.github.com/maven-latex-plugin/maven2
++--
+
+* Maven plugin dependeny
+
++--
+<plugin>
+    <groupId>de.akquinet.maven</groupId>
+    <artifactId>maven-latex-plugin</artifactId>
+    <version>${project.version}</version>
+</plugin>
++--
+

@@ -1,0 +1,36 @@
+    ------
+    maven-latex-plugin Simple Example
+    ------
+    Carsten Erker
+    ------
+    ------
+
+Simple Example
+
+    The following configuration contains one execution which will create
+
+    * a pdf version of each TeX document under $project/target/site.
+
+
++--
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.akquinet.maven</groupId>
+                <artifactId>maven-latex-plugin</artifactId>
+                <version>1.0</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>latex</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
++--
