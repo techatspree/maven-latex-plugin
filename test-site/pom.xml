@@ -6,7 +6,7 @@
 	<version>1.0</version>
 	<name>Maven LaTeX Plugin - Test Site</name>
    <properties>
-       <maven-latex-plugin.version>1.1</maven-latex-plugin.version>
+       <maven-latex-plugin.version>1.2</maven-latex-plugin.version>
    </properties>
 	<pluginRepositories>
         <pluginRepository>
@@ -26,7 +26,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>de.akquinet.maven</groupId>
+				<groupId>de.akquinet.jbosscc.latex</groupId>
 				<artifactId>maven-latex-plugin</artifactId>
 				<version>${maven-latex-plugin.version}</version>
 				<configuration>
