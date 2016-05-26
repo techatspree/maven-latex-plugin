@@ -24,43 +24,51 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-public interface TexFileUtils
-{
+public interface TexFileUtils {
 
-    String TEX4HT_OUTPUT_DIR = "m2latex_tex4ht_out";
+	String TEX4HT_OUTPUT_DIR = "m2latex_tex4ht_out";
 
-    void copyLatexOutputToOutputFolder( File texFile, File tempDirectory, File targetSiteDirectory )
-        throws MojoExecutionException, MojoFailureException;
+	void copyLatexOutputToOutputFolder(File texFile, File tempDirectory,
+			File targetSiteDirectory) throws MojoExecutionException,
+			MojoFailureException;
 
-    void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
-        throws MojoExecutionException;
+	void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
+			throws MojoExecutionException;
 
-    void copyTex4htOutputToOutputFolder( File texFile, File baseDirectory, File outputDirectory,
-                                         File targetSiteDirectory )
-        throws MojoFailureException, MojoExecutionException;
+	void copyTex4htOutputToOutputFolder(File texFile, File baseDirectory,
+			File outputDirectory, File targetSiteDirectory)
+			throws MojoFailureException, MojoExecutionException;
 
-    File getCorrespondingAuxFile( File texFile );
+	File getCorrespondingAuxFile(File texFile);
 
-    File getCorrespondingDviFile( File texFile );
+	File getCorrespondingDviFile(File texFile);
 
-    File getCorrespondingLogFile( File texFile );
+	File getCorrespondingLogFile(File texFile);
 
-    File getCorrespondingPdfFile( File texFile );
+	File getCorrespondingPdfFile(File texFile);
 
-    String getFileNameWithoutSuffix( File texFile );
+	File getCorrespondingIstFile(File texFile);
 
-    /*
-     * @param tempDir
-     * 
-     * @return A List of java.io.File objects denoting the LaTeX documents to process.
-     * 
-     * @throws MojoExecutionException
-     */
-    List getLatexMainDocuments( File directory )
-        throws MojoExecutionException;
+	File getCorrespondingGlgFile(File texFile);
 
-    boolean matchInCorrespondingLogFile( File texFile, String pattern )
-        throws MojoExecutionException;
+	File getCorrespondingGlsFile(File texFile);
 
-    File createTex4htOutputDir( File tempDir ) throws MojoExecutionException;
+	File getCorrespondingGloFile(File texFile);
+
+	String getFileNameWithoutSuffix(File texFile);
+
+	/*
+	 * @param tempDir
+	 * 
+	 * @return A List of java.io.File objects denoting the LaTeX documents to
+	 * process.
+	 * 
+	 * @throws MojoExecutionException
+	 */
+	List getLatexMainDocuments(File directory) throws MojoExecutionException;
+
+	boolean matchInCorrespondingLogFile(File texFile, String pattern)
+			throws MojoExecutionException;
+
+	File createTex4htOutputDir(File tempDir) throws MojoExecutionException;
 }
