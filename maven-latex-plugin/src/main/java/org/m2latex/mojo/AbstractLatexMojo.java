@@ -25,6 +25,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.logging.Log;
 
+/**
+ * Abstract base class for all late mojos. 
+ */
 public abstract class AbstractLatexMojo
     extends AbstractMojo
 {
@@ -32,7 +35,7 @@ public abstract class AbstractLatexMojo
     /**
      * Location of the maven base dir.
      * 
-     * @parameter expression="${basedir}"
+     * @parameter property="basedir"
      * @readonly
      */
     protected File baseDirectory;
@@ -40,7 +43,7 @@ public abstract class AbstractLatexMojo
     /**
      * Location of the target dir.
      * 
-     * @parameter expression="${project.build.directory}"
+     * @parameter property="project.build.directory"
      * @readonly
      */
     protected File targetDirectory;
@@ -48,7 +51,7 @@ public abstract class AbstractLatexMojo
     /**
      * Location of the target/site dir.
      * 
-     * @parameter expression="${project.reporting.outputDirectory}"
+     * @parameter property="project.reporting.outputDirectory"
      * @readonly
      */
     protected File targetSiteDirectory;
@@ -68,14 +71,17 @@ public abstract class AbstractLatexMojo
 
     protected void cleanUp()
     {
-        getLog().debug( "Deleting temporary directory " + settings.getTempDirectory().getPath() );
+        getLog().debug( "Deleting temporary directory " + 
+			settings.getTempDirectory().getPath() );
         try
         {
             FileUtils.deleteDirectory( settings.getTempDirectory() );
         }
         catch ( IOException e )
         {
-            getLog().warn( "The temporary directory '" + settings.getTempDirectory() + "' could be deleted.", e );
+            getLog().warn( "The temporary directory '" + 
+			   settings.getTempDirectory() + 
+			   "' could be deleted.", e );
         }
     }
 
@@ -83,14 +89,16 @@ public abstract class AbstractLatexMojo
     {
         if ( settings == null )
         {
-            // no configuration is defined in pom, i.e. object is not created by Maven
+            // no configuration is defined in pom, 
+	    // i.e. object is not created by Maven
             settings = new Settings();
         }
-        settings.setBaseDirectory( baseDirectory ).setTargetSiteDirectory( targetSiteDirectory )
+        settings.setBaseDirectory( baseDirectory )
+	    .setTargetSiteDirectory( targetSiteDirectory )
             .setTargetDirectory( targetDirectory );
 
         log = getLog();
-        fileUtils = new TexFileUtilsImpl( log );
-        latexProcessor = new LatexProcessor( settings, new CommandExecutorImpl( log ), log, fileUtils );
+        this.fileUtils = new TexFileUtilsImpl( log );
+        latexProcessor = new LatexProcessor( settings, new CommandExecutorImpl( log ), log, this.fileUtils );
     }
 }

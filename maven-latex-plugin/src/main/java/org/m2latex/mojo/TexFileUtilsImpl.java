@@ -23,9 +23,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -55,7 +55,9 @@ public class TexFileUtilsImpl
      * 
      * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
      */
-    public void copyLatexOutputToOutputFolder( File texFile, File tempDirectory, File outputDirectory )
+    public void copyLatexOutputToOutputFolder( File texFile, 
+					       File tempDirectory, 
+					       File outputDirectory )
         throws MojoExecutionException, MojoFailureException
     {
         WildcardFileFilter fileFilter = new WildcardFileFilter( getFilesToCopy( texFile, LATEX_OUTPUT_FILES ) );
@@ -67,7 +69,9 @@ public class TexFileUtilsImpl
      * 
      * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
      */
-    public void copyTex4htOutputToOutputFolder( File texFile, File tempDirectory, File tex4htOutputDirectory,
+    public void copyTex4htOutputToOutputFolder( File texFile, 
+						File tempDirectory, 
+						File tex4htOutputDirectory,
                                                 File outputDirectory )
         throws MojoExecutionException, MojoFailureException
     {
@@ -255,10 +259,10 @@ public class TexFileUtilsImpl
      * 
      * @see org.m2latex.mojo.TexFileUtils#getLatexMainDocuments(java.io.File)
      */
-    public List getLatexMainDocuments( File directory )
+    public List<File> getLatexMainDocuments( File directory )
         throws MojoExecutionException
     {
-        ArrayList mainFiles = new ArrayList();
+        List<File> mainFiles = new ArrayList<File>();
 
         Collection texFiles = FileUtils.listFiles( directory, FileFilterUtils.suffixFileFilter( ".tex" ),
                                                    TrueFileFilter.INSTANCE );

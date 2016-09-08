@@ -56,7 +56,7 @@ public interface TexFileUtils
      * 
      * @throws MojoExecutionException
      */
-    List getLatexMainDocuments( File directory )
+    List<File> getLatexMainDocuments( File directory )
         throws MojoExecutionException;
 
     boolean matchInCorrespondingLogFile( File texFile, String pattern )

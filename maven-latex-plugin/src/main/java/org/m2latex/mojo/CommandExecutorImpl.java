@@ -26,6 +26,10 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
 
+/**
+ * Execution of an executable with given arguments 
+ * in a given working directory logging on {@link #log}. 
+ */
 public class CommandExecutorImpl
     implements CommandExecutor
 {
@@ -36,7 +40,9 @@ public class CommandExecutorImpl
         this.log = log;
     }
 
-    public final String execute( File workingDir, File pathToExecutable, String executable, String[] args )
+    public final String execute( File workingDir, 
+				 File pathToExecutable, 
+				 String executable, String[] args )
         throws CommandLineException
     {
         String command = new File( pathToExecutable, executable ).getPath();

@@ -39,6 +39,9 @@ public class LatexMojo
         throws MojoExecutionException, MojoFailureException
     {
         initialize();
+        log.debug( "Settings: " + settings.toString() );
+        log.info( "settings.getOutputDirectory(): " + 
+		  settings.getOutputDirectory() );
 
         File texDirectory = settings.getTexDirectory();
 
@@ -50,11 +53,14 @@ public class LatexMojo
 
         try
         {
-            fileUtils.copyLatexSrcToTempDir( texDirectory, settings.getTempDirectory() );
-            List latexMainFiles = fileUtils.getLatexMainDocuments( settings.getTempDirectory() );
-            for ( Iterator iterator = latexMainFiles.iterator(); iterator.hasNext(); )
+            fileUtils.copyLatexSrcToTempDir( texDirectory, 
+					     settings.getTempDirectory() );
+            List<File> latexMainFiles = fileUtils
+		.getLatexMainDocuments( settings.getTempDirectory() );
+	    for (File texFile : latexMainFiles) 
+            //for ( Iterator iterator = latexMainFiles.iterator(); iterator.hasNext(); )
             {
-                File texFile = (File) iterator.next();
+                //File texFile = (File) iterator.next();
                 latexProcessor.processLatex( texFile );
                 fileUtils.copyLatexOutputToOutputFolder( texFile, settings.getTempDirectory(), settings
                     .getOutputDirectory() );

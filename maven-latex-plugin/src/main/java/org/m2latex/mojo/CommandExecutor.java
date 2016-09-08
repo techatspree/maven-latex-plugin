@@ -25,7 +25,9 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 public interface CommandExecutor
 {
 
-    public abstract String execute( File workingDir, File pathToExecutable, String executable, String[] args )
+    public abstract String execute( File workingDir, 
+				    File pathToExecutable, 
+				    String executable, String[] args )
         throws CommandLineException;
 
 }

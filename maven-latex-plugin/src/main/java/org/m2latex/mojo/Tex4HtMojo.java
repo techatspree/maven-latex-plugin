@@ -40,7 +40,8 @@ public class Tex4HtMojo
     {
         initialize();
         log.debug( "Settings: " + settings.toString() );
-        log.info( "settings.getOutputDirectory(): " + settings.getOutputDirectory() );
+        log.info( "settings.getOutputDirectory(): " + 
+		  settings.getOutputDirectory() );
 
         File texDirectory = settings.getTexDirectory();
 
@@ -52,11 +53,14 @@ public class Tex4HtMojo
 
         try
         {
-            fileUtils.copyLatexSrcToTempDir( texDirectory, settings.getTempDirectory() );
-            List latexMainFiles = fileUtils.getLatexMainDocuments( settings.getTempDirectory() );
-            for ( Iterator iterator = latexMainFiles.iterator(); iterator.hasNext(); )
+            fileUtils.copyLatexSrcToTempDir( texDirectory, 
+					     settings.getTempDirectory() );
+            List<File> latexMainFiles = fileUtils
+		.getLatexMainDocuments( settings.getTempDirectory() );
+            for (File texFile : latexMainFiles) 
+            //for ( Iterator iterator = latexMainFiles.iterator(); iterator.hasNext(); )
             {
-                File texFile = (File) iterator.next();
+                //File texFile = (File) iterator.next();
                 latexProcessor.processTex4ht( texFile );
                 // TODO move to Settings
                 File tex4htOutputDir = new File( settings.getTempDirectory(), TexFileUtils.TEX4HT_OUTPUT_DIR );
