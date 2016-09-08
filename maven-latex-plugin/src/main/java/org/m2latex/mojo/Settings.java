@@ -23,8 +23,20 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.util.Arrays;
 
+/**
+ * The settings for this plugin. 
+ * These are the elements of the pom in element <code>settings</code>
+ */
 public class Settings
 {
+
+   private final static String SST;
+
+    static {
+	String fs = System.getProperty("file.separator");
+	SST = "src" + fs + "site" + fs + "tex";
+    }
+
     /**
      * @parameter
      * @readonly
@@ -44,61 +56,116 @@ public class Settings
     private File targetDirectory;
 
     /**
+     * The working directory as a string, 
+     * for temporary files and LaTeX processing 
+     * relative to ${project.build.directory}. 
+     * The according file is given by {@link #tempDirectoryFile}. 
+     * **** MAYBE NOT COMPLETELY CORRECT. 
+     *
      * @parameter
      * @readonly
      */
     private String tempDirectory = null;
 
     /**
+     * All tex main documents in this folder (including subfolders) 
+     * will be processed. 
+     * Getter method {@link #getTexDirectory()} 
+     * implements default value <code>baseDirectory/src/site/tex</code> 
+     * for unix and accordingly for windows. 
+     *
      * @parameter
      */
     private File texDirectory = null;
 
     /**
+     * The generated artifacts will be copied to this folder 
+     * relative to ${project.reporting.outputDirectory}. 
+     * Getter method {@link #getOutputDirectory()} 
+     * implements default value {@link #targetSiteDirectory}. 
+     * The according file is given by {@link #outputDirectoryFile}. 
+     * **** MAYBE NOT COMPLETELY CORRECT. 
+    *
      * @parameter
      */
     private String outputDirectory = null;
 
     /**
+     * Path to the TeX scripts, if none, it must be on the system path. 
+     *
      * @parameter
      */
     private File texPath = null;
 
     /**
+     * The latex command. Default is <code>pdflatex</code>. 
+     *
      * @parameter
      */
     private String texCommand = "pdflatex";
 
     /**
+     * The tex4ht command. Default is <code>htlatex</code>. 
+     *
      * @parameter
      */
     private String tex4htCommand = "htlatex";
 
     /**
+     * The bibtex command. Default is <code>bibtex</code>. 
+     *
      * @parameter
      */
     private String bibtexCommand = "bibtex";
 
     /**
+     * Clean up the working directory in the end? 
+     * May be used for debugging when setting to <code>false</code>. 
+     * Default value is <code>true</code>. 
+     *
      * @parameter
      */
     private boolean cleanUp = true;
 
     /**
+     * The arguments to use when calling latex. 
+     * Default are the arguments <code>-interaction=nonstopmode</code> and 
+     * <code>--src-specials</code>. 
+     *
      * @parameter
      */
-    private String[] texCommandArgs = new String[]{"-interaction=nonstopmode", "--src-specials"};
+    private String[] texCommandArgs = new String[]{
+	"-interaction=nonstopmode",
+	"--src-specials"
+    };
 
     /**
+     * The arguments to use when calling tex4ht. 
+     * Default are <code>html,2</code>, <code></code>, <code></code>
+     * and the arguments from latex, 
+     * <code>-interaction=nonstopmode --src-specials</code>. 
+     * <p>
      * TODO move to different fields; take latex args from texCommandArgs
      *
      * @parameter
      */
-    private String[] tex4htCommandArgs = new String[]{"html,2", "", "", "-interaction=nonstopmode --src-specials"};
+    private String[] tex4htCommandArgs = new String[] {
+	"html,2", "", "", "-interaction=nonstopmode --src-specials"
+    };
 
+    /**
+     * File for {@link #outputDirectory}. 
+     */
     private File outputDirectoryFile = null;
 
+    /**
+     * File for {@link #tempDirectory}. 
+     */
     private File tempDirectoryFile = null;
+
+
+    // getter methods partially implementing default values. 
+
 
     public File getBaseDirectory()
     {
@@ -110,19 +177,19 @@ public class Settings
         return bibtexCommand;
     }
 
+   /**
+     * Getter method for parameter {@link #outputDirectory} 
+     * implemeting default value <code>baseDirectory/src/site/tex</code> 
+     * for unix and accordingly for windows. 
+     */
     public File getOutputDirectory()
     {
         if ( outputDirectoryFile == null )
-        {
-            if ( StringUtils.isEmpty( outputDirectory ) )
-            {
-                outputDirectoryFile = targetSiteDirectory;
-            }
-            else
-            {
-                outputDirectoryFile = new File( targetSiteDirectory, outputDirectory );
-            }
-        }
+	    {
+		outputDirectoryFile = StringUtils.isEmpty( outputDirectory )
+		    ? targetSiteDirectory
+		    : new File( targetSiteDirectory, outputDirectory );
+	    }
         return outputDirectoryFile;
     }
 
@@ -136,13 +203,20 @@ public class Settings
         return targetSiteDirectory;
     }
 
+    /**
+     * Getter method for parameter {@link #tempDirectory} 
+     * implemeting default value <code>baseDirectory/src/site/tex</code> 
+     * for unix and accordingly for windows. 
+     */
     public File getTempDirectory()
     {
         if (tempDirectoryFile == null)
-        {
-            String dirName = StringUtils.isBlank( tempDirectory ) ? "m2latex" : tempDirectory;
-            tempDirectoryFile = new File( targetDirectory, dirName );
-        }
+	    {
+		String dirName = StringUtils.isBlank( tempDirectory ) 
+		    ? "m2latex" 
+		    : tempDirectory;
+		tempDirectoryFile = new File( targetDirectory, dirName );
+	    }
         return tempDirectoryFile;
     }
 
@@ -166,12 +240,18 @@ public class Settings
         return texCommandArgs;
     }
 
+
+    /**
+     * Getter method for parameter {@link #texDirectory} 
+     * implemeting default value <code>baseDirectory/src/site/tex</code> 
+     * for unix and accordingly for windows. 
+     */
     public File getTexDirectory()
     {
         if ( texDirectory == null )
-        {
-            texDirectory = new File( new File( new File( baseDirectory, "src" ), "site" ), "tex" );
-        }
+	    {
+		texDirectory = new File(baseDirectory, SST );
+	    }
         return texDirectory;
     }
 
@@ -184,6 +264,8 @@ public class Settings
     {
         return cleanUp;
     }
+
+    // setter methods 
 
     public Settings setBaseDirectory( File baseDirectory )
     {
@@ -227,6 +309,7 @@ public class Settings
         return this;
     }
 
+    // **** why this with annotation parameter? 
     /**
      * @parameter
      */
@@ -268,15 +351,17 @@ public class Settings
 
     public String toString()
     {
-        StringBuffer sb = new StringBuffer( super.toString() );
-        sb.append( '[' ).append( "tempDirectory=" ).append( tempDirectory );
-        sb.append( ",texPath=" ).append( texPath );
-        sb.append( ",texCommand=" ).append( texCommand );
-        sb.append( ",bibtexCommand=" ).append( bibtexCommand );
-        sb.append( ",baseDirectory=" ).append( baseDirectory );
-        sb.append( ",targetSiteDirectory=" ).append( targetSiteDirectory );
-        sb.append( ",texDirectory=" ).append( texDirectory );
-        sb.append( ",texCommandArgs=" ).append( Arrays.asList( texCommandArgs ) ).append( ']' );
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        sb.append("tempDirectory=").append( tempDirectory );
+        sb.append(",texPath=").append( texPath );
+        sb.append(",texCommand=").append( texCommand );
+        sb.append(",bibtexCommand=").append( bibtexCommand );
+        sb.append(",baseDirectory=").append( baseDirectory );
+        sb.append(",targetSiteDirectory=").append( targetSiteDirectory );
+        sb.append(",texDirectory=").append( texDirectory );
+        sb.append(",texCommandArgs=").append(Arrays.asList(texCommandArgs));
+        sb.append(']');
         return sb.toString();
     }
 }
