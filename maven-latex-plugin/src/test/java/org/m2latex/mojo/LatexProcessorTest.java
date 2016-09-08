@@ -20,22 +20,23 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.easymock.MockControl;
 
+import org.junit.Test;
+
 public class LatexProcessorTest
-    extends TestCase
 {
-    private MockControl executorCtrl = MockControl.createStrictControl( CommandExecutor.class );
+    private MockControl executorCtrl = MockControl
+	.createStrictControl( CommandExecutor.class );
 
     private CommandExecutor executor = (CommandExecutor) executorCtrl.getMock();
 
-    private MockControl fileUtilsCtrl = MockControl.createStrictControl( TexFileUtils.class );
+    private MockControl fileUtilsCtrl = MockControl
+	.createStrictControl( TexFileUtils.class );
 
     private TexFileUtils fileUtils = (TexFileUtils) fileUtilsCtrl.getMock();
 
@@ -43,24 +44,31 @@ public class LatexProcessorTest
 
     private Log log = new SystemStreamLog();
 
-    private LatexProcessor processor = new LatexProcessor( settings, executor, log, fileUtils );
+    private LatexProcessor processor = new LatexProcessor
+	( settings, executor, log, fileUtils );
 
-    private File texFile = new File( System.getProperty( "tmp.dir" ), "test.tex" );
+    private File texFile = new File(System.getProperty("tmp.dir"), "test.tex");
 
-    private File auxFile = new File( System.getProperty( "tmp.dir" ), "test.aux" );
+    private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
 
-    private File tex4htDir = new File( "m2latex", TexFileUtils.TEX4HT_OUTPUT_DIR );
+    private File tex4htDir = new File("m2latex", 
+				      TexFileUtils.TEX4HT_OUTPUT_DIR );
 
-    private String[] latexArgsExpected = new String[] { "-interaction=nonstopmode", "--src-specials", texFile.getName() };
+    private String[] latexArgsExpected = new String[] {
+	"-interaction=nonstopmode", 
+	"--src-specials", 
+	texFile.getName() 
+    };
 
     private String[] tex4htArgsExpected = new String[] {
         texFile.getName(),
         "html,2",
         "",
         " -d" + tex4htDir.getAbsolutePath() + File.separatorChar,
-        "-interaction=nonstopmode --src-specials" };
+        "-interaction=nonstopmode --src-specials"
+    };
 
-    public void testProcessLatexSimple()
+    @Test public void testProcessLatexSimple()
         throws Exception
     {
         mockRunLatex();
@@ -74,7 +82,7 @@ public class LatexProcessorTest
         verify();
     }
 
-    public void testProcessLatexWithBibtex()
+    @Test public void testProcessLatexWithBibtex()
         throws Exception
     {
         mockRunLatex();
@@ -93,7 +101,7 @@ public class LatexProcessorTest
         verify();
     }
 
-    public void testProcessTex4ht()
+   @Test public void testProcessTex4ht()
         throws Exception
     {
         mockRunLatex();
@@ -111,7 +119,8 @@ public class LatexProcessorTest
     private void mockNeedAnotherLatexRun( boolean returnValue )
         throws MojoExecutionException
     {
-        fileUtils.matchInCorrespondingLogFile( texFile, LatexProcessor.PATTERN_NEED_ANOTHER_LATEX_RUN );
+        fileUtils.matchInCorrespondingLogFile(texFile, 
+					      LatexProcessor.PATTERN_NEED_ANOTHER_LATEX_RUN);
         fileUtilsCtrl.setReturnValue( returnValue );
     }
 
@@ -131,8 +140,10 @@ public class LatexProcessorTest
         fileUtils.getCorrespondingAuxFile( texFile );
         fileUtilsCtrl.setReturnValue( auxFile );
 
-        executor.execute( texFile.getParentFile(), settings.getTexPath(), settings.getBibtexCommand(),
-                          new String[] { auxFile.getPath() } );
+        executor.execute(texFile.getParentFile(),
+			 settings.getTexPath(),
+			 settings.getBibtexCommand(),
+			 new String[] { auxFile.getPath() } );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
     }
@@ -140,7 +151,10 @@ public class LatexProcessorTest
     private void mockRunLatex()
         throws CommandLineException
     {
-        executor.execute( texFile.getParentFile(), settings.getTexPath(), settings.getTexCommand(), latexArgsExpected );
+        executor.execute(texFile.getParentFile(),
+			 settings.getTexPath(),
+			 settings.getTexCommand(),
+			 latexArgsExpected );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
     }
@@ -151,7 +165,9 @@ public class LatexProcessorTest
         fileUtils.createTex4htOutputDir( tex4htDir.getParentFile() );
         fileUtilsCtrl.setReturnValue( tex4htDir );
 
-        executor.execute( texFile.getParentFile(), settings.getTexPath(), settings.getTex4htCommand(),
+        executor.execute(texFile.getParentFile(),
+			 settings.getTexPath(),
+			 settings.getTex4htCommand(),
                           tex4htArgsExpected );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );

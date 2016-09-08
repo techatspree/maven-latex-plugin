@@ -24,15 +24,21 @@ import junit.framework.TestCase;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 public class CommandExecutorImplTest
-    extends TestCase
 {
-    public void testExecute()
+    @Test public void testExecute()
         throws Exception
     {
-        CommandExecutorImpl executor = new CommandExecutorImpl( new SystemStreamLog() );
+        CommandExecutorImpl executor = 
+	    new CommandExecutorImpl( new SystemStreamLog() );
         String echoText = "LaTeX";
-        String output = executor.execute( new File( "." ), null, "echo", new String[] { echoText } );
+        String output = executor.execute( new File( "." ), 
+					  null, 
+					  "echo", new String[] { echoText } );
         assertEquals( echoText, output.subSequence( 0, echoText.length() ) );
     }
 }

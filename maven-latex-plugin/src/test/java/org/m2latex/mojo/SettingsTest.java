@@ -20,16 +20,17 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
 
 public class SettingsTest
-    extends TestCase
 {
-    public void testSettings()
+    @Test public void testSettings()
         throws Exception
     {
         Settings settings = new Settings();
-        settings.setBaseDirectory( new File( System.getProperty( "java.io.tmpdir" ) ) );
+        settings.setBaseDirectory(new File(System.getProperty("java.io.tmpdir")));
         assertNotNull( settings.getBaseDirectory() );
 
     }
