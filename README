@@ -76,6 +76,18 @@ The following code snippet shows all possible configuration settings with their 
                 <tex4htCommandArg></tex4htCommandArg>
                 <tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
             </tex4htCommandArgs>
+
+
+            <!-- the pattern which triggers latex rerun 
+	    	 if found in the log file.  -->
+	    <patternNeedAnotherLatexRun>
+	      (Rerun (LaTeX|to get cross-references right)|
+	      There were undefined references|
+	      Package natbib Warning: Citation\\(s\\) may have changed)
+	    </patternNeedAnotherLatexRun>
+
+	    <!-- The maximal number of reruns. If -1 this means, no limit. -->
+	    <maxNumReruns>5</maxNumReruns>
         </settings>
     </configuration>
     <executions>
