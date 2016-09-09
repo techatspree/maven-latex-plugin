@@ -30,6 +30,11 @@ import org.junit.Test;
 
 public class LatexProcessorTest
 {
+   static final String PATTERN_NEED_ANOTHER_LATEX_RUN = 
+       "(Rerun (LaTeX|to get cross-references right)|" 
+       + "There were undefined references|" 
+       + "Package natbib Warning: Citation\\(s\\) may have changed)";
+
     private MockControl executorCtrl = MockControl
 	.createStrictControl( CommandExecutor.class );
 
@@ -57,11 +62,11 @@ public class LatexProcessorTest
     private String[] latexArgsExpected = new String[] {
 	"-interaction=nonstopmode", 
 	"--src-specials", 
-	texFile.getName() 
+	this.texFile.getName() 
     };
 
     private String[] tex4htArgsExpected = new String[] {
-        texFile.getName(),
+        this.texFile.getName(),
         "html,2",
         "",
         " -d" + tex4htDir.getAbsolutePath() + File.separatorChar,
@@ -77,7 +82,7 @@ public class LatexProcessorTest
 
         replay();
 
-        processor.processLatex( texFile );
+        processor.processLatex( this.texFile );
 
         verify();
     }
@@ -96,7 +101,7 @@ public class LatexProcessorTest
 
         replay();
 
-        processor.processLatex( texFile );
+        processor.processLatex( this.texFile );
 
         verify();
     }
@@ -111,7 +116,7 @@ public class LatexProcessorTest
 
         replay();
 
-        processor.processTex4ht( texFile );
+        processor.processTex4ht(this. texFile );
 
         verify();
     }
@@ -120,7 +125,7 @@ public class LatexProcessorTest
         throws MojoExecutionException
     {
         fileUtils.matchInCorrespondingLogFile(texFile, 
-					      LatexProcessor.PATTERN_NEED_ANOTHER_LATEX_RUN);
+					      PATTERN_NEED_ANOTHER_LATEX_RUN);
         fileUtilsCtrl.setReturnValue( returnValue );
     }
 

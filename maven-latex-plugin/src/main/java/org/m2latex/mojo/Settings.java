@@ -165,6 +165,16 @@ public class Settings
        "There were undefined references|" + 
        "Package natbib Warning: Citation\\(s\\) may have changed)";
 
+    /**
+     * The maximal allowed number of reruns of the latex process. 
+     * This is to avoid endless repetitions. 
+     * The default value is 5. 
+     * This shall be non-negative 
+     * or <code>-1</code> which signifies no threshold. 
+     *
+     * @parameter
+     */
+    private int maxNumReruns = 5;
 
     // private fields 
 
@@ -286,6 +296,9 @@ public class Settings
 	return this.patternNeedAnotherLatexRun;
     }
 
+    public int getMaxNumReruns() {
+	return this.maxNumReruns;
+    }
 
     // setter methods 
 
@@ -371,9 +384,15 @@ public class Settings
         return this;
     }
 
-    public Settings setPatternNeedAnotherLatexRun(String patternNeedAnotherLatexRun) {
-	this.patternNeedAnotherLatexRun = patternNeedAnotherLatexRun;
+    public Settings setPatternNeedAnotherLatexRun(String pattern) {
+	this.patternNeedAnotherLatexRun = pattern;
         return this;
+    }
+
+    public Settings setMaxNumReruns(int maxNumReruns) {
+	assert maxNumReruns >= -1;
+	this.maxNumReruns = maxNumReruns;
+	return this;
     }
 
     public String toString()
@@ -388,6 +407,9 @@ public class Settings
         sb.append(",targetSiteDirectory=").append( this.targetSiteDirectory );
         sb.append(",texDirectory=").append( this.texDirectory );
         sb.append(",texCommandArgs=").append(Arrays.asList(this.texCommandArgs));
+        sb.append(",patternNeedAnotherLatexRun=")
+	    .append(this.patternNeedAnotherLatexRun);
+	sb.append(",maxNumReruns=").append(this.maxNumReruns);
         sb.append(']');
         return sb.toString();
     }

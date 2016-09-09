@@ -60,8 +60,10 @@ public class TexFileUtilsImpl
 					       File outputDirectory )
         throws MojoExecutionException, MojoFailureException
     {
-        WildcardFileFilter fileFilter = new WildcardFileFilter( getFilesToCopy( texFile, LATEX_OUTPUT_FILES ) );
-        copyLatexOutputToOutputFolder( texFile, tempDirectory, outputDirectory, fileFilter );
+        WildcardFileFilter fileFilter = new WildcardFileFilter
+	    ( getFilesToCopy( texFile, LATEX_OUTPUT_FILES ) );
+        copyLatexOutputToOutputFolder(texFile, tempDirectory, 
+				      outputDirectory, fileFilter);
     }
 
     /*
@@ -79,59 +81,65 @@ public class TexFileUtilsImpl
 
         if ( outputFiles == null || outputFiles.length == 0 )
         {
-            log.warn( "LaTeX file " + texFile + " did not generate any output in " + tex4htOutputDirectory + "!" );
+            log.warn( "LaTeX file " + texFile + 
+		      " did not generate any output in " + 
+		      tex4htOutputDirectory + "!" );
         }
         else
         {
-            File targetDirectory = getTargetDirectory( texFile, tempDirectory, outputDirectory );
+            File targetDirectory = getTargetDirectory(texFile, 
+						      tempDirectory, 
+						      outputDirectory);
             copyFilesToDirectory( outputFiles, targetDirectory );
         }
     }
 
     private void copyFilesToDirectory( File[] files, File targetDirectory )
-        throws MojoExecutionException
-    {
-        for ( int i = 0; i < files.length; i++ )
-        {
-            try
-            {
+        throws MojoExecutionException {
+        for ( int i = 0; i < files.length; i++ ) {
+            try {
                 FileUtils.copyFileToDirectory( files[i], targetDirectory );
-            }
-            catch ( IOException e )
-            {
-                throw new MojoExecutionException(
-                                                  "Error copying file " + files[i] + " to directory " + targetDirectory,
-                                                  e );
+            } catch ( IOException e ) {
+                throw new MojoExecutionException
+		    ("Error copying file " + files[i] + 
+		     " to directory " + targetDirectory,
+		     e );
             }
         }
     }
 
-    private void copyLatexOutputToOutputFolder( File texFile, File tempDirectory, File outputDirectory,
-                                                IOFileFilter fileFilter )
+    private void copyLatexOutputToOutputFolder(File texFile,
+					       File tempDirectory,
+					       File outputDirectory,
+					       IOFileFilter fileFilter )
         throws MojoFailureException, MojoExecutionException
     {
-        File targetDir = getTargetDirectory( texFile, tempDirectory, outputDirectory );
+        File targetDir = getTargetDirectory( texFile, tempDirectory, 
+					     outputDirectory );
         try
         {
-            Collection filesToCopy = FileUtils.listFiles( texFile.getParentFile(), fileFilter, null );
-            for ( Iterator iterator = filesToCopy.iterator(); iterator.hasNext(); )
+            Collection<File> filesToCopy = FileUtils
+		.listFiles( texFile.getParentFile(), fileFilter, null );
+	    for (File file : filesToCopy)
             {
-                File file = (File) iterator.next();
-                copyFileToDirectory( file, targetDir );
-
+                 copyFileToDirectory( file, targetDir );
             }
         }
         catch ( IOException e )
         {
-            throw new MojoExecutionException( "File " + texFile + " could not be copied to the target directory: "
-                + targetDir, e );
+            throw new MojoExecutionException
+		( "File " + texFile + 
+		  " could not be copied to the target directory: "
+		  + targetDir, e );
         }
     }
 
     /**
      * E.g. sourceFile /tmp/adir/afile, sourceBaseDir /tmp, targetBaseDir /home returns /home/adir/
      */
-    File getTargetDirectory( File sourceFile, File sourceBaseDir, File targetBaseDir )
+    File getTargetDirectory(File sourceFile,
+			    File sourceBaseDir,
+			    File targetBaseDir)
         throws MojoExecutionException, MojoFailureException
     {
         String filePath;
@@ -143,20 +151,22 @@ public class TexFileUtilsImpl
         }
         catch ( IOException e )
         {
-            throw new MojoExecutionException( "Error getting canonical path", e );
+            throw new MojoExecutionException("Error getting canonical path", e);
         }
 
         if ( !filePath.startsWith( tempPath ) )
         {
-            throw new MojoFailureException( "File " + sourceFile
-                + " is expected to be somewhere under the following directory: " + tempPath );
+            throw new MojoFailureException
+		( "File " + sourceFile + 
+		  " is expected to be somewhere under the following directory: "
+		  + tempPath );
         }
 
-        File targetDir = new File( targetBaseDir, filePath.substring( tempPath.length() ) );
-        return targetDir;
+	return new File(targetBaseDir, filePath.substring(tempPath.length()));
     }
 
-    private String[] getFilesToCopy( final File texFile, final String[] filesPatterns )
+    private String[] getFilesToCopy(final File texFile, 
+				    final String[] filesPatterns)
     {
         String texFilePrefix = getFileNameWithoutSuffix( texFile );
         String[] fileNames = new String[filesPatterns.length];
@@ -179,18 +189,21 @@ public class TexFileUtilsImpl
         {
             if ( tempDirectory.exists() )
             {
-                log.info( "Deleting existing directory " + tempDirectory.getPath() );
+                log.info( "Deleting existing directory " 
+			  + tempDirectory.getPath() );
                 FileUtils.deleteDirectory( tempDirectory );
             }
 
-            log.debug( "Copying TeX source directory (" + texDirectory.getPath() + ") to temporary directory ("
-                + tempDirectory + ")" );
+            log.debug("Copying TeX source directory (" + texDirectory.getPath()
+		      + ") to temporary directory (" + tempDirectory + ")" );
             FileUtils.copyDirectory( texDirectory, tempDirectory );
         }
         catch ( IOException e )
         {
-            throw new MojoExecutionException( "Failure copying the TeX directory (" + texDirectory.getPath()
-                + ") to a temporary directory (" + tempDirectory.getPath() + ").", e );
+            throw new MojoExecutionException
+		("Failure copying the TeX directory (" + texDirectory.getPath()
+		 + ") to a temporary directory (" + tempDirectory.getPath() 
+		 + ").", e );
         }
     }
 
@@ -242,7 +255,8 @@ public class TexFileUtilsImpl
     public String getFileNameWithoutSuffix( File texFile )
     {
         String nameTexFile = texFile.getName();
-        String namePrefixTexFile = nameTexFile.substring( 0, nameTexFile.lastIndexOf( "." ) );
+        String namePrefixTexFile = nameTexFile
+	    .substring(0, nameTexFile.lastIndexOf( "." ));
         return namePrefixTexFile;
     }
 
@@ -264,15 +278,15 @@ public class TexFileUtilsImpl
     {
         List<File> mainFiles = new ArrayList<File>();
 
-        Collection texFiles = FileUtils.listFiles( directory, FileFilterUtils.suffixFileFilter( ".tex" ),
-                                                   TrueFileFilter.INSTANCE );
-        for ( Iterator iterator = texFiles.iterator(); iterator.hasNext(); )
-        {
-            File file = (File) iterator.next();
-            if ( isTexMainFile( file ) )
-            {
-                mainFiles.add( file );
-            }
+        Collection<File> texFiles = FileUtils
+	    .listFiles(directory,
+		       FileFilterUtils.suffixFileFilter( ".tex" ),
+		       TrueFileFilter.INSTANCE );
+	for (File file : texFiles) {
+	    if ( isTexMainFile( file ) )
+		{
+		    mainFiles.add( file );
+		}
         }
         return mainFiles;
     }
@@ -294,21 +308,27 @@ public class TexFileUtilsImpl
             }
             catch ( FileNotFoundException e )
             {
-                throw new MojoExecutionException( "File " + logFile.getPath() + " does not exist after running LaTeX.",
-                                                  e );
+                throw new MojoExecutionException
+		    ("File " + logFile.getPath() 
+		     + " does not exist after running LaTeX.",
+		     e );
             }
             catch ( IOException e )
             {
-                throw new MojoExecutionException( "Error reading file " + logFile.getPath(), e );
+                throw new MojoExecutionException
+		    ("Error reading file " + logFile.getPath(), e);
             }
         }
         else
         {
-            throw new MojoExecutionException( "File " + logFile.getPath() + " does not exist after running LaTeX." );
+            throw new MojoExecutionException
+		( "File " + logFile.getPath() 
+		  + " does not exist after running LaTeX." );
         }
     }
 
-    public File createTex4htOutputDir( File tempDir ) throws MojoExecutionException
+    public File createTex4htOutputDir( File tempDir ) 
+	throws MojoExecutionException
     {
         File tex4htOutdir = new File( tempDir, TEX4HT_OUTPUT_DIR );
         if ( tex4htOutdir.exists() )
@@ -319,7 +339,8 @@ public class TexFileUtilsImpl
             }
             catch ( IOException e )
             {
-                throw new MojoExecutionException( "Could not clean TeX4ht output dir: " + tex4htOutdir, e );
+                throw new MojoExecutionException
+		    ( "Could not clean TeX4ht output dir: " + tex4htOutdir, e );
             }
         }
         else
@@ -345,7 +366,9 @@ public class TexFileUtilsImpl
         {
             FileReader fileReader = new FileReader( file );
             bufferedReader = new BufferedReader( fileReader );
-            for ( String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine() )
+            for (String line = bufferedReader.readLine(); 
+		 line != null; 
+		 line = bufferedReader.readLine() )
             {
                 if ( pattern.matcher( line ).find() )
                 {
@@ -363,14 +386,16 @@ public class TexFileUtilsImpl
                 }
                 catch ( IOException e )
                 {
-                    log.warn( "Cannot close the file '" + file.getPath() + "'.", e );
+                    log.warn("Cannot close the file '" + file.getPath() + "'.",
+			     e);
                 }
         }
     }
 
     private File getFileWithDifferentSuffix( File file, String suffix )
     {
-        return new File( file.getParentFile(), getFileNameWithoutSuffix( file ) + "." + suffix );
+        return new File(file.getParentFile(),
+			getFileNameWithoutSuffix( file ) + "." + suffix );
     }
 
     private boolean isTexMainFile( File file )
@@ -390,7 +415,8 @@ public class TexFileUtilsImpl
         }
         catch ( IOException e )
         {
-            throw new MojoExecutionException( "Problems reading the file '" + file.getPath()
+            throw new MojoExecutionException
+		( "Problems reading the file '" + file.getPath()
                 + "' while checking if it is a TeX main file", e );
         }
     }

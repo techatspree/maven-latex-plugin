@@ -47,23 +47,42 @@ public class LatexProcessor
         this.fileUtils = fileUtils;
     }
 
-    public void processLatex( File texFile )
+    /**
+     * Runs latex at least once, run bibtex and rerun latex as long as needed 
+     * or threshold {@link Settings#maxNumReruns} specifies. 
+     *
+     * @param texFile
+     *    the tex file to be processed. 
+     * @see #runLatex(File)
+     * @see #runBibtex(File)
+     * @see #needLatexRun(File)
+     * @see #needBibtexRun(File)
+     */
+    public void processLatex(final File texFile)
             throws CommandLineException, MojoExecutionException
     {
-        log.info( "Processing LaTeX file " + texFile );
+        log.info("Processing LaTeX file " + texFile + ". ");
 
         runLatex( texFile );
         if ( needBibtexRun( texFile ) )
         {
+            log.debug("Bibtex must be run. ");
             runBibtex( texFile );
         }
         int retries = 0;
-        while ( retries < 5 && needAnotherLatexRun( texFile ) )
+	boolean needAnotherLatexRun = true;
+	int maxNumReruns = this.settings.getMaxNumReruns();
+        while ((maxNumReruns == -1 || retries < maxNumReruns)
+	       && (needAnotherLatexRun = needAnotherLatexRun( texFile )) )
         {
-            log.debug( "Latex must be rerun" );
+            log.debug("Latex must be rerun. ");
             runLatex( texFile );
             retries++;
         }
+	if (needAnotherLatexRun) {
+	    log.warn("Max rerun reached although " + texFile +
+		     " needs another run. ");
+	}
     }
 
     public void processTex4ht( File texFile )
@@ -77,7 +96,7 @@ public class LatexProcessor
             throws CommandLineException, MojoExecutionException
     {
         log.debug( "Running " + settings.getTex4htCommand() + 
-		   " on file " + texFile.getName() );
+		   " on file " + texFile.getName() + ". ");
         File workingDir = texFile.getParentFile();
         String[] args = buildHtlatexArguments( texFile );
         executor.execute( workingDir, settings.getTexPath(), 
@@ -87,70 +106,80 @@ public class LatexProcessor
     private String[] buildHtlatexArguments( File texFile )
             throws MojoExecutionException
     {
-        File tex4htOutdir = fileUtils.createTex4htOutputDir( settings.getTempDirectory() );
+        File tex4htOutdir = fileUtils
+	    .createTex4htOutputDir( settings.getTempDirectory() );
 
-        final String argOutputDir = " -d" + tex4htOutdir.getAbsolutePath() + File.separatorChar;
+        final String argOutputDir = " -d" 
+	    + tex4htOutdir.getAbsolutePath() + File.separatorChar;
         String[] tex4htCommandArgs = settings.getTex4htCommandArgs();
 
         String htlatexOptions = getTex4htArgument( tex4htCommandArgs, 0 );
-        String tex4htOptions = getTex4htArgument( tex4htCommandArgs, 1 );
-        String t4htOptions = getTex4htArgument( tex4htCommandArgs, 2 ) + argOutputDir;
-        String latexOptions = getTex4htArgument( tex4htCommandArgs, 3 );
+        String tex4htOptions  = getTex4htArgument( tex4htCommandArgs, 1 );
+        String t4htOptions    = getTex4htArgument( tex4htCommandArgs, 2 ) 
+	    + argOutputDir;
+        String latexOptions   = getTex4htArgument( tex4htCommandArgs, 3 );
 
-        String[] args = new String[] {
+        return new String[] {
 	    texFile.getName(),
 	    htlatexOptions,
 	    tex4htOptions,
 	    t4htOptions,
 	    latexOptions
 	};
-
-        return args;
     }
 
-    private String getTex4htArgument( String[] args, int index )
+    private String getTex4htArgument(String[] args, int index)
     {
-        boolean returnEmptyArg = args == null || args.length < index + 1 || StringUtils.isEmpty( args[index] );
+        boolean returnEmptyArg = 
+	    args == null 
+	    || args.length <= index
+	    || StringUtils.isEmpty( args[index] );
         return returnEmptyArg ? "" : args[index];
     }
 
-    private boolean needAnotherLatexRun( File texFile )
+    private boolean needAnotherLatexRun(File texFile)
             throws MojoExecutionException
     {
         String reRunPattern = this.settings.getPatternNeedAnotherLatexRun();
-        boolean needRun = fileUtils.matchInCorrespondingLogFile( texFile, reRunPattern );
+        boolean needRun = fileUtils.matchInCorrespondingLogFile(texFile, 
+								reRunPattern);
         log.debug( "Another Latex run? " + needRun );
         return needRun;
     }
 
-    private boolean needBibtexRun( File texFile )
+    private boolean needBibtexRun(File texFile)
             throws MojoExecutionException
     {
-        String namePrefixTexFile = fileUtils.getFileNameWithoutSuffix( texFile );
+        String namePrefixTexFile = fileUtils.getFileNameWithoutSuffix(texFile);
         String pattern = "No file " + namePrefixTexFile + ".bbl";
         return fileUtils.matchInCorrespondingLogFile( texFile, pattern );
     }
 
-    private void runBibtex( File texFile )
+    private void runBibtex(File texFile)
             throws CommandLineException
     {
-        log.debug( "Running BibTeX on file " + texFile.getName() );
+        log.debug( "Running BibTeX on file " + texFile.getName() + ". ");
         File workingDir = texFile.getParentFile();
 
-        String[] args = new String[]{fileUtils.getCorrespondingAuxFile( texFile ).getPath()};
-        executor.execute( workingDir, settings.getTexPath(), settings.getBibtexCommand(), args );
+        String[] args = new String[] {
+	    fileUtils.getCorrespondingAuxFile( texFile ).getName()
+	};
+        executor.execute( workingDir, settings.getTexPath(), 
+			  settings.getBibtexCommand(), args );
     }
 
-    private void runLatex( File texFile )
+    private void runLatex(File texFile)
             throws CommandLineException
     {
-        log.debug( "Running " + settings.getTexCommand() + " on file " + texFile.getName() );
+        log.debug("Running " + settings.getTexCommand() + 
+		  " on file " + texFile.getName() + ". ");
         File workingDir = texFile.getParentFile();
 
         String[] texCommandArgs = settings.getTexCommandArgs();
         String[] args = new String[texCommandArgs.length + 1];
         System.arraycopy( texCommandArgs, 0, args, 0, texCommandArgs.length );
         args[texCommandArgs.length] = texFile.getName();
-        executor.execute( workingDir, settings.getTexPath(), settings.getTexCommand(), args );
+        executor.execute( workingDir, settings.getTexPath(), 
+			  settings.getTexCommand(), args );
     }
 }
