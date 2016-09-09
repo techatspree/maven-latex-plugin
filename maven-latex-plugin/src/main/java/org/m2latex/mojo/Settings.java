@@ -153,6 +153,22 @@ public class Settings
 	"html,2", "", "", "-interaction=nonstopmode --src-specials"
     };
 
+
+    /**
+     * The pattern in the log file which triggers rerunning latex. 
+     * **** default? to be replaced by an array of strings? **** 
+     *
+     * @parameter
+     */
+   private String patternNeedAnotherLatexRun = 
+       "(Rerun (LaTeX|to get cross-references right)|" + 
+       "There were undefined references|" + 
+       "Package natbib Warning: Citation\\(s\\) may have changed)";
+
+
+    // private fields 
+
+
     /**
      * File for {@link #outputDirectory}. 
      */
@@ -169,12 +185,12 @@ public class Settings
 
     public File getBaseDirectory()
     {
-        return baseDirectory;
+        return this.baseDirectory;
     }
 
     public String getBibtexCommand()
     {
-        return bibtexCommand;
+        return this.bibtexCommand;
     }
 
    /**
@@ -184,23 +200,24 @@ public class Settings
      */
     public File getOutputDirectory()
     {
-        if ( outputDirectoryFile == null )
+        if ( this.outputDirectoryFile == null )
 	    {
-		outputDirectoryFile = StringUtils.isEmpty( outputDirectory )
-		    ? targetSiteDirectory
-		    : new File( targetSiteDirectory, outputDirectory );
+		this.outputDirectoryFile = 
+		    StringUtils.isEmpty(this.outputDirectory)
+		    ? this.targetSiteDirectory
+		    : new File(this.targetSiteDirectory, this.outputDirectory);
 	    }
-        return outputDirectoryFile;
+        return this.outputDirectoryFile;
     }
 
     public File getTargetDirectory()
     {
-        return targetDirectory;
+        return this.targetDirectory;
     }
 
     public File getTargetSiteDirectory()
     {
-        return targetSiteDirectory;
+        return this.targetSiteDirectory;
     }
 
     /**
@@ -210,34 +227,34 @@ public class Settings
      */
     public File getTempDirectory()
     {
-        if (tempDirectoryFile == null)
+        if (this.tempDirectoryFile == null)
 	    {
-		String dirName = StringUtils.isBlank( tempDirectory ) 
+		String dirName = StringUtils.isBlank(this.tempDirectory)  
 		    ? "m2latex" 
-		    : tempDirectory;
-		tempDirectoryFile = new File( targetDirectory, dirName );
+		    : this.tempDirectory;
+		this.tempDirectoryFile = new File(this.targetDirectory,dirName);
 	    }
-        return tempDirectoryFile;
+        return this.tempDirectoryFile;
     }
 
     public String getTex4htCommand()
     {
-        return tex4htCommand;
+        return this.tex4htCommand;
     }
 
     public String[] getTex4htCommandArgs()
     {
-        return tex4htCommandArgs;
+        return this.tex4htCommandArgs;
     }
 
     public String getTexCommand()
     {
-        return texCommand;
+        return this.texCommand;
     }
 
     public String[] getTexCommandArgs()
     {
-        return texCommandArgs;
+        return this.texCommandArgs;
     }
 
 
@@ -248,26 +265,31 @@ public class Settings
      */
     public File getTexDirectory()
     {
-        if ( texDirectory == null )
+        if ( this.texDirectory == null )
 	    {
-		texDirectory = new File(baseDirectory, SST );
+		this.texDirectory = new File(this.baseDirectory, SST );
 	    }
-        return texDirectory;
+        return this.texDirectory;
     }
 
     public File getTexPath()
     {
-        return texPath;
+        return this.texPath;
     }
 
     public boolean isCleanUp()
     {
-        return cleanUp;
+        return this.cleanUp;
     }
+
+    public String getPatternNeedAnotherLatexRun() {
+	return this.patternNeedAnotherLatexRun;
+    }
+
 
     // setter methods 
 
-    public Settings setBaseDirectory( File baseDirectory )
+    public Settings setBaseDirectory(File baseDirectory )
     {
         this.baseDirectory = baseDirectory;
         return this;
@@ -349,18 +371,23 @@ public class Settings
         return this;
     }
 
+    public Settings setPatternNeedAnotherLatexRun(String patternNeedAnotherLatexRun) {
+	this.patternNeedAnotherLatexRun = patternNeedAnotherLatexRun;
+        return this;
+    }
+
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
-        sb.append("tempDirectory=").append( tempDirectory );
-        sb.append(",texPath=").append( texPath );
-        sb.append(",texCommand=").append( texCommand );
-        sb.append(",bibtexCommand=").append( bibtexCommand );
-        sb.append(",baseDirectory=").append( baseDirectory );
-        sb.append(",targetSiteDirectory=").append( targetSiteDirectory );
-        sb.append(",texDirectory=").append( texDirectory );
-        sb.append(",texCommandArgs=").append(Arrays.asList(texCommandArgs));
+        sb.append("tempDirectory=").append( this.tempDirectory );
+        sb.append(",texPath=").append( this.texPath );
+        sb.append(",texCommand=").append( this.texCommand );
+        sb.append(",bibtexCommand=").append( this.bibtexCommand );
+        sb.append(",baseDirectory=").append( this.baseDirectory );
+        sb.append(",targetSiteDirectory=").append( this.targetSiteDirectory );
+        sb.append(",texDirectory=").append( this.texDirectory );
+        sb.append(",texCommandArgs=").append(Arrays.asList(this.texCommandArgs));
         sb.append(']');
         return sb.toString();
     }

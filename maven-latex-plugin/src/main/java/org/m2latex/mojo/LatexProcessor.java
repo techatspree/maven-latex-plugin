@@ -27,7 +27,6 @@ import java.io.File;
 
 public class LatexProcessor
 {
-    static final String PATTERN_NEED_ANOTHER_LATEX_RUN = "(Rerun (LaTeX|to get cross-references right)|There were undefined references|Package natbib Warning: Citation\\(s\\) may have changed)";
 
     private final Settings settings;
 
@@ -37,7 +36,10 @@ public class LatexProcessor
 
     private TexFileUtils fileUtils;
 
-    public LatexProcessor( Settings settings, CommandExecutor executor, Log log, TexFileUtils fileUtils )
+    public LatexProcessor( Settings settings, 
+			   CommandExecutor executor, 
+			   Log log, 
+			   TexFileUtils fileUtils )
     {
         this.settings = settings;
         this.executor = executor;
@@ -74,10 +76,12 @@ public class LatexProcessor
     private void runTex4ht( File texFile )
             throws CommandLineException, MojoExecutionException
     {
-        log.debug( "Running " + settings.getTex4htCommand() + " on file " + texFile.getName() );
+        log.debug( "Running " + settings.getTex4htCommand() + 
+		   " on file " + texFile.getName() );
         File workingDir = texFile.getParentFile();
         String[] args = buildHtlatexArguments( texFile );
-        executor.execute( workingDir, settings.getTexPath(), settings.getTex4htCommand(), args );
+        executor.execute( workingDir, settings.getTexPath(), 
+			  settings.getTex4htCommand(), args );
     }
 
     private String[] buildHtlatexArguments( File texFile )
@@ -93,12 +97,13 @@ public class LatexProcessor
         String t4htOptions = getTex4htArgument( tex4htCommandArgs, 2 ) + argOutputDir;
         String latexOptions = getTex4htArgument( tex4htCommandArgs, 3 );
 
-        String[] args = new String[5];
-        args[0] = texFile.getName();
-        args[1] = htlatexOptions;
-        args[2] = tex4htOptions;
-        args[3] = t4htOptions;
-        args[4] = latexOptions;
+        String[] args = new String[] {
+	    texFile.getName(),
+	    htlatexOptions,
+	    tex4htOptions,
+	    t4htOptions,
+	    latexOptions
+	};
 
         return args;
     }
@@ -112,7 +117,7 @@ public class LatexProcessor
     private boolean needAnotherLatexRun( File texFile )
             throws MojoExecutionException
     {
-        String reRunPattern = PATTERN_NEED_ANOTHER_LATEX_RUN;
+        String reRunPattern = this.settings.getPatternNeedAnotherLatexRun();
         boolean needRun = fileUtils.matchInCorrespondingLogFile( texFile, reRunPattern );
         log.debug( "Another Latex run? " + needRun );
         return needRun;
