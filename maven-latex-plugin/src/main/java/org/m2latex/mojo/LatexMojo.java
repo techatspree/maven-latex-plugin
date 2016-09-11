@@ -58,10 +58,8 @@ public class LatexMojo
             List<File> latexMainFiles = fileUtils
 		.getLatexMainDocuments( settings.getTempDirectory() );
 	    for (File texFile : latexMainFiles) 
-            //for ( Iterator iterator = latexMainFiles.iterator(); iterator.hasNext(); )
             {
-                //File texFile = (File) iterator.next();
-                latexProcessor.processLatex( texFile );
+                 latexProcessor.processLatex( texFile );
                 fileUtils.copyLatexOutputToOutputFolder( texFile, settings.getTempDirectory(), settings
                     .getOutputDirectory() );
             }
