@@ -57,7 +57,7 @@ public class LatexProcessorTest
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
 
     private File tex4htDir = new File("m2latex", 
-				      TexFileUtils.TEX4HT_OUTPUT_DIR );
+				      settings.getTex4htOutputDirectory());
 
     private String[] latexArgsExpected = new String[] {
 	"-interaction=nonstopmode", 

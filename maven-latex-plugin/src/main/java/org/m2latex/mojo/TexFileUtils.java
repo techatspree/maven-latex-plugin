@@ -27,8 +27,6 @@ import org.apache.maven.plugin.MojoFailureException;
 public interface TexFileUtils
 {
 
-    String TEX4HT_OUTPUT_DIR = "m2latex_tex4ht_out";
-
     void copyLatexOutputToOutputFolder( File texFile, File tempDirectory, File targetSiteDirectory )
         throws MojoExecutionException, MojoFailureException;
 

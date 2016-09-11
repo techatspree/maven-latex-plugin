@@ -41,13 +41,17 @@ import org.apache.maven.plugin.logging.Log;
 public class TexFileUtilsImpl
     implements TexFileUtils
 {
-    private static final String[] LATEX_OUTPUT_FILES = new String[] { "%n.pdf", "%n.dvi", "%n.ps" };
+    private static final String[] LATEX_OUTPUT_FILES = 
+	new String[] { "%n.pdf", "%n.dvi", "%n.ps" };
 
     private final Log log;
 
-    public TexFileUtilsImpl( Log log )
+    private final Settings settings;
+
+    public TexFileUtilsImpl( Log log, Settings settings )
     {
         this.log = log;
+	this.settings = settings;
     }
 
     /*
@@ -330,7 +334,8 @@ public class TexFileUtilsImpl
     public File createTex4htOutputDir( File tempDir ) 
 	throws MojoExecutionException
     {
-        File tex4htOutdir = new File( tempDir, TEX4HT_OUTPUT_DIR );
+        File tex4htOutdir = new File(tempDir, 
+				     this.settings.getTex4htOutputDirectory());
         if ( tex4htOutdir.exists() )
         {
             try

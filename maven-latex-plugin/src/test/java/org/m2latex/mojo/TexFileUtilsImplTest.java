@@ -29,7 +29,9 @@ import org.junit.Test;
 
 public class TexFileUtilsImplTest
 {
-    private TexFileUtilsImpl utils = new TexFileUtilsImpl( new SystemStreamLog() );
+    private TexFileUtilsImpl utils = 
+	new TexFileUtilsImpl( new SystemStreamLog(), 
+			      new Settings() );
 
     @Test public void testGetTargetDir()
         throws Exception

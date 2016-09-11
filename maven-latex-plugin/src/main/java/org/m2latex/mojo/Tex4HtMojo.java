@@ -58,14 +58,16 @@ public class Tex4HtMojo
             List<File> latexMainFiles = fileUtils
 		.getLatexMainDocuments( settings.getTempDirectory() );
             for (File texFile : latexMainFiles) 
-            //for ( Iterator iterator = latexMainFiles.iterator(); iterator.hasNext(); )
             {
-                //File texFile = (File) iterator.next();
                 latexProcessor.processTex4ht( texFile );
-                // TODO move to Settings
-                File tex4htOutputDir = new File( settings.getTempDirectory(), TexFileUtils.TEX4HT_OUTPUT_DIR );
-                fileUtils.copyTex4htOutputToOutputFolder( texFile, settings.getTempDirectory(), tex4htOutputDir,
-                                                          settings.getOutputDirectory() );
+                File tex4htOutputDir = 
+		    new File(settings.getTempDirectory(), 
+			     settings.getTex4htOutputDirectory());
+                fileUtils
+		    .copyTex4htOutputToOutputFolder(texFile, 
+						    settings.getTempDirectory(),
+						    tex4htOutputDir,
+						    settings.getOutputDirectory());
             }
         }
         catch ( CommandLineException e )

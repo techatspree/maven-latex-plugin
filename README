@@ -88,6 +88,10 @@ The following code snippet shows all possible configuration settings with their 
 
 	    <!-- The maximal number of reruns. If -1 this means, no limit. -->
 	    <maxNumReruns>5</maxNumReruns>
+
+	    <!-- the output directory for tex4ht. 
+	    	 Default is 'm2latex_tex4ht_out' -->
+	    <tex4htOutputDirectory>m2latex_tex4ht_out</tex4htOutputDirectory>
         </settings>
     </configuration>
     <executions>

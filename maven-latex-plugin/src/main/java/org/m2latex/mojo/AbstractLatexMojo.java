@@ -98,7 +98,7 @@ public abstract class AbstractLatexMojo
             .setTargetDirectory( targetDirectory );
 
         log = getLog();
-        this.fileUtils = new TexFileUtilsImpl( log );
+        this.fileUtils = new TexFileUtilsImpl( log, settings );
         latexProcessor = new LatexProcessor( settings, new CommandExecutorImpl( log ), log, this.fileUtils );
     }
 }
