@@ -22,8 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileFilter;
 
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
@@ -79,6 +82,58 @@ public abstract class AbstractLatexMojo
 
     // set by {@link #initialize()}. 
     protected Log log;// really needed? what about getLog()? 
+
+
+    // depends on abstract methods processSource(File), 
+    // getOutputDir() and getFileFilter(File)
+    public void execute()
+        throws MojoExecutionException, MojoFailureException
+    {
+        initialize();
+        log.debug( "Settings: " + settings.toString() );
+        log.info( "settings.getOutputDirectory(): " + 
+		  settings.getOutputDirectory() );
+
+        File texDirectory = settings.getTexDirectory();
+
+        if ( !texDirectory.exists() )
+        {
+            log.info( "No tex directory - skipping LaTeX processing" );
+            return;
+        }
+
+        try
+        {
+            fileUtils.copyLatexSrcToTempDir( texDirectory, 
+					     settings.getTempDirectory() );
+            List<File> latexMainFiles = fileUtils
+		.getLatexMainDocuments( settings.getTempDirectory() );
+	    for (File texFile : latexMainFiles) 
+            {
+		processSource(texFile);
+		File outputDir = getOutputDir();
+		File targetDir = fileUtils.getTargetDirectory
+		    (texFile, settings.getTempDirectory(), outputDir);
+		FileFilter fileFilter = getFileFilter(texFile);
+
+                fileUtils.copyOutputToTargetFolder(fileFilter,
+						   texFile,
+						   outputDir,
+						   targetDir);
+            }
+        }
+        catch ( CommandLineException e )
+        {
+            throw new MojoExecutionException( "Error executing command", e );
+        }
+        finally
+        {
+            if ( settings.isCleanUp() )
+            {
+                cleanUp();
+            }
+        }
+    }
 
 
     abstract void processSource(File texFile) 
