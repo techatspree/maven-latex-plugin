@@ -22,18 +22,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileFilter;
 import java.io.IOException;
+
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -54,121 +56,7 @@ public class TexFileUtilsImpl
 	this.settings = settings;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
-     */
-    public void copyLatexOutputToOutputFolder( File texFile, 
-					       File tempDirectory, 
-					       File outputDirectory )
-        throws MojoExecutionException, MojoFailureException
-    {
-        WildcardFileFilter fileFilter = new WildcardFileFilter
-	    ( getFilesToCopy( texFile, LATEX_OUTPUT_FILES ) );
-        copyLatexOutputToOutputFolder(texFile, tempDirectory, 
-				      outputDirectory, fileFilter);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
-     */
-    public void copyTex4htOutputToOutputFolder( File texFile, 
-						File tempDirectory, 
-						File tex4htOutputDirectory,
-                                                File outputDirectory )
-        throws MojoExecutionException, MojoFailureException
-    {
-        File[] outputFiles = tex4htOutputDirectory.listFiles();
-
-        if ( outputFiles == null || outputFiles.length == 0 )
-        {
-            log.warn( "LaTeX file " + texFile + 
-		      " did not generate any output in " + 
-		      tex4htOutputDirectory + "!" );
-        }
-        else
-        {
-            File targetDirectory = getTargetDirectory(texFile, 
-						      tempDirectory, 
-						      outputDirectory);
-            copyFilesToDirectory( outputFiles, targetDirectory );
-        }
-    }
-
-    private void copyFilesToDirectory( File[] files, File targetDirectory )
-        throws MojoExecutionException {
-        for ( int i = 0; i < files.length; i++ ) {
-            try {
-                FileUtils.copyFileToDirectory( files[i], targetDirectory );
-            } catch ( IOException e ) {
-                throw new MojoExecutionException
-		    ("Error copying file " + files[i] + 
-		     " to directory " + targetDirectory,
-		     e );
-            }
-        }
-    }
-
-    private void copyLatexOutputToOutputFolder(File texFile,
-					       File tempDirectory,
-					       File outputDirectory,
-					       IOFileFilter fileFilter )
-        throws MojoFailureException, MojoExecutionException
-    {
-        File targetDir = getTargetDirectory( texFile, tempDirectory, 
-					     outputDirectory );
-        try
-        {
-            Collection<File> filesToCopy = FileUtils
-		.listFiles( texFile.getParentFile(), fileFilter, null );
-	    for (File file : filesToCopy)
-            {
-                 copyFileToDirectory( file, targetDir );
-            }
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException
-		( "File " + texFile + 
-		  " could not be copied to the target directory: "
-		  + targetDir, e );
-        }
-    }
-
-    /**
-     * E.g. sourceFile /tmp/adir/afile, sourceBaseDir /tmp, targetBaseDir /home returns /home/adir/
-     */
-    File getTargetDirectory(File sourceFile,
-			    File sourceBaseDir,
-			    File targetBaseDir)
-        throws MojoExecutionException, MojoFailureException
-    {
-        String filePath;
-        String tempPath;
-        try
-        {
-            filePath = sourceFile.getParentFile().getCanonicalPath();
-            tempPath = sourceBaseDir.getCanonicalPath();
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException("Error getting canonical path", e);
-        }
-
-        if ( !filePath.startsWith( tempPath ) )
-        {
-            throw new MojoFailureException
-		( "File " + sourceFile + 
-		  " is expected to be somewhere under the following directory: "
-		  + tempPath );
-        }
-
-	return new File(targetBaseDir, filePath.substring(tempPath.length()));
-    }
-
+//<code></code>
     private String[] getFilesToCopy(final File texFile, 
 				    final String[] filesPatterns)
     {
@@ -179,6 +67,137 @@ public class TexFileUtilsImpl
             fileNames[i] = filesPatterns[i].replaceAll( "%n", texFilePrefix );
         }
         return fileNames;
+    }
+
+    /**
+     * Invoked only by LatexMojo#execute()
+     * (non-Javadoc)
+     * 
+     * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
+     */
+    public void copyLatexOutputToOutputFolder( File texFile, 
+					       File outputDirectory,
+					       File targetDir)
+        throws MojoExecutionException, MojoFailureException {
+
+        FileFilter fileFilter = new WildcardFileFilter
+	    ( getFilesToCopy( texFile, LATEX_OUTPUT_FILES ) );
+
+	File[] outputFiles = outputDirectory.listFiles();
+
+	if (outputFiles == null) {
+	    log.error("File " + outputDirectory + 
+		      " is not a directory as expected! " );
+	}
+
+	if (outputFiles.length == 0) {
+            log.warn( "LaTeX file " + texFile + 
+		      " did not generate any output in " + 
+		      outputDirectory + "!" );
+        }
+
+
+	File file;
+	for (int idx = 0; idx < outputFiles.length; idx++) {
+	    file = outputFiles[idx];
+	    if (fileFilter.accept(file)) {
+		copyFileToDirectory(file, targetDir);
+	    }
+	}
+     }
+
+    /**
+     * Invoked only by Tex4htMojo#execute()
+     * 
+     * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
+     */
+    public void copyTex4htOutputToOutputFolder( File texFile, 
+						File outputDirectory,
+						File targetDir )
+        throws MojoExecutionException, MojoFailureException {
+
+	FileFilter fileFilter = new FileFilter() {
+		public boolean accept(File pathname) {
+		    return true;
+		}
+	    };
+
+        File[] outputFiles = outputDirectory.listFiles();
+
+        if (outputFiles == null) {
+	    log.error("File " + outputDirectory + 
+		      " is not a directory as expected! " );
+	}
+
+        if (outputFiles.length == 0) {
+            log.warn( "LaTeX file " + texFile + 
+		      " did not generate any output in " + 
+		      outputDirectory + "!" );
+        }
+
+	File file;
+	for (int idx = 0; idx < outputFiles.length; idx++) {
+	    file = outputFiles[idx];
+	    if (fileFilter.accept(file)) {
+		copyFileToDirectory(file, targetDir);
+	    }
+	}
+    }
+
+    /**
+     * Returns the directory containing <code>sourceFile</code> 
+     * with the prefix <code>sourceBaseDir</code> 
+     * replaced by <code>targetBaseDir</code>. 
+     * E.g. <code>sourceFile=/tmp/adir/afile</code>, 
+     * <code>sourceBaseDir=/tmp</code>, <code>targetBaseDir=/home</code> 
+     * returns <code>/home/adir/</code>. 
+     *
+     * @param sourceFile
+     *    the source file the parent directory of which 
+     *    shall be converted to the target. 
+     * @param sourceBaseDir
+     *    the base directory of the source. 
+     *    Immediately or not, 
+     *    <code>sourceFile</code> shall be in <code>sourceBaseDir</code>. 
+     * @param targetBaseDir
+     *    the base directory of the target. 
+     * @return
+     *    the directory below <code>targetBaseDir</code>
+     *    which corresponds to the parent directory of <code>sourceFile</code> 
+     *    which is below <code>sourceBaseDir</code>. 
+     * @throws MojoExecutionException
+     *    If the canonical path of <code>sourceFile</code> 
+     *    or of <code>sourceBaseDir</code> cannot be determined. 
+     * @throws MojoFailureException
+     *    if <code>sourceFile</code> is not below <code>sourceBaseDir</code>. 
+     */
+    public File getTargetDirectory(File sourceFile,
+				   File sourceBaseDir,
+				   File targetBaseDir)
+        throws MojoExecutionException, MojoFailureException
+    {
+        String sourceParentPath;
+        String sourceBasePath;
+        try
+        {
+            sourceParentPath = sourceFile.getParentFile().getCanonicalPath();
+            sourceBasePath = sourceBaseDir.getCanonicalPath();
+        }
+        catch ( IOException e )
+        {
+            throw new MojoExecutionException("Error getting canonical path", e);
+        }
+
+        if ( !sourceParentPath.startsWith( sourceBasePath ) )
+        {
+            throw new MojoFailureException
+		( "File " + sourceFile + 
+		  " is expected to be somewhere under directory "
+		  + sourceBasePath + ". ");
+        }
+
+	return new File(targetBaseDir, 
+			sourceParentPath.substring(sourceBasePath.length()));
     }
 
     /*
@@ -218,7 +237,7 @@ public class TexFileUtilsImpl
      */
     public File getCorrespondingAuxFile( File texFile )
     {
-        return getFileWithDifferentSuffix( texFile, "aux" );
+        return replaceSuffix( texFile, "aux" );
     }
 
     /*
@@ -228,7 +247,7 @@ public class TexFileUtilsImpl
      */
     public File getCorrespondingDviFile( File texFile )
     {
-        return getFileWithDifferentSuffix( texFile, "dvi" );
+        return replaceSuffix( texFile, "dvi" );
     }
 
     /*
@@ -238,7 +257,7 @@ public class TexFileUtilsImpl
      */
     public File getCorrespondingLogFile( File texFile )
     {
-        return getFileWithDifferentSuffix( texFile, "log" );
+        return replaceSuffix( texFile, "log" );
     }
 
     /*
@@ -248,7 +267,7 @@ public class TexFileUtilsImpl
      */
     public File getCorrespondingPdfFile( File texFile )
     {
-        return getFileWithDifferentSuffix( texFile, "pdf" );
+        return replaceSuffix( texFile, "pdf" );
     }
 
     /*
@@ -356,10 +375,16 @@ public class TexFileUtilsImpl
     }
 
     private void copyFileToDirectory( File file, File targetDir )
-        throws IOException
+        throws MojoExecutionException
     {
         log.info( "Copying " + file.getName() + " to " + targetDir );
-        FileUtils.copyFileToDirectory( file, targetDir );
+	try {
+	    FileUtils.copyFileToDirectory( file, targetDir );
+	} catch ( IOException e ) {
+            throw new MojoExecutionException
+		("Error copying file " + file + " to directory " + targetDir,
+		 e );
+        }
     }
 
     private boolean fileContainsPattern( File file, String regex )
@@ -397,7 +422,7 @@ public class TexFileUtilsImpl
         }
     }
 
-    private File getFileWithDifferentSuffix( File file, String suffix )
+    private File replaceSuffix( File file, String suffix )
     {
         return new File(file.getParentFile(),
 			getFileNameWithoutSuffix( file ) + "." + suffix );
