@@ -60,21 +60,25 @@ public class Tex4HtMojo
 		.getLatexMainDocuments( settings.getTempDirectory() );
             for (File texFile : latexMainFiles) 
             {
+		// 1st difference to LatexMojo 
                 latexProcessor.processTex4ht( texFile );
-                File tex4htOutputDir = 
+
+		// 2nd difference to LatexMojo 
+                 File outputDir = 
 		    new File(settings.getTempDirectory(), 
 			     settings.getTex4htOutputDirectory());
 
 		File targetDir = fileUtils.getTargetDirectory
-		    (texFile, settings.getTempDirectory(), tex4htOutputDir);
+		    (texFile, settings.getTempDirectory(), outputDir);
  
+		// 3rd difference to LatexMojo 
 		FileFilter fileFilter = fileUtils
 		    .getTex4htOutputFileFilter(texFile);
 
-                fileUtils.copyTex4htOutputToOutputFolder(fileFilter,
-							 texFile, 
-							 tex4htOutputDir, 
-							 targetDir);
+                fileUtils.copyOutputToTargetFolder(fileFilter,
+						   texFile, 
+						   tex4htOutputDir, 
+						   targetDir);
             }
         }
         catch ( CommandLineException e )

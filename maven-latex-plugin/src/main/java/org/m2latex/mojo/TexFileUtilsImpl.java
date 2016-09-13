@@ -82,55 +82,17 @@ public class TexFileUtilsImpl
 	};
     }
 
-    /**
-     * Invoked only by LatexMojo#execute()
-     * (non-Javadoc)
-     * 
-     * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
-     */
-    public void copyLatexOutputToOutputFolder(FileFilter fileFilter,
-					      File texFile, 
-					      File outputDirectory,
-					      File targetDir)
-        throws MojoExecutionException, MojoFailureException {
-
-        // FileFilter fileFilter = new WildcardFileFilter
-	//     ( getFilesToCopy( texFile, LATEX_OUTPUT_FILES ) );
-
-	File[] outputFiles = outputDirectory.listFiles();
-
-	if (outputFiles == null) {
-	    log.error("File " + outputDirectory + 
-		      " is not a directory as expected! " );
-	}
-
-	if (outputFiles.length == 0) {
-            log.warn( "LaTeX file " + texFile + 
-		      " did not generate any output in " + 
-		      outputDirectory + "!" );
-        }
-
-
-	File file;
-	for (int idx = 0; idx < outputFiles.length; idx++) {
-	    file = outputFiles[idx];
-	    if (fileFilter.accept(file)) {
-		copyFileToDirectory(file, targetDir);
-	    }
-	}
-     }
 
     /**
      * Invoked only by Tex4htMojo#execute()
      * 
      * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
      */
-    public void copyTex4htOutputToOutputFolder(FileFilter fileFilter, 
-					       File texFile, 
-					       File outputDirectory,
-					       File targetDir )
+    public void copyOutputToTargetFolder(FileFilter fileFilter, 
+					 File texFile, 
+					 File outputDirectory,
+					 File targetDir )
         throws MojoExecutionException, MojoFailureException {
-
 
         File[] outputFiles = outputDirectory.listFiles();
 

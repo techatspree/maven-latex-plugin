@@ -61,19 +61,23 @@ public class LatexMojo
 		.getLatexMainDocuments( settings.getTempDirectory() );
 	    for (File texFile : latexMainFiles) 
             {
+		// 1st difference to Tex4htMojo 
 		latexProcessor.processLatex( texFile );
 
-		File latexOutputDir = settings.getOutputDirectory();
-		File targetDir = fileUtils.getTargetDirectory
-		    (texFile, settings.getTempDirectory(), latexOutputDir);
+		// 2nd difference to Tex4htMojo 
+		File outputDir = settings.getOutputDirectory();
 
+		File targetDir = fileUtils.getTargetDirectory
+		    (texFile, settings.getTempDirectory(), outputDir);
+
+		// 3rd difference to Tex4htMojo 
 		FileFilter fileFilter = fileUtils
 		    .getLatexOutputFileFilter(texFile);
 
-                fileUtils.copyLatexOutputToOutputFolder(fileFilter,
-							texFile,
-							latexOutputDir,
-							targetDir);
+                fileUtils.copyOutputToTargetFolder(fileFilter,
+						   texFile,
+						   latexOutputDir,
+						   targetDir);
 
             }
         }

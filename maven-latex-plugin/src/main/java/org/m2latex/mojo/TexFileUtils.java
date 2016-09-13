@@ -32,17 +32,11 @@ public interface TexFileUtils
     FileFilter getLatexOutputFileFilter(File texFile);
     FileFilter getTex4htOutputFileFilter(File texFile);
 
-    void copyLatexOutputToOutputFolder(FileFilter fileFilter, 
-				       File texFile, 
-				       File outputDirectory,
-				       File targetDir)
+    void copyOutputToTargetFolder(FileFilter fileFilter, 
+				  File texFile, 
+				  File outputDirectory,
+				  File targetDir)
         throws MojoExecutionException, MojoFailureException;
-
-    void copyTex4htOutputToOutputFolder(FileFilter fileFilter, 
-					File texFile, 
-					File tex4htOutputDirectory,
-					File targetDir )
-        throws MojoFailureException, MojoExecutionException;
 
     void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
         throws MojoExecutionException;
