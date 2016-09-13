@@ -20,10 +20,14 @@ package org.m2latex.mojo;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileFilter;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+
+import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
  * Abstract base class for all late mojos. 
@@ -34,6 +38,7 @@ public abstract class AbstractLatexMojo
 
     /**
      * Location of the maven base dir.
+     * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
      * 
      * @parameter property="basedir"
      * @readonly
@@ -42,6 +47,7 @@ public abstract class AbstractLatexMojo
 
     /**
      * Location of the target dir.
+     * Reinitializes {@link Settings#targetDirectory} via {@link #initialize()}. 
      * 
      * @parameter property="project.build.directory"
      * @readonly
@@ -49,7 +55,8 @@ public abstract class AbstractLatexMojo
     protected File targetDirectory;
 
     /**
-     * Location of the target/site dir.
+     * Location of the target/site dir. 
+     * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
      * 
      * @parameter property="project.reporting.outputDirectory"
      * @readonly
@@ -57,17 +64,27 @@ public abstract class AbstractLatexMojo
     protected File targetSiteDirectory;
 
     /**
-     * The Settings.
+     * The Settings. 
+     * If not set prior to execution, is set in {@link #initialize()}. 
      * 
      * @parameter
      */
     protected Settings settings;
 
+    // set by {@link #initialize()}. 
     protected LatexProcessor latexProcessor;
 
+    // set by {@link #initialize()}. 
     protected TexFileUtils fileUtils;
 
-    protected Log log;
+    // set by {@link #initialize()}. 
+    protected Log log;// really needed? what about getLog()? 
+
+
+    abstract void processSource(File texFile) 
+	throws CommandLineException, MojoExecutionException;
+    abstract File getOutputDir();
+    abstract FileFilter getFileFilter(File texFile);
 
     protected void cleanUp()
     {
@@ -87,18 +104,18 @@ public abstract class AbstractLatexMojo
 
     protected void initialize()
     {
-        if ( settings == null )
+        if ( this.settings == null )
         {
             // no configuration is defined in pom, 
 	    // i.e. object is not created by Maven
-            settings = new Settings();
+            this.settings = new Settings();
         }
-        settings.setBaseDirectory( baseDirectory )
-	    .setTargetSiteDirectory( targetSiteDirectory )
-            .setTargetDirectory( targetDirectory );
+        this.settings.setBaseDirectory( this.baseDirectory )
+	    .setTargetSiteDirectory( this.targetSiteDirectory )
+            .setTargetDirectory( this.targetDirectory );
 
-        log = getLog();
+        this.log = getLog();
         this.fileUtils = new TexFileUtilsImpl( log, settings );
-        latexProcessor = new LatexProcessor( settings, new CommandExecutorImpl( log ), log, this.fileUtils );
+        this.latexProcessor = new LatexProcessor( settings, new CommandExecutorImpl( this.log ), this.log, this.fileUtils );
     }
 }

@@ -36,6 +36,24 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 public class Tex4HtMojo
     extends AbstractLatexMojo
 {
+
+    // implements AbstractLatexMojo#processSource(File)
+    void processSource(File texFile) 
+	throws CommandLineException, MojoExecutionException {
+	this.latexProcessor.processTex4ht(texFile);
+    }
+
+    // implements AbstractLatexMojo#etOutputDir()
+    File getOutputDir() {
+	return new File(this.settings.getTempDirectory(), 
+			this.settings.getTex4htOutputDirectory());
+    }
+
+    // implements AbstractLatexMojo#getFileFilter(File)
+    FileFilter getFileFilter(File texFile) {
+	return this.fileUtils.getTex4htOutputFileFilter(texFile);
+    }
+
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
@@ -61,23 +79,26 @@ public class Tex4HtMojo
             for (File texFile : latexMainFiles) 
             {
 		// 1st difference to LatexMojo 
-                latexProcessor.processTex4ht( texFile );
+                //latexProcessor.processTex4ht( texFile );
+		processSource(texFile);
 
 		// 2nd difference to LatexMojo 
-                 File outputDir = 
-		    new File(settings.getTempDirectory(), 
-			     settings.getTex4htOutputDirectory());
+		File outputDir = getOutputDir();
+		// File outputDir = 
+		//     new File(settings.getTempDirectory(), 
+		// 	     settings.getTex4htOutputDirectory());
 
 		File targetDir = fileUtils.getTargetDirectory
 		    (texFile, settings.getTempDirectory(), outputDir);
  
 		// 3rd difference to LatexMojo 
-		FileFilter fileFilter = fileUtils
-		    .getTex4htOutputFileFilter(texFile);
+		FileFilter fileFilter = getFileFilter(texFile);
+		// FileFilter fileFilter = fileUtils
+		//     .getTex4htOutputFileFilter(texFile);
 
                 fileUtils.copyOutputToTargetFolder(fileFilter,
 						   texFile, 
-						   tex4htOutputDir, 
+						   outputDir, 
 						   targetDir);
             }
         }

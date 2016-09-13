@@ -75,11 +75,7 @@ public class TexFileUtilsImpl
     }
 
     public FileFilter getTex4htOutputFileFilter(File texFile) {
-	return new FileFilter() {
-	    public boolean accept(File pathname) {
-		return true;
-	    }
-	};
+	return TrueFileFilter.TRUE;
     }
 
 
@@ -255,14 +251,6 @@ public class TexFileUtilsImpl
         return namePrefixTexFile;
     }
 
-    /*
-     * 
-     * @param tempDir
-     * 
-     * @return A List of java.io.File objects denoting the LaTeX documents to process.
-     * 
-     * @throws MojoExecutionException
-     */
     /*
      * (non-Javadoc)
      * 
