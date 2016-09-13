@@ -19,11 +19,13 @@
 package org.m2latex.mojo;
 
 import java.io.File;
-import java.util.Iterator;
+import java.io.FileFilter;
+
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
@@ -64,8 +66,12 @@ public class LatexMojo
 		File latexOutputDir = settings.getOutputDirectory();
 		File targetDir = fileUtils.getTargetDirectory
 		    (texFile, settings.getTempDirectory(), latexOutputDir);
- 
-                fileUtils.copyLatexOutputToOutputFolder(texFile,
+
+		FileFilter fileFilter = fileUtils
+		    .getLatexOutputFileFilter(texFile);
+
+                fileUtils.copyLatexOutputToOutputFolder(fileFilter,
+							texFile,
 							latexOutputDir,
 							targetDir);
 

@@ -19,6 +19,8 @@
 package org.m2latex.mojo;
 
 import java.io.File;
+import java.io.FileFilter;
+
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,18 +29,23 @@ import org.apache.maven.plugin.MojoFailureException;
 public interface TexFileUtils
 {
 
-    void copyLatexOutputToOutputFolder( File texFile, 
-					File outputDirectory,
-					File targetDir)
+    FileFilter getLatexOutputFileFilter(File texFile);
+    FileFilter getTex4htOutputFileFilter(File texFile);
+
+    void copyLatexOutputToOutputFolder(FileFilter fileFilter, 
+				       File texFile, 
+				       File outputDirectory,
+				       File targetDir)
         throws MojoExecutionException, MojoFailureException;
+
+    void copyTex4htOutputToOutputFolder(FileFilter fileFilter, 
+					File texFile, 
+					File tex4htOutputDirectory,
+					File targetDir )
+        throws MojoFailureException, MojoExecutionException;
 
     void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
         throws MojoExecutionException;
-
-    void copyTex4htOutputToOutputFolder( File texFile, 
-					 File tex4htOutputDirectory,
-                                         File targetDir )
-        throws MojoFailureException, MojoExecutionException;
 
     File getCorrespondingAuxFile( File texFile );
 

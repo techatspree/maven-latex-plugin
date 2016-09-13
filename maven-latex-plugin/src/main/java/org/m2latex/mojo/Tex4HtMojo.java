@@ -19,7 +19,8 @@
 package org.m2latex.mojo;
 
 import java.io.File;
-import java.util.Iterator;
+import java.io.FileFilter;
+
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -67,7 +68,11 @@ public class Tex4HtMojo
 		File targetDir = fileUtils.getTargetDirectory
 		    (texFile, settings.getTempDirectory(), tex4htOutputDir);
  
-                fileUtils.copyTex4htOutputToOutputFolder(texFile, 
+		FileFilter fileFilter = fileUtils
+		    .getTex4htOutputFileFilter(texFile);
+
+                fileUtils.copyTex4htOutputToOutputFolder(fileFilter,
+							 texFile, 
 							 tex4htOutputDir, 
 							 targetDir);
             }
