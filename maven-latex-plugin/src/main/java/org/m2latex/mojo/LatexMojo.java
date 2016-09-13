@@ -59,9 +59,16 @@ public class LatexMojo
 		.getLatexMainDocuments( settings.getTempDirectory() );
 	    for (File texFile : latexMainFiles) 
             {
-                 latexProcessor.processLatex( texFile );
-                fileUtils.copyLatexOutputToOutputFolder( texFile, settings.getTempDirectory(), settings
-                    .getOutputDirectory() );
+		latexProcessor.processLatex( texFile );
+
+		File latexOutputDir = settings.getOutputDirectory();
+		File targetDir = fileUtils.getTargetDirectory
+		    (texFile, settings.getTempDirectory(), latexOutputDir);
+ 
+                fileUtils.copyLatexOutputToOutputFolder(texFile,
+							latexOutputDir,
+							targetDir);
+
             }
         }
         catch ( CommandLineException e )

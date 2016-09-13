@@ -63,11 +63,13 @@ public class Tex4HtMojo
                 File tex4htOutputDir = 
 		    new File(settings.getTempDirectory(), 
 			     settings.getTex4htOutputDirectory());
-                fileUtils
-		    .copyTex4htOutputToOutputFolder(texFile, 
-						    settings.getTempDirectory(),
-						    tex4htOutputDir,
-						    settings.getOutputDirectory());
+
+		File targetDir = fileUtils.getTargetDirectory
+		    (texFile, settings.getTempDirectory(), tex4htOutputDir);
+ 
+                fileUtils.copyTex4htOutputToOutputFolder(texFile, 
+							 tex4htOutputDir, 
+							 targetDir);
             }
         }
         catch ( CommandLineException e )

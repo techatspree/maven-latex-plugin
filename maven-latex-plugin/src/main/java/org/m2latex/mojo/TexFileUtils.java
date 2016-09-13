@@ -27,14 +27,17 @@ import org.apache.maven.plugin.MojoFailureException;
 public interface TexFileUtils
 {
 
-    void copyLatexOutputToOutputFolder( File texFile, File tempDirectory, File targetSiteDirectory )
+    void copyLatexOutputToOutputFolder( File texFile, 
+					File outputDirectory,
+					File targetDir)
         throws MojoExecutionException, MojoFailureException;
 
     void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
         throws MojoExecutionException;
 
-    void copyTex4htOutputToOutputFolder( File texFile, File baseDirectory, File outputDirectory,
-                                         File targetSiteDirectory )
+    void copyTex4htOutputToOutputFolder( File texFile, 
+					 File tex4htOutputDirectory,
+                                         File targetDir )
         throws MojoFailureException, MojoExecutionException;
 
     File getCorrespondingAuxFile( File texFile );
@@ -61,4 +64,10 @@ public interface TexFileUtils
         throws MojoExecutionException;
 
     File createTex4htOutputDir( File tempDir ) throws MojoExecutionException;
+
+    File getTargetDirectory(File sourceFile,
+			    File sourceBaseDir,
+			    File targetBaseDir)
+	throws MojoExecutionException, MojoFailureException;
+ 
 }

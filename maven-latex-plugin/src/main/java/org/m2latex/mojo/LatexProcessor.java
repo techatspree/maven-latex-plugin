@@ -25,6 +25,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 
 import java.io.File;
 
+// idea: use latex2rtf and unoconv
 public class LatexProcessor
 {
 
@@ -48,8 +49,9 @@ public class LatexProcessor
     }
 
     /**
-     * Runs latex at least once, run bibtex and rerun latex as long as needed 
-     * or threshold {@link Settings#maxNumReruns} specifies. 
+     * Runs latex on <code>texFile</code> at least once, 
+     * runs bibtex and reruns latex as long as needed to get all links 
+     * or as threshold {@link Settings#maxNumReruns} specifies. 
      *
      * @param texFile
      *    the tex file to be processed. 
@@ -85,6 +87,15 @@ public class LatexProcessor
 	}
     }
 
+    /**
+     * Runs tex4ht on <code>texFile</code> 
+     * after processing latex to set up the references. 
+     *
+     * @param texFile
+     *    the tex file to be processed. 
+     * @see #processLatex(File)
+     * @see #runTex4ht(File)
+     */
     public void processTex4ht( File texFile )
             throws MojoExecutionException, CommandLineException
     {
@@ -92,6 +103,11 @@ public class LatexProcessor
         runTex4ht( texFile );
     }
 
+    /**
+     * Runs the tex4ht command given by {@link Settings#getTex4htCommand()} 
+     * on <code>texFile</code> in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildHtlatexArguments(File)}. 
+     */
     private void runTex4ht( File texFile )
             throws CommandLineException, MojoExecutionException
     {
@@ -99,8 +115,10 @@ public class LatexProcessor
 		   " on file " + texFile.getName() + ". ");
         File workingDir = texFile.getParentFile();
         String[] args = buildHtlatexArguments( texFile );
-        executor.execute( workingDir, settings.getTexPath(), 
-			  settings.getTex4htCommand(), args );
+        this.executor.execute( workingDir, 
+			       this.settings.getTexPath(), 
+			       this.settings.getTex4htCommand(), 
+			       args );
     }
 
     private String[] buildHtlatexArguments( File texFile )
@@ -137,6 +155,7 @@ public class LatexProcessor
         return returnEmptyArg ? "" : args[index];
     }
 
+    // FIXME: Is this the right criterion? 
     private boolean needAnotherLatexRun(File texFile)
             throws MojoExecutionException
     {
@@ -155,6 +174,11 @@ public class LatexProcessor
         return fileUtils.matchInCorrespondingLogFile( texFile, pattern );
     }
 
+    /**
+     * Runs the bibtex command given by {@link Settings#getBibtexCommand()} 
+     * on the aux-file corresponding with <code>texFile</code> 
+     * in the directory containing <code>texFile</code>. 
+     */
     private void runBibtex(File texFile)
             throws CommandLineException
     {
@@ -164,10 +188,17 @@ public class LatexProcessor
         String[] args = new String[] {
 	    fileUtils.getCorrespondingAuxFile( texFile ).getName()
 	};
-        executor.execute( workingDir, settings.getTexPath(), 
-			  settings.getBibtexCommand(), args );
+        this.executor.execute( workingDir, 
+			       this.settings.getTexPath(), 
+			       this.settings.getBibtexCommand(), 
+			       args );
     }
 
+    /**
+     * Runs the tex4ht command given by {@link Settings#getLatexCommand()} 
+     * on <code>texFile</code> in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(File)}. 
+     */
     private void runLatex(File texFile)
             throws CommandLineException
     {
@@ -175,11 +206,23 @@ public class LatexProcessor
 		  " on file " + texFile.getName() + ". ");
         File workingDir = texFile.getParentFile();
 
+	String[] args = buildLatexArguments( texFile );
+        this.executor.execute( workingDir, 
+			       this.settings.getTexPath(), 
+			       this.settings.getTexCommand(), 
+			       args );
+    }
+
+    private String[] buildLatexArguments( File texFile )
+    {
         String[] texCommandArgs = settings.getTexCommandArgs();
         String[] args = new String[texCommandArgs.length + 1];
         System.arraycopy( texCommandArgs, 0, args, 0, texCommandArgs.length );
         args[texCommandArgs.length] = texFile.getName();
-        executor.execute( workingDir, settings.getTexPath(), 
-			  settings.getTexCommand(), args );
+	return args;
     }
+
+
 }
+
+
