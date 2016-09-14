@@ -26,6 +26,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import java.io.File;
 
 // idea: use latex2rtf and unoconv
+// idea: targets for latex2html, latex2man, latex2png and many more. 
 public class LatexProcessor
 {
 
@@ -101,6 +102,47 @@ public class LatexProcessor
     {
         processLatex( texFile );
         runTex4ht( texFile );
+    }
+
+    /**
+     * Runs tex4ht on <code>texFile</code>. 
+     * FIXME: Maybe prior invocation of latex and bibtex would be better. 
+     *
+     * @param texFile
+     *    the tex file to be processed. 
+     * @see #processLatex(File)
+     * @see #runLatex2rtf(File)
+     */
+     public void processLatex2rtf( File texFile )
+          throws MojoExecutionException, CommandLineException
+    {
+	runLatex2rtf(texFile);
+    }
+
+    /**
+     * Runs the latex2rtf command 
+     * given by {@link Settings#getLatex2rtfCommand()} 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatex2rtfArguments(File)}. 
+     */
+    private void runLatex2rtf( File texFile )
+            throws CommandLineException, MojoExecutionException
+    {
+        log.debug( "Running " + settings.getLatex2rtfCommand() + 
+		   " on file " + texFile.getName() + ". ");
+        File workingDir = texFile.getParentFile();
+        String[] args = buildLatex2rtfArguments( texFile );
+        this.executor.execute( workingDir, 
+			       this.settings.getTexPath(), 
+			       this.settings.getLatex2rtfCommand(), 
+			       args );
+    }
+
+    // FIXME: take arguments for latex2rtf into account 
+    private String[] buildLatex2rtfArguments( File texFile )
+    {
+	return new String[] {texFile.getName()};
     }
 
     /**
@@ -195,8 +237,9 @@ public class LatexProcessor
     }
 
     /**
-     * Runs the tex4ht command given by {@link Settings#getLatexCommand()} 
-     * on <code>texFile</code> in the directory containing <code>texFile</code> 
+     * Runs the latex command given by {@link Settings#getLatexCommand()} 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatexArguments(File)}. 
      */
     private void runLatex(File texFile)
