@@ -25,14 +25,16 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
- * Build HTML documents from LaTeX sources.
- * 
+ * Build HTML documents and more from LaTeX sources.
+ *
  * @goal tex4ht
  * @phase site
  */
+//@Mojo( name = "tex4ht")
 public class Tex4HtMojo
     extends AbstractLatexMojo
 {
@@ -43,7 +45,7 @@ public class Tex4HtMojo
 	this.latexProcessor.processTex4ht(texFile);
     }
 
-    // implements AbstractLatexMojo#etOutputDir()
+    // implements AbstractLatexMojo#getOutputDir()
     File getOutputDir() {
 	return new File(this.settings.getTempDirectory(), 
 			this.settings.getTex4htOutputDirectory());
