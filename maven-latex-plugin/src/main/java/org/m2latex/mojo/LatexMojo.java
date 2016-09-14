@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 
 import org.codehaus.plexus.util.cli.CommandLineException;
 
@@ -34,7 +35,8 @@ import org.codehaus.plexus.util.cli.CommandLineException;
  * @goal latex
  * @phase site
  */
-public class LatexMojo
+//@Mojo( name = "latex")
+ public class LatexMojo
     extends AbstractLatexMojo
 {
     // implements AbstractLatexMojo#processSource(File)
@@ -43,9 +45,9 @@ public class LatexMojo
 	this.latexProcessor.processLatex(texFile);
     }
 
-    // implements AbstractLatexMojo#etOutputDir()
+    // implements AbstractLatexMojo#getOutputDir()
     File getOutputDir() {
-	return this.settings.getOutputDirectory();
+	return this.settings.getTempDirectory();
     }
 
     // implements AbstractLatexMojo#getFileFilter(File)
