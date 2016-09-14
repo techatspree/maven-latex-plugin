@@ -1,6 +1,10 @@
 latex-maven-plugin
 
-Use the maven-latex-plugin in your Maven2 projects to automatically create pdf and/or html documents from your LaTeX sources. The plugin will call the LaTeX and TeX4Ht scripts to do the necessary work.
+Use the maven-latex-plugin in your Maven2 projects to automatically create 
+pdf, rtf and/or html documents from your LaTeX sources. 
+The plugin will call the LaTeX, latex2rtf and TeX4Ht scripts 
+to do the necessary work. 
+Of course these should be installed when using this plugin. 
 
 Homepage: http://akquinet.github.com/maven-latex-plugin
 
@@ -21,8 +25,9 @@ Maven coordinates:
 Note latex-maven-plugin was formerly maven-latex-plugin. 
 The rename is due to new conventions. 
 All in all version 1.3 is just an update 
-using java 1.5 (formerly 1.3) and junit 4 (formerly 3).   
-
+using java 1.6 (formerly 1.3) and junit 4 (formerly 3), 
+adding some missing parameters 
+and another goal, latex2rtf. 
 
 
 The following code snippet shows all possible configuration settings with their default values.
@@ -77,7 +82,6 @@ The following code snippet shows all possible configuration settings with their 
                 <tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
             </tex4htCommandArgs>
 
-
             <!-- the pattern which triggers latex rerun 
 	    	 if found in the log file.  -->
 	    <patternNeedAnotherLatexRun>
@@ -92,15 +96,19 @@ The following code snippet shows all possible configuration settings with their 
 	    <!-- the output directory for tex4ht. 
 	    	 Default is 'm2latex_tex4ht_out' -->
 	    <tex4htOutputDirectory>m2latex_tex4ht_out</tex4htOutputDirectory>
+
+           <!-- the latex2rtft command. Default: 'latex2rtf' -->
+	    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
         </settings>
     </configuration>
     <executions>
-        <!-- execute latex goal automatically during the site phase -->
+        <!-- execute latex goals automatically during the site phase -->
         <execution>
             <phase>site</phase>
             <goals>
                 <goal>latex</goal>
                 <goal>tex4ht</goal>
+                <goal>latex2rtf</goal>
             </goals>
         </execution>
     </executions>
