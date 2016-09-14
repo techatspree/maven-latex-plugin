@@ -31,6 +31,7 @@ public interface TexFileUtils
 
     FileFilter getLatexOutputFileFilter(File texFile);
     FileFilter getTex4htOutputFileFilter(File texFile);
+    FileFilter getLatex2rtfOutputFileFilter(File texFile);
 
     void copyOutputToTargetFolder(FileFilter fileFilter, 
 				  File texFile, 
