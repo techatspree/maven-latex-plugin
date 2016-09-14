@@ -33,7 +33,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
- * Abstract base class for all late mojos. 
+ * Abstract base class for all mojos. 
  */
 public abstract class AbstractLatexMojo
     extends AbstractMojo
@@ -50,7 +50,8 @@ public abstract class AbstractLatexMojo
 
     /**
      * Location of the target dir.
-     * Reinitializes {@link Settings#targetDirectory} via {@link #initialize()}. 
+     * Reinitializes {@link Settings#targetDirectory} 
+     * via {@link #initialize()}. 
      * 
      * @parameter property="project.build.directory"
      * @readonly
@@ -96,40 +97,33 @@ public abstract class AbstractLatexMojo
 
         File texDirectory = settings.getTexDirectory();
 
-        if ( !texDirectory.exists() )
-        {
+        if ( !texDirectory.exists() ) {
             log.info( "No tex directory - skipping LaTeX processing" );
             return;
         }
 
-        try
-        {
-            fileUtils.copyLatexSrcToTempDir( texDirectory, 
-					     settings.getTempDirectory() );
+        try {
+            fileUtils.copyLatexSrcToTempDir(texDirectory, 
+					    settings.getTempDirectory());
             List<File> latexMainFiles = fileUtils
 		.getLatexMainDocuments( settings.getTempDirectory() );
-	    for (File texFile : latexMainFiles) 
-            {
+	    File outputDir = getOutputDir();
+	    for (File texFile : latexMainFiles) {
 		processSource(texFile);
-		File outputDir = getOutputDir();
 		File targetDir = fileUtils.getTargetDirectory
-		    (texFile, settings.getTempDirectory(), outputDir);
+		    (texFile, 
+		     settings.getTempDirectory(), 
+		     settings.getOutputDirectory());
 		FileFilter fileFilter = getFileFilter(texFile);
-
                 fileUtils.copyOutputToTargetFolder(fileFilter,
 						   texFile,
 						   outputDir,
 						   targetDir);
             }
-        }
-        catch ( CommandLineException e )
-        {
+        } catch ( CommandLineException e ) {
             throw new MojoExecutionException( "Error executing command", e );
-        }
-        finally
-        {
-            if ( settings.isCleanUp() )
-            {
+        } finally {
+            if ( settings.isCleanUp() ) {
                 cleanUp();
             }
         }
