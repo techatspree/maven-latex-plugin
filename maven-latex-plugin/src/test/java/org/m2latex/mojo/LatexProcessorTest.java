@@ -173,7 +173,7 @@ public class LatexProcessorTest
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
-                          tex4htArgsExpected );
+			 tex4htArgsExpected );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
     }
