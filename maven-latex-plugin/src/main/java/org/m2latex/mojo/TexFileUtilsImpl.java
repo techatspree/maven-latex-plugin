@@ -78,6 +78,12 @@ public class TexFileUtilsImpl
 	return TrueFileFilter.TRUE;
     }
 
+    public FileFilter getLatex2rtfOutputFileFilter(File texFile) {
+	return new WildcardFileFilter(getFilesToCopy(texFile, 
+						     new String[] {"%n.rtf"}));
+    }
+
+
 
     /**
      * Invoked only by Tex4htMojo#execute()
@@ -310,14 +316,16 @@ public class TexFileUtilsImpl
         }
     }
 
+    // creates if it does not exist or clean otherwise, 
     public File createTex4htOutputDir( File tempDir ) 
 	throws MojoExecutionException
     {
         File tex4htOutdir = new File(tempDir, 
 				     this.settings.getTex4htOutputDirectory());
-        if ( tex4htOutdir.exists() )
+	// if exists, clean otherwise create 
+         if ( tex4htOutdir.exists() )
         {
-            try
+           try
             {
                 FileUtils.cleanDirectory( tex4htOutdir );
             }
