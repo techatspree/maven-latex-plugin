@@ -35,22 +35,15 @@ public interface TexFileUtils
 
     void copyOutputToTargetFolder(FileFilter fileFilter, 
 				  File texFile, 
-				  File outputDirectory,
 				  File targetDir)
         throws MojoExecutionException, MojoFailureException;
 
     void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
         throws MojoExecutionException;
 
-    File getCorrespondingAuxFile( File texFile );
-
-    File getCorrespondingDviFile( File texFile );
-
-    File getCorrespondingLogFile( File texFile );
-
-    File getCorrespondingPdfFile( File texFile );
-
     String getFileNameWithoutSuffix( File texFile );
+
+    File replaceSuffix( File file, String suffix );
 
     /*
      * @param tempDir
@@ -62,7 +55,7 @@ public interface TexFileUtils
     List<File> getLatexMainDocuments( File directory )
         throws MojoExecutionException;
 
-    boolean matchInCorrespondingLogFile( File texFile, String pattern )
+     boolean matchInLogFile( File logFile, String pattern )
         throws MojoExecutionException;
 
     File createTex4htOutputDir( File tempDir ) throws MojoExecutionException;
@@ -71,5 +64,5 @@ public interface TexFileUtils
 			    File sourceBaseDir,
 			    File targetBaseDir)
 	throws MojoExecutionException, MojoFailureException;
- 
+
 }
