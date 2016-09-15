@@ -69,21 +69,23 @@ public class TexFileUtilsImpl
         return fileNames;
     }
 
-    public FileFilter getLatexOutputFileFilter(File texFile) {
-	return new WildcardFileFilter(getFilesToCopy(texFile, 
+    public FileFilter getLatexOutputFileFilter(File file) {
+	return new WildcardFileFilter(getFilesToCopy(file, 
 						     LATEX_OUTPUT_FILES));
     }
 
-    public FileFilter getTex4htOutputFileFilter(File texFile) {
-	return TrueFileFilter.TRUE;
+    public FileFilter getTex4htOutputFileFilter(File file) {
+	return new FileFilter() {
+	    public boolean accept(File file) {
+		return file.isFile();
+	    }
+	};
     }
 
-    public FileFilter getLatex2rtfOutputFileFilter(File texFile) {
-	return new WildcardFileFilter(getFilesToCopy(texFile, 
+    public FileFilter getLatex2rtfOutputFileFilter(File file) {
+	return new WildcardFileFilter(getFilesToCopy(file, 
 						     new String[] {"%n.rtf"}));
     }
-
-
 
     /**
      * Invoked only by Tex4htMojo#execute()
@@ -92,21 +94,21 @@ public class TexFileUtilsImpl
      */
     public void copyOutputToTargetFolder(FileFilter fileFilter, 
 					 File texFile, 
-					 File outputDirectory,
 					 File targetDir )
         throws MojoExecutionException, MojoFailureException {
 
-        File[] outputFiles = outputDirectory.listFiles();
+	File texFileDir = texFile.getParentFile();
+        File[] outputFiles = texFileDir.listFiles();
 
         if (outputFiles == null) {
-	    log.error("File " + outputDirectory + 
+	    log.error("File " + texFileDir + 
 		      " is not a directory as expected! " );
 	}
 
         if (outputFiles.length == 0) {
             log.warn( "LaTeX file " + texFile + 
 		      " did not generate any output in " + 
-		      outputDirectory + "!" );
+		      texFileDir + "!" );
         }
 
 	File file;
@@ -159,7 +161,8 @@ public class TexFileUtilsImpl
         }
         catch ( IOException e )
         {
-            throw new MojoExecutionException("Error getting canonical path", e);
+            throw new MojoExecutionException
+		("Error getting canonical path", e);
         }
 
         if ( !sourceParentPath.startsWith( sourceBasePath ) )
@@ -207,46 +210,6 @@ public class TexFileUtilsImpl
     /*
      * (non-Javadoc)
      * 
-     * @see org.m2latex.mojo.TexFileUtils#getCorrespondingAuxFile(java.io.File)
-     */
-    public File getCorrespondingAuxFile( File texFile )
-    {
-        return replaceSuffix( texFile, "aux" );
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.m2latex.mojo.TexFileUtils#getCorrespondingDviFile(java.io.File)
-     */
-    public File getCorrespondingDviFile( File texFile )
-    {
-        return replaceSuffix( texFile, "dvi" );
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.m2latex.mojo.TexFileUtils#getCorrespondingLogFile(java.io.File)
-     */
-    public File getCorrespondingLogFile( File texFile )
-    {
-        return replaceSuffix( texFile, "log" );
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.m2latex.mojo.TexFileUtils#getCorrespondingPdfFile(java.io.File)
-     */
-    public File getCorrespondingPdfFile( File texFile )
-    {
-        return replaceSuffix( texFile, "pdf" );
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.m2latex.mojo.TexFileUtils#getFileNameWithoutSuffix(java.io.File)
      */
     public String getFileNameWithoutSuffix( File texFile )
@@ -280,40 +243,28 @@ public class TexFileUtilsImpl
         return mainFiles;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.m2latex.mojo.TexFileUtils#searchInLogFile(java.io.File, java.lang.String)
-     */
-    public boolean matchInCorrespondingLogFile( File texFile, String pattern )
+    // logFile may be .log or .blg or something 
+    public boolean matchInLogFile( File logFile, String pattern )
         throws MojoExecutionException
     {
-        File logFile = getCorrespondingLogFile( texFile );
-        if ( logFile.exists() )
-        {
-            try
-            {
-                return fileContainsPattern( logFile, pattern );
-            }
-            catch ( FileNotFoundException e )
-            {
-                throw new MojoExecutionException
-		    ("File " + logFile.getPath() 
-		     + " does not exist after running LaTeX.",
-		     e );
-            }
-            catch ( IOException e )
-            {
-                throw new MojoExecutionException
-		    ("Error reading file " + logFile.getPath(), e);
-            }
-        }
-        else
-        {
-            throw new MojoExecutionException
-		( "File " + logFile.getPath() 
-		  + " does not exist after running LaTeX." );
-        }
+        if (!logFile.exists())
+	    {
+		throw new MojoExecutionException
+		    ( "File " + logFile.getPath() 
+		      + " does not exist after running LaTeX." );
+	    }
+       
+	try {
+	    return fileContainsPattern( logFile, pattern );
+	} catch (FileNotFoundException e) {
+	    throw new MojoExecutionException
+		("Log file " + logFile.getPath() 
+		 + " not found. ",
+		 e );
+	} catch (IOException e) {
+	    throw new MojoExecutionException
+		("Error reading log file " + logFile.getPath() + ". ", e);
+	}
     }
 
     // creates if it does not exist or clean otherwise, 
@@ -390,7 +341,7 @@ public class TexFileUtilsImpl
         }
     }
 
-    private File replaceSuffix( File file, String suffix )
+    public File replaceSuffix( File file, String suffix )
     {
         return new File(file.getParentFile(),
 			getFileNameWithoutSuffix( file ) + "." + suffix );
