@@ -155,7 +155,7 @@ public class LatexProcessorTest
     private void mockRunBibtex()
         throws CommandLineException, MojoExecutionException
     {
-        fileUtils.getCorrespondingAuxFile( texFile );
+        fileUtils.replaceSuffix( texFile, "aux" );
         fileUtilsCtrl.setReturnValue( auxFile );
 
         executor.execute(texFile.getParentFile(),
