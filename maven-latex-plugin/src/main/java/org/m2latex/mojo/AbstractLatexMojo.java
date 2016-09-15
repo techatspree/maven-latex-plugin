@@ -117,7 +117,6 @@ public abstract class AbstractLatexMojo
 		FileFilter fileFilter = getFileFilter(texFile);
                 fileUtils.copyOutputToTargetFolder(fileFilter,
 						   texFile,
-						   outputDir,
 						   targetDir);
             }
         } catch ( CommandLineException e ) {
