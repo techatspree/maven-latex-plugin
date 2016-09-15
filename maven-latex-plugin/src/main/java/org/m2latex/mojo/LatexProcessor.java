@@ -32,9 +32,9 @@ public class LatexProcessor
 
     private final Settings settings;
 
-    private final Log log;
-
     private final CommandExecutor executor;
+
+    private final Log log;
 
     private TexFileUtils fileUtils;
 
@@ -67,7 +67,8 @@ public class LatexProcessor
         log.info("Processing LaTeX file " + texFile + ". ");
 
         runLatex( texFile );
-        if ( needBibtexRun( texFile ) )
+	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+        if ( needBibtexRun( logFile ) )
         {
             log.debug("Bibtex must be run. ");
             runBibtex( texFile );
@@ -76,7 +77,7 @@ public class LatexProcessor
 	boolean needAnotherLatexRun = true;
 	int maxNumReruns = this.settings.getMaxNumReruns();
         while ((maxNumReruns == -1 || retries < maxNumReruns)
-	       && (needAnotherLatexRun = needAnotherLatexRun( texFile )) )
+	       && (needAnotherLatexRun = needAnotherLatexRun( logFile )) )
         {
             log.debug("Latex must be rerun. ");
             runLatex( texFile );
@@ -131,12 +132,15 @@ public class LatexProcessor
     {
         log.debug( "Running " + settings.getLatex2rtfCommand() + 
 		   " on file " + texFile.getName() + ". ");
+
         File workingDir = texFile.getParentFile();
         String[] args = buildLatex2rtfArguments( texFile );
-        this.executor.execute( workingDir, 
-			       this.settings.getTexPath(), 
-			       this.settings.getLatex2rtfCommand(), 
-			       args );
+        this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), 
+			      this.settings.getLatex2rtfCommand(), 
+			      args);
+
+	// no check: just warning that no output has been created. 
     }
 
     // FIXME: take arguments for latex2rtf into account 
@@ -147,7 +151,8 @@ public class LatexProcessor
 
     /**
      * Runs the tex4ht command given by {@link Settings#getTex4htCommand()} 
-     * on <code>texFile</code> in the directory containing <code>texFile</code> 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildHtlatexArguments(File)}. 
      */
     private void runTex4ht( File texFile )
@@ -155,12 +160,13 @@ public class LatexProcessor
     {
         log.debug( "Running " + settings.getTex4htCommand() + 
 		   " on file " + texFile.getName() + ". ");
+
         File workingDir = texFile.getParentFile();
         String[] args = buildHtlatexArguments( texFile );
-        this.executor.execute( workingDir, 
-			       this.settings.getTexPath(), 
-			       this.settings.getTex4htCommand(), 
-			       args );
+        this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), 
+			      this.settings.getTex4htCommand(), 
+			      args);
     }
 
     private String[] buildHtlatexArguments( File texFile )
@@ -198,22 +204,22 @@ public class LatexProcessor
     }
 
     // FIXME: Is this the right criterion? 
-    private boolean needAnotherLatexRun(File texFile)
-            throws MojoExecutionException
+    private boolean needAnotherLatexRun(File logFile)
+	throws MojoExecutionException
     {
         String reRunPattern = this.settings.getPatternNeedAnotherLatexRun();
-        boolean needRun = fileUtils.matchInCorrespondingLogFile(texFile, 
-								reRunPattern);
+        boolean needRun = fileUtils.matchInLogFile(logFile, reRunPattern);
         log.debug( "Another Latex run? " + needRun );
         return needRun;
     }
 
-    private boolean needBibtexRun(File texFile)
-            throws MojoExecutionException
+    private boolean needBibtexRun(File logFile)
+	throws MojoExecutionException
     {
-        String namePrefixTexFile = fileUtils.getFileNameWithoutSuffix(texFile);
-        String pattern = "No file " + namePrefixTexFile + ".bbl";
-        return fileUtils.matchInCorrespondingLogFile( texFile, pattern );
+        String namePrefixLogFile = this.fileUtils
+	    .getFileNameWithoutSuffix(logFile);
+        String pattern = "No file " + namePrefixLogFile + ".bbl";
+        return this.fileUtils.matchInLogFile( logFile, pattern );
     }
 
     /**
@@ -222,18 +228,36 @@ public class LatexProcessor
      * in the directory containing <code>texFile</code>. 
      */
     private void runBibtex(File texFile)
-            throws CommandLineException
+	throws CommandLineException, MojoExecutionException
     {
         log.debug( "Running BibTeX on file " + texFile.getName() + ". ");
-        File workingDir = texFile.getParentFile();
 
+        File workingDir = texFile.getParentFile();
         String[] args = new String[] {
-	    fileUtils.getCorrespondingAuxFile( texFile ).getName()
+	    fileUtils.replaceSuffix( texFile, "aux" ).getName()
 	};
-        this.executor.execute( workingDir, 
-			       this.settings.getTexPath(), 
-			       this.settings.getBibtexCommand(), 
-			       args );
+        this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), 
+			      this.settings.getBibtexCommand(), 
+			      args);
+
+	File logFile = this.fileUtils.replaceSuffix( texFile, "blg" );
+	if (!logFile.exists()) {
+	    this.log.error("BibTeX failed: no log file found . ");
+	}
+	// FIXME: Could be further improved: 1 error but more warnings: 
+	// The latter shall be displayed. (maybe)
+	boolean errOccurred = this.fileUtils
+	    .matchInLogFile(logFile, "Error");
+	if (errOccurred) {
+	    log.warn("BibTeX failed when running on " + texFile + ". ");
+	}
+	boolean warnOccurred = this.fileUtils
+	    .matchInLogFile(logFile, "Warning");
+	if (warnOccurred) {
+	    log.warn("BibTeX warning when running on " + texFile + ". ");
+	}
+ 
     }
 
     /**
@@ -243,29 +267,34 @@ public class LatexProcessor
      * with arguments given by {@link #buildLatexArguments(File)}. 
      */
     private void runLatex(File texFile)
-            throws CommandLineException
+	throws MojoExecutionException, CommandLineException
     {
         log.debug("Running " + settings.getTexCommand() + 
 		  " on file " + texFile.getName() + ". ");
-        File workingDir = texFile.getParentFile();
 
+        File workingDir = texFile.getParentFile();
 	String[] args = buildLatexArguments( texFile );
-        this.executor.execute( workingDir, 
-			       this.settings.getTexPath(), 
-			       this.settings.getTexCommand(), 
-			       args );
+        this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), 
+			      this.settings.getTexCommand(), 
+			      args);
+
+	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
+	boolean errorOccurred = this.fileUtils
+	    .matchInLogFile(logFile, "Fatal error|LaTeX Error");
+	if (errorOccurred) {
+	    log.warn("LaTeX failed to run on " + texFile + ". ");
+	}
     }
 
     private String[] buildLatexArguments( File texFile )
     {
-        String[] texCommandArgs = settings.getTexCommandArgs();
+        String[] texCommandArgs = this.settings.getTexCommandArgs();
         String[] args = new String[texCommandArgs.length + 1];
         System.arraycopy( texCommandArgs, 0, args, 0, texCommandArgs.length );
         args[texCommandArgs.length] = texFile.getName();
 	return args;
     }
-
-
 }
 
 
