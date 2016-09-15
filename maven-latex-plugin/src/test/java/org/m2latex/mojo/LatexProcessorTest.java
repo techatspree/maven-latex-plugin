@@ -53,8 +53,9 @@ public class LatexProcessorTest
 	( settings, executor, log, fileUtils );
 
     private File texFile = new File(System.getProperty("tmp.dir"), "test.tex");
-
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
+    private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
+    private File blgFile = new File(System.getProperty("tmp.dir"), "test.blg");
 
     private File tex4htDir = new File("m2latex", 
 				      settings.getTex4htOutputDirectory());
@@ -77,6 +78,10 @@ public class LatexProcessorTest
         throws Exception
     {
         mockRunLatex();
+
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
+
         mockNeedBibtexRun( false );
         mockNeedAnotherLatexRun( false );
 
@@ -91,8 +96,13 @@ public class LatexProcessorTest
         throws Exception
     {
         mockRunLatex();
+
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
+
         mockNeedBibtexRun( true );
         mockRunBibtex();
+
         mockNeedAnotherLatexRun( true );
         mockRunLatex();
         mockNeedAnotherLatexRun( true );
@@ -110,7 +120,11 @@ public class LatexProcessorTest
         throws Exception
     {
         mockRunLatex();
-        mockNeedBibtexRun( false );
+
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
+
+	mockNeedBibtexRun( false );
         mockNeedAnotherLatexRun( false );
         mockRunTex4ht();
 
@@ -124,23 +138,22 @@ public class LatexProcessorTest
     private void mockNeedAnotherLatexRun( boolean returnValue )
         throws MojoExecutionException
     {
-        fileUtils.matchInCorrespondingLogFile(texFile, 
-					      PATTERN_NEED_ANOTHER_LATEX_RUN);
+        fileUtils.matchInLogFile(logFile, PATTERN_NEED_ANOTHER_LATEX_RUN);
         fileUtilsCtrl.setReturnValue( returnValue );
     }
 
     private void mockNeedBibtexRun( boolean returnValue )
         throws MojoExecutionException
     {
-        fileUtils.getFileNameWithoutSuffix( texFile );
-        fileUtilsCtrl.setReturnValue( texFile.getName().split( "\\." )[0] );
+        fileUtils.getFileNameWithoutSuffix( logFile );
+        fileUtilsCtrl.setReturnValue( logFile.getName().split( "\\." )[0] );
 
-        fileUtils.matchInCorrespondingLogFile( texFile, "No file test.bbl" );
+        fileUtils.matchInLogFile( logFile, "No file test.bbl" );
         fileUtilsCtrl.setReturnValue( returnValue );
     }
 
     private void mockRunBibtex()
-        throws CommandLineException
+        throws CommandLineException, MojoExecutionException
     {
         fileUtils.getCorrespondingAuxFile( texFile );
         fileUtilsCtrl.setReturnValue( auxFile );
@@ -151,10 +164,19 @@ public class LatexProcessorTest
 			 new String[] { auxFile.getPath() } );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
+
+	fileUtils.replaceSuffix( texFile, "blg" );
+	fileUtilsCtrl.setReturnValue( blgFile );
+
+	fileUtils.matchInLogFile(blgFile, "Error");
+	fileUtilsCtrl.setReturnValue( false );
+
+	fileUtils.matchInLogFile(blgFile, "Warning");
+	fileUtilsCtrl.setReturnValue( false );
     }
 
     private void mockRunLatex()
-        throws CommandLineException
+        throws CommandLineException, MojoExecutionException
     {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
@@ -162,6 +184,12 @@ public class LatexProcessorTest
 			 latexArgsExpected );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
+
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
+
+	fileUtils.matchInLogFile(logFile, "Fatal error|LaTeX Error");
+	fileUtilsCtrl.setReturnValue( false );
     }
 
     private void mockRunTex4ht()
