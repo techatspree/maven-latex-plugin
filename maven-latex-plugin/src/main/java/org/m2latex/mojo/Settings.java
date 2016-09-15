@@ -167,7 +167,7 @@ public class Settings
      * and the arguments from latex, 
      * <code>-interaction=nonstopmode --src-specials</code>. 
      * <p>
-     * TODO move to different fields; take latex args from texCommandArgs
+     * FIXME: Move to different fields; take latex args from texCommandArgs
      *
      * @parameter
      */
