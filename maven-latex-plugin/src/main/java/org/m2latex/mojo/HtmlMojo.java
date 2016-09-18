@@ -34,10 +34,8 @@ import org.codehaus.plexus.util.cli.CommandLineException;
  * @goal html
  * @phase site
  */
-//@Mojo( name = "tex4ht")
-public class Tex4HtMojo
-    extends AbstractLatexMojo
-{
+//@Mojo( name = "html")
+public class HtmlMojo extends AbstractLatexMojo {
 
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
