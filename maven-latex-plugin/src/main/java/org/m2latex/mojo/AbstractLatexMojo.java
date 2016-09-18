@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileFilter;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
@@ -91,33 +91,43 @@ public abstract class AbstractLatexMojo
         throws MojoExecutionException, MojoFailureException
     {
         initialize();
-        log.debug( "Settings: " + settings.toString() );
-        log.info( "settings.getOutputDirectory(): " + 
-		  settings.getOutputDirectory() );
+        log.debug("Settings: " + settings.toString() );
+        log.info("settings.getOutputDirectoryFile(): " + 
+		  settings.getOutputDirectoryFile() );
 
-        File texDirectory = settings.getTexDirectory();
+        File texDirectory = settings.getTexSrcDirectoryFile();
 
         if ( !texDirectory.exists() ) {
             log.info( "No tex directory - skipping LaTeX processing" );
             return;
         }
 
+	File tempDir = this.settings.getTempDirectoryFile();
         try {
-            fileUtils.copyLatexSrcToTempDir(texDirectory, 
-					    settings.getTempDirectory());
-            List<File> latexMainFiles = fileUtils
-		.getLatexMainDocuments( settings.getTempDirectory() );
-	    File outputDir = getOutputDir();
+	    // copy sources to tempDir 
+            this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
+
+	    // process xfig files 
+ 	    Collection<File> figFiles = this.fileUtils
+		.getXFigDocuments(tempDir);
+	    for (File figFile : figFiles) {
+		log.info("Processing " + figFile + ". ");
+		this.latexProcessor.runFig2Dev(figFile);
+	    }
+
+	    // process latex main files 
+            Collection<File> latexMainFiles = this.fileUtils
+		.getLatexMainDocuments(tempDir);
 	    for (File texFile : latexMainFiles) {
 		processSource(texFile);
-		File targetDir = fileUtils.getTargetDirectory
+		File targetDir = this.fileUtils.getTargetDirectory
 		    (texFile, 
-		     settings.getTempDirectory(), 
-		     settings.getOutputDirectory());
+		     tempDir, 
+		     this.settings.getOutputDirectoryFile());
 		FileFilter fileFilter = getFileFilter(texFile);
-                fileUtils.copyOutputToTargetFolder(fileFilter,
-						   texFile,
-						   targetDir);
+                this.fileUtils.copyOutputToTargetFolder(fileFilter,
+							texFile,
+							targetDir);
             }
         } catch ( CommandLineException e ) {
             throw new MojoExecutionException( "Error executing command", e );
@@ -131,21 +141,20 @@ public abstract class AbstractLatexMojo
 
     abstract void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException;
-    abstract File getOutputDir();
     abstract FileFilter getFileFilter(File texFile);
 
     protected void cleanUp()
     {
+	File tempDir = this.settings.getTempDirectoryFile();
         getLog().debug( "Deleting temporary directory " + 
-			settings.getTempDirectory().getPath() );
+			tempDir.getPath() );
         try
         {
-            FileUtils.deleteDirectory( settings.getTempDirectory() );
+            FileUtils.deleteDirectory(tempDir);
         }
         catch ( IOException e )
         {
-            getLog().warn( "The temporary directory '" + 
-			   settings.getTempDirectory() + 
+            getLog().warn( "The temporary directory '" + tempDir + 
 			   "' could be deleted.", e );
         }
     }
