@@ -45,11 +45,6 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 	this.latexProcessor.processLatex(texFile);
     }
 
-    // implements AbstractLatexMojo#getOutputDir()
-    File getOutputDir() {
-	return this.settings.getTempDirectory();
-    }
-
     // implements AbstractLatexMojo#getFileFilter(File)
     FileFilter getFileFilter(File texFile) {
 	return this.fileUtils.getLatexOutputFileFilter(texFile);

@@ -45,12 +45,6 @@ public class Tex4HtMojo
 	this.latexProcessor.processTex4ht(texFile);
     }
 
-    // implements AbstractLatexMojo#getOutputDir()
-    File getOutputDir() {
-	return new File(this.settings.getTempDirectory(), 
-			this.settings.getTex4htOutputDirectory());
-    }
-
     // implements AbstractLatexMojo#getFileFilter(File)
     FileFilter getFileFilter(File texFile) {
 	return this.fileUtils.getTex4htOutputFileFilter(texFile);

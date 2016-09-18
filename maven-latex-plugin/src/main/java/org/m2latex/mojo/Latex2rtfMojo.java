@@ -45,11 +45,6 @@ public class Latex2rtfMojo
 	this.latexProcessor.processLatex2rtf(texFile);
     }
 
-    // implements AbstractLatexMojo#getOutputDir()
-    File getOutputDir() {
-	return this.settings.getTempDirectory();
-    }
-
     // implements AbstractLatexMojo#getFileFilter(File)
     FileFilter getFileFilter(File texFile) {
 	return this.fileUtils.getLatex2rtfOutputFileFilter(texFile);
