@@ -20,6 +20,7 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
@@ -30,8 +31,26 @@ public class SettingsTest
         throws Exception
     {
         Settings settings = new Settings();
-        settings.setBaseDirectory(new File(System.getProperty("java.io.tmpdir")));
-        assertNotNull( settings.getBaseDirectory() );
+
+	// invoked from within maven in base directory with pom.xml 
+	File baseDirectory = new File(System.getProperty("user.dir"));
+	settings.setBaseDirectory(baseDirectory);
+	// mvn project has default file structure 
+	File targetDirectory = new File(baseDirectory, "target");
+	settings.setTargetDirectory(targetDirectory);
+	File targetSiteDirectory = new File(targetDirectory, "site");
+	settings.setTargetSiteDirectory(targetSiteDirectory);
+
+	// test getTexSrcDirectoryFile() and setTexSrcDirectory(...) 
+	assertEquals(new File(baseDirectory, Settings.SST),
+		     settings.getTexSrcDirectoryFile());
+	settings.setTexSrcDirectory("site");
+	settings.setBaseDirectory(targetDirectory);
+	assertEquals(targetSiteDirectory,
+		     settings.getTexSrcDirectoryFile());
+
+	// FIXME: Further tests required. 
 
     }
+
 }

@@ -30,11 +30,7 @@ import org.junit.Test;
 
 public class LatexProcessorTest
 {
-   static final String PATTERN_NEED_ANOTHER_LATEX_RUN = 
-       "(Rerun (LaTeX|to get cross-references right)|" 
-       + "There were undefined references|" 
-       + "Package natbib Warning: Citation\\(s\\) may have changed)";
-
+ 
     private MockControl executorCtrl = MockControl
 	.createStrictControl( CommandExecutor.class );
 
@@ -57,12 +53,11 @@ public class LatexProcessorTest
     private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
     private File blgFile = new File(System.getProperty("tmp.dir"), "test.blg");
 
-    private File tex4htDir = new File("m2latex", 
-				      settings.getTex4htOutputDirectory());
 
     private String[] latexArgsExpected = new String[] {
-	"-interaction=nonstopmode", 
-	"--src-specials", 
+	 "-interaction=nonstopmode", 
+	 "-src-specials", 
+	 //"-interaction=nonstopmode -src-specials", 
 	this.texFile.getName() 
     };
 
@@ -70,8 +65,8 @@ public class LatexProcessorTest
         this.texFile.getName(),
         "html,2",
         "",
-        " -d" + tex4htDir.getAbsolutePath() + File.separatorChar,
-        "-interaction=nonstopmode --src-specials"
+        "",
+        "-interaction=nonstopmode -src-specials"
     };
 
     @Test public void testProcessLatexSimple()
@@ -84,6 +79,11 @@ public class LatexProcessorTest
 
         mockNeedBibtexRun( false );
         mockNeedAnotherLatexRun( false );
+
+	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
+	fileUtilsCtrl.setReturnValue( false );
+	fileUtils.matchInLogFile(logFile, "Warning ");
+	fileUtilsCtrl.setReturnValue( false );
 
         replay();
 
@@ -109,6 +109,11 @@ public class LatexProcessorTest
         mockRunLatex();
         mockNeedAnotherLatexRun( false );
 
+	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
+	fileUtilsCtrl.setReturnValue( false );
+	fileUtils.matchInLogFile(logFile, "Warning ");
+	fileUtilsCtrl.setReturnValue( false );
+
         replay();
 
         processor.processLatex( this.texFile );
@@ -126,6 +131,12 @@ public class LatexProcessorTest
 
 	mockNeedBibtexRun( false );
         mockNeedAnotherLatexRun( false );
+
+	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
+	fileUtilsCtrl.setReturnValue( false );
+	fileUtils.matchInLogFile(logFile, "Warning ");
+	fileUtilsCtrl.setReturnValue( false );
+
         mockRunTex4ht();
 
         replay();
@@ -138,7 +149,8 @@ public class LatexProcessorTest
     private void mockNeedAnotherLatexRun( boolean returnValue )
         throws MojoExecutionException
     {
-        fileUtils.matchInLogFile(logFile, PATTERN_NEED_ANOTHER_LATEX_RUN);
+        fileUtils.matchInLogFile(logFile, 
+				 this.settings.getPatternNeedAnotherLatexRun());
         fileUtilsCtrl.setReturnValue( returnValue );
     }
 
@@ -188,22 +200,25 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
 
-	fileUtils.matchInLogFile(logFile, "Fatal error|LaTeX Error");
+	fileUtils.matchInLogFile(logFile, this.settings.getPatternErrLatex());
 	fileUtilsCtrl.setReturnValue( false );
     }
 
     private void mockRunTex4ht()
             throws CommandLineException, MojoExecutionException
     {
-        fileUtils.createTex4htOutputDir( tex4htDir.getParentFile() );
-        fileUtilsCtrl.setReturnValue( tex4htDir );
-
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
 			 tex4htArgsExpected );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
+
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
+
+	fileUtils.matchInLogFile(logFile, this.settings.getPatternErrLatex());
+	fileUtilsCtrl.setReturnValue( false );
     }
 
     private void replay()
