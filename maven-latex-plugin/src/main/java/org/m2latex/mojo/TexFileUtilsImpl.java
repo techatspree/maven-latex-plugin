@@ -44,7 +44,10 @@ public class TexFileUtilsImpl
     implements TexFileUtils
 {
     private static final String[] LATEX_OUTPUT_FILES = 
-	new String[] { "%n.pdf", "%n.dvi", "%n.ps" };
+	new String[] { ".pdf", ".dvi", ".ps" };
+
+    private static final String[] HTLATEX_OUTPUT_FILES = 
+	new String[] { "*.html", ".css", "*.png", "*.svg" };
 
     private final Log log;
 
@@ -56,7 +59,20 @@ public class TexFileUtilsImpl
 	this.settings = settings;
     }
 
-//<code></code>
+    /**
+     * Returns a list of filenames 
+     * with the suffixes given by <code>filesPatterns</code> 
+     * derived from the .tex-file given by <code>texFile</code>. 
+     *
+     * @param texFile
+     *    the tex-file to derive filenames from. 
+     * @param filesPatterns
+     *    patterns of the form <code>.&lt;suffix&gt;</code>
+     * @return
+     *    For each pattern a filename derived from <code>texFile</code> 
+     *    by replacing the suffix <code>.tex</code> by the suffix 
+     *    given by a pattern in <code>filesPatterns</code>. 
+     */
     private String[] getFilesToCopy(final File texFile, 
 				    final String[] filesPatterns)
     {
@@ -64,33 +80,30 @@ public class TexFileUtilsImpl
         String[] fileNames = new String[filesPatterns.length];
         for ( int i = 0; i < filesPatterns.length; i++ )
         {
-            fileNames[i] = filesPatterns[i].replaceAll( "%n", texFilePrefix );
+            fileNames[i] = texFilePrefix + filesPatterns[i];
         }
         return fileNames;
     }
 
+//<code></code>
     public FileFilter getLatexOutputFileFilter(File file) {
 	return new WildcardFileFilter(getFilesToCopy(file, 
 						     LATEX_OUTPUT_FILES));
     }
 
     public FileFilter getTex4htOutputFileFilter(File file) {
-	return new FileFilter() {
-	    public boolean accept(File file) {
-		return file.isFile();
-	    }
-	};
+	return new WildcardFileFilter(getFilesToCopy(file, 
+						     HTLATEX_OUTPUT_FILES));
     }
 
     public FileFilter getLatex2rtfOutputFileFilter(File file) {
 	return new WildcardFileFilter(getFilesToCopy(file, 
-						     new String[] {"%n.rtf"}));
+						     new String[] {".rtf"}));
     }
 
     /**
-     * Invoked only by Tex4htMojo#execute()
+     * Invoked only by AbstractLatexMojo#execute()
      * 
-     * @see org.m2latex.mojo.TexFileUtils#copyOutputToSiteFolder(java.io.File, java.io.File, java.io.File)
      */
     public void copyOutputToTargetFolder(FileFilter fileFilter, 
 					 File texFile, 
@@ -220,6 +233,13 @@ public class TexFileUtilsImpl
         return namePrefixTexFile;
     }
 
+    public Collection<File> getXFigDocuments( File directory ) {
+	return FileUtils
+	    .listFiles(directory,
+		       FileFilterUtils.suffixFileFilter( ".fig" ),
+		       TrueFileFilter.INSTANCE );
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -241,6 +261,29 @@ public class TexFileUtilsImpl
 		}
         }
         return mainFiles;
+    }
+
+   private boolean isTexMainFile( File file )
+        throws MojoExecutionException
+    {
+        String pattern = ".*\\\\begin\\s*\\{document\\}.*";
+
+        try
+        {
+            return fileContainsPattern( file, pattern );
+
+        }
+        catch ( FileNotFoundException e )
+        {
+            throw new MojoExecutionException( "The TeX file '" + file.getPath()
+                + "' was removed while running this goal", e );
+        }
+        catch ( IOException e )
+        {
+            throw new MojoExecutionException
+		( "Problems reading the file '" + file.getPath()
+                + "' while checking if it is a TeX main file", e );
+        }
     }
 
     // logFile may be .log or .blg or something 
@@ -265,32 +308,6 @@ public class TexFileUtilsImpl
 	    throw new MojoExecutionException
 		("Error reading log file " + logFile.getPath() + ". ", e);
 	}
-    }
-
-    // creates if it does not exist or clean otherwise, 
-    public File createTex4htOutputDir( File tempDir ) 
-	throws MojoExecutionException
-    {
-        File tex4htOutdir = new File(tempDir, 
-				     this.settings.getTex4htOutputDirectory());
-	// if exists, clean otherwise create 
-         if ( tex4htOutdir.exists() )
-        {
-           try
-            {
-                FileUtils.cleanDirectory( tex4htOutdir );
-            }
-            catch ( IOException e )
-            {
-                throw new MojoExecutionException
-		    ( "Could not clean TeX4ht output dir: " + tex4htOutdir, e );
-            }
-        }
-        else
-        {
-            tex4htOutdir.mkdirs();
-        }
-        return tex4htOutdir;
     }
 
     private void copyFileToDirectory( File file, File targetDir )
@@ -347,26 +364,4 @@ public class TexFileUtilsImpl
 			getFileNameWithoutSuffix( file ) + "." + suffix );
     }
 
-    private boolean isTexMainFile( File file )
-        throws MojoExecutionException
-    {
-        String pattern = ".*\\\\begin\\s*\\{document\\}.*";
-
-        try
-        {
-            return fileContainsPattern( file, pattern );
-
-        }
-        catch ( FileNotFoundException e )
-        {
-            throw new MojoExecutionException( "The TeX file '" + file.getPath()
-                + "' was removed while running this goal", e );
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException
-		( "Problems reading the file '" + file.getPath()
-                + "' while checking if it is a TeX main file", e );
-        }
-    }
-}
+ }
