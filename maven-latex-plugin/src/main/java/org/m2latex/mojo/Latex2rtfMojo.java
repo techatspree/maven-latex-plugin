@@ -32,7 +32,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 /**
  * Build rtf documents from LaTeX sources.
  * 
- * @goal latex2rtf
+ * @goal rtf
  * @phase site
  */
 //@Mojo( name = "latex2rtf")

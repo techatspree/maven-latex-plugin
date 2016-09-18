@@ -32,7 +32,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 /**
  * Build PDF or DVI documents from LaTeX sources.
  * 
- * @goal latex
+ * @goal pdf
  * @phase site
  */
 //@Mojo( name = "latex")

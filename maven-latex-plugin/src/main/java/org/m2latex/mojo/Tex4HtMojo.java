@@ -31,7 +31,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 /**
  * Build HTML documents and more from LaTeX sources.
  *
- * @goal tex4ht
+ * @goal html
  * @phase site
  */
 //@Mojo( name = "tex4ht")
