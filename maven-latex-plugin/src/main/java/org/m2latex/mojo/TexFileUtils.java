@@ -21,7 +21,7 @@ package org.m2latex.mojo;
 import java.io.File;
 import java.io.FileFilter;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -45,6 +45,8 @@ public interface TexFileUtils
 
     File replaceSuffix( File file, String suffix );
 
+    Collection<File> getXFigDocuments( File directory );
+
     /*
      * @param tempDir
      * 
@@ -52,13 +54,11 @@ public interface TexFileUtils
      * 
      * @throws MojoExecutionException
      */
-    List<File> getLatexMainDocuments( File directory )
+    Collection<File> getLatexMainDocuments( File directory )
         throws MojoExecutionException;
 
-     boolean matchInLogFile( File logFile, String pattern )
+    boolean matchInLogFile( File logFile, String pattern )
         throws MojoExecutionException;
-
-    File createTex4htOutputDir( File tempDir ) throws MojoExecutionException;
 
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
