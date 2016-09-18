@@ -568,11 +568,11 @@ public class Settings
 	sb.append(",tempDirectory=")   .append(this.tempDirectory);
  	sb.append(",outputDirectory=") .append(this.outputDirectory);
         sb.append(",texPath=")         .append(this.texPath);
-        sb.append(",texCommand=")      .append(this.texCommand );
+        sb.append(",texCommand=")      .append(this.texCommand);
 	sb.append(",texCommandArgs=")  .append(this.texCommandArgs);
-	sb.append(",patternErrLatex="  .append(this.patternErrLatex);
- 	sb.append(",debugBadBoxes="    .append(this.debugBadBoxes);
- 	sb.append(",debugWarnings="    .append(this.debugWarnings);
+	sb.append(",patternErrLatex=") .append(this.patternErrLatex);
+ 	sb.append(",debugBadBoxes=")   .append(this.debugBadBoxes);
+ 	sb.append(",debugWarnings=")   .append(this.debugWarnings);
         sb.append(",bibtexCommand=")   .append(this.bibtexCommand);
         sb.append(",tex4htCommand=")   .append(this.tex4htCommand);
         sb.append(",tex4htStyOptions=").append(this.tex4htStyOptions);
