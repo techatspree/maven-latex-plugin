@@ -58,7 +58,7 @@ public class LatexProcessor
      *    the tex file to be processed. 
      * @see #runLatex(File)
      * @see #runBibtex(File)
-     * @see #needLatexRun(File)
+     * @see #needAnotherLatexRun(File)
      * @see #needBibtexRun(File)
      */
     public void processLatex(final File texFile)
@@ -73,6 +73,14 @@ public class LatexProcessor
             log.debug("Bibtex must be run. ");
             runBibtex( texFile );
         }
+
+	File idxFile = this.fileUtils.replaceSuffix(texFile, "idx");
+	if ( idxFile.exists() )
+        {
+            log.debug("Makeindex must be run. ");
+            runMakeindex( idxFile );
+        }
+
         int retries = 0;
 	boolean needAnotherLatexRun = true;
 	int maxNumReruns = this.settings.getMaxNumReruns();
@@ -86,6 +94,17 @@ public class LatexProcessor
 	if (needAnotherLatexRun) {
 	    log.warn("Max rerun reached although " + texFile +
 		     " needs another run. ");
+	}
+
+	if (this.settings.getDebugBadBoxes() && 
+	    this.fileUtils.matchInLogFile(logFile, 
+					  "(Und|Ov)erful \\[hv]box")) {
+	    log.warn("Bad Boxes in " + texFile + ". ");
+	}
+	if (this.settings.getDebugWarnings() && 
+	    this.fileUtils.matchInLogFile(logFile, 
+					  "Warning ")) {
+	    log.warn("Warnings running LaTeX on " + texFile + ". ");
 	}
     }
 
@@ -118,6 +137,46 @@ public class LatexProcessor
           throws MojoExecutionException, CommandLineException
     {
 	runLatex2rtf(texFile);
+    }
+
+    // used in AbstractLatexMojo.execute() only 
+    public void runFig2Dev( File figFile )
+	throws CommandLineException, MojoExecutionException
+    {
+       log.debug( "Running " + "fig1dev" + 
+		   " on file " + figFile.getName() + ". ");
+       File workingDir = figFile.getParentFile();
+       String[] args;
+
+       String pdf   = this.fileUtils.replaceSuffix(figFile, "pdf"  ).toString();
+       String pdf_t = this.fileUtils.replaceSuffix(figFile, "pdf_t").toString();
+
+       args = new String[] {
+	   "-L",
+	   "pdftex",
+	   figFile.getName(), // source 
+	   pdf // target 
+       };
+       this.executor.execute(workingDir, 
+			     this.settings.getTexPath(), //**** 
+			     "fig2dev", 
+			     args);
+      args = new String[] {
+	   "-L",
+	   "pdftex_t",
+	   "-p",// portrait (-l for landscape), next argument ignored 
+	   pdf,
+	   figFile.getName(), // source 
+	   pdf_t // target 
+       };
+       this.executor.execute(workingDir, 
+			     this.settings.getTexPath(), //**** 
+			     "fig2dev", 
+			     args);
+
+
+
+	// no check: just warning that no output has been created. 
     }
 
     /**
@@ -167,40 +226,26 @@ public class LatexProcessor
 			      this.settings.getTexPath(), 
 			      this.settings.getTex4htCommand(), 
 			      args);
+
+	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
+	boolean errorOccurred = this.fileUtils
+	    .matchInLogFile(logFile, this.settings.getPatternErrLatex());
+	if (errorOccurred) {
+	    log.warn("LaTeX failed to run on " + texFile + ". ");
+	}
+	// missing: warnings: should be displayed configurable. 
     }
 
     private String[] buildHtlatexArguments( File texFile )
             throws MojoExecutionException
     {
-        File tex4htOutdir = fileUtils
-	    .createTex4htOutputDir( settings.getTempDirectory() );
-
-        final String argOutputDir = " -d" 
-	    + tex4htOutdir.getAbsolutePath() + File.separatorChar;
-        String[] tex4htCommandArgs = settings.getTex4htCommandArgs();
-
-        String htlatexOptions = getTex4htArgument( tex4htCommandArgs, 0 );
-        String tex4htOptions  = getTex4htArgument( tex4htCommandArgs, 1 );
-        String t4htOptions    = getTex4htArgument( tex4htCommandArgs, 2 ) 
-	    + argOutputDir;
-        String latexOptions   = getTex4htArgument( tex4htCommandArgs, 3 );
-
         return new String[] {
 	    texFile.getName(),
-	    htlatexOptions,
-	    tex4htOptions,
-	    t4htOptions,
-	    latexOptions
+	    this.settings.getTex4htStyOptions(),
+	    this.settings.getTex4htOptions(),
+	    this.settings.getT4htOptions(),
+	    this.settings.getTexCommandArgs()
 	};
-    }
-
-    private String getTex4htArgument(String[] args, int index)
-    {
-        boolean returnEmptyArg = 
-	    args == null 
-	    || args.length <= index
-	    || StringUtils.isEmpty( args[index] );
-        return returnEmptyArg ? "" : args[index];
     }
 
     // FIXME: Is this the right criterion? 
@@ -222,7 +267,39 @@ public class LatexProcessor
         return this.fileUtils.matchInLogFile( logFile, pattern );
     }
 
-    /**
+    private void runMakeindex(File idxFile)
+	throws CommandLineException, MojoExecutionException
+    {
+	log.debug( "Running makeindex on file " + idxFile.getName() + ". ");
+
+	File workingDir = idxFile.getParentFile();
+	String[] args = new String[] {idxFile.getName()};
+	this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), 
+			      "makeindex", 
+			      args);
+
+	// detect errors 
+ 	File logFile = this.fileUtils.replaceSuffix( idxFile, "ilg" );
+	if (!logFile.exists()) {
+	    this.log.error("Makeindex failed: no log file found. ");
+	}
+	boolean errOccurred = this.fileUtils
+	    .matchInLogFile(logFile, 
+			    // FIXME: List is incomplete 
+			    "Extra |" + 
+			    "Illegal null field|" + 
+			    "Argument |" + 
+			    "Illegal null field" + 
+			    "Unmatched |" + 
+			    "Inconsistent page encapsulator |" + 
+			    "Conflicting entries");
+	if (errOccurred) {
+	    log.warn("Makeindex failed when running on " + idxFile + ". ");
+	}
+  }
+
+     /**
      * Runs the bibtex command given by {@link Settings#getBibtexCommand()} 
      * on the aux-file corresponding with <code>texFile</code> 
      * in the directory containing <code>texFile</code>. 
@@ -243,7 +320,7 @@ public class LatexProcessor
 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "blg" );
 	if (!logFile.exists()) {
-	    this.log.error("BibTeX failed: no log file found . ");
+	    this.log.error("BibTeX failed: no log file found. ");
 	}
 	// FIXME: Could be further improved: 1 error but more warnings: 
 	// The latter shall be displayed. (maybe)
@@ -281,7 +358,7 @@ public class LatexProcessor
 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
 	boolean errorOccurred = this.fileUtils
-	    .matchInLogFile(logFile, "Fatal error|LaTeX Error");
+	    .matchInLogFile(logFile, this.settings.getPatternErrLatex());
 	if (errorOccurred) {
 	    log.warn("LaTeX failed to run on " + texFile + ". ");
 	}
@@ -289,12 +366,13 @@ public class LatexProcessor
 
     private String[] buildLatexArguments( File texFile )
     {
-        String[] texCommandArgs = this.settings.getTexCommandArgs();
+        String[] texCommandArgs = this.settings.getTexCommandArgs()
+	    .split(" ");
         String[] args = new String[texCommandArgs.length + 1];
         System.arraycopy( texCommandArgs, 0, args, 0, texCommandArgs.length );
         args[texCommandArgs.length] = texFile.getName();
 	return args;
-    }
+     }
 }
 
 
