@@ -52,6 +52,7 @@ public class LatexProcessorTest
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
     private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
     private File blgFile = new File(System.getProperty("tmp.dir"), "test.blg");
+    private File idxFile = new File(System.getProperty("tmp.dir"), "test.idx");
 
 
     private String[] latexArgsExpected = new String[] {
@@ -72,14 +73,22 @@ public class LatexProcessorTest
     @Test public void testProcessLatexSimple()
         throws Exception
     {
+	// run latex 
         mockRunLatex();
 
+	// determine from log whether bibtex shall be run: no 
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
-
         mockNeedBibtexRun( false );
+
+	// determine from presence of idx, whether to run makeindex: no 
+	fileUtils.replaceSuffix( texFile, "idx" );
+	fileUtilsCtrl.setReturnValue( idxFile );
+
+	// determine whether to rerun latex: no 
         mockNeedAnotherLatexRun( false );
 
+	// detect bad boxes and warnings: none 
 	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInLogFile(logFile, "Warning ");
@@ -95,20 +104,27 @@ public class LatexProcessorTest
     @Test public void testProcessLatexWithBibtex()
         throws Exception
     {
+	// run latex 
         mockRunLatex();
 
+	// determine from log whether bibtex shall be run: yes and run it 
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
-
         mockNeedBibtexRun( true );
         mockRunBibtex();
 
+	// determine from presence of idx, whether to run makeindex: no 
+	fileUtils.replaceSuffix( texFile, "idx" );
+	fileUtilsCtrl.setReturnValue( idxFile );
+
+	// determine whether to rerun latex and run until no 
         mockNeedAnotherLatexRun( true );
         mockRunLatex();
         mockNeedAnotherLatexRun( true );
         mockRunLatex();
         mockNeedAnotherLatexRun( false );
 
+	// detect bad boxes and warnings: none 
 	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInLogFile(logFile, "Warning ");
@@ -124,14 +140,22 @@ public class LatexProcessorTest
    @Test public void testProcessTex4ht()
         throws Exception
     {
+ 	// run latex 
         mockRunLatex();
 
+	// determine from log whether bibtex shall be run: no 
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
-
 	mockNeedBibtexRun( false );
+
+	// determine from presence of idx, whether to run makeindex: no 
+	fileUtils.replaceSuffix( texFile, "idx" );
+	fileUtilsCtrl.setReturnValue( idxFile );
+
+	// determine whether to rerun latex: no 
         mockNeedAnotherLatexRun( false );
 
+	// detect bad boxes and warnings: none 
 	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInLogFile(logFile, "Warning ");
