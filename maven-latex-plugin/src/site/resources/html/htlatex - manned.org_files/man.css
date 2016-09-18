@@ -1,0 +1,100 @@
+/* TODO: column-width is better done in Perl? (More like a column-count, then) */
+
+* { margin: 0; padding: 0; font-family: "Trebuchet MS", sans-serif; }
+html { background: #333; padding: 0 10px; }
+body { margin: 10px auto 50px auto; max-width: 1250px; border-collapse: separate; padding-bottom: 10px;
+  -webkit-border-radius: 10px; -moz-border-radius: 10px;
+  -webkit-box-shadow: 0 10px 10px #def; -moz-box-shadow: 0 10px 10px #def; box-shadow: 0 10px 10px #def; }
+h1 { font-size: 24px; font-weight: normal; color: #abc; }
+h1 a { font-size: 12px; vertical-align: top }
+h2 { font-size: 21px; margin-top: 40px; color: #468; font-weight: normal; clear: left }
+h2 + i { font-size: 12px; }
+dd { margin-left: 15px; }
+a { color: #048; }
+a:hover { text-decoration: underline; color: #48B;}
+table { background: #eee; border: 5px solid #f8f8f8; margin: 10px 0; border-collapse: collapse; }
+thead tr { font-weight: bold; border-bottom: 1px solid #ccc }
+td { padding: 1px 5px; font-size: 12px; border-left: 1px solid #ccc; }
+
+#header { padding: 4px 20px; border-bottom: 1px solid #888; font: 24px "Arial"; background: url('images/gradients.png') repeat-x;
+  -webkit-border-radius: 8px 8px 0 0; -moz-border-radius: 8px 8px 0 0; border-radius: 8px 8px 0 0; }
+#header a { color: #f8f8f8; text-decoration: none; font-weight: bold; }
+#header a:hover { background: none; }
+#header form { float: right; }
+#header input[type=text] { color: #000; width: 260px; padding: 1px 2px 1px 15px; border-radius: 12px 0 0 12px; border: 1px solid #444;
+  -webkit-box-shadow: 1px 1px 3px #fff, -1px -1px 2px #234; -moz-shadow: 1px 1px 3px #fff, -1px -1px 2px #234; box-shadow: 1px 1px 3px #fff, -1px -1px 2px #234;
+  background: url('images/gradients.png') 0 -105px repeat-x; height: 15px; }
+#header input[type=text]:hover, #header input[type=text]:focus { background: url('images/gradients.png') 0 -122px repeat-x; outline: none; }
+#header input[type=submit] { height: 23px; width: 62px; background-image: url('images/search.png'); border: 0; margin: 0 0 0 -5px; cursor: pointer }
+
+#body { padding: 10px 10px 20px 10px; background: #fff }
+
+#systems a,
+#charselect a,
+#nav dd dd a { color: #048; font-family: "Verdana"; font-weight: normal; text-decoration: none; padding: 3px 5px;
+  -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
+#systems a:hover,
+#charselect a:hover,
+#nav dd dd a:hover { background: #cde; }
+
+#nav { background: #f0f8ff; color: #036; float: right; padding: 8px; width: 250px; margin-bottom: 10px;
+  -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; }
+#nav a.global, #nav i.global { float: right; font-family: "Verdana"; font-size: 13px; padding: 0px 5px; }
+#nav i.global { font-style: normal; color: #aaa }
+#nav dl > dt { font-weight: bold; }
+#nav a { font-size: 13px; }
+#nav dd dt a { text-decoration: none; }
+#nav .expand { text-decoration: none; padding-left: 5px; font-size: 16px }
+#nav dd .expand { font-size: 14px }
+#nav dl i { font-style: normal; font-size: 12px; padding-left: 7px; color: #aaa }
+#nav b { font-size: 13px; background: #cde; padding: 3px 5px;
+  -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
+
+i.grayedout { color: #aaa; font-size: 13px; }
+
+#about { max-width: 900px }
+#about p, #about dd { text-align: justify }
+#about ul { padding-left: 20px }
+
+#systems li { display: block; float: left; width: 300px; margin: 20px 10px; padding-left: 60px }
+#systems span { display: block; margin-left: -55px; float: left; width: 50px; height: 50px; background-repeat: no-repeat; }
+#systems b { font-size: 24px; display: block }
+#systems .hidden { display: none; }
+
+#charselect { float: right }
+#charselect b { padding: 3px }
+.pagination { display: block; margin: 10px; width: 100%; text-align: center }
+
+#external { list-style-type: none }
+
+#packages { margin: 20px 0; -webkit-column-width: 300px; -moz-column-width: 300px; column-width: 300px }
+#packages li { display: block; }
+#packages i { color: #aaa; font-size: 13px; }
+#packages a { padding-right: 2px }
+
+#searchres { margin: 20px 0; -webkit-column-width: 300px; -moz-column-width: 300px; column-width: 300px }
+#searchres li { display: block; }
+#searchres i { color: #aaa; font-size: 13px; }
+#searchres a { padding-right: 2px }
+
+#manuals { margin: 20px 0; -webkit-column-width: 500px; -moz-column-width: 500px; column-width: 500px }
+#manuals li { display: block; }
+#manuals i { color: #aaa; font-size: 13px; }
+
+#footer { height: 60px; clear: both; padding: 4px 10px; color: #f8f8f8; margin: 0 0 -20px 0;
+  border-top: 1px solid #888; font-size: 13px; background: url('images/gradients.png') 0 -37px repeat-x;
+  -webkit-border-radius: 0 0 8px 8px; -moz-border-radius: 0 0 8px 8px; border-radius: 0 0 8px 8px; }
+#footer a { font-size: 13px; padding: 0; color: #f8f8f8; }
+#footer a:hover { background: none; }
+
+pre, pre * { font-family: "Lucida Console", Monospace; font-size: 15px }
+pre b { color: #369; font-weight: normal; }
+
+#ds_box { position: absolute; top: 0; border: 1px solid $border$; border-top: none; background: #f0f8ff; cursor: pointer; z-index: 2 }
+#ds_box.hidden { display: none }
+#ds_box b { padding: 2px 0 0 10px; font-size: 12px; }
+#ds_box tr.selected { background: #fff; }
+#ds_box table { width: 100%; border: 0; background: none; margin: 0 }
+#ds_box td { border: 0; padding: 1px 5px }
+#ds_box i { padding-left: 5px; color: #aaa; font-style: normal }
+
