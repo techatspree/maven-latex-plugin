@@ -38,67 +38,124 @@ The following code snippet shows all possible configuration settings with their 
     <version>1.1</version>
     <configuration>
         <settings>
-            <!-- all tex main documents in this folder (including subfolders) 
-	    	 will be processed -->
-            <texDirectory>${basedir}/src/site/tex</texDirectory>
 
-            <!-- the generated artifacts will be copied to this folder 
-	    	 relative to ${project.reporting.outputDirectory} -->
-            <outputDirectory>.</outputDirectory>
+            <!-- The tex source directory as a string, containing 
+		 all tex main documents (including subfolders) to be processed
+		 relative to $baseDirectory. 
+		 The default value is 'src/site/tex' on Unix systems. -->
+            <texSrcDirectory>src/site/tex</texSrcDirectory>
 
-            <!-- the working directory, 
-	    	 for temporary files and LaTeX processing 
-	    	 relative to ${project.build.directory} -->
+	    <!-- The working directory, 
+		 for temporary files and LaTeX processing 
+		 relative to $targetDirectory 
+		 which is by default '$baseDirectory/target' on Unix systems. 
+		 The default value is 'm2latex'. -->
             <tempDirectory>m2latex</tempDirectory>
 
-            <!-- clean up the working directory in the end? 
-	    	 May be used for debugging when setting false. Default: true -->
-            <cleanUp>true</cleanUp>
+            <!-- The generated artifacts will be copied to this folder 
+		 relative to $targetSiteDirectory 
+		 which is by default '$targetDirectory/site' on Unix systems. 
+		 The default value is '.'.  -->
+            <outputDirectory>.</outputDirectory>
 
-            <!-- path to the TeX scripts, 
-	    	 if none, it must be on the system path -->
+            <!-- Path to the TeX scripts or null. 
+	   	In the latter case, the scripts must be on the system path. 
+	  	Note that in the pom, <texPath/> 
+		and even <texPath>    </texPath> represent the null-File. 
+		The default value is null. -->
             <texPath/>
 
-            <!-- the latex command. Default: 'pdflatex'. -->
+           <!-- The latex command. 
+		 The default is 'pdflatex'. -->
             <texCommand>pdflatex</texCommand>
 
-            <!-- the bibtex command. Default: 'bibtex' -->
-            <bibtexCommand>bibtex</bibtexCommand>
-
-            <!-- the arguments to use when calling latex -->
+            <!-- The arguments string to use 
+		  when calling latex via $texCommand 
+		  Leading and trailing blanks are ignored. 
+		  A sequence of at least one blank separate the proper options. 
+		  The default value is 
+		  '-interaction=nonstopmode -src-specials'. -->
             <texCommandArgs>
-                <texCommandArg>-interaction=nonstopmode</texCommandArg>
-                <texCommandArg>--src-specials</texCommandArg>
-            </texCommandArgs>
+	      -interaction=nonstopmode -src-specials
+	    </texCommandArgs>
+
+	    <!-- The pattern in the log-file 
+		 indicating a failure when running $texCommand. 
+		 The default value is 
+		 'Fatal error|LaTeX Error|Emergency stop'. 
+		 If this is not sufficient, please extend 
+		 and notify the developer of this plugin. -->
+	    <patternErrLatex>
+	      Fatal error|LaTeX Error|Emergency stop
+	    </patternErrLatex>
+
+	    <!-- Whether debugging of warnings is on: 
+		 If so, a warning in the last LaTeX run is displayed. 
+		 For details, set $cleanUp to false, 
+		 rerun LaTeX and have a look at the log-file. 
+		 The default value is 'true'. -->
+	    <debugWarnings>true</debugWarnings>
+
+
+          <!-- The bibtex command. 
+		 The default value is 'bibtex'. -->
+            <bibtexCommand>bibtex</bibtexCommand>
 
             <!-- the tex4ht command. Default: 'htlatex' -->
             <tex4htCommand>htlatex</tex4htCommand>
 
-            <!-- the arguments to use when calling tex4ht -->
-            <tex4htCommandArgs>
-                <tex4htCommandArg>html,2</tex4htCommandArg>
-                <tex4htCommandArg></tex4htCommandArg>
-                <tex4htCommandArg></tex4htCommandArg>
-                <tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
-            </tex4htCommandArgs>
+	    <!-- options for tex4ht.sty
+		 Format: 
+		 <Output format>, <index>, <depth>, 
+		 ['info'], ['next'], ['fn-in'], ['frames'], 
+		 ['pmathml'], ['pmathml-css'], ...
+		 
+		 options in [] are optional 
+		 DEFAULT: html,2 
+		 Available formats are html, xhtml, mathml, ooffice 
+		 index=2  index in 2 columns. 
+		 depth is the depth of sectioning 
+		 to which separate files are created. 
+		 fn-in specifies inline footnotes 
+		 frames specifies separate frames for contents and toc 
+		 mathml specifies mathml 
+		 uni-html4 is used for unicode
+	    -->
+	    <!-- xhtml,uni-html4,0 mathml,-->
+             <tex4htStyOptions>xhtml,uni-html4,2,svg</tex4htStyOptions>
+
+	    <!-- options for tex4ht.c, default is empty -->
+	    <!-- ' -cunihtf' forces unicode -->
+            <tex4htOptions> -cunihtf -utf8</tex4htOptions>
+
+	    <!-- options for t4ht.c, default is empty 
+		 -p prevents png-->
+            <t4htOptions>-cvalidate</t4htOptions>
+ 
+
+
+
 
             <!-- the pattern which triggers latex rerun 
 	    	 if found in the log file.  -->
 	    <patternNeedAnotherLatexRun>
 	      (Rerun (LaTeX|to get cross-references right)|
 	      There were undefined references|
+(rerunfilecheck)                Rerun to get outlines right|
+Package longtable Warning: Table widths have changed. Rerun LaTeX.|
 	      Package natbib Warning: Citation\\(s\\) may have changed)
 	    </patternNeedAnotherLatexRun>
 
 	    <!-- The maximal number of reruns. If -1 this means, no limit. -->
-	    <maxNumReruns>5</maxNumReruns>
-
-	    <!-- the output directory for tex4ht. 
-	    	 Default is 'm2latex_tex4ht_out' -->
-	    <tex4htOutputDirectory>m2latex_tex4ht_out</tex4htOutputDirectory>
+	    <maxNumReruns>-1</maxNumReruns>
 
            <!-- the latex2rtft command. Default: 'latex2rtf' -->
 	    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
+
+            <!-- clean up the working directory in the end? 
+		 May be used for debugging when setting false. 
+		 Default is true -->
+             <cleanUp>true</cleanUp>
         </settings>
     </configuration>
     <executions>
@@ -106,9 +163,9 @@ The following code snippet shows all possible configuration settings with their 
         <execution>
             <phase>site</phase>
             <goals>
-                <goal>latex</goal>
-                <goal>tex4ht</goal>
-                <goal>latex2rtf</goal>
+                <goal>pdf</goal>
+                <goal>html</goal>
+                <goal>rtf</goal>
             </goals>
         </execution>
     </executions>
