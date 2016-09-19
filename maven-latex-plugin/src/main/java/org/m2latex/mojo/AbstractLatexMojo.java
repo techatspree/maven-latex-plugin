@@ -103,9 +103,9 @@ public abstract class AbstractLatexMojo
         }
 
 	File tempDir = this.settings.getTempDirectoryFile();
-        try {
 	    // copy sources to tempDir 
             this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
+        try {
 
 	    // process xfig files 
  	    Collection<File> figFiles = this.fileUtils
