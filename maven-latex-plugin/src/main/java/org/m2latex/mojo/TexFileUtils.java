@@ -29,35 +29,42 @@ import org.apache.maven.plugin.MojoFailureException;
 public interface TexFileUtils
 {
 
-    FileFilter getLatexOutputFileFilter(File texFile);
-    FileFilter getTex4htOutputFileFilter(File texFile);
-    FileFilter getLatex2rtfOutputFileFilter(File texFile);
+    FileFilter getPdfOutputFileFilter(File texFile);
+
+    FileFilter getHtmOutputFileFilter(File texFile);
+
+    FileFilter getOdtOutputFileFilter(File texFile);
+
+    FileFilter getDocxOutputFileFilter(File texFile);
+
+    FileFilter getRtfOutputFileFilter(File texFile);
 
     void copyOutputToTargetFolder(FileFilter fileFilter, 
 				  File texFile, 
 				  File targetDir)
         throws MojoExecutionException, MojoFailureException;
 
-    void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
+    void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
         throws MojoExecutionException;
 
-    String getFileNameWithoutSuffix( File texFile );
+    String getFileNameWithoutSuffix(File texFile);
 
-    File replaceSuffix( File file, String suffix );
+    File replaceSuffix(File file, String suffix);
 
-    Collection<File> getXFigDocuments( File directory );
+    Collection<File> getXFigDocuments(File directory);
 
     /*
      * @param tempDir
      * 
-     * @return A List of java.io.File objects denoting the LaTeX documents to process.
-     * 
+     * @return
+     *    A List of java.io.File objects 
+     *    denoting the LaTeX documents to process.
      * @throws MojoExecutionException
      */
-    Collection<File> getLatexMainDocuments( File directory )
+    Collection<File> getLatexMainDocuments(File tempDir)
         throws MojoExecutionException;
 
-    boolean matchInLogFile( File logFile, String pattern )
+    boolean matchInLogFile(File logFile, String pattern)
         throws MojoExecutionException;
 
     File getTargetDirectory(File sourceFile,

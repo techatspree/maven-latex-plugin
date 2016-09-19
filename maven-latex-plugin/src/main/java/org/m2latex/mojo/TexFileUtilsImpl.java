@@ -40,21 +40,29 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
-public class TexFileUtilsImpl
-    implements TexFileUtils
-{
-    private static final String[] LATEX_OUTPUT_FILES = 
-	new String[] { ".pdf", ".dvi", ".ps" };
+public class TexFileUtilsImpl implements TexFileUtils {
 
-    private static final String[] HTLATEX_OUTPUT_FILES = 
-	new String[] { "*.html", ".css", "*.png", "*.svg" };
+    private static final String[] LATEX_OUTPUT_FILES = new String[] {
+	 ".pdf", ".dvi", ".ps"
+    };
+
+    private static final String[] HTML_OUTPUT_FILES = new String[] {
+	"*.html", "*.xhtml", "*.htm", ".css", "*.png", "*.svg"
+    };
+
+    private static final String[] OOFFICE_OUTPUT_FILES = new String[] {
+       ".odt", ".fodt", ".uot", ".uot"
+    };
+
+    private static final String[] MSWORD_OUTPUT_FILES = new String[] {
+       ".doc", ".docx", ".rtf"
+    };
 
     private final Log log;
 
     private final Settings settings;
 
-    public TexFileUtilsImpl( Log log, Settings settings )
-    {
+    public TexFileUtilsImpl(Log log, Settings settings) {
         this.log = log;
 	this.settings = settings;
     }
@@ -85,18 +93,28 @@ public class TexFileUtilsImpl
         return fileNames;
     }
 
-//<code></code>
-    public FileFilter getLatexOutputFileFilter(File file) {
+    //<code></code>
+    public FileFilter getPdfOutputFileFilter(File file) {
 	return new WildcardFileFilter(getFilesToCopy(file, 
 						     LATEX_OUTPUT_FILES));
     }
 
-    public FileFilter getTex4htOutputFileFilter(File file) {
+    public FileFilter getHtmOutputFileFilter(File file) {
 	return new WildcardFileFilter(getFilesToCopy(file, 
-						     HTLATEX_OUTPUT_FILES));
+						     HTML_OUTPUT_FILES));
     }
 
-    public FileFilter getLatex2rtfOutputFileFilter(File file) {
+    public FileFilter getOdtOutputFileFilter(File file) {
+	return new WildcardFileFilter(getFilesToCopy(file, 
+						     OOFFICE_OUTPUT_FILES));
+    }
+
+    public FileFilter getDocxOutputFileFilter(File file) {
+	return new WildcardFileFilter(getFilesToCopy(file, 
+						     MSWORD_OUTPUT_FILES));
+    }
+
+    public FileFilter getRtfOutputFileFilter(File file) {
 	return new WildcardFileFilter(getFilesToCopy(file, 
 						     new String[] {".rtf"}));
     }
@@ -163,8 +181,7 @@ public class TexFileUtilsImpl
     public File getTargetDirectory(File sourceFile,
 				   File sourceBaseDir,
 				   File targetBaseDir)
-        throws MojoExecutionException, MojoFailureException
-    {
+        throws MojoExecutionException, MojoFailureException {
         String sourceParentPath;
         String sourceBasePath;
         try
@@ -178,8 +195,7 @@ public class TexFileUtilsImpl
 		("Error getting canonical path", e);
         }
 
-        if ( !sourceParentPath.startsWith( sourceBasePath ) )
-        {
+        if (!sourceParentPath.startsWith(sourceBasePath)) {
             throw new MojoFailureException
 		( "File " + sourceFile + 
 		  " is expected to be somewhere under directory "
@@ -193,17 +209,17 @@ public class TexFileUtilsImpl
     /*
      * (non-Javadoc)
      * 
-     * @see org.m2latex.mojo.TexFileUtils#copyLatexSrcToTempDir(java.io.File, java.io.File)
+     * @see TexFileUtils#copyLatexSrcToTempDir(File, File)
      */
-    public void copyLatexSrcToTempDir( File texDirectory, File tempDirectory )
+    public void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
         throws MojoExecutionException
     {
         try
         {
             if ( tempDirectory.exists() )
             {
-                log.info( "Deleting existing directory " 
-			  + tempDirectory.getPath() );
+                log.info("Deleting existing directory " 
+			 + tempDirectory.getPath() );
                 FileUtils.deleteDirectory( tempDirectory );
             }
 
@@ -223,7 +239,7 @@ public class TexFileUtilsImpl
     /*
      * (non-Javadoc)
      * 
-     * @see org.m2latex.mojo.TexFileUtils#getFileNameWithoutSuffix(java.io.File)
+     * @see TexFileUtils#getFileNameWithoutSuffix(File)
      */
     public String getFileNameWithoutSuffix( File texFile )
     {
@@ -243,16 +259,16 @@ public class TexFileUtilsImpl
     /*
      * (non-Javadoc)
      * 
-     * @see org.m2latex.mojo.TexFileUtils#getLatexMainDocuments(java.io.File)
+     * @see TexFileUtils#getLatexMainDocuments(File)
      */
     public List<File> getLatexMainDocuments( File directory )
-        throws MojoExecutionException
-    {
+        throws MojoExecutionException {
+
         List<File> mainFiles = new ArrayList<File>();
 
         Collection<File> texFiles = FileUtils
 	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter( ".tex" ),
+		       FileFilterUtils.suffixFileFilter(".tex"),
 		       TrueFileFilter.INSTANCE );
 	for (File file : texFiles) {
 	    if ( isTexMainFile( file ) )
@@ -263,95 +279,84 @@ public class TexFileUtilsImpl
         return mainFiles;
     }
 
-   private boolean isTexMainFile( File file )
-        throws MojoExecutionException
-    {
+   private boolean isTexMainFile(File file) throws MojoExecutionException {
         String pattern = ".*\\\\begin\\s*\\{document\\}.*";
 
         try
         {
-            return fileContainsPattern( file, pattern );
+            return fileContainsPattern(file, pattern);
 
         }
-        catch ( FileNotFoundException e )
+        catch (FileNotFoundException e)
         {
-            throw new MojoExecutionException( "The TeX file '" + file.getPath()
+            throw new MojoExecutionException("The TeX file '" + file.getPath()
                 + "' was removed while running this goal", e );
         }
-        catch ( IOException e )
+        catch (IOException e)
         {
             throw new MojoExecutionException
-		( "Problems reading the file '" + file.getPath()
-                + "' while checking if it is a TeX main file", e );
+		("Problems reading the file '" + file.getPath()
+                + "' while checking if it is a TeX main file", e);
         }
     }
 
     // logFile may be .log or .blg or something 
-    public boolean matchInLogFile( File logFile, String pattern )
+    public boolean matchInLogFile(File logFile, String pattern)
         throws MojoExecutionException
     {
         if (!logFile.exists())
 	    {
 		throw new MojoExecutionException
-		    ( "File " + logFile.getPath() 
-		      + " does not exist after running LaTeX." );
+		    ("File " + logFile.getPath() 
+		     + " does not exist after running LaTeX.");
 	    }
        
 	try {
 	    return fileContainsPattern( logFile, pattern );
 	} catch (FileNotFoundException e) {
 	    throw new MojoExecutionException
-		("Log file " + logFile.getPath() 
-		 + " not found. ",
-		 e );
+		("Log file " + logFile.getPath() + " not found. ",
+		 e);
 	} catch (IOException e) {
 	    throw new MojoExecutionException
 		("Error reading log file " + logFile.getPath() + ". ", e);
 	}
     }
 
-    private void copyFileToDirectory( File file, File targetDir )
+    private void copyFileToDirectory(File file, File targetDir)
         throws MojoExecutionException
     {
-        log.info( "Copying " + file.getName() + " to " + targetDir );
+        log.info("Copying " + file.getName() + " to " + targetDir);
 	try {
-	    FileUtils.copyFileToDirectory( file, targetDir );
+	    FileUtils.copyFileToDirectory(file, targetDir);
 	} catch ( IOException e ) {
             throw new MojoExecutionException
 		("Error copying file " + file + " to directory " + targetDir,
-		 e );
+		 e);
         }
     }
 
-    private boolean fileContainsPattern( File file, String regex )
-        throws FileNotFoundException, IOException
-    {
+    private boolean fileContainsPattern(File file, String regex)
+        throws FileNotFoundException, IOException {
+
         Pattern pattern = Pattern.compile( regex );
         BufferedReader bufferedReader = null;
-        try
-        {
-            FileReader fileReader = new FileReader( file );
-            bufferedReader = new BufferedReader( fileReader );
+        try {
+            FileReader fileReader = new FileReader(file);
+            bufferedReader = new BufferedReader(fileReader);
             for (String line = bufferedReader.readLine(); 
 		 line != null; 
-		 line = bufferedReader.readLine() )
-            {
-                if ( pattern.matcher( line ).find() )
-                {
+		 line = bufferedReader.readLine()) {
+                if (pattern.matcher( line ).find()) {
                     return true;
                 }
             }
             return false;
-        }
-        finally
-        {
+        } finally {
             if ( bufferedReader != null )
-                try
-                {
+                try {
                     bufferedReader.close();
-                }
-                catch ( IOException e )
-                {
+                } catch ( IOException e ) {
                     log.warn("Cannot close the file '" + file.getPath() + "'.",
 			     e);
                 }
