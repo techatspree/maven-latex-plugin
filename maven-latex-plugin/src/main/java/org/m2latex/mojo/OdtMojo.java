@@ -29,7 +29,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
- * Build HTML documents and more from LaTeX sources.
+ * Build documents in open office formats from LaTeX sources.
  *
  * @goal odt
  * @phase site

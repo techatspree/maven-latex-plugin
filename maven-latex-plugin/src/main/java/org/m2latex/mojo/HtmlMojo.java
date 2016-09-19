@@ -29,7 +29,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
- * Build HTML documents and more from LaTeX sources.
+ * Build HTML documents and XHTML documents from LaTeX sources.
  *
  * @goal html
  * @phase site
@@ -40,11 +40,11 @@ public class HtmlMojo extends AbstractLatexMojo {
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
-	this.latexProcessor.processTex4ht(texFile);
+	this.latexProcessor.processTex2html(texFile);
     }
 
     // implements AbstractLatexMojo#getFileFilter(File)
     FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getTex4htOutputFileFilter(texFile);
+	return this.fileUtils.getHtmOutputFileFilter(texFile);
     }
 }

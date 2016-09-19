@@ -36,9 +36,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
  * @phase site
  */
 //@Mojo( name = "latex2rtf")
-public class Latex2rtfMojo
-    extends AbstractLatexMojo
-{
+public class RtfMojo extends AbstractLatexMojo {
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
@@ -47,6 +45,6 @@ public class Latex2rtfMojo
 
     // implements AbstractLatexMojo#getFileFilter(File)
     FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getLatex2rtfOutputFileFilter(texFile);
+	return this.fileUtils.getRtfOutputFileFilter(texFile);
     }
 }

@@ -36,17 +36,15 @@ import org.codehaus.plexus.util.cli.CommandLineException;
  * @phase site
  */
 //@Mojo( name = "latex")
- public class LatexMojo
-    extends AbstractLatexMojo
-{
+ public class PdfMojo extends AbstractLatexMojo {
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
-	this.latexProcessor.processLatex(texFile);
+	this.latexProcessor.processLatex2pdf(texFile);
     }
 
     // implements AbstractLatexMojo#getFileFilter(File)
     FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getLatexOutputFileFilter(texFile);
+	return this.fileUtils.getPdfOutputFileFilter(texFile);
     }
 }
