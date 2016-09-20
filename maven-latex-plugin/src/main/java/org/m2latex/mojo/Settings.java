@@ -246,7 +246,7 @@ public class Settings
 	"Extra |" + 
 	"Illegal null field|" + 
 	"Argument |" + 
-	"Illegal null field" + 
+	"Illegal null field|" + 
 	"Unmatched |" + 
 	"Inconsistent page encapsulator |" + 
 	"Conflicting entries";
