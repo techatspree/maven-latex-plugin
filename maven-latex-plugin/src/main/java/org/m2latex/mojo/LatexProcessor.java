@@ -427,7 +427,7 @@ public class LatexProcessor
             throws CommandLineException, MojoExecutionException
     {
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, "pdf");
-	String command = this.settings.getOdt2docCommand();
+	String command = this.settings.getPdf2txtCommand();
 	log.debug( "Running " + command + 
 		   " on file " + pdfFile.getName() + ". ");
 
