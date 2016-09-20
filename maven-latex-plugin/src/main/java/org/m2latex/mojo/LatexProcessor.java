@@ -243,7 +243,7 @@ public class LatexProcessor
 	throws CommandLineException, MojoExecutionException
     {
 	String command = this.settings.getFig2devCommand();
-	log.debug( "Running " +  + 
+	log.debug( "Running " + command + 
 		   " on file " + figFile.getName() + ". ");
 	File workingDir = figFile.getParentFile();
 	String[] args;
@@ -427,7 +427,7 @@ public class LatexProcessor
             throws CommandLineException, MojoExecutionException
     {
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, "pdf");
-	String command = this.settings.getOdt2docCommand()
+	String command = this.settings.getOdt2docCommand();
 	log.debug( "Running " + command + 
 		   " on file " + pdfFile.getName() + ". ");
 

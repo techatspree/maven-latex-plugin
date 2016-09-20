@@ -622,7 +622,7 @@ public class Settings
         return this;
     }
 
-    public Settings setPdf2txtCommand(String pdf2txtCommand {
+    public Settings setPdf2txtCommand(String pdf2txtCommand) {
         this.pdf2txtCommand = pdf2txtCommand;
         return this;
     }
