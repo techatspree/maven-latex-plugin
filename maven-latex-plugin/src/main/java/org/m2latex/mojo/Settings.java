@@ -307,6 +307,16 @@ public class Settings
 
     // FIXME: provide parameters for latex2rtf 
 
+
+    /**
+     * The pdf2txt command converting pdf into plain text. 
+     * Default is <code>pdftotext</code>. 
+     *
+     * @parameter
+     */
+    private String pdf2txtCommand = "pdftotext";
+
+
     // rerunning latex 
 
     /**
@@ -446,6 +456,10 @@ public class Settings
 
     public String getOdt2docCommand() {
         return this.odt2docCommand;
+    }
+
+    public String getPdf2txtCommand() {
+        return this.pdf2txtCommand;
     }
 
     public boolean isCleanUp() {
@@ -608,6 +622,11 @@ public class Settings
         return this;
     }
 
+    public Settings setPdf2txtCommand(String pdf2txtCommand {
+        this.pdf2txtCommand = pdf2txtCommand;
+        return this;
+    }
+
     // **** why this with annotation parameter? 
     /**
      * @parameter
@@ -665,6 +684,7 @@ public class Settings
 	sb.append(",t4htOptions=")     .append(this.t4htOptions);
         sb.append(",latex2rtfCommand=").append(this.latex2rtfCommand);
         sb.append(",odt2docCommand=")  .append(this.odt2docCommand);
+        sb.append(",pdf2txtCommand=")  .append(this.pdf2txtCommand);
 	sb.append(",patternNeedAnotherLatexRun=")
 	    .append(this.patternNeedAnotherLatexRun);
 	sb.append(",maxNumReruns=").append(this.maxNumReruns);

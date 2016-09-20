@@ -39,6 +39,8 @@ public interface TexFileUtils
 
     FileFilter getRtfOutputFileFilter(File texFile);
 
+    FileFilter getTxtOutputFileFilter(File texFile);
+
     void copyOutputToTargetFolder(FileFilter fileFilter, 
 				  File texFile, 
 				  File targetDir)

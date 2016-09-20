@@ -202,6 +202,10 @@ Package longtable Warning: Table widths have changed. Rerun LaTeX.|
 	    	 Default is 'odt2doc'. -->
 	    <odt2docCommand>odt2doc</odt2docCommand>
 
+	    <!-- The pdf2txt command converting pdf into plain text. 
+	    	 Default is 'pdftotext'.  -->
+            <pdf2txtCommand>pdftotext</pdf2txtCommand>
+
             <!-- clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
 		 Default is true -->
@@ -218,6 +222,7 @@ Package longtable Warning: Table widths have changed. Rerun LaTeX.|
                 <goal>rtf</goal>
                 <goal>odt</goal>
                 <goal>doc</goal>
+                <goal>txt</goal>
 <!--
 here is a bug affecting goal odt: 
 /usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def

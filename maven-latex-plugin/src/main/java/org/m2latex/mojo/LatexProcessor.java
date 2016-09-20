@@ -197,11 +197,27 @@ public class LatexProcessor
      * @see #processLatex2pdf(File)
      * @see #runLatex2rtf(File)
      */
-     public void processLatex2rtf( File texFile )
+    public void processLatex2rtf( File texFile )
           throws MojoExecutionException, CommandLineException
     {
 	log.info("Processing LaTeX file " + texFile + ". ");
 	runLatex2rtf(texFile);
+    }
+
+    /**
+     * Runs direct conversion of <code>texFile</code> to txt format 
+     * via pdf. 
+     *
+     * @param texFile
+     *    the tex file to be processed. 
+     * @see #processLatex2pdf(File)
+     * @see #runPdf2txt(File)
+     */
+   public void processLatex2txt( File texFile )
+          throws MojoExecutionException, CommandLineException
+    {
+        processLatex2pdf(texFile);
+	runPdf2txt(texFile);
     }
 
     private boolean update(File source, File target)
@@ -226,45 +242,46 @@ public class LatexProcessor
     public void runFig2Dev(File figFile)
 	throws CommandLineException, MojoExecutionException
     {
-	log.debug( "Running " + this.settings.getFig2devCommand() + 
+	String command = this.settings.getFig2devCommand();
+	log.debug( "Running " +  + 
 		   " on file " + figFile.getName() + ". ");
-       File workingDir = figFile.getParentFile();
-       String[] args;
+	File workingDir = figFile.getParentFile();
+	String[] args;
 
-       File pdfFile   = this.fileUtils.replaceSuffix(figFile, "pdf");
-       File pdf_tFile = this.fileUtils.replaceSuffix(figFile, "pdf_t");
+	File pdfFile   = this.fileUtils.replaceSuffix(figFile, "pdf");
+	File pdf_tFile = this.fileUtils.replaceSuffix(figFile, "pdf_t");
 
-       String pdf   = pdfFile  .toString();
-       String pdf_t = pdf_tFile.toString();
+	String pdf   = pdfFile  .toString();
+	String pdf_t = pdf_tFile.toString();
 
-       if (update(figFile, pdfFile)) {
-	   args = new String[] {
-	       "-L", // language 
-	       "pdftex",
-	       figFile.getName(), // source 
-	       pdf // target 
-	   };
-	   this.executor.execute(workingDir, 
-				 this.settings.getTexPath(), //**** 
-				 this.settings.getFig2devCommand(), 
-				 args);
-       }
+	if (update(figFile, pdfFile)) {
+	    args = new String[] {
+		"-L", // language 
+		"pdftex",
+		figFile.getName(), // source 
+		pdf // target 
+	    };
+	    this.executor.execute(workingDir, 
+				  this.settings.getTexPath(), //**** 
+				  command, 
+				  args);
+	}
 
-      if (update(figFile, pdf_tFile)) {
-	  args = new String[] {
-	      "-L",// language 
-	      "pdftex_t",
-	      "-p",// portrait (-l for landscape), next argument ignored 
-	      pdf,
-	      figFile.getName(), // source 
-	      pdf_t // target 
-	  };
-	  this.executor.execute(workingDir, 
-				this.settings.getTexPath(), //**** 
-				this.settings.getFig2devCommand(), 
-				args);
-      }
-      // no check: just warning that no output has been created. 
+	if (update(figFile, pdf_tFile)) {
+	    args = new String[] {
+		"-L",// language 
+		"pdftex_t",
+		"-p",// portrait (-l for landscape), next argument ignored 
+		pdf,
+		figFile.getName(), // source 
+		pdf_t // target 
+	    };
+	    this.executor.execute(workingDir, 
+				  this.settings.getTexPath(), //**** 
+				  command, 
+				  args);
+	}
+	// no check: just warning that no output has been created. 
     }
 
     /**
@@ -277,14 +294,15 @@ public class LatexProcessor
     private void runLatex2rtf( File texFile )
             throws CommandLineException, MojoExecutionException
     {
-        log.debug( "Running " + settings.getLatex2rtfCommand() + 
+	String command = this.settings.getLatex2rtfCommand();
+        log.debug( "Running " +command + 
 		   " on file " + texFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();
         String[] args = buildLatex2rtfArguments( texFile );
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
-			      this.settings.getLatex2rtfCommand(), 
+			      command, 
 			      args);
 
 	// FIXME: no check: just warning that no output has been created. 
@@ -305,14 +323,15 @@ public class LatexProcessor
     private void runLatex2html( File texFile )
             throws CommandLineException, MojoExecutionException
     {
-        log.debug( "Running " + settings.getTex4htCommand() + 
+	String command = this.settings.getTex4htCommand();
+        log.debug( "Running " + command + 
 		   " on file " + texFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();
         String[] args = buildHtlatexArguments( texFile );
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
-			      this.settings.getTex4htCommand(), 
+			      command, 
 			      args);
 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
@@ -351,7 +370,8 @@ public class LatexProcessor
     private void runLatex2odt( File texFile)
             throws CommandLineException, MojoExecutionException
     {
-        log.debug( "Running " + settings.getTex4htCommand() + 
+	String command = this.settings.getTex4htCommand();
+        log.debug( "Running " + command + 
 		   " on file " + texFile.getName() + ". ");
 
         String[] args = new String[] {
@@ -362,7 +382,7 @@ public class LatexProcessor
 	};
         this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
-			      this.settings.getTex4htCommand(), 
+			      command, 
 			      args);
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
@@ -392,13 +412,29 @@ public class LatexProcessor
             throws CommandLineException, MojoExecutionException
     {
 	File odtFile = this.fileUtils.replaceSuffix(texFile, "odt");
-	log.debug( "Running " + this.settings.getOdt2docCommand() + 
+	String command = this.settings.getOdt2docCommand();
+	log.debug( "Running " + command + 
 		   " on file " + odtFile.getName() + ". ");
 
 	String[] args = new String[] {odtFile.getName()};
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
-			      this.settings.getOdt2docCommand(), 
+			      command, 
+			      args);
+    }
+
+    private void runPdf2txt( File texFile)
+            throws CommandLineException, MojoExecutionException
+    {
+	File pdfFile = this.fileUtils.replaceSuffix(texFile, "pdf");
+	String command = this.settings.getOdt2docCommand()
+	log.debug( "Running " + command + 
+		   " on file " + pdfFile.getName() + ". ");
+
+	String[] args = new String[] {pdfFile.getName()};
+	this.executor.execute(texFile.getParentFile(), 
+			      this.settings.getTexPath(), 
+			      command, 
 			      args);
     }
 

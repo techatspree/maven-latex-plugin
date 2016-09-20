@@ -119,6 +119,11 @@ public class TexFileUtilsImpl implements TexFileUtils {
 						     new String[] {".rtf"}));
     }
 
+    public FileFilter getTxtOutputFileFilter(File file) {
+	return new WildcardFileFilter(getFilesToCopy(file, 
+						     new String[] {".txt"}));
+    }
+
     /**
      * Invoked only by AbstractLatexMojo#execute()
      * 
