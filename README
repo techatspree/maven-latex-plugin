@@ -166,6 +166,8 @@ Package longtable Warning: Table widths have changed. Rerun LaTeX.|
                 <goal>pdf</goal>
                 <goal>html</goal>
                 <goal>rtf</goal>
+                <goal>odt</goal>
+                <goal>doc</goal>
             </goals>
         </execution>
     </executions>
