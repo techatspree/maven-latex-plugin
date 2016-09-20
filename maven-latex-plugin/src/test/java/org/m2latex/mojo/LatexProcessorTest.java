@@ -62,7 +62,7 @@ public class LatexProcessorTest
 	this.texFile.getName() 
     };
 
-    private String[] tex4htArgsExpected = new String[] {
+    private String[] tex2htmlArgsExpected = new String[] {
         this.texFile.getName(),
         "html,2",
         "",
@@ -96,7 +96,7 @@ public class LatexProcessorTest
 
         replay();
 
-        processor.processLatex( this.texFile );
+        processor.processLatex2pdf( this.texFile );
 
         verify();
     }
@@ -132,12 +132,12 @@ public class LatexProcessorTest
 
         replay();
 
-        processor.processLatex( this.texFile );
+        processor.processLatex2pdf( this.texFile );
 
         verify();
     }
 
-   @Test public void testProcessTex4ht()
+   @Test public void testProcessTex2html()
         throws Exception
     {
  	// run latex 
@@ -161,11 +161,11 @@ public class LatexProcessorTest
 	fileUtils.matchInLogFile(logFile, "Warning ");
 	fileUtilsCtrl.setReturnValue( false );
 
-        mockRunTex4ht();
+        mockRunTex2html();
 
         replay();
 
-        processor.processTex4ht(this. texFile );
+        processor.processTex2html(this. texFile );
 
         verify();
     }
@@ -204,11 +204,11 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "blg" );
 	fileUtilsCtrl.setReturnValue( blgFile );
 
-	fileUtils.matchInLogFile(blgFile, "Error");
-	fileUtilsCtrl.setReturnValue( false );
+	// fileUtils.matchInLogFile(blgFile, "Error");
+	// fileUtilsCtrl.setReturnValue( false );
 
-	fileUtils.matchInLogFile(blgFile, "Warning");
-	fileUtilsCtrl.setReturnValue( false );
+	// fileUtils.matchInLogFile(blgFile, "Warning");
+	// fileUtilsCtrl.setReturnValue( false );
     }
 
     private void mockRunLatex()
@@ -224,17 +224,17 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
 
-	fileUtils.matchInLogFile(logFile, this.settings.getPatternErrLatex());
-	fileUtilsCtrl.setReturnValue( false );
+	// fileUtils.matchInLogFile(logFile, this.settings.getPatternErrLatex());
+	// fileUtilsCtrl.setReturnValue( false );
     }
 
-    private void mockRunTex4ht()
+    private void mockRunTex2html()
             throws CommandLineException, MojoExecutionException
     {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
-			 tex4htArgsExpected );
+			 tex2htmlArgsExpected );
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
 
