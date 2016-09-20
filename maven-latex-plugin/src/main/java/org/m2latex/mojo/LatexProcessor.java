@@ -214,8 +214,6 @@ public class LatexProcessor
 	return source.lastModified() > target.lastModified();
     }
 
-    private static String fig2devCommand = "fig2dev";
-
     /**
      * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
      * This is a quite restricted usage of fig2dev. 
@@ -228,7 +226,7 @@ public class LatexProcessor
     public void runFig2Dev(File figFile)
 	throws CommandLineException, MojoExecutionException
     {
-       log.debug( "Running " + fig2devCommand + 
+	log.debug( "Running " + this.settings.getFig2devCommand() + 
 		   " on file " + figFile.getName() + ". ");
        File workingDir = figFile.getParentFile();
        String[] args;
@@ -248,7 +246,7 @@ public class LatexProcessor
 	   };
 	   this.executor.execute(workingDir, 
 				 this.settings.getTexPath(), //**** 
-				 fig2devCommand, 
+				 this.settings.getFig2devCommand(), 
 				 args);
        }
 
@@ -263,7 +261,7 @@ public class LatexProcessor
 	  };
 	  this.executor.execute(workingDir, 
 				this.settings.getTexPath(), //**** 
-				fig2devCommand, 
+				this.settings.getFig2devCommand(), 
 				args);
       }
       // no check: just warning that no output has been created. 
@@ -384,7 +382,6 @@ public class LatexProcessor
 	// should be displayed configurable. 
     }
 
-    String odt2docCommand = "odt2doc";
 
     // FIXME: missing options. 
     // above all doctype: -ddoc, -ddocx 
@@ -395,13 +392,13 @@ public class LatexProcessor
             throws CommandLineException, MojoExecutionException
     {
 	File odtFile = this.fileUtils.replaceSuffix(texFile, "odt");
-	log.debug( "Running " + odt2docCommand + 
+	log.debug( "Running " + this.settings.getOdt2docCommand() + 
 		   " on file " + odtFile.getName() + ". ");
 
 	String[] args = new String[] {odtFile.getName()};
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
-			      odt2docCommand, 
+			      this.settings.getOdt2docCommand(), 
 			      args);
     }
 
@@ -425,35 +422,27 @@ public class LatexProcessor
         return this.fileUtils.matchInLogFile( logFile, pattern );
     }
 
-    private String patternErrMakeindex = 
-	// FIXME: List is incomplete 
-	"Extra |" + 
-	"Illegal null field|" + 
-	"Argument |" + 
-	"Illegal null field" + 
-	"Unmatched |" + 
-	"Inconsistent page encapsulator |" + 
-	"Conflicting entries";
 
     private void runMakeindex(File idxFile)
 	throws CommandLineException, MojoExecutionException
     {
-	log.debug( "Running makeindex on file " + idxFile.getName() + ". ");
+	log.debug( "Running " + this.settings.getMakeIndexCommand() + 
+		   " on file " + idxFile.getName() + ". ");
 
 	File workingDir = idxFile.getParentFile();
 	String[] args = new String[] {idxFile.getName()};
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
-			      "makeindex", 
+			      this.settings.getMakeIndexCommand(), 
 			      args);
 
 	// detect errors 
  	File logFile = this.fileUtils.replaceSuffix( idxFile, "ilg" );
 	if (logFile.exists()) {
 	    boolean errOccurred = this.fileUtils.matchInLogFile
-		(logFile, patternErrMakeindex);
+		(logFile, this.settings.getPatternErrMakeindex());
 	    if (errOccurred) {
-		log.warn("Makeindex failed when running on " + idxFile + 
+		log.warn("MakeIndex failed when running on " + idxFile + 
 			 ". For details see " + logFile.getName() + ". ");
 	    }
 	    // FIXME: what about warnings? 
@@ -528,7 +517,7 @@ public class LatexProcessor
 			      this.settings.getTexCommand(), 
 			      args);
 
-	// FIXME: May be no log is written? 
+	// logging errors 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
 	if (logFile.exists()) {
 	    boolean errorOccurred = this.fileUtils
@@ -546,8 +535,7 @@ public class LatexProcessor
 
     private String[] buildLatexArguments( File texFile )
     {
-        String[] texCommandArgs = this.settings.getTexCommandArgs()
-	    .split(" ");
+        String[] texCommandArgs = this.settings.getTexCommandArgs().split(" ");
         String[] args = new String[texCommandArgs.length + 1];
         System.arraycopy( texCommandArgs, 0, args, 0, texCommandArgs.length );
         args[texCommandArgs.length] = texFile.getName();

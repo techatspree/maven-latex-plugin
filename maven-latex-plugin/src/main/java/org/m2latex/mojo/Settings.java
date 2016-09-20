@@ -150,7 +150,18 @@ public class Settings
     private File texPath = null;
 
     /**
-     * The latex command. The default value is <code>pdflatex</code>. 
+     * The fig2dev command for conversion of fig-files 
+     * into various formats. 
+     * Currently only pdf combined with pdf_t is supported. 
+     * The default value is <code>fig2dev</code>. 
+     *
+     * @parameter
+     */
+    private String fig2devCommand = "fig2dev";
+
+
+    /**
+     * The LaTeX command. The default value is <code>pdflatex</code>. 
      * FIXME: The goal shall not be latex but pdf. 
      * Thus maybe it is a bad idea to make the executable configurable. 
      *
@@ -205,13 +216,41 @@ public class Settings
     private boolean debugWarnings = true;
 
     /**
-     * The bibtex command. The default value is <code>bibtex</code>. 
+     * The BibTeX command. The default value is <code>bibtex</code>. 
      *
      * @parameter
      */
     private String bibtexCommand = "bibtex";
 
     // FIXME: Any parameters for bibtex? 
+
+
+    /**
+     * The MakeIndex command. The default value is <code>makeindex</code>. 
+     *
+     * @parameter
+     */
+    private String makeIndexCommand = "makeindex";
+
+    /**
+     * The Pattern in the ilg-file 
+     * indicating that {@link #makeIndexCommand} failed. 
+     * The default value is chosen 
+     * according to the <code>makeindex</code> documentation 
+     * but seems to be incomplete. 
+     *
+     * @parameter
+     */
+    private String patternErrMakeindex = 
+	// FIXME: List is incomplete 
+	"Extra |" + 
+	"Illegal null field|" + 
+	"Argument |" + 
+	"Illegal null field" + 
+	"Unmatched |" + 
+	"Inconsistent page encapsulator |" + 
+	"Conflicting entries";
+
 
     /**
      * The tex4ht command. The default value is <code>htlatex</code>. 
@@ -258,6 +297,13 @@ public class Settings
      * @parameter
      */
     private String latex2rtfCommand = "latex2rtf";
+
+    /**
+     * The odt2doc command. Default is <code>odt2doc</code>. 
+     *
+     * @parameter
+     */
+    private String odt2docCommand = "odt2doc";
 
     // FIXME: provide parameters for latex2rtf 
 
@@ -340,6 +386,10 @@ public class Settings
         return this.texPath;
     }
 
+    public String getFig2devCommand() {
+        return this.fig2devCommand;
+    }
+
     public String getTexCommand() {
         return this.texCommand;
     }
@@ -366,6 +416,14 @@ public class Settings
         return this.bibtexCommand;
     }
 
+    public String getMakeIndexCommand() {
+	return this.makeIndexCommand;
+    }
+
+    public String getPatternErrMakeindex() {
+	return this.patternErrMakeindex;
+    }
+
     public String getTex4htCommand() {
         return this.tex4htCommand;
     }
@@ -384,6 +442,10 @@ public class Settings
 
     public String getLatex2rtfCommand() {
         return this.latex2rtfCommand;
+    }
+
+    public String getOdt2docCommand() {
+        return this.odt2docCommand;
     }
 
     public boolean isCleanUp() {
@@ -469,6 +531,11 @@ public class Settings
         return this;
     }
 
+    public Settings setFig2devCommand(String fig2devCommand) {
+        this.fig2devCommand = fig2devCommand;
+	return this;
+    }
+
     public Settings setTexCommand(String texCommand) {
         this.texCommand = texCommand;
         return this;
@@ -494,6 +561,16 @@ public class Settings
 
     public Settings setBibtexCommand(String bibtexCommand) {
         this.bibtexCommand = bibtexCommand;
+        return this;
+    }
+
+    public Settings setMakeIndexCommand(String makeIndexCommand) {
+        this.makeIndexCommand = makeIndexCommand;
+        return this;
+    }
+
+    public Settings setPatternErrMakeindex(String patternErrMakeindex) {
+        this.patternErrMakeindex = patternErrMakeindex;
         return this;
     }
 
@@ -523,6 +600,11 @@ public class Settings
 
     public Settings setLatex2rtfCommand(String latex2rtfCommand) {
         this.latex2rtfCommand = latex2rtfCommand;
+        return this;
+    }
+
+    public Settings setOdt2docCommand(String odt2docCommand) {
+        this.odt2docCommand = odt2docCommand;
         return this;
     }
 
@@ -568,18 +650,21 @@ public class Settings
 	sb.append(",tempDirectory=")   .append(this.tempDirectory);
  	sb.append(",outputDirectory=") .append(this.outputDirectory);
         sb.append(",texPath=")         .append(this.texPath);
+        sb.append(",fig2devCommand=")  .append(this.fig2devCommand);
         sb.append(",texCommand=")      .append(this.texCommand);
 	sb.append(",texCommandArgs=")  .append(this.texCommandArgs);
 	sb.append(",patternErrLatex=") .append(this.patternErrLatex);
  	sb.append(",debugBadBoxes=")   .append(this.debugBadBoxes);
  	sb.append(",debugWarnings=")   .append(this.debugWarnings);
         sb.append(",bibtexCommand=")   .append(this.bibtexCommand);
+        sb.append(",makeIndexCommand=").append(this.makeIndexCommand);
+        sb.append(",patternErrMakeindex=").append(this.patternErrMakeindex);
         sb.append(",tex4htCommand=")   .append(this.tex4htCommand);
         sb.append(",tex4htStyOptions=").append(this.tex4htStyOptions);
         sb.append(",tex4htOptions=")   .append(this.tex4htOptions);
 	sb.append(",t4htOptions=")     .append(this.t4htOptions);
         sb.append(",latex2rtfCommand=").append(this.latex2rtfCommand);
-        sb.append(",baseDirectory=")   .append(this.baseDirectory);
+        sb.append(",odt2docCommand=")  .append(this.odt2docCommand);
 	sb.append(",patternNeedAnotherLatexRun=")
 	    .append(this.patternNeedAnotherLatexRun);
 	sb.append(",maxNumReruns=").append(this.maxNumReruns);

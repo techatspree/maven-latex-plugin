@@ -26,8 +26,22 @@ Note latex-maven-plugin was formerly maven-latex-plugin.
 The rename is due to new conventions. 
 All in all version 1.3 is just an update 
 using java 1.6 (formerly 1.3) and junit 4 (formerly 3), 
-adding some missing parameters 
-and another goal, latex2rtf. 
+adding some missing parameters, 
+renaming and adding further goals for various output. 
+Also, warnings were added. 
+Also, makeindex is now supported and also a single preprocessor, 
+fig2dev in a rudimentary way. 
+
+A maven plugin is just an interface between maven 
+and the application(s) doing all the work. 
+In this case, needed are 
+- a derivative of latex, as latex, pdflatex or something 
+- something like bibtex 
+- something like makeindex 
+- tex4ht for creation of all but rtf, pdf and dvi 
+  including html, odt and doc 
+- latex2rtf for creation of rtf 
+- odt2doc for creation of doc and docx 
 
 
 The following code snippet shows all possible configuration settings with their default values.
@@ -65,7 +79,13 @@ The following code snippet shows all possible configuration settings with their 
 		The default value is null. -->
             <texPath/>
 
-           <!-- The latex command. 
+	    <!-- The fig2dev command for conversion of fig-files 
+		 into various formats. 
+		 Currently only pdf combined with pdf_t is supported. 
+		 The default value is <code>fig2dev</code>.  -->
+	    <fig2devCommand>fig2dev</fig2devCommand>
+  
+            <!-- The LaTeX command. 
 		 The default is 'pdflatex'. -->
             <texCommand>pdflatex</texCommand>
 
@@ -89,6 +109,14 @@ The following code snippet shows all possible configuration settings with their 
 	      Fatal error|LaTeX Error|Emergency stop
 	    </patternErrLatex>
 
+	    <!-- Whether debugging of overfull/underfull hboxes/vboxes is on: 
+		 If so, a bad box occurs in the last LaTeX run, 
+		 a warning is displayed. 
+		 For details, set $cleanUp to false, 
+		 rerun LaTeX and have a look at the log-file.
+		 The default value is 'true'. -->
+	    <debugBadBoxes>true</debugBadBoxes>
+
 	    <!-- Whether debugging of warnings is on: 
 		 If so, a warning in the last LaTeX run is displayed. 
 		 For details, set $cleanUp to false, 
@@ -96,11 +124,28 @@ The following code snippet shows all possible configuration settings with their 
 		 The default value is 'true'. -->
 	    <debugWarnings>true</debugWarnings>
 
-
-          <!-- The bibtex command. 
+            <!-- The BibTeX command. 
 		 The default value is 'bibtex'. -->
             <bibtexCommand>bibtex</bibtexCommand>
 
+	    <!-- The MakeIndex command. 
+		 The default value is <code>makeindex</code>. -->
+	    <makeIndexCommand>makeindex</makeIndexCommand>
+
+	    <!-- The Pattern in the ilg-file 
+		 indicating that {@link #makeIndexCommand} failed. 
+		 The default value is chosen 
+		 according to the <code>makeindex</code> documentation 
+		 but seems to be incomplete. -->
+	    <patternErrMakeindex>	Extra |
+	    Illegal null field|
+	    Argument |
+	    Illegal null field|
+	    Unmatched |
+	    Inconsistent page encapsulator |
+	    Conflicting entries
+	    </patternErrMakeindex>
+ 
             <!-- the tex4ht command. Default: 'htlatex' -->
             <tex4htCommand>htlatex</tex4htCommand>
 
@@ -149,8 +194,13 @@ Package longtable Warning: Table widths have changed. Rerun LaTeX.|
 	    <!-- The maximal number of reruns. If -1 this means, no limit. -->
 	    <maxNumReruns>-1</maxNumReruns>
 
-           <!-- the latex2rtft command. Default: 'latex2rtf' -->
-	    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
+            <!-- The latex2rtf command. 
+		 Default is 'latex2rtf'. -->
+ 	    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
+
+            <!-- The odt2doc command. 
+	    	 Default is 'odt2doc'. -->
+	    <odt2docCommand>odt2doc</odt2docCommand>
 
             <!-- clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
