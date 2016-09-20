@@ -81,9 +81,6 @@ public abstract class AbstractLatexMojo
     // set by {@link #initialize()}. 
     protected TexFileUtils fileUtils;
 
-    // set by {@link #initialize()}. 
-    protected Log log;// really needed? what about getLog()? 
-
 
     // depends on abstract methods processSource(File), 
     // getOutputDir() and getFileFilter(File)
@@ -91,14 +88,14 @@ public abstract class AbstractLatexMojo
         throws MojoExecutionException, MojoFailureException
     {
         initialize();
-        log.debug("Settings: " + settings.toString() );
-        log.info("settings.getOutputDirectoryFile(): " + 
-		  settings.getOutputDirectoryFile() );
+        getLog().debug("Settings: " + settings.toString() );
+        getLog().info("OutputDirectory: " + 
+		      this.settings.getOutputDirectoryFile() );
 
         File texDirectory = settings.getTexSrcDirectoryFile();
 
         if ( !texDirectory.exists() ) {
-            log.info( "No tex directory - skipping LaTeX processing" );
+            getLog().info( "No tex directory - skipping LaTeX processing" );
             return;
         }
 
@@ -111,7 +108,7 @@ public abstract class AbstractLatexMojo
  	    Collection<File> figFiles = this.fileUtils
 		.getXFigDocuments(tempDir);
 	    for (File figFile : figFiles) {
-		log.info("Processing " + figFile + ". ");
+		getLog().info("Processing " + figFile + ". ");
 		this.latexProcessor.runFig2Dev(figFile);
 	    }
 
@@ -183,8 +180,11 @@ public abstract class AbstractLatexMojo
 	    .setTargetSiteDirectory( this.targetSiteDirectory )
             .setTargetDirectory( this.targetDirectory );
 
-        this.log = getLog();
+        Log log = getLog();
         this.fileUtils = new TexFileUtilsImpl( log, settings );
-        this.latexProcessor = new LatexProcessor( settings, new CommandExecutorImpl( this.log ), this.log, this.fileUtils );
+        this.latexProcessor = new LatexProcessor(settings, 
+						 new CommandExecutorImpl(log), 
+						 log, 
+						 this.fileUtils);
     }
 }
