@@ -218,6 +218,14 @@ Package longtable Warning: Table widths have changed. Rerun LaTeX.|
                 <goal>rtf</goal>
                 <goal>odt</goal>
                 <goal>doc</goal>
+<!--
+here is a bug affecting goal odt: 
+/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
+89c89
+ \def\pgfsys@svg@newline{{?nl}} % replacement 
+- - -
+ \def\pgfsys@svg@newline{\Hnewline} % original 
+-->
             </goals>
         </execution>
     </executions>
