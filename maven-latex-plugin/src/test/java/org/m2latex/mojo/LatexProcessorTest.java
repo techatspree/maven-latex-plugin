@@ -137,7 +137,7 @@ public class LatexProcessorTest
         verify();
     }
 
-   @Test public void testProcessTex2html()
+   @Test public void testProcessLatex2html()
         throws Exception
     {
  	// run latex 
@@ -161,11 +161,11 @@ public class LatexProcessorTest
 	fileUtils.matchInLogFile(logFile, "Warning ");
 	fileUtilsCtrl.setReturnValue( false );
 
-        mockRunTex2html();
+        mockRunLatex2html();
 
         replay();
 
-        processor.processTex2html(this. texFile );
+        processor.processLatex2html(this. texFile );
 
         verify();
     }
@@ -228,7 +228,7 @@ public class LatexProcessorTest
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
-    private void mockRunTex2html()
+    private void mockRunLatex2html()
             throws CommandLineException, MojoExecutionException
     {
         executor.execute(texFile.getParentFile(),

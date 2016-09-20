@@ -40,7 +40,7 @@ public class OdtMojo extends AbstractLatexMojo {
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
-	this.latexProcessor.processTex2odt(texFile);
+	this.latexProcessor.processLatex2odt(texFile);
     }
 
     // implements AbstractLatexMojo#getFileFilter(File)

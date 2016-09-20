@@ -139,13 +139,13 @@ public class LatexProcessor
      * @param texFile
      *    the tex file to be processed. 
      * @see #processLatex2pdf(File)
-     * @see #runTex2html(File)
+     * @see #runLatex2html(File)
      */
-    public void processTex2html( File texFile )
+    public void processLatex2html( File texFile )
             throws MojoExecutionException, CommandLineException
     {
         processLatex2pdf(texFile);
-        runTex2html     (texFile);
+        runLatex2html     (texFile);
     }
 
     /**
@@ -157,13 +157,13 @@ public class LatexProcessor
      * @param texFile
      *    the tex file to be processed. 
      * @see #processLatex2pdf(File)
-     * @see #runTex2odt(File)
+     * @see #runLatex2odt(File)
      */
-    public void processTex2odt( File texFile )
+    public void processLatex2odt( File texFile )
             throws MojoExecutionException, CommandLineException
     {
         processLatex2pdf( texFile );
-        runTex2odt( texFile );
+        runLatex2odt( texFile );
     }
 
     /**
@@ -177,11 +177,11 @@ public class LatexProcessor
      * @see #processLatex2pdf(File)
      * @see #runOdt2doc(File)
      */
-    public void processTex2docx( File texFile )
+    public void processLatex2docx( File texFile )
             throws MojoExecutionException, CommandLineException
     {
         processLatex2pdf(texFile);
-        runTex2odt(texFile);
+        runLatex2odt(texFile);
         runOdt2doc(texFile);
     }
 
@@ -194,7 +194,7 @@ public class LatexProcessor
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #processLatex(File)
+     * @see #processLatex2pdf(File)
      * @see #runLatex2rtf(File)
      */
      public void processLatex2rtf( File texFile )
@@ -302,7 +302,7 @@ public class LatexProcessor
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildHtlatexArguments(File)}. 
      */
-    private void runTex2html( File texFile )
+    private void runLatex2html( File texFile )
             throws CommandLineException, MojoExecutionException
     {
         log.debug( "Running " + settings.getTex4htCommand() + 
@@ -348,7 +348,7 @@ public class LatexProcessor
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
      */
-    private void runTex2odt( File texFile)
+    private void runLatex2odt( File texFile)
             throws CommandLineException, MojoExecutionException
     {
         log.debug( "Running " + settings.getTex4htCommand() + 

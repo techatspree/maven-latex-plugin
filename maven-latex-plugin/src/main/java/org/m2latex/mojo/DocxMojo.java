@@ -40,7 +40,7 @@ public class DocxMojo extends AbstractLatexMojo {
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
-	this.latexProcessor.processTex2docx(texFile);
+	this.latexProcessor.processLatex2docx(texFile);
     }
 
     // implements AbstractLatexMojo#getFileFilter(File)
