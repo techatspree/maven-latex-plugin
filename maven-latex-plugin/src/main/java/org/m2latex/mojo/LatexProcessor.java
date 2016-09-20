@@ -50,18 +50,41 @@ public class LatexProcessor
     }
 
     /**
-     * Runs latex on <code>texFile</code> at least once, 
-     * runs bibtex and reruns latex as long as needed to get all links 
+     * Runs LaTeX on <code>texFile</code> at least once, 
+     * runs BibTeX and MakeIndex by need 
+     * and reruns latex as long as needed to get all links 
      * or as threshold {@link Settings#maxNumReruns} specifies. 
+     * <p>
+     * The result of the LaTeX run is typically some pdf-file, 
+     * but it is also possible to specify the dvi-format 
+     * (no longer recommended but still working). 
+     * <p>
+     * A warning is logged if 
+     * <ul>
+     * <li>
+     * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
+     * <li>
+     * bad boxes occurred and shall be logged 
+     * according to {@link Settings#getDebugBadBoxes()} 
+     * <li>
+     * warnings occurred and shall be logged 
+     * according to {@link Settings#getDebugWarnings()} 
+     * </ul>
+     * A warning is logged if a LaTeX run, a BibTeX run or MakeIndex fails 
+     * or if BibTeX run or a MakeIndex run issues a warning
+     * in the according methods {@link #runLatex(File)}, 
+     * {@link #runBibtex(File)} and {@link #runMakeindex(File)}. 
      *
      * @param texFile
      *    the tex file to be processed. 
      * @see #runLatex(File)
      * @see #runBibtex(File)
+     * @see #runMakeindex(File)
      * @see #needAnotherLatexRun(File)
      * @see #needBibtexRun(File)
      */
-    public void processLatex(final File texFile)
+    // FIXME: what about glossaries and things like that? 
+    public void processLatex2pdf(final File texFile)
             throws CommandLineException, MojoExecutionException
     {
         log.info("Processing LaTeX file " + texFile + ". ");
@@ -109,24 +132,65 @@ public class LatexProcessor
     }
 
     /**
-     * Runs tex4ht on <code>texFile</code> 
-     * after processing latex to set up the references. 
+     * Runs conversion of <code>texFile</code> to html or xhtml 
+     * after processing latex to set up the references, 
+     * bibliography, index and that like. 
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #processLatex(File)
-     * @see #runTex4ht(File)
+     * @see #processLatex2pdf(File)
+     * @see #runTex2html(File)
      */
-    public void processTex4ht( File texFile )
+    public void processTex2html( File texFile )
             throws MojoExecutionException, CommandLineException
     {
-        processLatex( texFile );
-        runTex4ht( texFile );
+        processLatex2pdf(texFile);
+        runTex2html     (texFile);
     }
 
     /**
-     * Runs tex4ht on <code>texFile</code>. 
-     * FIXME: Maybe prior invocation of latex and bibtex would be better. 
+     * Runs conversion of <code>texFile</code> 
+     * to odt or other open office formats 
+     * after processing latex to set up the references, 
+     * bibliography, index and that like. 
+     *
+     * @param texFile
+     *    the tex file to be processed. 
+     * @see #processLatex2pdf(File)
+     * @see #runTex2odt(File)
+     */
+    public void processTex2odt( File texFile )
+            throws MojoExecutionException, CommandLineException
+    {
+        processLatex2pdf( texFile );
+        runTex2odt( texFile );
+    }
+
+    /**
+     * Runs conversion of <code>texFile</code> 
+     * to docx or other MS word formats 
+     * after processing latex to set up the references, 
+     * bibliography, index and that like. 
+     *
+     * @param texFile
+     *    the tex file to be processed. 
+     * @see #processLatex2pdf(File)
+     * @see #runOdt2doc(File)
+     */
+    public void processTex2docx( File texFile )
+            throws MojoExecutionException, CommandLineException
+    {
+        processLatex2pdf(texFile);
+        runTex2odt(texFile);
+        runOdt2doc(texFile);
+    }
+
+    /**
+     * Runs direct conversion of <code>texFile</code> to rtf format. 
+     * <p>
+     * FIXME: Maybe prior invocation of LaTeX MakeIndex and BibTeX 
+     * after set up the references, bibliography, index and that like 
+     * would be better. 
      *
      * @param texFile
      *    the tex file to be processed. 
@@ -136,47 +200,73 @@ public class LatexProcessor
      public void processLatex2rtf( File texFile )
           throws MojoExecutionException, CommandLineException
     {
+	log.info("Processing LaTeX file " + texFile + ". ");
 	runLatex2rtf(texFile);
     }
 
+    private boolean update(File source, File target)
+    {
+	if (!target.exists()) {
+	    return true;
+	}
+	assert source.exists();
+
+	return source.lastModified() > target.lastModified();
+    }
+
+    private static String fig2devCommand = "fig2dev";
+
+    /**
+     * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
+     * This is a quite restricted usage of fig2dev. 
+     *
+     * @param figFile
+     *    the fig file to be processed. 
+     * @see AbstractLatexMojo#execute()
+     */
     // used in AbstractLatexMojo.execute() only 
-    public void runFig2Dev( File figFile )
+    public void runFig2Dev(File figFile)
 	throws CommandLineException, MojoExecutionException
     {
-       log.debug( "Running " + "fig1dev" + 
+       log.debug( "Running " + fig2devCommand + 
 		   " on file " + figFile.getName() + ". ");
        File workingDir = figFile.getParentFile();
        String[] args;
 
-       String pdf   = this.fileUtils.replaceSuffix(figFile, "pdf"  ).toString();
-       String pdf_t = this.fileUtils.replaceSuffix(figFile, "pdf_t").toString();
+       File pdfFile   = this.fileUtils.replaceSuffix(figFile, "pdf");
+       File pdf_tFile = this.fileUtils.replaceSuffix(figFile, "pdf_t");
 
-       args = new String[] {
-	   "-L",
-	   "pdftex",
-	   figFile.getName(), // source 
-	   pdf // target 
-       };
-       this.executor.execute(workingDir, 
-			     this.settings.getTexPath(), //**** 
-			     "fig2dev", 
-			     args);
-      args = new String[] {
-	   "-L",
-	   "pdftex_t",
-	   "-p",// portrait (-l for landscape), next argument ignored 
-	   pdf,
-	   figFile.getName(), // source 
-	   pdf_t // target 
-       };
-       this.executor.execute(workingDir, 
-			     this.settings.getTexPath(), //**** 
-			     "fig2dev", 
-			     args);
+       String pdf   = pdfFile  .toString();
+       String pdf_t = pdf_tFile.toString();
 
+       if (update(figFile, pdfFile)) {
+	   args = new String[] {
+	       "-L", // language 
+	       "pdftex",
+	       figFile.getName(), // source 
+	       pdf // target 
+	   };
+	   this.executor.execute(workingDir, 
+				 this.settings.getTexPath(), //**** 
+				 fig2devCommand, 
+				 args);
+       }
 
-
-	// no check: just warning that no output has been created. 
+      if (update(figFile, pdf_tFile)) {
+	  args = new String[] {
+	      "-L",// language 
+	      "pdftex_t",
+	      "-p",// portrait (-l for landscape), next argument ignored 
+	      pdf,
+	      figFile.getName(), // source 
+	      pdf_t // target 
+	  };
+	  this.executor.execute(workingDir, 
+				this.settings.getTexPath(), //**** 
+				fig2devCommand, 
+				args);
+      }
+      // no check: just warning that no output has been created. 
     }
 
     /**
@@ -199,7 +289,7 @@ public class LatexProcessor
 			      this.settings.getLatex2rtfCommand(), 
 			      args);
 
-	// no check: just warning that no output has been created. 
+	// FIXME: no check: just warning that no output has been created. 
     }
 
     // FIXME: take arguments for latex2rtf into account 
@@ -214,7 +304,7 @@ public class LatexProcessor
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildHtlatexArguments(File)}. 
      */
-    private void runTex4ht( File texFile )
+    private void runTex2html( File texFile )
             throws CommandLineException, MojoExecutionException
     {
         log.debug( "Running " + settings.getTex4htCommand() + 
@@ -248,6 +338,73 @@ public class LatexProcessor
 	};
     }
 
+    /**
+     * Runs conversion from latex to odt 
+     * executing {@link Settings#getTex4htCommand()} 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(File)}. 
+     * <p>
+     * Logs a warning if the latex run failed 
+     * but not if bad boxes ocurred or if warnings occurred. 
+     * This is done in {@link #processLatex2pdf(File)} 
+     * after the last LaTeX run only. 
+     */
+    private void runTex2odt( File texFile)
+            throws CommandLineException, MojoExecutionException
+    {
+        log.debug( "Running " + settings.getTex4htCommand() + 
+		   " on file " + texFile.getName() + ". ");
+
+        String[] args = new String[] {
+	    texFile.getName(),
+	    "xhtml,ooffice", // there is no choice here 
+	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
+	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
+	};
+        this.executor.execute(texFile.getParentFile(), 
+			      this.settings.getTexPath(), 
+			      this.settings.getTex4htCommand(), 
+			      args);
+
+	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
+	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
+	if (logFile.exists()) {
+	    boolean errorOccurred = this.fileUtils
+		.matchInLogFile(logFile, this.settings.getPatternErrLatex());
+	    if (errorOccurred) {
+		log.warn("LaTeX failed when running on " + texFile + 
+			 ". For details see " + logFile.getName() + ". ");
+	    }
+	} else {
+	    this.log.error("LaTeX failed: no log file found. ");
+	}
+
+	// Maybe missing: warnings and bad boxes; 
+	// should be displayed configurable. 
+    }
+
+    String odt2docCommand = "odt2doc";
+
+    // FIXME: missing options. 
+    // above all doctype: -ddoc, -ddocx 
+    // available: odt2doc --show. 
+    // among those also: latex and rtf !!!!!! 
+    // This is important to define the copy filter accordingly 
+    private void runOdt2doc( File texFile)
+            throws CommandLineException, MojoExecutionException
+    {
+	File odtFile = this.fileUtils.replaceSuffix(texFile, "odt");
+	log.debug( "Running " + odt2docCommand + 
+		   " on file " + odtFile.getName() + ". ");
+
+	String[] args = new String[] {odtFile.getName()};
+	this.executor.execute(texFile.getParentFile(), 
+			      this.settings.getTexPath(), 
+			      odt2docCommand, 
+			      args);
+    }
+
     // FIXME: Is this the right criterion? 
     private boolean needAnotherLatexRun(File logFile)
 	throws MojoExecutionException
@@ -258,6 +415,7 @@ public class LatexProcessor
         return needRun;
     }
 
+    // FIXME: the right criterion? 
     private boolean needBibtexRun(File logFile)
 	throws MojoExecutionException
     {
@@ -266,6 +424,16 @@ public class LatexProcessor
         String pattern = "No file " + namePrefixLogFile + ".bbl";
         return this.fileUtils.matchInLogFile( logFile, pattern );
     }
+
+    private String patternErrMakeindex = 
+	// FIXME: List is incomplete 
+	"Extra |" + 
+	"Illegal null field|" + 
+	"Argument |" + 
+	"Illegal null field" + 
+	"Unmatched |" + 
+	"Inconsistent page encapsulator |" + 
+	"Conflicting entries";
 
     private void runMakeindex(File idxFile)
 	throws CommandLineException, MojoExecutionException
@@ -281,23 +449,18 @@ public class LatexProcessor
 
 	// detect errors 
  	File logFile = this.fileUtils.replaceSuffix( idxFile, "ilg" );
-	if (!logFile.exists()) {
+	if (logFile.exists()) {
+	    boolean errOccurred = this.fileUtils.matchInLogFile
+		(logFile, patternErrMakeindex);
+	    if (errOccurred) {
+		log.warn("Makeindex failed when running on " + idxFile + 
+			 ". For details see " + logFile.getName() + ". ");
+	    }
+	    // FIXME: what about warnings? 
+	} else {
 	    this.log.error("Makeindex failed: no log file found. ");
 	}
-	boolean errOccurred = this.fileUtils
-	    .matchInLogFile(logFile, 
-			    // FIXME: List is incomplete 
-			    "Extra |" + 
-			    "Illegal null field|" + 
-			    "Argument |" + 
-			    "Illegal null field" + 
-			    "Unmatched |" + 
-			    "Inconsistent page encapsulator |" + 
-			    "Conflicting entries");
-	if (errOccurred) {
-	    log.warn("Makeindex failed when running on " + idxFile + ". ");
-	}
-  }
+    }
 
      /**
      * Runs the bibtex command given by {@link Settings#getBibtexCommand()} 
@@ -307,11 +470,12 @@ public class LatexProcessor
     private void runBibtex(File texFile)
 	throws CommandLineException, MojoExecutionException
     {
-        log.debug( "Running BibTeX on file " + texFile.getName() + ". ");
+	File auxFile = fileUtils.replaceSuffix( texFile, "aux" );
+        log.debug( "Running BibTeX on file " + auxFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();
         String[] args = new String[] {
-	    fileUtils.replaceSuffix( texFile, "aux" ).getName()
+	    auxFile.getName()
 	};
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
@@ -319,29 +483,37 @@ public class LatexProcessor
 			      args);
 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "blg" );
-	if (!logFile.exists()) {
+	if (logFile.exists()) {
+	    // FIXME: Could be further improved: 1 error but more warnings: 
+	    // The latter shall be displayed. (maybe)
+	    boolean errOccurred = this.fileUtils
+		.matchInLogFile(logFile, "Error");
+	    if (errOccurred) {
+		log.warn("BibTeX failed when running on " + texFile + ". ");
+	    }
+	    boolean warnOccurred = this.fileUtils
+		.matchInLogFile(logFile, "Warning");
+	    if (warnOccurred) {
+		log.warn("BibTeX warning when running on " + texFile + ". ");
+	    }
+	    if (errOccurred || warnOccurred) {
+		log.warn("For details see " + logFile.getName() + ". ");
+	    }
+	} else {
 	    this.log.error("BibTeX failed: no log file found. ");
 	}
-	// FIXME: Could be further improved: 1 error but more warnings: 
-	// The latter shall be displayed. (maybe)
-	boolean errOccurred = this.fileUtils
-	    .matchInLogFile(logFile, "Error");
-	if (errOccurred) {
-	    log.warn("BibTeX failed when running on " + texFile + ". ");
-	}
-	boolean warnOccurred = this.fileUtils
-	    .matchInLogFile(logFile, "Warning");
-	if (warnOccurred) {
-	    log.warn("BibTeX warning when running on " + texFile + ". ");
-	}
- 
     }
 
     /**
-     * Runs the latex command given by {@link Settings#getLatexCommand()} 
+     * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatexArguments(File)}. 
+     * <p>
+     * Logs a warning if the latex run failed 
+     * but not if bad boxes ocurred or if warnings occurred. 
+     * This is done in {@link #processLatex2pdf(File)} 
+     * after the last LaTeX run only. 
      */
     private void runLatex(File texFile)
 	throws MojoExecutionException, CommandLineException
@@ -356,11 +528,19 @@ public class LatexProcessor
 			      this.settings.getTexCommand(), 
 			      args);
 
+	// FIXME: May be no log is written? 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
-	boolean errorOccurred = this.fileUtils
-	    .matchInLogFile(logFile, this.settings.getPatternErrLatex());
-	if (errorOccurred) {
-	    log.warn("LaTeX failed to run on " + texFile + ". ");
+	if (logFile.exists()) {
+	    boolean errorOccurred = this.fileUtils
+		.matchInLogFile(logFile, this.settings.getPatternErrLatex());
+	    if (errorOccurred) {
+		log.warn("LaTeX conversion to odt failed when running on " 
+			 + texFile + 
+			 ". For details see " + logFile.getName() + ". ");
+	    }
+	} else {
+	    this.log.error("LaTeX conversion to odt failed: " + 
+			   "no log file found. ");
 	}
     }
 
