@@ -124,7 +124,8 @@ public abstract class AbstractLatexMojo
 		    (texFile, 
 		     tempDir, 
 		     this.settings.getOutputDirectoryFile());
-		FileFilter fileFilter = getFileFilter(texFile);
+		FileFilter fileFilter = this.fileUtils
+		    .getFileFilter(texFile, getOutputFileSuffixes());
                 this.fileUtils.copyOutputToTargetFolder(fileFilter,
 							texFile,
 							targetDir);
@@ -138,10 +139,21 @@ public abstract class AbstractLatexMojo
         }
     }
 
-
+    /**
+     * Processes the source file <code>texFile</code> 
+     * according to the concrete Mojo. 
+     */
     abstract void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException;
-    abstract FileFilter getFileFilter(File texFile);
+
+    /**
+     * Returns the suffixes and wildcards of the output files. 
+     * For example if creating pdf and postscript, 
+     * this is just <code>.pdf, .ps</code> 
+     * but if various html files are created, it is <code>*.html</code>, 
+     * the asterisk representing a wildcard. 
+     */
+    abstract String[] getOutputFileSuffixes();
 
     protected void cleanUp()
     {

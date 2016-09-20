@@ -37,14 +37,18 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 //@Mojo( name = "odt")
 public class OdtMojo extends AbstractLatexMojo {
 
+    private static final String[] OOFFICE_OUTPUT_FILES = new String[] {
+       ".odt", ".fodt", ".uot", ".uot"
+    };
+
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
 	this.latexProcessor.processLatex2odt(texFile);
     }
 
-    // implements AbstractLatexMojo#getFileFilter(File)
-    FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getOdtOutputFileFilter(texFile);
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    String[] getOutputFileSuffixes() {
+	return OOFFICE_OUTPUT_FILES;
     }
 }

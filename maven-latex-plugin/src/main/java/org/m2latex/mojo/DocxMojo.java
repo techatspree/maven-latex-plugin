@@ -37,14 +37,18 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 //@Mojo( name = "msword")
 public class DocxMojo extends AbstractLatexMojo {
 
+    private static final String[] MSWORD_OUTPUT_FILES = new String[] {
+       ".doc", ".docx", ".rtf"
+    };
+
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
 	this.latexProcessor.processLatex2docx(texFile);
     }
 
-    // implements AbstractLatexMojo#getFileFilter(File)
-    FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getDocxOutputFileFilter(texFile);
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    String[] getOutputFileSuffixes() {
+	return MSWORD_OUTPUT_FILES;
     }
 }

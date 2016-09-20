@@ -37,14 +37,17 @@ import org.codehaus.plexus.util.cli.CommandLineException;
  */
 //@Mojo( name = "latex2rtf")
 public class RtfMojo extends AbstractLatexMojo {
+
+    private final static String[] RTF_OUTPUT_FILES = new String[] {".rtf"};
+
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
 	this.latexProcessor.processLatex2rtf(texFile);
     }
 
-    // implements AbstractLatexMojo#getFileFilter(File)
-    FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getRtfOutputFileFilter(texFile);
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    String[] getOutputFileSuffixes() {
+	return RTF_OUTPUT_FILES;
     }
 }

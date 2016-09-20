@@ -37,14 +37,19 @@ import org.codehaus.plexus.util.cli.CommandLineException;
  */
 //@Mojo( name = "latex")
  public class PdfMojo extends AbstractLatexMojo {
+
+    private static final String[] LATEX_OUTPUT_FILES = new String[] {
+	 ".pdf", ".dvi", ".ps"
+    };
+
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
 	this.latexProcessor.processLatex2pdf(texFile);
     }
 
-    // implements AbstractLatexMojo#getFileFilter(File)
-    FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getPdfOutputFileFilter(texFile);
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    String[] getOutputFileSuffixes() {
+	return LATEX_OUTPUT_FILES;
     }
 }

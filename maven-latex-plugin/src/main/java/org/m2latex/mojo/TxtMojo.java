@@ -37,14 +37,16 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 //@Mojo( name = "txt")
 public class TxtMojo extends AbstractLatexMojo {
 
+    private final static String[] TXT_OUTPUT_FILES = new String[] {".txt"};
+
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
 	this.latexProcessor.processLatex2txt(texFile);
     }
 
-    // implements AbstractLatexMojo#getFileFilter(File)
-    FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getTxtOutputFileFilter(texFile);
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    String[] getOutputFileSuffixes() {
+	return TXT_OUTPUT_FILES;
     }
 }

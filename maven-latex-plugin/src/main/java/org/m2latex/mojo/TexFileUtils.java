@@ -28,18 +28,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 public interface TexFileUtils
 {
-
-    FileFilter getPdfOutputFileFilter(File texFile);
-
-    FileFilter getHtmOutputFileFilter(File texFile);
-
-    FileFilter getOdtOutputFileFilter(File texFile);
-
-    FileFilter getDocxOutputFileFilter(File texFile);
-
-    FileFilter getRtfOutputFileFilter(File texFile);
-
-    FileFilter getTxtOutputFileFilter(File texFile);
+    FileFilter getFileFilter(final File texFile, final String[] filesPatterns);
 
     void copyOutputToTargetFolder(FileFilter fileFilter, 
 				  File texFile, 

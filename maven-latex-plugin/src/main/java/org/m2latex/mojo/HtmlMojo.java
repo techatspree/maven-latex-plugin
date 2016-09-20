@@ -37,14 +37,18 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 //@Mojo( name = "html")
 public class HtmlMojo extends AbstractLatexMojo {
 
+    private static final String[] HTML_OUTPUT_FILES = new String[] {
+	"*.html", "*.xhtml", "*.htm", ".css", "*.png", "*.svg"
+    };
+
     // implements AbstractLatexMojo#processSource(File)
     void processSource(File texFile) 
 	throws CommandLineException, MojoExecutionException {
 	this.latexProcessor.processLatex2html(texFile);
     }
 
-    // implements AbstractLatexMojo#getFileFilter(File)
-    FileFilter getFileFilter(File texFile) {
-	return this.fileUtils.getHtmOutputFileFilter(texFile);
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    String[] getOutputFileSuffixes() {
+	return HTML_OUTPUT_FILES;
     }
 }

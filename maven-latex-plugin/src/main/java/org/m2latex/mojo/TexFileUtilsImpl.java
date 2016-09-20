@@ -42,22 +42,6 @@ import org.apache.maven.plugin.logging.Log;
 
 public class TexFileUtilsImpl implements TexFileUtils {
 
-    private static final String[] LATEX_OUTPUT_FILES = new String[] {
-	 ".pdf", ".dvi", ".ps"
-    };
-
-    private static final String[] HTML_OUTPUT_FILES = new String[] {
-	"*.html", "*.xhtml", "*.htm", ".css", "*.png", "*.svg"
-    };
-
-    private static final String[] OOFFICE_OUTPUT_FILES = new String[] {
-       ".odt", ".fodt", ".uot", ".uot"
-    };
-
-    private static final String[] MSWORD_OUTPUT_FILES = new String[] {
-       ".doc", ".docx", ".rtf"
-    };
-
     private final Log log;
 
     private final Settings settings;
@@ -68,20 +52,21 @@ public class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
-     * Returns a list of filenames 
-     * with the suffixes given by <code>filesPatterns</code> 
-     * derived from the .tex-file given by <code>texFile</code>. 
+     * Returns a wildcard file filter containing all files 
+     * replacing teh suffix of <code>texFile</code> 
+     * with the pattern given by <code>filesPatterns</code>. 
      *
      * @param texFile
      *    the tex-file to derive filenames from. 
      * @param filesPatterns
-     *    patterns of the form <code>.&lt;suffix&gt;</code>
+     *    patterns of the form <code>.&lt;suffix&gt;</code> 
+     *    or <code>*.&lt;suffix&gt;</code> 
      * @return
-     *    For each pattern a filename derived from <code>texFile</code> 
-     *    by replacing the suffix <code>.tex</code> by the suffix 
-     *    given by a pattern in <code>filesPatterns</code>. 
+     *    A file filter given by the wildcard 
+     *    replacing the suffix of <code>texFile</code> 
+     *    with the pattern given by <code>filesPatterns</code>. 
      */
-    private String[] getFilesToCopy(final File texFile, 
+    public FileFilter getFileFilter(final File texFile, 
 				    final String[] filesPatterns)
     {
         String texFilePrefix = getFileNameWithoutSuffix( texFile );
@@ -90,38 +75,8 @@ public class TexFileUtilsImpl implements TexFileUtils {
         {
             fileNames[i] = texFilePrefix + filesPatterns[i];
         }
-        return fileNames;
-    }
 
-    //<code></code>
-    public FileFilter getPdfOutputFileFilter(File file) {
-	return new WildcardFileFilter(getFilesToCopy(file, 
-						     LATEX_OUTPUT_FILES));
-    }
-
-    public FileFilter getHtmOutputFileFilter(File file) {
-	return new WildcardFileFilter(getFilesToCopy(file, 
-						     HTML_OUTPUT_FILES));
-    }
-
-    public FileFilter getOdtOutputFileFilter(File file) {
-	return new WildcardFileFilter(getFilesToCopy(file, 
-						     OOFFICE_OUTPUT_FILES));
-    }
-
-    public FileFilter getDocxOutputFileFilter(File file) {
-	return new WildcardFileFilter(getFilesToCopy(file, 
-						     MSWORD_OUTPUT_FILES));
-    }
-
-    public FileFilter getRtfOutputFileFilter(File file) {
-	return new WildcardFileFilter(getFilesToCopy(file, 
-						     new String[] {".rtf"}));
-    }
-
-    public FileFilter getTxtOutputFileFilter(File file) {
-	return new WildcardFileFilter(getFilesToCopy(file, 
-						     new String[] {".txt"}));
+	return new WildcardFileFilter(fileNames);
     }
 
     /**
