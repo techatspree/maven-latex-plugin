@@ -38,7 +38,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 public abstract class AbstractLatexMojo extends AbstractMojo {
 
     /**
-     * Location of the maven base dir.
+     * The base directory of this maven project. 
      * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
      * 
      * @parameter property="basedir"
@@ -47,7 +47,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
     protected File baseDirectory;
 
     /**
-     * Location of the target dir.
+     * The target directory of this maven project. 
      * Reinitializes {@link Settings#targetDirectory} 
      * via {@link #initialize()}. 
      * 
@@ -57,7 +57,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
     protected File targetDirectory;
 
     /**
-     * Location of the target/site dir. 
+     * The target site directory of this maven project. 
      * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
      * 
      * @parameter property="project.reporting.outputDirectory"
@@ -67,7 +67,8 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 
     /**
      * The Settings. 
-     * If not set prior to execution, is set in {@link #initialize()}. 
+     * If not set in the pom prior to execution, 
+     * is set in {@link #initialize()}. 
      * 
      * @parameter
      */

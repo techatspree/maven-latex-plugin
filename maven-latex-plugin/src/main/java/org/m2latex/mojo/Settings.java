@@ -49,8 +49,7 @@ public class Settings
     /**
      * The base directory of this maven project. 
      *
-     * @parameter
-     * @readonly
+     * @see AbstractLatexMojo#baseDirectory
      */
     private File baseDirectory;
 
@@ -59,8 +58,7 @@ public class Settings
      * By default this is <code>{@link #baseDirectory}/target</code> 
      * on Unix systems. 
      *
-     * @parameter
-     * @readonly
+     * @see AbstractLatexMojo#targetDirectory
      */
     private File targetDirectory;
 
@@ -69,8 +67,7 @@ public class Settings
      * By default this is <code>{@link #targetDirectory}/site</code> 
      * on Unix systems. 
      *
-     * @parameter
-     * @readonly
+     * @see AbstractLatexMojo#targetSiteDirectory
      */
     private File targetSiteDirectory;
 
