@@ -238,6 +238,8 @@ public class Settings
      * The default value is chosen 
      * according to the <code>makeindex</code> documentation 
      * but seems to be incomplete. 
+     * If this is not complete, please extend 
+     * and notify the developer of this plugin. 
      *
      * @parameter
      */
@@ -321,7 +323,17 @@ public class Settings
 
     /**
      * The pattern in the log file which triggers rerunning latex. 
-     * **** default? to be replaced by an array of strings? **** 
+     * This pattern may never be ensured to be complete, 
+     * because any new package may break completeness. 
+     * Nevertheless, the default value aims completeness 
+     * while be restrictive enough not to trigger another latex run 
+     * if not needed. 
+     * To ensure termination, let {@link #maxNumReruns} 
+     * specify the maximum number of latex runs. 
+     * If the user finds an extension, (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
+     * Then the default value will be extended. 
+     * FIXME: default? to be replaced by an array of strings? **** 
      *
      * @parameter
      */
@@ -337,7 +349,7 @@ public class Settings
      * This is to avoid endless repetitions. 
      * The default value is 5. 
      * This shall be non-negative 
-     * or <code>-1</code> which signifies no threshold. 
+     * or <code>-1</code> which signifies that there is no threshold. 
      *
      * @parameter
      */
@@ -349,7 +361,7 @@ public class Settings
     /**
      * Clean up the working directory in the end? 
      * May be used for debugging when setting to <code>false</code>. 
-     * Default value is <code>true</code>. 
+     * The default value is <code>true</code>. 
      *
      * @parameter
      */

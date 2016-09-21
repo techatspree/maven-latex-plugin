@@ -35,9 +35,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 /**
  * Abstract base class for all mojos. 
  */
-public abstract class AbstractLatexMojo
-    extends AbstractMojo
-{
+public abstract class AbstractLatexMojo extends AbstractMojo {
 
     /**
      * Location of the maven base dir.
@@ -88,11 +86,11 @@ public abstract class AbstractLatexMojo
         throws MojoExecutionException, MojoFailureException
     {
         initialize();
-        getLog().debug("Settings: " + settings.toString() );
+        getLog().debug("Settings: " + this.settings.toString() );
         getLog().info("OutputDirectory: " + 
 		      this.settings.getOutputDirectoryFile() );
 
-        File texDirectory = settings.getTexSrcDirectoryFile();
+        File texDirectory = this.settings.getTexSrcDirectoryFile();
 
         if ( !texDirectory.exists() ) {
             getLog().info( "No tex directory - skipping LaTeX processing" );
@@ -100,10 +98,10 @@ public abstract class AbstractLatexMojo
         }
 
 	File tempDir = this.settings.getTempDirectoryFile();
-	    // copy sources to tempDir 
-            this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
-        try {
+	// copy sources to tempDir 
+	this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
 
+        try {
 	    // process xfig files 
  	    Collection<File> figFiles = this.fileUtils
 		.getXFigDocuments(tempDir);
@@ -130,7 +128,7 @@ public abstract class AbstractLatexMojo
         } catch ( CommandLineException e ) {
             throw new MojoExecutionException( "Error executing command", e );
         } finally {
-            if ( settings.isCleanUp() ) {
+            if ( this.settings.isCleanUp() ) {
                 cleanUp();
             }
         }
@@ -170,9 +168,9 @@ public abstract class AbstractLatexMojo
 
     protected void initialize()
     {
-        if ( this.settings == null )
+       if ( this.settings == null )
         {
-            // no configuration is defined in pom, 
+            // Here, no configuration is defined in pom, 
 	    // i.e. object is not created by Maven
             this.settings = new Settings();
         }
@@ -181,8 +179,8 @@ public abstract class AbstractLatexMojo
             .setTargetDirectory( this.targetDirectory );
 
         Log log = getLog();
-        this.fileUtils = new TexFileUtilsImpl( log, settings );
-        this.latexProcessor = new LatexProcessor(settings, 
+        this.fileUtils = new TexFileUtilsImpl( log, this.settings );
+        this.latexProcessor = new LatexProcessor(this.settings, 
 						 new CommandExecutorImpl(log), 
 						 log, 
 						 this.fileUtils);
