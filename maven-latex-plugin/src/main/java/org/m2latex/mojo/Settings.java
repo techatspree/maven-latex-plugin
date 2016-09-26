@@ -337,8 +337,8 @@ public class Settings
    private String patternNeedAnotherLatexRun = 
        "(Rerun (LaTeX|to get cross-references right)|" + 
        "There were undefined references|" + 
-       "(rerunfilecheck)                Rerun to get outlines right|" +
-"Package longtable Warning: Table widths have changed. Rerun LaTeX.|" +
+       "\\(rerunfilecheck\\)                Rerun to get outlines right|" +
+       "Package longtable Warning: Table widths have changed. Rerun LaTeX.|" +
        "Package natbib Warning: Citation\\(s\\) may have changed)";
 
     /**
@@ -490,78 +490,69 @@ public class Settings
      * Setter method for {@link #baseDirectory} 
      * influencing also {@link #texSrcDirectoryFile}. 
      */
-    public Settings setBaseDirectory(File baseDirectory) {
+    public void setBaseDirectory(File baseDirectory) {
         this.baseDirectory = baseDirectory;
 	this.texSrcDirectoryFile = new File(this.baseDirectory, 
 					    this.texSrcDirectory);
-        return this;
     }
 
     /**
      * Setter method for {@link #targetDirectory} 
      * influencing also {@link #tempDirectoryFile}. 
      */
-    public Settings setTargetDirectory(File targetDirectory) {
+    public void setTargetDirectory(File targetDirectory) {
         this.targetDirectory = targetDirectory;
 	this.tempDirectoryFile = new File(this.targetDirectory,
 					  this.tempDirectory);
-        return this;
     }
 
     /**
      * Setter method for {@link #targetSiteDirectory} 
      * influencing also {@link #outputDirectoryFile}. 
      */
-    public Settings setTargetSiteDirectory(File targetSiteDirectory) {
+    public void setTargetSiteDirectory(File targetSiteDirectory) {
         this.targetSiteDirectory = targetSiteDirectory;
 	this.outputDirectoryFile = new File(this.targetSiteDirectory, 
 					    this.outputDirectory);
-	return this;
     }
 
     /**
      * Sets {@link #texSrcDirectory} and updates {@link #texSrcDirectoryFile}. 
      */
-    public Settings setTexSrcDirectory(String texSrcDirectory) {
+    public void setTexSrcDirectory(String texSrcDirectory) {
         this.texSrcDirectory = texSrcDirectory;
 	this.texSrcDirectoryFile = new File(this.baseDirectory, 
 					    this.texSrcDirectory);
-        return this;
     }
 
     /**
      * Sets {@link #tempDirectory} and updates {@link #tempDirectoryFile}. 
      */
-    public Settings setTempDirectory(String tempDirectory) {
+    public void setTempDirectory(String tempDirectory) {
         this.tempDirectory = tempDirectory;
 	this.tempDirectoryFile = new File(this.targetDirectory,
 					  this.tempDirectory);
-        return this;
     }
 
     /**
      * Sets {@link #outputDirectory} and updates {@link #outputDirectoryFile}. 
      */
-    public Settings setOutputDirectory(String outputDirectory) {
+    public void setOutputDirectory(String outputDirectory) {
         this.outputDirectory = outputDirectory;
 	this.outputDirectoryFile = new File(this.targetSiteDirectory, 
 					    this.outputDirectory);
-        return this;
     }
 
-    public Settings setTexPath(File texPath) {
+    public void setTexPath(File texPath) {
         this.texPath = texPath;
-        return this;
     }
 
-    public Settings setFig2devCommand(String fig2devCommand) {
+    public void setFig2devCommand(String fig2devCommand) {
         this.fig2devCommand = fig2devCommand;
-	return this;
     }
 
-    public Settings setTexCommand(String texCommand) {
+    public void setTexCommand(String texCommand) {
         this.texCommand = texCommand;
-        return this;
     }
 
     /**
@@ -575,129 +566,137 @@ public class Settings
      *    Leading and trailing blank and newline are ignored. 
      *    Proper arguments are separated by blank and newline. 
      */
-    public Settings setTexCommandArgs(String args) {
+    public void setTexCommandArgs(String args) {
         this.texCommandArgs = args.replace("( \n)+", " ").trim();
-        return this;
     }
 
 
 
-    public Settings setBibtexCommand(String bibtexCommand) {
+    public void setBibtexCommand(String bibtexCommand) {
         this.bibtexCommand = bibtexCommand;
-        return this;
     }
 
-    public Settings setMakeIndexCommand(String makeIndexCommand) {
+    public void setMakeIndexCommand(String makeIndexCommand) {
         this.makeIndexCommand = makeIndexCommand;
-        return this;
     }
 
-    public Settings setPatternErrMakeindex(String patternErrMakeindex) {
+    // setter method for patternErrMakeindex in maven 
+    public void setPatternErrMakeindex(String patternErrMakeindex) {
         this.patternErrMakeindex = patternErrMakeindex;
-        return this;
     }
 
-    public Settings setCleanUp(boolean cleanUp) {
+    // method introduces patternErrMakeindex in ant 
+    public PatternErrMakeindex createPatternErrMakeindex() {
+   	return new PatternErrMakeindex();
+    }
+
+    // defines patternErrMakeindex element with text in ant 
+    public class PatternErrMakeindex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternErrMakeindex(pattern);
+   	}
+    }
+
+
+    public void setCleanUp(boolean cleanUp) {
         this.cleanUp = cleanUp;
-        return this;
     }
 
-    public Settings setPatternErrLatex(String patternErrLatex) {
+    public void setPatternErrLatex(String patternErrLatex) {
 	this.patternErrLatex = patternErrLatex;
-	return this;
     }
 
-    public Settings setDebugBadBoxes(boolean debugBadBoxes) {
+    public void setDebugBadBoxes(boolean debugBadBoxes) {
 	this.debugBadBoxes = debugBadBoxes;
-	return this;
+    }
+
+    public void setDebugWarnings(boolean debugWarnings) {
+	this.debugWarnings = debugWarnings;
+    }
+
+
+    public void setLatex2rtfCommand(String latex2rtfCommand) {
+        this.latex2rtfCommand = latex2rtfCommand;
+    }
+
+    public void setOdt2docCommand(String odt2docCommand) {
+        this.odt2docCommand = odt2docCommand;
+     }
+
+    public void setPdf2txtCommand(String pdf2txtCommand) {
+        this.pdf2txtCommand = pdf2txtCommand;
+    }
+
+    public void setTex4htCommand(String tex4htCommand) {
+        this.tex4htCommand = tex4htCommand;
+    }
+
+    public void setTex4htStyOptions(String tex4htStyOptions) {
+	this.tex4htStyOptions = tex4htStyOptions;
    }
 
-    public Settings setDebugWarnings(boolean debugWarnings) {
-	this.debugWarnings = debugWarnings;
-	return this;
-    }
-
-
-
-
-
-    public Settings setLatex2rtfCommand(String latex2rtfCommand) {
-        this.latex2rtfCommand = latex2rtfCommand;
-        return this;
-    }
-
-    public Settings setOdt2docCommand(String odt2docCommand) {
-        this.odt2docCommand = odt2docCommand;
-        return this;
-    }
-
-    public Settings setPdf2txtCommand(String pdf2txtCommand) {
-        this.pdf2txtCommand = pdf2txtCommand;
-        return this;
-    }
-
-    // **** why this with annotation parameter? 
-    /**
-     * @parameter
-     */
-    public Settings setTex4htCommand(String tex4htCommand) {
-        this.tex4htCommand = tex4htCommand;
-        return this;
-    }
-
-    public Settings setTex4htStyOptions(String tex4htStyOptions) {
-	this.tex4htStyOptions = tex4htStyOptions;
-	return this;
-    }
-
-     public Settings setTex4htOptions(String tex4htOptions) {
+     public void setTex4htOptions(String tex4htOptions) {
 	this.tex4htOptions = tex4htOptions;
-	return this;
     }
 
-     public Settings setT4htOptions(String t4htOptions) {
+     public void setT4htOptions(String t4htOptions) {
 	this.t4htOptions = t4htOptions;
-	return this;
     }
 
-    public Settings setPatternNeedAnotherLatexRun(String pattern) {
+    // setter method for patternNeedAnotherLatexRun in maven 
+    public void setPatternNeedAnotherLatexRun(String pattern) {
 	this.patternNeedAnotherLatexRun = pattern;
-        return this;
     }
 
-    public Settings setMaxNumReruns(int maxNumReruns) {
+    // method introduces patternNeedAnotherLatexRun in ant 
+    public PatternNeedAnotherLatexRun createPatternNeedAnotherLatexRun() {
+   	return new PatternNeedAnotherLatexRun();
+    }
+
+    // defines patternNeedAnotherLatexRun element with text in ant 
+    public class PatternNeedAnotherLatexRun {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternNeedAnotherLatexRun(pattern);
+   	}
+    }
+
+    public void setMaxNumReruns(int maxNumReruns) {
 	assert maxNumReruns >= -1;
 	this.maxNumReruns = maxNumReruns;
-	return this;
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        sb.append("texSrcDirectory=")  .append(this.texSrcDirectory);
-	sb.append(",tempDirectory=")   .append(this.tempDirectory);
- 	sb.append(",outputDirectory=") .append(this.outputDirectory);
-        sb.append(",texPath=")         .append(this.texPath);
-        sb.append(",fig2devCommand=")  .append(this.fig2devCommand);
-        sb.append(",texCommand=")      .append(this.texCommand);
-	sb.append(",texCommandArgs=")  .append(this.texCommandArgs);
-	sb.append(",patternErrLatex=") .append(this.patternErrLatex);
- 	sb.append(",debugBadBoxes=")   .append(this.debugBadBoxes);
- 	sb.append(",debugWarnings=")   .append(this.debugWarnings);
-        sb.append(",bibtexCommand=")   .append(this.bibtexCommand);
-        sb.append(",makeIndexCommand=").append(this.makeIndexCommand);
-        sb.append(",patternErrMakeindex=").append(this.patternErrMakeindex);
-        sb.append(",tex4htCommand=")   .append(this.tex4htCommand);
-        sb.append(",tex4htStyOptions=").append(this.tex4htStyOptions);
-        sb.append(",tex4htOptions=")   .append(this.tex4htOptions);
-	sb.append(",t4htOptions=")     .append(this.t4htOptions);
-        sb.append(",latex2rtfCommand=").append(this.latex2rtfCommand);
-        sb.append(",odt2docCommand=")  .append(this.odt2docCommand);
-        sb.append(",pdf2txtCommand=")  .append(this.pdf2txtCommand);
-	sb.append(",patternNeedAnotherLatexRun=")
+	sb.append("[ texSrcDirectory=") .append(this.texSrcDirectory);
+	sb.append(", tempDirectory=")   .append(this.tempDirectory);
+ 	sb.append(", outputDirectory=") .append(this.outputDirectory);
+        sb.append(", texPath=")         .append(this.texPath);
+        sb.append(", fig2devCommand=")  .append(this.fig2devCommand);
+        sb.append(", texCommand=")      .append(this.texCommand);
+	sb.append(", texCommandArgs=")  .append(this.texCommandArgs);
+	sb.append(", patternErrLatex=") .append(this.patternErrLatex);
+ 	sb.append(", debugBadBoxes=")   .append(this.debugBadBoxes);
+ 	sb.append(", debugWarnings=")   .append(this.debugWarnings);
+        sb.append(", bibtexCommand=")   .append(this.bibtexCommand);
+        sb.append(", makeIndexCommand=").append(this.makeIndexCommand);
+        sb.append(", patternErrMakeindex=").append(this.patternErrMakeindex);
+        sb.append(", tex4htCommand=")   .append(this.tex4htCommand);
+        sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
+        sb.append(", tex4htOptions=")   .append(this.tex4htOptions);
+	sb.append(", t4htOptions=")     .append(this.t4htOptions);
+        sb.append(", latex2rtfCommand=").append(this.latex2rtfCommand);
+        sb.append(", odt2docCommand=")  .append(this.odt2docCommand);
+        sb.append(", pdf2txtCommand=")  .append(this.pdf2txtCommand);
+	sb.append(", patternNeedAnotherLatexRun=")
 	    .append(this.patternNeedAnotherLatexRun);
-	sb.append(",maxNumReruns=").append(this.maxNumReruns);
-	sb.append(",=cleanUp").append(this.cleanUp);
+	sb.append(", maxNumReruns=").append(this.maxNumReruns);
+	sb.append(", cleanUp=").append(this.cleanUp);
         sb.append(']');
         return sb.toString();
     }
