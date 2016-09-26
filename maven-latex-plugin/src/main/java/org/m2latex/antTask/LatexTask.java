@@ -1,10 +1,16 @@
 package org.m2latex.antTask;
 
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.m2latex.mojo.Settings;
 
 public class LatexTask extends Task {
 
-    private String message;
+    private Settings settings;
+
+    public Settings createSettings() {
+	return this.settings = new Settings();
+    }
 
     public void execute() {
         // use of the reference to Project-instance
@@ -15,10 +21,10 @@ public class LatexTask extends Task {
 
         // where this task is used?
         log("I am used in: " +  getLocation() );
-	log("message is: " +  this.message );
+	if (this.settings == null) {
+            throw new BuildException("No settings found.");
+        }
+ 	log("settings: \n" +  this.settings );
     }
 
-    public void setMessage(String message) {
-	this.message = message;
-    }
-}
+ }
