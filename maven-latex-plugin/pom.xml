@@ -184,6 +184,7 @@
           <classifier>antTask</classifier>
           <includes>
             <include>**/antTask/*</include>
+            <include>**/mojo/Settings*</include>
           </includes>
         </configuration>
       </execution>
