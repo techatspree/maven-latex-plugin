@@ -12,7 +12,47 @@
 
    <target name="pdf"
 	   description="create pdf from latex. ">
-     <latex message='this is my message'>
+     <latex>
+       <!-- missing: baseDirectory, targetDirectory, targetSiteDirectory,
+	    texPath = null -->
+       <settings texSrcDirectory="src/site/tex"
+		 tempDirectory="m2latex"
+		 outputDirectory="."
+		 fig2devCommand="fig2dev"
+		 texCommand="pdflatex"
+		 texCommandArgs="-interaction=nonstopmode -src-specials"
+		 patternErrLatex="Fatal error|LaTeX Error|Emergency stop"
+		 debugBadBoxes='true'
+		 debugWarnings='true'
+		 makeIndexCommand="makeindex"
+		 tex4htCommand="htlatex"
+		 tex4htStyOptions="html,2"
+		 tex4htOptions=""
+		 t4htOptions=""
+		 latex2rtfCommand="latex2rtf"
+		 pdf2txtCommand="pdftotext"
+		 maxNumReruns='5'
+		 cleanUp='true'>
+	 <!-- texPath is null -->
+
+	 <!-- FIXME: List is incomplete  -->
+	 <patternErrMakeindex>
+	   Extra |
+	   Illegal null field| 
+	   Argument |
+	   Illegal null field|
+	   Unmatched |
+	   Inconsistent page encapsulator |
+	   Conflicting entries
+	 </patternErrMakeindex>
+	 <patternNeedAnotherLatexRun>
+	   (Rerun (LaTeX|to get cross-references right)|
+	   There were undefined references|
+	   \(rerunfilecheck\)                Rerun to get outlines right|
+	   Package longtable Warning: Table widths have changed. Rerun LaTeX.|
+	   Package natbib Warning: Citation\(s\) may have changed)
+	 </patternNeedAnotherLatexRun>
+       </settings>
      </latex>
    </target>
 </project>
