@@ -169,15 +169,15 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 
     protected void initialize()
     {
-       if ( this.settings == null )
+	if ( this.settings == null )
         {
             // Here, no configuration is defined in pom, 
 	    // i.e. object is not created by Maven
             this.settings = new Settings();
         }
-        this.settings.setBaseDirectory( this.baseDirectory )
-	    .setTargetSiteDirectory( this.targetSiteDirectory )
-            .setTargetDirectory( this.targetDirectory );
+       this.settings.setBaseDirectory( this.baseDirectory );
+       this.settings.setTargetSiteDirectory( this.targetSiteDirectory );
+       this.settings.setTargetDirectory( this.targetDirectory );
 
         Log log = getLog();
         this.fileUtils = new TexFileUtilsImpl( log, this.settings );
