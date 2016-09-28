@@ -41,10 +41,20 @@ public class CommandExecutorImpl
         this.log = log;
     }
 
+    /**
+     * Execute <code>executable</code> with arguments <code>args</code> 
+     * in the working directory <code>workingDir</code>. 
+     * Here, <code>pathToExecutable</code> is the path 
+     * to the executable. May be null? 
+     *
+     *
+     * @throws CommandLineException
+     *    if invocation of <code>executable</code> fails. 
+     */
     public final String execute( File workingDir, 
 				 File pathToExecutable, 
 				 String executable, String[] args )
-        throws CommandLineException
+	throws CommandLineException
     {
         String command = new File( pathToExecutable, executable ).getPath();
         Commandline cl = new Commandline( command );
@@ -52,6 +62,7 @@ public class CommandExecutorImpl
         cl.setWorkingDirectory( workingDir.getPath() );
         StringStreamConsumer output = new StringStreamConsumer();
         log.debug( "Executing: " + cl + " in: " + workingDir );
+	// may throw CommandLineException 
         CommandLineUtils.executeCommandLine( cl, output, output );
         log.debug( "Output:\n" + output.getOutput() + "\n" );
         return output.getOutput();
