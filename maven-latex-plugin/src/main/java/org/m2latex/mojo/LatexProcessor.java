@@ -536,7 +536,7 @@ public class LatexProcessor
      * with arguments given by {@link #buildLatexArguments(File)}. 
      * <p>
      * Logs a warning if the latex run failed 
-     * but not if bad boxes ocurred or if warnings occurred. 
+     * but not if bad boxes occurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
      */
@@ -548,6 +548,7 @@ public class LatexProcessor
 
         File workingDir = texFile.getParentFile();
 	String[] args = buildLatexArguments( texFile );
+	// may throw CommandLineException
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
 			      this.settings.getTexCommand(), 
@@ -556,6 +557,7 @@ public class LatexProcessor
 	// logging errors 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
 	if (logFile.exists()) {
+	    // matchInLogFile may throw MojoExecutionException
 	    boolean errorOccurred = this.fileUtils
 		.matchInLogFile(logFile, this.settings.getPatternErrLatex());
 	    if (errorOccurred) {
@@ -569,6 +571,7 @@ public class LatexProcessor
 	}
     }
 
+    // used in runLatex only 
     private String[] buildLatexArguments( File texFile )
     {
         String[] texCommandArgs = this.settings.getTexCommandArgs().split(" ");
