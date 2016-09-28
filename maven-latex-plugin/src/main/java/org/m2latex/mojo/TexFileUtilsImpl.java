@@ -27,7 +27,6 @@ import java.io.IOException;
 
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.List;
 
 import java.util.regex.Pattern;
 
@@ -41,6 +40,12 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
 public class TexFileUtilsImpl implements TexFileUtils {
+
+    /**
+     * The pattern which identifies a latex main file. 
+     */
+   private final static String MAIN_TEX_PATTERN = 
+	".*\\\\begin\\s*\\{document\\}.*";
 
     private final Log log;
 
@@ -81,12 +86,14 @@ public class TexFileUtilsImpl implements TexFileUtils {
 
     /**
      * Invoked only by AbstractLatexMojo#execute()
-     * 
+     * <code></code>
+     * @MojoExecutionException
+     *    wraps IOException when copying. 
      */
     public void copyOutputToTargetFolder(FileFilter fileFilter, 
 					 File texFile, 
 					 File targetDir )
-        throws MojoExecutionException, MojoFailureException {
+	throws MojoExecutionException {
 
 	File texFileDir = texFile.getParentFile();
         File[] outputFiles = texFileDir.listFiles();
@@ -106,7 +113,15 @@ public class TexFileUtilsImpl implements TexFileUtils {
 	for (int idx = 0; idx < outputFiles.length; idx++) {
 	    file = outputFiles[idx];
 	    if (fileFilter.accept(file)) {
-		copyFileToDirectory(file, targetDir);
+		log.info("Copying " + file.getName() + " to " + targetDir);
+		try {
+		    FileUtils.copyFileToDirectory(file, targetDir);
+		} catch ( IOException e ) {
+		    throw new MojoExecutionException
+			("Error copying file " + file + 
+			 " to directory " + targetDir,
+			 e);
+		}
 	    }
 	}
     }
@@ -141,14 +156,16 @@ public class TexFileUtilsImpl implements TexFileUtils {
     public File getTargetDirectory(File sourceFile,
 				   File sourceBaseDir,
 				   File targetBaseDir)
-        throws MojoExecutionException, MojoFailureException {
+    throws MojoExecutionException, MojoFailureException {
         String sourceParentPath;
         String sourceBasePath;
         try
         {
-            sourceParentPath = sourceFile.getParentFile().getCanonicalPath();
+	    // getCanonicalPath may throw IOException 
+	    sourceParentPath = sourceFile.getParentFile().getCanonicalPath();
+	    // getCanonicalPath may throw IOException 
             sourceBasePath = sourceBaseDir.getCanonicalPath();
-        }
+         }
         catch ( IOException e )
         {
             throw new MojoExecutionException
@@ -166,38 +183,47 @@ public class TexFileUtilsImpl implements TexFileUtils {
 			sourceParentPath.substring(sourceBasePath.length()));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Copy <code>texDirectory</code> to <code>tempDirectory</code>, 
+     * the latter deleting before copy if it exists. 
+     *
+     * @throws MojoExecutionException
+     *    if either deleting or copying fails. 
      * @see TexFileUtils#copyLatexSrcToTempDir(File, File)
      */
+    // used in AbstractLatexMojo.execute() only. 
     public void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
         throws MojoExecutionException
     {
-        try
-        {
+        try {
             if ( tempDirectory.exists() )
             {
-                log.info("Deleting existing directory " 
-			 + tempDirectory.getPath() );
+                log.info("Deleting existing directory '" 
+			 + tempDirectory.getPath() + "'. ");
+		// may throw IOException 
                 FileUtils.deleteDirectory( tempDirectory );
             }
-
-            log.debug("Copying TeX source directory (" + texDirectory.getPath()
-		      + ") to temporary directory (" + tempDirectory + ")" );
-            FileUtils.copyDirectory( texDirectory, tempDirectory );
-        }
-        catch ( IOException e )
-        {
+	} catch (IOException e) {
             throw new MojoExecutionException
-		("Failure copying the TeX directory (" + texDirectory.getPath()
-		 + ") to a temporary directory (" + tempDirectory.getPath() 
-		 + ").", e );
+		("Failure deleting the temporary directory '" + 
+		 tempDirectory.getPath() + "'. ", e );
+        }
+
+	log.debug("Copying TeX source directory '" + texDirectory.getPath()
+		  + "' to temporary directory '" + tempDirectory + "'. " );
+	try {
+ 	    // may throw IOException 
+	    FileUtils.copyDirectory( texDirectory, tempDirectory );
+	} catch (IOException e) {
+            throw new MojoExecutionException
+		("Failure copying the TeX directory '" + texDirectory.getPath()
+		 + "' to a temporary directory '" + tempDirectory.getPath() 
+		 + "'. ", e );
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Return the name of the given file without the suffix. 
      * 
      * @see TexFileUtils#getFileNameWithoutSuffix(File)
      */
@@ -209,6 +235,11 @@ public class TexFileUtilsImpl implements TexFileUtils {
         return namePrefixTexFile;
     }
 
+    /**
+     * Return a collection of xfig-files in the given directory. 
+     * 
+     * @see TexFileUtils#getFileNameWithoutSuffix(File)
+     */
     public Collection<File> getXFigDocuments( File directory ) {
 	return FileUtils
 	    .listFiles(directory,
@@ -221,10 +252,11 @@ public class TexFileUtilsImpl implements TexFileUtils {
      * 
      * @see TexFileUtils#getLatexMainDocuments(File)
      */
-    public List<File> getLatexMainDocuments( File directory )
+    // used in AbstractLatexMojo.execute() only. 
+    public Collection<File> getLatexMainDocuments( File directory )
         throws MojoExecutionException {
 
-        List<File> mainFiles = new ArrayList<File>();
+        Collection<File> mainFiles = new ArrayList<File>();
 
         Collection<File> texFiles = FileUtils
 	    .listFiles(directory,
@@ -238,29 +270,38 @@ public class TexFileUtilsImpl implements TexFileUtils {
         }
         return mainFiles;
     }
-
+ 
    private boolean isTexMainFile(File file) throws MojoExecutionException {
-        String pattern = ".*\\\\begin\\s*\\{document\\}.*";
-
+ 
         try
         {
-            return fileContainsPattern(file, pattern);
+            return fileContainsPattern(file, MAIN_TEX_PATTERN);
 
         }
         catch (FileNotFoundException e)
         {
             throw new MojoExecutionException("The TeX file '" + file.getPath()
-                + "' was removed while running this goal", e );
+                + "' was removed while running this goal. ", e );
         }
         catch (IOException e)
         {
             throw new MojoExecutionException
 		("Problems reading the file '" + file.getPath()
-                + "' while checking if it is a TeX main file", e);
+                + "' while checking if it is a TeX main file. ", e);
         }
     }
 
     // logFile may be .log or .blg or something 
+    /**
+     *
+     * @throws MojoExecutionException
+     *    if the file <code>logFile</code> does not exist 
+     *    or cannot be read. 
+     */
+    // used in LatexProcessor only: 
+    // only in methods processLatex2pdf, runLatex2html, runLatex2odt, 
+    // needAnotherLatexRun, needBibtexRun, 
+    // runMakeindex, runBibtex, runLatex
     public boolean matchInLogFile(File logFile, String pattern)
         throws MojoExecutionException
     {
@@ -268,7 +309,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
 	    {
 		throw new MojoExecutionException
 		    ("File " + logFile.getPath() 
-		     + " does not exist after running LaTeX.");
+		     + " does not exist after running LaTeX. ");
 	    }
        
 	try {
@@ -283,43 +324,41 @@ public class TexFileUtilsImpl implements TexFileUtils {
 	}
     }
 
-    private void copyFileToDirectory(File file, File targetDir)
-        throws MojoExecutionException
-    {
-        log.info("Copying " + file.getName() + " to " + targetDir);
-	try {
-	    FileUtils.copyFileToDirectory(file, targetDir);
-	} catch ( IOException e ) {
-            throw new MojoExecutionException
-		("Error copying file " + file + " to directory " + targetDir,
-		 e);
-        }
-    }
-
+    /**
+     * Return whether <code>file</code> contains <code>regex</code>. 
+     *
+     * @throws FileNotFoundException
+     *    if <code>file</code> does not exist. 
+     * @throws IOException
+     *    if <code>file</code> could not be read. 
+     */
+    // used by isTexMainFile(File file) 
+    // and by matchInLogFile(File logFile, String pattern)
     private boolean fileContainsPattern(File file, String regex)
-        throws FileNotFoundException, IOException {
+	throws FileNotFoundException, IOException {
 
         Pattern pattern = Pattern.compile( regex );
-        BufferedReader bufferedReader = null;
-        try {
-            FileReader fileReader = new FileReader(file);
-            bufferedReader = new BufferedReader(fileReader);
-            for (String line = bufferedReader.readLine(); 
-		 line != null; 
-		 line = bufferedReader.readLine()) {
+	// may throw FileNotFoundException
+	FileReader fileReader = new FileReader(file);
+	BufferedReader bufferedReader = new BufferedReader(fileReader);
+	try {
+	    String line = bufferedReader.readLine();// may throw IOException
+	    for (; 
+		 line != null;
+		 line = bufferedReader.readLine()) {// may throw IOException
                 if (pattern.matcher( line ).find()) {
-                    return true;
+                   return true;
                 }
             }
-            return false;
+	   return false;
         } finally {
-            if ( bufferedReader != null )
-                try {
-                    bufferedReader.close();
-                } catch ( IOException e ) {
-                    log.warn("Cannot close the file '" + file.getPath() + "'.",
-			     e);
-                }
+	    // Here, an IOException occurred 
+	    try {
+		bufferedReader.close();
+	    } catch ( IOException e ) {
+		log.warn("Cannot close the file '" + file.getPath() + "'.",
+			 e);
+	    }
         }
     }
 
