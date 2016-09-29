@@ -88,8 +88,6 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
     {
         initialize();
         getLog().debug("Settings: " + this.settings.toString() );
-        getLog().info("OutputDirectory: " + 
-		      this.settings.getOutputDirectoryFile() );
 
         File texDirectory = this.settings.getTexSrcDirectoryFile();
 
@@ -100,7 +98,8 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 
 	File tempDir = this.settings.getTempDirectoryFile();
 	// copy sources to tempDir 
-	this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
+	// may throw MojoExecutionException 
+ 	this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
 
         try {
 	    // process xfig files 
@@ -108,26 +107,31 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 		.getXFigDocuments(tempDir);
 	    for (File figFile : figFiles) {
 		getLog().info("Processing " + figFile + ". ");
+		// may throw CommandLineException, MojoExecutionException 
 		this.latexProcessor.runFig2Dev(figFile);
 	    }
 
 	    // process latex main files 
+	    // may throw MojoExecutionException 
             Collection<File> latexMainFiles = this.fileUtils
 		.getLatexMainDocuments(tempDir);
 	    for (File texFile : latexMainFiles) {
+		// may throw CommandLineException, MojoExecutionException  
 		processSource(texFile);
+		// may throw MojoExecutionException, MojoFailureException 
 		File targetDir = this.fileUtils.getTargetDirectory
 		    (texFile, 
 		     tempDir, 
 		     this.settings.getOutputDirectoryFile());
 		FileFilter fileFilter = this.fileUtils
 		    .getFileFilter(texFile, getOutputFileSuffixes());
+		// may throw MojoExecutionException, MojoFailureException
                 this.fileUtils.copyOutputToTargetFolder(fileFilter,
 							texFile,
 							targetDir);
             }
-        } catch ( CommandLineException e ) {
-            throw new MojoExecutionException( "Error executing command", e );
+       } catch ( CommandLineException e ) {
+           throw new MojoExecutionException( "Error executing command", e );
         } finally {
             if ( this.settings.isCleanUp() ) {
                 cleanUp();
@@ -170,14 +174,14 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
     protected void initialize()
     {
 	if ( this.settings == null )
-        {
-            // Here, no configuration is defined in pom, 
-	    // i.e. object is not created by Maven
-            this.settings = new Settings();
-        }
-       this.settings.setBaseDirectory( this.baseDirectory );
-       this.settings.setTargetSiteDirectory( this.targetSiteDirectory );
-       this.settings.setTargetDirectory( this.targetDirectory );
+	    {
+		// Here, no configuration is defined in pom, 
+		// i.e. object is not created by Maven
+		this.settings = new Settings();
+	    }
+	this.settings.setBaseDirectory( this.baseDirectory );
+	this.settings.setTargetSiteDirectory( this.targetSiteDirectory );
+	this.settings.setTargetDirectory( this.targetDirectory );
 
         Log log = getLog();
         this.fileUtils = new TexFileUtilsImpl( log, this.settings );
