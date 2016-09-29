@@ -673,7 +673,10 @@ public class Settings
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-	sb.append("[ texSrcDirectory=") .append(this.texSrcDirectory);
+	sb.append("[ baseDirectory=")   .append(this.baseDirectory);
+	sb.append(", targetSiteDirectory=") .append(this.targetSiteDirectory);
+	sb.append(", targetDirectory=") .append(this.targetDirectory);
+	sb.append(", texSrcDirectory=") .append(this.texSrcDirectory);
 	sb.append(", tempDirectory=")   .append(this.tempDirectory);
  	sb.append(", outputDirectory=") .append(this.outputDirectory);
         sb.append(", texPath=")         .append(this.texPath);
