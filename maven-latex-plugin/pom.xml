@@ -185,6 +185,8 @@
           <includes>
             <include>**/antTask/*</include>
             <include>**/mojo/Settings*</include>
+            <include>**/mojo/*Mojo*</include>
+            <include>org/apache/maven/plugin/*Exception*</include>
           </includes>
         </configuration>
       </execution>
@@ -339,7 +341,7 @@
 	    <patternNeedAnotherLatexRun>
 	      (Rerun (LaTeX|to get cross-references right)|
 	      There were undefined references|
-(rerunfilecheck)                Rerun to get outlines right|
+\\(rerunfilecheck\\)                Rerun to get outlines right|
 Package longtable Warning: Table widths have changed. Rerun LaTeX.|
 	      Package natbib Warning: Citation\\(s\\) may have changed)
 	    </patternNeedAnotherLatexRun>
