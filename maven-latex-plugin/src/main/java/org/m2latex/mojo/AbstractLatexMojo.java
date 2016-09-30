@@ -30,8 +30,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
-import org.codehaus.plexus.util.cli.CommandLineException;
-
 /**
  * Abstract base class for all mojos. 
  */
@@ -107,7 +105,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 		.getXFigDocuments(tempDir);
 	    for (File figFile : figFiles) {
 		getLog().info("Processing " + figFile + ". ");
-		// may throw CommandLineException, MojoExecutionException 
+		// may throw MojoExecutionException 
 		this.latexProcessor.runFig2Dev(figFile);
 	    }
 
@@ -116,7 +114,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
             Collection<File> latexMainFiles = this.fileUtils
 		.getLatexMainDocuments(tempDir);
 	    for (File texFile : latexMainFiles) {
-		// may throw CommandLineException, MojoExecutionException  
+		// may throw MojoExecutionException  
 		processSource(texFile);
 		// may throw MojoExecutionException, MojoFailureException 
 		File targetDir = this.fileUtils.getTargetDirectory
@@ -130,9 +128,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 							texFile,
 							targetDir);
             }
-       } catch ( CommandLineException e ) {
-           throw new MojoExecutionException( "Error executing command", e );
-        } finally {
+       } finally {
             if ( this.settings.isCleanUp() ) {
                 cleanUp();
             }
@@ -144,7 +140,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
      * according to the concrete Mojo. 
      */
     abstract void processSource(File texFile) 
-	throws CommandLineException, MojoExecutionException;
+	throws MojoExecutionException;
 
     /**
      * Returns the suffixes and wildcards of the output files. 

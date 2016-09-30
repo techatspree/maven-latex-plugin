@@ -19,14 +19,9 @@
 package org.m2latex.mojo;
 
 import java.io.File;
-import java.io.FileFilter;
-
-import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
  * Build documents in msword formats, above all docx from LaTeX sources.
@@ -40,8 +35,7 @@ public class TxtMojo extends AbstractLatexMojo {
     private final static String[] TXT_OUTPUT_FILES = new String[] {".txt"};
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) 
-	throws CommandLineException, MojoExecutionException {
+    void processSource(File texFile) throws MojoExecutionException {
 	this.latexProcessor.processLatex2txt(texFile);
     }
 

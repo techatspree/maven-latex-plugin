@@ -22,6 +22,8 @@ import java.io.File;
 
 import org.apache.maven.plugin.logging.Log;
 
+import org.apache.maven.plugin.MojoExecutionException;
+
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -31,9 +33,7 @@ import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
  * Execution of an executable with given arguments 
  * in a given working directory logging on {@link #log}. 
  */
-public class CommandExecutorImpl
-    implements CommandExecutor
-{
+public class CommandExecutorImpl implements CommandExecutor {
     private final Log log;
 
     public CommandExecutorImpl( Log log )
@@ -48,23 +48,29 @@ public class CommandExecutorImpl
      * to the executable. May be null? 
      *
      *
-     * @throws CommandLineException
+     * @throws MojoExecutionException
      *    if invocation of <code>executable</code> fails. 
      */
     public final String execute( File workingDir, 
 				 File pathToExecutable, 
 				 String executable, String[] args )
-	throws CommandLineException
+	throws MojoExecutionException
     {
-        String command = new File( pathToExecutable, executable ).getPath();
-        Commandline cl = new Commandline( command );
-        cl.addArguments( args );
-        cl.setWorkingDirectory( workingDir.getPath() );
-        StringStreamConsumer output = new StringStreamConsumer();
-        log.debug( "Executing: " + cl + " in: " + workingDir );
-	// may throw CommandLineException 
-        CommandLineUtils.executeCommandLine( cl, output, output );
-        log.debug( "Output:\n" + output.getOutput() + "\n" );
-        return output.getOutput();
+	String command = new File( pathToExecutable, executable ).getPath();
+	Commandline cl = new Commandline( command );
+	cl.addArguments( args );
+	cl.setWorkingDirectory( workingDir.getPath() );
+	StringStreamConsumer output = new StringStreamConsumer();
+	log.debug( "Executing: " + cl + " in: " + workingDir );
+
+        try {
+	    // may throw CommandLineException 
+	    CommandLineUtils.executeCommandLine( cl, output, output );
+	} catch ( CommandLineException e ) {
+	    throw new MojoExecutionException( "Error executing command", e );
+        }
+
+	log.debug( "Output:\n" + output.getOutput() + "\n" );
+	return output.getOutput();
     }
 }

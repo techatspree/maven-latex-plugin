@@ -19,14 +19,9 @@
 package org.m2latex.mojo;
 
 import java.io.File;
-import java.io.FileFilter;
-
-import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
  * Build HTML documents and XHTML documents from LaTeX sources.
@@ -42,8 +37,7 @@ public class HtmlMojo extends AbstractLatexMojo {
     };
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) 
-	throws CommandLineException, MojoExecutionException {
+    void processSource(File texFile) throws MojoExecutionException {
 	this.latexProcessor.processLatex2html(texFile);
     }
 

@@ -20,14 +20,13 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import org.codehaus.plexus.util.cli.CommandLineException;
+import org.apache.maven.plugin.MojoExecutionException;
 
-public interface CommandExecutor
-{
+public interface CommandExecutor {
 
     public abstract String execute( File workingDir, 
 				    File pathToExecutable, 
 				    String executable, String[] args )
-        throws CommandLineException;
+        throws MojoExecutionException;
 
 }

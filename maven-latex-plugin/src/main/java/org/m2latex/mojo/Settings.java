@@ -18,11 +18,8 @@
 
 package org.m2latex.mojo;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.File;
 
-import java.util.Arrays;
 
 /**
  * The settings for this plugin. 

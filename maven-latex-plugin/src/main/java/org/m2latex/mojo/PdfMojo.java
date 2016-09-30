@@ -19,15 +19,9 @@
 package org.m2latex.mojo;
 
 import java.io.File;
-import java.io.FileFilter;
-
-import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-
-import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
  * Build PDF or DVI documents from LaTeX sources.
@@ -43,8 +37,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
     };
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) 
-	throws CommandLineException, MojoExecutionException {
+    void processSource(File texFile) throws MojoExecutionException {
 	this.latexProcessor.processLatex2pdf(texFile);
     }
 
