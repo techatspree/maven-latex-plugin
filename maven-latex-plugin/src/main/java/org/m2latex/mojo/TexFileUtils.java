@@ -23,8 +23,6 @@ import java.io.FileFilter;
 
 import java.util.Collection;
 
-import org.apache.maven.plugin.MojoFailureException;
-
 public interface TexFileUtils
 {
     FileFilter getFileFilter(final File texFile, final String[] filesPatterns);
@@ -32,7 +30,7 @@ public interface TexFileUtils
     void copyOutputToTargetFolder(FileFilter fileFilter, 
 				  File texFile, 
 				  File targetDir)
-        throws BuildExecutionException, MojoFailureException;
+        throws BuildExecutionException, BuildFailureException;
 
     void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
         throws BuildExecutionException;
@@ -60,6 +58,6 @@ public interface TexFileUtils
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
 			    File targetBaseDir)
-	throws BuildExecutionException, MojoFailureException;
+	throws BuildExecutionException, BuildFailureException;
 
 }

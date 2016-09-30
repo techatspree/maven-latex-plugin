@@ -12,8 +12,8 @@ package org.m2latex.mojo;
 public class BuildExecutionException extends MyBuildException {
 
 
-   public BuildExecutionException(String message) {
-       super(message);
+    public BuildExecutionException(String message) {
+	super(message);
     }
     public BuildExecutionException(String message, Throwable cause) {
 	super(message, cause);

@@ -94,44 +94,46 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
             return;
         }
 
-       try {
-	   File tempDir = this.settings.getTempDirectoryFile();
-	   // copy sources to tempDir 
-	   // may throw BuildExecutionException 
-	   this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
+	try {
+	    File tempDir = this.settings.getTempDirectoryFile();
+	    // copy sources to tempDir 
+	    // may throw BuildExecutionException 
+	    this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
 
-	   // process xfig files 
-	   Collection<File> figFiles = this.fileUtils
-	       .getXFigDocuments(tempDir);
-	   for (File figFile : figFiles) {
-	       getLog().info("Processing " + figFile + ". ");
-	       // may throw BuildExecutionException 
-	       this.latexProcessor.runFig2Dev(figFile);
-	   }
+	    // process xfig files 
+	    Collection<File> figFiles = this.fileUtils
+		.getXFigDocuments(tempDir);
+	    for (File figFile : figFiles) {
+		getLog().info("Processing " + figFile + ". ");
+		// may throw BuildExecutionException 
+		this.latexProcessor.runFig2Dev(figFile);
+	    }
 
-	   // process latex main files 
-	   // may throw BuildExecutionException 
-	   Collection<File> latexMainFiles = this.fileUtils
-	       .getLatexMainDocuments(tempDir);
-	   for (File texFile : latexMainFiles) {
-	       // may throw BuildExecutionException  
-	       processSource(texFile);
-	       // may throw BuildExecutionException, MojoFailureException 
-	       File targetDir = this.fileUtils.getTargetDirectory
-		   (texFile, 
-		    tempDir, 
-		    this.settings.getOutputDirectoryFile());
-	       FileFilter fileFilter = this.fileUtils
-		   .getFileFilter(texFile, getOutputFileSuffixes());
-	       // may throw BuildExecutionException, MojoFailureException
-	       this.fileUtils.copyOutputToTargetFolder(fileFilter,
-						       texFile,
-						       targetDir);
-	   }
-       } catch (BuildExecutionException e) {
+	    // process latex main files 
+	    // may throw BuildExecutionException 
+	    Collection<File> latexMainFiles = this.fileUtils
+		.getLatexMainDocuments(tempDir);
+	    for (File texFile : latexMainFiles) {
+		// may throw BuildExecutionException  
+		processSource(texFile);
+		// may throw BuildExecutionException, BuildFailureException 
+		File targetDir = this.fileUtils.getTargetDirectory
+		    (texFile, 
+		     tempDir, 
+		     this.settings.getOutputDirectoryFile());
+		FileFilter fileFilter = this.fileUtils
+		    .getFileFilter(texFile, getOutputFileSuffixes());
+		// may throw BuildExecutionException, BuildFailureException
+		this.fileUtils.copyOutputToTargetFolder(fileFilter,
+							texFile,
+							targetDir);
+	    }
+	} catch (BuildExecutionException e) {
 	    throw new MojoExecutionException(e.getMessage(), e.getCause());
+	} catch (BuildFailureException e) {
+	    throw new MojoFailureException(e.getMessage(), e.getCause());
 	} finally {
-            if ( this.settings.isCleanUp() ) {
+	    if ( this.settings.isCleanUp() ) {
                 cleanUp();
             }
         }

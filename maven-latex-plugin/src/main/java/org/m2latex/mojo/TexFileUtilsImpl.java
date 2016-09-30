@@ -35,7 +35,6 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
 public class TexFileUtilsImpl implements TexFileUtils {
@@ -149,13 +148,13 @@ public class TexFileUtilsImpl implements TexFileUtils {
      * @throws BuildExecutionException
      *    If the canonical path of <code>sourceFile</code> 
      *    or of <code>sourceBaseDir</code> cannot be determined. 
-     * @throws MojoFailureException
+     * @throws BuildFailureException
      *    if <code>sourceFile</code> is not below <code>sourceBaseDir</code>. 
      */
     public File getTargetDirectory(File sourceFile,
 				   File sourceBaseDir,
 				   File targetBaseDir)
-    throws BuildExecutionException, MojoFailureException {
+    throws BuildExecutionException, BuildFailureException {
         String sourceParentPath;
         String sourceBasePath;
         try
@@ -172,7 +171,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
         }
 
         if (!sourceParentPath.startsWith(sourceBasePath)) {
-            throw new MojoFailureException
+            throw new BuildFailureException
 		( "File " + sourceFile + 
 		  " is expected to be somewhere under directory "
 		  + sourceBasePath + ". ");

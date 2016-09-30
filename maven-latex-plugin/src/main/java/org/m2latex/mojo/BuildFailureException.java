@@ -11,6 +11,10 @@ package org.m2latex.mojo;
  */
 public class BuildFailureException extends MyBuildException {
 
+    public BuildFailureException(String message) {
+	super(message);
+    }
+
     public BuildFailureException(String message, Throwable cause) {
 	super(message, cause);
     }
