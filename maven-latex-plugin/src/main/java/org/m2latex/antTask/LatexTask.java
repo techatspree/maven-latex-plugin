@@ -4,9 +4,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
-//import org.apache.maven.plugin.Mojo;
-//import org.apache.maven.plugin.MojoFailureException;
-//import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.AbstractMojoExecutionException;
 
 import org.m2latex.mojo.Settings;

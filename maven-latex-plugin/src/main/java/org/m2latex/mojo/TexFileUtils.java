@@ -23,7 +23,6 @@ import java.io.FileFilter;
 
 import java.util.Collection;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 public interface TexFileUtils
@@ -33,10 +32,10 @@ public interface TexFileUtils
     void copyOutputToTargetFolder(FileFilter fileFilter, 
 				  File texFile, 
 				  File targetDir)
-        throws MojoExecutionException, MojoFailureException;
+        throws BuildExecutionException, MojoFailureException;
 
     void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
-        throws MojoExecutionException;
+        throws BuildExecutionException;
 
     String getFileNameWithoutSuffix(File texFile);
 
@@ -50,17 +49,17 @@ public interface TexFileUtils
      * @return
      *    A List of java.io.File objects 
      *    denoting the LaTeX documents to process.
-     * @throws MojoExecutionException
+     * @throws BuildExecutionException
      */
     Collection<File> getLatexMainDocuments(File tempDir)
-        throws MojoExecutionException;
+        throws BuildExecutionException;
 
     boolean matchInLogFile(File logFile, String pattern)
-        throws MojoExecutionException;
+        throws BuildExecutionException;
 
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
 			    File targetBaseDir)
-	throws MojoExecutionException, MojoFailureException;
+	throws BuildExecutionException, MojoFailureException;
 
 }

@@ -22,8 +22,6 @@ import java.io.File;
 
 import org.apache.maven.plugin.logging.Log;
 
-import org.apache.maven.plugin.MojoExecutionException;
-
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -48,13 +46,13 @@ public class CommandExecutorImpl implements CommandExecutor {
      * to the executable. May be null? 
      *
      *
-     * @throws MojoExecutionException
+     * @throws BuildExecutionException
      *    if invocation of <code>executable</code> fails. 
      */
     public final String execute( File workingDir, 
 				 File pathToExecutable, 
 				 String executable, String[] args )
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
 	String command = new File( pathToExecutable, executable ).getPath();
 	Commandline cl = new Commandline( command );
@@ -67,7 +65,7 @@ public class CommandExecutorImpl implements CommandExecutor {
 	    // may throw CommandLineException 
 	    CommandLineUtils.executeCommandLine( cl, output, output );
 	} catch ( CommandLineException e ) {
-	    throw new MojoExecutionException( "Error executing command", e );
+	    throw new BuildExecutionException( "Error executing command", e );
         }
 
 	log.debug( "Output:\n" + output.getOutput() + "\n" );

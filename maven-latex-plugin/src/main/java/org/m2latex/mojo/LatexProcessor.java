@@ -18,7 +18,6 @@
 
 package org.m2latex.mojo;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
@@ -83,7 +82,7 @@ public class LatexProcessor
      */
     // FIXME: what about glossaries and things like that? 
     public void processLatex2pdf(final File texFile)
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
         log.info("Processing LaTeX file " + texFile + ". ");
 
@@ -140,7 +139,7 @@ public class LatexProcessor
      * @see #runLatex2html(File)
      */
     public void processLatex2html( File texFile )
-            throws MojoExecutionException 
+            throws BuildExecutionException 
     {
         processLatex2pdf(texFile);
         runLatex2html     (texFile);
@@ -157,7 +156,7 @@ public class LatexProcessor
      * @see #processLatex2pdf(File)
      * @see #runLatex2odt(File)
      */
-    public void processLatex2odt(File texFile) throws MojoExecutionException
+    public void processLatex2odt(File texFile) throws BuildExecutionException
     {
         processLatex2pdf( texFile );
         runLatex2odt( texFile );
@@ -174,7 +173,7 @@ public class LatexProcessor
      * @see #processLatex2pdf(File)
      * @see #runOdt2doc(File)
      */
-    public void processLatex2docx(File texFile) throws MojoExecutionException
+    public void processLatex2docx(File texFile) throws BuildExecutionException
     {
         processLatex2pdf(texFile);
         runLatex2odt(texFile);
@@ -193,7 +192,7 @@ public class LatexProcessor
      * @see #processLatex2pdf(File)
      * @see #runLatex2rtf(File)
      */
-    public void processLatex2rtf(File texFile) throws MojoExecutionException {
+    public void processLatex2rtf(File texFile) throws BuildExecutionException {
 	log.info("Processing LaTeX file " + texFile + ". ");
 	runLatex2rtf(texFile);
     }
@@ -207,7 +206,7 @@ public class LatexProcessor
      * @see #processLatex2pdf(File)
      * @see #runPdf2txt(File)
      */
-   public void processLatex2txt(File texFile) throws MojoExecutionException {
+   public void processLatex2txt(File texFile) throws BuildExecutionException {
         processLatex2pdf(texFile);
 	runPdf2txt(texFile);
     }
@@ -231,7 +230,7 @@ public class LatexProcessor
      * @see AbstractLatexMojo#execute()
      */
     // used in AbstractLatexMojo.execute() only 
-    public void runFig2Dev(File figFile) throws MojoExecutionException {
+    public void runFig2Dev(File figFile) throws BuildExecutionException {
 	String command = this.settings.getFig2devCommand();
 	log.debug( "Running " + command + 
 		   " on file " + figFile.getName() + ". ");
@@ -251,7 +250,7 @@ public class LatexProcessor
 		figFile.getName(), // source 
 		pdf // target 
 	    };
-	    // may throw MojoExecutionException 
+	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
 				  command, 
@@ -267,7 +266,7 @@ public class LatexProcessor
 		figFile.getName(), // source 
 		pdf_t // target 
 	    };
-	    // may throw MojoExecutionException 
+	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
 				  command, 
@@ -284,7 +283,7 @@ public class LatexProcessor
      * with arguments given by {@link #buildLatex2rtfArguments(File)}. 
      */
     private void runLatex2rtf( File texFile )
-            throws MojoExecutionException
+            throws BuildExecutionException
     {
 	String command = this.settings.getLatex2rtfCommand();
         log.debug( "Running " +command + 
@@ -292,7 +291,7 @@ public class LatexProcessor
 
         File workingDir = texFile.getParentFile();
         String[] args = buildLatex2rtfArguments( texFile );
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -314,7 +313,7 @@ public class LatexProcessor
      * with arguments given by {@link #buildHtlatexArguments(File)}. 
      */
     private void runLatex2html( File texFile )
-            throws MojoExecutionException
+            throws BuildExecutionException
     {
 	String command = this.settings.getTex4htCommand();
         log.debug( "Running " + command + 
@@ -322,7 +321,7 @@ public class LatexProcessor
 
         File workingDir = texFile.getParentFile();
         String[] args = buildHtlatexArguments( texFile );
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -338,7 +337,7 @@ public class LatexProcessor
     }
 
     private String[] buildHtlatexArguments( File texFile )
-            throws MojoExecutionException
+            throws BuildExecutionException
     {
         return new String[] {
 	    texFile.getName(),
@@ -362,7 +361,7 @@ public class LatexProcessor
      * after the last LaTeX run only. 
      */
     private void runLatex2odt( File texFile)
-            throws MojoExecutionException
+            throws BuildExecutionException
     {
 	String command = this.settings.getTex4htCommand();
         log.debug( "Running " + command + 
@@ -374,7 +373,7 @@ public class LatexProcessor
 	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
 	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
 	};
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
         this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -404,7 +403,7 @@ public class LatexProcessor
     // among those also: latex and rtf !!!!!! 
     // This is important to define the copy filter accordingly 
     private void runOdt2doc( File texFile)
-            throws MojoExecutionException
+            throws BuildExecutionException
     {
 	File odtFile = this.fileUtils.replaceSuffix(texFile, "odt");
 	String command = this.settings.getOdt2docCommand();
@@ -412,7 +411,7 @@ public class LatexProcessor
 		   " on file " + odtFile.getName() + ". ");
 
 	String[] args = new String[] {odtFile.getName()};
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -420,7 +419,7 @@ public class LatexProcessor
     }
 
     private void runPdf2txt( File texFile)
-            throws MojoExecutionException
+            throws BuildExecutionException
     {
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, "pdf");
 	String command = this.settings.getPdf2txtCommand();
@@ -428,7 +427,7 @@ public class LatexProcessor
 		   " on file " + pdfFile.getName() + ". ");
 
 	String[] args = new String[] {pdfFile.getName()};
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -437,7 +436,7 @@ public class LatexProcessor
 
     // FIXME: Is this the right criterion? 
     private boolean needAnotherLatexRun(File logFile)
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
         String reRunPattern = this.settings.getPatternNeedAnotherLatexRun();
         boolean needRun = fileUtils.matchInLogFile(logFile, reRunPattern);
@@ -447,7 +446,7 @@ public class LatexProcessor
 
     // FIXME: the right criterion? 
     private boolean needBibtexRun(File logFile)
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
         String namePrefixLogFile = this.fileUtils
 	    .getFileNameWithoutSuffix(logFile);
@@ -457,14 +456,14 @@ public class LatexProcessor
 
 
     private void runMakeindex(File idxFile)
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
 	log.debug( "Running " + this.settings.getMakeIndexCommand() + 
 		   " on file " + idxFile.getName() + ". ");
 
 	File workingDir = idxFile.getParentFile();
 	String[] args = new String[] {idxFile.getName()};
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
 			      this.settings.getMakeIndexCommand(), 
@@ -491,7 +490,7 @@ public class LatexProcessor
      * in the directory containing <code>texFile</code>. 
      */
     private void runBibtex(File texFile)
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
 	File auxFile = fileUtils.replaceSuffix( texFile, "aux" );
         log.debug( "Running BibTeX on file " + auxFile.getName() + ". ");
@@ -500,7 +499,7 @@ public class LatexProcessor
         String[] args = new String[] {
 	    auxFile.getName()
 	};
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
 			      this.settings.getBibtexCommand(), 
@@ -540,14 +539,14 @@ public class LatexProcessor
      * after the last LaTeX run only. 
      */
     private void runLatex(File texFile)
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
         log.debug("Running " + settings.getTexCommand() + 
 		  " on file " + texFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();
 	String[] args = buildLatexArguments( texFile );
-	// may throw MojoExecutionException 
+	// may throw BuildExecutionException 
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
 			      this.settings.getTexCommand(), 
@@ -556,7 +555,7 @@ public class LatexProcessor
 	// logging errors 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
 	if (logFile.exists()) {
-	    // matchInLogFile may throw MojoExecutionException
+	    // matchInLogFile may throw BuildExecutionException
 	    boolean errorOccurred = this.fileUtils
 		.matchInLogFile(logFile, this.settings.getPatternErrLatex());
 	    if (errorOccurred) {

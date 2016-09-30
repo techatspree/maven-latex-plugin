@@ -20,7 +20,6 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**
@@ -37,7 +36,7 @@ import org.apache.maven.plugins.annotations.Mojo;
     };
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) throws MojoExecutionException {
+    void processSource(File texFile) throws BuildExecutionException {
 	this.latexProcessor.processLatex2pdf(texFile);
     }
 

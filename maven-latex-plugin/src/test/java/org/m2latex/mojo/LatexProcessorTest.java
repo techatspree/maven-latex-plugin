@@ -20,7 +20,6 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
@@ -71,7 +70,7 @@ public class LatexProcessorTest
     };
 
     @Test public void testProcessLatexSimple()
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
 	// run latex 
         mockRunLatex();
@@ -102,7 +101,7 @@ public class LatexProcessorTest
     }
 
     @Test public void testProcessLatexWithBibtex()
-	throws MojoExecutionException
+	throws BuildExecutionException
     {
 	// run latex 
         mockRunLatex();
@@ -137,7 +136,7 @@ public class LatexProcessorTest
         verify();
     }
 
-   @Test public void testProcessLatex2html() throws MojoExecutionException {
+   @Test public void testProcessLatex2html() throws BuildExecutionException {
  	// run latex 
         mockRunLatex();
 
@@ -169,14 +168,14 @@ public class LatexProcessorTest
     }
 
     private void mockNeedAnotherLatexRun(boolean retVal)
-        throws MojoExecutionException
+        throws BuildExecutionException
     {
         fileUtils.matchInLogFile(logFile, 
 				 this.settings.getPatternNeedAnotherLatexRun());
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
-    private void mockNeedBibtexRun(boolean retVal) throws MojoExecutionException
+    private void mockNeedBibtexRun(boolean retVal) throws BuildExecutionException
     {
         fileUtils.getFileNameWithoutSuffix( logFile );
         fileUtilsCtrl.setReturnValue( logFile.getName().split( "\\." )[0] );
@@ -185,7 +184,7 @@ public class LatexProcessorTest
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
-    private void mockRunBibtex() throws MojoExecutionException {
+    private void mockRunBibtex() throws BuildExecutionException {
         fileUtils.replaceSuffix( texFile, "aux" );
         fileUtilsCtrl.setReturnValue( auxFile );
 
@@ -206,7 +205,7 @@ public class LatexProcessorTest
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
-    private void mockRunLatex() throws MojoExecutionException {
+    private void mockRunLatex() throws BuildExecutionException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTexCommand(),
@@ -221,7 +220,7 @@ public class LatexProcessorTest
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
-    private void mockRunLatex2html() throws MojoExecutionException {
+    private void mockRunLatex2html() throws BuildExecutionException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),

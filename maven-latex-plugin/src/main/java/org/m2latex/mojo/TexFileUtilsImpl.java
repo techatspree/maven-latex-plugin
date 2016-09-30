@@ -35,7 +35,6 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
@@ -87,13 +86,13 @@ public class TexFileUtilsImpl implements TexFileUtils {
     /**
      * Invoked only by AbstractLatexMojo#execute()
      * <code></code>
-     * @MojoExecutionException
+     * @BuildExecutionException
      *    wraps IOException when copying. 
      */
     public void copyOutputToTargetFolder(FileFilter fileFilter, 
 					 File texFile, 
 					 File targetDir )
-	throws MojoExecutionException {
+	throws BuildExecutionException {
 
 	File texFileDir = texFile.getParentFile();
         File[] outputFiles = texFileDir.listFiles();
@@ -117,7 +116,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
 		try {
 		    FileUtils.copyFileToDirectory(file, targetDir);
 		} catch ( IOException e ) {
-		    throw new MojoExecutionException
+		    throw new BuildExecutionException
 			("Error copying file " + file + 
 			 " to directory " + targetDir,
 			 e);
@@ -147,7 +146,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
      *    the directory below <code>targetBaseDir</code>
      *    which corresponds to the parent directory of <code>sourceFile</code> 
      *    which is below <code>sourceBaseDir</code>. 
-     * @throws MojoExecutionException
+     * @throws BuildExecutionException
      *    If the canonical path of <code>sourceFile</code> 
      *    or of <code>sourceBaseDir</code> cannot be determined. 
      * @throws MojoFailureException
@@ -156,7 +155,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
     public File getTargetDirectory(File sourceFile,
 				   File sourceBaseDir,
 				   File targetBaseDir)
-    throws MojoExecutionException, MojoFailureException {
+    throws BuildExecutionException, MojoFailureException {
         String sourceParentPath;
         String sourceBasePath;
         try
@@ -168,7 +167,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
          }
         catch ( IOException e )
         {
-            throw new MojoExecutionException
+            throw new BuildExecutionException
 		("Error getting canonical path", e);
         }
 
@@ -187,13 +186,13 @@ public class TexFileUtilsImpl implements TexFileUtils {
      * Copy <code>texDirectory</code> to <code>tempDirectory</code>, 
      * the latter deleting before copy if it exists. 
      *
-     * @throws MojoExecutionException
+     * @throws BuildExecutionException
      *    if either deleting or copying fails. 
      * @see TexFileUtils#copyLatexSrcToTempDir(File, File)
      */
     // used in AbstractLatexMojo.execute() only. 
     public void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
-        throws MojoExecutionException
+        throws BuildExecutionException
     {
         try {
             if ( tempDirectory.exists() )
@@ -204,7 +203,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
                 FileUtils.deleteDirectory( tempDirectory );
             }
 	} catch (IOException e) {
-            throw new MojoExecutionException
+            throw new BuildExecutionException
 		("Failure deleting the temporary directory '" + 
 		 tempDirectory.getPath() + "'. ", e );
         }
@@ -215,7 +214,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
  	    // may throw IOException 
 	    FileUtils.copyDirectory( texDirectory, tempDirectory );
 	} catch (IOException e) {
-            throw new MojoExecutionException
+            throw new BuildExecutionException
 		("Failure copying the TeX directory '" + texDirectory.getPath()
 		 + "' to a temporary directory '" + tempDirectory.getPath() 
 		 + "'. ", e );
@@ -254,7 +253,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
      */
     // used in AbstractLatexMojo.execute() only. 
     public Collection<File> getLatexMainDocuments( File directory )
-        throws MojoExecutionException {
+        throws BuildExecutionException {
 
         Collection<File> mainFiles = new ArrayList<File>();
 
@@ -271,7 +270,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
         return mainFiles;
     }
  
-   private boolean isTexMainFile(File file) throws MojoExecutionException {
+   private boolean isTexMainFile(File file) throws BuildExecutionException {
  
         try
         {
@@ -280,12 +279,12 @@ public class TexFileUtilsImpl implements TexFileUtils {
         }
         catch (FileNotFoundException e)
         {
-            throw new MojoExecutionException("The TeX file '" + file.getPath()
+            throw new BuildExecutionException("The TeX file '" + file.getPath()
                 + "' was removed while running this goal. ", e );
         }
         catch (IOException e)
         {
-            throw new MojoExecutionException
+            throw new BuildExecutionException
 		("Problems reading the file '" + file.getPath()
                 + "' while checking if it is a TeX main file. ", e);
         }
@@ -294,7 +293,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
     // logFile may be .log or .blg or something 
     /**
      *
-     * @throws MojoExecutionException
+     * @throws BuildExecutionException
      *    if the file <code>logFile</code> does not exist 
      *    or cannot be read. 
      */
@@ -303,11 +302,11 @@ public class TexFileUtilsImpl implements TexFileUtils {
     // needAnotherLatexRun, needBibtexRun, 
     // runMakeindex, runBibtex, runLatex
     public boolean matchInLogFile(File logFile, String pattern)
-        throws MojoExecutionException
+        throws BuildExecutionException
     {
         if (!logFile.exists())
 	    {
-		throw new MojoExecutionException
+		throw new BuildExecutionException
 		    ("File " + logFile.getPath() 
 		     + " does not exist after running LaTeX. ");
 	    }
@@ -315,11 +314,11 @@ public class TexFileUtilsImpl implements TexFileUtils {
 	try {
 	    return fileContainsPattern( logFile, pattern );
 	} catch (FileNotFoundException e) {
-	    throw new MojoExecutionException
+	    throw new BuildExecutionException
 		("Log file " + logFile.getPath() + " not found. ",
 		 e);
 	} catch (IOException e) {
-	    throw new MojoExecutionException
+	    throw new BuildExecutionException
 		("Error reading log file " + logFile.getPath() + ". ", e);
 	}
     }
