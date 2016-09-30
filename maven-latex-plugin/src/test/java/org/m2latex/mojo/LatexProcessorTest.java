@@ -23,7 +23,7 @@ import java.io.File;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
-import org.codehaus.plexus.util.cli.CommandLineException;
+
 import org.easymock.MockControl;
 
 import org.junit.Test;
@@ -71,7 +71,7 @@ public class LatexProcessorTest
     };
 
     @Test public void testProcessLatexSimple()
-        throws Exception
+	throws MojoExecutionException
     {
 	// run latex 
         mockRunLatex();
@@ -102,7 +102,7 @@ public class LatexProcessorTest
     }
 
     @Test public void testProcessLatexWithBibtex()
-        throws Exception
+	throws MojoExecutionException
     {
 	// run latex 
         mockRunLatex();
@@ -137,9 +137,7 @@ public class LatexProcessorTest
         verify();
     }
 
-   @Test public void testProcessLatex2html()
-        throws Exception
-    {
+   @Test public void testProcessLatex2html() throws MojoExecutionException {
  	// run latex 
         mockRunLatex();
 
@@ -170,27 +168,24 @@ public class LatexProcessorTest
         verify();
     }
 
-    private void mockNeedAnotherLatexRun( boolean returnValue )
+    private void mockNeedAnotherLatexRun(boolean retVal)
         throws MojoExecutionException
     {
         fileUtils.matchInLogFile(logFile, 
 				 this.settings.getPatternNeedAnotherLatexRun());
-        fileUtilsCtrl.setReturnValue( returnValue );
+        fileUtilsCtrl.setReturnValue( retVal );
     }
 
-    private void mockNeedBibtexRun( boolean returnValue )
-        throws MojoExecutionException
+    private void mockNeedBibtexRun(boolean retVal) throws MojoExecutionException
     {
         fileUtils.getFileNameWithoutSuffix( logFile );
         fileUtilsCtrl.setReturnValue( logFile.getName().split( "\\." )[0] );
 
         fileUtils.matchInLogFile( logFile, "No file test.bbl" );
-        fileUtilsCtrl.setReturnValue( returnValue );
+        fileUtilsCtrl.setReturnValue( retVal );
     }
 
-    private void mockRunBibtex()
-        throws CommandLineException, MojoExecutionException
-    {
+    private void mockRunBibtex() throws MojoExecutionException {
         fileUtils.replaceSuffix( texFile, "aux" );
         fileUtilsCtrl.setReturnValue( auxFile );
 
@@ -211,9 +206,7 @@ public class LatexProcessorTest
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
-    private void mockRunLatex()
-        throws CommandLineException, MojoExecutionException
-    {
+    private void mockRunLatex() throws MojoExecutionException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTexCommand(),
@@ -228,9 +221,7 @@ public class LatexProcessorTest
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
-    private void mockRunLatex2html()
-            throws CommandLineException, MojoExecutionException
-    {
+    private void mockRunLatex2html() throws MojoExecutionException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
