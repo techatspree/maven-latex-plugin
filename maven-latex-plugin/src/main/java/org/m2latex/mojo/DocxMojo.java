@@ -20,6 +20,8 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
+import org.m2latex.core.BuildExecutionException;
+
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**

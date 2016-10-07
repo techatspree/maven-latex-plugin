@@ -1,5 +1,7 @@
 package org.m2latex.mojo;
 
+import org.m2latex.core.LogWrapper;
+
 import org.apache.maven.plugin.logging.Log;
 
 /**

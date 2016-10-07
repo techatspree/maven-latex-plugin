@@ -20,6 +20,13 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
+import org.m2latex.core.LatexProcessor;
+import org.m2latex.core.BuildFailureException;
+import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.TexFileUtils;
+import org.m2latex.core.ParameterAdapter;
+import org.m2latex.core.Settings;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
