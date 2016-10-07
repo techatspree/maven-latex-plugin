@@ -3,7 +3,7 @@
 
 \usepackage{longtable}
 
-\title{Manual for the latex-maven-plugin}
+\title{Manual for the latex-maven-plugin and for an according ant task }
 
 \begin{document}
 \maketitle
@@ -11,14 +11,108 @@
 \tableofcontents
 
 \section{Introduction}
-\section{Goals}
-\section{Settings}
-This is a testfile. 
-\begin{longtable}
 
+This piece of software implements both an ant task and a maven plugin 
+generating documentation of various formats from LaTeX files 
+in an uniform way. 
+In particular, the settings which may be passed to the task 
+and those allowed for the plugin are in a one-to-one relation. 
+They are both described in Section \ref{sec:settings}. 
+
+Both, the ant task and the maven plugin rely on the same code base 
+which form the package {\tt org.m2latex.core}. 
+The code specific for the ant task is in {\tt org.m2latex.antTask} 
+and that specific for the maven plugin is in {\tt org.m2latex.mojo}. 
+
+It is very usual to endow LaTeX-files with figures. 
+We support figures created in the xfig-format 
+by 
+
+
+\section{Settings}\label{sec:settings}
+\begin{longtable}{|lll|}
+\hline
+Parameter        & Default & Explanation \\
+\hline
+\hline
+texSrcDirectory  & src/site/tex & \\
+tempDirectory    & m2latex      & \\
+outputDirectory  & .            & \\
+texPath          &              & \\
+fig2devCommand   & fig2dev      & \\
+texCommand       & pdflatex     & \\
+texCommandArgs   & -interaction=nonstopmode -src-specials & \\
+patternerrlatex  & ! |fatal error|latex error|emergency stop & \\
+debugbadboxes    & true         & \\
+debugwarnings    & true         & \\
+bibtexcommand    & bibtex       & \\
+makeindexcommand & makeindex    & \\
+patternErrMakeindex &           & \\
+tex4htCommand       & htlatex               & \\
+tex4htStyOptions    & xhtml,uni-html4,2,svg & \\
+tex4htOptions       & -cunihtf -utf8        & \\
+t4htOptions         & -cvalidate            & \\
+patternNeedAnotherLatexRun &          & \\
+maxNumReruns        & -1              & \\
+latex2rtfCommand    & latex2rtf       & \\
+odt2docCommand      & odt2doc         & \\
+pdf2txtCommand      & pdftotext       & \\
+cleanUp             & true            & \\
+\hline
 \end{longtable}
 
+
+
+\section{Goals}
+
+%\begin{longtable}
+
+%\end{longtable}
+
 \section{Installation}
+
+The ant task is tested with 
+{\tt Apache Ant(TM) version 1.9.4 compiled on September 11 2015}
+and the maven plugin with {\tt Apache Maven 3.2.1
+(ea8b2b07643dbb1b84b6d16e1f08391b666bc1e9; 2014-02-14T18:37:52+01:00}). 
+The java version is {\tt 1.8.0\_101, vendor: Oracle Corporation}. 
+
+The task just passes parameters in the build file to the core 
+and accordingly the maven plugin passes parameters in the pom 
+to the core. 
+The core just invokes various programs to do the actual work. 
+
+To process the fig-files, by default {\tt fig2dev} is used. 
+To create pdf-files from latex files we use {\tt pdflatex} 
+or some other kind of latex creating pdf-files. 
+LaTeX uses several auxiliary programs. 
+Above all {\tt bibtex} to create the bibliography 
+and {\tt makeindex} for the index. 
+
+To create html-files, or to be more precise any kind of sgml and xml, 
+from pdf-files, {\tt htlatex} is used. 
+This includes also creating open office documents like odt-files. 
+Thus open office documents are created in two steps, 
+the first is to create pdf-files with the according tools, 
+the second one is done by {\tt htlatex}. 
+
+To create rtf-files, currently {\tt latex2rtf} is used. 
+Note that this does not require {\tt pdflatex}. 
+As a drawback, not all latex-packages are supported. 
+
+MS word documents are created from open office documents via {\tt odt2doc} 
+and thus require three steps. 
+
+Finally, there is a way, to create plain text files from the pdf-files 
+via {\tt pdftotext}. 
+This makes sense because that text is well formatted 
+and may contain unicode symbols like $\pi$. 
+
+So to run this software, the abovementioned programs must be installed. 
+
+TODO: how to install the maven-plugin and how the ant-task. 
+
+
 
 \end{document}
 
