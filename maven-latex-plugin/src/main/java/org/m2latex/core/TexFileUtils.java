@@ -23,7 +23,7 @@ import java.io.FileFilter;
 
 import java.util.Collection;
 
-public interface TexFileUtils
+interface TexFileUtils
 {
     FileFilter getFileFilter(final File texFile, final String[] filesPatterns);
 

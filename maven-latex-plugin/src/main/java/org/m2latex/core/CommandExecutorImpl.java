@@ -29,11 +29,11 @@ import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
  * Execution of an executable with given arguments 
  * in a given working directory logging on {@link #log}. 
  */
-public class CommandExecutorImpl implements CommandExecutor {
+class CommandExecutorImpl implements CommandExecutor {
 
     private final LogWrapper log;
 
-    public CommandExecutorImpl( LogWrapper log )
+    CommandExecutorImpl( LogWrapper log )
     {
         this.log = log;
     }

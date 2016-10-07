@@ -35,7 +35,7 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
-public class TexFileUtilsImpl implements TexFileUtils {
+class TexFileUtilsImpl implements TexFileUtils {
 
     /**
      * The pattern which identifies a latex main file. 
@@ -47,7 +47,7 @@ public class TexFileUtilsImpl implements TexFileUtils {
 
     private final Settings settings;
 
-    public TexFileUtilsImpl(LogWrapper log, Settings settings) {
+    TexFileUtilsImpl(LogWrapper log, Settings settings) {
         this.log = log;
 	this.settings = settings;
     }

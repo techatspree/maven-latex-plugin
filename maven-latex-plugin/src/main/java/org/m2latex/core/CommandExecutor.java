@@ -20,11 +20,10 @@ package org.m2latex.core;
 
 import java.io.File;
 
-public interface CommandExecutor {
+interface CommandExecutor {
 
-    public abstract String execute( File workingDir, 
-				    File pathToExecutable, 
-				    String executable, String[] args )
+    String execute( File workingDir, File pathToExecutable, 
+		    String executable, String[] args )
         throws BuildExecutionException;
 
 }
