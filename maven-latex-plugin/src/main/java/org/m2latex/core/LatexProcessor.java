@@ -652,12 +652,12 @@ public class LatexProcessor
 	    boolean errorOccurred = this.fileUtils
 		.matchInLogFile(logFile, this.settings.getPatternErrLatex());
 	    if (errorOccurred) {
-		log.warn("LaTeX conversion to odt failed when running on " 
+		log.warn("LaTeX conversion to pdf failed when running on " 
 			 + texFile + 
 			 ". For details see " + logFile.getName() + ". ");
 	    }
 	} else {
-	    this.log.error("LaTeX conversion to odt failed: " + 
+	    this.log.error("LaTeX conversion to pdf failed: " + 
 			   "no log file found. ");
 	}
     }
