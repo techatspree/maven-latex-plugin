@@ -1,7 +1,10 @@
 package org.m2latex.core;
 
 /**
- * Describe interface LogWrapper here.
+ * Common interface for logging in ant task and in maven plugin. 
+ *
+ * @see org.m2latex.mojo.MavenLogWrapper
+ * @see org.m2latex.antTask.AntLogWrapper
  *
  *
  * Created: Fri Oct  7 00:40:27 2016

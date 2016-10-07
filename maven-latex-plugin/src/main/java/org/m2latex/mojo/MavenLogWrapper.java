@@ -5,7 +5,7 @@ import org.m2latex.core.LogWrapper;
 import org.apache.maven.plugin.logging.Log;
 
 /**
- * Describe interface LogWrapper here.
+ * Performs logging in a maven plugin. 
  *
  *
  * Created: Fri Oct  7 00:40:27 2016

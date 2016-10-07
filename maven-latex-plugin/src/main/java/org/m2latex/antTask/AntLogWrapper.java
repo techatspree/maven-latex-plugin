@@ -5,7 +5,7 @@ import org.m2latex.core.LogWrapper;
 import org.apache.tools.ant.Project;
 
 /**
- * Describe interface LogWrapper here.
+ * Performs logging in an ant task. 
  *
  *
  * Created: Fri Oct  7 00:40:27 2016
