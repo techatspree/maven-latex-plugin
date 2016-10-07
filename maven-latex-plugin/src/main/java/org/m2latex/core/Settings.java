@@ -22,8 +22,9 @@ import java.io.File;
 
 
 /**
- * The settings for this maven plugin and for this ant task. 
- * These are the elements of the pom in element <code>settings</code>
+ * The settings for a maven plugin and for an ant task. 
+ * These are the elements of the maven pom in element <code>settings</code> 
+ * and accordingly for the ant build file. 
  */
 public class Settings
 {
