@@ -1,4 +1,4 @@
-package org.m2latex.mojo;
+package org.m2latex.antTask;
 
 import org.m2latex.core.LogWrapper;
 

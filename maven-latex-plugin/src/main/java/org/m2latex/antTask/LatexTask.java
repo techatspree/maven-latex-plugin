@@ -12,7 +12,6 @@ import org.m2latex.core.MyBuildException;
 import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.ParameterAdapter;
-import org.m2latex.mojo.AntLogWrapper;
 
 import java.io.File;
 
