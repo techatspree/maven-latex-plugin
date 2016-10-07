@@ -190,16 +190,7 @@
               <classifier>antTask</classifier>
               <includes>
 		<include>**/antTask/*</include>
-		<include>**/mojo/Settings*</include>
-		<include>**/mojo/ParameterAdapter*</include>
-		<include>**/mojo/LatexProcessor*</include>
-		<include>**/mojo/*Build*Exception*</include>
-		<include>**/mojo/*Mojo*</include>
-		<include>**/mojo/TexFileUtils*</include>
-		<include>**/mojo/CommandExecutor*</include>
-		<include>**/mojo/CommandLineException*</include>
-		<include>**/mojo/LogWrapper*</include>
-		<include>**/mojo/AntLogWrapper*</include>
+		<include>**/core/*</include>
 		<include>org/apache/maven/plugin/*Exception*</include>
 		<include>org/apache/commons/io/*</include>
 		<include>org/apache/commons/io/output/*</include>
