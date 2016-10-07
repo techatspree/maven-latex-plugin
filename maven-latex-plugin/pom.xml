@@ -274,7 +274,7 @@
 		 If this is not complete, please extend 
 		 and notify the developer of this plugin. -->
 	    <patternErrLatex>
-	      Fatal error|LaTeX Error|Emergency stop
+	      ! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally
 	    </patternErrLatex>
 
 	    <!-- Whether debugging of overfull/underfull hboxes/vboxes is on: 
