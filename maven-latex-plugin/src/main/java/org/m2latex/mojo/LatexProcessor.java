@@ -18,9 +18,10 @@
 
 package org.m2latex.mojo;
 
-import org.apache.maven.plugin.logging.Log;
-
 import java.io.File;
+import java.io.FileFilter;
+
+import java.util.Collection;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
@@ -31,20 +32,94 @@ public class LatexProcessor
 
     private final CommandExecutor executor;
 
-    private final Log log;
+    private final LogWrapper log;
 
-    private TexFileUtils fileUtils;
+    private final TexFileUtils fileUtils;
 
-    public LatexProcessor( Settings settings, 
-			   CommandExecutor executor, 
-			   Log log, 
-			   TexFileUtils fileUtils )
+    private final ParameterAdapter paramAdapt;
+
+    // for tests only
+    LatexProcessor(Settings settings, 
+		   CommandExecutor executor, 
+		   LogWrapper log, 
+		   TexFileUtils fileUtils,
+		   ParameterAdapter paramAdapt)
     {
         this.settings = settings;
-        this.executor = executor;
         this.log = log;
+        this.executor = executor;
         this.fileUtils = fileUtils;
+	this.paramAdapt = paramAdapt;
     }
+
+
+    public LatexProcessor( Settings settings, 
+			   LogWrapper log, 
+			   ParameterAdapter paramAdapt)
+    {
+        this.settings = settings;
+        this.log = log;
+        this.executor = new CommandExecutorImpl(this.log);
+        this.fileUtils = new TexFileUtilsImpl( this.log, this.settings );
+	this.paramAdapt = paramAdapt;
+    }
+
+
+    public void execute() 
+	throws BuildExecutionException, BuildFailureException {
+        this.paramAdapt.initialize();
+        this.log.debug("Settings: " + this.settings.toString() );
+
+        File texDirectory = this.settings.getTexSrcDirectoryFile();
+
+        if ( !texDirectory.exists() ) {
+            this.log.info( "No tex directory - skipping LaTeX processing" );
+            return;
+        }
+
+	try {
+	    File tempDir = this.settings.getTempDirectoryFile();
+	    // copy sources to tempDir 
+	    // may throw BuildExecutionException 
+	    this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
+
+	    // process xfig files 
+	    Collection<File> figFiles = this.fileUtils
+		.getXFigDocuments(tempDir);
+	    for (File figFile : figFiles) {
+		this.log.info("Processing " + figFile + ". ");
+		// may throw BuildExecutionException 
+		runFig2Dev(figFile);
+	    }
+
+	    // process latex main files 
+	    // may throw BuildExecutionException 
+	    Collection<File> latexMainFiles = this.fileUtils
+		.getLatexMainDocuments(tempDir);
+	    for (File texFile : latexMainFiles) {
+		// may throw BuildExecutionException  
+		this.paramAdapt.processSource(texFile);
+		// may throw BuildExecutionException, BuildFailureException 
+		File targetDir = this.fileUtils.getTargetDirectory
+		    (texFile, 
+		     tempDir, 
+		     this.settings.getOutputDirectoryFile());
+		FileFilter fileFilter = this.fileUtils
+		    .getFileFilter(texFile, 
+				   this.paramAdapt.getOutputFileSuffixes());
+		// may throw BuildExecutionException, BuildFailureException
+		this.fileUtils.copyOutputToTargetFolder(fileFilter,
+							texFile,
+							targetDir);
+	    }
+	} finally {
+	    if ( this.settings.isCleanUp() ) {
+                this.fileUtils.cleanUp();
+            }
+        }
+    }
+
+
 
     /**
      * Runs LaTeX on <code>texFile</code> at least once, 
@@ -439,7 +514,7 @@ public class LatexProcessor
 	throws BuildExecutionException
     {
         String reRunPattern = this.settings.getPatternNeedAnotherLatexRun();
-        boolean needRun = fileUtils.matchInLogFile(logFile, reRunPattern);
+        boolean needRun =  this.fileUtils.matchInLogFile(logFile, reRunPattern);
         log.debug( "Another Latex run? " + needRun );
         return needRun;
     }
@@ -492,7 +567,7 @@ public class LatexProcessor
     private void runBibtex(File texFile)
 	throws BuildExecutionException
     {
-	File auxFile = fileUtils.replaceSuffix( texFile, "aux" );
+	File auxFile =  this.fileUtils.replaceSuffix( texFile, "aux" );
         log.debug( "Running BibTeX on file " + auxFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();

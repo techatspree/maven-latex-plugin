@@ -36,12 +36,12 @@ import org.apache.maven.plugins.annotations.Mojo;
     };
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) throws BuildExecutionException {
+    public void processSource(File texFile) throws BuildExecutionException {
 	this.latexProcessor.processLatex2pdf(texFile);
     }
 
     // implements AbstractLatexMojo#getOutputFileSuffixes()
-    String[] getOutputFileSuffixes() {
+    public String[] getOutputFileSuffixes() {
 	return LATEX_OUTPUT_FILES;
     }
 }

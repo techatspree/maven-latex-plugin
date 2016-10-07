@@ -36,12 +36,12 @@ public class OdtMojo extends AbstractLatexMojo {
     };
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) throws BuildExecutionException {
+    public void processSource(File texFile) throws BuildExecutionException {
 	this.latexProcessor.processLatex2odt(texFile);
     }
 
     // implements AbstractLatexMojo#getOutputFileSuffixes()
-    String[] getOutputFileSuffixes() {
+    public String[] getOutputFileSuffixes() {
 	return OOFFICE_OUTPUT_FILES;
     }
 }

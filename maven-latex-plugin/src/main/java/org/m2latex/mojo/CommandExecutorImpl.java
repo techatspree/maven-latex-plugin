@@ -20,11 +20,9 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import org.apache.maven.plugin.logging.Log;
-
 import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
 
 /**
@@ -32,9 +30,10 @@ import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
  * in a given working directory logging on {@link #log}. 
  */
 public class CommandExecutorImpl implements CommandExecutor {
-    private final Log log;
 
-    public CommandExecutorImpl( Log log )
+    private final LogWrapper log;
+
+    public CommandExecutorImpl( LogWrapper log )
     {
         this.log = log;
     }

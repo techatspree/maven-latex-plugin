@@ -8,14 +8,22 @@ import org.apache.maven.plugin.AbstractMojoExecutionException;
 
 import org.m2latex.mojo.Settings;
 import org.m2latex.mojo.PdfMojo;
+import org.m2latex.mojo.MyBuildException;
+import org.m2latex.mojo.BuildExecutionException;
+import org.m2latex.mojo.LatexProcessor;
+import org.m2latex.mojo.ParameterAdapter;
+import org.m2latex.mojo.AntLogWrapper;
+
 import java.io.File;
 
-public class LatexTask extends Task {
+public class LatexTask extends Task implements ParameterAdapter {
 
     /**
      * Contains all parameters for executing this task. 
      */
     private Settings settings;
+
+    protected LatexProcessor latexProcessor;
 
     /**
      * Invoked by ant returning a container for all parameters 
@@ -28,18 +36,34 @@ public class LatexTask extends Task {
     private String getProperty(String prop) {
 	return getProject().getProperty(prop);
     }
+
     private File getPropertyFile(String prop) {
 	return new File(getProperty(prop));
     }
 
-    /**
-     * Invoked by ant executing the task. 
-     */
-    public void execute() throws BuildException {
-        // use of the reference to Project-instance
+    private static final String[] LATEX_OUTPUT_FILES = new String[] {
+	 ".pdf", ".dvi", ".ps"
+    };
+
+    // implements AbstractLatexMojo#processSource(File)
+    public void processSource(File texFile) throws BuildExecutionException {
+	this.latexProcessor.processLatex2pdf(texFile);
+    }
+
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    public String[] getOutputFileSuffixes() {
+	return LATEX_OUTPUT_FILES;
+    }
+
+
+ 
+
+    public void initialize() {
+       // use of the reference to Project-instance
         String message = getProperty("ant.project.name");
         // Task's log method
         log("Here is project '" + message + "'. ");
+	// almost the same as getProject().log(this, msg, msgLevel)
 
         // where this task is used?
         log("I am used in: " + getLocation() + "'. ");
@@ -52,10 +76,20 @@ public class LatexTask extends Task {
 
  	log("settings: \n" + this.settings);
 
-	PdfMojo mojo = new PdfMojo();
+	 this.latexProcessor = 
+	     new LatexProcessor(this.settings,  
+				new AntLogWrapper(getProject()), 
+				this);
+    }
+
+    /**
+     * Invoked by ant executing the task. 
+     */
+    public void execute() throws BuildException {
+ 	initialize();
 	try {
-	    mojo.execute();
-	} catch (AbstractMojoExecutionException e) {
+	    this.latexProcessor.execute();
+	} catch (MyBuildException e) {
 	    throw new BuildException(e.getMessage(), e.getCause());
 	}
      }

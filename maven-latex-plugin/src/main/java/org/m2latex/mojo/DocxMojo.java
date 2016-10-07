@@ -36,12 +36,12 @@ public class DocxMojo extends AbstractLatexMojo {
     };
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) throws BuildExecutionException {
+    public void processSource(File texFile) throws BuildExecutionException {
 	this.latexProcessor.processLatex2docx(texFile);
     }
 
     // implements AbstractLatexMojo#getOutputFileSuffixes()
-    String[] getOutputFileSuffixes() {
+    public String[] getOutputFileSuffixes() {
 	return MSWORD_OUTPUT_FILES;
     }
 }

@@ -19,21 +19,16 @@
 package org.m2latex.mojo;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.FileFilter;
 
-import java.util.Collection;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 
 /**
  * Abstract base class for all mojos. 
  */
-public abstract class AbstractLatexMojo extends AbstractMojo {
+public abstract class AbstractLatexMojo extends AbstractMojo 
+    implements ParameterAdapter {
 
     /**
      * The base directory of this maven project. 
@@ -81,69 +76,22 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 
     // depends on abstract methods processSource(File), 
     // getOutputDir() and getFileFilter(File)
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
-    {
-        initialize();
-        getLog().debug("Settings: " + this.settings.toString() );
-
-        File texDirectory = this.settings.getTexSrcDirectoryFile();
-
-        if ( !texDirectory.exists() ) {
-            getLog().info( "No tex directory - skipping LaTeX processing" );
-            return;
-        }
-
+    public void execute() throws MojoExecutionException, MojoFailureException {
+	initialize();
 	try {
-	    File tempDir = this.settings.getTempDirectoryFile();
-	    // copy sources to tempDir 
-	    // may throw BuildExecutionException 
-	    this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
-
-	    // process xfig files 
-	    Collection<File> figFiles = this.fileUtils
-		.getXFigDocuments(tempDir);
-	    for (File figFile : figFiles) {
-		getLog().info("Processing " + figFile + ". ");
-		// may throw BuildExecutionException 
-		this.latexProcessor.runFig2Dev(figFile);
-	    }
-
-	    // process latex main files 
-	    // may throw BuildExecutionException 
-	    Collection<File> latexMainFiles = this.fileUtils
-		.getLatexMainDocuments(tempDir);
-	    for (File texFile : latexMainFiles) {
-		// may throw BuildExecutionException  
-		processSource(texFile);
-		// may throw BuildExecutionException, BuildFailureException 
-		File targetDir = this.fileUtils.getTargetDirectory
-		    (texFile, 
-		     tempDir, 
-		     this.settings.getOutputDirectoryFile());
-		FileFilter fileFilter = this.fileUtils
-		    .getFileFilter(texFile, getOutputFileSuffixes());
-		// may throw BuildExecutionException, BuildFailureException
-		this.fileUtils.copyOutputToTargetFolder(fileFilter,
-							texFile,
-							targetDir);
-	    }
+	    this.latexProcessor.execute();
 	} catch (BuildExecutionException e) {
 	    throw new MojoExecutionException(e.getMessage(), e.getCause());
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());
-	} finally {
-	    if ( this.settings.isCleanUp() ) {
-                cleanUp();
-            }
-        }
+	}
     }
 
     /**
      * Processes the source file <code>texFile</code> 
      * according to the concrete Mojo. 
      */
-    abstract void processSource(File texFile) 
+    public abstract void processSource(File texFile) 
 	throws BuildExecutionException;
 
     /**
@@ -153,25 +101,9 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
      * but if various html files are created, it is <code>*.html</code>, 
      * the asterisk representing a wildcard. 
      */
-    abstract String[] getOutputFileSuffixes();
+    public abstract String[] getOutputFileSuffixes();
 
-    protected void cleanUp()
-    {
-	File tempDir = this.settings.getTempDirectoryFile();
-        getLog().debug( "Deleting temporary directory " + 
-			tempDir.getPath() );
-        try
-        {
-            FileUtils.deleteDirectory(tempDir);
-        }
-        catch ( IOException e )
-        {
-            getLog().warn( "The temporary directory '" + tempDir + 
-			   "' could be deleted.", e );
-        }
-    }
-
-    protected void initialize()
+    public void initialize()
     {
 	if ( this.settings == null )
 	    {
@@ -183,11 +115,8 @@ public abstract class AbstractLatexMojo extends AbstractMojo {
 	this.settings.setTargetSiteDirectory( this.targetSiteDirectory );
 	this.settings.setTargetDirectory( this.targetDirectory );
 
-        Log log = getLog();
-        this.fileUtils = new TexFileUtilsImpl( log, this.settings );
-        this.latexProcessor = new LatexProcessor(this.settings, 
-						 new CommandExecutorImpl(log), 
-						 log, 
-						 this.fileUtils);
+	this.latexProcessor = new LatexProcessor(this.settings,  
+						 new MavenLogWrapper(getLog()), 
+						 this);
     }
 }

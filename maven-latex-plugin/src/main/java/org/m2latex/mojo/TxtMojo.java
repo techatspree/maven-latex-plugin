@@ -34,12 +34,12 @@ public class TxtMojo extends AbstractLatexMojo {
     private final static String[] TXT_OUTPUT_FILES = new String[] {".txt"};
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) throws BuildExecutionException {
+    public void processSource(File texFile) throws BuildExecutionException {
 	this.latexProcessor.processLatex2txt(texFile);
     }
 
     // implements AbstractLatexMojo#getOutputFileSuffixes()
-    String[] getOutputFileSuffixes() {
+    public String[] getOutputFileSuffixes() {
 	return TXT_OUTPUT_FILES;
     }
 }

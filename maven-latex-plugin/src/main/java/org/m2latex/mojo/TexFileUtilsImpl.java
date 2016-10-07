@@ -35,8 +35,6 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
-import org.apache.maven.plugin.logging.Log;
-
 public class TexFileUtilsImpl implements TexFileUtils {
 
     /**
@@ -45,11 +43,11 @@ public class TexFileUtilsImpl implements TexFileUtils {
    private final static String MAIN_TEX_PATTERN = 
 	".*\\\\begin\\s*\\{document\\}.*";
 
-    private final Log log;
+    private final LogWrapper log;
 
     private final Settings settings;
 
-    public TexFileUtilsImpl(Log log, Settings settings) {
+    public TexFileUtilsImpl(LogWrapper log, Settings settings) {
         this.log = log;
 	this.settings = settings;
     }
@@ -365,5 +363,23 @@ public class TexFileUtilsImpl implements TexFileUtils {
         return new File(file.getParentFile(),
 			getFileNameWithoutSuffix( file ) + "." + suffix );
     }
+
+
+    public void cleanUp()
+    {
+	File tempDir = this.settings.getTempDirectoryFile();
+        log.debug("Deleting temporary directory '" + 
+			tempDir.getPath() + "'. ");
+        try
+        {
+            FileUtils.deleteDirectory(tempDir);
+        }
+        catch ( IOException e )
+        {
+            log.warn( "The temporary directory '" + tempDir + 
+			   "' could be deleted. ", e );
+        }
+    }
+
 
  }

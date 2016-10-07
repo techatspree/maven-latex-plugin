@@ -36,12 +36,12 @@ public class HtmlMojo extends AbstractLatexMojo {
     };
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) throws BuildExecutionException {
+    public void processSource(File texFile) throws BuildExecutionException {
 	this.latexProcessor.processLatex2html(texFile);
     }
 
     // implements AbstractLatexMojo#getOutputFileSuffixes()
-    String[] getOutputFileSuffixes() {
+    public String[] getOutputFileSuffixes() {
 	return HTML_OUTPUT_FILES;
     }
 }

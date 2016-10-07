@@ -60,4 +60,6 @@ public interface TexFileUtils
 			    File targetBaseDir)
 	throws BuildExecutionException, BuildFailureException;
 
+    public void cleanUp();
+
 }

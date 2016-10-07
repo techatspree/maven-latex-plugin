@@ -34,12 +34,12 @@ public class RtfMojo extends AbstractLatexMojo {
     private final static String[] RTF_OUTPUT_FILES = new String[] {".rtf"};
 
     // implements AbstractLatexMojo#processSource(File)
-    void processSource(File texFile) throws BuildExecutionException {
+    public void processSource(File texFile) throws BuildExecutionException {
 	this.latexProcessor.processLatex2rtf(texFile);
     }
 
     // implements AbstractLatexMojo#getOutputFileSuffixes()
-    String[] getOutputFileSuffixes() {
+    public String[] getOutputFileSuffixes() {
 	return RTF_OUTPUT_FILES;
     }
 }
