@@ -65,7 +65,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo
     protected File targetSiteDirectory;
 
     /**
-     * The Settings. 
+     * Contains all parameters for executing this maven plugin. 
      * If not set in the pom prior to execution, 
      * is set in {@link #initialize()}. 
      * 
@@ -74,36 +74,8 @@ public abstract class AbstractLatexMojo extends AbstractMojo
     protected Settings settings;
 
     // set by {@link #initialize()}. 
-    protected LatexProcessor latexProcessor;
+    protected final LatexProcessor latexProcessor;
 
-    // depends on abstract methods processSource(File), 
-    // getOutputDir() and getFileFilter(File)
-    public void execute() throws MojoExecutionException, MojoFailureException {
-	initialize();
-	try {
-	    this.latexProcessor.execute();
-	} catch (BuildExecutionException e) {
-	    throw new MojoExecutionException(e.getMessage(), e.getCause());
-	} catch (BuildFailureException e) {
-	    throw new MojoFailureException(e.getMessage(), e.getCause());
-	}
-    }
-
-    /**
-     * Processes the source file <code>texFile</code> 
-     * according to the concrete Mojo. 
-     */
-    public abstract void processSource(File texFile) 
-	throws BuildExecutionException;
-
-    /**
-     * Returns the suffixes and wildcards of the output files. 
-     * For example if creating pdf and postscript, 
-     * this is just <code>.pdf, .ps</code> 
-     * but if various html files are created, it is <code>*.html</code>, 
-     * the asterisk representing a wildcard. 
-     */
-    public abstract String[] getOutputFileSuffixes();
 
     // api-docs inherited from ParameterAdapter 
     public void initialize() {
@@ -121,4 +93,37 @@ public abstract class AbstractLatexMojo extends AbstractMojo
 						 new MavenLogWrapper(getLog()), 
 						 this);
     }
+
+
+    /**
+     * Processes the source file <code>texFile</code> 
+     * according to the concrete Mojo. 
+     */
+    public abstract void processSource(File texFile) 
+	throws BuildExecutionException;
+
+    /**
+     * Returns the suffixes and wildcards of the output files. 
+     * For example if creating pdf and postscript, 
+     * this is just <code>.pdf, .ps</code> 
+     * but if various html files are created, it is <code>*.html</code>, 
+     * the asterisk representing a wildcard. 
+     */
+    public abstract String[] getOutputFileSuffixes();
+
+
+    /**
+     * Invoked by maven executing the plugin. 
+     */
+    public void execute() throws MojoExecutionException, MojoFailureException {
+	initialize();
+	try {
+	    this.latexProcessor.execute();
+	} catch (BuildExecutionException e) {
+	    throw new MojoExecutionException(e.getMessage(), e.getCause());
+	} catch (BuildFailureException e) {
+	    throw new MojoFailureException(e.getMessage(), e.getCause());
+	}
+    }
+
 }

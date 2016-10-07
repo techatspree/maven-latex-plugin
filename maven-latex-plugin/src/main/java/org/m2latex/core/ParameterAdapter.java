@@ -6,6 +6,10 @@ import java.io.File;
 /**
  * Common interface to pass parameters from ant and from maven. 
  * The core method is {@link #initialize()}. 
+ * Note that both implementations, the one of an ant task 
+ * and the one for the maven plugin implement a method execute() 
+ * but throwing specific exceptions. 
+ * <p> 
  * TODO: The other two shall be removed later on. 
  *
  * @see org.m2latex.antTask.LatexTask
@@ -33,4 +37,6 @@ public interface ParameterAdapter {
      * the asterisk representing a wildcard. 
      */
     String[] getOutputFileSuffixes();
+
+
 }

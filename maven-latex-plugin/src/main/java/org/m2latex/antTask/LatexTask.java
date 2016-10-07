@@ -22,7 +22,8 @@ public class LatexTask extends Task implements ParameterAdapter {
      */
     private Settings settings;
 
-    protected LatexProcessor latexProcessor;
+    // set by {@link #initialize()}. 
+    protected final LatexProcessor latexProcessor;
 
     /**
      * Invoked by ant returning a container for all parameters 
@@ -44,18 +45,6 @@ public class LatexTask extends Task implements ParameterAdapter {
 	 ".pdf", ".dvi", ".ps"
     };
 
-    // implements AbstractLatexMojo#processSource(File)
-    public void processSource(File texFile) throws BuildExecutionException {
-	this.latexProcessor.processLatex2pdf(texFile);
-    }
-
-    // implements AbstractLatexMojo#getOutputFileSuffixes()
-    public String[] getOutputFileSuffixes() {
-	return LATEX_OUTPUT_FILES;
-    }
-
-
- 
     // api-docs inherited from ParameterAdapter 
     public void initialize() {
        // use of the reference to Project-instance
@@ -79,6 +68,16 @@ public class LatexTask extends Task implements ParameterAdapter {
 	     new LatexProcessor(this.settings,  
 				new AntLogWrapper(getProject()), 
 				this);
+    }
+
+    // implements AbstractLatexMojo#processSource(File)
+    public void processSource(File texFile) throws BuildExecutionException {
+	this.latexProcessor.processLatex2pdf(texFile);
+    }
+
+    // implements AbstractLatexMojo#getOutputFileSuffixes()
+    public String[] getOutputFileSuffixes() {
+	return LATEX_OUTPUT_FILES;
     }
 
     /**
