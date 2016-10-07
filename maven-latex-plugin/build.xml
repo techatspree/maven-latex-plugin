@@ -25,7 +25,7 @@
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
 		texCommandArgs="-interaction=nonstopmode -src-specials"
-		patternErrLatex="Fatal error|LaTeX Error|Emergency stop"
+		patternErrLatex="! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally"
 		debugBadBoxes='true'
 		debugWarnings='true'
 		makeIndexCommand="makeindex"
