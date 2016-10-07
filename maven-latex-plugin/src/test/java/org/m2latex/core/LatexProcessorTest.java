@@ -18,6 +18,9 @@
 
 package org.m2latex.core;
 
+import org.m2latex.mojo.MavenLogWrapper;
+import org.m2latex.mojo.PdfMojo;
+
 import java.io.File;
 
 import org.apache.maven.plugin.logging.Log;

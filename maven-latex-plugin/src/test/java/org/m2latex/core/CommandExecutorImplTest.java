@@ -18,6 +18,8 @@
 
 package org.m2latex.core;
 
+import org.m2latex.mojo.MavenLogWrapper;
+
 import java.io.File;
 
 import junit.framework.TestCase;

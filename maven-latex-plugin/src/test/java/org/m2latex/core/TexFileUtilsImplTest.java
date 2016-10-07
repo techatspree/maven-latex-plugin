@@ -18,6 +18,8 @@
 
 package org.m2latex.core;
 
+import org.m2latex.mojo.MavenLogWrapper;
+
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
 import java.io.File;
