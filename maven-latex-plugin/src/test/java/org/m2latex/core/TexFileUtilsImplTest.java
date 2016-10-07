@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.m2latex.mojo;
+package org.m2latex.core;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
