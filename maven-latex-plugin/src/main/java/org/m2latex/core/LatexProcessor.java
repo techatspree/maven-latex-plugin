@@ -83,7 +83,7 @@ public class LatexProcessor
      * via  {@link ParameterAdapter#getOutputFileSuffixes()} 
      * and copied to the target folder. 
      */
-    public void execute() 
+    public void execute(Target target) 
 	throws BuildExecutionException, BuildFailureException {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString() );
@@ -115,8 +115,8 @@ public class LatexProcessor
 	    Collection<File> latexMainFiles = this.fileUtils
 		.getLatexMainDocuments(tempDir);
 	    for (File texFile : latexMainFiles) {
-		// may throw BuildExecutionException  
-		this.paramAdapt.processSource(texFile);
+		// may throw BuildExecutionException 
+		target.processSource(this, texFile);
 		// may throw BuildExecutionException, BuildFailureException 
 		File targetDir = this.fileUtils.getTargetDirectory
 		    (texFile, 
@@ -124,7 +124,7 @@ public class LatexProcessor
 		     this.settings.getOutputDirectoryFile());
 		FileFilter fileFilter = this.fileUtils
 		    .getFileFilter(texFile, 
-				   this.paramAdapt.getOutputFileSuffixes());
+				   target.getOutputFileSuffixes());
 		// may throw BuildExecutionException, BuildFailureException
 		this.fileUtils.copyOutputToTargetFolder(fileFilter,
 							texFile,
