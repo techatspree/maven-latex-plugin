@@ -42,10 +42,10 @@ public class LatexProcessorTest
 
     private Settings settings = new Settings();
 
-    private Log log = new SystemStreamLog();
+    private LogWrapper log = new MavenLogWrapper(new SystemStreamLog());
 
     private LatexProcessor processor = new LatexProcessor
-	( settings, executor, log, fileUtils );
+	( settings, executor, log, fileUtils, new PdfMojo() );
 
     private File texFile = new File(System.getProperty("tmp.dir"), "test.tex");
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");

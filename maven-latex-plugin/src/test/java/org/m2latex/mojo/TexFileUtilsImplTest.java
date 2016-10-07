@@ -30,7 +30,7 @@ import org.junit.Test;
 public class TexFileUtilsImplTest
 {
     private TexFileUtilsImpl utils = 
-	new TexFileUtilsImpl( new SystemStreamLog(), 
+	new TexFileUtilsImpl( new MavenLogWrapper(new SystemStreamLog()), 
 			      new Settings() );
 
     @Test public void testGetTargetDir()

@@ -34,7 +34,7 @@ public class CommandExecutorImplTest
         throws Exception
     {
         CommandExecutorImpl executor = 
-	    new CommandExecutorImpl( new SystemStreamLog() );
+	    new CommandExecutorImpl(new MavenLogWrapper(new SystemStreamLog()));
         String echoText = "LaTeX";
         String output = executor.execute( new File( "." ), 
 					  null, 
