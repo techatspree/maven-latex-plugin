@@ -74,7 +74,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo
     protected Settings settings;
 
     // set by {@link #initialize()}. 
-    protected final LatexProcessor latexProcessor;
+    protected LatexProcessor latexProcessor;
 
 
     // api-docs inherited from ParameterAdapter 
