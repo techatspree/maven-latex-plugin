@@ -71,7 +71,18 @@ public class LatexProcessor
 	this.paramAdapt = paramAdapt;
     }
 
-
+    /**
+     * Executes the ant-task or the maven plugin. 
+     * This consists in reading the parameters 
+     * via {@link ParameterAdapter#initialize()} 
+     * copying LaTeX source directory recursively into a temporary folder, 
+     * processing xfig-files via {@link #runFig2Dev(File)} 
+     * and processing the tex main files 
+     * via {@link ParameterAdapter#processSource(File)}. 
+     * The resulting files are identified by its suffixes 
+     * via  {@link ParameterAdapter#getOutputFileSuffixes()} 
+     * and copied to the target folder. 
+     */
     public void execute() 
 	throws BuildExecutionException, BuildFailureException {
         this.paramAdapt.initialize();
