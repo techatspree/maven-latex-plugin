@@ -208,10 +208,9 @@ public class LatexProcessor
 	    log.warn("Max rerun reached although " + texFile +
 		     " needs another run. ");
 	}
-
 	if (this.settings.getDebugBadBoxes() && 
 	    this.fileUtils.matchInLogFile(logFile, 
-					  "(Und|Ov)erful \\[hv]box")) {
+					  "(Und|Ov)erfull \\[hv]box")) {
 	    log.warn("Bad Boxes in " + texFile + ". ");
 	}
 	if (this.settings.getDebugWarnings() && 
