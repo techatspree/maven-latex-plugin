@@ -18,9 +18,7 @@
 
 package org.m2latex.mojo;
 
-import java.io.File;
-
-import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -33,17 +31,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "latex")
 public class PdfMojo extends AbstractLatexMojo {
 
-    private static final String[] LATEX_OUTPUT_FILES = new String[] {
-	".pdf", ".dvi", ".ps"
-    };
-
-    // implements AbstractLatexMojo#processSource(File)
-    public void processSource(File texFile) throws BuildExecutionException {
-	this.latexProcessor.processLatex2pdf(texFile);
-    }
-
-    // implements AbstractLatexMojo#getOutputFileSuffixes()
-    public String[] getOutputFileSuffixes() {
-	return LATEX_OUTPUT_FILES;
+    public Target getTarget() {
+	return Target.Pdf;
     }
 }

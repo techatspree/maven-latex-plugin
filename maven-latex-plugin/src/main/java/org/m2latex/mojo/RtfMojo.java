@@ -18,9 +18,7 @@
 
 package org.m2latex.mojo;
 
-import java.io.File;
-
-import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -33,15 +31,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "latex2rtf")
 public class RtfMojo extends AbstractLatexMojo {
 
-    private final static String[] RTF_OUTPUT_FILES = new String[] {".rtf"};
-
-    // implements AbstractLatexMojo#processSource(File)
-    public void processSource(File texFile) throws BuildExecutionException {
-	this.latexProcessor.processLatex2rtf(texFile);
-    }
-
-    // implements AbstractLatexMojo#getOutputFileSuffixes()
-    public String[] getOutputFileSuffixes() {
-	return RTF_OUTPUT_FILES;
+    public Target getTarget() {
+	return Target.Rtf;
     }
 }

@@ -21,6 +21,7 @@ package org.m2latex.mojo;
 import java.io.File;
 
 import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -33,17 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "odt")
 public class OdtMojo extends AbstractLatexMojo {
 
-    private static final String[] OOFFICE_OUTPUT_FILES = new String[] {
-	".odt", ".fodt", ".uot", ".uot"
-    };
-
-    // implements AbstractLatexMojo#processSource(File)
-    public void processSource(File texFile) throws BuildExecutionException {
-	this.latexProcessor.processLatex2odt(texFile);
-    }
-
-    // implements AbstractLatexMojo#getOutputFileSuffixes()
-    public String[] getOutputFileSuffixes() {
-	return OOFFICE_OUTPUT_FILES;
+    public Target getTarget() {
+	return Target.Odt;
     }
 }

@@ -20,9 +20,8 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.Target;
 
-import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build HTML documents and XHTML documents from LaTeX sources.
@@ -33,17 +32,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "html")
 public class HtmlMojo extends AbstractLatexMojo {
 
-    private static final String[] HTML_OUTPUT_FILES = new String[] {
-	"*.html", "*.xhtml", "*.htm", ".css", "*.png", "*.svg"
-    };
-
-    // implements AbstractLatexMojo#processSource(File)
-    public void processSource(File texFile) throws BuildExecutionException {
-	this.latexProcessor.processLatex2html(texFile);
-    }
-
-    // implements AbstractLatexMojo#getOutputFileSuffixes()
-    public String[] getOutputFileSuffixes() {
-	return HTML_OUTPUT_FILES;
+    public Target getTarget() {
+	return Target.Html;
     }
 }

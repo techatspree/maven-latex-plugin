@@ -18,9 +18,7 @@
 
 package org.m2latex.mojo;
 
-import java.io.File;
-
-import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -33,17 +31,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "msword")
 public class DocxMojo extends AbstractLatexMojo {
 
-    private static final String[] MSWORD_OUTPUT_FILES = new String[] {
-       ".doc", ".docx", ".rtf"
-    };
-
-    // implements AbstractLatexMojo#processSource(File)
-    public void processSource(File texFile) throws BuildExecutionException {
-	this.latexProcessor.processLatex2docx(texFile);
+    public Target getTarget() {
+	return Target.Docx;
     }
 
-    // implements AbstractLatexMojo#getOutputFileSuffixes()
-    public String[] getOutputFileSuffixes() {
-	return MSWORD_OUTPUT_FILES;
-    }
+
 }
