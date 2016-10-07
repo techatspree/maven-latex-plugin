@@ -34,7 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 public class OdtMojo extends AbstractLatexMojo {
 
     private static final String[] OOFFICE_OUTPUT_FILES = new String[] {
-       ".odt", ".fodt", ".uot", ".uot"
+	".odt", ".fodt", ".uot", ".uot"
     };
 
     // implements AbstractLatexMojo#processSource(File)

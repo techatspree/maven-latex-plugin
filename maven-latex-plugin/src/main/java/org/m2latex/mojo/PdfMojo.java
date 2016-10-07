@@ -31,10 +31,10 @@ import org.apache.maven.plugins.annotations.Mojo;
  * @phase site
  */
 //@Mojo( name = "latex")
- public class PdfMojo extends AbstractLatexMojo {
+public class PdfMojo extends AbstractLatexMojo {
 
     private static final String[] LATEX_OUTPUT_FILES = new String[] {
-	 ".pdf", ".dvi", ".ps"
+	".pdf", ".dvi", ".ps"
     };
 
     // implements AbstractLatexMojo#processSource(File)
