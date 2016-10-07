@@ -1,6 +1,6 @@
 
 
-package org.m2latex.mojo;
+package org.m2latex.core;
 
 import java.io.File;
 
