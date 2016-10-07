@@ -23,7 +23,7 @@ public class LatexTask extends Task implements ParameterAdapter {
     private Settings settings;
 
     // set by {@link #initialize()}. 
-    protected final LatexProcessor latexProcessor;
+    protected LatexProcessor latexProcessor;
 
     /**
      * Invoked by ant returning a container for all parameters 
@@ -47,14 +47,14 @@ public class LatexTask extends Task implements ParameterAdapter {
 
     // api-docs inherited from ParameterAdapter 
     public void initialize() {
-       // use of the reference to Project-instance
-        String message = getProperty("ant.project.name");
+	// use of the reference to Project-instance
+        //String message = getProperty("ant.project.name");
         // Task's log method
-        log("Here is project '" + message + "'. ");
+        //log("Here is project '" + message + "'. ");
 	// almost the same as getProject().log(this, msg, msgLevel)
 
         // where this task is used?
-        log("I am used in: " + getLocation() + "'. ");
+        //log("I am used in: " + getLocation() + "'. ");
 	if (this.settings == null) {
             throw new BuildException("No settings found. ");
         }
@@ -62,7 +62,7 @@ public class LatexTask extends Task implements ParameterAdapter {
 	this.settings.setTargetSiteDirectory(getPropertyFile("targetSiteDir"));
 	this.settings.setTargetDirectory(getPropertyFile("targetDir"));
 
- 	log("settings: \n" + this.settings);
+ 	//log("settings: \n" + this.settings);
 
 	 this.latexProcessor = 
 	     new LatexProcessor(this.settings,  
