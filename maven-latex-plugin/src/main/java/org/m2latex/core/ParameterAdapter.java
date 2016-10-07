@@ -10,7 +10,7 @@ import java.io.File;
  * and the one for the maven plugin implement a method execute() 
  * but throwing specific exceptions. 
  * <p> 
- * TODO: The other two shall be removed later on. 
+ * TODO: describe getTarget()
  *
  * @see org.m2latex.antTask.LatexTask
  * @see org.m2latex.mojo.AbstractLatexMojo
@@ -24,19 +24,8 @@ public interface ParameterAdapter {
     void initialize();
 
     /**
-     * Processes the source file <code>texFile</code> 
-     * according to the concrete Mojo. 
+     * Returns the single target. 
+     * TODO: generalize to more than one target. 
      */
-     void processSource(File texFile) throws BuildExecutionException;
-
-    /**
-     * Returns the suffixes and wildcards of the output files. 
-     * For example if creating pdf and postscript, 
-     * this is just <code>.pdf, .ps</code> 
-     * but if various html files are created, it is <code>*.html</code>, 
-     * the asterisk representing a wildcard. 
-     */
-    String[] getOutputFileSuffixes();
-
-
+    Target getTarget();
 }
