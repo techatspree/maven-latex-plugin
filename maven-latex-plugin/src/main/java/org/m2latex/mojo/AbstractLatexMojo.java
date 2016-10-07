@@ -23,7 +23,6 @@ import java.io.File;
 import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.BuildFailureException;
 import org.m2latex.core.BuildExecutionException;
-import org.m2latex.core.TexFileUtils;
 import org.m2latex.core.ParameterAdapter;
 import org.m2latex.core.Settings;
 
@@ -76,10 +75,6 @@ public abstract class AbstractLatexMojo extends AbstractMojo
 
     // set by {@link #initialize()}. 
     protected LatexProcessor latexProcessor;
-
-    // set by {@link #initialize()}. 
-    protected TexFileUtils fileUtils;
-
 
     // depends on abstract methods processSource(File), 
     // getOutputDir() and getFileFilter(File)
