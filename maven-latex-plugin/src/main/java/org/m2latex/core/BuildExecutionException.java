@@ -1,8 +1,10 @@
 package org.m2latex.core;
 
 /**
- * Describe class BuildExecutionException here.
- *
+ * This is needed as a wrapper 
+ * to {@link org.apache.maven.plugin.MojoExecutionException} 
+ * in {@link org.m2latex.mojo.AbstractLatexMojo#execute()} 
+ * to avoid maven-specific classes. 
  *
  * Created: Fri Sep 30 15:01:16 2016
  *
