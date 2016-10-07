@@ -1,4 +1,4 @@
-package org.m2latex.mojo;
+package org.m2latex.core;
 
 /**
  * Describe class MyBuildException here.
