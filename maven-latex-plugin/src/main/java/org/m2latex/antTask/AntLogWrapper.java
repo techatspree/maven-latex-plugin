@@ -22,24 +22,24 @@ public class AntLogWrapper implements LogWrapper {
     }
 
     public void error(String msg) {
-	this.project.log(msg, Project.MSG_ERR);
+	this.project.log("[error] " + msg, Project.MSG_ERR);
     }
 
     public void warn(String msg) {
-	this.project.log(msg, Project.MSG_WARN);
+	this.project.log("[warning] " + msg, Project.MSG_WARN);
     }
 
     public void warn(String msg, Throwable thrw) {
-	this.project.log(msg, thrw, Project.MSG_WARN);
+	this.project.log("[warning] " + msg, thrw, Project.MSG_WARN);
     }
 
     public void info(String msg) {
-	this.project.log(msg, Project.MSG_INFO);
+	this.project.log("[info] " + msg, Project.MSG_INFO);
     }
 
     //void verbose(String msg);
     public void debug(String msg) {
-	this.project.log(msg, Project.MSG_DEBUG);
+	this.project.log("[debug] " + msg, Project.MSG_DEBUG);
     }
 
     // public void debug(String msg, Throwable thrw) {
