@@ -17,7 +17,8 @@ public class MavenLogWrapper implements LogWrapper {
 
     private final Log log;
 
-    MavenLogWrapper(Log log) {
+    // public for tests only. 
+    public MavenLogWrapper(Log log) {
 	this.log = log;
     }
 
