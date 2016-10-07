@@ -110,8 +110,8 @@ public abstract class AbstractLatexMojo extends AbstractMojo
      */
     public abstract String[] getOutputFileSuffixes();
 
-    public void initialize()
-    {
+    // api-docs inherited from ParameterAdapter 
+    public void initialize() {
 	if ( this.settings == null )
 	    {
 		// Here, no configuration is defined in pom, 

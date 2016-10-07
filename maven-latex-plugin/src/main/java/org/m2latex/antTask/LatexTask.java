@@ -56,7 +56,7 @@ public class LatexTask extends Task implements ParameterAdapter {
 
 
  
-
+    // api-docs inherited from ParameterAdapter 
     public void initialize() {
        // use of the reference to Project-instance
         String message = getProperty("ant.project.name");

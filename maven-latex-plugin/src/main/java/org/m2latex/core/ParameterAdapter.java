@@ -1,11 +1,22 @@
 
-
 package org.m2latex.core;
 
 import java.io.File;
 
+/**
+ * Common interface to pass parameters from ant and from maven. 
+ * The core method is {@link #initialize()}. 
+ * TODO: The other two shall be removed later on. 
+ *
+ * @see org.m2latex.antTask.LatexTask
+ * @see org.m2latex.mojo.AbstractLatexMojo
+ */
 public interface ParameterAdapter {
 
+    /**
+     * Sets up the parameters and initializes 
+     * {@link org.m2latex.core.LatexProcessor}. 
+     */
     void initialize();
 
     /**
