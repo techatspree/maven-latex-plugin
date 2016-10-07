@@ -6,12 +6,12 @@ import org.apache.tools.ant.BuildException;
 
 import org.apache.maven.plugin.AbstractMojoExecutionException;
 
-import org.m2latex.mojo.Settings;
+import org.m2latex.core.Settings;
 import org.m2latex.mojo.PdfMojo;
-import org.m2latex.mojo.MyBuildException;
-import org.m2latex.mojo.BuildExecutionException;
-import org.m2latex.mojo.LatexProcessor;
-import org.m2latex.mojo.ParameterAdapter;
+import org.m2latex.core.MyBuildException;
+import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.LatexProcessor;
+import org.m2latex.core.ParameterAdapter;
 import org.m2latex.mojo.AntLogWrapper;
 
 import java.io.File;
