@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-package org.m2latex.mojo;
+package org.m2latex.core;
 
 import java.io.File;
 
 
 /**
- * The settings for this plugin. 
+ * The settings for this maven plugin and for this ant task. 
  * These are the elements of the pom in element <code>settings</code>
  */
 public class Settings
