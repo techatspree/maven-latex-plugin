@@ -25,6 +25,10 @@ import java.util.Collection;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
+/**
+ * The latex processor used by both the ant task and the maven plugin. 
+ * This is the core class of this piece of software. 
+ */
 public class LatexProcessor
 {
 
@@ -52,7 +56,10 @@ public class LatexProcessor
 	this.paramAdapt = paramAdapt;
     }
 
-
+    /**
+     * Creates a LatexProcessor with parameters given by <code>settings</code> 
+     * which logs onto <code>log</code> and used by <code>paramAdapt</code>. 
+     */
     public LatexProcessor( Settings settings, 
 			   LogWrapper log, 
 			   ParameterAdapter paramAdapt)
