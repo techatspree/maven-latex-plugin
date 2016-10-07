@@ -12,6 +12,7 @@ import org.m2latex.core.MyBuildException;
 import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.ParameterAdapter;
+import org.m2latex.core.Target;
 
 import java.io.File;
 
@@ -70,14 +71,9 @@ public class LatexTask extends Task implements ParameterAdapter {
 				this);
     }
 
-    // implements AbstractLatexMojo#processSource(File)
-    public void processSource(File texFile) throws BuildExecutionException {
-	this.latexProcessor.processLatex2pdf(texFile);
-    }
-
-    // implements AbstractLatexMojo#getOutputFileSuffixes()
-    public String[] getOutputFileSuffixes() {
-	return LATEX_OUTPUT_FILES;
+    // api-docs inherited from ParameterAdapter
+    public Target getTarget() {
+	return Target.Pdf;
     }
 
     /**
@@ -86,7 +82,7 @@ public class LatexTask extends Task implements ParameterAdapter {
     public void execute() throws BuildException {
  	initialize();
 	try {
-	    this.latexProcessor.execute();
+	    this.latexProcessor.execute(getTarget());
 	} catch (MyBuildException e) {
 	    throw new BuildException(e.getMessage(), e.getCause());
 	}
