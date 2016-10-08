@@ -240,6 +240,10 @@
 		 The default value is '.'.  -->
             <outputDirectory>.</outputDirectory>
 
+	    <!-- A comma separated list of targets 
+		 to be stored in $targetSet. -->
+	    <targets>pdf, html</targets>
+
            <!-- Path to the TeX scripts or null. 
 		In the latter case, the scripts must be on the system path. 
 		Note that in the pom, <texPath/> 
@@ -403,6 +407,7 @@ here is a bug affecting goal odt:
  \def\pgfsys@svg@newline{\Hnewline} % original 
 -->
               <goal>odt</goal>
+              <goal>cfg</goal>
             </goals>
           </execution>
 	</executions>
