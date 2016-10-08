@@ -1,7 +1,7 @@
 
 package org.m2latex.core;
 
-import java.io.File;
+import java.util.Set;
 
 /**
  * Common interface to pass parameters from ant and from maven. 
@@ -27,5 +27,5 @@ public interface ParameterAdapter {
      * Returns the single target. 
      * TODO: generalize to more than one target. 
      */
-    Target getTarget();
+    Set<Target> getTargetSet();
 }
