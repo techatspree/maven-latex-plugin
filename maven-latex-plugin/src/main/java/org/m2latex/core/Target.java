@@ -14,10 +14,10 @@ import java.io.File;
 public enum Target {
 
     /**
-     * 
+     * Based on {@link #odt}
      *
      */
-    Docx() {
+    docx() {
 	private final String[] MSWORD_OUTPUT_FILES = new String[] {
 	    ".doc", ".docx", ".rtf"
 	};
@@ -30,7 +30,11 @@ public enum Target {
 	}
 
     },
-    Html() {
+    /**
+     * Based on {@link #pdf}
+     *
+     */
+    html() {
 	private final String[] HTML_OUTPUT_FILES = new String[] {
 	    "*.html", "*.xhtml", "*.htm", ".css", "*.png", "*.svg"
 	};
@@ -43,7 +47,11 @@ public enum Target {
 	}
 
     },
-    Rtf() {
+    /**
+     * standalone
+     *
+     */
+    rtf() {
 	private final String[] RTF_OUTPUT_FILES = new String[] {".rtf"};
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
@@ -54,7 +62,10 @@ public enum Target {
 	}
 
     },
-    Txt() {
+    /**
+     * Based on {@link #pdf}
+     */
+    txt() {
 	private final String[] TXT_OUTPUT_FILES = new String[] {".txt"};
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
@@ -63,9 +74,12 @@ public enum Target {
 	public String[] getOutputFileSuffixes() {
 	    return TXT_OUTPUT_FILES;
 	}
-
     },
-    Odt() {
+    /**
+     * Based on {@link #pdf}
+     *
+     */
+    odt() {
 	private final String[] OOFFICE_OUTPUT_FILES = new String[] {
 	    ".odt", ".fodt", ".uot", ".uot"
 	};
@@ -77,9 +91,11 @@ public enum Target {
 	public String[] getOutputFileSuffixes() {
 	    return OOFFICE_OUTPUT_FILES;
 	}
-
     },
-    Pdf() {
+    /**
+     * standalone. 
+     */
+    pdf() {
 	private final String[] LATEX_OUTPUT_FILES = new String[] {
 	    ".pdf", ".dvi", ".ps"
 	};
