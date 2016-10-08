@@ -83,7 +83,7 @@ public class LatexProcessor
      * via  {@link ParameterAdapter#getOutputFileSuffixes()} 
      * and copied to the target folder. 
      */
-    public void execute(Target target) 
+    public void execute() 
 	throws BuildExecutionException, BuildFailureException {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString() );
@@ -115,21 +115,24 @@ public class LatexProcessor
 	    Collection<File> latexMainFiles = this.fileUtils
 		.getLatexMainDocuments(tempDir);
 	    for (File texFile : latexMainFiles) {
-		// may throw BuildExecutionException 
-		target.processSource(this, texFile);
-		// may throw BuildExecutionException, BuildFailureException 
-		File targetDir = this.fileUtils.getTargetDirectory
-		    (texFile, 
-		     tempDir, 
-		     this.settings.getOutputDirectoryFile());
-		FileFilter fileFilter = this.fileUtils
-		    .getFileFilter(texFile, 
-				   target.getOutputFileSuffixes());
-		// may throw BuildExecutionException, BuildFailureException
-		this.fileUtils.copyOutputToTargetFolder(fileFilter,
-							texFile,
-							targetDir);
-	    }
+		for (Target target : this.paramAdapt.getTargetSet()) {
+		    // may throw BuildExecutionException 
+		    target.processSource(this, texFile);
+		    // may throw BuildExecutionException, BuildFailureException 
+		    File targetDir = this.fileUtils.getTargetDirectory
+			(texFile, 
+			 tempDir, 
+			 this.settings.getOutputDirectoryFile());
+		    FileFilter fileFilter = this.fileUtils
+			.getFileFilter(texFile, 
+				       target.getOutputFileSuffixes());
+		    // may throw BuildExecutionException, BuildFailureException
+		    this.fileUtils.copyOutputToTargetFolder(fileFilter,
+							    texFile,
+							    targetDir);
+
+		} // target 
+	    } // texFile 
 	} finally {
 	    if ( this.settings.isCleanUp() ) {
                 this.fileUtils.cleanUp();
@@ -234,7 +237,7 @@ public class LatexProcessor
             throws BuildExecutionException 
     {
         processLatex2pdf(texFile);
-        runLatex2html     (texFile);
+        runLatex2html   (texFile);
     }
 
     /**
@@ -250,8 +253,8 @@ public class LatexProcessor
      */
     public void processLatex2odt(File texFile) throws BuildExecutionException
     {
-        processLatex2pdf( texFile );
-        runLatex2odt( texFile );
+        processLatex2pdf(texFile);
+        runLatex2odt    (texFile);
     }
 
     /**
@@ -268,8 +271,8 @@ public class LatexProcessor
     public void processLatex2docx(File texFile) throws BuildExecutionException
     {
         processLatex2pdf(texFile);
-        runLatex2odt(texFile);
-        runOdt2doc(texFile);
+        runLatex2odt    (texFile);
+        runOdt2doc      (texFile);
     }
 
     /**
@@ -300,11 +303,10 @@ public class LatexProcessor
      */
    public void processLatex2txt(File texFile) throws BuildExecutionException {
         processLatex2pdf(texFile);
-	runPdf2txt(texFile);
-    }
+	runPdf2txt      (texFile);
+   }
 
-    private boolean update(File source, File target)
-    {
+    private boolean update(File source, File target) {
 	if (!target.exists()) {
 	    return true;
 	}
