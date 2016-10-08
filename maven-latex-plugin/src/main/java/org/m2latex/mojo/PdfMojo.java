@@ -32,7 +32,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * @phase site
  */
 //@Mojo( name = "latex")
-public class PdfMojo extends AbstractLatexMojo {
+public class PdfMojo extends CfgLatexMojo {
 
    public Set<Target> getTargetSet() {
 	return EnumSet.of(Target.pdf);

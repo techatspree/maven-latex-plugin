@@ -33,7 +33,7 @@ import org.m2latex.core.Target;
  * @phase site
  */
 //@Mojo( name = "html")
-public class HtmlMojo extends AbstractLatexMojo {
+public class HtmlMojo extends CfgLatexMojo {
 
    public Set<Target> getTargetSet() {
 	return EnumSet.of(Target.html);

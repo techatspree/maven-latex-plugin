@@ -32,7 +32,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * @phase site
  */
 //@Mojo( name = "msword")
-public class DocxMojo extends AbstractLatexMojo {
+public class DocxMojo extends CfgLatexMojo {
 
     public Set<Target> getTargetSet() {
 	return EnumSet.of(Target.docx);

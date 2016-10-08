@@ -32,7 +32,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * @phase site
  */
 //@Mojo( name = "latex2rtf")
-public class RtfMojo extends AbstractLatexMojo {
+public class RtfMojo extends CfgLatexMojo {
 
    public Set<Target> getTargetSet() {
 	return EnumSet.of(Target.odt);

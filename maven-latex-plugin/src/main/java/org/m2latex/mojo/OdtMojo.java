@@ -32,7 +32,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * @phase site
  */
 //@Mojo( name = "odt")
-public class OdtMojo extends AbstractLatexMojo {
+public class OdtMojo extends CfgLatexMojo {
 
     public Set<Target> getTargetSet() {
 	return EnumSet.of(Target.odt);

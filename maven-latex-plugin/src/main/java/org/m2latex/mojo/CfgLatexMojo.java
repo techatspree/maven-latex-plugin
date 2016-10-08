@@ -39,8 +39,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @goal cfg
  * @phase site
  */
-public class AbstractLatexMojo extends AbstractMojo 
-    implements ParameterAdapter {
+public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
 
     /**
      * The base directory of this maven project. 
