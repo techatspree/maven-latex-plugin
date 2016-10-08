@@ -20,6 +20,9 @@ package org.m2latex.core;
 
 import java.io.File;
 
+import java.util.Set;
+import java.util.HashSet;
+
 
 /**
  * The settings for a maven plugin and for an ant task. 
@@ -129,6 +132,15 @@ public class Settings
      */
     private File outputDirectoryFile = new File(this.targetSiteDirectory, 
 						this.outputDirectory);
+
+    /**
+     * A comma separated list of targets 
+     * returned as a set by {@link #getTargetSet()}. 
+     *
+     * @parameter
+     */
+    private String targets = "pdf, html";
+
 
     // texPath, commands and arguments 
 
@@ -386,12 +398,21 @@ public class Settings
 	return this.texSrcDirectoryFile;
     }
 
-     public File getTempDirectoryFile() {
+    public File getTempDirectoryFile() {
 	return this.tempDirectoryFile;
     }
 
-     public File getOutputDirectoryFile() {
+    public File getOutputDirectoryFile() {
        return this.outputDirectoryFile;
+    }
+
+    public Set<Target> getTargetSet() {
+	String[] targetSeq = this.targets.split(" *, *");
+	Set<Target> targetSet = new HashSet<Target>();
+	for (int idx = 0; idx < targetSeq.length; idx++) {
+	    targetSet.add(Target.valueOf(targetSeq[idx]));
+	}
+	return targetSet;
     }
 
 
@@ -539,6 +560,10 @@ public class Settings
         this.outputDirectory = outputDirectory;
 	this.outputDirectoryFile = new File(this.targetSiteDirectory, 
 					    this.outputDirectory);
+    }
+
+    public void setTargets(String targets) {
+	this.targets = targets.trim();
     }
 
     public void setTexPath(File texPath) {
