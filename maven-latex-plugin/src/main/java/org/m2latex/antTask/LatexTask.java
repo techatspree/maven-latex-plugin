@@ -16,6 +16,8 @@ import org.m2latex.core.Target;
 
 import java.io.File;
 
+import java.util.Set;
+
 public class LatexTask extends Task implements ParameterAdapter {
 
     /**
@@ -72,8 +74,8 @@ public class LatexTask extends Task implements ParameterAdapter {
     }
 
     // api-docs inherited from ParameterAdapter
-    public Target getTarget() {
-	return Target.Pdf;
+    public Set<Target> getTargetSet() {
+	return this.settings.getTargetSet();
     }
 
     /**
@@ -82,7 +84,7 @@ public class LatexTask extends Task implements ParameterAdapter {
     public void execute() throws BuildException {
  	initialize();
 	try {
-	    this.latexProcessor.execute(getTarget());
+	    this.latexProcessor.execute();
 	} catch (MyBuildException e) {
 	    throw new BuildException(e.getMessage(), e.getCause());
 	}
