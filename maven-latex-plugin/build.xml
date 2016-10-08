@@ -22,6 +22,7 @@
       <settings texSrcDirectory="src/site/tex"
 		tempDirectory="m2latex"
 		outputDirectory="."
+		targets="pdf, html"
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
 		texCommandArgs="-interaction=nonstopmode -src-specials"
