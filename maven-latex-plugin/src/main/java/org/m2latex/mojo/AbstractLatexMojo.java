@@ -20,6 +20,8 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
+import java.util.Set;
+
 import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.BuildFailureException;
 import org.m2latex.core.BuildExecutionException;
@@ -33,8 +35,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Abstract base class for all mojos. 
+ *
+ * @goal cfg
+ * @phase site
  */
-public abstract class AbstractLatexMojo extends AbstractMojo 
+public class AbstractLatexMojo extends AbstractMojo 
     implements ParameterAdapter {
 
     /**
@@ -96,7 +101,9 @@ public abstract class AbstractLatexMojo extends AbstractMojo
     }
 
     // api-docs inherited from ParameterAdapter
-    public abstract Target getTarget();
+    public Set<Target> getTargetSet() {
+	return this.settings.getTargetSet();
+    }
 
     /**
      * Invoked by maven executing the plugin. 
@@ -104,7 +111,7 @@ public abstract class AbstractLatexMojo extends AbstractMojo
     public void execute() throws MojoExecutionException, MojoFailureException {
 	initialize();
 	try {
-	    this.latexProcessor.execute(getTarget());
+	    this.latexProcessor.execute();
 	} catch (BuildExecutionException e) {
 	    throw new MojoExecutionException(e.getMessage(), e.getCause());
 	} catch (BuildFailureException e) {
