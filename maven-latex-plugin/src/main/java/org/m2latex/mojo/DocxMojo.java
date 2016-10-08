@@ -20,6 +20,9 @@ package org.m2latex.mojo;
 
 import org.m2latex.core.Target;
 
+import java.util.Set;
+import java.util.EnumSet;
+
 import org.apache.maven.plugins.annotations.Mojo;
 
 /**
@@ -31,8 +34,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "msword")
 public class DocxMojo extends AbstractLatexMojo {
 
-    public Target getTarget() {
-	return Target.Docx;
+    public Set<Target> getTargetSet() {
+	return EnumSet.of(Target.docx);
     }
 
 

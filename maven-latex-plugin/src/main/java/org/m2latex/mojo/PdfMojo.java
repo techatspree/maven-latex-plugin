@@ -18,6 +18,9 @@
 
 package org.m2latex.mojo;
 
+import java.util.Set;
+import java.util.EnumSet;
+
 import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
@@ -31,7 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "latex")
 public class PdfMojo extends AbstractLatexMojo {
 
-    public Target getTarget() {
-	return Target.Pdf;
+   public Set<Target> getTargetSet() {
+	return EnumSet.of(Target.pdf);
     }
 }

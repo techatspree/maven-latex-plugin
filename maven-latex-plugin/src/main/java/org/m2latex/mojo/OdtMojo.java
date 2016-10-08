@@ -18,9 +18,9 @@
 
 package org.m2latex.mojo;
 
-import java.io.File;
+import java.util.Set;
+import java.util.EnumSet;
 
-import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
@@ -34,7 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "odt")
 public class OdtMojo extends AbstractLatexMojo {
 
-    public Target getTarget() {
-	return Target.Odt;
+    public Set<Target> getTargetSet() {
+	return EnumSet.of(Target.odt);
     }
 }

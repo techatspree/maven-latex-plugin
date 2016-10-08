@@ -18,6 +18,9 @@
 
 package org.m2latex.mojo;
 
+import java.util.Set;
+import java.util.EnumSet;
+
 import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
@@ -31,7 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 //@Mojo( name = "txt")
 public class TxtMojo extends AbstractLatexMojo {
 
-    public Target getTarget() {
-	return Target.Txt;
+   public Set<Target> getTargetSet() {
+	return EnumSet.of(Target.txt);
     }
 }
