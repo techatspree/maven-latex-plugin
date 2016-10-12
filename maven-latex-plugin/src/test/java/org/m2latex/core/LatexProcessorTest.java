@@ -91,7 +91,7 @@ public class LatexProcessorTest
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
+	fileUtils.matchInLogFile(logFile, "(Und|Ov)erfull \\[hv]box");
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInLogFile(logFile, "Warning ");
 	fileUtilsCtrl.setReturnValue( false );
@@ -127,7 +127,7 @@ public class LatexProcessorTest
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
+	fileUtils.matchInLogFile(logFile, "(Und|Ov)erfull \\[hv]box");
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInLogFile(logFile, "Warning ");
 	fileUtilsCtrl.setReturnValue( false );
@@ -156,7 +156,7 @@ public class LatexProcessorTest
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, "(Und|Ov)erful \\[hv]box");
+	fileUtils.matchInLogFile(logFile, "(Und|Ov)erfull \\[hv]box");
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInLogFile(logFile, "Warning ");
 	fileUtilsCtrl.setReturnValue( false );
@@ -174,7 +174,7 @@ public class LatexProcessorTest
         throws BuildExecutionException
     {
         fileUtils.matchInLogFile(logFile, 
-				 this.settings.getPatternNeedAnotherLatexRun());
+				 this.settings.getPatternNeedLatexReRun());
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
