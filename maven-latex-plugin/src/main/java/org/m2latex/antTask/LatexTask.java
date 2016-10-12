@@ -32,17 +32,9 @@ public class LatexTask extends Task implements ParameterAdapter {
 	return this.settings = new Settings();
     }
 
-    private String getProperty(String prop) {
-	return getProject().getProperty(prop);
-    }
-
     private File getPropertyFile(String prop) {
-	return new File(getProperty(prop));
+	return new File(getProject().getProperty(prop));
     }
-
-    private static final String[] LATEX_OUTPUT_FILES = new String[] {
-	 ".pdf", ".dvi", ".ps"
-    };
 
     // api-docs inherited from ParameterAdapter 
     public void initialize() {
