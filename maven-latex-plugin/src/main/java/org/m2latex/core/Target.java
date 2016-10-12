@@ -19,7 +19,7 @@ public enum Target {
      */
     docx() {
 	private final String[] MSWORD_OUTPUT_FILES = new String[] {
-	    ".doc", ".docx", ".rtf"
+	    ".doc", ".doc6", ".doc95", ".docx", ".docx7", ".rtf"
 	};
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
