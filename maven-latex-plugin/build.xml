@@ -22,7 +22,7 @@
 
     <!-- ensure that all required directories are present. 
 	 these are removed by mvn only. -->
-    <mkdir dir="${targetDir}"/>
+    <!--mkdir dir="${targetDir}"/-->
     <mkdir dir="${clsDir}"/>
   </target>
 
@@ -32,7 +32,7 @@
 	  description="Delete all generated files 
 		       including tests and site. ">
     <delete includeemptydirs="true" failonerror="false">
-      <fileset dir="${targetDir}">
+      <fileset dir="${targetDir}/**">
       </fileset>
     </delete>
     <delete file="${antJarDir}${createdJar}" />
