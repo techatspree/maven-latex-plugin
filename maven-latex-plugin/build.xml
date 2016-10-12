@@ -29,14 +29,18 @@
 		patternErrLatex="! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally"
 		debugBadBoxes='true'
 		debugWarnings='true'
+		bibtexCommand="bibtex"
 		makeIndexCommand="makeindex"
 		tex4htCommand="htlatex"
-		tex4htStyOptions="html,2"
-		tex4htOptions=""
-		t4htOptions=""
+		tex4htStyOptions="html,uni-html4,2,svg"
+		tex4htOptions=" -cunihtf -utf8"
+		t4htOptions="-cvalidate"
+		maxNumReruns='-1'
 		latex2rtfCommand="latex2rtf"
+		odt2docCommand="odt2doc"
+		odt2docOptions="-fdocx"
 		pdf2txtCommand="pdftotext"
-		maxNumReruns='5'
+		pdf2txtOptions=""
 		cleanUp='true'>
 	<!-- texPath is null -->
 	
