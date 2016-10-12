@@ -50,6 +50,10 @@ for the underlying software.
 
 This section describes the parameters 
 of both the ant-task and the maven-plugin. 
+First we provide a table with parameter names, default values 
+and explanation, then listings of the configuration 
+in the {\tt pom.xml} for the maven-plugin 
+and in the {\tt build.xml} for the ant-task. 
 
 
 \begin{longtable}{|ll|}
@@ -311,6 +315,7 @@ May be used for debugging when setting {\tt false}.
 
 The maven-plugin described here 
 requires the definition below in {\tt pom.xml}. 
+
 \lstset{language=xml, basicstyle=\tiny}
 \begin{lstlisting}
 \small
@@ -630,6 +635,16 @@ requires the following task definition in {\tt build.xml}.
 
 \section{Installation}
 
+Both the ant-task and the maven-plugin just direct parameters 
+from ant and from maven, respectively, 
+to the programs that do the proper work. 
+Thus installation of the ant-task and of the maven plugin 
+requires that all needed programs are installed. 
+These prerequisites are collected in Section \ref{subsec:prerequisites}. 
+
+
+\subsection{Prerequisites}\label{subsec:prerequisites}
+
 The ant-task is tested with 
 {\tt Apache Ant(TM) version 1.9.4 compiled on September 11 2015}
 and the maven-plugin with 
@@ -641,12 +656,19 @@ Apache Maven 3.2.1
 \end{verbatim}
 The java version is {\tt 1.8.0\_101, vendor: Oracle Corporation}. 
 
-The task just passes parameters in the build file to the core 
-and accordingly the maven plugin passes parameters in the pom 
+So, a java installation is the base for running either the ant-task 
+or the maven-plugin. 
+To use the maven-plugin, of course maven must be installed 
+and to use the ant-task, ant must be installed. 
+
+The ant-task just passes parameters in the build file to the core 
+and accordingly the maven-plugin passes parameters in the pom 
 to the core. 
 The core just invokes various programs to do the actual work. 
 
 To process the fig-files, by default {\tt fig2dev} is used. 
+It makes sense to have {\tt xfig} installed, but this is not mandatory. 
+
 To create pdf-files from latex files we use {\tt pdflatex} 
 or some other kind of latex creating pdf-files. 
 LaTeX uses several auxiliary programs. 
@@ -675,7 +697,33 @@ and may contain unicode symbols like $\pi$.
 
 So to run this software, the abovementioned programs must be installed. 
 
-TODO: how to install the maven-plugin and how the ant-task. 
+\subsection{Setting pom.xml and build.xml}\label{subsec:sgml}
+
+To install the maven-plugin within a given maven project, 
+the according listing given in Section \ref{sec:settings} 
+has to be added to the {\tt pom.xml} 
+and accordingly to install the ant-task within an ant-project, 
+the according listing given in Section \ref{sec:settings} 
+has to be added to the {\tt build.xml} 
+
+\subsection{Completing the Installation}\label{subsec:instComplete}
+
+To install the maven-plugin, just type {\tt mvn clean install}. 
+To install the ant-task, one has first to comment out in {\tt build.xml} 
+the taskdef {\tt latex} and the target {\tt latex:cfg}. 
+One may also adapt the lib-folder of the ant-installation. 
+Then just type {\tt sudo ant clean install}. 
+After that, one may face problems rerunning with the normal user. 
+One may also run {\tt ant clean install}. 
+which fails in the last copy operation 
+and then copy later into ant's lib-folder. 
+That way, the target directory is not currupted. 
+
+Alternatively, if maven is installed, one may run {\tt mvn clean install} 
+which creates the jar-file defining the ant-task. 
+Also with this method, one has to copy the jar-file defining the ant-task 
+later into ant's lib-folder. 
+
 
 \section{Gaps}
 
