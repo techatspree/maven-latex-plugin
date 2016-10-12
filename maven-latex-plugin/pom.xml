@@ -241,7 +241,8 @@
             <outputDirectory>.</outputDirectory>
 
 	    <!-- A comma separated list of targets 
-		 to be stored in $targetSet. -->
+		 to be stored in $targetSet. 
+		 The default value is 'pdf, html'. -->
 	    <targets>pdf, html</targets>
 
            <!-- Path to the TeX scripts or null. 
@@ -254,11 +255,11 @@
 	    <!-- The fig2dev command for conversion of fig-files 
 		 into various formats. 
 		 Currently only pdf combined with pdf_t is supported. 
-		 The default value is <code>fig2dev</code>.  -->
+		 The default value is 'fig2dev'.  -->
 	    <fig2devCommand>fig2dev</fig2devCommand>
   
-            <!-- The LaTeX command. 
-		 The default is 'pdflatex'. -->
+            <!-- The LaTeX command to create a pdf-file. 
+		 The default value is 'pdflatex'. -->
             <texCommand>pdflatex</texCommand>
 
              <!-- The arguments string to use 
@@ -297,16 +298,18 @@
 	    <debugWarnings>true</debugWarnings>
 
 
-            <!-- The BibTeX command. 
+            <!-- The BibTeX command to create a bbl-file 
+		 from an aux-file and a bib-file (using a bst-style file). 
 		 The default value is 'bibtex'. -->
             <bibtexCommand>bibtex</bibtexCommand>
 
-	    <!-- The MakeIndex command. 
-		 The default value is <code>makeindex</code>. -->
+	    <!-- The MakeIndex command to create an ind-file 
+		 from an idx-file logging on an ilg-file. 
+		 The default value is 'makeindex'. -->
 	    <makeIndexCommand>makeindex</makeIndexCommand>
 
 	    <!-- The pattern in the ilg-file 
-		 indicating that {@link #makeIndexCommand} failed. 
+		 indicating that $makeIndexCommand failed. 
 		 The default value is chosen 
 		 according to the 'makeindex' documentation 
 		 but seems to be incomplete.
@@ -348,17 +351,31 @@
 	    <!-- ' -cunihtf' forces unicode -->
             <tex4htOptions> -cunihtf -utf8</tex4htOptions>
 
-	    <!-- options for t4ht.c, default is empty 
-		 -p prevents png-->
+	    <!-- The options for 't4ht' which converts idv-file and lg-file 
+		 into css-files, tmp-file and, 
+		 by need and if configured accordingly into png files. 
+		 The value <code>-p</code> prevents creation of png-pictures.
+		 The default value is the empty string. -->
             <t4htOptions>-cvalidate</t4htOptions>
- 
-	    <patternNeedAnotherLatexRun>
+
+	    <!-- The pattern in the log file which triggers rerunning latex. 
+		 This pattern may never be ensured to be complete, 
+		 because any new package may break completeness. 
+		 Nevertheless, the default value aims completeness 
+		 while be restrictive enough not to trigger another latex run 
+		 if not needed. 
+		 To ensure termination, let $maxNumReruns 
+		 specify the maximum number of latex runs. 
+		 If the user finds an extension, (s)he is asked to contribute 
+		 and to notify the developer of this plugin. 
+		 Then the default value will be extended. -->
+	    <patternNeedLatexReRun>
 	      (Rerun (LaTeX|to get cross-references right)|
 	      There were undefined references|
 \\(rerunfilecheck\\)                Rerun to get outlines right|
 Package longtable Warning: Table widths have changed. Rerun LaTeX.|
 	      Package natbib Warning: Citation\\(s\\) may have changed)
-	    </patternNeedAnotherLatexRun>
+	    </patternNeedLatexReRun>
 
 	    <!-- The maximal allowed number of reruns of the latex process. 
 		 This is to avoid endless repetitions. 
@@ -367,21 +384,37 @@ Package longtable Warning: Table widths have changed. Rerun LaTeX.|
 		 or -1 which signifies that there is no threshold. -->
 	    <maxNumReruns>-1</maxNumReruns>
 
-            <!-- The latex2rtf command. 
-		 Default is 'latex2rtf'. -->
+            <!-- The latex2rtf command to create rtf from latex directly. 
+		 The default value is 'latex2rtf'. -->
 	    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
 
-            <!-- The odt2doc command. 
-		 Default is 'odt2doc'. -->
+            <!-- The odt2doc command to create MS word-formats from otd-files. 
+		 The default value is 'odt2doc'. -->
 	    <odt2docCommand>odt2doc</odt2docCommand>
 
+	    <!-- The options of the odt2doc command. 
+		 Above all specification of output format via the option '-f'. 
+		 Invocation is 'odt2doc -f<format> <file>.odt'. 
+		 All output formats are shown by 'odt2doc - -show' 
+		 but the formats interesting in this context 
+		 are doc, doc6, doc95,docbook, docx, docx7, ooxml, rtf. 
+		 Interesting also the verbosity options '-v', '-vv', '-vvv' 
+		 the timeout '-T=secs' and '- -preserve' 
+		 to keep permissions and timestamp of the original document. 
+		 The default value is '-fdocx'. -->
+	    <odt2docOptions>-fdocx</odt2docOptions>
+
 	    <!-- The pdf2txt command converting pdf into plain text. 
-	    	 Default is 'pdftotext'.  -->
+	    	 The default value is 'pdftotext'.  -->
             <pdf2txtCommand>pdftotext</pdf2txtCommand>
 
-            <!-- clean up the working directory in the end? 
+	    <!-- The options of the pdf2txt command. 
+		 The default value is the empty string. -->
+            <pdf2txtOptions></pdf2txtOptions>
+
+            <!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
-		 Default is true -->
+		 The default value is 'true'. -->
             <cleanUp>true</cleanUp>
 
  	  </settings>
