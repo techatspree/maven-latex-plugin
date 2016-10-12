@@ -223,7 +223,9 @@ public class Settings
     private boolean debugWarnings = true;
 
     /**
-     * The BibTeX command. The default value is <code>bibtex</code>. 
+     * The BibTeX command to create a bbl-file 
+     * from an aux-file and a bib-file (using a bst-style file). 
+     * The default value is <code>bibtex</code>. 
      *
      * @parameter
      */
@@ -233,7 +235,9 @@ public class Settings
 
 
     /**
-     * The MakeIndex command. The default value is <code>makeindex</code>. 
+     * The MakeIndex command to create an ind-file 
+     * from an idx-file logging on an ilg-file. 
+     * The default value is <code>makeindex</code>. 
      *
      * @parameter
      */
@@ -295,35 +299,69 @@ public class Settings
      * The options for <code>t4ht</code> which converts idv-file and lg-file 
      * into css-files, tmp-file and, 
      * by need and if configured accordingly into png files. 
+     * The value <code>-p</code> prevents creation of png-pictures.
+     * The default value is the empty string. 
      *
      * @parameter
      */
     private String t4htOptions = "";
 
     /**
-     * The latex2rtf command. Default is <code>latex2rtf</code>. 
+     * The latex2rtf command to create rtf from latex directly. 
+     * Default is <code>latex2rtf</code>. 
      *
      * @parameter
      */
     private String latex2rtfCommand = "latex2rtf";
 
+    // FIXME: provide parameters for latex2rtf 
+
     /**
-     * The odt2doc command. Default is <code>odt2doc</code>. 
+     * The odt2doc command to create MS word-formats from otd-files. 
+     * The default value is <code>odt2doc</code>; 
+     * equivalent here is <code>unoconv</code>. 
+     * Note that <code>odt2doc</code> just calls <code>unoconv</code> 
+     * with odt-files as input and doc-file as default output. 
      *
+     * @see #odt2docOptions
      * @parameter
      */
     private String odt2docCommand = "odt2doc";
 
-    // FIXME: provide parameters for latex2rtf 
-
+    /**
+     * The options of the odt2doc command. 
+     * Above all specification of output format via the option <code>-f</code>. 
+     * Invocation is <code>odt2doc -f&lt;format> &lt;file>.odt</code>. 
+     * All output formats are shown by <code>odt2doc --show</code> 
+     * but the formats interesting in this context 
+     * are <code>doc, doc6, doc95,docbook, docx, docx7, ooxml, rtf</code>. 
+     * Interesting also the verbosity options <code>-v, -vv, -vvv</code> 
+     * the timeout <code>-T=secs</code> and <code>--preserve</code> 
+     * to keep permissions and timestamp of the original document. 
+     * The default value is <code>-fdocx</code>. 
+     *
+     * @see #odt2docCommand
+     * @parameter
+     */
+    private String odt2docOptions = "-fdocx";
 
     /**
      * The pdf2txt command converting pdf into plain text. 
-     * Default is <code>pdftotext</code>. 
+     * The default value is <code>pdftotext</code>. 
      *
+     * @see #pdf2txtOptions
      * @parameter
      */
     private String pdf2txtCommand = "pdftotext";
+
+    /**
+     * The options of the pdf2txt command. 
+     * The default value is the empty string. 
+     *
+     * @see #pdf2txtCommand
+     * @parameter
+     */
+    private String pdf2txtOptions = "";
 
 
     // rerunning latex 
@@ -344,7 +382,7 @@ public class Settings
      *
      * @parameter
      */
-   private String patternNeedAnotherLatexRun = 
+   private String patternNeedLatexReRun = 
        "(Rerun (LaTeX|to get cross-references right)|" + 
        "There were undefined references|" + 
        "\\(rerunfilecheck\\)                Rerun to get outlines right|" +
@@ -486,8 +524,16 @@ public class Settings
         return this.odt2docCommand;
     }
 
+    public String getOdt2docOptions() {
+	return this.odt2docOptions;
+    }
+
     public String getPdf2txtCommand() {
         return this.pdf2txtCommand;
+    }
+
+    public String getPdf2txtOptions() {
+        return this.pdf2txtOptions;
     }
 
     public boolean isCleanUp() {
@@ -495,8 +541,8 @@ public class Settings
     }
 
 
-    public String getPatternNeedAnotherLatexRun() {
-	return this.patternNeedAnotherLatexRun;
+    public String getPatternNeedLatexReRun() {
+	return this.patternNeedLatexReRun;
     }
 
     public int getMaxNumReruns() {
@@ -585,7 +631,8 @@ public class Settings
      * consist of proper options separated by a single blank. 
      *
      * @param args
-     *    The arguments string to use when calling latex. 
+     *    The arguments string to use when calling LaTeX 
+     *    via {@link #texCommand}. 
      *    Leading and trailing blank and newline are ignored. 
      *    Proper arguments are separated by blank and newline. 
      */
@@ -649,8 +696,16 @@ public class Settings
         this.odt2docCommand = odt2docCommand;
      }
 
+    public void setOdt2docOptions(String odt2docOptions) {
+        this.odt2docOptions = odt2docOptions.replace("( \n)+", " ").trim();
+     }
+
     public void setPdf2txtCommand(String pdf2txtCommand) {
         this.pdf2txtCommand = pdf2txtCommand;
+    }
+
+    public void setPdf2txtOptions(String pdf2txtOptions) {
+        this.pdf2txtOptions = pdf2txtOptions.replace("( \n)+", " ").trim();
     }
 
     public void setTex4htCommand(String tex4htCommand) {
@@ -669,23 +724,23 @@ public class Settings
 	this.t4htOptions = t4htOptions;
     }
 
-    // setter method for patternNeedAnotherLatexRun in maven 
-    public void setPatternNeedAnotherLatexRun(String pattern) {
-	this.patternNeedAnotherLatexRun = pattern;
+    // setter method for patternNeedLatexReRun in maven 
+    public void setPatternNeedLatexReRun(String pattern) {
+	this.patternNeedLatexReRun = pattern;
     }
 
-    // method introduces patternNeedAnotherLatexRun in ant 
-    public PatternNeedAnotherLatexRun createPatternNeedAnotherLatexRun() {
-   	return new PatternNeedAnotherLatexRun();
+    // method introduces patternNeedLatexReRun in ant 
+    public PatternNeedLatexReRun createPatternNeedLatexReRun() {
+   	return new PatternNeedLatexReRun();
     }
 
     // defines patternNeedAnotherLatexRun element with text in ant 
-    public class PatternNeedAnotherLatexRun {
+    public class PatternNeedLatexReRun {
 	// FIXME: this is without property resolution. 
 	// to add this need  pattern = getProject().replaceProperties(pattern)
 	// with Task.getProject() 
    	public void addText(String pattern) {
-   	    Settings.this.setPatternNeedAnotherLatexRun(pattern);
+   	    Settings.this.setPatternNeedLatexReRun(pattern);
    	}
     }
 
@@ -718,9 +773,11 @@ public class Settings
 	sb.append(", t4htOptions=")     .append(this.t4htOptions);
         sb.append(", latex2rtfCommand=").append(this.latex2rtfCommand);
         sb.append(", odt2docCommand=")  .append(this.odt2docCommand);
+        sb.append(", odt2docOptions=")  .append(this.odt2docOptions);
         sb.append(", pdf2txtCommand=")  .append(this.pdf2txtCommand);
-	sb.append(", patternNeedAnotherLatexRun=")
-	    .append(this.patternNeedAnotherLatexRun);
+        sb.append(", pdf2txtOptions=")  .append(this.pdf2txtOptions);
+	sb.append(", patternNeedLatexReRun=")
+	    .append(this.patternNeedLatexReRun);
 	sb.append(", maxNumReruns=").append(this.maxNumReruns);
 	sb.append(", cleanUp=").append(this.cleanUp);
         sb.append(']');
