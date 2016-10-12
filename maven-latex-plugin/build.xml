@@ -54,13 +54,13 @@
 	  Inconsistent page encapsulator |
 	  Conflicting entries
 	</patternErrMakeindex>
-	<patternNeedAnotherLatexRun>
+	<patternNeedLatexReRun>
 	  (Rerun (LaTeX|to get cross-references right)|
 	  There were undefined references|
 	  \(rerunfilecheck\)                Rerun to get outlines right|
 	  Package longtable Warning: Table widths have changed. Rerun LaTeX.|
 	  Package natbib Warning: Citation\(s\) may have changed)
-	</patternNeedAnotherLatexRun>
+	</patternNeedLatexReRun>
       </settings>
     </latex>
   </target>
