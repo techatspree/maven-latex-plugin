@@ -4,12 +4,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
-import org.apache.maven.plugin.AbstractMojoExecutionException;
-
 import org.m2latex.core.Settings;
-import org.m2latex.mojo.PdfMojo;
 import org.m2latex.core.MyBuildException;
-import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.ParameterAdapter;
 import org.m2latex.core.Target;
