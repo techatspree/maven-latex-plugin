@@ -321,6 +321,11 @@ public class LatexProcessor
      *
      * @param figFile
      *    the fig file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the fig2dev command 
+     *    returned by {@link Settings#getFig2devCommand()} failed. 
+     *    This is invoked twice: once for creating the pdf-file 
+     *    and once for creating the pdf_t-file. 
      * @see AbstractLatexMojo#execute()
      */
     // used in AbstractLatexMojo.execute() only 
@@ -375,6 +380,10 @@ public class LatexProcessor
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatex2rtfArguments(File)}. 
+     *
+     * @throws BuildExecutionException
+     *    if running the latex2rtf command 
+     *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      */
     private void runLatex2rtf( File texFile )
             throws BuildExecutionException
@@ -405,6 +414,10 @@ public class LatexProcessor
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildHtlatexArguments(File)}. 
+     *
+     * @throws BuildExecutionException
+     *    if running the tex4ht command 
+     *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
     private void runLatex2html( File texFile )
             throws BuildExecutionException
@@ -453,6 +466,10 @@ public class LatexProcessor
      * but not if bad boxes ocurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
+     *
+     * @throws BuildExecutionException
+     *    if running the tex4ht command 
+     *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
     private void runLatex2odt( File texFile)
             throws BuildExecutionException
@@ -492,10 +509,22 @@ public class LatexProcessor
 
 
     // FIXME: missing options. 
-    // above all doctype: -ddoc, -ddocx 
+    // above all (input) doctype: -ddoc, -ddocx 
+    // and (output) doctype: -fdoc, -fdocx, 
     // available: odt2doc --show. 
     // among those also: latex and rtf !!!!!! 
     // This is important to define the copy filter accordingly 
+    /**
+     * Runs conversion from odt to doc or docx-file  
+     * executing {@link Settings#getOdt2docCommand()} 
+     * on an odt-file created from <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(File)}. 
+     *
+     * @throws BuildExecutionException
+     *    if running the odt2doc command 
+     *    returned by {@link Settings#getOdt2docCommand()} failed. 
+     */
     private void runOdt2doc( File texFile)
             throws BuildExecutionException
     {
@@ -504,7 +533,9 @@ public class LatexProcessor
 	log.debug( "Running " + command + 
 		   " on file " + odtFile.getName() + ". ");
 
-	String[] args = new String[] {odtFile.getName()};
+	String[] args = buildArguments(this.settings.getOdt2docOptions(),
+				       odtFile);
+
 	// may throw BuildExecutionException 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
@@ -520,7 +551,8 @@ public class LatexProcessor
 	log.debug( "Running " + command + 
 		   " on file " + pdfFile.getName() + ". ");
 
-	String[] args = new String[] {pdfFile.getName()};
+	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
+				       pdfFile);
 	// may throw BuildExecutionException 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
@@ -528,17 +560,29 @@ public class LatexProcessor
 			      args);
     }
 
+    private String[] buildArguments(String options, File file) {
+	if (options.isEmpty()) {
+	    return new String[] {file.getName()};
+	}
+        String[] optionsArr = options.split(" ");
+        String[] args = new String[optionsArr.length + 1];
+        System.arraycopy(optionsArr, 0, args, 0, optionsArr.length );
+        args[optionsArr.length] = file.getName();
+	
+	return args;
+     }
+
     // FIXME: Is this the right criterion? 
     private boolean needAnotherLatexRun(File logFile)
 	throws BuildExecutionException
     {
-        String reRunPattern = this.settings.getPatternNeedAnotherLatexRun();
+        String reRunPattern = this.settings.getPatternNeedLatexReRun();
         boolean needRun =  this.fileUtils.matchInLogFile(logFile, reRunPattern);
         log.debug( "Another Latex run? " + needRun );
         return needRun;
     }
 
-    // FIXME: the right criterion? 
+    // FIXME: Is this the right criterion? 
     private boolean needBibtexRun(File logFile)
 	throws BuildExecutionException
     {
@@ -639,7 +683,9 @@ public class LatexProcessor
 		  " on file " + texFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();
-	String[] args = buildLatexArguments( texFile );
+	String[] args = buildArguments(this.settings.getTexCommandArgs(),
+				       texFile);
+
 	// may throw BuildExecutionException 
         this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
@@ -662,16 +708,6 @@ public class LatexProcessor
 			   "no log file found. ");
 	}
     }
-
-    // used in runLatex only 
-    private String[] buildLatexArguments( File texFile )
-    {
-        String[] texCommandArgs = this.settings.getTexCommandArgs().split(" ");
-        String[] args = new String[texCommandArgs.length + 1];
-        System.arraycopy( texCommandArgs, 0, args, 0, texCommandArgs.length );
-        args[texCommandArgs.length] = texFile.getName();
-	return args;
-     }
 }
 
 
