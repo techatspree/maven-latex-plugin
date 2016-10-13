@@ -50,10 +50,21 @@ for the underlying software.
 
 This section describes the parameters 
 of both the ant-task and the maven-plugin. 
-First we provide a table with parameter names, default values 
+After an overview in Section \ref{subsec:settingsOverview}, 
+We give in depth explanations in Section \ref{subsec:settingsDetail}. 
+
+\section{Overview and Listings}\label{subsec:settingsOverview}
+
+First we provide a table, Table \ref{tab:parameters} 
+with parameter names, default values 
 and explanation, then listings of the configuration 
 in the {\tt pom.xml} for the maven-plugin 
 and in the {\tt build.xml} for the ant-task. 
+The listing of the {\tt build.xml} shows 
+which parameters are attributes and which ones are text elements. 
+In {\tt pom.xml} only text elements occur. 
+Note that neither of the parameters is mandatory, 
+as there are always valid default values. 
 
 
 \begin{longtable}{|ll|}
@@ -87,7 +98,7 @@ which is by default '{\tt\$baseDirectory/target}' on Unix systems.
 \tt outputDirectory  & \tt .             \\
 \multicolumn2{|l|}{
 \begin{minipage}{1.0\linewidth}
-The generated artifacts will be copied to this folder 
+The generated artifacts will be copied to {\tt outputDirectory}
 relative to {\tt\$targetSiteDirectory} 
 which is by default '{\tt\$targetDirectory/site}' on Unix systems. 
 %The default value is '{\tt.}'.  
@@ -105,8 +116,9 @@ A comma separated list of targets to be stored in {\tt\$targetSet}.
 \begin{minipage}{1.0\linewidth}
 Path to the TeX scripts or {\tt null}. 
 In the latter case, the scripts must be on the system path. 
-Note that in the pom, {\tt$<$texPath/$>$} 
-and even {\tt$<$texPath$>$    $<$/texPath$>$} represent the {\tt null}-File. 
+Note that in the pom, the according empty element {\tt$<$texPath/$>$} 
+even if written as {\tt $<$texPath$>$\ \ \ $<$/texPath$>$} 
+represents the {\tt null}-File. 
 %The default value is {\tt null}. 
 \end{minipage}
 } \\
@@ -276,8 +288,9 @@ The odt2doc command is invoked in the form
 '{\tt odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
 All output formats are shown by '{\tt odt2doc --show}' 
 but the formats interesting in this context 
-are {\tt doc}, {\tt doc6}, {\tt doc95}, {\tt docbook}, {\tt docx}, 
-{\tt docx7}, {\tt ooxml}, {\tt rtf}. 
+are the following: 
+{\tt doc}, {\tt doc6}, {\tt doc95}, {\tt docbook}, {\tt docx}, 
+{\tt docx7}, {\tt ooxml} and {\tt rtf}. 
 Interesting also the verbosity options '{\tt -v}', '{\tt -vv}', '{\tt -vvv}' 
 the timeout '{\tt -T=secs}' and '{\tt --preserve}' 
 to keep permissions and timestamp of the original document. 
@@ -313,8 +326,8 @@ May be used for debugging when setting {\tt false}.
 
 
 
-The maven-plugin described here 
-requires the definition below in {\tt pom.xml}. 
+The maven-plugin described here, 
+requires the following definition in {\tt pom.xml}. 
 
 \lstset{language=xml, basicstyle=\tiny}
 \begin{lstlisting}
@@ -566,8 +579,8 @@ It has to be placed in the build element where below dots are given.
 \end{lstlisting}
 
 
-The ant-task described here 
-requires the following task definition in {\tt build.xml}. 
+The ant-task described here, 
+requires the following target and task definition in {\tt build.xml}. 
 
 \begin{lstlisting}
   <taskdef name="latex"
@@ -626,6 +639,13 @@ requires the following task definition in {\tt build.xml}.
   </target>
 \end{lstlisting}
 
+\subsection{Details}\label{subsec:settingsDetail}
+
+Note that all parameters have default values 
+and that thus neither has to be specified explicitly. 
+We now discuss the individual parameters in depth. 
+
+TODO: do this. 
 
 \section{Goals}
 
@@ -711,23 +731,47 @@ has to be added to the {\tt build.xml}
 To install the maven-plugin, just type {\tt mvn clean install}. 
 To install the ant-task, one has first to comment out in {\tt build.xml} 
 the taskdef {\tt latex} and the target {\tt latex:cfg}. 
-One may also adapt the lib-folder of the ant-installation. 
-Then just type {\tt sudo ant clean install}. 
-After that, one may face problems rerunning with the normal user. 
-One may also run {\tt ant clean install}. 
-which fails in the last copy operation 
-and then copy later into ant's lib-folder. 
-That way, the target directory is not currupted. 
+One may also adapt the lib-folder of the ant-installation, 
+i.e. the property {\tt antJarDir} where {\tt ant.jar} resides. 
+Then just type {\tt ant clean jar} 
+which creates the jar-file (property {\tt createdJar}) defining the ant-task. 
+After that one may copy the created jar into folder {\tt antJarDir}, 
+where ant finds it typing {\tt sudo ant install}. 
 
-Alternatively, if maven is installed, one may run {\tt mvn clean install} 
-which creates the jar-file defining the ant-task. 
+Note that, if maven is installed, the command {\tt mvn clean install} 
+also creates the jar-file {\tt createdJar} defining the ant-task. 
 Also with this method, one has to copy the jar-file defining the ant-task 
 later into ant's lib-folder. 
+
+After having installed the ant-task, 
+reactivate the taskdef {\tt latex} and the target {\tt latex:cfg} 
+and run {\tt ant latex:cfg} to create this manual. 
 
 Mixing ant and maven builds is not so good. 
 One may always recover by just creating with maven. 
 
 \section{Gaps}
+
+Only figures created with xfig and stored as files pdf and pdf\_t 
+may be integrated into a latex document. 
+There is no proper make-mechanism taking dependencies into account. 
+Thus all documents in all formats specified are remade, 
+whether they changed or not. 
+No glossary is supported. 
+The ant-task does not allow to create pdf selectively. 
+
+In my opinion, it would be desirable not to copy the tex sources into a
+working directory 
+
+The ant-build is not finished: tests are not run and 
+test runs are no prerequisite for installation. 
+
+This manual is not finished. 
+To test the overall functionality of the maven-plugin and of the ant-task 
+described here, this manual is created through plugin and task. 
+Currently this manual has no index and no bibliography and no picture, 
+which is desirable to ensure that these can be build through plugin and task. 
+
 
 
 \end{document}
