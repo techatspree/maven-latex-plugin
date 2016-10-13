@@ -38,7 +38,7 @@
     <delete file="${antJarDir}${createdJar}" />
   </target>
 
-  <target name="install" 
+  <target name="jar" 
 	  depends="init"
 	  description="Creates a jar-file defining the ant-task 
 		       and copies it where ant finds it. ">
@@ -59,6 +59,12 @@
 	 basedir="${clsDir}"
 	 includes="**/*.class" excludes="${createdJar}"> 
      </jar>
+  </target>
+
+  <target name="install" 
+	  depends="jar"
+	  description="Copies the relevant jar-file defining the ant-task 
+		       to where ant finds it. ">
      <copy file="${targetDir}/${createdJar}" 
 	   todir="${antJarDir}"/>
   </target>
