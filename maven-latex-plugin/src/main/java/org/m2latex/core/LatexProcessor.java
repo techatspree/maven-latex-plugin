@@ -31,6 +31,9 @@ import java.util.Collection;
  */
 public class LatexProcessor
 {
+    static final String PATTERN_OUFULL_HVBOX = "(Ov|Und)erfull \\\\[hv]box";
+
+    static final String PATTERN_WARNING      = "Warning";
 
     private final Settings settings;
 
@@ -105,7 +108,7 @@ public class LatexProcessor
 	    Collection<File> figFiles = this.fileUtils
 		.getXFigDocuments(tempDir);
 	    for (File figFile : figFiles) {
-		this.log.info("Processing " + figFile + ". ");
+		this.log.info("Processing fig-file " + figFile + ". ");
 		// may throw BuildExecutionException 
 		runFig2Dev(figFile);
 	    }
@@ -163,8 +166,9 @@ public class LatexProcessor
      * warnings occurred and shall be logged 
      * according to {@link Settings#getDebugWarnings()} 
      * </ul>
-     * A warning is logged if a LaTeX run, a BibTeX run or MakeIndex fails 
-     * or if BibTeX run or a MakeIndex run issues a warning
+     * A warning is logged each time a LaTeX run fails, 
+     * a BibTeX run or MakeIndex fails 
+     * or if a BibTeX run or a MakeIndex run issues a warning
      * in the according methods {@link #runLatex(File)}, 
      * {@link #runBibtex(File)} and {@link #runMakeindex(File)}. 
      *
@@ -178,50 +182,57 @@ public class LatexProcessor
      */
     // FIXME: what about glossaries and things like that? 
     public void processLatex2pdf(final File texFile)
-	throws BuildExecutionException
-    {
+	throws BuildExecutionException {
         log.info("Processing LaTeX file " + texFile + ". ");
 
         runLatex( texFile );
 	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
-        if ( needBibtexRun( logFile ) )
-        {
+	boolean needBibtexRun = needBibtexRun(logFile);
+        if (needBibtexRun) {
             log.debug("Bibtex must be run. ");
-            runBibtex( texFile );
+            runBibtex(texFile);
         }
 
 	File idxFile = this.fileUtils.replaceSuffix(texFile, "idx");
-	if ( idxFile.exists() )
-        {
+	if (idxFile.exists()){
             log.debug("Makeindex must be run. ");
-            runMakeindex( idxFile );
+            runMakeindex(idxFile);
         }
+
+	// rerun LaTeX at least once if bibtex or makeindex had been run 
+	// or if a toc, a lof or a lot exists. 
+	File tocFile = this.fileUtils.replaceSuffix(texFile, "toc");
+	File lofFile = this.fileUtils.replaceSuffix(texFile, "lof");
+	File lotFile = this.fileUtils.replaceSuffix(texFile, "lot");
+	if (needBibtexRun | idxFile.exists() 
+	     | tocFile.exists() | lofFile.exists() | lotFile.exists()) {
+	    runLatex(texFile);
+	}
 
         int retries = 0;
 	boolean needAnotherLatexRun = true;
 	int maxNumReruns = this.settings.getMaxNumReruns();
         while ((maxNumReruns == -1 || retries < maxNumReruns)
-	       && (needAnotherLatexRun = needAnotherLatexRun( logFile )) )
-        {
+	       && (needAnotherLatexRun = needAnotherLatexRun(logFile))) {
             log.debug("Latex must be rerun. ");
-            runLatex( texFile );
+            runLatex(texFile);
             retries++;
         }
 	if (needAnotherLatexRun) {
-	    log.warn("Max rerun reached although " + texFile +
-		     " needs another run. ");
+	    log.warn("Max rerun reached although LaTeX demands another run. ");
 	}
 	if (this.settings.getDebugBadBoxes() && 
 	    this.fileUtils.matchInLogFile(logFile, 
-					  "(Und|Ov)erfull \\[hv]box")) {
-	    log.warn("Bad Boxes in " + texFile + ". ");
+					  PATTERN_OUFULL_HVBOX)) {
+	    log.warn("LaTeX created bad boxes. ");
 	}
 	if (this.settings.getDebugWarnings() && 
 	    this.fileUtils.matchInLogFile(logFile, 
-					  "Warning ")) {
-	    log.warn("Warnings running LaTeX on " + texFile + ". ");
+					  PATTERN_WARNING)) {
+	    log.warn("LaTeX emited warnings. ");
 	}
     }
+
 
     /**
      * Runs conversion of <code>texFile</code> to html or xhtml 
