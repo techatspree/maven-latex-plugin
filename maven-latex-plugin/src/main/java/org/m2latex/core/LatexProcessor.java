@@ -627,7 +627,12 @@ public class LatexProcessor
 		log.warn("MakeIndex failed when running on " + idxFile + 
 			 ". For details see " + logFile.getName() + ". ");
 	    }
-	    // FIXME: what about warnings? 
+	    boolean warnOccurred = this.fileUtils.matchInLogFile
+		(logFile, this.settings.getPatternWarnMakeindex());
+	    if (warnOccurred) {
+		log.warn("MakeIndex emitted warnings running on " + idxFile + 
+			 ". For details see " + logFile.getName() + ". ");
+	    }
 	} else {
 	    this.log.error("Makeindex failed: no log file found. ");
 	}
