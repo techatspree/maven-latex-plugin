@@ -593,13 +593,36 @@ public class LatexProcessor
         return needRun;
     }
 
-    // FIXME: Is this the right criterion? 
+    /**
+     * Returns whether a BibTeX run is necessary after a LaTeX run. 
+     * This is true if the tex-file contains the command 
+     * <code>\bibliography</code> which writes a line 
+     * <code>No file xxx.bbl.</code> into the log file. 
+     */
     private boolean needBibtexRun(File logFile)
-	throws BuildExecutionException
-    {
+	throws BuildExecutionException {
         String namePrefixLogFile = this.fileUtils
 	    .getFileNameWithoutSuffix(logFile);
-        String pattern = "No file " + namePrefixLogFile + ".bbl";
+        String pattern = "No file " + namePrefixLogFile + ".bbl.";
+	// may throw a BuildExecutionException
+        return this.fileUtils.matchInLogFile( logFile, pattern );
+    }
+
+    /**
+     * Returns whether a MakeIndex run is necessary after a LaTeX run. 
+     * This is true if the tex-file contains the command 
+     * <code>\printindex</code> which writes a line 
+     * <code>No file xxx.ind.</code> into the log file. 
+     */
+    // not used. Instead use creation of idx-file. 
+    // This runs makeindex in a superset of cases, 
+    // this method would yield. 
+    private boolean needMakeIndexRun(File logFile)
+	throws BuildExecutionException {
+        String namePrefixLogFile = this.fileUtils
+	    .getFileNameWithoutSuffix(logFile);
+        String pattern = "No file " + namePrefixLogFile + ".ind.";
+	// may throw a BuildExecutionException
         return this.fileUtils.matchInLogFile( logFile, pattern );
     }
 
@@ -664,12 +687,12 @@ public class LatexProcessor
 	    // FIXME: Could be further improved: 1 error but more warnings: 
 	    // The latter shall be displayed. (maybe)
 	    boolean errOccurred = this.fileUtils
-		.matchInLogFile(logFile, "Error");
+		.matchInLogFile(logFile, this.settings.getPatternErrBibtex());
 	    if (errOccurred) {
 		log.warn("BibTeX failed when running on " + texFile + ". ");
 	    }
 	    boolean warnOccurred = this.fileUtils
-		.matchInLogFile(logFile, "Warning");
+		.matchInLogFile(logFile, this.settings.getPatternWarnBibtex());
 	    if (warnOccurred) {
 		log.warn("BibTeX warning when running on " + texFile + ". ");
 	    }
