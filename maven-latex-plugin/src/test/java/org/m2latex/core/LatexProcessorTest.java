@@ -215,7 +215,7 @@ public class LatexProcessorTest
         fileUtils.getFileNameWithoutSuffix( logFile );
         fileUtilsCtrl.setReturnValue( logFile.getName().split( "\\." )[0] );
 
-        fileUtils.matchInLogFile( logFile, "No file test.bbl" );
+        fileUtils.matchInLogFile( logFile, "No file test.bbl." );
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
