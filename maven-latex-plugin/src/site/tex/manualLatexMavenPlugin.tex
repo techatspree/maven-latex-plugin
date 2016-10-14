@@ -4,14 +4,21 @@
 \usepackage{longtable}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{graphics}
+\usepackage{makeidx}
 
 \title{Manual for the latex-maven-plugin and for an according ant task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
+
+\makeindex
 
 \begin{document}
 \maketitle
 
 \tableofcontents
+\listoffigures
+\listoftables
+
 
 \section{Introduction}
 
@@ -46,6 +53,165 @@ That way, creating this manual is a top level test
 for the underlying software. 
 
 
+\section{Tools used by this Plugin and Task}\label{sec:tools}
+
+\index{fig2dev}
+Currently, only figures drawn with {\tt xfig}, or, to be more precise, 
+figures stored in .fig-files are supported. 
+To export a file {\tt xxx.fig} into several external formats, 
+xfig uses {\tt fig2dev}. 
+Among others, {\tt fig2dev} supports export to mixed pdf and latex: 
+graphics in pdf and text in latex which yields the fonts typical for latex. 
+Accordingly, the export requires two commands and yields two files: 
+%
+\begin{verbatim}
+fig2dev -L pdftex          xxx.fig xxx.pdf   
+fig2dev -L pdftex_t -p pdf xxx.fig xxx.pdf_t
+\end{verbatim}
+%
+yield {\tt xxx.pdf} and {\tt xxx.pdf\_t}, respectively, 
+the latter containing latex and including the former. 
+The file {\tt xxx.pdf\_t} is ``inputted'' into the tex-file. 
+Note that this is appropriate for latex creating pdf-files, 
+not postscript or dvi. 
+
+Note that the option {\tt -L} is to specify the language, 
+{\tt -p pdf} specifies portrait 
+(also {\tt -l pdf} for landscape would be possible) 
+and {\tt pdf} is ignored. 
+For more options type {\tt fig2def -h} or consult the manual pages. 
+
+Maybe xfig is intended to export from within the export dialog 
+and not directly via a script like {\tt fig2dev}. 
+This may be the reason 
+why the magnification must be set in the export dialog, 
+but it is stored in the fig-file nevertheless. 
+
+Figure \ref{fig:fig2dev} shows the transformation of figures. 
+Note that the {\tt fig2dev}-command is configurable 
+via the parameter {\tt fig2devCommand}, 
+but there will be hardly any command with the same command line interface 
+performing exactly the transformations given in Figure \ref{fig:fig2dev}, 
+except {\tt fig2dev} itself. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{1fig2dev.pdf_t}
+\end{center}
+\caption{\label{fig:fig2dev}Conversion of a fig-file into pdf and pdf\_t files}
+\end{figure}
+
+The next step is to create a pdf-file from the tex-files. 
+LaTeX distinguishes master tex-files from tex-files intended to be inputted
+from elsewhere. 
+Master tex-files have the form 
+%
+\begin{lstlisting}
+\documentclass{...}
+
+\begin{document}
+...
+\end{document}
+\end{lstlisting}
+
+To satisfy this task, one may apply a latex to pdf converter 
+to a master tex-file {\tt xxx.tex}. 
+The latex to pdf converter is configurable via the parameter {\tt texCommand} 
+(misleading name, I know, but short). 
+Possible values are {\tt pdflatex}, {\tt lualatex}, {\tt xelatex}, 
+where the first is the default for which this software is also tested. 
+It is also possible to pass parameters to the latex to pdf converter. 
+
+In fact, the converter does much more than converting tex to pdf. 
+Figure \ref{fig:tex2pdf} shows, 
+that besides the pdf-file also a log-file and an aux-file is created. 
+In addition, 
+if a table of contents, a list of figures or a list of tables is to be
+created, 
+also a toc-file, a lof-file and a lot-file is created. 
+If an index is created, in addition an idx-file is created. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{2tex2pdf.pdf_t}
+\end{center}
+\caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
+\end{figure}
+
+
+In case the latex to pdf converter writes into its log-file, 
+that a bbl-file is missing, a bibliography must be generated. 
+CAUTION: This criterion is valid only in this context 
+if initially, i.e. before running the latex to pdf converter, 
+no bbl-file is present. 
+Found no better criterion yet. 
+
+To create a bibliography, a {\tt bibtex}-command must be run. 
+Essentially, {\ttbibtex} extracts the citations in the aux-file 
+and writes them into a bbl-file. 
+The aux-file contains also a link to the bibliography database in the bib-file 
+and to the bibliography style file. 
+This software presupposes, that {\tt bibtex} reads the aux-file 
+and creates a bbl-file and also an blg-file with logging output 
+as illustrated by Figure \ref{fig:aux2bbl}. 
+
+
+\begin{figure}[htb]
+\begin{center}
+\input{3aux2bbl.pdf_t}
+\end{center}
+\caption{\label{fig:aux2bbl}
+Conversion of an aux-file into a bbl-file using a bibliography}
+\end{figure}
+
+
+
+
+In case the latex to pdf converter creates idx-file, 
+an index must be generated. 
+% Well, this is not really the truth: it is needed only if ...
+To that end, a {\tt makeindex}-command must be run. 
+Essentially, {\tt makeindex} sorts and combines index entries. 
+This software presupposes, that {\tt makeindex} converts the idx-file 
+into an ind-file creating also an ilg-file with logging output 
+as shown in Figure \ref{fig:idx2ind}. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{4idx2ind.pdf_t}
+\end{center}
+\caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
+\end{figure}
+
+It is possible to configure the makeindex-command 
+and to pass arbitrary options. 
+CAUTION: For the usual {\tt makeindex}-command, 
+the option {\tt -t} specifying the logging file is not allowed, 
+because this bypasses the detection of errors and warnings of this software. 
+
+
+a
+
+
+Erstes Zitat: \cite{MkIdxMoe}
+
+
+
+%\index{!!!!}
+%\index{bla|(}
+%\index{bla|)}
+
+
+
+
+
+How to work on: First step: %
+\begin{verbatim}
+<cleanUp>false</cleanUp>
+\end{verbatim}
+Then have a look at the logging file. 
+
+
 \section{Settings}\label{sec:settings}
 
 This section describes the parameters 
@@ -77,7 +243,7 @@ Parameter        & Default  \\
 \hline
 \tt texSrcDirectory  & \tt src/site/tex  \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The tex source directory as a string, 
 containing all tex main documents 
 (including subfolders) to be processed
@@ -87,7 +253,7 @@ The default value is '{\tt src/site/tex}' on Unix systems.
 } \\
 \tt tempDirectory    & \tt m2latex       \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The working directory, 
 for temporary files and LaTeX processing 
 relative to {\tt \$targetDirectory} 
@@ -97,7 +263,7 @@ which is by default '{\tt\$baseDirectory/target}' on Unix systems.
 } \\
 \tt outputDirectory  & \tt .             \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The generated artifacts will be copied to {\tt outputDirectory}
 relative to {\tt\$targetSiteDirectory} 
 which is by default '{\tt\$targetDirectory/site}' on Unix systems. 
@@ -106,14 +272,14 @@ which is by default '{\tt\$targetDirectory/site}' on Unix systems.
 } \\
 \tt targets          & \tt pdf, html     \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 A comma separated list of targets to be stored in {\tt\$targetSet}. 
 %The default value is '{\tt pdf, html}'. 
 \end{minipage}
 } \\
 \tt texPath          & {\tt null}         \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 Path to the TeX scripts or {\tt null}. 
 In the latter case, the scripts must be on the system path. 
 Note that in the pom, the according empty element {\tt$<$texPath/$>$} 
@@ -122,9 +288,9 @@ represents the {\tt null}-File.
 %The default value is {\tt null}. 
 \end{minipage}
 } \\
-\tt fig2devCommand   & \tt fig2dev       \\
+\tt fig2devCommand   & \tt fig2dev  \index{fig2dev}     \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The fig2dev command for conversion of fig-files into various formats. 
 Currently only {\tt pdf} combined with {\tt pdf\_t} is supported. 
 %The default value is '{\tt fig2dev}'. 
@@ -135,14 +301,14 @@ Currently only {\tt pdf} combined with {\tt pdf\_t} is supported.
 \hline
 \tt texCommand       & \tt pdflatex      \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The LaTeX command to create a pdf-file. 
 %The default value is '{\tt pdflatex}'. 
 \end{minipage}
 } \\
 \tt texCommandArgs   & \tt\small -interaction=nonstopmode -src-specials  \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The arguments string to use 
 when calling LaTeX via {\tt\$texCommand}.
 Leading and trailing blanks are ignored. 
@@ -153,7 +319,7 @@ A sequence of at least one blank separate the proper options.
 } \\
 \tt patternerrlatex & \tt\small! $|$Fatal error$|$LaTeX Error$|$Emergency stop\\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
 indicating a failure when running the {\tt\$texCommand}. 
 %The default value is 
@@ -164,7 +330,7 @@ and notify the developer of this plugin.
 } \\
 \tt debugbadboxes    & \tt true          \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 Whether debugging of overfull/underfull hboxes/vboxes is on: 
 If so, a bad box occurs in the last LaTeX run, a warning is displayed. 
 For details, set {\tt\$cleanUp} to false, 
@@ -174,7 +340,7 @@ rerun LaTeX and have a look at the log-file.
 } \\
 \tt debugwarnings    & \tt true          \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 Whether debugging of warnings is on: 
 If so, a warning in the last LaTeX run is displayed. 
 For details, set {\tt\$cleanUp} to false, 
@@ -187,52 +353,83 @@ rerun LaTeX and have a look at the log-file.
 \hline
 \tt bibtexcommand    & \tt bibtex        \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The BibTeX command to create a bbl-file 
 from an aux-file and a bib-file (using a bst-style file). 
 %The default value is '{\tt bibtex}'. 
 \end{minipage}
 } \\
-\tt makeindexcommand & \tt makeindex     \\
+\tt patternErrBibtex    & \tt error message        \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
+The Pattern in the blg-file 
+indicating that \$bibtexCommand failed. 
+The default value is chosen 
+according to the 'bibtex' documentation. 
+\end{minipage}
+} \\
+\tt patternWarnBibtex    & \tt Warning--        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The Pattern in the blg-file 
+indicating a warning \$bibtexCommand emitted. 
+The default value is chosen 
+according to the 'bibtex' documentation. \end{minipage}
+} \\
+\tt makeIndexCommand & \tt makeindex     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
 The MakeIndex command to create an ind-file from an idx-file 
 logging on an ilg-file. 
 %The default value is '{\tt makeindex}'. 
 \end{minipage}
 } \\
-\tt patternErrMakeindex & see below ****           \\
+\tt makeIndexOptions & \tt the empty string     \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
+The options for the MakeIndex command. 
+% The default value is the empty string. 
+\end{minipage}
+} \\
+\tt patternErrMakeindex & !! Input index error         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
 indicating that \$makeIndexCommand failed. 
 The default value is chosen 
-according to the 'makeindex' documentation 
-but seems to be incomplete.
-If this is not complete, please extend 
-and notify the developer of this plugin. \end{minipage}
+according to the 'makeindex' documentation.
+\end{minipage}
+} \\
+\tt patternWarnMakeindex & \#\# Warning         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the ilg-file 
+indicating a warning \$makeIndexCommand emitted. 
+The default value is chosen 
+according to the 'makeindex' documentation.
+\end{minipage}
 } \\
 \hline
 \multicolumn2{|l|}{htlatex} \\
 \hline
 \tt tex4htCommand       & \tt htlatex  \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
 \tt tex4htStyOptions    & \tt xhtml,uni-html4,2,svg  \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
 \tt tex4htOptions       & \tt -cunihtf -utf8         \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
 \tt t4htOptions         & the empty string              \\%-cvalidate
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The options for 't4ht' which converts idv-file and lg-file 
 into css-files, tmp-file and, 
 by need and if configured accordingly into png files. 
@@ -242,7 +439,7 @@ The value '-p' prevents creation of png-pictures.
 } \\
 \tt patternNeedLatexReRun &  see below ****          \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers rerunning latex. 
 This pattern may never be ensured to be complete, 
 because any new package may break completeness. 
@@ -257,7 +454,7 @@ Then the default value will be extended.
 } \\
 \tt maxNumReruns        & \tt 5               \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The maximal allowed number of reruns of the latex process. 
 This is to avoid endless repetitions. 
 %The default value is 5. 
@@ -267,21 +464,21 @@ or -1 which signifies that there is no threshold.
 } \\
 \tt latex2rtfCommand    & \tt latex2rtf        \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The latex2rtf command to create rtf from latex directly. 
 %The default value is '{\tt latex2rtf}'. 
 \end{minipage}
 } \\
 \tt odt2docCommand      & \tt odt2doc          \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The odt2doc command to create MS word-formats from otd-files. 
 %The default value is '{\tt odt2doc}'. 
 \end{minipage}
 } \\
 \tt odt2docOptions      & \tt -fdocx          \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The options of the odt2doc command. 
 Above all specification of output format via the option '-f'. 
 The odt2doc command is invoked in the form 
@@ -299,29 +496,28 @@ to keep permissions and timestamp of the original document.
 } \\
 \tt pdf2txtCommand      & \tt pdftotext        \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The pdf2txt command converting pdf into plain text. 
 The default value is '{\tt pdftotext}'. 
 \end{minipage}
 } \\
 \tt pdf2txtOptions      & the empty string  \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 The options of the pdf2txt command. 
 %The default value is the empty string. 
 \end{minipage}
 } \\
 \tt cleanUp             & \tt true             \\
 \multicolumn2{|l|}{
-\begin{minipage}{1.0\linewidth}
+\begin{minipage}{0.95\linewidth}
 Clean up the working directory in the end? 
 May be used for debugging when setting {\tt false}. 
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
 \hline
-\caption{\label{tab:parameters} The parameters of the ant-task 
-  and of the maven-plugin. }
+\caption{\label{tab:parameters} The parameters of task and plugin }
 \end{longtable}
 
 
@@ -424,28 +620,40 @@ requires the following definition in {\tt pom.xml}.
 		 The default value is 'bibtex'. -->
             <bibtexCommand>bibtex</bibtexCommand>
 
+	    <!-- The Pattern in the blg-file 
+		 indicating that $bibtexCommand failed. 
+		 The default value is chosen 
+		 according to the 'bibtex' documentation. -->
+	    <patternErrBibtex>error message</patternErrBibtex>
+
+	    <!-- The Pattern in the blg-file 
+		 indicating a warning $bibtexCommand emitted. 
+		 The default value is chosen 
+		 according to the 'bibtex' documentation. -->
+	    <patternWarnBibtex>Warning--</patternWarnBibtex>
+
 	    <!-- The MakeIndex command to create an ind-file 
 		 from an idx-file logging on an ilg-file. 
 		 The default value is 'makeindex'. -->
 	    <makeIndexCommand>makeindex</makeIndexCommand>
 
+	    <!-- The options for the MakeIndex command. 
+		 The default value is the empty string. -->
+	    <makeIndexOptions></makeIndexOptions>
+
 	    <!-- The pattern in the ilg-file 
 		 indicating that $makeIndexCommand failed. 
 		 The default value is chosen 
-		 according to the 'makeindex' documentation 
-		 but seems to be incomplete.
-		 If this is not complete, please extend 
-		 and notify the developer of this plugin.  -->
-	    <patternErrMakeindex>	Extra |
-	    Illegal null field|
-	    Argument |
-	    Illegal null field|
-	    Unmatched |
-	    Inconsistent page encapsulator |
-	    Conflicting entries
-	    </patternErrMakeindex>
+		 according to the 'makeindex' documentation.  -->
+	    <patternErrMakeindex>!! Input index error </patternErrMakeindex>
  
-            <!-- the tex4ht command htlatex-->
+ 	    <!-- The Pattern in the ilg-file 
+		 indicating a warning $makeIndexCommand emitted. 
+		 The default value is chosen 
+		 according to the 'makeindex' documentation. -->
+	    <patternWarnMakeindex>## Warning </patternWarnMakeindex>
+
+           <!-- the tex4ht command htlatex-->
             <tex4htCommand>htlatex</tex4htCommand>
 
 	    <!-- options for tex4ht.sty
@@ -599,11 +807,11 @@ requires the following target and task definition in {\tt build.xml}.
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
 		texCommandArgs="-interaction=nonstopmode -src-specials"
-		patternErrLatex="! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally"
 		debugBadBoxes='true'
 		debugWarnings='true'
 		bibtexCommand="bibtex"
 		makeIndexCommand="makeindex"
+		makeIndexOptions=""
 		tex4htCommand="htlatex"
 		tex4htStyOptions="html,uni-html4,2,svg"
 		tex4htOptions=" -cunihtf -utf8"
@@ -617,16 +825,13 @@ requires the following target and task definition in {\tt build.xml}.
 		cleanUp='true'>
 	<!-- texPath is null -->
 	
-	<!-- FIXME: List is incomplete  -->
-	<patternErrMakeindex>
-	  Extra |
-	  Illegal null field| 
-	  Argument |
-	  Illegal null field|
-	  Unmatched |
-	  Inconsistent page encapsulator |
-	  Conflicting entries
-	</patternErrMakeindex>
+	<patternErrLatex>
+	  ! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally
+	</patternErrLatex>
+	<patternErrBibtex>error message</patternErrBibtex>
+	<patternWarnBibtex>Warning--</patternWarnBibtex>
+	<patternErrMakeindex>!! Input index error </patternErrMakeindex>
+	<patternWarnMakeindex>## Warning </patternWarnMakeindex>
 	<patternNeedLatexReRun>
 	  (Rerun (LaTeX|to get cross-references right)|
 	  There were undefined references|
@@ -686,7 +891,7 @@ and accordingly the maven-plugin passes parameters in the pom
 to the core. 
 The core just invokes various programs to do the actual work. 
 
-To process the fig-files, by default {\tt fig2dev} is used. 
+To process the fig-files, by default {\tt fig2dev} is used. \index{fig2dev}
 It makes sense to have {\tt xfig} installed, but this is not mandatory. 
 
 To create pdf-files from latex files we use {\tt pdflatex} 
@@ -773,7 +978,14 @@ Currently this manual has no index and no bibliography and no picture,
 which is desirable to ensure that these can be build through plugin and task. 
 
 
+Creating more than one index is not supported. 
+To that end, makeindex has to be invoked with an argument 
+specifying the type of index. 
 
+\printindex
+
+\bibliography{lit}{}
+\bibliographystyle{alpha}
 \end{document}
 
 %%% Local Variables: 
