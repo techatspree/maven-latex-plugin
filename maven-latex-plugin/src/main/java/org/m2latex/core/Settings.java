@@ -192,13 +192,13 @@ public class Settings
      * The pattern in the <code>log</code> file 
      * indicating a failure when running {@link #texCommand}. 
      * The default value is 
-     * <code>Fatal error|LaTeX Error|Emergency stop</code>. 
+     * <code>! |Fatal error|LaTeX Error|Emergency stop</code>. 
      * If this is not sufficient, please extend 
      * and notify the developer of this plugin. 
      *
      * @parameter
      */
-    private String patternErrLatex = "Fatal error|LaTeX Error|Emergency stop";
+    private String patternErrLatex = "! |Fatal error|LaTeX Error|Emergency stop";
 
     /**
      * Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -675,8 +675,24 @@ public class Settings
         this.cleanUp = cleanUp;
     }
 
+    // setter method for patternErrLatex in maven 
     public void setPatternErrLatex(String patternErrLatex) {
 	this.patternErrLatex = patternErrLatex;
+    }
+
+    // method introduces patternErrLatex in ant 
+    public PatternErrLatex createPatternErrLatex() {
+   	return new PatternErrLatex();
+    }
+
+    // defines patternErrLatex element with text in ant 
+    public class PatternErrLatex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternErrLatex(pattern);
+   	}
     }
 
     public void setDebugBadBoxes(boolean debugBadBoxes) {
