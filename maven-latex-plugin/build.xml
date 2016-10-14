@@ -92,11 +92,11 @@
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
 		texCommandArgs="-interaction=nonstopmode -src-specials"
-		patternErrLatex="! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally"
 		debugBadBoxes='true'
 		debugWarnings='true'
 		bibtexCommand="bibtex"
 		makeIndexCommand="makeindex"
+		makeIndexOptions=""
 		tex4htCommand="htlatex"
 		tex4htStyOptions="html,uni-html4,2,svg"
 		tex4htOptions=" -cunihtf -utf8"
@@ -108,15 +108,13 @@
 		pdf2txtCommand="pdftotext"
 		pdf2txtOptions=""
 		cleanUp='true'>
-	<patternErrMakeindex>
-	  Extra |
-	  Illegal null field| 
-	  Argument |
-	  Illegal null field|
-	  Unmatched |
-	  Inconsistent page encapsulator |
-	  Conflicting entries
-	</patternErrMakeindex>
+	<patternErrLatex>
+	  ! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally
+	</patternErrLatex>
+	<patternErrBibtex>error message</patternErrBibtex>
+	<patternWarnBibtex>Warning--</patternWarnBibtex>
+	<patternErrMakeindex>!! Input index error </patternErrMakeindex>
+	<patternWarnMakeindex>## Warning </patternWarnMakeindex>
 	<patternNeedLatexReRun>
 	  (Rerun (LaTeX|to get cross-references right)|
 	  There were undefined references|
