@@ -198,7 +198,8 @@ public class Settings
      *
      * @parameter
      */
-    private String patternErrLatex = "! |Fatal error|LaTeX Error|Emergency stop";
+    private String patternErrLatex = 
+	"! |Fatal error|LaTeX Error|Emergency stop";
 
     /**
      * Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -243,26 +244,37 @@ public class Settings
      */
     private String makeIndexCommand = "makeindex";
 
+
+    /**
+     * The options for the MakeIndex command. 
+     * Note that the option <code>-t xxx.ilg</code> 
+     * to specify the logging file is not allowed, 
+     * because this software uses the standard logging file. 
+     * The default value is the empty string. 
+     *
+     * @parameter
+     */
+    private String makeIndexOptions = "";
+
     /**
      * The Pattern in the ilg-file 
      * indicating that {@link #makeIndexCommand} failed. 
      * The default value is chosen 
-     * according to the <code>makeindex</code> documentation 
-     * but seems to be incomplete. 
-     * If this is not complete, please extend 
-     * and notify the developer of this plugin. 
+     * according to the <code>makeindex</code> documentation. 
      *
      * @parameter
      */
-    private String patternErrMakeindex = 
-	// FIXME: List is incomplete 
-	"Extra |" + 
-	"Illegal null field|" + 
-	"Argument |" + 
-	"Illegal null field|" + 
-	"Unmatched |" + 
-	"Inconsistent page encapsulator |" + 
-	"Conflicting entries";
+    private String patternErrMakeindex = "!! Input index error ";
+
+    /**
+     * The Pattern in the ilg-file 
+     * indicating a warning {@link #makeIndexCommand} emitted. 
+     * The default value is chosen 
+     * according to the <code>makeindex</code> documentation. 
+     *
+     * @parameter
+     */
+    private String patternWarnMakeindex = "## Warning ";
 
 
     /**
@@ -496,8 +508,16 @@ public class Settings
 	return this.makeIndexCommand;
     }
 
+    public String getMakeIndexOptions() {
+	return this.makeIndexOptions;
+    }
+
     public String getPatternErrMakeindex() {
 	return this.patternErrMakeindex;
+    }
+
+    public String getPatternWarnMakeindex() {
+	return this.patternWarnMakeindex;
     }
 
     public String getTex4htCommand() {
@@ -650,6 +670,10 @@ public class Settings
         this.makeIndexCommand = makeIndexCommand;
     }
 
+    public void setMakeIndexOptions(String makeIndexOptions) {
+	this.makeIndexOptions = makeIndexOptions.replace("( \n)+", " ").trim();
+    }
+
     // setter method for patternErrMakeindex in maven 
     public void setPatternErrMakeindex(String patternErrMakeindex) {
         this.patternErrMakeindex = patternErrMakeindex;
@@ -667,6 +691,26 @@ public class Settings
 	// with Task.getProject() 
    	public void addText(String pattern) {
    	    Settings.this.setPatternErrMakeindex(pattern);
+   	}
+    }
+
+    // setter method for patternWarnMakeindex in maven 
+    public void setPatternWarnMakeindex(String patternWarnMakeindex) {
+        this.patternWarnMakeindex = patternWarnMakeindex;
+    }
+
+    // method introduces patternWarnMakeindex in ant 
+    public PatternWarnMakeindex createPatternWarnMakeindex() {
+   	return new PatternWarnMakeindex();
+    }
+
+    // defines patternWarnMakeindex element with text in ant 
+    public class PatternWarnMakeindex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternWarnMakeindex(pattern);
    	}
     }
 
@@ -767,12 +811,15 @@ public class Settings
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+	// directories 
 	sb.append("[ baseDirectory=")   .append(this.baseDirectory);
-	sb.append(", targetSiteDirectory=") .append(this.targetSiteDirectory);
 	sb.append(", targetDirectory=") .append(this.targetDirectory);
+	sb.append(", targetSiteDirectory=") .append(this.targetSiteDirectory);
 	sb.append(", texSrcDirectory=") .append(this.texSrcDirectory);
 	sb.append(", tempDirectory=")   .append(this.tempDirectory);
  	sb.append(", outputDirectory=") .append(this.outputDirectory);
+
+ 	sb.append(", targets=")         .append(this.targets);
         sb.append(", texPath=")         .append(this.texPath);
         sb.append(", fig2devCommand=")  .append(this.fig2devCommand);
         sb.append(", texCommand=")      .append(this.texCommand);
@@ -780,13 +827,19 @@ public class Settings
 	sb.append(", patternErrLatex=") .append(this.patternErrLatex);
  	sb.append(", debugBadBoxes=")   .append(this.debugBadBoxes);
  	sb.append(", debugWarnings=")   .append(this.debugWarnings);
+
         sb.append(", bibtexCommand=")   .append(this.bibtexCommand);
+
         sb.append(", makeIndexCommand=").append(this.makeIndexCommand);
+        sb.append(", makeIndexOptions=").append(this.makeIndexOptions);
         sb.append(", patternErrMakeindex=").append(this.patternErrMakeindex);
+        sb.append(", patternWarnMakeindex=").append(this.patternWarnMakeindex);
+
         sb.append(", tex4htCommand=")   .append(this.tex4htCommand);
         sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
         sb.append(", tex4htOptions=")   .append(this.tex4htOptions);
 	sb.append(", t4htOptions=")     .append(this.t4htOptions);
+
         sb.append(", latex2rtfCommand=").append(this.latex2rtfCommand);
         sb.append(", odt2docCommand=")  .append(this.odt2docCommand);
         sb.append(", odt2docOptions=")  .append(this.odt2docOptions);
