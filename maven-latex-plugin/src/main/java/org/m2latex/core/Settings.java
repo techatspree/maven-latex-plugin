@@ -233,7 +233,36 @@ public class Settings
     private String bibtexCommand = "bibtex";
 
     // FIXME: Any parameters for bibtex? 
+// Usage: bibtex [OPTION]... AUXFILE[.aux]
+//   Write bibliography for entries in AUXFILE to AUXFILE.bbl,
+//   along with a log file AUXFILE.blg.
+// -min-crossrefs=NUMBER  include item after NUMBER cross-refs; default 2
+// -terse                 do not print progress reports
+// -help                  display this help and exit
+// -version               output version information and exit
 
+// how to detect errors/warnings??? 
+//Process exited with error(s)
+
+    /**
+     * The Pattern in the blg-file 
+     * indicating that {@link #bibtexCommand} failed. 
+     * The default value is chosen 
+     * according to the <code>bibtex</code> documentation. 
+     *
+     * @parameter
+     */
+    private String patternErrBibtex = "error message";
+
+    /**
+     * The Pattern in the blg-file 
+     * indicating a warning {@link #bibtexCommand} emitted. 
+     * The default value is chosen 
+     * according to the <code>bibtex</code> documentation. 
+     *
+     * @parameter
+     */
+    private String patternWarnBibtex = "Warning--";
 
     /**
      * The MakeIndex command to create an ind-file 
@@ -504,6 +533,17 @@ public class Settings
         return this.bibtexCommand;
     }
 
+    public String getPatternErrBibtex() {
+	return this.patternErrBibtex;
+    }
+
+    public String getPatternWarnBibtex() {
+	return this.patternWarnBibtex;
+    }
+
+
+
+
     public String getMakeIndexCommand() {
 	return this.makeIndexCommand;
     }
@@ -665,6 +705,50 @@ public class Settings
     public void setBibtexCommand(String bibtexCommand) {
         this.bibtexCommand = bibtexCommand;
     }
+
+    // setter method for patternErrBibtex in maven 
+    public void setPatternErrBibtex(String patternErrBibtex) {
+        this.patternErrBibtex = patternErrBibtex;
+    }
+
+    // method introduces patternErrBibtex in ant 
+    public PatternErrBibtex createPatternErrBibtex() {
+   	return new PatternErrBibtex();
+    }
+
+    // defines patternErrBibtex element with text in ant 
+    public class PatternErrBibtex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternErrBibtex(pattern);
+   	}
+    }
+
+    // setter method for patternWarnBibtex in maven 
+    public void setPatternWarnBibtex(String patternWarnBibtex) {
+        this.patternWarnBibtex = patternWarnBibtex;
+    }
+
+    // method introduces patternWarnBibtex in ant 
+    public PatternWarnBibtex createPatternWarnBibtex() {
+   	return new PatternWarnBibtex();
+    }
+
+    // defines patternWarnBibtex element with text in ant 
+    public class PatternWarnBibtex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternWarnBibtex(pattern);
+   	}
+    }
+
+
+
+
 
     public void setMakeIndexCommand(String makeIndexCommand) {
         this.makeIndexCommand = makeIndexCommand;
@@ -829,6 +913,8 @@ public class Settings
  	sb.append(", debugWarnings=")   .append(this.debugWarnings);
 
         sb.append(", bibtexCommand=")   .append(this.bibtexCommand);
+        sb.append(", patternErrBibtex=").append(this.patternErrBibtex);
+        sb.append(", patternWarnBibtex=").append(this.patternWarnBibtex);
 
         sb.append(", makeIndexCommand=").append(this.makeIndexCommand);
         sb.append(", makeIndexOptions=").append(this.makeIndexOptions);
