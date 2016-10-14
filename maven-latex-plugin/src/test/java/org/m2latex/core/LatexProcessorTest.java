@@ -55,6 +55,9 @@ public class LatexProcessorTest
     private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
     private File blgFile = new File(System.getProperty("tmp.dir"), "test.blg");
     private File idxFile = new File(System.getProperty("tmp.dir"), "test.idx");
+    private File tocFile = new File(System.getProperty("tmp.dir"), "test.toc");
+    private File lofFile = new File(System.getProperty("tmp.dir"), "test.lof");
+    private File lotFile = new File(System.getProperty("tmp.dir"), "test.lot");
 
 
     private String[] latexArgsExpected = new String[] {
@@ -87,13 +90,22 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "idx" );
 	fileUtilsCtrl.setReturnValue( idxFile );
 
+	// determine from presence of toc, lof, lot (and idx and other criteria)
+	// whether to rerun latex: no 
+	fileUtils.replaceSuffix( texFile, "toc" );
+	fileUtilsCtrl.setReturnValue( tocFile );
+	fileUtils.replaceSuffix( texFile, "lof" );
+	fileUtilsCtrl.setReturnValue( lofFile );
+	fileUtils.replaceSuffix( texFile, "lot" );
+	fileUtilsCtrl.setReturnValue( lotFile );
+
 	// determine whether to rerun latex: no 
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, "(Und|Ov)erfull \\[hv]box");
+	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInLogFile(logFile, "Warning ");
+	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_WARNING);
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -119,17 +131,27 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "idx" );
 	fileUtilsCtrl.setReturnValue( idxFile );
 
-	// determine whether to rerun latex and run until no 
-        mockNeedAnotherLatexRun( true );
+	// determine from presence of toc, lof, lot (and idx and bibtex)
+	// whether to rerun latex: no 
+	fileUtils.replaceSuffix( texFile, "toc" );
+	fileUtilsCtrl.setReturnValue( tocFile );
+	fileUtils.replaceSuffix( texFile, "lof" );
+	fileUtilsCtrl.setReturnValue( lofFile );
+	fileUtils.replaceSuffix( texFile, "lot" );
+	fileUtilsCtrl.setReturnValue( lotFile );
+
+	// to run latex because bibtex had been run 
         mockRunLatex();
+
+	// determine whether to rerun latex and run until no 
         mockNeedAnotherLatexRun( true );
         mockRunLatex();
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, "(Und|Ov)erfull \\[hv]box");
+	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInLogFile(logFile, "Warning ");
+	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_WARNING);
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -152,13 +174,22 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "idx" );
 	fileUtilsCtrl.setReturnValue( idxFile );
 
+	// determine from presence of toc, lof, lot (and idx and other criteria)
+	// whether to rerun latex: no 
+	fileUtils.replaceSuffix( texFile, "toc" );
+	fileUtilsCtrl.setReturnValue( tocFile );
+	fileUtils.replaceSuffix( texFile, "lof" );
+	fileUtilsCtrl.setReturnValue( lofFile );
+	fileUtils.replaceSuffix( texFile, "lot" );
+	fileUtilsCtrl.setReturnValue( lotFile );
+
 	// determine whether to rerun latex: no 
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, "(Und|Ov)erfull \\[hv]box");
+	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInLogFile(logFile, "Warning ");
+	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_WARNING);
 	fileUtilsCtrl.setReturnValue( false );
 
         mockRunLatex2html();
@@ -178,7 +209,8 @@ public class LatexProcessorTest
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
-    private void mockNeedBibtexRun(boolean retVal) throws BuildExecutionException
+    private void mockNeedBibtexRun(boolean retVal) 
+	throws BuildExecutionException
     {
         fileUtils.getFileNameWithoutSuffix( logFile );
         fileUtilsCtrl.setReturnValue( logFile.getName().split( "\\." )[0] );
@@ -204,7 +236,7 @@ public class LatexProcessorTest
 	// fileUtils.matchInLogFile(blgFile, "Error");
 	// fileUtilsCtrl.setReturnValue( false );
 
-	// fileUtils.matchInLogFile(blgFile, "Warning");
+	// fileUtils.matchInLogFile(blgFile, LatexProcessor.PATTERN_WARNING);
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
