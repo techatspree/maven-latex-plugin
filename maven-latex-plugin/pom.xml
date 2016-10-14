@@ -303,26 +303,38 @@
 		 The default value is 'bibtex'. -->
             <bibtexCommand>bibtex</bibtexCommand>
 
+	    <!-- The Pattern in the blg-file 
+		 indicating that $bibtexCommand failed. 
+		 The default value is chosen 
+		 according to the 'bibtex' documentation. -->
+	    <patternErrBibtex>error message</patternErrBibtex>
+
+	    <!-- The Pattern in the blg-file 
+		 indicating a warning $bibtexCommand emitted. 
+		 The default value is chosen 
+		 according to the 'bibtex' documentation. -->
+	    <patternWarnBibtex>Warning--</patternWarnBibtex>
+
 	    <!-- The MakeIndex command to create an ind-file 
 		 from an idx-file logging on an ilg-file. 
 		 The default value is 'makeindex'. -->
 	    <makeIndexCommand>makeindex</makeIndexCommand>
 
+	    <!-- The options for the MakeIndex command. 
+		 The default value is the empty string. -->
+	    <makeIndexOptions>-c</makeIndexOptions>
+
 	    <!-- The pattern in the ilg-file 
 		 indicating that $makeIndexCommand failed. 
 		 The default value is chosen 
-		 according to the 'makeindex' documentation 
-		 but seems to be incomplete.
-		 If this is not complete, please extend 
-		 and notify the developer of this plugin.  -->
-	    <patternErrMakeindex>	Extra |
-	    Illegal null field|
-	    Argument |
-	    Illegal null field|
-	    Unmatched |
-	    Inconsistent page encapsulator |
-	    Conflicting entries
-	    </patternErrMakeindex>
+		 according to the 'makeindex' documentation. -->
+	    <patternErrMakeindex>!! Input index error </patternErrMakeindex>
+
+	    <!-- The Pattern in the ilg-file 
+		 indicating a warning $makeIndexCommand emitted. 
+		 The default value is chosen 
+		 according to the 'makeindex' documentation. -->
+	    <patternWarnMakeindex>## Warning </patternWarnMakeindex>
  
             <!-- the tex4ht command htlatex-->
             <tex4htCommand>htlatex</tex4htCommand>
