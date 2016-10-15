@@ -6,6 +6,7 @@
 \usepackage{xcolor}
 \usepackage{graphics}
 \usepackage{makeidx}
+\usepackage{hyperref}
 
 \title{Manual for the latex-maven-plugin and for an according ant task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
@@ -55,6 +56,9 @@ for the underlying software.
 
 \section{Tools used by this Plugin and Task}\label{sec:tools}
 
+
+\subsection{Conversion of fig-files}\label{subsec:fig2dev}
+
 \index{fig2dev}
 Currently, only figures drawn with {\tt xfig}, or, to be more precise, 
 figures stored in .fig-files are supported. 
@@ -101,6 +105,8 @@ except {\tt fig2dev} itself.
 \caption{\label{fig:fig2dev}Conversion of a fig-file into pdf and pdf\_t files}
 \end{figure}
 
+\subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
+
 The next step is to create a pdf-file from the tex-files. 
 LaTeX distinguishes master tex-files from tex-files intended to be inputted
 from elsewhere. 
@@ -114,22 +120,37 @@ Master tex-files have the form
 \end{document}
 \end{lstlisting}
 
-To satisfy this task, one may apply a latex to pdf converter 
+To satisfy this task, one may apply a latex to pdf converter {\tt latex2pdf} 
 to a master tex-file {\tt xxx.tex}. 
-The latex to pdf converter is configurable via the parameter {\tt texCommand} 
+The latex to pdf converter {\tt latex2pdf} 
+is configurable via the parameter {\tt texCommand} 
 (misleading name, I know, but short). 
 Possible values are {\tt pdflatex}, {\tt lualatex}, {\tt xelatex}, 
 where the first is the default for which this software is also tested. 
 It is also possible to pass parameters to the latex to pdf converter. 
 
-In fact, the converter does much more than converting tex to pdf. 
-Figure \ref{fig:tex2pdf} shows, 
+In fact, the converter {\tt latex2pdf} 
+does much more than converting tex to pdf. 
+Figure \ref{fig:tex2pdf} shows for {\tt latex2pdf} set to {\tt pdflatex}, 
 that besides the pdf-file also a log-file and an aux-file is created. 
+The log-file contains logging information on the run of the conversion 
+and the aux-file transports information from one run to the next. 
+Thus conversion goes without it but it is read if present. 
+This is why it is depicted at input side in dashed lines. 
+
 In addition, 
-if a table of contents, a list of figures or a list of tables is to be
-created, 
-also a toc-file, a lof-file and a lot-file is created. 
-If an index is created, in addition an idx-file is created. 
+if a table of contents, a list of figures or a list of tables is required, 
+also a toc-file, a lof-file and a lot-file is created 
+collecting the according information. 
+If such a file is present, it is read in 
+and is used to create a table of contents, a list of figures and of tables 
+in the second run of {\tt latex2pdf}. 
+
+If an index is demanded, in addition an idx-file is created. 
+In contrast to a toc-file, it cannot be used directly to create an index in
+the next run, because the index entries must be collected and sorted before. 
+This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs. 
+
 
 \begin{figure}[htb]
 \begin{center}
@@ -138,6 +159,7 @@ If an index is created, in addition an idx-file is created.
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
 \end{figure}
 
+\subsection{Bibliographies}\label{subsec:bibtex}
 
 In case the latex to pdf converter writes into its log-file, 
 that a bbl-file is missing, a bibliography must be generated. 
@@ -147,7 +169,7 @@ no bbl-file is present.
 Found no better criterion yet. 
 
 To create a bibliography, a {\tt bibtex}-command must be run. 
-Essentially, {\ttbibtex} extracts the citations in the aux-file 
+Essentially, {\tt bibtex} extracts the citations in the aux-file 
 and writes them into a bbl-file. 
 The aux-file contains also a link to the bibliography database in the bib-file 
 and to the bibliography style file. 
@@ -165,6 +187,7 @@ Conversion of an aux-file into a bbl-file using a bibliography}
 \end{figure}
 
 
+\subsection{Indices}\label{subsec:makeindex}
 
 
 In case the latex to pdf converter creates idx-file, 
@@ -188,6 +211,14 @@ and to pass arbitrary options.
 CAUTION: For the usual {\tt makeindex}-command, 
 the option {\tt -t} specifying the logging file is not allowed, 
 because this bypasses the detection of errors and warnings of this software. 
+
+
+
+\subsection{Miscellaneous}
+
+Warning of failures occurs each time pdflatex is run. 
+Restricting this to the first run is not appropriate, 
+because the aux-file is read and so the failures may depend on the run. 
 
 
 a
@@ -959,14 +990,40 @@ One may always recover by just creating with maven.
 
 Only figures created with xfig and stored as files pdf and pdf\_t 
 may be integrated into a latex document. 
+This could be extended to a broader variety of export file formats. 
+The problem is, that fig-files to not contain information on the export
+format. 
+This has to be either given elsewhere in a config file 
+or determined by pre-parsing the tex-files. 
+
+It is also desirable to add support for further figure creation software, 
+other than xfig. 
+
 There is no proper make-mechanism taking dependencies into account. 
 Thus all documents in all formats specified are remade, 
 whether they changed or not. 
+
+Also, if more than one target is created from one latex source, 
+common steps are redone for each target. 
+E.g. if pdf and html are created, 
+pdf creation is done twice and if pdf, html, odt and docx are created, 
+odt is done twice (once for odt second for docx) 
+and pdf is done even trice: 
+once for pdf itself, once for odt and once for docx. 
+
 No glossary is supported. 
-The ant-task does not allow to create pdf selectively. 
+Creating more than one index is not supported. 
+To that end, makeindex has to be invoked with an argument 
+specifying the type of index. 
+
+The ant-task does not allow to create single formats, e.g. pdf selectively. 
+
 
 In my opinion, it would be desirable not to copy the tex sources into a
-working directory 
+working directory. 
+That way one could use the maven plugin 
+not only for final creation of documentation 
+but it could better support development of the documentation. 
 
 The ant-build is not finished: tests are not run and 
 test runs are no prerequisite for installation. 
@@ -974,13 +1031,8 @@ test runs are no prerequisite for installation.
 This manual is not finished. 
 To test the overall functionality of the maven-plugin and of the ant-task 
 described here, this manual is created through plugin and task. 
-Currently this manual has no index and no bibliography and no picture, 
-which is desirable to ensure that these can be build through plugin and task. 
 
 
-Creating more than one index is not supported. 
-To that end, makeindex has to be invoked with an argument 
-specifying the type of index. 
 
 \printindex
 
