@@ -52,8 +52,8 @@ interface TexFileUtils
     Collection<File> getLatexMainDocuments(File tempDir)
         throws BuildExecutionException;
 
-    boolean matchInLogFile(File logFile, String pattern)
-        throws BuildExecutionException;
+    boolean matchInFile(File file, String pattern) 
+	throws BuildExecutionException;
 
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,

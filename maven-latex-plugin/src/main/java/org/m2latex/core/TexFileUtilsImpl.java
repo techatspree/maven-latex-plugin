@@ -298,25 +298,25 @@ class TexFileUtilsImpl implements TexFileUtils {
     // only in methods processLatex2pdf, runLatex2html, runLatex2odt, 
     // needAnotherLatexRun, needBibtexRun, 
     // runMakeindex, runBibtex, runLatex
-    public boolean matchInLogFile(File logFile, String pattern)
+    public boolean matchInFile(File file, String pattern)
         throws BuildExecutionException
     {
-        if (!logFile.exists())
+        if (!file.exists())
 	    {
 		throw new BuildExecutionException
-		    ("File " + logFile.getPath() 
+		    ("File " + file.getPath() 
 		     + " does not exist after running LaTeX. ");
 	    }
        
 	try {
-	    return fileContainsPattern( logFile, pattern );
+	    return fileContainsPattern(file, pattern);
 	} catch (FileNotFoundException e) {
 	    throw new BuildExecutionException
-		("Log file " + logFile.getPath() + " not found. ",
+		("File " + file.getPath() + " not found. ",
 		 e);
 	} catch (IOException e) {
 	    throw new BuildExecutionException
-		("Error reading log file " + logFile.getPath() + ". ", e);
+		("Error reading file " + file.getPath() + ". ", e);
 	}
     }
 
