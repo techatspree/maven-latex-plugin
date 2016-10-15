@@ -194,18 +194,14 @@ public class LatexProcessor {
 	boolean needBibtexRun = runBibtexByNeed(texFile);
 
 	// run makeindex by need 
-	File idxFile = this.fileUtils.replaceSuffix(texFile, "idx");
-	if (idxFile.exists()){
-            log.debug("Makeindex must be run. ");
-            runMakeindex(idxFile);
-        }
+	boolean needMakeindexRun = runMakeindexByNeed(texFile);
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
 	File tocFile = this.fileUtils.replaceSuffix(texFile, "toc");
 	File lofFile = this.fileUtils.replaceSuffix(texFile, "lof");
 	File lotFile = this.fileUtils.replaceSuffix(texFile, "lot");
-	if (needBibtexRun | idxFile.exists() 
+	if (needBibtexRun | needMakeindexRun 
 	     | tocFile.exists() | lofFile.exists() | lotFile.exists()) {
 	    runLatex(texFile);
 	}
@@ -574,6 +570,11 @@ public class LatexProcessor {
 			      args);
     }
 
+    /**
+     * Returns an array of strings, 
+     * each entry with a single option given by <code>options</code> 
+     * except the last one which is the name of <code>file</code>. 
+     */
     private String[] buildArguments(String options, File file) {
 	if (options.isEmpty()) {
 	    return new String[] {file.getName()};
@@ -602,33 +603,36 @@ public class LatexProcessor {
     }
 
 
+
+
     /**
-     * Returns whether a MakeIndex run is necessary after a LaTeX run. 
-     * This is true if the tex-file contains the command 
-     * <code>\printindex</code> which writes a line 
-     * <code>No file xxx.ind.</code> into the log file. 
+     * Runs the makeindex command 
+     * given by {@link Settings#getMakeinexCommand()} 
+     * on the idx-file corresponding with <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * provided that the existence of an idx-file indicates 
+     * that an index shall be created. 
+     *
+     * @return
+     *    whether makeindex is run. 
+     *    Equivalently, whether LaTeX has to be rerun because of makeindex. 
      */
-    // not used. Instead use creation of idx-file. 
-    // This runs makeindex in a superset of cases, 
-    // this method would yield. 
-    private boolean needMakeIndexRun(File logFile)
-	throws BuildExecutionException {
-        String namePrefixLogFile = this.fileUtils
-	    .getFileNameWithoutSuffix(logFile);
-        String pattern = "No file " + namePrefixLogFile + ".ind.";
-	// may throw a BuildExecutionException
-        return this.fileUtils.matchInFile(logFile, pattern);
-    }
-
-
-    private void runMakeindex(File idxFile)
+    private boolean runMakeindexByNeed(File texFile)
 	throws BuildExecutionException {
 
-	log.debug( "Running " + this.settings.getMakeIndexCommand() + 
-		   " on file " + idxFile.getName() + ". ");
+	File idxFile = this.fileUtils.replaceSuffix(texFile, "idx");
+	boolean needRun = idxFile.exists();
+	log.debug("MakeIndex run required? " +needRun);
+	if (!needRun) {
+	    return false;
+	}
+
+	log.debug("Running " + this.settings.getMakeIndexCommand() + 
+		  " on file " + idxFile.getName() + ". ");
 
 	File workingDir = idxFile.getParentFile();
-	String[] args = new String[] {idxFile.getName()};
+	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
+				       idxFile);
 	// may throw BuildExecutionException 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), 
@@ -653,6 +657,7 @@ public class LatexProcessor {
 	} else {
 	    this.log.error("Makeindex failed: no log file found. ");
 	}
+	return true;
     }
 
     /**
@@ -661,6 +666,10 @@ public class LatexProcessor {
      * in the directory containing <code>texFile</code> 
      * provided an according pattern in the aux-file indicates 
      * that a bibliography shall be created. 
+     *
+     * @return
+     *    whether bibtex is run. 
+     *    Equivalently, whether LaTeX has to be rerun because of bibtex. 
      */
     private boolean runBibtexByNeed(File texFile)
 	throws BuildExecutionException {
@@ -673,7 +682,8 @@ public class LatexProcessor {
 	    return false;
 	}
 
-	log.debug( "Running BibTeX on file " + auxFile.getName() + ". ");
+	log.debug("Running " + this.settings.getBibtexCommand() + 
+		  " on file " + auxFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();
         String[] args = new String[] {
