@@ -81,10 +81,8 @@ public class LatexProcessorTest
 	// run latex 
         mockRunLatex();
 
-	// determine from log whether bibtex shall be run: no 
-	fileUtils.replaceSuffix( texFile, "aux" );
-	fileUtilsCtrl.setReturnValue( auxFile );
-        mockNeedBibtexRun( false );
+	// run bibtex by need: no 
+        mockRunBibtexByNeed(false);
 
 	// determine from presence of idx, whether to run makeindex: no 
 	fileUtils.replaceSuffix( texFile, "idx" );
@@ -123,11 +121,8 @@ public class LatexProcessorTest
 	// run latex 
         mockRunLatex();
 
-	// determine from log whether bibtex shall be run: yes and run it 
-	fileUtils.replaceSuffix( texFile, "aux" );
-	fileUtilsCtrl.setReturnValue( auxFile );
-        mockNeedBibtexRun( true );
-        mockRunBibtex();
+	// run bibtex by need: yes 
+        mockRunBibtexByNeed(true);
 
 	// determine from presence of idx, whether to run makeindex: no 
 	fileUtils.replaceSuffix( texFile, "idx" );
@@ -170,10 +165,8 @@ public class LatexProcessorTest
  	// run latex 
         mockRunLatex();
 
-	// determine from log whether bibtex shall be run: no 
-	fileUtils.replaceSuffix( texFile, "aux" );
-	fileUtilsCtrl.setReturnValue( auxFile );
-	mockNeedBibtexRun( false );
+	// run bibtex by need: no 
+	mockRunBibtexByNeed(false);
 
 	// determine from presence of idx, whether to run makeindex: no 
 	fileUtils.replaceSuffix( texFile, "idx" );
@@ -216,16 +209,24 @@ public class LatexProcessorTest
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
-    private void mockNeedBibtexRun(boolean retVal) 
-	throws BuildExecutionException
-    {
-        fileUtils.matchInFile(auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
-        fileUtilsCtrl.setReturnValue( retVal );
-    }
+    // private void mockNeedBibtexRun(boolean retVal) 
+    // 	throws BuildExecutionException
+    // {
+    //     fileUtils.matchInFile(auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
+    //     fileUtilsCtrl.setReturnValue( retVal );
+    // }
 
-    private void mockRunBibtex() throws BuildExecutionException {
+    private void mockRunBibtexByNeed(boolean runBibtex) 
+	throws BuildExecutionException {
+
         fileUtils.replaceSuffix( texFile, "aux" );
         fileUtilsCtrl.setReturnValue( auxFile );
+        fileUtils.matchInFile(auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
+        fileUtilsCtrl.setReturnValue( runBibtex );
+
+	if (!runBibtex) {
+	    return;
+	}
 
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
