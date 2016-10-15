@@ -3,7 +3,7 @@ package org.m2latex.core;
 import java.io.File;
 
 /**
- * Describe enum Target here.
+ * The enumeration of all supported targets. 
  *
  *
  * Created: Fri Oct  7 13:32:21 2016
