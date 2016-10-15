@@ -76,14 +76,14 @@ public class LatexProcessorTest
     };
 
     @Test public void testProcessLatexSimple()
-	throws BuildExecutionException
-    {
+	throws BuildExecutionException {
+
 	// run latex 
         mockRunLatex();
 
 	// determine from log whether bibtex shall be run: no 
-	fileUtils.replaceSuffix( texFile, "log" );
-	fileUtilsCtrl.setReturnValue( logFile );
+	fileUtils.replaceSuffix( texFile, "aux" );
+	fileUtilsCtrl.setReturnValue( auxFile );
         mockNeedBibtexRun( false );
 
 	// determine from presence of idx, whether to run makeindex: no 
@@ -100,12 +100,14 @@ public class LatexProcessorTest
 	fileUtilsCtrl.setReturnValue( lotFile );
 
 	// determine whether to rerun latex: no 
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_WARNING);
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_WARNING);
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -122,8 +124,8 @@ public class LatexProcessorTest
         mockRunLatex();
 
 	// determine from log whether bibtex shall be run: yes and run it 
-	fileUtils.replaceSuffix( texFile, "log" );
-	fileUtilsCtrl.setReturnValue( logFile );
+	fileUtils.replaceSuffix( texFile, "aux" );
+	fileUtilsCtrl.setReturnValue( auxFile );
         mockNeedBibtexRun( true );
         mockRunBibtex();
 
@@ -144,14 +146,16 @@ public class LatexProcessorTest
         mockRunLatex();
 
 	// determine whether to rerun latex and run until no 
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
         mockNeedAnotherLatexRun( true );
         mockRunLatex();
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_WARNING);
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_WARNING);
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -162,12 +166,13 @@ public class LatexProcessorTest
     }
 
    @Test public void testProcessLatex2html() throws BuildExecutionException {
+
  	// run latex 
         mockRunLatex();
 
 	// determine from log whether bibtex shall be run: no 
-	fileUtils.replaceSuffix( texFile, "log" );
-	fileUtilsCtrl.setReturnValue( logFile );
+	fileUtils.replaceSuffix( texFile, "aux" );
+	fileUtilsCtrl.setReturnValue( auxFile );
 	mockNeedBibtexRun( false );
 
 	// determine from presence of idx, whether to run makeindex: no 
@@ -184,12 +189,14 @@ public class LatexProcessorTest
 	fileUtilsCtrl.setReturnValue( lotFile );
 
 	// determine whether to rerun latex: no 
+	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtilsCtrl.setReturnValue( logFile );
         mockNeedAnotherLatexRun( false );
 
 	// detect bad boxes and warnings: none 
-	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInLogFile(logFile, LatexProcessor.PATTERN_WARNING);
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_WARNING);
 	fileUtilsCtrl.setReturnValue( false );
 
         mockRunLatex2html();
@@ -204,18 +211,15 @@ public class LatexProcessorTest
     private void mockNeedAnotherLatexRun(boolean retVal)
         throws BuildExecutionException
     {
-        fileUtils.matchInLogFile(logFile, 
-				 this.settings.getPatternNeedLatexReRun());
+        fileUtils.matchInFile(logFile, 
+			      this.settings.getPatternNeedLatexReRun());
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
     private void mockNeedBibtexRun(boolean retVal) 
 	throws BuildExecutionException
     {
-        fileUtils.getFileNameWithoutSuffix( logFile );
-        fileUtilsCtrl.setReturnValue( logFile.getName().split( "\\." )[0] );
-
-        fileUtils.matchInLogFile( logFile, "No file test.bbl." );
+        fileUtils.matchInFile(auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
@@ -233,10 +237,10 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "blg" );
 	fileUtilsCtrl.setReturnValue( blgFile );
 
-	// fileUtils.matchInLogFile(blgFile, "Error");
+	// fileUtils.matchInFile(blgFile, "Error");
 	// fileUtilsCtrl.setReturnValue( false );
 
-	// fileUtils.matchInLogFile(blgFile, LatexProcessor.PATTERN_WARNING);
+	// fileUtils.matchInFile(blgFile, LatexProcessor.PATTERN_WARNING);
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
@@ -250,9 +254,6 @@ public class LatexProcessorTest
 
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
-
-	// fileUtils.matchInLogFile(logFile, this.settings.getPatternErrLatex());
-	// fileUtilsCtrl.setReturnValue( false );
     }
 
     private void mockRunLatex2html() throws BuildExecutionException {
@@ -266,7 +267,7 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
 
-	fileUtils.matchInLogFile(logFile, this.settings.getPatternErrLatex());
+	fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
 	fileUtilsCtrl.setReturnValue( false );
     }
 
