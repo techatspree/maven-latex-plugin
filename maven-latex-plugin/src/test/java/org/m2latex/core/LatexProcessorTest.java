@@ -53,8 +53,11 @@ public class LatexProcessorTest
     private File texFile = new File(System.getProperty("tmp.dir"), "test.tex");
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
     private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
+
     private File blgFile = new File(System.getProperty("tmp.dir"), "test.blg");
     private File idxFile = new File(System.getProperty("tmp.dir"), "test.idx");
+    private File ilgFile = new File(System.getProperty("tmp.dir"), "test.ilg");
+
     private File tocFile = new File(System.getProperty("tmp.dir"), "test.toc");
     private File lofFile = new File(System.getProperty("tmp.dir"), "test.lof");
     private File lotFile = new File(System.getProperty("tmp.dir"), "test.lot");
@@ -84,9 +87,8 @@ public class LatexProcessorTest
 	// run bibtex by need: no 
         mockRunBibtexByNeed(false);
 
-	// determine from presence of idx, whether to run makeindex: no 
-	fileUtils.replaceSuffix( texFile, "idx" );
-	fileUtilsCtrl.setReturnValue( idxFile );
+	// run makeIndex by need: no 
+	mockRunMakeIndexByNeed(false);
 
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
@@ -124,9 +126,8 @@ public class LatexProcessorTest
 	// run bibtex by need: yes 
         mockRunBibtexByNeed(true);
 
-	// determine from presence of idx, whether to run makeindex: no 
-	fileUtils.replaceSuffix( texFile, "idx" );
-	fileUtilsCtrl.setReturnValue( idxFile );
+	// run makeIndex by need: no 
+	mockRunMakeIndexByNeed(false);
 
 	// determine from presence of toc, lof, lot (and idx and bibtex)
 	// whether to rerun latex: no 
@@ -168,9 +169,8 @@ public class LatexProcessorTest
 	// run bibtex by need: no 
 	mockRunBibtexByNeed(false);
 
-	// determine from presence of idx, whether to run makeindex: no 
-	fileUtils.replaceSuffix( texFile, "idx" );
-	fileUtilsCtrl.setReturnValue( idxFile );
+	// run makeIndex by need: no 
+	mockRunMakeIndexByNeed(false);
 
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
@@ -244,6 +244,30 @@ public class LatexProcessorTest
 	// fileUtils.matchInFile(blgFile, LatexProcessor.PATTERN_WARNING);
 	// fileUtilsCtrl.setReturnValue( false );
     }
+
+    private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
+	throws BuildExecutionException {
+
+        fileUtils.replaceSuffix( texFile, "idx" );
+        fileUtilsCtrl.setReturnValue( idxFile );
+
+	if (!runMakeIndex) {
+	    return;
+	}
+
+
+        executor.execute(texFile.getParentFile(),
+			 settings.getTexPath(),
+			 settings.getMakeIndexCommand(),
+			 new String[] { idxFile.getPath() } );
+	executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
+        executorCtrl.setReturnValue( null );
+
+	fileUtils.replaceSuffix( idxFile, "ilg" );
+	fileUtilsCtrl.setReturnValue( ilgFile );
+
+    }
+
 
     private void mockRunLatex() throws BuildExecutionException {
         executor.execute(texFile.getParentFile(),
