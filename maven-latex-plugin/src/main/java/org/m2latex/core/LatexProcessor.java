@@ -191,12 +191,7 @@ public class LatexProcessor {
         runLatex(texFile);
 
 	// run bibtex by need 
-	File auxFile = this.fileUtils.replaceSuffix(texFile, "aux");
-	boolean needBibtexRun = needBibtexRun(auxFile);
-        if (needBibtexRun) {
-            log.debug("Bibtex must be run. ");
-            runBibtex(texFile);
-        }
+	boolean needBibtexRun = runBibtexByNeed(texFile);
 
 	// run makeindex by need 
 	File idxFile = this.fileUtils.replaceSuffix(texFile, "idx");
@@ -606,21 +601,6 @@ public class LatexProcessor {
         return needRun;
     }
 
-    /**
-     * Returns whether a BibTeX run is necessary after a LaTeX run 
-     * based on a pattern matching in the aux file. 
-     * 
-     * @see #PATTERN_NEED_BIBTEX_RUN
-     */
-    private boolean needBibtexRun(File auxFile)
-	throws BuildExecutionException {
-	// may throw a BuildExecutionException
-        boolean needRun = this.fileUtils.matchInFile(auxFile, 
-						     PATTERN_NEED_BIBTEX_RUN);
-        log.debug("BibTeX run required? " + needRun);
-        return needRun;
-    }
-
 
     /**
      * Returns whether a MakeIndex run is necessary after a LaTeX run. 
@@ -642,8 +622,8 @@ public class LatexProcessor {
 
 
     private void runMakeindex(File idxFile)
-	throws BuildExecutionException
-    {
+	throws BuildExecutionException {
+
 	log.debug( "Running " + this.settings.getMakeIndexCommand() + 
 		   " on file " + idxFile.getName() + ". ");
 
@@ -675,16 +655,25 @@ public class LatexProcessor {
 	}
     }
 
-     /**
+    /**
      * Runs the bibtex command given by {@link Settings#getBibtexCommand()} 
      * on the aux-file corresponding with <code>texFile</code> 
-     * in the directory containing <code>texFile</code>. 
+     * in the directory containing <code>texFile</code> 
+     * provided an according pattern in the aux-file indicates 
+     * that a bibliography shall be created. 
      */
-    private void runBibtex(File texFile)
-	throws BuildExecutionException
-    {
-	File auxFile =  this.fileUtils.replaceSuffix( texFile, "aux" );
-        log.debug( "Running BibTeX on file " + auxFile.getName() + ". ");
+    private boolean runBibtexByNeed(File texFile)
+	throws BuildExecutionException {
+
+	File auxFile =  this.fileUtils.replaceSuffix(texFile, "aux");
+        boolean needRun = this.fileUtils.matchInFile(auxFile, 
+						     PATTERN_NEED_BIBTEX_RUN);
+	log.debug("BibTeX run required? " + needRun);
+	if (!needRun) {
+	    return false;
+	}
+
+	log.debug( "Running BibTeX on file " + auxFile.getName() + ". ");
 
         File workingDir = texFile.getParentFile();
         String[] args = new String[] {
@@ -716,6 +705,7 @@ public class LatexProcessor {
 	} else {
 	    this.log.error("BibTeX failed: no log file found. ");
 	}
+	return true;
     }
 
     /**
