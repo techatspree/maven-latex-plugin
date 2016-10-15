@@ -191,33 +191,31 @@ public class LatexProcessor {
         runLatex(texFile);
 
 	// run bibtex by need 
-	boolean needBibtexRun = runBibtexByNeed(texFile);
+	boolean needLatexReRun = runBibtexByNeed(texFile);
 
 	// run makeindex by need 
-	boolean needMakeindexRun = runMakeindexByNeed(texFile);
+	needLatexReRun |= runMakeindexByNeed(texFile);
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
-	File tocFile = this.fileUtils.replaceSuffix(texFile, "toc");
-	File lofFile = this.fileUtils.replaceSuffix(texFile, "lof");
-	File lotFile = this.fileUtils.replaceSuffix(texFile, "lot");
-	if (needBibtexRun | needMakeindexRun 
-	     | tocFile.exists() | lofFile.exists() | lotFile.exists()) {
+	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "toc").exists();
+	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lof").exists();
+	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lot").exists();
+	if (needLatexReRun) {
 	    runLatex(texFile);
 	}
 
 	// rerun latex by need 
         int retries = 0;
-	boolean needAnotherLatexRun = true;
 	int maxNumReruns = this.settings.getMaxNumReruns();
 	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
         while ((maxNumReruns == -1 || retries < maxNumReruns)
-	       && (needAnotherLatexRun = needAnotherLatexRun(logFile))) {
+	       && (needLatexReRun = needAnotherLatexRun(logFile))) {
             log.debug("Latex must be rerun. ");
             runLatex(texFile);
             retries++;
         }
-	if (needAnotherLatexRun) {
+	if (needLatexReRun) {
 	    log.warn("Max rerun reached although LaTeX demands another run. ");
 	}
 
