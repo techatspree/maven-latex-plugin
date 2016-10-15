@@ -29,8 +29,10 @@ import java.util.Collection;
  * The latex processor used by both the ant task and the maven plugin. 
  * This is the core class of this piece of software. 
  */
-public class LatexProcessor
-{
+public class LatexProcessor {
+
+    static final String PATTERN_NEED_BIBTEX_RUN = "bibcite";
+
     static final String PATTERN_OUFULL_HVBOX = "(Ov|Und)erfull \\\\[hv]box";
 
     static final String PATTERN_WARNING      = "Warning";
@@ -50,8 +52,7 @@ public class LatexProcessor
 		   CommandExecutor executor, 
 		   LogWrapper log, 
 		   TexFileUtils fileUtils,
-		   ParameterAdapter paramAdapt)
-    {
+		   ParameterAdapter paramAdapt) {
         this.settings = settings;
         this.log = log;
         this.executor = executor;
@@ -65,8 +66,7 @@ public class LatexProcessor
      */
     public LatexProcessor( Settings settings, 
 			   LogWrapper log, 
-			   ParameterAdapter paramAdapt)
-    {
+			   ParameterAdapter paramAdapt) {
         this.settings = settings;
         this.log = log;
         this.executor = new CommandExecutorImpl(this.log);
@@ -93,8 +93,8 @@ public class LatexProcessor
 
         File texDirectory = this.settings.getTexSrcDirectoryFile();
 
-        if ( !texDirectory.exists() ) {
-            this.log.info( "No tex directory - skipping LaTeX processing" );
+        if (!texDirectory.exists()) {
+            this.log.info("No tex directory - skipping LaTeX processing");
             return;
         }
 
@@ -118,14 +118,15 @@ public class LatexProcessor
 	    Collection<File> latexMainFiles = this.fileUtils
 		.getLatexMainDocuments(tempDir);
 	    for (File texFile : latexMainFiles) {
+		// may throw BuildExecutionException, BuildFailureException 
+		File targetDir = this.fileUtils.getTargetDirectory
+		    (texFile, 
+		     tempDir, 
+		     this.settings.getOutputDirectoryFile());
+
 		for (Target target : this.paramAdapt.getTargetSet()) {
 		    // may throw BuildExecutionException 
 		    target.processSource(this, texFile);
-		    // may throw BuildExecutionException, BuildFailureException 
-		    File targetDir = this.fileUtils.getTargetDirectory
-			(texFile, 
-			 tempDir, 
-			 this.settings.getOutputDirectoryFile());
 		    FileFilter fileFilter = this.fileUtils
 			.getFileFilter(texFile, 
 				       target.getOutputFileSuffixes());
@@ -183,16 +184,21 @@ public class LatexProcessor
     // FIXME: what about glossaries and things like that? 
     public void processLatex2pdf(final File texFile)
 	throws BuildExecutionException {
+
         log.info("Processing LaTeX file " + texFile + ". ");
 
-        runLatex( texFile );
-	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
-	boolean needBibtexRun = needBibtexRun(logFile);
+	// initial latex run 
+        runLatex(texFile);
+
+	// run bibtex by need 
+	File auxFile = this.fileUtils.replaceSuffix(texFile, "aux");
+	boolean needBibtexRun = needBibtexRun(auxFile);
         if (needBibtexRun) {
             log.debug("Bibtex must be run. ");
             runBibtex(texFile);
         }
 
+	// run makeindex by need 
 	File idxFile = this.fileUtils.replaceSuffix(texFile, "idx");
 	if (idxFile.exists()){
             log.debug("Makeindex must be run. ");
@@ -209,9 +215,11 @@ public class LatexProcessor
 	    runLatex(texFile);
 	}
 
+	// rerun latex by need 
         int retries = 0;
 	boolean needAnotherLatexRun = true;
 	int maxNumReruns = this.settings.getMaxNumReruns();
+	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
         while ((maxNumReruns == -1 || retries < maxNumReruns)
 	       && (needAnotherLatexRun = needAnotherLatexRun(logFile))) {
             log.debug("Latex must be rerun. ");
@@ -221,14 +229,14 @@ public class LatexProcessor
 	if (needAnotherLatexRun) {
 	    log.warn("Max rerun reached although LaTeX demands another run. ");
 	}
+
+	// emit warnings 
 	if (this.settings.getDebugBadBoxes() && 
-	    this.fileUtils.matchInLogFile(logFile, 
-					  PATTERN_OUFULL_HVBOX)) {
+	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
 	    log.warn("LaTeX created bad boxes. ");
 	}
 	if (this.settings.getDebugWarnings() && 
-	    this.fileUtils.matchInLogFile(logFile, 
-					  PATTERN_WARNING)) {
+	    this.fileUtils.matchInFile(logFile, PATTERN_WARNING)) {
 	    log.warn("LaTeX emited warnings. ");
 	}
     }
@@ -447,7 +455,7 @@ public class LatexProcessor
 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
 	boolean errorOccurred = this.fileUtils
-	    .matchInLogFile(logFile, this.settings.getPatternErrLatex());
+	    .matchInFile(logFile, this.settings.getPatternErrLatex());
 	if (errorOccurred) {
 	    log.warn("LaTeX failed to run on " + texFile + ". ");
 	}
@@ -505,7 +513,7 @@ public class LatexProcessor
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
 	if (logFile.exists()) {
 	    boolean errorOccurred = this.fileUtils
-		.matchInLogFile(logFile, this.settings.getPatternErrLatex());
+		.matchInFile(logFile, this.settings.getPatternErrLatex());
 	    if (errorOccurred) {
 		log.warn("LaTeX failed when running on " + texFile + 
 			 ". For details see " + logFile.getName() + ". ");
@@ -583,30 +591,36 @@ public class LatexProcessor
 	return args;
      }
 
-    // FIXME: Is this the right criterion? 
+    /**
+     * Returns whether another LaTeX run is necessary 
+     * based on a pattern matching in the log file. 
+     *
+     * @see Settings#getPatternNeedLatexReRun()
+     */
     private boolean needAnotherLatexRun(File logFile)
-	throws BuildExecutionException
-    {
+	throws BuildExecutionException {
         String reRunPattern = this.settings.getPatternNeedLatexReRun();
-        boolean needRun =  this.fileUtils.matchInLogFile(logFile, reRunPattern);
-        log.debug( "Another Latex run? " + needRun );
+	// may throw a BuildExecutionException
+        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
+        log.debug( "Another LaTeX run? " + needRun );
         return needRun;
     }
 
     /**
-     * Returns whether a BibTeX run is necessary after a LaTeX run. 
-     * This is true if the tex-file contains the command 
-     * <code>\bibliography</code> which writes a line 
-     * <code>No file xxx.bbl.</code> into the log file. 
+     * Returns whether a BibTeX run is necessary after a LaTeX run 
+     * based on a pattern matching in the aux file. 
+     * 
+     * @see #PATTERN_NEED_BIBTEX_RUN
      */
-    private boolean needBibtexRun(File logFile)
+    private boolean needBibtexRun(File auxFile)
 	throws BuildExecutionException {
-        String namePrefixLogFile = this.fileUtils
-	    .getFileNameWithoutSuffix(logFile);
-        String pattern = "No file " + namePrefixLogFile + ".bbl.";
 	// may throw a BuildExecutionException
-        return this.fileUtils.matchInLogFile( logFile, pattern );
+        boolean needRun = this.fileUtils.matchInFile(auxFile, 
+						     PATTERN_NEED_BIBTEX_RUN);
+        log.debug("BibTeX run required? " + needRun);
+        return needRun;
     }
+
 
     /**
      * Returns whether a MakeIndex run is necessary after a LaTeX run. 
@@ -623,7 +637,7 @@ public class LatexProcessor
 	    .getFileNameWithoutSuffix(logFile);
         String pattern = "No file " + namePrefixLogFile + ".ind.";
 	// may throw a BuildExecutionException
-        return this.fileUtils.matchInLogFile( logFile, pattern );
+        return this.fileUtils.matchInFile(logFile, pattern);
     }
 
 
@@ -644,13 +658,13 @@ public class LatexProcessor
 	// detect errors 
  	File logFile = this.fileUtils.replaceSuffix( idxFile, "ilg" );
 	if (logFile.exists()) {
-	    boolean errOccurred = this.fileUtils.matchInLogFile
+	    boolean errOccurred = this.fileUtils.matchInFile
 		(logFile, this.settings.getPatternErrMakeindex());
 	    if (errOccurred) {
 		log.warn("MakeIndex failed when running on " + idxFile + 
 			 ". For details see " + logFile.getName() + ". ");
 	    }
-	    boolean warnOccurred = this.fileUtils.matchInLogFile
+	    boolean warnOccurred = this.fileUtils.matchInFile
 		(logFile, this.settings.getPatternWarnMakeindex());
 	    if (warnOccurred) {
 		log.warn("MakeIndex emitted warnings running on " + idxFile + 
@@ -687,12 +701,12 @@ public class LatexProcessor
 	    // FIXME: Could be further improved: 1 error but more warnings: 
 	    // The latter shall be displayed. (maybe)
 	    boolean errOccurred = this.fileUtils
-		.matchInLogFile(logFile, this.settings.getPatternErrBibtex());
+		.matchInFile(logFile, this.settings.getPatternErrBibtex());
 	    if (errOccurred) {
 		log.warn("BibTeX failed when running on " + texFile + ". ");
 	    }
 	    boolean warnOccurred = this.fileUtils
-		.matchInLogFile(logFile, this.settings.getPatternWarnBibtex());
+		.matchInFile(logFile, this.settings.getPatternWarnBibtex());
 	    if (warnOccurred) {
 		log.warn("BibTeX warning when running on " + texFile + ". ");
 	    }
@@ -734,9 +748,9 @@ public class LatexProcessor
 	// logging errors 
 	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
 	if (logFile.exists()) {
-	    // matchInLogFile may throw BuildExecutionException
+	    // matchInFile may throw BuildExecutionException
 	    boolean errorOccurred = this.fileUtils
-		.matchInLogFile(logFile, this.settings.getPatternErrLatex());
+		.matchInFile(logFile, this.settings.getPatternErrLatex());
 	    if (errorOccurred) {
 		log.warn("LaTeX conversion to pdf failed when running on " 
 			 + texFile + 
