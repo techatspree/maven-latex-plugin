@@ -6,7 +6,7 @@
 \usepackage{xcolor}
 \usepackage{graphics}
 \usepackage{makeidx}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 
 \title{Manual for the latex-maven-plugin and for an according ant task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
@@ -125,7 +125,7 @@ to a master tex-file {\tt xxx.tex}.
 The latex to pdf converter {\tt latex2pdf} 
 is configurable via the parameter {\tt texCommand} 
 (misleading name, I know, but short). 
-Possible values are {\tt pdflatex}, {\tt lualatex}, {\tt xelatex}, 
+Possible values are {\tt pdflatex}, {\tt lualatex} and {\tt xelatex}, 
 where the first is the default for which this software is also tested. 
 It is also possible to pass parameters to the latex to pdf converter. 
 
@@ -138,6 +138,28 @@ and the aux-file transports information from one run to the next.
 Thus conversion goes without it but it is read if present. 
 This is why it is depicted at input side in dashed lines. 
 
+What is in fact in the aux-file depends on the package. 
+Among other information, 
+also citations and the location of the bibliography file with ending bib 
+are present. 
+This cannot be used directly in the next {\tt latex2pdf} run 
+to create the bibiography, 
+because the entries must be retrieved from the bib-file, 
+collected and sorted. 
+This is done by invoking {\tt bibtex} between two {\tt latex2pdf} runs. 
+Based on the aux-file, {\tt bibtex} creates a bbl-file 
+containing the bibliography, which is read in in the next {\tt latex2pdf} run. 
+For details see Section \ref{subsec:bibtex}. 
+
+If an index is demanded, in addition {\tt latex2pdf} creates an idx-file. 
+As the citations, it cannot be used directly to create an index in
+the next {\tt latex2pdf} run, 
+because the index entries must be collected and sorted before. 
+This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs. 
+Based on the idx-file, {\tt makeindex} creates an ind-file 
+containing the index, which is read in in the next {\tt latex2pdf} run. 
+For details see Section {subsec:makeindex}. 
+
 In addition, 
 if a table of contents, a list of figures or a list of tables is required, 
 also a toc-file, a lof-file and a lot-file is created 
@@ -146,10 +168,6 @@ If such a file is present, it is read in
 and is used to create a table of contents, a list of figures and of tables 
 in the second run of {\tt latex2pdf}. 
 
-If an index is demanded, in addition an idx-file is created. 
-In contrast to a toc-file, it cannot be used directly to create an index in
-the next run, because the index entries must be collected and sorted before. 
-This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs. 
 
 
 \begin{figure}[htb]
@@ -161,21 +179,24 @@ This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs.
 
 \subsection{Bibliographies}\label{subsec:bibtex}
 
-In case the latex to pdf converter writes into its log-file, 
-that a bbl-file is missing, a bibliography must be generated. 
-CAUTION: This criterion is valid only in this context 
-if initially, i.e. before running the latex to pdf converter, 
-no bbl-file is present. 
-Found no better criterion yet. 
+In case the latex to pdf converter writes bibliographic information, 
+into its aux-file, a bibliography must be generated. 
+Bibliographic information are 
+citations, a link to the bib-file containing the bibliography data, 
+and optionally a link to the bibliography style file. 
 
 To create a bibliography, a {\tt bibtex}-command must be run. 
-Essentially, {\tt bibtex} extracts the citations in the aux-file 
-and writes them into a bbl-file. 
-The aux-file contains also a link to the bibliography database in the bib-file 
-and to the bibliography style file. 
+Essentially, {\tt bibtex} extracts the citations in the aux-file, 
+unifies them, 
+retrieves the according entries from the bib-file, sorts these 
+and writes them into a bbl-file 
+which can be included in the next run of {\tt latex2pdf}. 
+
 This software presupposes, that {\tt bibtex} reads the aux-file 
 and creates a bbl-file and also an blg-file with logging output 
 as illustrated by Figure \ref{fig:aux2bbl}. 
+From the blg-file this software may determine 
+whether {\tt bibtex} emitted an error or warnings. 
 
 
 \begin{figure}[htb]
@@ -196,8 +217,11 @@ an index must be generated.
 To that end, a {\tt makeindex}-command must be run. 
 Essentially, {\tt makeindex} sorts and combines index entries. 
 This software presupposes, that {\tt makeindex} converts the idx-file 
-into an ind-file creating also an ilg-file with logging output 
+into an ind-file containing the index 
+and creating also an ilg-file with logging output 
 as shown in Figure \ref{fig:idx2ind}. 
+From the ilg-file this software may determine 
+whether {\tt makeindex} emitted an error or warnings. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -212,7 +236,7 @@ CAUTION: For the usual {\tt makeindex}-command,
 the option {\tt -t} specifying the logging file is not allowed, 
 because this bypasses the detection of errors and warnings of this software. 
 
-
+Information on the makeindex program can be found in \cite{MkIdxMoe}. 
 
 \subsection{Miscellaneous}
 
@@ -224,7 +248,6 @@ because the aux-file is read and so the failures may depend on the run.
 a
 
 
-Erstes Zitat: \cite{MkIdxMoe}
 
 
 
@@ -348,7 +371,7 @@ A sequence of at least one blank separate the proper options.
 %'{\tt-interaction=nonstopmode -src-specials}'. 
 \end{minipage}
 } \\
-\tt patternerrlatex & \tt\small! $|$Fatal error$|$LaTeX Error$|$Emergency stop\\
+\tt patternErrLatex & see below \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
@@ -380,7 +403,7 @@ rerun LaTeX and have a look at the log-file.
 \end{minipage}
 } \\
 \hline
-\multicolumn2{|l|}{bibtex and makeindex} \\
+\multicolumn2{|l|}{makeindex} \\
 \hline
 \tt bibtexcommand    & \tt bibtex        \\
 \multicolumn2{|l|}{
@@ -407,6 +430,8 @@ indicating a warning \$bibtexCommand emitted.
 The default value is chosen 
 according to the 'bibtex' documentation. \end{minipage}
 } \\
+\multicolumn2{|l|}{makeindex} \\
+\hline
 \tt makeIndexCommand & \tt makeindex     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
