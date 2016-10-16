@@ -242,6 +242,44 @@ because this bypasses the detection of errors and warnings of this software.
 Information on the makeindex program can be found in \cite{MkIdxMoe} 
 and in \cite{MkIdxLam}. 
 
+\subsection{Rerunning the latex processor}
+
+As indicated in the previous sections, 
+{\tt latex2pdf} must be rerun, if {\tt bibtex} or {\tt makeindex} had been run 
+to read in the bibliography created by {\tt bibtex} 
+or the index created by {\tt makeindex}. 
+Likewise, if a toc-file, a lof-file or a lot-file 
+had been created in the first {\tt latex2pdf} run, 
+another run is needed to read in these files 
+to create a table of contents, a list of figures or a list of tables, 
+respectively. 
+Note that for all these cases, 
+the log-file does not allow to detect that {\tt latex2pdf} has to be rerun, 
+by matching a fixed pattern. 
+
+After the second run of {\tt latex2pdf}, 
+the table of contents is included and the references and citations are
+inserted 
+which may shift the subsequent text 
+which may require another run of {\tt latex2pdf} 
+This may be detected by pattern matching on the log-file. 
+
+Note that there are several packages which require additional runs, 
+such as the longtable-package, 
+which may vary dimensions of tables. 
+This software presupposes, that all these reruns 
+may be detected by matching a fixed pattern in the log-file. 
+Since packages are frequently changed and new packages are written, 
+also the pattern cannot be fixed. 
+Thus it is configurable. 
+
+Note that, if a package requires running other programs 
+between two runs of {\tt latex2pdf}, 
+this would require a change in this software. 
+
+
+
+
 \subsection{Miscellaneous}
 
 Warning of failures occurs each time pdflatex is run. 
