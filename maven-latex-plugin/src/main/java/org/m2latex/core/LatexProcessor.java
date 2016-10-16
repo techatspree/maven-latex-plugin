@@ -31,7 +31,7 @@ import java.util.Collection;
  */
 public class LatexProcessor {
 
-    static final String PATTERN_NEED_BIBTEX_RUN = "bibcite";
+    static final String PATTERN_NEED_BIBTEX_RUN = "bibdata";
 
     static final String PATTERN_OUFULL_HVBOX = "(Ov|Und)erfull \\\\[hv]box";
 
