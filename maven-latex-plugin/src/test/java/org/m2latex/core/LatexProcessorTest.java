@@ -292,8 +292,9 @@ public class LatexProcessorTest
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
 
-	fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
-	fileUtilsCtrl.setReturnValue( false );
+	// since log file does not exist 
+	// fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
+	// fileUtilsCtrl.setReturnValue( false );
     }
 
     private void replay()
