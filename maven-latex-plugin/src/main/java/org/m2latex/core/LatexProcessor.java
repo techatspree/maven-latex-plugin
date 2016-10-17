@@ -170,12 +170,12 @@ public class LatexProcessor {
      * A warning is logged each time a LaTeX run fails, 
      * a BibTeX run or MakeIndex fails 
      * or if a BibTeX run or a MakeIndex run issues a warning
-     * in the according methods {@link #runLatex(File)}, 
+     * in the according methods {@link #runLatex2pdf(File)}, 
      * {@link #runBibtex(File)} and {@link #runMakeindex(File)}. 
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #runLatex(File)
+     * @see #runLatex2pdf(File)
      * @see #runBibtex(File)
      * @see #runMakeindex(File)
      * @see #needAnotherLatexRun(File)
@@ -188,7 +188,7 @@ public class LatexProcessor {
         log.info("Processing LaTeX file " + texFile + ". ");
 
 	// initial latex run 
-        runLatex(texFile);
+        runLatex2pdf(texFile);
 
 	// run bibtex by need 
 	boolean needLatexReRun = runBibtexByNeed(texFile);
@@ -202,7 +202,7 @@ public class LatexProcessor {
 	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lof").exists();
 	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lot").exists();
 	if (needLatexReRun) {
-	    runLatex(texFile);
+	    runLatex2pdf(texFile);
 	}
 
 	// rerun latex by need 
@@ -212,7 +212,7 @@ public class LatexProcessor {
         while ((maxNumReruns == -1 || retries < maxNumReruns)
 	       && (needLatexReRun = needAnotherLatexRun(logFile))) {
             log.debug("Latex must be rerun. ");
-            runLatex(texFile);
+            runLatex2pdf(texFile);
             retries++;
         }
 	if (needLatexReRun) {
@@ -393,17 +393,16 @@ public class LatexProcessor {
      *    if running the latex2rtf command 
      *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      */
-    private void runLatex2rtf( File texFile )
-            throws BuildExecutionException
-    {
-	String command = this.settings.getLatex2rtfCommand();
-        log.debug( "Running " +command + 
-		   " on file " + texFile.getName() + ". ");
+    private void runLatex2rtf(File texFile)
+            throws BuildExecutionException {
 
-        File workingDir = texFile.getParentFile();
-        String[] args = buildLatex2rtfArguments( texFile );
+	String command = this.settings.getLatex2rtfCommand();
+        log.debug("Running " + command + 
+		  " on file " + texFile.getName() + ". ");
+
+        String[] args = buildLatex2rtfArguments(texFile);
 	// may throw BuildExecutionException 
-        this.executor.execute(workingDir, 
+        this.executor.execute(texFile.getParentFile(), // workingDir
 			      this.settings.getTexPath(), 
 			      command, 
 			      args);
@@ -427,27 +426,23 @@ public class LatexProcessor {
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
-    private void runLatex2html( File texFile )
-            throws BuildExecutionException
-    {
-	String command = this.settings.getTex4htCommand();
-        log.debug( "Running " + command + 
-		   " on file " + texFile.getName() + ". ");
+    private void runLatex2html(File texFile)
+	throws BuildExecutionException {
 
-        File workingDir = texFile.getParentFile();
-        String[] args = buildHtlatexArguments( texFile );
+	String command = this.settings.getTex4htCommand();
+        log.debug("Running " + command + 
+		  " on file " + texFile.getName() + ". ");
+
+        String[] args = buildHtlatexArguments(texFile);
 	// may throw BuildExecutionException 
-        this.executor.execute(workingDir, 
+        this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
 			      args);
 
-	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
-	boolean errorOccurred = this.fileUtils
-	    .matchInFile(logFile, this.settings.getPatternErrLatex());
-	if (errorOccurred) {
-	    log.warn("LaTeX failed to run on " + texFile + ". ");
-	}
+	// logging errors 
+	logErrs(texFile, command);
+
 	// missing: warnings: should be displayed configurable. 
     }
 
@@ -479,12 +474,12 @@ public class LatexProcessor {
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
-    private void runLatex2odt( File texFile)
-            throws BuildExecutionException
-    {
+    private void runLatex2odt(File texFile)
+            throws BuildExecutionException {
+
 	String command = this.settings.getTex4htCommand();
-        log.debug( "Running " + command + 
-		   " on file " + texFile.getName() + ". ");
+        log.debug("Running " + command + 
+		  " on file " + texFile.getName() + ". ");
 
         String[] args = new String[] {
 	    texFile.getName(),
@@ -499,17 +494,7 @@ public class LatexProcessor {
 			      args);
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
-	if (logFile.exists()) {
-	    boolean errorOccurred = this.fileUtils
-		.matchInFile(logFile, this.settings.getPatternErrLatex());
-	    if (errorOccurred) {
-		log.warn("LaTeX failed when running on " + texFile + 
-			 ". For details see " + logFile.getName() + ". ");
-	    }
-	} else {
-	    this.log.error("LaTeX failed: no log file found. ");
-	}
+	logErrs(texFile, command);
 
 	// Maybe missing: warnings and bad boxes; 
 	// should be displayed configurable. 
@@ -628,11 +613,10 @@ public class LatexProcessor {
 	log.debug("Running " + this.settings.getMakeIndexCommand() + 
 		  " on file " + idxFile.getName() + ". ");
 
-	File workingDir = idxFile.getParentFile();
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
 				       idxFile);
 	// may throw BuildExecutionException 
-	this.executor.execute(workingDir, 
+	this.executor.execute(idxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
 			      this.settings.getMakeIndexCommand(), 
 			      args);
@@ -683,12 +667,9 @@ public class LatexProcessor {
 	log.debug("Running " + this.settings.getBibtexCommand() + 
 		  " on file " + auxFile.getName() + ". ");
 
-        File workingDir = texFile.getParentFile();
-        String[] args = new String[] {
-	    auxFile.getName()
-	};
+	String[] args = new String[] {auxFile.getName()};
 	// may throw BuildExecutionException 
-        this.executor.execute(workingDir, 
+        this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      this.settings.getBibtexCommand(), 
 			      args);
@@ -727,36 +708,51 @@ public class LatexProcessor {
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
      */
-    private void runLatex(File texFile)
-	throws BuildExecutionException
-    {
-        log.debug("Running " + settings.getTexCommand() + 
+    private void runLatex2pdf(File texFile)
+	throws BuildExecutionException {
+
+	String command = this.settings.getTexCommand();
+        log.debug("Running " + command + 
 		  " on file " + texFile.getName() + ". ");
 
-        File workingDir = texFile.getParentFile();
-	String[] args = buildArguments(this.settings.getTexCommandArgs(),
+	String[] args = buildArguments(this.settings.getTexCommandArgs(), 
 				       texFile);
-
 	// may throw BuildExecutionException 
-        this.executor.execute(workingDir, 
+        this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
-			      this.settings.getTexCommand(), 
+			      command, 
 			      args);
 
 	// logging errors 
-	File logFile = this.fileUtils.replaceSuffix( texFile, "log" );
+	logErrs(texFile, command);
+    }
+
+    /**
+     * Logs errors detected in the according log file: 
+     * The log file is by replacing the ending of <code>texFile</code> 
+     * by <code>log</code>. 
+     * If the log file exists, a <em>warning</em> is logged 
+     * if the error pattern given by {@link Settings#getPatternErrLatex()} 
+     * occurs in the log file. 
+     * If the log file does not exist, an <em>error</em> is logged. 
+     * In both cases, the message logged refers to the <code>command</code> 
+     * which failed. 
+     */
+    private void logErrs(File texFile, String command) 
+	throws BuildExecutionException {
+
+	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
 	if (logFile.exists()) {
 	    // matchInFile may throw BuildExecutionException
 	    boolean errorOccurred = this.fileUtils
 		.matchInFile(logFile, this.settings.getPatternErrLatex());
 	    if (errorOccurred) {
-		log.warn("LaTeX conversion to pdf failed when running on " 
-			 + texFile + 
-			 ". For details see " + logFile.getName() + ". ");
+		log.warn("Running " + command + " on " + texFile.getName() + 
+			 "failed. For details see " + logFile.getName() + ". ");
 	    }
 	} else {
-	    this.log.error("LaTeX conversion to pdf failed: " + 
-			   "no log file found. ");
+	    this.log.error("Running " + command + " on " + texFile.getName() + 
+			   " failed: no log file found. ");
 	}
     }
 }
