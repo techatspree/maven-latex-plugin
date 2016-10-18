@@ -113,6 +113,15 @@ public class LatexProcessor {
 		runFig2Dev(figFile);
 	    }
 
+	    // process gnuplot files 
+	    Collection<File> pltFiles = this.fileUtils
+		.getGnuplotDocuments(tempDir);
+	    for (File pltFile : pltFiles) {
+		this.log.info("Processing gnuplot-file " + pltFile + ". ");
+		// may throw BuildExecutionException 
+		runGnuplot2pdf(pltFile);
+	    }
+
 	    // process latex main files 
 	    // may throw BuildExecutionException 
 	    Collection<File> latexMainFiles = this.fileUtils
@@ -241,10 +250,10 @@ public class LatexProcessor {
      * @see #processLatex2pdf(File)
      * @see #runLatex2html(File)
      */
-    public void processLatex2html( File texFile )
-            throws BuildExecutionException 
-    {
-        processLatex2pdf(texFile);
+    public void processLatex2html(File texFile)
+	throws BuildExecutionException {
+	log.info("Processing LaTeX file " + texFile + ". ");
+	//processLatex2pdf(texFile);
         runLatex2html   (texFile);
     }
 
@@ -259,9 +268,9 @@ public class LatexProcessor {
      * @see #processLatex2pdf(File)
      * @see #runLatex2odt(File)
      */
-    public void processLatex2odt(File texFile) throws BuildExecutionException
-    {
-        processLatex2pdf(texFile);
+    public void processLatex2odt(File texFile) throws BuildExecutionException {
+	log.info("Processing LaTeX file " + texFile + ". ");
+        //processLatex2pdf(texFile);
         runLatex2odt    (texFile);
     }
 
@@ -276,9 +285,9 @@ public class LatexProcessor {
      * @see #processLatex2pdf(File)
      * @see #runOdt2doc(File)
      */
-    public void processLatex2docx(File texFile) throws BuildExecutionException
-    {
-        processLatex2pdf(texFile);
+    public void processLatex2docx(File texFile) throws BuildExecutionException {
+	log.info("Processing LaTeX file " + texFile + ". ");
+        //processLatex2pdf(texFile);
         runLatex2odt    (texFile);
         runOdt2doc      (texFile);
     }
@@ -301,18 +310,17 @@ public class LatexProcessor {
     }
 
     /**
-     * Runs direct conversion of <code>texFile</code> to txt format 
-     * via pdf. 
+     * Runs direct conversion of <code>texFile</code> to txt format via pdf. 
      *
      * @param texFile
      *    the tex file to be processed. 
      * @see #processLatex2pdf(File)
      * @see #runPdf2txt(File)
      */
-   public void processLatex2txt(File texFile) throws BuildExecutionException {
+    public void processLatex2txt(File texFile) throws BuildExecutionException {
         processLatex2pdf(texFile);
 	runPdf2txt      (texFile);
-   }
+    }
 
     private boolean update(File source, File target) {
 	if (!target.exists()) {
@@ -322,6 +330,61 @@ public class LatexProcessor {
 
 	return source.lastModified() > target.lastModified();
     }
+
+    /**
+     * Converts a gnuplot file into a tex-file with ending ptx 
+     * including a pdf-file. 
+     *
+     * @param pltFile 
+     *    the plt-file (gnuplot format) to be converted to pdf. 
+     * @throws BuildExecutionException
+     *    if running the ptx/pdf-conversion built in in gnuplot fails. 
+     */
+    public void runGnuplot2pdf(File pltFile) throws BuildExecutionException {
+	String command = "gnuplot";
+	File pdfFile = this.fileUtils.replaceSuffix(pltFile, "pdf");
+	File ptxFile = this.fileUtils.replaceSuffix(pltFile, "ptx");
+
+	// gnuplot -e 
+	// "set terminal cairolatex pdf;
+	//set output 'gnuplot.ptx';
+	//load 'gnuplot.plt'"
+	String[] args = new String[] {
+	    "-e",   // run a command string "..." with commands sparated by ';' 
+	    // 
+	    "\"set",                            // set terminal cairolatex pdf;
+	    "terminal",
+	    "cairolatex",
+	    "pdf;set",                          // set output 'xxx.ptx';
+	    "output",
+	    "'" + ptxFile.getName() + "';load", // load 'xxx.plt'"
+	    "'" + pltFile.getName() + "'\""
+	};
+	// FIXME: include options. 
+// set terminal cairolatex
+// {eps | pdf}
+// {standalone | input}
+// {blacktext | colortext | colourtext}
+// {header <header> | noheader}
+// {mono|color}
+// {{no}transparent} {{no}crop} {background <rgbcolor>}
+// {font <font>} {fontscale <scale>}
+// {linewidth <lw>} {rounded|butt|square} {dashlength <dl>}
+// {size <XX>{unit},<YY>{unit}}
+
+
+//	if (update(pltFile, ptxFile)) {
+	    log.debug("Running " + command + 
+		      " -e...  on file " + pltFile.getName() + ". ");
+	    // may throw BuildExecutionException 
+	    this.executor.execute(pltFile.getParentFile(), //workingDir 
+				  this.settings.getTexPath(), //**** 
+				  command, 
+				  args);
+//	}
+	// no check: just warning that no output has been created. 
+    }
+
 
     /**
      * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
@@ -339,8 +402,6 @@ public class LatexProcessor {
     // used in AbstractLatexMojo.execute() only 
     public void runFig2Dev(File figFile) throws BuildExecutionException {
 	String command = this.settings.getFig2devCommand();
-	log.debug( "Running " + command + 
-		   " on file " + figFile.getName() + ". ");
 	File workingDir = figFile.getParentFile();
 	String[] args;
 
@@ -357,6 +418,8 @@ public class LatexProcessor {
 		figFile.getName(), // source 
 		pdf // target 
 	    };
+	    log.debug("Running " + command + 
+		      " -Lpdftex  ... on file " + figFile.getName() + ". ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -373,6 +436,8 @@ public class LatexProcessor {
 		figFile.getName(), // source 
 		pdf_t // target 
 	    };
+	    log.debug("Running " + command + 
+		      " -Lpdftex_t... on file " + figFile.getName() + ". ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -387,8 +452,10 @@ public class LatexProcessor {
      * given by {@link Settings#getLatex2rtfCommand()} 
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatex2rtfArguments(File)}. 
+     * with arguments given by {@link #buildLatex2rtfArguments(String, File)}. 
      *
+     * @param texFile
+     *    the latex file to be processed. 
      * @throws BuildExecutionException
      *    if running the latex2rtf command 
      *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
@@ -408,6 +475,11 @@ public class LatexProcessor {
 			      args);
 
 	// FIXME: no check: just warning that no output has been created. 
+	// Warnings and error messages are output to stderr 
+	// and by default listed in the console window. 
+	// aThey can be redirected to a file “latex2rtf.log” by
+	// appending 2>latex2rtf.log to the command line.
+
     }
 
     // FIXME: take arguments for latex2rtf into account 
@@ -420,8 +492,10 @@ public class LatexProcessor {
      * Runs the tex4ht command given by {@link Settings#getTex4htCommand()} 
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildHtlatexArguments(File)}. 
+     * with arguments given by {@link #buildHtlatexArguments(String, File)}. 
      *
+     * @param texFile
+     *    the latex file to be processed. 
      * @throws BuildExecutionException
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
@@ -463,13 +537,15 @@ public class LatexProcessor {
      * executing {@link Settings#getTex4htCommand()} 
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(File)}. 
+     * with arguments given by {@link #buildLatexArguments(String, File)}. 
      * <p>
      * Logs a warning if the latex run failed 
      * but not if bad boxes ocurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
      *
+     * @param texFile
+     *    the latex file to be processed. 
      * @throws BuildExecutionException
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
@@ -512,15 +588,17 @@ public class LatexProcessor {
      * executing {@link Settings#getOdt2docCommand()} 
      * on an odt-file created from <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(File)}. 
+     * with arguments given by {@link #buildLatexArguments(String, File)}. 
      *
+     * @param texFile
+     *    the latex file to be processed. 
      * @throws BuildExecutionException
      *    if running the odt2doc command 
      *    returned by {@link Settings#getOdt2docCommand()} failed. 
      */
     private void runOdt2doc( File texFile)
-            throws BuildExecutionException
-    {
+            throws BuildExecutionException {
+
 	File odtFile = this.fileUtils.replaceSuffix(texFile, "odt");
 	String command = this.settings.getOdt2docCommand();
 	log.debug( "Running " + command + 
@@ -536,13 +614,25 @@ public class LatexProcessor {
 			      args);
     }
 
-    private void runPdf2txt( File texFile)
-            throws BuildExecutionException
-    {
+    /**
+     * Runs conversion from pdf to txt-file  
+     * executing {@link Settings#getPdf2txtCommand()} 
+     * on a pdf-file created from <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     *
+     * @param texFile
+     *    the latex file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the pdf2txt command 
+     *    returned by {@link Settings#getPdf2txtCommand()} failed. 
+     */
+    private void runPdf2txt(File texFile) throws BuildExecutionException {
+
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, "pdf");
 	String command = this.settings.getPdf2txtCommand();
-	log.debug( "Running " + command + 
-		   " on file " + pdfFile.getName() + ". ");
+	log.debug("Running " + command + 
+		  " on file " + pdfFile.getName() + ". ");
 
 	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
 				       pdfFile);
@@ -551,12 +641,25 @@ public class LatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args);
+	// FIXME: what about error logging? 
+	// Seems not to create a log-file. 
     }
 
     /**
      * Returns an array of strings, 
      * each entry with a single option given by <code>options</code> 
      * except the last one which is the name of <code>file</code>. 
+     *
+     * @param options
+     *    the options string. The individual options 
+     *    are expected to be separated by a single blank. 
+     * @param file
+     *    
+     * @return
+     *    An array of strings: 
+     *    The 0th entry is the file name, 
+     *    The others, if <code>options</code> is not empty, 
+     *    are the options in <code>options</code>. 
      */
     private String[] buildArguments(String options, File file) {
 	if (options.isEmpty()) {
@@ -627,14 +730,16 @@ public class LatexProcessor {
 	    boolean errOccurred = this.fileUtils.matchInFile
 		(logFile, this.settings.getPatternErrMakeindex());
 	    if (errOccurred) {
-		log.warn("MakeIndex failed when running on " + idxFile + 
-			 ". For details see " + logFile.getName() + ". ");
+		log.warn("Running MakeIndex on " + idxFile + 
+			 " failed. For details see " + 
+			 logFile.getName() + ". ");
 	    }
 	    boolean warnOccurred = this.fileUtils.matchInFile
 		(logFile, this.settings.getPatternWarnMakeindex());
 	    if (warnOccurred) {
-		log.warn("MakeIndex emitted warnings running on " + idxFile + 
-			 ". For details see " + logFile.getName() + ". ");
+		log.warn("Running MakeIndex on " + idxFile + 
+			 " emitted warnings. For details see " + 
+			 logFile.getName() + ". ");
 	    }
 	} else {
 	    this.log.error("Makeindex failed: no log file found. ");
@@ -681,18 +786,20 @@ public class LatexProcessor {
 	    boolean errOccurred = this.fileUtils
 		.matchInFile(logFile, this.settings.getPatternErrBibtex());
 	    if (errOccurred) {
-		log.warn("BibTeX failed when running on " + texFile + ". ");
+		log.warn("Running BibTeX on " + texFile + 
+			 " failed: For details see " + 
+			 logFile.getName() + ". ");
 	    }
 	    boolean warnOccurred = this.fileUtils
 		.matchInFile(logFile, this.settings.getPatternWarnBibtex());
 	    if (warnOccurred) {
-		log.warn("BibTeX warning when running on " + texFile + ". ");
-	    }
-	    if (errOccurred || warnOccurred) {
-		log.warn("For details see " + logFile.getName() + ". ");
+		log.warn("Running BibTeX on " + texFile + 
+			 " emitted warnings: For details see " + 
+			 logFile.getName() + ". ");
 	    }
 	} else {
-	    this.log.error("BibTeX failed: no log file found. ");
+	    this.log.error("Running BibTeX on " + texFile + 
+			   " failed: no log file found. ");
 	}
 	return true;
     }
@@ -707,6 +814,12 @@ public class LatexProcessor {
      * but not if bad boxes occurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
+     *
+     * @param texFile
+     *    the latex file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the latex command 
+     *    returned by {@link Settings#getLatexCommand()} failed. 
      */
     private void runLatex2pdf(File texFile)
 	throws BuildExecutionException {
@@ -748,7 +861,8 @@ public class LatexProcessor {
 		.matchInFile(logFile, this.settings.getPatternErrLatex());
 	    if (errorOccurred) {
 		log.warn("Running " + command + " on " + texFile.getName() + 
-			 "failed. For details see " + logFile.getName() + ". ");
+			 " failed. For details see " + 
+			 logFile.getName() + ". ");
 	    }
 	} else {
 	    this.log.error("Running " + command + " on " + texFile.getName() + 
