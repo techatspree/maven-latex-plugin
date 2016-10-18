@@ -40,6 +40,7 @@ interface TexFileUtils
     File replaceSuffix(File file, String suffix);
 
     Collection<File> getXFigDocuments(File directory);
+    Collection<File> getGnuplotDocuments(File directory);
 
     /*
      * @param tempDir

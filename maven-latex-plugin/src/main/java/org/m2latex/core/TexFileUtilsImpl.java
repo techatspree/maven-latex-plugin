@@ -236,10 +236,22 @@ class TexFileUtilsImpl implements TexFileUtils {
      * 
      * @see TexFileUtils#getFileNameWithoutSuffix(File)
      */
-    public Collection<File> getXFigDocuments( File directory ) {
+   public Collection<File> getXFigDocuments( File directory ) {
 	return FileUtils
 	    .listFiles(directory,
 		       FileFilterUtils.suffixFileFilter( ".fig" ),
+		       TrueFileFilter.INSTANCE );
+    }
+
+    /**
+     * Return a collection of gnuplot-files in the given directory. 
+     * 
+     * @see TexFileUtils#getFileNameWithoutSuffix(File)
+     */
+    public Collection<File> getGnuplotDocuments(File directory) {
+	return FileUtils
+	    .listFiles(directory,
+		       FileFilterUtils.suffixFileFilter( ".plt" ),
 		       TrueFileFilter.INSTANCE );
     }
 
