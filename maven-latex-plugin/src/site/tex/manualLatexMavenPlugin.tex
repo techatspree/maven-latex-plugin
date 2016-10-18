@@ -1,12 +1,20 @@
 
 \documentclass[12pt]{article}
 
+\makeatletter
+\@ifpackageloaded{tex4ht}{%
+\usepackage[dvips]{xcolor}
+\usepackage[dvips]{graphicx}
+\usepackage[tex4ht]{hyperref}
+}{%
+\usepackage[pdftex]{xcolor}
+\usepackage[pdftex]{graphicx}
+\usepackage{hyperref}
+}
+
 \usepackage{longtable}
 \usepackage{listings}
-\usepackage{xcolor}
-\usepackage{graphics}
 \usepackage{makeidx}
-%\usepackage{hyperref}
 
 \title{Manual for the latex-maven-plugin and for an according ant task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
@@ -105,6 +113,66 @@ except {\tt fig2dev} itself.
 \caption{\label{fig:fig2dev}Conversion of a fig-file into pdf and pdf\_t files}
 \end{figure}
 
+\subsection{Conversion of gnuplot-files}\label{subsec:gnuplot2pdf}
+
+Plots drawn with {\tt gnuplot}, or, to be more precise, 
+figures stored in .plt-files created by {\tt gnuplot} are supported. 
+To export a file {\tt xxx.plt} into several external formats, 
+uses {\tt gnuplot} itself. 
+Among others, {\tt gnuplot} supports export to mixed pdf and latex: 
+graphics in pdf and text in latex which yields the fonts typical for latex. 
+Accordingly, the export requires two commands and yields two files: 
+The command 
+%
+\begin{verbatim}
+gnuplot -e  "set terminal cairolatex pdf;
+             set output 'gnuplot.ptx';
+             load 'gnuplot.plt'"
+\end{verbatim}
+%
+exports {\tt xxx.plt} to {\tt xxx.ptx} and to {\tt xxx.pdf}, 
+the former containing latex and including the latter. 
+Note that this is appropriate for latex creating pdf-files, 
+not postscript or dvi. 
+
+FIXME: 
+Here further options are missing: 
+%   // set terminal pdf {monochrome|color|colour}
+%    //                      {{no}enhanced}
+%    //                      {fname "<font>"} {fsize <fontsize>}
+%    //                      {font "<fontname>{,<fontsize>}"}
+%    //                      {linewidth <lw>} {rounded|butt}
+%    //                      {solid|dashed} {dl <dashlength>}}
+%    //                      {size <XX>{unit},<YY>{unit}}
+
+Figure \ref{fig:plt2pdf} shows the transformation of the plots 
+and Figure \ref{fig:plt2pdf} shows an example of a gnuplot file 
+embedded in this latex file. 
+%Note that the {\tt fig2dev}-command is configurable 
+%via the parameter {\tt fig2devCommand}, 
+%but there will be hardly any command with the same command line interface 
+%performing exactly the transformations given in Figure \ref{fig:fig2dev}, 
+%except {\tt fig2dev} itself. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{2plt2pdf.pdf_t}
+\end{center}
+\caption{\label{fig:plt2pdf}Conversion of a gnuplot-file into a pdf-file}
+\end{figure}
+
+FIXME: why does gnuplot not work from within java, whereas standalone it does 
+
+\begin{figure}[htb]
+\begin{center}
+%\input{3gnuplot.ptx}
+\end{center}
+\caption{\label{fig:gnuplot}
+Converted sample gnuplot-file into ptx and pdf files }
+\end{figure}
+
+
+
 \subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
 
 The next step is to create a pdf-file from the tex-files. 
@@ -172,7 +240,7 @@ in the second run of {\tt latex2pdf}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{2tex2pdf.pdf_t}
+\input{4tex2pdf.pdf_t}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
 \end{figure}
@@ -201,7 +269,7 @@ whether {\tt bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{3aux2bbl.pdf_t}
+\input{5aux2bbl.pdf_t}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
@@ -209,6 +277,7 @@ Conversion of an aux-file into a bbl-file using a bibliography}
 
 Vital information on {\tt bibtex} can be found in \cite{BibPat} 
 and in \cite{BibMar}. 
+Also Chapter 10 in \cite{Gra} gives vital information on {\tt bibtex}. 
 
 
 \subsection{Indices}\label{subsec:makeindex}
@@ -228,7 +297,7 @@ whether {\tt makeindex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{4idx2ind.pdf_t}
+\input{6idx2ind.pdf_t}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
@@ -278,6 +347,74 @@ between two runs of {\tt latex2pdf},
 this would require a change in this software. 
 
 
+\subsection{Creating hypertext}
+
+To create html and xhtml from latex files, 
+a {\tt htlatex}-command is used. 
+This may be {\tt htlatex}, the default based on {\tt latex} 
+and {\tt htxelatex} based on {\tt xelatex}. 
+
+Figure \ref{fig:tex2xml} shows the steps {\tt htlatex} performs: 
+From the input latex file {\tt xxx.tex} 
+another latex file {\tt yyy.tex} is created 
+which arises from {\tt xxx.tex} by adding 
+{\tt \textbackslash usepackage[...]\{tex4ht\}}. 
+Then {\tt htlatex} runs {\tt latex} on {\tt yyy.tex} 
+which results in {\tt yyy.dvi}. 
+Note that this is in contrast to {\tt pdflatex} 
+which would create some {\tt yyy.pdf}. 
+
+Then comes the converter {\tt tex4ht} into the game 
+which creates several html-files among those also {\tt xxx.html}. 
+The other files, {\tt yyy.idv} and {\tt yyy.lg}, 
+are further processed by {\tt t4ht} creating picture files 
+and the stylesheet {\tt xxx.css}. 
+
+The output of TeX is a standard dvi file 
+interleaved with special instructions for the postprocessor tex4ht to use. 
+The special instructions come from implicit and explicit requests 
+made in the source file through commands of TeX4ht.
+
+The utility {\tt tex4ht} translates the dvi code into standard text, 
+while obeying the requests it gets from the special instructions. 
+The special instructions may request the creation of files, 
+insertion of html code, filtering of pictures, and so forth.
+
+In the extreme case that the source code contains no commands of TeX4ht, 
+{\tt tex4ht} gets pure dvi code and it outputs (almost) plain text 
+with no hypertext elements in it.
+
+The special ({\tt\textbackslash special}) instructions seeded in the dvi code 
+are not understood by dvi processors other than those of TeX4ht.
+
+
+{\tt xxx.idv}
+This is a dvi file extracted from {\tt xxx.dvi}, 
+and it contains the pictures needed in the html files.
+
+{\tt xxx.lg}
+This is a log file listing the pictures of {\tt xxx.idv}, 
+the png files that should be created, CSS information, 
+and user directives introduced 
+through the ‘{\tt\textbackslash Needs\{...\}}’ command.
+
+
+{\tt t4ht|
+This is an interpreter 
+for executing the requests made in the {\tt xxx.lg} script.
+
+\begin{figure}[htb]
+\begin{center}
+\input{7tex2xml.pdf_t}
+\end{center}
+\caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
+\end{figure}
+
+\subsection{Creating odt-files}
+
+\subsection{Creating MX word files}
+
+\subsection{Creating plain text files}
 
 
 \subsection{Miscellaneous}
