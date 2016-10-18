@@ -168,9 +168,12 @@ public class Settings
 
 
     /**
-     * The LaTeX command. The default value is <code>pdflatex</code>. 
-     * FIXME: The goal shall not be latex but pdf. 
-     * Thus maybe it is a bad idea to make the executable configurable. 
+     * The LaTeX command. 
+     * Possible values are e.g. <code>pdflatex</code>, <code>lualatex</code> 
+     * and <code>xelatex</code>. 
+     * The default value (for which this software is also tested) 
+     * is <code>pdflatex</code>. 
+     * FIXME: unintuitive name. 
      *
      * @parameter
      */
@@ -307,7 +310,11 @@ public class Settings
 
 
     /**
-     * The tex4ht command. The default value is <code>htlatex</code>. 
+     * The tex4ht command. 
+     * Possible values are e.g. 
+     * <code>htlatex</code> and <code>htxelatex</code>. 
+     * The default value (for which this software is also tested) 
+     * is <code>htlatex</code>. 
      *
      * @parameter
      */
