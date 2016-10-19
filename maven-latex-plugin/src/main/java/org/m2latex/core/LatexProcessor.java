@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 import java.util.Collection;
+import java.util.Arrays;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
@@ -31,11 +32,32 @@ import java.util.Collection;
  */
 public class LatexProcessor {
 
-    static final String PATTERN_NEED_BIBTEX_RUN = "bibdata";
+    // For pattern matching, it is vital to avoid false positive matches. 
+    // e.g. Overfull \box with text '! ' is not an error 
+    // and Overfull \box with text 'Warning' is no warning. 
 
-    static final String PATTERN_OUFULL_HVBOX = "(Ov|Und)erfull \\\\[hv]box";
+    static final String PATTERN_NEED_BIBTEX_RUN = "^\\bibdata";
 
-    static final String PATTERN_WARNING      = "Warning";
+    // Note that two \\ represent a single \ in the string. 
+    // Thus \\\\ represents '\\' in the pattern, 
+    // which in turn represents a single \. 
+    static final String PATTERN_OUFULL_HVBOX = 
+	"^(Ov|Und)erfull \\\\[hv]box \\(";
+
+    // Note that there are warnings not indicated by a pattern containing 
+    // '[Ww]arning' and that there are warnings declared as no warning. 
+    // a few of them I did take into account, some not: 
+    // Too much space after a point. (No warning).
+    //Bad line break. (No warning).
+    //Bad page break. (No warning).
+    static final String PATTERN_WARNING      = 
+	"^LaTeX Warning: |" +
+	"^LaTeX Font Warning: |" + 
+	"^(Package|Class) .+ Warning: |" + 
+	"^Missing character: There is no .* in font .*!$|" +
+	"^pdfTeX warning (ext4): destination with the same identifier|" +
+	"^* Font .+ does not contain script |" +
+	"^A space is missing. (No warning).";
 
     private final Settings settings;
 
@@ -47,7 +69,7 @@ public class LatexProcessor {
 
     private final ParameterAdapter paramAdapt;
 
-    // for tests only
+    // also for tests 
     LatexProcessor(Settings settings, 
 		   CommandExecutor executor, 
 		   LogWrapper log, 
@@ -63,15 +85,19 @@ public class LatexProcessor {
     /**
      * Creates a LatexProcessor with parameters given by <code>settings</code> 
      * which logs onto <code>log</code> and used by <code>paramAdapt</code>. 
+     *
+     * @param settings
+     *    the settings controlling latex processing 
+     * @param log
+     *    the logger to write on events while processing 
+     * @param paramAdapt
+     *    the parameter adapter, refers to maven-plugin or ant-task. 
      */
-    public LatexProcessor( Settings settings, 
-			   LogWrapper log, 
-			   ParameterAdapter paramAdapt) {
-        this.settings = settings;
-        this.log = log;
-        this.executor = new CommandExecutorImpl(this.log);
-        this.fileUtils = new TexFileUtilsImpl( this.log, this.settings );
-	this.paramAdapt = paramAdapt;
+    public LatexProcessor(Settings settings, 
+			  LogWrapper log, 
+			  ParameterAdapter paramAdapt) {
+	this(settings, new CommandExecutorImpl(log), log, 
+	     new TexFileUtilsImpl(log, settings), paramAdapt);
     }
 
     /**
@@ -110,7 +136,7 @@ public class LatexProcessor {
 	    for (File figFile : figFiles) {
 		this.log.info("Processing fig-file " + figFile + ". ");
 		// may throw BuildExecutionException 
-		runFig2Dev(figFile);
+		runFig2Dev(figFile, LatexDev.pdf);
 	    }
 
 	    // process gnuplot files 
@@ -119,7 +145,7 @@ public class LatexProcessor {
 	    for (File pltFile : pltFiles) {
 		this.log.info("Processing gnuplot-file " + pltFile + ". ");
 		// may throw BuildExecutionException 
-		runGnuplot2pdf(pltFile);
+		runGnuplot2Dev(pltFile, LatexDev.pdf);
 	    }
 
 	    // process latex main files 
@@ -153,7 +179,58 @@ public class LatexProcessor {
         }
     }
 
+    // FIXME: use the -recorder option to resolve dependencies. 
+    // With that option, a file xxx.fls is generated with form 
+    // PWD /home/ernst/OpenSource/maven-latex-plugin/maven-latex-plugin.git/trunk/maven-latex-plugin/src/site/tex
+    // INPUT /usr/local/texlive/2014/texmf.cnf
+    // INPUT /usr/local/texlive/2014/texmf-dist/web2c/texmf.cnf
+    // INPUT /usr/local/texlive/2014/texmf-var/web2c/pdftex/pdflatex.fmt
+    // INPUT manualLatexMavenPlugin.tex
+    // OUTPUT manualLatexMavenPlugin.log
+    // INPUT /usr/local/texlive/2014/texmf-dist/tex/latex/base/article.cls
+    // INPUT /usr/local/texlive/2014/texmf-dist/tex/latex/base/article.cls
+    // INPUT /usr/local/texlive/2014/texmf-dist/tex/latex/base/size12.clo
+    //
+    // The first line starts has the form 'PWD <working directory>' 
+    // The other lines have the form '(INPUT|OUTPUT) <file>' 
+    // We distinguishe those in the installation, 
+    // here '/usr/local/texlive/2014/...' which do not change ever 
+    // and others. 
+    // In this example, the others are (unified and sorted): 
 
+I// NPUT manualLatexMavenPlugin.tex
+
+// OUTPUT manualLatexMavenPlugin.log
+// INPUT  manualLatexMavenPlugin.aux
+// OUTPUT manualLatexMavenPlugin.aux
+// INPUT  manualLatexMavenPlugin.out
+// OUTPUT manualLatexMavenPlugin.out
+// INPUT  manualLatexMavenPlugin.toc
+// OUTPUT manualLatexMavenPlugin.toc
+// INPUT  manualLatexMavenPlugin.lof
+// OUTPUT manualLatexMavenPlugin.lof
+// INPUT  manualLatexMavenPlugin.lot
+// OUTPUT manualLatexMavenPlugin.lot
+
+// OUTPUT manualLatexMavenPlugin.idx
+// INPUT  manualLatexMavenPlugin.ind
+
+// OUTPUT manualLatexMavenPlugin.pdf
+
+// INPUT 1fig2dev.ptx
+// INPUT 1fig2dev.pdf
+// INPUT 2plt2pdf.ptx
+// INPUT 2plt2pdf.pdf
+// INPUT 4tex2pdf.ptx
+// INPUT 5aux2bbl.ptx
+// INPUT 5aux2bbl.pdf
+// INPUT 6idx2ind.ptx
+// INPUT 6idx2ind.pdf
+// INPUT 7tex2xml.ptx
+// INPUT 7tex2xml.pdf
+// what is missing is all to do with bibliography, i.e. the bib-file. 
+
+    // FIXME: determine whether to use latexmk makes sense 
 
     /**
      * Runs LaTeX on <code>texFile</code> at least once, 
@@ -340,7 +417,8 @@ public class LatexProcessor {
      * @throws BuildExecutionException
      *    if running the ptx/pdf-conversion built in in gnuplot fails. 
      */
-    public void runGnuplot2pdf(File pltFile) throws BuildExecutionException {
+    public void runGnuplot2Dev(File pltFile, LatexDev dev) 
+	throws BuildExecutionException {
 	String command = "gnuplot";
 	File pdfFile = this.fileUtils.replaceSuffix(pltFile, "pdf");
 	File ptxFile = this.fileUtils.replaceSuffix(pltFile, "ptx");
@@ -355,7 +433,7 @@ public class LatexProcessor {
 	    "\"set",                            // set terminal cairolatex pdf;
 	    "terminal",
 	    "cairolatex",
-	    "pdf;set",                          // set output 'xxx.ptx';
+	    dev.getGnuplotInTexLanguage() + ";set",    // set output 'xxx.ptx';
 	    "output",
 	    "'" + ptxFile.getName() + "';load", // load 'xxx.plt'"
 	    "'" + pltFile.getName() + "'\""
@@ -400,23 +478,25 @@ public class LatexProcessor {
      * @see AbstractLatexMojo#execute()
      */
     // used in AbstractLatexMojo.execute() only 
-    public void runFig2Dev(File figFile) throws BuildExecutionException {
+    public void runFig2Dev(File figFile, LatexDev dev) 
+	throws BuildExecutionException {
+
 	String command = this.settings.getFig2devCommand();
 	File workingDir = figFile.getParentFile();
 	String[] args;
 
-	File pdfFile   = this.fileUtils.replaceSuffix(figFile, "pdf");
-	File pdf_tFile = this.fileUtils.replaceSuffix(figFile, "pdf_t");
+	//File pdfFile   = this.fileUtils.replaceSuffix(figFile, "pdf");
+	File pdf_tFile = this.fileUtils.replaceSuffix(figFile, "ptx");
 
-	String pdf   = pdfFile  .toString();
+	//String pdf   = pdfFile  .toString();
 	String pdf_t = pdf_tFile.toString();
 
-	if (update(figFile, pdfFile)) {
+	//if (update(figFile, pdfFile)) {
 	    args = new String[] {
 		"-L", // language 
-		"pdftex",
+		dev.getXFigInTexLanguage(),
 		figFile.getName(), // source 
-		pdf // target 
+		dev.getXFigInTexFile(this.fileUtils, figFile) // target 
 	    };
 	    log.debug("Running " + command + 
 		      " -Lpdftex  ... on file " + figFile.getName() + ". ");
@@ -425,14 +505,14 @@ public class LatexProcessor {
 				  this.settings.getTexPath(), //**** 
 				  command, 
 				  args);
-	}
+	    //}
 
-	if (update(figFile, pdf_tFile)) {
+	    //if (update(figFile, pdf_tFile)) {
 	    args = new String[] {
 		"-L",// language 
-		"pdftex_t",
-		"-p",// portrait (-l for landscape), next argument ignored 
-		pdf,
+		dev.getXFigTexLanguage(),
+		"-p",// portrait (-l for landscape), next argument not ignored 
+		dev.getXFigInTexFile(this.fileUtils, figFile),
 		figFile.getName(), // source 
 		pdf_t // target 
 	    };
@@ -443,7 +523,7 @@ public class LatexProcessor {
 				  this.settings.getTexPath(), //**** 
 				  command, 
 				  args);
-	}
+	    //}
 	// no check: just warning that no output has been created. 
     }
 
@@ -661,13 +741,12 @@ public class LatexProcessor {
      *    The others, if <code>options</code> is not empty, 
      *    are the options in <code>options</code>. 
      */
-    private String[] buildArguments(String options, File file) {
+    static String[] buildArguments(String options, File file) {
 	if (options.isEmpty()) {
 	    return new String[] {file.getName()};
 	}
         String[] optionsArr = options.split(" ");
-        String[] args = new String[optionsArr.length + 1];
-        System.arraycopy(optionsArr, 0, args, 0, optionsArr.length );
+        String[] args = Arrays.copyOf(optionsArr, optionsArr.length + 1);
         args[optionsArr.length] = file.getName();
 	
 	return args;
