@@ -63,19 +63,12 @@ public class LatexProcessorTest
     private File lotFile = new File(System.getProperty("tmp.dir"), "test.lot");
 
 
-    private String[] latexArgsExpected = new String[] {
-	 "-interaction=nonstopmode", 
-	 "-src-specials", 
-	 //"-interaction=nonstopmode -src-specials", 
-	this.texFile.getName() 
-    };
-
     private String[] tex2htmlArgsExpected = new String[] {
         this.texFile.getName(),
         "html,2",
         "",
         "",
-        "-interaction=nonstopmode -src-specials"
+        settings.getTexCommandArgs()
     };
 
     @Test public void testProcessLatexSimple()
@@ -273,7 +266,9 @@ public class LatexProcessorTest
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTexCommand(),
-			 latexArgsExpected );
+			 LatexProcessor
+			 .buildArguments(settings.getTexCommandArgs(), 
+					 texFile));
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
 
