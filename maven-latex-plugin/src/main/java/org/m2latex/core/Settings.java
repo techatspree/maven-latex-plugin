@@ -185,24 +185,24 @@ public class Settings
      * The setter method {@link #setTexCommandArgs(String)} ensures, 
      * that exactly one blank separate the proper options. 
      * The default value is 
-     * <code>-interaction=nonstopmode -src-specials</code>. 
+     * <code>-interaction=nonstopmode -src-specials -recorder</code>. 
      *
      * @parameter
      */
-    private String texCommandArgs = "-interaction=nonstopmode -src-specials";
+    private String texCommandArgs = 
+	"-interaction=nonstopmode -src-specials -recorder";
 
     /**
      * The pattern in the <code>log</code> file 
      * indicating a failure when running {@link #texCommand}. 
      * The default value is 
-     * <code>! |Fatal error|LaTeX Error|Emergency stop</code>. 
+     * <code>^! </code>. 
      * If this is not sufficient, please extend 
      * and notify the developer of this plugin. 
      *
      * @parameter
      */
-    private String patternErrLatex = 
-	"! |Fatal error|LaTeX Error|Emergency stop";
+    private String patternErrLatex = "^! ";
 
     /**
      * Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -421,6 +421,13 @@ public class Settings
      * Nevertheless, the default value aims completeness 
      * while be restrictive enough not to trigger another latex run 
      * if not needed. 
+     * Note that the log file may contain text from the tex file, 
+     * e.g. if warning for an overfull hbox. 
+     * Thus the pattern must be restrictive enough 
+     * to avoid false rerun warning 
+     * e.g. caused by occurrence of the word 'rerun'. 
+     * The default value is quite complex. 
+     * <p>
      * To ensure termination, let {@link #maxNumReruns} 
      * specify the maximum number of latex runs. 
      * If the user finds an extension, (s)he is asked to contribute 
@@ -431,11 +438,33 @@ public class Settings
      * @parameter
      */
    private String patternNeedLatexReRun = 
-       "(Rerun (LaTeX|to get cross-references right)|" + 
-       "There were undefined references|" + 
-       "\\(rerunfilecheck\\)                Rerun to get outlines right|" +
-       "Package longtable Warning: Table widths have changed. Rerun LaTeX.|" +
-       "Package natbib Warning: Citation\\(s\\) may have changed)";
+       // general message 
+       "^LaTeX Warning: Label(s) may have changed. " +
+       + "Rerun to get cross-references right.$|" +
+       // default message in one line for packages 
+       "^Package \w+ Warning: .*Rerun .*$|" 
+       // works for 
+       // Package totcount Warning: Rerun to get correct total counts
+       // Package longtable Warning: Table widths have changed. Rerun LaTeX ...
+       // Package hyperref Warning: Rerun to get outlines right (old hyperref)
+       //
+       // default message in two lines for packages 
+       "^Package \w+ Warning: .*$"
+       + "^\(\w+\) .*Rerun .*$|" +
+       // works for 
+       // Package natbib Warning: Citation\\(s\\) may have changed.
+       // (natbib)                Rerun to get citations correct.
+       // Package Changebar Warning: Changebar info has changed.
+       // (Changebar)                Rerun to get the bars right
+       //
+       // messages specific to various packages 
+       "^LaTeX Warning: Etaremune labels have changed.$|" +
+       // 'Rerun to get them right.' is on the next line
+       //
+       // from package rerunfilecheck used by other packages like new hyperref 
+       // Package rerunfilecheck Warning: File `foo.out' has changed.
+       "^\\(rerunfilecheck\\)                Rerun to get outlines right$";
+       //  (rerunfilecheck)                or use package `xxx'.
 
     /**
      * The maximal allowed number of reruns of the latex process. 
