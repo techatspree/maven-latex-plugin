@@ -44,21 +44,6 @@ public class LatexProcessor {
     static final String PATTERN_OUFULL_HVBOX = 
 	"^(Ov|Und)erfull \\\\[hv]box \\(";
 
-    // Note that there are warnings not indicated by a pattern containing 
-    // '[Ww]arning' and that there are warnings declared as no warning. 
-    // a few of them I did take into account, some not: 
-    // Too much space after a point. (No warning).
-    //Bad line break. (No warning).
-    //Bad page break. (No warning).
-    static final String PATTERN_WARNING      = 
-	"^LaTeX Warning: |" +
-	"^LaTeX Font Warning: |" + 
-	"^(Package|Class) .+ Warning: |" + 
-	"^Missing character: There is no .* in font .*!$|" +
-	"^pdfTeX warning (ext4): destination with the same identifier|" +
-	"^* Font .+ does not contain script |" +
-	"^A space is missing. (No warning).";
-
     private final Settings settings;
 
     private final CommandExecutor executor;
@@ -198,7 +183,7 @@ public class LatexProcessor {
     // and others. 
     // In this example, the others are (unified and sorted): 
 
-I// NPUT manualLatexMavenPlugin.tex
+// INPUT manualLatexMavenPlugin.tex
 
 // OUTPUT manualLatexMavenPlugin.log
 // INPUT  manualLatexMavenPlugin.aux
@@ -304,14 +289,15 @@ I// NPUT manualLatexMavenPlugin.tex
 	if (needLatexReRun) {
 	    log.warn("Max rerun reached although LaTeX demands another run. ");
 	}
-
 	// emit warnings 
 	if (this.settings.getDebugBadBoxes() && 
 	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
 	    log.warn("LaTeX created bad boxes. ");
 	}
 	if (this.settings.getDebugWarnings() && 
-	    this.fileUtils.matchInFile(logFile, PATTERN_WARNING)) {
+	    this.fileUtils
+	    .matchInFile(logFile, 
+			 this.settings.getPatternNeedLatexReRun())) {
 	    log.warn("LaTeX emited warnings. ");
 	}
     }

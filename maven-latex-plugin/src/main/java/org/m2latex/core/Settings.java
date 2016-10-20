@@ -195,14 +195,37 @@ public class Settings
     /**
      * The pattern in the <code>log</code> file 
      * indicating a failure when running {@link #texCommand}. 
-     * The default value is 
-     * <code>^! </code>. 
+     * The default value is <code>(^! )</code> (note the space). 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     *
+     * @parameter
+     */
+    private String patternErrLatex = "(^! )";
+
+    /**
+     * The pattern in the <code>log</code> file 
+     * indicating a warning when running {@link #texCommand}. 
+     * The default value is too complicated to display here. 
      * If this is not sufficient, please extend 
      * and notify the developer of this plugin. 
      *
      * @parameter
      */
-    private String patternErrLatex = "^! ";
+    // Note that there are warnings not indicated by a pattern containing 
+    // '[Ww]arning' and that there are warnings declared as 'no warning'. 
+    // a few of them I did take into account, some not: 
+    // Too much space after a point. (No warning).
+    // Bad line break. (No warning).
+    // Bad page break. (No warning).
+    private String patternWarnLatex = 
+	"(^LaTeX Warning: |" +
+	"^LaTeX Font Warning: |" + 
+	"^(Package|Class) .+ Warning: |" + 
+	"^Missing character: There is no .* in font .*!$|" +
+	"^pdfTeX warning (ext4): destination with the same identifier|" +
+	"^* Font .+ does not contain script |" +
+	"^A space is missing. (No warning).)";
 
     /**
      * Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -439,18 +462,18 @@ public class Settings
      */
    private String patternNeedLatexReRun = 
        // general message 
-       "^LaTeX Warning: Label(s) may have changed. " +
+       "(^LaTeX Warning: Label(s) may have changed. " 
        + "Rerun to get cross-references right.$|" +
        // default message in one line for packages 
-       "^Package \w+ Warning: .*Rerun .*$|" 
+       "^Package \\w+ Warning: .*Rerun .*$|" +
        // works for 
        // Package totcount Warning: Rerun to get correct total counts
        // Package longtable Warning: Table widths have changed. Rerun LaTeX ...
        // Package hyperref Warning: Rerun to get outlines right (old hyperref)
-       //
+       // ... 
        // default message in two lines for packages 
-       "^Package \w+ Warning: .*$"
-       + "^\(\w+\) .*Rerun .*$|" +
+       "^Package \\w+ Warning: .*$"
+       + "^\\(\\w+\\) .*Rerun .*$|" +
        // works for 
        // Package natbib Warning: Citation\\(s\\) may have changed.
        // (natbib)                Rerun to get citations correct.
@@ -463,7 +486,7 @@ public class Settings
        //
        // from package rerunfilecheck used by other packages like new hyperref 
        // Package rerunfilecheck Warning: File `foo.out' has changed.
-       "^\\(rerunfilecheck\\)                Rerun to get outlines right$";
+       "^\\(rerunfilecheck\\)                Rerun to get outlines right$)";
        //  (rerunfilecheck)                or use package `xxx'.
 
     /**
@@ -553,6 +576,10 @@ public class Settings
 
     public String getPatternErrLatex() {
 	return this.patternErrLatex;
+    }
+
+    public String getPatternWarnLatex() {
+	return this.patternWarnLatex;
     }
 
     public boolean getDebugBadBoxes() {
@@ -858,6 +885,30 @@ public class Settings
    	    Settings.this.setPatternErrLatex(pattern);
    	}
     }
+
+
+    // setter method for patternWarnLatex in maven 
+    public void setPatternWarnLatex(String patternWarnLatex) {
+	this.patternWarnLatex = patternWarnLatex;
+    }
+
+    // method introduces patternWarnLatex in ant 
+    public PatternWarnLatex createPatternWarnLatex() {
+   	return new PatternWarnLatex();
+    }
+
+    // defines patternWarnLatex element with text in ant 
+    public class PatternWarnLatex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternWarnLatex(pattern);
+   	}
+    }
+
+
+
 
     public void setDebugBadBoxes(boolean debugBadBoxes) {
 	this.debugBadBoxes = debugBadBoxes;
