@@ -68,8 +68,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    with the pattern given by <code>filesPatterns</code>. 
      */
     public FileFilter getFileFilter(final File texFile, 
-				    final String[] filesPatterns)
-    {
+				    final String[] filesPatterns) {
         String texFilePrefix = getFileNameWithoutSuffix( texFile );
         String[] fileNames = new String[filesPatterns.length];
         for ( int i = 0; i < filesPatterns.length; i++ )
@@ -88,7 +87,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     public void copyOutputToTargetFolder(FileFilter fileFilter, 
 					 File texFile, 
-					 File targetDir )
+					 File targetDir)
 	throws BuildExecutionException {
 
 	File texFileDir = texFile.getParentFile();
@@ -152,18 +151,16 @@ class TexFileUtilsImpl implements TexFileUtils {
     public File getTargetDirectory(File sourceFile,
 				   File sourceBaseDir,
 				   File targetBaseDir)
-    throws BuildExecutionException, BuildFailureException {
+	throws BuildExecutionException, BuildFailureException {
+
         String sourceParentPath;
         String sourceBasePath;
-        try
-        {
+        try {
 	    // getCanonicalPath may throw IOException 
 	    sourceParentPath = sourceFile.getParentFile().getCanonicalPath();
 	    // getCanonicalPath may throw IOException 
             sourceBasePath = sourceBaseDir.getCanonicalPath();
-         }
-        catch ( IOException e )
-        {
+         } catch (IOException e) {
             throw new BuildExecutionException
 		("Error getting canonical path", e);
         }
@@ -189,11 +186,9 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used in AbstractLatexMojo.execute() only. 
     public void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
-        throws BuildExecutionException
-    {
+        throws BuildExecutionException {
         try {
-            if ( tempDirectory.exists() )
-            {
+            if (tempDirectory.exists()) {
                 log.info("Deleting existing directory '" 
 			 + tempDirectory.getPath() + "'. ");
 		// may throw IOException 
@@ -223,11 +218,10 @@ class TexFileUtilsImpl implements TexFileUtils {
      * 
      * @see TexFileUtils#getFileNameWithoutSuffix(File)
      */
-    public String getFileNameWithoutSuffix( File texFile )
-    {
+    public String getFileNameWithoutSuffix(File texFile) {
         String nameTexFile = texFile.getName();
         String namePrefixTexFile = nameTexFile
-	    .substring(0, nameTexFile.lastIndexOf( "." ));
+	    .substring(0, nameTexFile.lastIndexOf("."));
         return namePrefixTexFile;
     }
 
@@ -236,10 +230,10 @@ class TexFileUtilsImpl implements TexFileUtils {
      * 
      * @see TexFileUtils#getFileNameWithoutSuffix(File)
      */
-   public Collection<File> getXFigDocuments( File directory ) {
+   public Collection<File> getXFigDocuments(File directory) {
 	return FileUtils
 	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter( ".fig" ),
+		       FileFilterUtils.suffixFileFilter(".fig"),
 		       TrueFileFilter.INSTANCE );
     }
 
@@ -251,8 +245,8 @@ class TexFileUtilsImpl implements TexFileUtils {
     public Collection<File> getGnuplotDocuments(File directory) {
 	return FileUtils
 	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter( ".plt" ),
-		       TrueFileFilter.INSTANCE );
+		       FileFilterUtils.suffixFileFilter(".plt"),
+		       TrueFileFilter.INSTANCE);
     }
 
     /*
@@ -261,7 +255,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @see TexFileUtils#getLatexMainDocuments(File)
      */
     // used in AbstractLatexMojo.execute() only. 
-    public Collection<File> getLatexMainDocuments( File directory )
+    public Collection<File> getLatexMainDocuments(File directory)
         throws BuildExecutionException {
 
         Collection<File> mainFiles = new ArrayList<File>();
@@ -269,30 +263,23 @@ class TexFileUtilsImpl implements TexFileUtils {
         Collection<File> texFiles = FileUtils
 	    .listFiles(directory,
 		       FileFilterUtils.suffixFileFilter(".tex"),
-		       TrueFileFilter.INSTANCE );
+		       TrueFileFilter.INSTANCE);
 	for (File file : texFiles) {
-	    if ( isTexMainFile( file ) )
-		{
-		    mainFiles.add( file );
-		}
+	    if (isTexMainFile(file)) {
+		mainFiles.add(file);
+	    }
         }
         return mainFiles;
     }
  
    private boolean isTexMainFile(File file) throws BuildExecutionException {
- 
-        try
-        {
+        try {
             return fileContainsPattern(file, MAIN_TEX_PATTERN);
 
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             throw new BuildExecutionException("The TeX file '" + file.getPath()
                 + "' was removed while running this goal. ", e );
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new BuildExecutionException
 		("Problems reading the file '" + file.getPath()
                 + "' while checking if it is a TeX main file. ", e);
@@ -311,14 +298,13 @@ class TexFileUtilsImpl implements TexFileUtils {
     // needAnotherLatexRun, needBibtexRun, 
     // runMakeindex, runBibtex, runLatex
     public boolean matchInFile(File file, String pattern)
-        throws BuildExecutionException
-    {
-        if (!file.exists())
-	    {
+        throws BuildExecutionException {
+
+        if (!file.exists()) {
 		throw new BuildExecutionException
 		    ("File " + file.getPath() 
 		     + " does not exist after running LaTeX. ");
-	    }
+	}
        
 	try {
 	    return fileContainsPattern(file, pattern);
@@ -345,53 +331,51 @@ class TexFileUtilsImpl implements TexFileUtils {
     private boolean fileContainsPattern(File file, String regex)
 	throws FileNotFoundException, IOException {
 
-        Pattern pattern = Pattern.compile( regex );
+        Pattern pattern = Pattern.compile(regex);
 	// may throw FileNotFoundException
 	FileReader fileReader = new FileReader(file);
 	BufferedReader bufferedReader = new BufferedReader(fileReader);
 	try {
-	    String line = bufferedReader.readLine();// may throw IOException
-	    for (; 
+	    for (String line = bufferedReader.readLine();// may thr. IOException
 		 line != null;
 		 line = bufferedReader.readLine()) {// may throw IOException
-                if (pattern.matcher( line ).find()) {
-                   return true;
+                if (pattern.matcher(line).find()) {
+		    return true;
                 }
             }
 	   return false;
         } finally {
-	    // Here, an IOException occurred 
+	    // Here, an IOException may have occurred 
 	    try {
 		bufferedReader.close();
-	    } catch ( IOException e ) {
-		log.warn("Cannot close the file '" + file.getPath() + "'.",
-			 e);
+	    } catch (IOException e) {
+		log.warn("Cannot close the file '" + file.getPath() + "'.", e);
 	    }
         }
     }
 
-    public File replaceSuffix( File file, String suffix )
-    {
+    public File replaceSuffix(File file, String suffix) {
         return new File(file.getParentFile(),
-			getFileNameWithoutSuffix( file ) + "." + suffix );
+			getFileNameWithoutSuffix(file) + "." + suffix );
     }
 
 
-    public void cleanUp()
-    {
+    public void cleanUp() {
 	File tempDir = this.settings.getTempDirectoryFile();
         log.debug("Deleting temporary directory '" + 
-			tempDir.getPath() + "'. ");
-        try
-        {
+		  tempDir.getPath() + "'. ");
+        try {
             FileUtils.deleteDirectory(tempDir);
-        }
-        catch ( IOException e )
-        {
-            log.warn( "The temporary directory '" + tempDir + 
-			   "' could be deleted. ", e );
+        } catch (IOException e) {
+            log.warn("The temporary directory '" + tempDir + 
+		     "' could be deleted. ", e);
         }
     }
 
+    public static void main(String[] args) {
+	Pattern pattern = Pattern.compile("^! ");
+	System.out.println("res: "+pattern.matcher(args[0]).find());
+	
+    }
 
  }
