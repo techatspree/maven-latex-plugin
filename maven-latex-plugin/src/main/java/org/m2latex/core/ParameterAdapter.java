@@ -25,6 +25,11 @@ public interface ParameterAdapter {
 
     /**
      * Returns the single target. 
+     * The set is an EnumSet and thus in a sense sorted, 
+     * although not imlementing SortedSet: 
+     * The iterator returned by the iterator method 
+     * traverses the elements in their natural order 
+     * (the order in which the enum constants are declared). 
      * TODO: generalize to more than one target. 
      */
     Set<Target> getTargetSet();
