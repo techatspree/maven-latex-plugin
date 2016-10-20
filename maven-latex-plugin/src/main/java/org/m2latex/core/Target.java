@@ -13,6 +13,70 @@ import java.io.File;
  */
 public enum Target {
 
+   /**
+     * standalone
+     *
+     */
+    rtf() {
+	private final String[] RTF_OUTPUT_FILES = new String[] {".rtf"};
+	public void processSource(LatexProcessor latexProcessor, 
+				  File texFile) throws BuildExecutionException {
+	    latexProcessor.processLatex2rtf(texFile);
+	}
+	public String[] getOutputFileSuffixes() {
+	    return RTF_OUTPUT_FILES;
+	}
+
+    },
+    /**
+     * standalone. 
+     */
+    pdf() {
+	private final String[] LATEX_OUTPUT_FILES = new String[] {
+	    ".pdf", ".dvi", ".ps"
+	};
+	public void processSource(LatexProcessor latexProcessor, 
+				  File texFile) throws BuildExecutionException {
+	    latexProcessor.processLatex2pdf(texFile);
+	}
+	public String[] getOutputFileSuffixes() {
+	    return LATEX_OUTPUT_FILES;
+	}
+    },
+    /**
+     * Based on {@link #pdf}
+     *
+     */
+    html() {
+	private final String[] HTML_OUTPUT_FILES = new String[] {
+	    "*.html", "*.xhtml", "*.htm", ".css", "*.png", "*.svg"
+	};
+	public void processSource(LatexProcessor latexProcessor, 
+				  File texFile) throws BuildExecutionException {
+	    latexProcessor.processLatex2html(texFile);
+	}
+	public String[] getOutputFileSuffixes() {
+	    return HTML_OUTPUT_FILES;
+	}
+
+    },
+     /**
+     * Based on {@link #pdf}
+     *
+     */
+    odt() {
+	private final String[] OOFFICE_OUTPUT_FILES = new String[] {
+	    ".odt", ".fodt", ".uot", ".uot"
+	};
+	public void processSource(LatexProcessor latexProcessor, 
+				  File texFile) throws BuildExecutionException {
+	    latexProcessor.processLatex2odt(texFile);
+	}
+
+	public String[] getOutputFileSuffixes() {
+	    return OOFFICE_OUTPUT_FILES;
+	}
+    },
     /**
      * Based on {@link #odt}
      *
@@ -32,38 +96,6 @@ public enum Target {
     },
     /**
      * Based on {@link #pdf}
-     *
-     */
-    html() {
-	private final String[] HTML_OUTPUT_FILES = new String[] {
-	    "*.html", "*.xhtml", "*.htm", ".css", "*.png", "*.svg"
-	};
-	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
-	    latexProcessor.processLatex2html(texFile);
-	}
-	public String[] getOutputFileSuffixes() {
-	    return HTML_OUTPUT_FILES;
-	}
-
-    },
-    /**
-     * standalone
-     *
-     */
-    rtf() {
-	private final String[] RTF_OUTPUT_FILES = new String[] {".rtf"};
-	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
-	    latexProcessor.processLatex2rtf(texFile);
-	}
-	public String[] getOutputFileSuffixes() {
-	    return RTF_OUTPUT_FILES;
-	}
-
-    },
-    /**
-     * Based on {@link #pdf}
      */
     txt() {
 	private final String[] TXT_OUTPUT_FILES = new String[] {".txt"};
@@ -73,38 +105,6 @@ public enum Target {
 	}
 	public String[] getOutputFileSuffixes() {
 	    return TXT_OUTPUT_FILES;
-	}
-    },
-    /**
-     * Based on {@link #pdf}
-     *
-     */
-    odt() {
-	private final String[] OOFFICE_OUTPUT_FILES = new String[] {
-	    ".odt", ".fodt", ".uot", ".uot"
-	};
-	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
-	    latexProcessor.processLatex2odt(texFile);
-	}
-
-	public String[] getOutputFileSuffixes() {
-	    return OOFFICE_OUTPUT_FILES;
-	}
-    },
-    /**
-     * standalone. 
-     */
-    pdf() {
-	private final String[] LATEX_OUTPUT_FILES = new String[] {
-	    ".pdf", ".dvi", ".ps"
-	};
-	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
-	    latexProcessor.processLatex2pdf(texFile);
-	}
-	public String[] getOutputFileSuffixes() {
-	    return LATEX_OUTPUT_FILES;
 	}
     };
 
