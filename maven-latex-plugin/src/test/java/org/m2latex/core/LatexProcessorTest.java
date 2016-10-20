@@ -29,6 +29,7 @@ import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.easymock.MockControl;
 
 import org.junit.Test;
+import org.junit.Ignore;
 
 public class LatexProcessorTest
 {
@@ -100,7 +101,8 @@ public class LatexProcessorTest
 	// detect bad boxes and warnings: none 
 	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_WARNING);
+	fileUtils.matchInFile(logFile, 
+			      this.settings.getPatternNeedLatexReRun());
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -144,7 +146,8 @@ public class LatexProcessorTest
 	// detect bad boxes and warnings: none 
 	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_WARNING);
+	fileUtils.matchInFile(logFile, 
+			      this.settings.getPatternNeedLatexReRun());
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -182,7 +185,8 @@ public class LatexProcessorTest
 	// // detect bad boxes and warnings: none 
 	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	// fileUtilsCtrl.setReturnValue( false );
-	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_WARNING);
+	// fileUtils.matchInFile(logFile, 
+	//		         this.settings.getPatternNeedLatexReRun());
 	// fileUtilsCtrl.setReturnValue( false );
 
         mockRunLatex2html();
@@ -234,7 +238,8 @@ public class LatexProcessorTest
 	// fileUtils.matchInFile(blgFile, "Error");
 	// fileUtilsCtrl.setReturnValue( false );
 
-	// fileUtils.matchInFile(blgFile, LatexProcessor.PATTERN_WARNING);
+	// fileUtils.matchInFile(blgFile, 
+	//                       this.settings.getPatternNeedLatexReRun());
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
