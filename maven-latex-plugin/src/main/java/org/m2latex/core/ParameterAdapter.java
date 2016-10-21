@@ -24,7 +24,8 @@ public interface ParameterAdapter {
     void initialize();
 
     /**
-     * Returns the single target. 
+     * Returns the set of target. 
+     * FIXME: Better would be Enum set but best a sorted kind of EnumSet
      * The set is an EnumSet and thus in a sense sorted, 
      * although not imlementing SortedSet: *****
      * The iterator returned by the iterator method 
