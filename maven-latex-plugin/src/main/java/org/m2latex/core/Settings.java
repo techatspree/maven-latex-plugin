@@ -20,8 +20,9 @@ package org.m2latex.core;
 
 import java.io.File;
 
-import java.util.Set;
+import java.util.SortedSet;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 
 /**
@@ -136,6 +137,8 @@ public class Settings
     /**
      * A comma separated list of targets 
      * returned as a set by {@link #getTargetSet()}. 
+     * For allowed values see {@link Targets}. 
+     * The default value is <code>pdf, html</code>. 
      *
      * @parameter
      */
@@ -166,9 +169,8 @@ public class Settings
      */
     private String fig2devCommand = "fig2dev";
 
-
     /**
-     * The LaTeX command. 
+     * The LaTeX command to create a pdf-file. 
      * Possible values are e.g. <code>pdflatex</code>, <code>lualatex</code> 
      * and <code>xelatex</code>. 
      * The default value (for which this software is also tested) 
@@ -190,7 +192,7 @@ public class Settings
      * @parameter
      */
     private String texCommandArgs = 
-	"-interaction=nonstopmode -src-specials -recorder";
+	"-interaction=nonstopmode -src-specials -recorder -shell-escape ";
 
     /**
      * The pattern in the <code>log</code> file 
@@ -206,9 +208,20 @@ public class Settings
     /**
      * The pattern in the <code>log</code> file 
      * indicating a warning when running {@link #texCommand}. 
-     * The default value is too complicated to display here. 
-     * If this is not sufficient, please extend 
-     * and notify the developer of this plugin. 
+     * The default value is 
+     * <pre>
+     *(^LaTeX Warning: |
+     *^LaTeX Font Warning: |
+     *^(Package|Class) .+ Warning: |
+     *^Missing character: There is no .* in font .*!$|
+     *^pdfTeX warning (ext4): destination with the same identifier|
+     *^* Font .+ does not contain script |
+     *^A space is missing. (No warning).)
+     * </pre>. 
+     * It is designed to be as complete as possible 
+     * while not indicating a warning where not appropriate. 
+     * If the current default value is not appropriate, 
+     * please overwrite and notify the developer of this plugin. 
      *
      * @parameter
      */
@@ -299,7 +312,6 @@ public class Settings
      */
     private String makeIndexCommand = "makeindex";
 
-
     /**
      * The options for the MakeIndex command. 
      * Note that the option <code>-t xxx.ilg</code> 
@@ -379,7 +391,7 @@ public class Settings
 
     /**
      * The latex2rtf command to create rtf from latex directly. 
-     * Default is <code>latex2rtf</code>. 
+     * The default value is <code>latex2rtf</code>. 
      *
      * @parameter
      */
@@ -544,9 +556,10 @@ public class Settings
        return this.outputDirectoryFile;
     }
 
-    public Set<Target> getTargetSet() {
+    public SortedSet<Target> getTargetSet() {
 	String[] targetSeq = this.targets.split(" *, *");
-	Set<Target> targetSet = new HashSet<Target>();
+	// TreeSet is sorted. maybe this determines ordering of targets. 
+	SortedSet<Target> targetSet = new TreeSet<Target>();
 	for (int idx = 0; idx < targetSeq.length; idx++) {
 	    targetSet.add(Target.valueOf(targetSeq[idx]));
 	}
