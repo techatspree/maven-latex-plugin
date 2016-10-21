@@ -1,7 +1,7 @@
 
 package org.m2latex.core;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Common interface to pass parameters from ant and from maven. 
@@ -26,11 +26,11 @@ public interface ParameterAdapter {
     /**
      * Returns the single target. 
      * The set is an EnumSet and thus in a sense sorted, 
-     * although not imlementing SortedSet: 
+     * although not imlementing SortedSet: *****
      * The iterator returned by the iterator method 
      * traverses the elements in their natural order 
      * (the order in which the enum constants are declared). 
      * TODO: generalize to more than one target. 
      */
-    Set<Target> getTargetSet();
+    SortedSet<Target> getTargetSet();
 }
