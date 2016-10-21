@@ -96,9 +96,33 @@ public class LatexProcessor {
      * The resulting files are identified by its suffixes 
      * via  {@link ParameterAdapter#getOutputFileSuffixes()} 
      * and copied to the target folder. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li>
+     * If the tex directory does not exist. 
+     * <li>
+     * FIXME: logging of invoked methods. 
+     * </ul>
+     *
+     * FIXME: exceptions not really clear. 
+     * @throws BuildExecutionException 
+     *    <ul>
+     *    <li>
+     *    if copying the latex-directory to the temporary directory 
+     *    or copying the results from the temporary directory 
+     *    into the target directory fails. 
+     *    <li>
+     *    if processing xfig-files or gnuplot files or latex-files fail. 
+     *    <li>
+     *    if latex main documents could not be identified. 
+     *    <li>
+     *    if processing xfig-files or gnuplot files fail. 
+     *    </ul>
      */
     public void execute() 
 	throws BuildExecutionException, BuildFailureException {
+
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString() );
 
