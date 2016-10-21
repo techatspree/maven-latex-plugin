@@ -20,8 +20,9 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import java.util.Set;
-import java.util.EnumSet;
+import java.util.SortedSet;
+import java.util.TreeSet;
+//import java.util.EnumSet;
 
 import org.m2latex.core.Target;
 
@@ -35,7 +36,10 @@ import org.m2latex.core.Target;
 //@Mojo( name = "html")
 public class HtmlMojo extends CfgLatexMojo {
 
-   public Set<Target> getTargetSet() {
-	return EnumSet.of(Target.html);
-    }
+   public SortedSet<Target> getTargetSet() {
+       SortedSet<Target> res = new TreeSet<Target>();
+       res.add(Target.html);
+       return res;
+       //return EnumSet.of(Target.html);
+   }
 }

@@ -20,7 +20,7 @@ package org.m2latex.mojo;
 
 import java.io.File;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.BuildFailureException;
@@ -100,7 +100,7 @@ public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
     }
 
     // api-docs inherited from ParameterAdapter
-    public Set<Target> getTargetSet() {
+    public SortedSet<Target> getTargetSet() {
 	return this.settings.getTargetSet();
     }
 
