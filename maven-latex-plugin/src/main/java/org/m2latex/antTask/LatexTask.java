@@ -12,7 +12,7 @@ import org.m2latex.core.Target;
 
 import java.io.File;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 public class LatexTask extends Task implements ParameterAdapter {
 
@@ -62,7 +62,7 @@ public class LatexTask extends Task implements ParameterAdapter {
     }
 
     // api-docs inherited from ParameterAdapter
-    public Set<Target> getTargetSet() {
+    public SortedSet<Target> getTargetSet() {
 	return this.settings.getTargetSet();
     }
 
