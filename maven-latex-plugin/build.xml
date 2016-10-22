@@ -91,36 +91,43 @@
 		targets="pdf, html"
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
-		texCommandArgs="-interaction=nonstopmode -src-specials"
+		texCommandArgs="-interaction=nonstopmode -src-specials -recorder --shell-escape"
 		debugBadBoxes='true'
 		debugWarnings='true'
 		bibtexCommand="bibtex"
 		makeIndexCommand="makeindex"
-		makeIndexOptions=""
+		makeIndexOptions="-c"
 		tex4htCommand="htlatex"
-		tex4htStyOptions="html,uni-html4,2,svg"
+		tex4htStyOptions="xhtml,uni-html4,2,svg,pic-tabular"
 		tex4htOptions=" -cunihtf -utf8"
 		t4htOptions="-cvalidate"
-		maxNumReruns='-1'
 		latex2rtfCommand="latex2rtf"
 		odt2docCommand="odt2doc"
 		odt2docOptions="-fdocx"
 		pdf2txtCommand="pdftotext"
 		pdf2txtOptions=""
+		maxNumReruns='-1'
 		cleanUp='true'>
-	<patternErrLatex>
-	  ! |Fatal error|LaTeX Error|Emergency stop|LaTeX exited abnormally
-	</patternErrLatex>
+	<patternErrLatex>(^! )</patternErrLatex>
+	<patternWarnLatex>
+	(^LaTeX Warning: |
+	^LaTeX Font Warning: |
+	^(Package|Class) .+ Warning: |
+	^Missing character: There is no .* in font .*!$|
+	^pdfTeX warning (ext4): destination with the same identifier|
+	^* Font .+ does not contain script |
+	^A space is missing. (No warning).)
+	</patternWarnLatex>
 	<patternErrBibtex>error message</patternErrBibtex>
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
 	<patternErrMakeindex>!! Input index error </patternErrMakeindex>
 	<patternWarnMakeindex>## Warning </patternWarnMakeindex>
 	<patternNeedLatexReRun>
-	  (Rerun (LaTeX|to get cross-references right)|
-	  There were undefined references|
-	  \(rerunfilecheck\)                Rerun to get outlines right|
-	  Package longtable Warning: Table widths have changed. Rerun LaTeX.|
-	  Package natbib Warning: Citation\(s\) may have changed)
+(^LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.$|
+^Package \\w+ Warning: .*Rerun .*$|
+^Package \\w+ Warning: .*$^\\(\\w+\\) .*Rerun .*$|
+^LaTeX Warning: Etaremune labels have changed.$|
+^\\(rerunfilecheck\\)                Rerun to get outlines right$)
 	</patternNeedLatexReRun>
       </settings>
     </latex>
