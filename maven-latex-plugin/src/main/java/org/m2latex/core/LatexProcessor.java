@@ -27,8 +27,14 @@ import java.util.Arrays;
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
 /**
- * The latex processor used by both the ant task and the maven plugin. 
+ * The latex processor creates various output from latex sources 
+ * including also preprocessing of graphic files in several formats. 
  * This is the core class of this piece of software. 
+ * The main method is {@link #execute()} which is executed by the ant task 
+ * and by the maven plugin. 
+ * It does preprocessing of the graphic files 
+ * and main processing of the latex file according to the target(s) 
+ * given by the parameters. 
  */
 public class LatexProcessor {
 
@@ -433,20 +439,12 @@ public class LatexProcessor {
 	File pdfFile = this.fileUtils.replaceSuffix(pltFile, "pdf");
 	File ptxFile = this.fileUtils.replaceSuffix(pltFile, "ptx");
 
-	// gnuplot -e 
-	// "set terminal cairolatex pdf;
-	//set output 'gnuplot.ptx';
-	//load 'gnuplot.plt'"
 	String[] args = new String[] {
 	    "-e",   // run a command string "..." with commands sparated by ';' 
 	    // 
-	    "\"set",                            // set terminal cairolatex pdf;
-	    "terminal",
-	    "cairolatex",
-	    dev.getGnuplotInTexLanguage() + ";set",    // set output 'xxx.ptx';
-	    "output",
-	    "'" + ptxFile.getName() + "';load", // load 'xxx.plt'"
-	    "'" + pltFile.getName() + "'\""
+	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
+	    ";set output \"" + ptxFile.getName() + 
+	    "\";load \"" + pltFile.getName() + "\""
 	};
 	// FIXME: include options. 
 // set terminal cairolatex
