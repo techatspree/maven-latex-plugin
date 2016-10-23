@@ -44,30 +44,43 @@ class CommandExecutorImpl implements CommandExecutor {
      * Here, <code>pathToExecutable</code> is the path 
      * to the executable. May be null? 
      *
-     *
+     * @param workingDir
+     *    the working directory. 
+     *    The shell changes to that directory 
+     *    before invoking <code>executable</code> 
+     *    with arguments <code>args</code>. 
+     * @param pathToExecutable
+     *    the path to the executable <code>executable</code>. 
+     *    This may be <code>null</code> if <code>executable</code> 
+     *    is on the execution path 
+     * @param executable
+     *    the name of the program to be executed 
+     * @param args
+     *    the list of arguments, 
+     *    each containing a blank enclosed in double quotes. 
      * @throws BuildExecutionException
      *    if invocation of <code>executable</code> fails. 
      */
-    public final String execute( File workingDir, 
-				 File pathToExecutable, 
-				 String executable, String[] args )
-	throws BuildExecutionException
-    {
-	String command = new File( pathToExecutable, executable ).getPath();
-	Commandline cl = new Commandline( command );
-	cl.addArguments( args );
-	cl.setWorkingDirectory( workingDir.getPath() );
+    public final String execute(File workingDir, 
+				File pathToExecutable, 
+				String executable, 
+				String[] args)throws BuildExecutionException {
+	String command = new File(pathToExecutable, executable).getPath();
+	Commandline cl = new Commandline(command);
+	cl.getShell().setQuotedArgumentsEnabled(false);
+	cl.addArguments(args);
+	cl.setWorkingDirectory(workingDir.getPath());
 	StringStreamConsumer output = new StringStreamConsumer();
-	log.debug( "Executing: " + cl + " in: " + workingDir );
+	log.debug("Executing: " + cl + " in: " + workingDir );
 
         try {
 	    // may throw CommandLineException 
-	    CommandLineUtils.executeCommandLine( cl, output, output );
-	} catch ( CommandLineException e ) {
-	    throw new BuildExecutionException( "Error executing command", e );
+	    CommandLineUtils.executeCommandLine(cl, output, output);
+	} catch (CommandLineException e) {
+	    throw new BuildExecutionException("Error executing command", e);
         }
 
-	log.debug( "Output:\n" + output.getOutput() + "\n" );
+	log.debug("Output:\n" + output.getOutput() + "\n");
 	return output.getOutput();
     }
 }
