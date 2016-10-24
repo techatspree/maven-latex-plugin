@@ -220,6 +220,58 @@ One may always recover by just creating with maven.
 
 
 
+\section{Usage of this Plugin and of this Task}\label{sec:usage}
+
+After having added the configuration of the plugin to the {\tt pom.xml}, 
+it can be used directly invoking maven through 
+{\tt mvn latex:cfg}. 
+Here {\tt latex} is the (short) name of the plugin and {\tt cfg} is the
+target. 
+It can also be interpreted as {\tt mvn $<$source$>$:$<$target$>$}: 
+The source file is of a latex file and the target(s) are configurable. 
+By default, the target comprises pdf-files and html-files. 
+The following listing shows a configuration 
+with the full range of output formats including in addition 
+the open office document format, the current MS word-format 
+and also plain text in utf8 encoding. 
+%
+\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}
+<!-- create html and pdf and other formats from latex -->
+<plugin>
+  <groupId>de.akquinet.jbosscc.latex</groupId>
+  <artifactId>latex-maven-plugin</artifactId>
+  <version>1.3-SNAPSHOT</version><!--uptodate?-->
+  <!--artifactId>maven-latex-plugin</artifactId>
+      <version>1.2</version--><!--uptodate?-->
+	
+  <configuration>
+    <settings>
+      <targets>pdf, html, odt, docx, rtf, txt</targets>
+    </settings>
+  </configuration>
+</plugin>
+\end{lstlisting}
+
+Sometimes it is more convenient 
+to specify the output formats not via the pom 
+but directly on the command line. 
+In particular, one may write {\tt mvn latex:pdf} to create documentation 
+in pdf-format only. 
+Note that the {\tt -X} switch activates debugging 
+which results in a more verbose output. 
+Example: {\tt mvn -X latex:cfg}. 
+
+For sake of uniformity, 
+the name of the ant-task is {\tt latex:cfg} 
+and it can be invoked via {\tt ant latex:cfg}. 
+Unlike the maven-plugin, the ant-task 
+does not allow to specify a target on the command line. 
+The {\tt -d} switch activates debugging 
+which results in a more verbose output. 
+Example: {\tt ant -d latex:cfg}. 
+
+
 \section{Conversions done by this Plugin and this Task}\label{sec:conversions}
 
 \subsection{Including pdf-files}\label{subsec:figpdf}
