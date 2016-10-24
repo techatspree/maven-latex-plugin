@@ -25,8 +25,10 @@
 \else
 \fi
 
+\usepackage[nottoc,numindex, numbib]{tocbibind}
 
-\title{Manual for the latex-maven-plugin and for an according ant task }
+
+\title{Manual for the latex-maven-plugin and for an according ant-task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
 
 \makeindex
@@ -47,11 +49,12 @@ in an uniform way.
 In particular, the settings which may be passed to the task 
 and those allowed for the plugin are in a one-to-one relation. 
 They are both described in Section \ref{sec:settings}. 
+\index{ant-task}
 
 Both, the ant-task and the maven-plugin rely on the same code base 
 which form the package {\tt org.m2latex.core}. 
-The code specific for the ant task is in {\tt org.m2latex.antTask} 
-and that specific for the maven plugin is in {\tt org.m2latex.mojo}. 
+The code specific for the ant-task is in {\tt org.m2latex.antTask} 
+and that specific for the maven-plugin is in {\tt org.m2latex.mojo}. 
 
 It is very usual to endow LaTeX-files with figures. 
 We support figures created in the xfig-format 
@@ -78,10 +81,10 @@ for the underlying software.
 Both the ant-task and the maven-plugin just direct parameters 
 from ant and from maven, respectively, 
 to the programs that do the proper work. 
-Thus installation of the ant-task and of the maven plugin 
+Thus installation of the ant-task and of the maven-plugin 
 requires that all needed programs are installed. 
 These prerequisites are collected in Section \ref{subsec:prerequisites}. 
-
+\index{ant-task}
 
 \subsection{Prerequisites}\label{subsec:prerequisites}
 
@@ -105,6 +108,7 @@ The ant-task just passes parameters in the build file to the core
 and accordingly the maven-plugin passes parameters in the pom 
 to the core. 
 The core just invokes various programs to do the actual work. 
+\index{ant-task}
 
 To convert gnuplot files into pdf-files, there is no alternative, 
 to have installed {\tt gnuplot}. \index{gnuplot}
@@ -133,19 +137,23 @@ This includes also creating open office documents like odt-files.
 Thus open office documents are created in two steps, 
 the first is to create pdf-files with the according tools, 
 the second one is done by {\tt htlatex} or that like. 
+\index{htlatex}\index{htxelatex}
 
 To create rtf-files, currently {\tt latex2rtf} is used. 
 Note that this does not require {\tt pdflatex}. 
 As a drawback, not all latex-packages are supported. 
+\index{latex2rtf}
 
 MS word documents are created from open office documents via {\tt odt2doc} 
 and thus require three steps. 
+\index{odt2doc} 
 
 Finally, there is a way, to create plain text files from the pdf-files 
 via {\tt pdftotext}. 
 The way from latex to text via pdf makes sense 
 because that text is well formatted 
 and may contain unicode symbols like $\pi$. 
+\index{pdftotext}
 
 So to run this software, the abovementioned programs 
 or at least the subset used, must be installed. 
@@ -178,6 +186,7 @@ has to be added to the {\tt build.xml}.
 Also working with an ant project 
 conforming with maven conventions, 
 no explicit configuration is needed. 
+\index{ant-task}
 
 In both cases, add configuration, 
 where a deviation from the default requires to do so. 
@@ -195,6 +204,7 @@ Then just type {\tt ant clean jar}
 which creates the jar-file (property {\tt createdJar}) defining the ant-task. 
 After that one may copy the created jar into folder {\tt antJarDir}, 
 where ant finds it typing {\tt sudo ant install}. 
+\index{ant-task}
 
 Note that, if maven is installed, the command {\tt mvn clean install} 
 also creates the jar-file {\tt createdJar} defining the ant-task. 
@@ -210,7 +220,7 @@ One may always recover by just creating with maven.
 
 
 
-\section{Tools used by this Plugin and Task}\label{sec:tools}
+\section{Conversions done by this Plugin and this Task}\label{sec:conversions}
 
 \subsection{Including pdf-files}\label{subsec:figpdf}
 
@@ -245,6 +255,7 @@ An alternative, which we do not use
 is replacing the pdf by an eps via configuration file {\tt myxhtml.cfg} 
 which is listed below. 
 %
+\lstset{language=tex, basicstyle=\scriptsize}
 \begin{lstlisting}
 \Preamble{xhtml}
 %\makeatletter
@@ -892,7 +903,7 @@ The value '-p' prevents creation of png-pictures.
 %The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternNeedLatexReRun &  see below ****          \\
+\tt patternLatexNeedsReRun &  see below ****          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers rerunning latex. 
@@ -980,7 +991,7 @@ May be used for debugging when setting {\tt false}.
 The maven-plugin described here, 
 requires the following definition in {\tt pom.xml}. 
 
-\lstset{language=xml, basicstyle=\small}
+\lstset{language=xml, basicstyle=\scriptsize}
 \begin{lstlisting}
 <!-- create html and pdf and other formats from latex -->
 <plugin>
@@ -1147,13 +1158,14 @@ requires the following definition in {\tt pom.xml}.
 	 If the user finds an extension, (s)he is asked to contribute 
 	 and to notify the developer of this plugin. 
 	 Then the default value will be extended. -->
-    <patternNeedLatexReRun>
-      (^LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.$|
-      ^Package \\w+ Warning: .*Rerun .*$|" +
-      ^Package \\w+ Warning: .*$^\\(\\w+\\) .*Rerun .*$|
+    <patternLatexNeedsReRun>
+      (^LaTeX Warning: Label\(s\) may have changed. \
+Rerun to get cross-references right.$|
+      ^Package \\w+ Warning: .*Rerun .*$|
+      ^Package \\w+ Warning: .*$^\(\w+\) .*Rerun .*$|
       ^LaTeX Warning: Etaremune labels have changed.$|
-      ^\\(rerunfilecheck\\)                Rerun to get outlines right$)
-    </patternNeedLatexReRun>
+      ^\(rerunfilecheck\)                Rerun to get outlines right$)
+    </patternLatexNeedsReRun>
 
     <!-- The maximal allowed number of reruns of the latex process. 
 	 This is to avoid endless repetitions. 
@@ -1211,7 +1223,8 @@ requires the following definition in {\tt pom.xml}.
         <!--goal>txt</goal-->
  <!--
 Here is a bug affecting goal odt: 
-/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
+/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/
+systemlayer/pgfsys-tex4ht.def
 89c89
  \def\pgfsys@svg@newline{{?nl}} % replacement 
 - - -
@@ -1239,6 +1252,7 @@ It has to be placed in the build element where below dots are given.
 The ant-task described here, 
 requires the following target and task definition in {\tt build.xml}. 
 
+\lstset{language=xml, basicstyle=\scriptsize}
 \begin{lstlisting}
   <taskdef name="latex"
 	   classname="org.m2latex.antTask.LatexTask"
@@ -1279,13 +1293,15 @@ requires the following target and task definition in {\tt build.xml}.
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
 	<patternErrMakeindex>!! Input index error </patternErrMakeindex>
 	<patternWarnMakeindex>## Warning </patternWarnMakeindex>
-	<patternNeedLatexReRun>
-(^LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.$|
-^Package \\w+ Warning: .*Rerun .*$|
-^Package \\w+ Warning: .*$^\\(\\w+\\) .*Rerun .*$|
+	<patternLatexNeedsReRun>
+(^LaTeX Warning: Label\(s\) may have changed. \
+Rerun to get cross-references right.$|
+^Package \w+ Warning: .*Rerun .*$|
+^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
 ^LaTeX Warning: Etaremune labels have changed.$|
-^\\(rerunfilecheck\\)                Rerun to get outlines right$)
-	</patternNeedLatexReRun>
+^\(rerunfilecheck\)                \
+Rerun to get outlines right$)
+	</patternLatexNeedsReRun>
       </settings>
     </latex>
   </target>
@@ -1341,7 +1357,7 @@ The ant-task does not allow to create single formats, e.g. pdf selectively.
 
 In my opinion, it would be desirable not to copy the tex sources into a
 working directory. 
-That way one could use the maven plugin 
+That way one could use the maven-plugin 
 not only for final creation of documentation 
 but it could better support development of the documentation. 
 
@@ -1354,10 +1370,10 @@ described here, this manual is created through plugin and task.
 
 
 
-\printindex
-
-\bibliography{lit}{}
 \bibliographystyle{alpha}
+\bibliography{lit}{}
+
+\printindex
 \end{document}
 
 %%% Local Variables: 
