@@ -102,7 +102,7 @@ public class LatexProcessorTest
 	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInFile(logFile, 
-			      this.settings.getPatternNeedLatexReRun());
+			      this.settings.getPatternWarnLatex());
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -147,7 +147,7 @@ public class LatexProcessorTest
 	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	fileUtilsCtrl.setReturnValue( false );
 	fileUtils.matchInFile(logFile, 
-			      this.settings.getPatternNeedLatexReRun());
+			      this.settings.getPatternWarnLatex());
 	fileUtilsCtrl.setReturnValue( false );
 
         replay();
@@ -186,7 +186,7 @@ public class LatexProcessorTest
 	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	// fileUtilsCtrl.setReturnValue( false );
 	// fileUtils.matchInFile(logFile, 
-	//		         this.settings.getPatternNeedLatexReRun());
+	//		         this.settings.getPatternWarnLatex());
 	// fileUtilsCtrl.setReturnValue( false );
 
         mockRunLatex2html();
@@ -202,7 +202,7 @@ public class LatexProcessorTest
         throws BuildExecutionException
     {
         fileUtils.matchInFile(logFile, 
-			      this.settings.getPatternNeedLatexReRun());
+			      this.settings.getPatternLatexNeedsReRun());
         fileUtilsCtrl.setReturnValue( retVal );
     }
 
@@ -239,7 +239,7 @@ public class LatexProcessorTest
 	// fileUtilsCtrl.setReturnValue( false );
 
 	// fileUtils.matchInFile(blgFile, 
-	//                       this.settings.getPatternNeedLatexReRun());
+	//                       this.settings.getPatternLatexNeedsReRun());
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
