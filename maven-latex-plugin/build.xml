@@ -122,13 +122,13 @@
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
 	<patternErrMakeindex>!! Input index error </patternErrMakeindex>
 	<patternWarnMakeindex>## Warning </patternWarnMakeindex>
-	<patternNeedLatexReRun>
-(^LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.$|
-^Package \\w+ Warning: .*Rerun .*$|
-^Package \\w+ Warning: .*$^\\(\\w+\\) .*Rerun .*$|
+	<patternLatexNeedsReRun>
+(^LaTeX Warning: Label\(s\) may have changed. Rerun to get cross-references right.$|
+^Package \w+ Warning: .*Rerun .*$|
+^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
 ^LaTeX Warning: Etaremune labels have changed.$|
-^\\(rerunfilecheck\\)                Rerun to get outlines right$)
-	</patternNeedLatexReRun>
+^\(rerunfilecheck\)                Rerun to get outlines right$)
+	</patternLatexNeedsReRun>
       </settings>
     </latex>
   </target>

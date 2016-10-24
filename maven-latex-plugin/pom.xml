@@ -485,7 +485,7 @@ not allowed:
 		 Invocation is 'odt2doc -f<format> <file>.odt'. 
 		 All output formats are shown by 'odt2doc - -show' 
 		 but the formats interesting in this context 
-		 are doc, doc6, doc95,docbook, docx, docx7, ooxml, rtf. 
+		 are doc, doc6, doc95, docbook, docx, docx7, ooxml, rtf. 
 		 Interesting also the verbosity options '-v', '-vv', '-vvv' 
 		 the timeout '-T=secs' and '- -preserve' 
 		 to keep permissions and timestamp of the original document. 
@@ -520,13 +520,13 @@ not allowed:
 		 If the user finds an extension, (s)he is asked to contribute 
 		 and to notify the developer of this plugin. 
 		 Then the default value will be extended. -->
-	    <patternNeedLatexReRun>
-(^LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.$|
-^Package \\w+ Warning: .*Rerun .*$|
-^Package \\w+ Warning: .*$^\\(\\w+\\) .*Rerun .*$|
+	    <patternLatexNeedsReRun>
+(^LaTeX Warning: Label\(s\) may have changed. Rerun to get cross-references right.$|
+^Package \w+ Warning: .*Rerun .*$|
+^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
 ^LaTeX Warning: Etaremune labels have changed.$|
-^\\(rerunfilecheck\\)                Rerun to get outlines right$)
-	    </patternNeedLatexReRun>
+^\(rerunfilecheck\)                Rerun to get outlines right$)
+	    </patternLatexNeedsReRun>
 
 	    <!-- The maximal allowed number of reruns of the latex process. 
 		 This is to avoid endless repetitions. 
