@@ -9,7 +9,7 @@
 }{%
 \usepackage{xcolor}  % [pdftex] explicit specification works for pdflatex only 
 \usepackage{graphicx}% [pdftex] explicit specification works for pdflatex only 
-%\usepackage{hyperref}% driver [hpdftex] is autodetected 
+\usepackage{hyperref}% driver [hpdftex] is autodetected 
 }
 
 \usepackage{longtable}
@@ -70,6 +70,144 @@ This manual is designed in a way that it covers the most important features
 but also to demand the most important features. 
 That way, creating this manual is a top level test 
 for the underlying software. 
+
+
+
+\section{Installation}
+
+Both the ant-task and the maven-plugin just direct parameters 
+from ant and from maven, respectively, 
+to the programs that do the proper work. 
+Thus installation of the ant-task and of the maven plugin 
+requires that all needed programs are installed. 
+These prerequisites are collected in Section \ref{subsec:prerequisites}. 
+
+
+\subsection{Prerequisites}\label{subsec:prerequisites}
+
+The ant-task is tested with 
+{\tt Apache Ant(TM) version 1.9.4 compiled on September 11 2015}\index{ant}
+and the maven-plugin with \index{maven}
+%
+\begin{verbatim}
+Apache Maven 3.2.1
+(ea8b2b07643dbb1b84b6d16e1f08391b666bc1e9; 
+2014-02-14T18:37:52+01:00). 
+\end{verbatim}
+The java version is {\tt 1.8.0\_101, vendor: Oracle Corporation}. \index{java}
+
+So, a java installation is the base for running either the ant-task 
+or the maven-plugin. 
+To use the maven-plugin, of course maven must be installed 
+and to use the ant-task, ant must be installed. 
+
+The ant-task just passes parameters in the build file to the core 
+and accordingly the maven-plugin passes parameters in the pom 
+to the core. 
+The core just invokes various programs to do the actual work. 
+
+To convert gnuplot files into pdf-files, there is no alternative, 
+to have installed {\tt gnuplot}. \index{gnuplot}
+To convert the fig-files into pdf-files, 
+by default {\tt fig2dev} is used. \index{fig2dev}
+It makes sense to have {\tt xfig} installed, but this is not mandatory. 
+Currently for including pdf-files in both cases, 
+the driver {\tt dvipdfmx} must be installed. 
+Strictly speaking, this is required only for html-creation and related. 
+Note that if no pictures created by {\tt gnuplot} or by {\tt fig2dev} are used, 
+of course, neither {\tt gnuplot} nor {\tt fig2dev} nor {\tt dvipdfmx} is
+needed. 
+
+To create pdf-files from latex files we use {\tt pdflatex} 
+or some other kind of latex creating pdf-files 
+like {\tt xelatex} or {\tt lualatex}. 
+\index{pdflatex}\index{xelatex}\index{lualatex} 
+LaTeX uses several auxiliary programs. 
+Above all {\tt bibtex} to create the bibliography 
+and {\tt makeindex} for the index. \index{bibtex}\index{makeindex}
+
+To create html-files, or to be more precise any kind of sgml and xml, 
+from pdf-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
+Currently the author is not aware of any alternative to the two. 
+This includes also creating open office documents like odt-files. 
+Thus open office documents are created in two steps, 
+the first is to create pdf-files with the according tools, 
+the second one is done by {\tt htlatex} or that like. 
+
+To create rtf-files, currently {\tt latex2rtf} is used. 
+Note that this does not require {\tt pdflatex}. 
+As a drawback, not all latex-packages are supported. 
+
+MS word documents are created from open office documents via {\tt odt2doc} 
+and thus require three steps. 
+
+Finally, there is a way, to create plain text files from the pdf-files 
+via {\tt pdftotext}. 
+The way from latex to text via pdf makes sense 
+because that text is well formatted 
+and may contain unicode symbols like $\pi$. 
+
+So to run this software, the abovementioned programs 
+or at least the subset used, must be installed. 
+
+\subsection{Setting pom.xml and build.xml}\label{subsec:sgml}
+
+To install the maven-plugin within a given maven project, 
+the listing of a pom entry given in Section \ref{sec:settings} 
+can be added to {\tt pom.xml} and modified accordingly. 
+In a default maven project, 
+the default configuration is usable which creates pdf-documents and
+html-sites. 
+The according entry to be added to the {\tt pom.xml} is then just 
+%
+\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}
+<!-- create html and pdf and other formats from latex -->
+<plugin>
+  <groupId>de.akquinet.jbosscc.latex</groupId>
+  <artifactId>latex-maven-plugin</artifactId>
+  <version>1.3-SNAPSHOT</version><!--uptodate?-->
+  <!--artifactId>maven-latex-plugin</artifactId>
+      <version>1.2</version--><!--uptodate?-->
+</plugin>
+\end{lstlisting}
+
+Likewise to install the ant-task within an ant-project, 
+the listing of a build file entry given in Section \ref{sec:settings} 
+has to be added to the {\tt build.xml}. 
+Also working with an ant project 
+conforming with maven conventions, 
+no explicit configuration is needed. 
+
+In both cases, add configuration, 
+where a deviation from the default requires to do so. 
+
+
+
+\subsection{Completing the Installation}\label{subsec:instComplete}
+
+To install the maven-plugin, just type {\tt mvn clean install}. 
+To install the ant-task, one has first to comment out in {\tt build.xml} 
+the taskdef {\tt latex} and the target {\tt latex:cfg}. 
+One may also adapt the lib-folder of the ant-installation, 
+i.e. the property {\tt antJarDir} where {\tt ant.jar} resides. 
+Then just type {\tt ant clean jar} 
+which creates the jar-file (property {\tt createdJar}) defining the ant-task. 
+After that one may copy the created jar into folder {\tt antJarDir}, 
+where ant finds it typing {\tt sudo ant install}. 
+
+Note that, if maven is installed, the command {\tt mvn clean install} 
+also creates the jar-file {\tt createdJar} defining the ant-task. 
+Also with this method, one has to copy the jar-file defining the ant-task 
+later into ant's lib-folder. 
+
+After having installed the ant-task, 
+reactivate the taskdef {\tt latex} and the target {\tt latex:cfg} 
+and run {\tt ant latex:cfg} to create this manual. 
+
+Mixing ant and maven builds is not so good. 
+One may always recover by just creating with maven. 
+
 
 
 \section{Tools used by this Plugin and Task}\label{sec:tools}
@@ -1167,109 +1305,6 @@ TODO: do this.
 
 %\end{longtable}
 
-\section{Installation}
-
-Both the ant-task and the maven-plugin just direct parameters 
-from ant and from maven, respectively, 
-to the programs that do the proper work. 
-Thus installation of the ant-task and of the maven plugin 
-requires that all needed programs are installed. 
-These prerequisites are collected in Section \ref{subsec:prerequisites}. 
-
-
-\subsection{Prerequisites}\label{subsec:prerequisites}
-
-The ant-task is tested with 
-{\tt Apache Ant(TM) version 1.9.4 compiled on September 11 2015}
-and the maven-plugin with 
-%
-\begin{verbatim}
-Apache Maven 3.2.1
-(ea8b2b07643dbb1b84b6d16e1f08391b666bc1e9; 
-2014-02-14T18:37:52+01:00). 
-\end{verbatim}
-The java version is {\tt 1.8.0\_101, vendor: Oracle Corporation}. 
-
-So, a java installation is the base for running either the ant-task 
-or the maven-plugin. 
-To use the maven-plugin, of course maven must be installed 
-and to use the ant-task, ant must be installed. 
-
-The ant-task just passes parameters in the build file to the core 
-and accordingly the maven-plugin passes parameters in the pom 
-to the core. 
-The core just invokes various programs to do the actual work. 
-
-To convert gnuplot files into pdf-files, there is no alternative, 
-to have installed {\tt gnuplot}. \index{gnuplot}
-To convert the fig-files into pdf-files, 
-by default {\tt fig2dev} is used. \index{fig2dev}
-It makes sense to have {\tt xfig} installed, but this is not mandatory. 
-Currently for including pdf-files in both cases, 
-the driver {\tt dvipdfmx} must be installed. 
-Strictly speaking, this is required only for html-creation and related. 
-
-To create pdf-files from latex files we use {\tt pdflatex} 
-or some other kind of latex creating pdf-files. 
-LaTeX uses several auxiliary programs. 
-Above all {\tt bibtex} to create the bibliography 
-and {\tt makeindex} for the index. \index{bibtex}\index{makeindex}
-
-To create html-files, or to be more precise any kind of sgml and xml, 
-from pdf-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
-Currently the author is not aware of any alternative to the two. 
-This includes also creating open office documents like odt-files. 
-Thus open office documents are created in two steps, 
-the first is to create pdf-files with the according tools, 
-the second one is done by {\tt htlatex} or that like. 
-
-To create rtf-files, currently {\tt latex2rtf} is used. 
-Note that this does not require {\tt pdflatex}. 
-As a drawback, not all latex-packages are supported. 
-
-MS word documents are created from open office documents via {\tt odt2doc} 
-and thus require three steps. 
-
-Finally, there is a way, to create plain text files from the pdf-files 
-via {\tt pdftotext}. 
-The way from latex to text via pdf makes sense 
-because that text is well formatted 
-and may contain unicode symbols like $\pi$. 
-
-So to run this software, the abovementioned programs must be installed. 
-
-\subsection{Setting pom.xml and build.xml}\label{subsec:sgml}
-
-To install the maven-plugin within a given maven project, 
-the according listing given in Section \ref{sec:settings} 
-has to be added to the {\tt pom.xml} 
-and accordingly to install the ant-task within an ant-project, 
-the according listing given in Section \ref{sec:settings} 
-has to be added to the {\tt build.xml} 
-
-\subsection{Completing the Installation}\label{subsec:instComplete}
-
-To install the maven-plugin, just type {\tt mvn clean install}. 
-To install the ant-task, one has first to comment out in {\tt build.xml} 
-the taskdef {\tt latex} and the target {\tt latex:cfg}. 
-One may also adapt the lib-folder of the ant-installation, 
-i.e. the property {\tt antJarDir} where {\tt ant.jar} resides. 
-Then just type {\tt ant clean jar} 
-which creates the jar-file (property {\tt createdJar}) defining the ant-task. 
-After that one may copy the created jar into folder {\tt antJarDir}, 
-where ant finds it typing {\tt sudo ant install}. 
-
-Note that, if maven is installed, the command {\tt mvn clean install} 
-also creates the jar-file {\tt createdJar} defining the ant-task. 
-Also with this method, one has to copy the jar-file defining the ant-task 
-later into ant's lib-folder. 
-
-After having installed the ant-task, 
-reactivate the taskdef {\tt latex} and the target {\tt latex:cfg} 
-and run {\tt ant latex:cfg} to create this manual. 
-
-Mixing ant and maven builds is not so good. 
-One may always recover by just creating with maven. 
 
 \section{Gaps}
 
