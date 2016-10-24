@@ -472,7 +472,7 @@ public class Settings
      *
      * @parameter
      */
-   private String patternNeedLatexReRun = 
+   private String patternLatexNeedsReRun = 
        // general message 
        "(^LaTeX Warning: Label\\(s\\) may have changed. " 
        + "Rerun to get cross-references right.$|" +
@@ -677,8 +677,8 @@ public class Settings
     }
 
 
-    public String getPatternNeedLatexReRun() {
-	return this.patternNeedLatexReRun;
+    public String getPatternLatexNeedsReRun() {
+	return this.patternLatexNeedsReRun;
     }
 
     public int getMaxNumReruns() {
@@ -968,23 +968,23 @@ public class Settings
 	this.t4htOptions = t4htOptions;
     }
 
-    // setter method for patternNeedLatexReRun in maven 
-    public void setPatternNeedLatexReRun(String pattern) {
-	this.patternNeedLatexReRun = pattern;
+    // setter method for patternLatexNeedsReRun in maven 
+    public void setPatternLatexNeedsReRun(String pattern) {
+	this.patternLatexNeedsReRun = pattern;
     }
 
-    // method introduces patternNeedLatexReRun in ant 
-    public PatternNeedLatexReRun createPatternNeedLatexReRun() {
-   	return new PatternNeedLatexReRun();
+    // method introduces patternLatexNeedsReRun in ant 
+    public PatternLatexNeedsReRun createPatternLatexNeedsReRun() {
+   	return new PatternLatexNeedsReRun();
     }
 
     // defines patternNeedAnotherLatexRun element with text in ant 
-    public class PatternNeedLatexReRun {
+    public class PatternLatexNeedsReRun {
 	// FIXME: this is without property resolution. 
 	// to add this need  pattern = getProject().replaceProperties(pattern)
 	// with Task.getProject() 
    	public void addText(String pattern) {
-   	    Settings.this.setPatternNeedLatexReRun(pattern);
+   	    Settings.this.setPatternLatexNeedsReRun(pattern);
    	}
     }
 
@@ -1009,6 +1009,7 @@ public class Settings
         sb.append(", texCommand=")      .append(this.texCommand);
 	sb.append(", texCommandArgs=")  .append(this.texCommandArgs);
 	sb.append(", patternErrLatex=") .append(this.patternErrLatex);
+	sb.append(", patternWarnLatex=").append(this.patternWarnLatex);
  	sb.append(", debugBadBoxes=")   .append(this.debugBadBoxes);
  	sb.append(", debugWarnings=")   .append(this.debugWarnings);
 
@@ -1031,8 +1032,8 @@ public class Settings
         sb.append(", odt2docOptions=")  .append(this.odt2docOptions);
         sb.append(", pdf2txtCommand=")  .append(this.pdf2txtCommand);
         sb.append(", pdf2txtOptions=")  .append(this.pdf2txtOptions);
-	sb.append(", patternNeedLatexReRun=")
-	    .append(this.patternNeedLatexReRun);
+	sb.append(", patternLatexNeedsReRun=")
+	    .append(this.patternLatexNeedsReRun);
 	sb.append(", maxNumReruns=").append(this.maxNumReruns);
 	sb.append(", cleanUp=").append(this.cleanUp);
         sb.append(']');
