@@ -474,7 +474,7 @@ public class Settings
      */
    private String patternNeedLatexReRun = 
        // general message 
-       "(^LaTeX Warning: Label(s) may have changed. " 
+       "(^LaTeX Warning: Label\\(s\\) may have changed. " 
        + "Rerun to get cross-references right.$|" +
        // default message in one line for packages 
        "^Package \\w+ Warning: .*Rerun .*$|" +
