@@ -42,7 +42,7 @@ public class LatexProcessor {
     // e.g. Overfull \box with text '! ' is not an error 
     // and Overfull \box with text 'Warning' is no warning. 
 
-    static final String PATTERN_NEED_BIBTEX_RUN = "^\\bibdata";
+    static final String PATTERN_NEED_BIBTEX_RUN = "^\\\\bibdata";
 
     // Note that two \\ represent a single \ in the string. 
     // Thus \\\\ represents '\\' in the pattern, 
@@ -321,7 +321,8 @@ public class LatexProcessor {
 	if (needLatexReRun) {
 	    log.warn("Max rerun reached although LaTeX demands another run. ");
 	}
-	// emit warnings 
+
+	// emit warnings (errors are emitted by runLatex2pdf and that like.)
 	if (this.settings.getDebugBadBoxes() && 
 	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
 	    log.warn("LaTeX created bad boxes. ");
@@ -329,7 +330,7 @@ public class LatexProcessor {
 	if (this.settings.getDebugWarnings() && 
 	    this.fileUtils
 	    .matchInFile(logFile, 
-			 this.settings.getPatternNeedLatexReRun())) {
+			 this.settings.getPatternWarnLatex())) {
 	    log.warn("LaTeX emited warnings. ");
 	}
     }
@@ -583,6 +584,7 @@ public class LatexProcessor {
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildHtlatexArguments(String, File)}. 
+     * FIXME: document about errors and warnings. 
      *
      * @param texFile
      *    the latex file to be processed. 
@@ -629,7 +631,8 @@ public class LatexProcessor {
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatexArguments(String, File)}. 
      * <p>
-     * Logs a warning if the latex run failed 
+     * Logs a warning or an error if the latex run failed 
+     * invoking {@link #logErrs(File, String)}
      * but not if bad boxes ocurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
@@ -766,11 +769,11 @@ public class LatexProcessor {
      * Returns whether another LaTeX run is necessary 
      * based on a pattern matching in the log file. 
      *
-     * @see Settings#getPatternNeedLatexReRun()
+     * @see Settings#getPatternLatexNeedsReRun()
      */
     private boolean needAnotherLatexRun(File logFile)
 	throws BuildExecutionException {
-        String reRunPattern = this.settings.getPatternNeedLatexReRun();
+        String reRunPattern = this.settings.getPatternLatexNeedsReRun();
 	// may throw a BuildExecutionException
         boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
         log.debug( "Another LaTeX run? " + needRun );
@@ -899,7 +902,8 @@ public class LatexProcessor {
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatexArguments(File)}. 
      * <p>
-     * Logs a warning if the latex run failed 
+     * Logs a warning or an error if the latex run failed 
+     * invoking {@link #logErrs(File, String)}
      * but not if bad boxes occurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
