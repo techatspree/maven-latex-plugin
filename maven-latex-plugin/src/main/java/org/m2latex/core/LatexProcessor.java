@@ -303,6 +303,8 @@ public class LatexProcessor {
 	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lof").exists();
 	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lot").exists();
 	if (needLatexReRun) {
+	    log.debug("Rerun LaTeX to update table of contents, ... " + 
+		      " including bibliography, index, or that like. ");
 	    runLatex2pdf(texFile);
 	}
 
