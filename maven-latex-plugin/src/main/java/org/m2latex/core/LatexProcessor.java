@@ -495,7 +495,12 @@ public class LatexProcessor {
      */
     public void processLatex2txt(File texFile) throws BuildExecutionException {
 	log.info("Converting into txt: LaTeX file " + texFile + ". ");
-        preProcessLatex2pdf(texFile);
+        boolean rerun = preProcessLatex2pdf(texFile);
+	if (rerun) {
+	    runLatex2pdf(texFile);
+	}
+	// warnings emitted by LaTex are ignored 
+	// (errors are emitted by runLatex2pdf and that like.)
 	runPdf2txt      (texFile);
     }
 
