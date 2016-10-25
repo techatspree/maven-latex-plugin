@@ -25,8 +25,24 @@
 \else
 \fi
 
-\usepackage[nottoc,numindex, numbib]{tocbibind}
-
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+\usepackage[toc]{glossaries}
+\setacronymstyle{long-short}
+\newacronym{pdf}{pdf}{portable document format}
+\newacronym{dvi}{dvi}{device independent}
+\newacronym{eps}{eps}{encapsulated postscript}
+\newacronym{tex}{tex}{tex the format, which may also be latex}
+\newacronym{html}{html}{hypertext markup language}
+\newacronym{xhtml}{xhtml}{extensible hypertext markup language}
+\newacronym{odt}{odt}{open document text}
+\newacronym{doc}{doc}{outdated document format for MS word }
+\newacronym{docx}{docx}{current document format for MS word }
+\newacronym{xml}{xml}{extensible markup language }
+\newacronym{ptx}{ptx}{pdf/postscript tex format }
+\newacronym{fig}{fig}{native file format for xfig }
+\newacronym{png}{png}{Portable Network Graphics}
+\newacronym{svg}{svg}{Scalable Vector Graphics}
+\makeglossaries
 
 \title{Manual for the latex-maven-plugin and for an according ant-task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
@@ -274,6 +290,23 @@ Example: {\tt ant -d latex:cfg}.
 
 \section{Conversions done by this Plugin and this Task}\label{sec:conversions}
 
+This section describes the conversions of source files into target files 
+in detail. 
+
+The most important target file formats is pdf. 
+But pdf also occurs as an intermediate format for pictures. 
+For historical reasons, still eps (encapsulated postscript) is used. 
+Section \ref{subsec:figpdf} shows that it suffices to stick to pictures 
+in pdf-format. 
+Section \ref{subsec:fig2dev} shows how {\tt fig2dev} converts fig-files 
+into latex-files containing text and including graphics in as pdf-files. 
+Likewise, Section \ref{subsec:gnuplot2pdf} describes 
+how gnuplot converts gnuplot-files into pdf-files. 
+Currently, these are the only graphic formats which must be converted 
+before being able to be included into a latex file. 
+
+
+
 \subsection{Including pdf-files}\label{subsec:figpdf}
 
 Modern latex implementations directly create pdf-files. 
@@ -281,11 +314,11 @@ Thus it makes sense, to allow including graphics as pdf-files
 in latex-files. 
 This is done in pdf mode 
 by the latex-packages {\tt xcolor} and {\tt graphicx}. 
-In contrast, in dvi-mode used to create html output, 
+In contrast, in dvi-mode which is still used to create html output, 
 this is not supported by the default driver, 
-Instead it shall be used {\tt dvipdfmx}. 
+Instead it shall be used the driver {\tt dvipdfmx}. 
 To obtain a latex-file which works both for creating pdf and html, 
-insert in the header 
+insert in the header of the latex main file 
 %
 \lstset{language=tex, basicstyle=\small}
 \begin{lstlisting}
@@ -351,12 +384,26 @@ fig2dev -L pdftex_t -p pdf xxx.fig xxx.ptx
 \end{verbatim}
 %
 yield {\tt xxx.pdf} and {\tt xxx.ptx}, respectively, 
-the latter containing latex and including the former. 
-The file {\tt xxx.ptx} is ``inputted'' into the tex-file. 
+the latter containing latex and including the former via the 
+{\tt\textbackslash includegraphics}-command. 
+Thus the according latex main document must use packages graphicx and xcolor 
+as indicated in Section \ref{subsec:figpdf}. 
+The file {\tt xxx.ptx} is ``inputted'' into the tex-file 
+with the {\tt\textbackslash input}-command. 
 Note that this is appropriate for latex creating pdf-files, 
 not postscript or dvi. 
 
-Note that the option {\tt -L} is to specify the language, 
+In the {\tt fig2dev}-commands above, 
+the option {\tt -L} specifies the language of the output file. 
+In the first command the language is {\tt pdftex} 
+which is just the picture without text in pdf-format; 
+the according output file is  {\tt xxx.pdf}. 
+In the second command the lanugage is {\tt pdftex\_t} 
+which is just latex and 
+comprises the text of the picture and the inclusion of {\tt xxx.pdf}
+via {\tt\textbackslash includegraphics\{xxx.pdf\}}; 
+the according output file is {\tt xxx.ptx}. 
+
 {\tt -p pdf} specifies portrait 
 (also {\tt -l pdf} for landscape would be possible). 
 According to the documentation, {\tt pdf} is ignored, 
@@ -382,7 +429,8 @@ This may be the reason
 why the magnification must be set in the export dialog, 
 but it is stored in the fig-file nevertheless. 
 
-Figure \ref{fig:fig2dev} shows the transformation of figures. 
+Figure \ref{fig:fig2dev} shows the transformation 
+of figures with {\tt fig2dev}. 
 Note that the {\tt fig2dev}-command is configurable 
 via the parameter {\tt fig2devCommand}, 
 but there will be hardly any command with the same command line interface 
@@ -395,6 +443,7 @@ except {\tt fig2dev} itself.
 \end{center}
 \caption{\label{fig:fig2dev}Conversion of a fig-file into pdf and ptx-files}
 \end{figure}
+
 
 \subsection{Conversion of gnuplot-files}\label{subsec:gnuplot2pdf}
 
@@ -454,7 +503,25 @@ FIXME: why does gnuplot not work from within java, whereas standalone it does
 Converted sample gnuplot-file into ptx and pdf files }
 \end{figure}
 
+\subsection{Pictures which are not created}\label{subsec:picasis}
 
+Figure \ref{fig:asIs} shows some picture included as jpg. 
+This is done as usual with {\tt\textbackslash includegraphics}. 
+Note that both for {\tt pdflatex} and siblings creating pdf-output 
+and for {\tt htlatex} in conjunction with {\tt dvipdfmx} 
+(see Section \ref{subsec:figpdf}) 
+files in the format pdf, png, jpg are supported. 
+This list may be incomplete. 
+
+FIXME: at the moment, htlatex does not work with pictures at all. 
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{4oboeBaroqueDennerMIR370.jpg}
+\end{center}
+\caption{\label{fig:asIs}
+Some jpg-picture, directly included }
+\end{figure}
 
 \subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
 
@@ -523,7 +590,7 @@ in the second run of {\tt latex2pdf}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{4tex2pdf.ptx}
+\input{5tex2pdf.ptx}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
 \end{figure}
@@ -552,7 +619,7 @@ whether {\tt bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{5aux2bbl.ptx}
+\input{6aux2bbl.ptx}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
@@ -580,7 +647,7 @@ whether {\tt makeindex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{6idx2ind.ptx}
+\input{7idx2ind.ptx}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
@@ -688,7 +755,7 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{7tex2xml.ptx}
+\input{8tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -1426,6 +1493,7 @@ described here, this manual is created through plugin and task.
 \bibliography{lit}{}
 
 \printindex
+\printglossaries 
 \end{document}
 
 %%% Local Variables: 
