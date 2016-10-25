@@ -1148,6 +1148,14 @@ requires the following definition in {\tt pom.xml}.
 	 The default value is 'pdf, html'. -->
     <targets>pdf, html</targets>
 
+    <!-- The pattern which identifies a latex main file. 
+	 The default value is '\s*\\(documentstyle|documentclass).*'. 
+	 If this is not appropriate, please modify 
+	 and notify the developer of this plugin. -->
+    <patternLatexMainFile>
+      \s*\\(documentstyle|documentclass).*
+    </patternLatexMainFile>
+
     <!-- Path to the TeX scripts or null. 
 	 In the latter case, the scripts must be on the system path. 
 	 Note that in the pom, <texPath/> 
@@ -1409,7 +1417,9 @@ requires the following target and task definition in {\tt build.xml}.
 		pdf2txtOptions=""
 		cleanUp='true'>
 	<!-- texPath is null -->
-	
+	<patternLatexMainFile>
+	  \s*\\(documentstyle|documentclass).*
+	</patternLatexMainFile>
 	<patternErrLatex>(^! )</patternErrLatex>
 	<patternErrBibtex>error message</patternErrBibtex>
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
