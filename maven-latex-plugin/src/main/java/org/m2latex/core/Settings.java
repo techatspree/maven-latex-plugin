@@ -1038,6 +1038,8 @@ public class Settings
  	sb.append(", outputDirectory=") .append(this.outputDirectory);
 
  	sb.append(", targets=")         .append(this.targets);
+ 	sb.append(", =patternLatexMainFile").append(this.patternLatexMainFile);
+
         sb.append(", texPath=")         .append(this.texPath);
         sb.append(", fig2devCommand=")  .append(this.fig2devCommand);
         sb.append(", texCommand=")      .append(this.texCommand);
