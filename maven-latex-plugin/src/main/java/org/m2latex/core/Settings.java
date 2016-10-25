@@ -30,8 +30,7 @@ import java.util.TreeSet;
  * These are the elements of the maven pom in element <code>settings</code> 
  * and accordingly for the ant build file. 
  */
-public class Settings
-{
+public class Settings {
 
     // static initializer 
 
@@ -954,9 +953,6 @@ public class Settings
    	}
     }
 
-
-
-
     public void setDebugBadBoxes(boolean debugBadBoxes) {
 	this.debugBadBoxes = debugBadBoxes;
     }
@@ -1038,7 +1034,7 @@ public class Settings
  	sb.append(", outputDirectory=") .append(this.outputDirectory);
 
  	sb.append(", targets=")         .append(this.targets);
- 	sb.append(", =patternLatexMainFile").append(this.patternLatexMainFile);
+ 	sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
 
         sb.append(", texPath=")         .append(this.texPath);
         sb.append(", fig2devCommand=")  .append(this.fig2devCommand);
