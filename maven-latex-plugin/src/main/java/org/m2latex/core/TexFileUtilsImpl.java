@@ -37,12 +37,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 class TexFileUtilsImpl implements TexFileUtils {
 
-    /**
-     * The pattern which identifies a latex main file. 
-     */
-   private final static String MAIN_TEX_PATTERN = 
-	".*\\\\begin\\s*\\{document\\}.*";
-
     private final LogWrapper log;
 
     private final Settings settings;
@@ -274,7 +268,8 @@ class TexFileUtilsImpl implements TexFileUtils {
  
    private boolean isTexMainFile(File file) throws BuildExecutionException {
         try {
-            return fileContainsPattern(file, MAIN_TEX_PATTERN);
+            return fileContainsPattern(file, 
+				       this.settings.getPatternLatexMainFile());
 
         } catch (FileNotFoundException e) {
             throw new BuildExecutionException("The TeX file '" + file.getPath()

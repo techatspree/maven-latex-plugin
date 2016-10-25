@@ -145,6 +145,18 @@ public class Settings
     private String targets = "pdf, html";
 
 
+    /**
+     * The pattern which identifies a latex main file. 
+     * The default value is <code>\s*\\(documentstyle|documentclass).*</code>. 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     *
+     * @parameter
+     */
+    private String patternLatexMainFile = 
+	"\\s*\\\\(documentstyle|documentclass).*";
+
+
     // texPath, commands and arguments 
 
     /**
@@ -566,7 +578,9 @@ public class Settings
 	return targetSet;
     }
 
-
+    public String getPatternLatexMainFile() {
+	return this.patternLatexMainFile;
+    }
 
 
     // texPath, commands and arguments 
@@ -746,6 +760,26 @@ public class Settings
 
     public void setTargets(String targets) {
 	this.targets = targets.trim();
+    }
+
+    // setter method for patternLatexMainFile in maven 
+    public void setPatternLatexMainFile(String patternLatexMainFile) {
+	this.patternLatexMainFile = patternLatexMainFile;
+    }
+
+    // method introduces patternLatexMainFile in ant 
+    public PatternLatexMainFile createPatternLatexMainFile() {
+   	return new PatternLatexMainFile();
+    }
+
+    // defines patternLatexMainFile element with text in ant 
+    public class PatternLatexMainFile {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternLatexMainFile(pattern);
+   	}
     }
 
     public void setTexPath(File texPath) {

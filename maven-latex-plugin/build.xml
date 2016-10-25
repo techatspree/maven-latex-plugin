@@ -108,6 +108,9 @@
 		pdf2txtOptions=""
 		maxNumReruns='-1'
 		cleanUp='true'>
+	<patternLatexMainFile>
+	  \s*\\(documentstyle|documentclass).*
+	</patternLatexMainFile>
 	<patternErrLatex>(^! )</patternErrLatex>
 	<patternWarnLatex>
 	(^LaTeX Warning: |

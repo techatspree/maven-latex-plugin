@@ -254,6 +254,14 @@
 		 The default value is 'pdf, html'. -->
 	    <targets>pdf, html</targets>
 
+	    <!-- The pattern which identifies a latex main file. 
+		 The default value is '\s*\\(documentstyle|documentclass).*'. 
+		 If this is not appropriate, please modify 
+		 and notify the developer of this plugin. -->
+	    <patternLatexMainFile>
+	      \s*\\(documentstyle|documentclass).*
+	    </patternLatexMainFile>
+
            <!-- Path to the TeX scripts or null. 
 		In the latter case, the scripts must be on the system path. 
 		Note that in the pom, <texPath/> 

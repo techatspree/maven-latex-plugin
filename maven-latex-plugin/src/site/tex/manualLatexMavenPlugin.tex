@@ -493,8 +493,6 @@ embedded in this latex file.
 \caption{\label{fig:plt2pdf}Conversion of a gnuplot-file into a pdf-file}
 \end{figure}
 
-FIXME: why does gnuplot not work from within java, whereas standalone it does 
-
 \begin{figure}[htb]
 \begin{center}
 \input{3gnuplot.ptx}
@@ -517,7 +515,7 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{4oboeBaroqueDennerMIR370.jpg}
+\includegraphics[width=0.9\textwidth]{4oboeBaroqueDennerMIR370.jpg}%
 \end{center}
 \caption{\label{fig:asIs}
 Some jpg-picture, directly included }
@@ -530,6 +528,7 @@ LaTeX distinguishes master tex-files from tex-files intended to be inputted
 from elsewhere. 
 Master tex-files have the form 
 %
+\lstset{language=tex, basicstyle=\small}
 \begin{lstlisting}
 \documentclass{...}
 
@@ -576,7 +575,7 @@ because the index entries must be collected and sorted before.
 This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs. 
 Based on the idx-file, {\tt makeindex} creates an ind-file 
 containing the index, which is read in in the next {\tt latex2pdf} run. 
-For details see Section {subsec:makeindex}. 
+For details see Section \ref{subsec:makeindex}. 
 
 In addition, 
 if a table of contents, a list of figures or a list of tables is required, 
@@ -860,15 +859,19 @@ A comma separated list of targets to be stored in {\tt\$targetSet}.
 %The default value is '{\tt pdf, html}'. 
 \end{minipage}
 } \\
-\tt texPath          & {\tt null}         \\
+\tt targets          & \tt pdf, html     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Path to the TeX scripts or {\tt null}. 
-In the latter case, the scripts must be on the system path. 
-Note that in the pom, the according empty element {\tt$<$texPath/$>$} 
-even if written as {\tt $<$texPath$>$\ \ \ $<$/texPath$>$} 
-represents the {\tt null}-File. 
-%The default value is {\tt null}. 
+A comma separated list of targets to be stored in {\tt\$targetSet}. 
+%The default value is '{\tt pdf, html}'. 
+\end{minipage}
+} \\
+\tt patternLatexMainFile          &  \textbackslash s*\\textbackslash (documentstyle|documentclass).*        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern which identifies a latex main file. 
+If the default value is not appropriate, please modify 
+and notify the developer of this plugin. 
 \end{minipage}
 } \\
 \tt fig2devCommand   & \tt fig2dev  \index{fig2dev}     \\
