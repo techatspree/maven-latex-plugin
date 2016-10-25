@@ -248,45 +248,29 @@ public class LatexProcessor {
     // FIXME: determine whether to use latexmk makes sense 
 
     /**
-     * Runs LaTeX on <code>texFile</code> at least once, 
+     * Runs LaTeX on <code>texFile</code> at once, 
      * runs BibTeX and MakeIndex by need 
-     * and reruns latex as long as needed to get all links 
-     * or as threshold {@link Settings#maxNumReruns} specifies. 
+     * and returns whether a second LaTeX run is required. 
+
      * <p>
-     * The result of the LaTeX run is typically some pdf-file, 
-     * but it is also possible to specify the dvi-format 
-     * (no longer recommended but still working). 
-     * <p>
-     * A warning is logged if 
-     * <ul>
-     * <li>
-     * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
-     * <li>
-     * bad boxes occurred and shall be logged 
-     * according to {@link Settings#getDebugBadBoxes()} 
-     * <li>
-     * warnings occurred and shall be logged 
-     * according to {@link Settings#getDebugWarnings()} 
-     * </ul>
-     * A warning is logged each time a LaTeX run fails, 
-     * a BibTeX run or MakeIndex fails 
+     * A warning is logged if the LaTeX, a BibTeX run or MakeIndex fails 
      * or if a BibTeX run or a MakeIndex run issues a warning
      * in the according methods {@link #runLatex2pdf(File)}, 
      * {@link #runBibtex(File)} and {@link #runMakeindex(File)}. 
      *
      * @param texFile
      *    the tex file to be processed. 
+     * @return
+     *    whether a second LaTeX run is required 
+     *    because either bibtex or makeindex had been run 
+     *    or to update a table of contents or a list figures or tables. 
      * @see #runLatex2pdf(File)
-     * @see #runBibtex(File)
-     * @see #runMakeindex(File)
-     * @see #needAnotherLatexRun(File)
-     * @see #needBibtexRun(File)
+     * @see #runBibtexByNeed(File)
+     * @see #runMakeindexByNeed(File)
      */
     // FIXME: what about glossaries and things like that? 
-    public void processLatex2pdf(final File texFile)
+    private boolean preProcessLatex2pdf(final File texFile)
 	throws BuildExecutionException {
-
-        log.info("Processing LaTeX file " + texFile + ". ");
 
 	// initial latex run 
         runLatex2pdf(texFile);
@@ -302,9 +286,41 @@ public class LatexProcessor {
 	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "toc").exists();
 	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lof").exists();
 	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lot").exists();
+
+	return needLatexReRun;
+    }
+
+    /**
+     * Runs LaTeX on <code>texFile</code> at once, 
+     * runs BibTeX and MakeIndex by need 
+     * and reruns latex as long as needed to get all links 
+     * or as threshold {@link Settings#maxNumReruns} specifies. 
+     * <p>
+     * The result of the LaTeX run is typically some pdf-file, 
+     * but it is also possible to specify the dvi-format 
+     * (no longer recommended but still working). 
+     * <p>
+     * A warning is logged under certain circumstances if 
+     * <ul>
+     * <li>
+     * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
+     * <li>
+     * bad boxes or warnings occurred. 
+     * For details see {@link #logWarns(File, String)}. 
+     * </ul>
+     *
+     * @param texFile
+     *    the tex file to be processed. 
+     * @see #needAnotherLatexRun(File)
+     */
+    public void processLatex2pdf(final File texFile) 
+	throws BuildExecutionException {
+
+        log.info("Converting into pdf: LaTeX file " + texFile + ". ");
+	boolean needLatexReRun = preProcessLatex2pdf(texFile);
 	if (needLatexReRun) {
 	    log.debug("Rerun LaTeX to update table of contents, ... " + 
-		      " including bibliography, index, or that like. ");
+		      "including bibliography, index, or that like. ");
 	    runLatex2pdf(texFile);
 	}
 
@@ -323,15 +339,79 @@ public class LatexProcessor {
 	}
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
+	logWarns(logFile, this.settings.getTexCommand());
+    }
+
+   /**
+     * Logs errors detected in the according log file: 
+     * The log file is by replacing the ending of <code>texFile</code> 
+     * by <code>log</code>. 
+     * If the log file exists, a <em>warning</em> is logged 
+     * if the error pattern given by {@link Settings#getPatternErrLatex()} 
+     * occurs in the log file. 
+     * If the log file does not exist, an <em>error</em> is logged. 
+     * In both cases, the message logged refers to the <code>command</code> 
+     * which failed. 
+     */
+    private void logErrs(File logFile, String command) 
+	throws BuildExecutionException {
+
+	//File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+	if (logFile.exists()) {
+	    // matchInFile may throw BuildExecutionException
+	    boolean errorOccurred = this.fileUtils
+		.matchInFile(logFile, this.settings.getPatternErrLatex());
+	    if (errorOccurred) {
+		log.warn("Running " + command + 
+			 " failed. For details see " + 
+			 logFile.getName() + ". ");
+	    }
+	} else {
+	    this.log.error("Running " + command + 
+			   " failed: no log file " + 
+			   logFile.getName() + " found. ");
+	}
+    }
+
+    /**
+     * Logs warnings detected in the according log file: 
+     * The log file is by replacing the ending of <code>texFile</code> 
+     * by <code>log</code>. 
+     * Before logging warnings, 
+     * errors are logged via {@link #logErrs(File, String)}. 
+     * So, if the log-file does not exist, 
+     * an error was already shown and so nothing is to be done here. 
+     * If the log file exists, a <em>warning</em> is logged if 
+     * <ul>
+     * <li>
+     * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
+     * <li>
+     * bad boxes occurred and shall be logged 
+     * according to {@link Settings#getDebugBadBoxes()} 
+     * <li>
+     * warnings occurred and shall be logged 
+     * according to {@link Settings#getDebugWarnings()} 
+     * </ul>
+     * Both criteria are based on pattern recognized in the log file: 
+     * {@link #PATTERN_OUFULL_HVBOX} for bad boxes is fixed, 
+     * whereas {@link Settings#getPatternWarnLatex()} is configurable. 
+     * The message logged refers to the <code>command</code> which failed. 
+     */
+    private void logWarns(File logFile, String command) 
+	throws BuildExecutionException {
+
+	if (!logFile.exists()) {
+	    return;
+	}
+
 	if (this.settings.getDebugBadBoxes() && 
 	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
-	    log.warn("LaTeX created bad boxes. ");
+	    log.warn("Running " + command + " created bad boxes. ");
 	}
 	if (this.settings.getDebugWarnings() && 
-	    this.fileUtils
-	    .matchInFile(logFile, 
-			 this.settings.getPatternWarnLatex())) {
-	    log.warn("LaTeX emited warnings. ");
+	    this.fileUtils.matchInFile(logFile, 
+				       this.settings.getPatternWarnLatex())) {
+	    log.warn("Running " + command + " emited warnings. ");
 	}
     }
 
@@ -343,13 +423,13 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #processLatex2pdf(File)
+     * @see #preProcessLatex2pdf(File)
      * @see #runLatex2html(File)
      */
     public void processLatex2html(File texFile)
 	throws BuildExecutionException {
-	log.info("Processing LaTeX file " + texFile + ". ");
-	//processLatex2pdf(texFile);
+	log.info("Converting into html: LaTeX file " + texFile + ". ");
+	preProcessLatex2pdf(texFile);
         runLatex2html   (texFile);
     }
 
@@ -361,12 +441,12 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #processLatex2pdf(File)
+     * @see #preProcessLatex2pdf(File)
      * @see #runLatex2odt(File)
      */
     public void processLatex2odt(File texFile) throws BuildExecutionException {
-	log.info("Processing LaTeX file " + texFile + ". ");
-        //processLatex2pdf(texFile);
+	log.info("Converting into odt: LaTeX file " + texFile + ". ");
+        preProcessLatex2pdf(texFile);
         runLatex2odt    (texFile);
     }
 
@@ -378,12 +458,13 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #processLatex2pdf(File)
+     * @see #preProcessLatex2pdf(File)
+     * @see #runLatex2odt(File)
      * @see #runOdt2doc(File)
      */
     public void processLatex2docx(File texFile) throws BuildExecutionException {
-	log.info("Processing LaTeX file " + texFile + ". ");
-        //processLatex2pdf(texFile);
+	log.info("Converting into doc(x): LaTeX file " + texFile + ". ");
+        preProcessLatex2pdf(texFile);
         runLatex2odt    (texFile);
         runOdt2doc      (texFile);
     }
@@ -397,11 +478,10 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #processLatex2pdf(File)
      * @see #runLatex2rtf(File)
      */
     public void processLatex2rtf(File texFile) throws BuildExecutionException {
-	log.info("Processing LaTeX file " + texFile + ". ");
+	log.info("Converting into rtf: LaTeX file " + texFile + ". ");
 	runLatex2rtf(texFile);
     }
 
@@ -410,11 +490,12 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #processLatex2pdf(File)
+     * @see #preProcessLatex2pdf(File)
      * @see #runPdf2txt(File)
      */
     public void processLatex2txt(File texFile) throws BuildExecutionException {
-        processLatex2pdf(texFile);
+	log.info("Converting into txt: LaTeX file " + texFile + ". ");
+        preProcessLatex2pdf(texFile);
 	runPdf2txt      (texFile);
     }
 
@@ -606,15 +687,14 @@ public class LatexProcessor {
 			      command, 
 			      args);
 
-	// logging errors 
-	logErrs(texFile, command);
-
-	// missing: warnings: should be displayed configurable. 
+	// logging errors and warnings 
+	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+	logErrs (logFile, command);
+	logWarns(logFile, command);
     }
 
     private String[] buildHtlatexArguments( File texFile )
-            throws BuildExecutionException
-    {
+            throws BuildExecutionException {
         return new String[] {
 	    texFile.getName(),
 	    this.settings.getTex4htStyOptions(),
@@ -663,10 +743,9 @@ public class LatexProcessor {
 			      args);
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	logErrs(texFile, command);
-
-	// Maybe missing: warnings and bad boxes; 
-	// should be displayed configurable. 
+	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+	logErrs (logFile, command);
+	logWarns(logFile, command);
     }
 
 
@@ -929,39 +1008,11 @@ public class LatexProcessor {
 			      command, 
 			      args);
 
-	// logging errors 
-	logErrs(texFile, command);
-    }
-
-    /**
-     * Logs errors detected in the according log file: 
-     * The log file is by replacing the ending of <code>texFile</code> 
-     * by <code>log</code>. 
-     * If the log file exists, a <em>warning</em> is logged 
-     * if the error pattern given by {@link Settings#getPatternErrLatex()} 
-     * occurs in the log file. 
-     * If the log file does not exist, an <em>error</em> is logged. 
-     * In both cases, the message logged refers to the <code>command</code> 
-     * which failed. 
-     */
-    private void logErrs(File texFile, String command) 
-	throws BuildExecutionException {
-
+	// logging errors (warnings are done in processLatex2pdf)
 	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
-	if (logFile.exists()) {
-	    // matchInFile may throw BuildExecutionException
-	    boolean errorOccurred = this.fileUtils
-		.matchInFile(logFile, this.settings.getPatternErrLatex());
-	    if (errorOccurred) {
-		log.warn("Running " + command + " on " + texFile.getName() + 
-			 " failed. For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	} else {
-	    this.log.error("Running " + command + " on " + texFile.getName() + 
-			   " failed: no log file found. ");
-	}
+	logErrs(logFile, command);
     }
-}
+
+ }
 
 
