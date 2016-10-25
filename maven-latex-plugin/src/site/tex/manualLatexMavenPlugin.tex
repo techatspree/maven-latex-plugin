@@ -439,7 +439,7 @@ except {\tt fig2dev} itself.
 
 \begin{figure}[htb]
 \begin{center}
-\input{1fig2dev.ptx}
+\input{01fig2dev.ptx}
 \end{center}
 \caption{\label{fig:fig2dev}Conversion of a fig-file into pdf and ptx-files}
 \end{figure}
@@ -488,14 +488,14 @@ embedded in this latex file.
 
 \begin{figure}[htb]
 \begin{center}
-\input{2plt2pdf.ptx}
+\input{02plt2pdf.ptx}
 \end{center}
 \caption{\label{fig:plt2pdf}Conversion of a gnuplot-file into a pdf-file}
 \end{figure}
 
 \begin{figure}[htb]
 \begin{center}
-\input{3gnuplot.ptx}
+\input{03gnuplot.ptx}
 \end{center}
 \caption{\label{fig:gnuplot}
 Converted sample gnuplot-file into ptx and pdf files }
@@ -515,7 +515,7 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{4oboeBaroqueDennerMIR370.jpg}%
+\includegraphics[width=0.9\textwidth]{04oboeBaroqueDennerMIR370.jpg}%
 \end{center}
 \caption{\label{fig:asIs}
 Some jpg-picture, directly included }
@@ -589,7 +589,7 @@ in the second run of {\tt latex2pdf}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{5tex2pdf.ptx}
+\input{05tex2pdf.ptx}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
 \end{figure}
@@ -618,7 +618,7 @@ whether {\tt bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{6aux2bbl.ptx}
+\input{06aux2bbl.ptx}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
@@ -646,7 +646,7 @@ whether {\tt makeindex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{7idx2ind.ptx}
+\input{07idx2ind.ptx}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
@@ -754,7 +754,7 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{8tex2xml.ptx}
+\input{08tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -764,6 +764,27 @@ for executing the requests made in the {\tt xxx.lg} script.
 \subsection{Creating MX word files}
 
 \subsection{Creating plain text files}
+
+Plain text files can be created from latex files 
+just by stripping off the tex-commands. 
+The disadvantage is, 
+that references, bibliography index, table of contents \dots 
+and symbols get lost. 
+Thus, the first step we take is just doing one LaTeX run, 
+followed by another LaTeX run to satisfy the links. 
+as described in Section \ref{subsec:tex2pdf}. 
+This creates an appropriate pdf-file, 
+possibly with overfull boxes and that like. 
+As a final step, we convert the pdf-file into a text file 
+using, as a default {\tt pdftotext} with ending {\tt txt}. 
+Figure \ref{fig:tex2txt} illustrates this. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{09tex2txt.ptx}
+\end{center}
+\caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
+\end{figure}
 
 
 \subsection{Miscellaneous}
