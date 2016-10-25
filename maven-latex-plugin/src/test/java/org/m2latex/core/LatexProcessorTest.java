@@ -98,12 +98,12 @@ public class LatexProcessorTest
 	fileUtilsCtrl.setReturnValue( logFile );
         mockNeedAnotherLatexRun( false );
 
-	// detect bad boxes and warnings: none 
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInFile(logFile, 
-			      this.settings.getPatternWarnLatex());
-	fileUtilsCtrl.setReturnValue( false );
+	// // detect bad boxes and warnings: none 
+	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	// fileUtilsCtrl.setReturnValue( false );
+	// fileUtils.matchInFile(logFile, 
+	// 		      this.settings.getPatternWarnLatex());
+	// fileUtilsCtrl.setReturnValue( false );
 
         replay();
 
@@ -143,12 +143,12 @@ public class LatexProcessorTest
         mockRunLatex();
         mockNeedAnotherLatexRun( false );
 
-	// detect bad boxes and warnings: none 
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	fileUtilsCtrl.setReturnValue( false );
-	fileUtils.matchInFile(logFile, 
-			      this.settings.getPatternWarnLatex());
-	fileUtilsCtrl.setReturnValue( false );
+	// // detect bad boxes and warnings: none 
+	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	// fileUtilsCtrl.setReturnValue( false );
+	// fileUtils.matchInFile(logFile, 
+	// 		      this.settings.getPatternWarnLatex());
+	// fileUtilsCtrl.setReturnValue( false );
 
         replay();
 
@@ -159,23 +159,23 @@ public class LatexProcessorTest
 
    @Test public void testProcessLatex2html() throws BuildExecutionException {
 
- 	// // run latex 
-        // mockRunLatex();
+ 	// run latex 
+        mockRunLatex();
 
-	// // run bibtex by need: no 
-	// mockRunBibtexByNeed(false);
+	// run bibtex by need: no 
+	mockRunBibtexByNeed(false);
 
-	// // run makeIndex by need: no 
-	// mockRunMakeIndexByNeed(false);
+	// run makeIndex by need: no 
+	mockRunMakeIndexByNeed(false);
 
-	// // determine from presence of toc, lof, lot (and idx and other criteria)
-	// // whether to rerun latex: no 
-	// fileUtils.replaceSuffix( texFile, "toc" );
-	// fileUtilsCtrl.setReturnValue( tocFile );
-	// fileUtils.replaceSuffix( texFile, "lof" );
-	// fileUtilsCtrl.setReturnValue( lofFile );
-	// fileUtils.replaceSuffix( texFile, "lot" );
-	// fileUtilsCtrl.setReturnValue( lotFile );
+	// determine from presence of toc, lof, lot (and idx and other criteria)
+	// whether to rerun latex: no 
+	fileUtils.replaceSuffix( texFile, "toc" );
+	fileUtilsCtrl.setReturnValue( tocFile );
+	fileUtils.replaceSuffix( texFile, "lof" );
+	fileUtilsCtrl.setReturnValue( lofFile );
+	fileUtils.replaceSuffix( texFile, "lot" );
+	fileUtilsCtrl.setReturnValue( lotFile );
 
 	// // determine whether to rerun latex: no 
 	// fileUtils.replaceSuffix( texFile, "log" );
@@ -186,7 +186,7 @@ public class LatexProcessorTest
 	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
 	// fileUtilsCtrl.setReturnValue( false );
 	// fileUtils.matchInFile(logFile, 
-	//		         this.settings.getPatternWarnLatex());
+	// 		         this.settings.getPatternWarnLatex());
 	// fileUtilsCtrl.setReturnValue( false );
 
         mockRunLatex2html();
@@ -289,6 +289,7 @@ public class LatexProcessorTest
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
 
+	// logErrs
 	fileUtils.replaceSuffix( texFile, "log" );
 	fileUtilsCtrl.setReturnValue( logFile );
 
