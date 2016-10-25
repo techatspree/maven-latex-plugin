@@ -660,7 +660,7 @@ because this bypasses the detection of errors and warnings of this software.
 Information on the makeindex program can be found in \cite{MkIdxMoe} 
 and in \cite{MkIdxLam}. 
 
-\subsection{Rerunning the latex processor}
+\subsection{Rerunning the latex processor}\label{subsec:rerunLatex}
 
 As indicated in the previous sections, 
 {\tt latex2pdf} must be rerun, if {\tt bibtex} or {\tt makeindex} had been run 
@@ -696,7 +696,7 @@ between two runs of {\tt latex2pdf},
 this would require a change in this software. 
 
 
-\subsection{Creating hypertext}
+\subsection{Creating hypertext}\label{subsec:tex2html}
 
 To create html and xhtml from latex files, 
 a {\tt htlatex}-command is used. 
@@ -759,11 +759,33 @@ for executing the requests made in the {\tt xxx.lg} script.
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
 
-\subsection{Creating odt-files}
+\subsection{Creating odt-files}\label{subsec:tex2odt}
 
-\subsection{Creating MX word files}
+\subsection{Creating MX word files}\label{subsec:tex2doc}
 
-\subsection{Creating plain text files}
+The best way to convert latex files into MS word files is via odt files. 
+Conversion from latex to odt 
+is already described in Section \ref{subsec:tex2odt}. 
+The last step can be done by {\tt odt2doc} which can create both 
+doc-format and docx-format and many others 
+which is illustrated in Figure \ref{fig:tex2doc}. 
+
+
+\begin{figure}[htb]
+\begin{center}
+\input{09tex2doc.ptx}
+\end{center}
+\caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
+\end{figure}
+
+
+
+\subsection{Creating plain text files}\label{subsec:tex2txt}
+
+Why should one create plain text from latex files? 
+Maybe this is the minimal format the receiver can work with. 
+Another common application is wordcount, 
+in particular if writing a paper for a journal. 
 
 Plain text files can be created from latex files 
 just by stripping off the tex-commands. 
@@ -781,7 +803,7 @@ Figure \ref{fig:tex2txt} illustrates this.
 
 \begin{figure}[htb]
 \begin{center}
-\input{09tex2txt.ptx}
+\input{10tex2txt.ptx}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
@@ -887,7 +909,7 @@ A comma separated list of targets to be stored in {\tt\$targetSet}.
 %The default value is '{\tt pdf, html}'. 
 \end{minipage}
 } \\
-\tt patternLatexMainFile          &  \textbackslash s*\\textbackslash (documentstyle|documentclass).*        \\
+\tt patternLatexMainFile          &  \textbackslash s*\textbackslash (documentstyle|documentclass).*        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern which identifies a latex main file. 
@@ -909,11 +931,11 @@ Currently only {\tt pdf} combined with {\tt ptx} is supported.
 \tt texCommand       & \tt pdflatex      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The LaTeX command to create a pdf-file. 
+The LaTeX command to create a pdf-file with. 
 %The default value is '{\tt pdflatex}'. 
 \end{minipage}
 } \\
-\tt texCommandArgs   & \tt\small -interaction=nonstopmode -src-specials  \\
+\tt texCommandArgs   & see below  \\%\tt\small -interaction=nonstopmode -src-specials
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The arguments string to use 
@@ -924,7 +946,7 @@ A sequence of at least one blank separate the proper options.
 %'{\tt-interaction=nonstopmode -src-specials}'. 
 \end{minipage}
 } \\
-\tt patternErrLatex & \tt(\^! ) \\
+\tt patternErrLatex & \tt(\^{}! ) \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
@@ -993,14 +1015,14 @@ logging on an ilg-file.
 %The default value is '{\tt makeindex}'. 
 \end{minipage}
 } \\
-\tt makeIndexOptions & \tt the empty string     \\
+\tt makeIndexOptions & the empty string     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the MakeIndex command. 
 % The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternErrMakeindex & !! Input index error         \\
+\tt patternErrMakeindex & \tt !! Input index error         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
@@ -1009,7 +1031,7 @@ The default value is chosen
 according to the 'makeindex' documentation.
 \end{minipage}
 } \\
-\tt patternWarnMakeindex & \#\# Warning         \\
+\tt patternWarnMakeindex & \tt \#\# Warning         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
@@ -1107,7 +1129,7 @@ to keep permissions and timestamp of the original document.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pdf2txt command converting pdf into plain text. 
-The default value is '{\tt pdftotext}'. 
+%The default value is '{\tt pdftotext}'. 
 \end{minipage}
 } \\
 \tt pdf2txtOptions      & the empty string  \\
