@@ -437,6 +437,12 @@ but there will be hardly any command with the same command line interface
 performing exactly the transformations given in Figure \ref{fig:fig2dev}, 
 except {\tt fig2dev} itself. 
 
+At the same time, Figure \ref{fig:fig2dev} is an example 
+for a latex-file created from a fig-file 
+and embedded in this latex file 
+with the {\tt\textbackslash input}-command. 
+
+
 \begin{figure}[htb]
 \begin{center}
 \input{01fig2dev.ptx}
@@ -478,8 +484,9 @@ Here further options are missing:
 %    //                      {size <XX>{unit},<YY>{unit}}
 
 Figure \ref{fig:plt2pdf} shows the transformation of the plots 
-and Figure \ref{fig:plt2pdf} shows an example of a gnuplot file 
-embedded in this latex file. 
+and Figure \ref{fig:plt2pdf} shows an example of a latex-file 
+created from a gnuplot file 
+and embedded in this latex file with the {\tt\textbackslash input}-command. 
 %Note that the {\tt gnuplot}-command is configurable 
 %via the parameter {\tt gnuplotCommand}, 
 %but there will be hardly any command with the same command line interface 
@@ -501,6 +508,53 @@ embedded in this latex file.
 Converted sample gnuplot-file into ptx and pdf files }
 \end{figure}
 
+
+\subsection{Inclusion of Metapost files}\label{subsec:metapost}
+
+A graphic format, very native to TeX is {\tt metapost}, 
+a derivative of {\tt metafont} originally used to describe shape of fonts. 
+Although seemingly supported by TeX only, 
+{\tt metapost} is interesting as it is a graphical programming language, 
+Turing complete, much like postscript. 
+Files containing {\tt metapost} have the ending {\tt mp}. 
+The interpreter for {\tt metapost} is {\tt mpost}. 
+Figure \ref{fig:mp2mps} illustrates how {\tt mpost} converts an mp-file 
+{\tt xxx.mp} 
+into one or more mps-files {\tt xxx1.mp}\dots {\tt xxxn.mp}, 
+(as the mp-file may declare more than one figure) 
+creating a log-file {\tt xxx.log} like LaTeX does 
+and an mpx-file {\tt xxx.mpx}. 
+The mps-files look like postscript, or more like encapsulated postscript, 
+but are not completely valid, since the prologue is missing, by default. 
+%**** reference to practical metapost ****
+To make it valid set in the mp-file {\tt prologues:=2;} 
+
+Roughly speaking, the mpx-file contains text parts of the mp-file; 
+more knowledge is not necessary, as it is not used by this software. 
+
+Figure \ref{fig:metapost} gives an example of a metapost file 
+included in this LaTeX-file. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{04mp2mps.ptx}
+\end{center}
+\caption{\label{fig:mp2mps}Conversion of a metapost-file into an mps-file}
+\end{figure}
+
+Figure \ref{fig:metapost} shows an example of an mps-file 
+created from a metapost file 
+and embedded in this latex file 
+with the {\tt\textbackslash includegraphics}-command. 
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics{05metapost1.mps}
+\end{center}
+\caption{\label{fig:metapost}
+Converted sample metapost-file included as mps-file  }
+\end{figure}
+
 \subsection{Pictures which are not created}\label{subsec:picasis}
 
 Figure \ref{fig:asIs} shows some picture included as jpg. 
@@ -515,7 +569,7 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{04oboeBaroqueDennerMIR370.jpg}%
+\includegraphics[width=0.9\textwidth]{06oboeBaroqueDennerMIR370.jpg}%
 \end{center}
 \caption{\label{fig:asIs}
 Some jpg-picture, directly included }
@@ -589,7 +643,7 @@ in the second run of {\tt latex2pdf}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{05tex2pdf.ptx}
+\input{07tex2pdf.ptx}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
 \end{figure}
@@ -618,7 +672,7 @@ whether {\tt bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{06aux2bbl.ptx}
+\input{08aux2bbl.ptx}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
@@ -646,7 +700,7 @@ whether {\tt makeindex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{07idx2ind.ptx}
+\input{09idx2ind.ptx}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
@@ -754,7 +808,7 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{08tex2xml.ptx}
+\input{10tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -773,7 +827,7 @@ which is illustrated in Figure \ref{fig:tex2doc}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{09tex2doc.ptx}
+\input{11tex2doc.ptx}
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -803,7 +857,7 @@ Figure \ref{fig:tex2txt} illustrates this.
 
 \begin{figure}[htb]
 \begin{center}
-\input{10tex2txt.ptx}
+\input{12tex2txt.ptx}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}

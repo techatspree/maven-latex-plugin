@@ -96,7 +96,9 @@ public class LatexProcessor {
      * This consists in reading the parameters 
      * via {@link ParameterAdapter#initialize()} 
      * copying LaTeX source directory recursively into a temporary folder, 
-     * processing xfig-files via {@link #runFig2Dev(File)} 
+     * processing xfig-files via {@link #runFig2Dev(File)}, 
+     * gnuplot-files via {@link #runGnuplot2Dev(File)},  
+     * metapost-files via {@link #runMetapost2mps(File)} 
      * and processing the tex main files 
      * via {@link ParameterAdapter#processSource(File)}. 
      * The resulting files are identified by its suffixes 
@@ -161,6 +163,15 @@ public class LatexProcessor {
 		this.log.info("Processing gnuplot-file " + pltFile + ". ");
 		// may throw BuildExecutionException 
 		runGnuplot2Dev(pltFile, LatexDev.pdf);
+	    }
+
+	    // process metapost files 
+	    Collection<File> mpFiles = this.fileUtils
+		.getMetapostDocuments(tempDir);
+	    for (File mpFile : mpFiles) {
+		this.log.info("Processing metapost-file " + mpFile + ". ");
+		// may throw BuildExecutionException 
+		runMetapost2mps(mpFile);
 	    }
 
 	    // process latex main files 
@@ -355,12 +366,15 @@ public class LatexProcessor {
      */
     private void logErrs(File logFile, String command) 
 	throws BuildExecutionException {
+	logErrs(logFile, command, this.settings.getPatternErrLatex());
+    }
 
-	//File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+    private void logErrs(File logFile, String command, String pattern) 
+	throws BuildExecutionException {
+
 	if (logFile.exists()) {
 	    // matchInFile may throw BuildExecutionException
-	    boolean errorOccurred = this.fileUtils
-		.matchInFile(logFile, this.settings.getPatternErrLatex());
+	    boolean errorOccurred = this.fileUtils.matchInFile(logFile,pattern);
 	    if (errorOccurred) {
 		log.warn("Running " + command + 
 			 " failed. For details see " + 
@@ -521,8 +535,10 @@ public class LatexProcessor {
      *    the plt-file (gnuplot format) to be converted to pdf. 
      * @throws BuildExecutionException
      *    if running the ptx/pdf-conversion built in in gnuplot fails. 
+     * @see #execute()
      */
-    public void runGnuplot2Dev(File pltFile, LatexDev dev) 
+    // used in execute() only 
+     public void runGnuplot2Dev(File pltFile, LatexDev dev) 
 	throws BuildExecutionException {
 	String command = "gnuplot";
 	File pdfFile = this.fileUtils.replaceSuffix(pltFile, "pdf");
@@ -572,9 +588,9 @@ public class LatexProcessor {
      *    returned by {@link Settings#getFig2devCommand()} failed. 
      *    This is invoked twice: once for creating the pdf-file 
      *    and once for creating the pdf_t-file. 
-     * @see AbstractLatexMojo#execute()
+     * @see #execute()
      */
-    // used in AbstractLatexMojo.execute() only 
+    // used in execute() only 
     public void runFig2Dev(File figFile, LatexDev dev) 
 	throws BuildExecutionException {
 
@@ -622,6 +638,40 @@ public class LatexProcessor {
 				  args);
 	    //}
 	// no check: just warning that no output has been created. 
+    }
+
+    /**
+     * Runs mpost on mp-files to generate mps-files. 
+     *
+     * @param mpFile
+     *    the metapost file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the mpost command failed. 
+     * @see #execute()
+     */
+    // used in execute() only 
+    private void runMetapost2mps(File mpFile) throws BuildExecutionException {
+	String command = "mpost";
+	File workingDir = mpFile.getParentFile();
+	// for more information just type mpost --help 
+	String[] args = new String[] {
+	    "-interaction=nonstopmode",
+	    mpFile.getName()
+	};
+	log.debug("Running " + command + 
+		  " -interaction=nonstopmode " + mpFile.getName() + ". ");
+	// may throw BuildExecutionException 
+	this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), //**** 
+			      command, 
+			      args);
+	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
+	// FIXME: what is xxx.mpx for? 
+	File logFile = this.fileUtils.replaceSuffix(mpFile, "log");
+	// FIXME: DO NOT USE OPTION -file-line-error; 
+	// else pattern does not match errors 
+	logErrs(logFile, command, "^! ");
+	// FIXME: what about warnings?
     }
 
     /**
@@ -698,8 +748,8 @@ public class LatexProcessor {
 	logWarns(logFile, command);
     }
 
-    private String[] buildHtlatexArguments( File texFile )
-            throws BuildExecutionException {
+    private String[] buildHtlatexArguments(File texFile)
+	throws BuildExecutionException {
         return new String[] {
 	    texFile.getName(),
 	    this.settings.getTex4htStyOptions(),

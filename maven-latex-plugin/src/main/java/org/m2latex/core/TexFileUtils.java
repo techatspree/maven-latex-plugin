@@ -41,6 +41,7 @@ interface TexFileUtils
 
     Collection<File> getXFigDocuments(File directory);
     Collection<File> getGnuplotDocuments(File directory);
+    Collection<File> getMetapostDocuments(File directory);
 
     /*
      * @param tempDir

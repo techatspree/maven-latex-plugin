@@ -243,6 +243,13 @@ class TexFileUtilsImpl implements TexFileUtils {
 		       TrueFileFilter.INSTANCE);
     }
 
+    public Collection<File> getMetapostDocuments(File directory) {
+	return FileUtils
+	    .listFiles(directory,
+		       FileFilterUtils.suffixFileFilter(".mp"),
+		       TrueFileFilter.INSTANCE);
+    }
+
     /*
      * (non-Javadoc)
      * 
