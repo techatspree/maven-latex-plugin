@@ -59,24 +59,38 @@
 
 \section{Introduction}
 
+LaTeX is a beautyful way to create printable documents, 
+today in particular as pdf-files, 
+with a particular strength in typesetting formulae like 
+%
+\begin{eqnarray*}
+\pi & = & \sqrt{12}\sum^\infty_{k=0} \frac{ (-3)^{-k} }{ 2k+1 }
+\end{eqnarray*}
+
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from LaTeX files 
 in an uniform way. 
-In particular, the settings which may be passed to the task 
+Besides pdf, these formats include the web-format (x)html, 
+open document format odt, microsoft's word formats like docx 
+and finally plain text. 
+
+Uniformity of ant-task and a maven-plugin means in particular, 
+that the settings which may be passed to the task 
 and those allowed for the plugin are in a one-to-one relation. 
 They are both described in Section \ref{sec:settings}. 
 \index{ant-task}
-
 Both, the ant-task and the maven-plugin rely on the same code base 
 which form the package {\tt org.m2latex.core}. 
 The code specific for the ant-task is in {\tt org.m2latex.antTask} 
 and that specific for the maven-plugin is in {\tt org.m2latex.mojo}. 
 
 It is very usual to endow LaTeX-files with figures. 
-We support figures created in the xfig-format 
-by the program xfig. 
-Further make functionality on latex figures is not supported, 
-but can be easily added. 
+We support figures created in the xfig-format by the program xfig, 
+figures created by the plotting utility gnuplot, 
+the tex-specific graphic language metapost 
+and finally figures in formats which can be included into a latex-file 
+without preprocessing like png and jpg. 
+Further functionality on latex figures can be easily added. 
 If there is some need, please write an email to the author. 
 
 The creation process supports makeindex and bibtex. 
