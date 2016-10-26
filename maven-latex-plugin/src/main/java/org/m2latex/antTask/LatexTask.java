@@ -14,7 +14,7 @@ import java.io.File;
 
 import java.util.SortedSet;
 
-public class LatexTask extends Task implements ParameterAdapter {
+public class LatexCfgTask extends Task implements ParameterAdapter {
 
     /**
      * Contains all parameters for executing this task. 
