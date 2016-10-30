@@ -86,17 +86,17 @@ public class LatexProcessorTest
 
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
-	fileUtils.replaceSuffix( texFile, "toc" );
-	fileUtilsCtrl.setReturnValue( tocFile );
-	fileUtils.replaceSuffix( texFile, "lof" );
-	fileUtilsCtrl.setReturnValue( lofFile );
-	fileUtils.replaceSuffix( texFile, "lot" );
-	fileUtilsCtrl.setReturnValue( lotFile );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC);
+	fileUtilsCtrl.setReturnValue(tocFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOF);
+	fileUtilsCtrl.setReturnValue(lofFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT);
+	fileUtilsCtrl.setReturnValue(lotFile);
 
 	// determine whether to rerun latex: no 
-	fileUtils.replaceSuffix( texFile, "log" );
-	fileUtilsCtrl.setReturnValue( logFile );
-        mockNeedAnotherLatexRun( false );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
+	fileUtilsCtrl.setReturnValue(logFile);
+        mockNeedAnotherLatexRun(false);
 
 	// // detect bad boxes and warnings: none 
 	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
@@ -126,18 +126,18 @@ public class LatexProcessorTest
 
 	// determine from presence of toc, lof, lot (and idx and bibtex)
 	// whether to rerun latex: no 
-	fileUtils.replaceSuffix( texFile, "toc" );
-	fileUtilsCtrl.setReturnValue( tocFile );
-	fileUtils.replaceSuffix( texFile, "lof" );
-	fileUtilsCtrl.setReturnValue( lofFile );
-	fileUtils.replaceSuffix( texFile, "lot" );
-	fileUtilsCtrl.setReturnValue( lotFile );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC);
+	fileUtilsCtrl.setReturnValue(tocFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOF);
+	fileUtilsCtrl.setReturnValue(lofFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT);
+	fileUtilsCtrl.setReturnValue(lotFile);
 
 	// to run latex because bibtex had been run 
         mockRunLatex();
 
 	// determine whether to rerun latex and run until no 
-	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	fileUtilsCtrl.setReturnValue( logFile );
         mockNeedAnotherLatexRun( true );
         mockRunLatex();
@@ -170,15 +170,15 @@ public class LatexProcessorTest
 
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
-	fileUtils.replaceSuffix( texFile, "toc" );
-	fileUtilsCtrl.setReturnValue( tocFile );
-	fileUtils.replaceSuffix( texFile, "lof" );
-	fileUtilsCtrl.setReturnValue( lofFile );
-	fileUtils.replaceSuffix( texFile, "lot" );
-	fileUtilsCtrl.setReturnValue( lotFile );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC);
+	fileUtilsCtrl.setReturnValue(tocFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOF);
+	fileUtilsCtrl.setReturnValue(lofFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT);
+	fileUtilsCtrl.setReturnValue(lotFile);
 
 	// // determine whether to rerun latex: no 
-	// fileUtils.replaceSuffix( texFile, "log" );
+	// fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	// fileUtilsCtrl.setReturnValue( logFile );
         // mockNeedAnotherLatexRun( false );
 
@@ -216,7 +216,7 @@ public class LatexProcessorTest
     private void mockRunBibtexByNeed(boolean runBibtex) 
 	throws BuildExecutionException {
 
-        fileUtils.replaceSuffix( texFile, "aux" );
+        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_AUX);
         fileUtilsCtrl.setReturnValue( auxFile );
         fileUtils.matchInFile(auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
         fileUtilsCtrl.setReturnValue( runBibtex );
@@ -232,7 +232,7 @@ public class LatexProcessorTest
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
 
-	fileUtils.replaceSuffix( texFile, "blg" );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_BLG);
 	fileUtilsCtrl.setReturnValue( blgFile );
 
 	// fileUtils.matchInFile(blgFile, "Error");
@@ -246,7 +246,7 @@ public class LatexProcessorTest
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
 	throws BuildExecutionException {
 
-        fileUtils.replaceSuffix( texFile, "idx" );
+        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
         fileUtilsCtrl.setReturnValue( idxFile );
 
 	if (!runMakeIndex) {
@@ -261,7 +261,7 @@ public class LatexProcessorTest
 	executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
 
-	fileUtils.replaceSuffix( idxFile, "ilg" );
+	fileUtils.replaceSuffix(idxFile, LatexProcessor.SUFFIX_ILG);
 	fileUtilsCtrl.setReturnValue( ilgFile );
 
     }
@@ -277,7 +277,7 @@ public class LatexProcessorTest
         executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
         executorCtrl.setReturnValue( null );
 
-	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	fileUtilsCtrl.setReturnValue( logFile );
     }
 
@@ -290,7 +290,7 @@ public class LatexProcessorTest
         executorCtrl.setReturnValue( null );
 
 	// logErrs
-	fileUtils.replaceSuffix( texFile, "log" );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	fileUtilsCtrl.setReturnValue( logFile );
 
 	// since log file does not exist 
