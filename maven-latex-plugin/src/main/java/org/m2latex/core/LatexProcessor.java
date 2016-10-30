@@ -30,7 +30,7 @@ import java.util.Arrays;
  * The latex processor creates various output from latex sources 
  * including also preprocessing of graphic files in several formats. 
  * This is the core class of this piece of software. 
- * The main method is {@link #execute()} which is executed by the ant task 
+ * The main method is {@link #create()} which is executed by the ant task 
  * and by the maven plugin. 
  * It does preprocessing of the graphic files 
  * and main processing of the latex file according to the target(s) 
@@ -49,6 +49,44 @@ public class LatexProcessor {
     // which in turn represents a single \. 
     static final String PATTERN_OUFULL_HVBOX = 
 	"^(Ov|Und)erfull \\\\[hv]box \\(";
+
+
+    // LaTeX 
+    final static String SUFFIX_TOC = ".toc";
+    final static String SUFFIX_LOF = ".lof";
+    final static String SUFFIX_LOT = ".lot";
+    final static String SUFFIX_AUX = ".aux";
+
+
+    // home-brewed ending to represent tex including postscript 
+    private final static String SUFFIX_PTX = ".ptx";
+    final static String SUFFIX_PDF = ".pdf";
+    final static String SUFFIX_PSTEX = ".pstex";
+
+    // for LaTeX but also for mpost 
+    final static String SUFFIX_LOG = ".log";
+ 
+    // suffix for xfig
+    private final static String SUFFIX_FIG = ".fig";
+    // suffix for gnuplot
+    private final static String SUFFIX_PLT = ".plt";
+    // suffix for metapost
+    private final static String SUFFIX_MP  = ".mp";
+    // from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
+    private final static String SUFFIX_MPS = ".mps";
+    private final static String SUFFIX_MPX = ".mpx";
+
+    // odt2doc 
+    private final static String SUFFIX_ODT = ".odt";
+
+    // makeindex 
+    final static String SUFFIX_IDX = ".idx";
+    final static String SUFFIX_ILG = ".ilg";
+
+    // bibtex 
+    final static String SUFFIX_BLG = ".blg";
+
+
 
     private final Settings settings;
 
@@ -88,17 +126,14 @@ public class LatexProcessor {
 			  LogWrapper log, 
 			  ParameterAdapter paramAdapt) {
 	this(settings, new CommandExecutorImpl(log), log, 
-	     new TexFileUtilsImpl(log, settings), paramAdapt);
+	     new TexFileUtilsImpl(log), paramAdapt);
     }
 
     /**
-     * Executes the ant-task or the maven plugin. 
+     * Defines creational ant-task and the maven plugin. 
      * This consists in reading the parameters 
      * via {@link ParameterAdapter#initialize()} 
-     * copying LaTeX source directory recursively into a temporary folder, 
-     * processing xfig-files via {@link #runFig2Dev(File)}, 
-     * gnuplot-files via {@link #runGnuplot2Dev(File)},  
-     * metapost-files via {@link #runMetapost2mps(File)} 
+     * processing graphic-files via {@link #processGraphics(File)} 
      * and processing the tex main files 
      * via {@link ParameterAdapter#processSource(File)}. 
      * The resulting files are identified by its suffixes 
@@ -128,7 +163,7 @@ public class LatexProcessor {
      *    if processing xfig-files or gnuplot files fail. 
      *    </ul>
      */
-    public void execute() 
+    public void create() 
 	throws BuildExecutionException, BuildFailureException {
 
         this.paramAdapt.initialize();
@@ -137,52 +172,26 @@ public class LatexProcessor {
         File texDirectory = this.settings.getTexSrcDirectoryFile();
 
         if (!texDirectory.exists()) {
-            this.log.info("No tex directory - skipping LaTeX processing");
+            this.log.info("No tex directory - skipping LaTeX processing. ");
             return;
         }
 
+	// may throw BuildExecutionException 
+	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
+
 	try {
-	    File tempDir = this.settings.getTempDirectoryFile();
-	    // copy sources to tempDir 
-	    // may throw BuildExecutionException 
-	    this.fileUtils.copyLatexSrcToTempDir(texDirectory, tempDir);
-
-	    // process xfig files 
-	    Collection<File> figFiles = this.fileUtils
-		.getXFigDocuments(tempDir);
-	    for (File figFile : figFiles) {
-		this.log.info("Processing fig-file " + figFile + ". ");
-		// may throw BuildExecutionException 
-		runFig2Dev(figFile, LatexDev.pdf);
-	    }
-
-	    // process gnuplot files 
-	    Collection<File> pltFiles = this.fileUtils
-		.getGnuplotDocuments(tempDir);
-	    for (File pltFile : pltFiles) {
-		this.log.info("Processing gnuplot-file " + pltFile + ". ");
-		// may throw BuildExecutionException 
-		runGnuplot2Dev(pltFile, LatexDev.pdf);
-	    }
-
-	    // process metapost files 
-	    Collection<File> mpFiles = this.fileUtils
-		.getMetapostDocuments(tempDir);
-	    for (File mpFile : mpFiles) {
-		this.log.info("Processing metapost-file " + mpFile + ". ");
-		// may throw BuildExecutionException 
-		runMetapost2mps(mpFile);
-	    }
+	    processGraphics(texDirectory);
 
 	    // process latex main files 
 	    // may throw BuildExecutionException 
 	    Collection<File> latexMainFiles = this.fileUtils
-		.getLatexMainDocuments(tempDir);
+		.getLatexMainDocuments(texDirectory, 
+				       this.settings.getPatternLatexMainFile());
 	    for (File texFile : latexMainFiles) {
 		// may throw BuildExecutionException, BuildFailureException 
 		File targetDir = this.fileUtils.getTargetDirectory
 		    (texFile, 
-		     tempDir, 
+		     texDirectory,
 		     this.settings.getOutputDirectoryFile());
 
 		for (Target target : this.paramAdapt.getTargetSet()) {
@@ -192,18 +201,175 @@ public class LatexProcessor {
 			.getFileFilter(texFile, 
 				       target.getOutputFileSuffixes());
 		    // may throw BuildExecutionException, BuildFailureException
-		    this.fileUtils.copyOutputToTargetFolder(fileFilter,
-							    texFile,
+		    this.fileUtils.copyOutputToTargetFolder(texFile,
+							    fileFilter,
 							    targetDir);
 
 		} // target 
 	    } // texFile 
 	} finally {
-	    if ( this.settings.isCleanUp() ) {
-                this.fileUtils.cleanUp();
+	    if (this.settings.isCleanUp()) {
+		// may throw BuildExecutionException
+                this.fileUtils.cleanUp(orgFiles, texDirectory);
             }
         }
     }
+
+    /**
+     * Converts files in various graphic formats incompatible with LaTeX 
+     * into formats which can be inputted or included directly 
+     * into a latex file: 
+     *
+     * <ul>
+     * <li>
+     * {@link #runFig2Dev(File, LatexDev)} converts a fig-file into pdf, 
+     * except the text which is converted into latex-file including the pdf-file
+     * <li>
+     * {@link #runGnuplot2Dev(File, LatexDev)} converts a gnuplot-file into pdf,
+     * except the text which is converted into latex-file including the pdf-file
+     * <li>
+     * {@link #runMetapost2mps(File)} converts a metapost-file into mps-format. 
+     * </ul>
+     *
+     * @throws BuildExecutionException
+     */
+    private void processGraphics(File texDirectory) 
+	throws BuildExecutionException {
+
+	// process xfig files 
+	// may throw BuildExecutionException 
+	Collection<File> figFiles = this.fileUtils
+	    .getFilesWithSuffix(texDirectory, SUFFIX_FIG);
+	for (File figFile : figFiles) {
+	    this.log.info("Processing fig-file " + figFile + ". ");
+	    // may throw BuildExecutionException 
+	    runFig2Dev(figFile, LatexDev.pdf);
+	}
+
+	// process gnuplot files 
+	// may throw BuildExecutionException 
+	Collection<File> pltFiles = this.fileUtils
+	    .getFilesWithSuffix(texDirectory, SUFFIX_PLT);
+	for (File pltFile : pltFiles) {
+	    this.log.info("Processing gnuplot-file " + pltFile + ". ");
+	    // may throw BuildExecutionException 
+	    runGnuplot2Dev(pltFile, LatexDev.pdf);
+	}
+
+	// process metapost files 
+	// may throw BuildExecutionException 
+	Collection<File> mpFiles = this.fileUtils
+	    .getFilesWithSuffix(texDirectory, SUFFIX_MP);
+	for (File mpFile : mpFiles) {
+	    this.log.info("Processing metapost-file " + mpFile + ". ");
+	    // may throw BuildExecutionException 
+	    runMetapost2mps(mpFile);
+	}
+    }
+
+    private void clearGraphics(File texDirectory) 
+	throws BuildExecutionException {
+
+	// delete targets of xfig files 
+	// may throw BuildExecutionException 
+	Collection<File> figFiles = this.fileUtils
+	    .getFilesWithSuffix(texDirectory, SUFFIX_FIG);
+	for (File figFile : figFiles) {
+	    this.log.info("Deleting targets of fig-file " + figFile + ". ");
+	    // may throw BuildExecutionException 
+	    this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
+	    this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
+	}
+
+	// delete targets of gnuplot files 
+	// may throw BuildExecutionException 
+	Collection<File> pltFiles = this.fileUtils
+	    .getFilesWithSuffix(texDirectory, SUFFIX_PLT);
+	for (File pltFile : pltFiles) {
+	    this.log.info("Deleting targets of gnuplot-file " + pltFile + ". ");
+	    // may throw BuildExecutionException 
+	    this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX).delete();
+	    this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF).delete();
+	}
+
+	// delete targets of metapost files 
+	// may throw BuildExecutionException 
+	Collection<File> mpFiles = this.fileUtils
+	    .getFilesWithSuffix(texDirectory, SUFFIX_MP);
+	FileFilter filter;
+	for (File mpFile : mpFiles) {
+	    this.log.info("Deleting targets of metapost-file " + mpFile + ". ");
+	    // may throw BuildExecutionException 
+	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG).delete();
+	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX).delete();
+	    // delete files xxxNumber.mps 
+	    String name1 = mpFile.getName();
+	    final String root = name1.substring(0, name1.lastIndexOf("."));
+	    filter = new FileFilter() {
+		    public boolean accept(File file) {
+			return !file.isDirectory()
+			    &&  file.getName().matches(root+"\\d+"+SUFFIX_MPS);
+		    }
+		};
+
+	    // may throw BuildExecutionException 
+	    this.fileUtils.delete(mpFile, filter);
+	}
+    }
+
+    /**
+     * Clear all files in <code>texDirectory</code> and folders therein 
+     * with name starting as the name of a latex main file without suffix 
+     * (which is called the root) but do not clear the latex file itself. 
+     * Clear also the eps file <code>zz&lt;root>.eps</code>. 
+     */
+    private void clearFromLatexMain(File texDirectory) 
+	throws BuildExecutionException {
+
+	// may throw BuildExecutionException 
+	Collection<File> texMainFiles = this.fileUtils
+	    .getLatexMainDocuments(texDirectory, 
+				   this.settings.getPatternLatexMainFile());
+	FileFilter filter;
+	for (final File texFile : texMainFiles) {	    
+	    // filter to delete 
+	    String name1 = texFile.getName();
+	    final String root = name1.substring(0, name1.lastIndexOf("."));
+	    filter = new FileFilter() {
+		    public boolean accept(File file) {
+			return !file.isDirectory()
+			    &&  file.getName().matches(root+".+")
+			    && !file.equals(texFile);
+		    }
+		};
+	    this.log.info("Deleting files " + root + "... . ");
+	    // may throw BuildExecutionException 
+	    this.fileUtils.delete(texFile, filter);
+
+	    this.log.info("Deleting file zz" + root + ".eps. ");
+	    new File(texFile.getParent(), "zz" + root + ".eps").delete();
+	}
+    }
+
+
+    /**
+     * Defines clearing ant-task and the maven plugin. 
+     * Consists in clearing created graphic files 
+     * and created files derived from latex main file. 
+     *
+     * @see #clearGraphics(File)
+     * @see #clearFromLatexMain(File)
+     */
+    public void clearAll() throws BuildExecutionException {
+        this.paramAdapt.initialize();
+        this.log.debug("Settings: " + this.settings.toString());
+
+        File texDirectory = this.settings.getTexSrcDirectoryFile();
+
+	clearGraphics(texDirectory);
+	clearFromLatexMain(texDirectory);
+    }
+
 
     // FIXME: use the -recorder option to resolve dependencies. 
     // With that option, a file xxx.fls is generated with form 
@@ -294,9 +460,12 @@ public class LatexProcessor {
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
-	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "toc").exists();
-	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lof").exists();
-	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, "lot").exists();
+	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)
+	    .exists();
+	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF)
+	    .exists();
+	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT)
+	    .exists();
 
 	return needLatexReRun;
     }
@@ -338,7 +507,7 @@ public class LatexProcessor {
 	// rerun latex by need 
         int retries = 0;
 	int maxNumReruns = this.settings.getMaxNumReruns();
-	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
         while ((maxNumReruns == -1 || retries < maxNumReruns)
 	       && (needLatexReRun = needAnotherLatexRun(logFile))) {
             log.debug("Latex must be rerun. ");
@@ -376,13 +545,11 @@ public class LatexProcessor {
 	    // matchInFile may throw BuildExecutionException
 	    boolean errorOccurred = this.fileUtils.matchInFile(logFile,pattern);
 	    if (errorOccurred) {
-		log.warn("Running " + command + 
-			 " failed. For details see " + 
+		log.warn("Running " + command + " failed. For details see " + 
 			 logFile.getName() + ". ");
 	    }
 	} else {
-	    this.log.error("Running " + command + 
-			   " failed: no log file " + 
+	    this.log.error("Running " + command + " failed: no log file " + 
 			   logFile.getName() + " found. ");
 	}
     }
@@ -500,7 +667,7 @@ public class LatexProcessor {
     }
 
     /**
-     * Runs direct conversion of <code>texFile</code> to txt format via pdf. 
+     * Runs conversion of <code>texFile</code> to txt format via pdf. 
      *
      * @param texFile
      *    the tex file to be processed. 
@@ -541,8 +708,8 @@ public class LatexProcessor {
      public void runGnuplot2Dev(File pltFile, LatexDev dev) 
 	throws BuildExecutionException {
 	String command = "gnuplot";
-	File pdfFile = this.fileUtils.replaceSuffix(pltFile, "pdf");
-	File ptxFile = this.fileUtils.replaceSuffix(pltFile, "ptx");
+	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
+	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
 
 	String[] args = new String[] {
 	    "-e",   // run a command string "..." with commands sparated by ';' 
@@ -576,6 +743,8 @@ public class LatexProcessor {
 	// no check: just warning that no output has been created. 
     }
 
+    // suffix for tex files containing text and including pdf 
+
 
     /**
      * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
@@ -598,8 +767,8 @@ public class LatexProcessor {
 	File workingDir = figFile.getParentFile();
 	String[] args;
 
-	//File pdfFile   = this.fileUtils.replaceSuffix(figFile, "pdf");
-	File pdf_tFile = this.fileUtils.replaceSuffix(figFile, "ptx");
+	//File pdfFile   = this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF);
+	File pdf_tFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
 
 	//String pdf   = pdfFile  .toString();
 	String pdf_t = pdf_tFile.toString();
@@ -640,6 +809,7 @@ public class LatexProcessor {
 	// no check: just warning that no output has been created. 
     }
 
+ 
     /**
      * Runs mpost on mp-files to generate mps-files. 
      *
@@ -658,8 +828,7 @@ public class LatexProcessor {
 	    "-interaction=nonstopmode",
 	    mpFile.getName()
 	};
-	log.debug("Running " + command + 
-		  " -interaction=nonstopmode " + mpFile.getName() + ". ");
+	log.debug("Running " + command + " on " + mpFile.getName() + ". ");
 	// may throw BuildExecutionException 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
@@ -667,10 +836,8 @@ public class LatexProcessor {
 			      args);
 	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
 	// FIXME: what is xxx.mpx for? 
-	File logFile = this.fileUtils.replaceSuffix(mpFile, "log");
-	// FIXME: DO NOT USE OPTION -file-line-error; 
-	// else pattern does not match errors 
-	logErrs(logFile, command, "^! ");
+	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
+	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
     }
 
@@ -743,7 +910,7 @@ public class LatexProcessor {
 			      args);
 
 	// logging errors and warnings 
-	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	logErrs (logFile, command);
 	logWarns(logFile, command);
     }
@@ -798,7 +965,7 @@ public class LatexProcessor {
 			      args);
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	logErrs (logFile, command);
 	logWarns(logFile, command);
     }
@@ -826,7 +993,7 @@ public class LatexProcessor {
     private void runOdt2doc( File texFile)
             throws BuildExecutionException {
 
-	File odtFile = this.fileUtils.replaceSuffix(texFile, "odt");
+	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
 	String command = this.settings.getOdt2docCommand();
 	log.debug( "Running " + command + 
 		   " on file " + odtFile.getName() + ". ");
@@ -856,7 +1023,7 @@ public class LatexProcessor {
      */
     private void runPdf2txt(File texFile) throws BuildExecutionException {
 
-	File pdfFile = this.fileUtils.replaceSuffix(texFile, "pdf");
+	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
 	String command = this.settings.getPdf2txtCommand();
 	log.debug("Running " + command + 
 		  " on file " + pdfFile.getName() + ". ");
@@ -932,9 +1099,9 @@ public class LatexProcessor {
     private boolean runMakeindexByNeed(File texFile)
 	throws BuildExecutionException {
 
-	File idxFile = this.fileUtils.replaceSuffix(texFile, "idx");
+	File idxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
 	boolean needRun = idxFile.exists();
-	log.debug("MakeIndex run required? " +needRun);
+	log.debug("MakeIndex run required? " + needRun);
 	if (!needRun) {
 	    return false;
 	}
@@ -951,7 +1118,7 @@ public class LatexProcessor {
 			      args);
 
 	// detect errors 
- 	File logFile = this.fileUtils.replaceSuffix( idxFile, "ilg" );
+ 	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
 	if (logFile.exists()) {
 	    boolean errOccurred = this.fileUtils.matchInFile
 		(logFile, this.settings.getPatternErrMakeindex());
@@ -987,7 +1154,7 @@ public class LatexProcessor {
     private boolean runBibtexByNeed(File texFile)
 	throws BuildExecutionException {
 
-	File auxFile =  this.fileUtils.replaceSuffix(texFile, "aux");
+	File auxFile =  this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
         boolean needRun = this.fileUtils.matchInFile(auxFile, 
 						     PATTERN_NEED_BIBTEX_RUN);
 	log.debug("BibTeX run required? " + needRun);
@@ -1005,7 +1172,7 @@ public class LatexProcessor {
 			      this.settings.getBibtexCommand(), 
 			      args);
 
-	File logFile = this.fileUtils.replaceSuffix( texFile, "blg" );
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
 	if (logFile.exists()) {
 	    // FIXME: Could be further improved: 1 error but more warnings: 
 	    // The latter shall be displayed. (maybe)
@@ -1064,7 +1231,7 @@ public class LatexProcessor {
 			      args);
 
 	// logging errors (warnings are done in processLatex2pdf)
-	File logFile = this.fileUtils.replaceSuffix(texFile, "log");
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	logErrs(logFile, command);
     }
 
