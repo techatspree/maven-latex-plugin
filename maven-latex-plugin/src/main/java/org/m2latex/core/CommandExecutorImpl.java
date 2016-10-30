@@ -71,13 +71,13 @@ class CommandExecutorImpl implements CommandExecutor {
 	cl.addArguments(args);
 	cl.setWorkingDirectory(workingDir.getPath());
 	StringStreamConsumer output = new StringStreamConsumer();
-	log.debug("Executing: " + cl + " in: " + workingDir );
+	log.debug("Executing: " + cl + " in: " + workingDir + ". ");
 
         try {
 	    // may throw CommandLineException 
 	    CommandLineUtils.executeCommandLine(cl, output, output);
 	} catch (CommandLineException e) {
-	    throw new BuildExecutionException("Error executing command", e);
+	    throw new BuildExecutionException("Error executing command ", e);
         }
 
 	log.debug("Output:\n" + output.getOutput() + "\n");
