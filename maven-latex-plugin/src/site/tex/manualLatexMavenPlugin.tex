@@ -12,6 +12,10 @@
 \usepackage{hyperref}% driver [hpdftex] is autodetected 
 }
 
+\usepackage{svg}
+\usepackage[active]{srcltx}
+
+
 \usepackage{longtable}
 \usepackage{listings}
 \usepackage{makeidx}
@@ -28,6 +32,7 @@
 \usepackage[nottoc, numindex, numbib]{tocbibind}
 \usepackage[toc]{glossaries}
 \setacronymstyle{long-short}
+% file formats 
 \newacronym{pdf}{pdf}{portable document format}
 \newacronym{dvi}{dvi}{device independent}
 \newacronym{eps}{eps}{encapsulated postscript}
@@ -38,10 +43,21 @@
 \newacronym{doc}{doc}{outdated document format for MS word }
 \newacronym{docx}{docx}{current document format for MS word }
 \newacronym{xml}{xml}{extensible markup language }
-\newacronym{ptx}{ptx}{pdf/postscript tex format }
+\newacronym{ptx}{ptx}{pdf/postscript tex format }% home brewed 
+% plt missing 
 \newacronym{fig}{fig}{native file format for xfig }
 \newacronym{png}{png}{Portable Network Graphics}
 \newacronym{svg}{svg}{Scalable Vector Graphics}
+% latex file endings 
+\newacronym{toc}{toc}{table of contents}
+\newacronym{lof}{lof}{list of figures}
+\newacronym{lot}{lot}{list of tables}
+\newacronym{aux}{aux}{auxiliary file}
+\newacronym{log}{log}{logging file (for LaTeX and mpost)}
+\newacronym{mp}{mp}{metapost}
+\newacronym{mps}{mps}{metapost's postscript like output including text}
+\newacronym{mpx}{mpx}{metapost tex output: texts }
+
 \makeglossaries
 
 \title{Manual for the latex-maven-plugin and for an according ant-task }
@@ -66,6 +82,8 @@ with a particular strength in typesetting formulae like
 \begin{eqnarray*}
 \pi & = & \sqrt{12}\sum^\infty_{k=0} \frac{ (-3)^{-k} }{ 2k+1 }
 \end{eqnarray*}
+%
+Here, portability of the format \gls{pdf} is a vital feature. 
 
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from LaTeX files 
@@ -140,17 +158,36 @@ to the core.
 The core just invokes various programs to do the actual work. 
 \index{ant-task}
 
-To convert gnuplot files into pdf-files, there is no alternative, 
-to have installed {\tt gnuplot}. \index{gnuplot}
+Depending on what kinds of graphic formats are used, 
+the following programs are required: 
 To convert the fig-files into pdf-files, 
 by default {\tt fig2dev} is used. \index{fig2dev}
-It makes sense to have {\tt xfig} installed, but this is not mandatory. 
+It makes sense to have {\tt xfig} installed  \index{xfig}
+to create and edit fig-files, but this is not mandatory. 
+To convert gnuplot files into pdf-files, there is no alternative, 
+to have installed {\tt gnuplot}. \index{gnuplot}
+It serves as an interpreter and also as a converter. 
+Strictly speaking, only the latter functionality is required here. 
+To convert metapost-files (ending {\tt mp}) into encapsulated postscript, 
+\index{mpost}\index{metapost}
+the interpreter {\tt mpost} or equivalent is required. 
+This comes with a standard tex-installation. 
+To include svg-files into latex \index{svg}, 
+{\tt inkscape} must be installed. \index{inkscape}
+It also serves to create and edit svg-files. 
+
+
+
 Currently for including pdf-files in both cases, 
 the driver {\tt dvipdfmx} must be installed. 
 Strictly speaking, this is required only for html-creation and related. 
-Note that if no pictures created by {\tt gnuplot} or by {\tt fig2dev} are used, 
-of course, neither {\tt gnuplot} nor {\tt fig2dev} nor {\tt dvipdfmx} is
-needed. 
+Note that if no pictures created by {\tt fig2dev}, {\tt gnuplot}, 
+{\tt mpost} or by {\tt inkscape} are used, of course, 
+neither {\tt fig2dev} nor {\tt gnuplot}, {\tt mpost}, {\tt inkscape} 
+nor {\tt dvipdfmx} is needed. 
+To include graphics, the grapics bundle described in \cite{GraX} is required, 
+except for svg-files which requires the svg-package 
+described in \cite{SvgP}. 
 
 To create pdf-files from latex files we use {\tt pdflatex} 
 or some other kind of latex creating pdf-files 
@@ -158,7 +195,12 @@ like {\tt xelatex} or {\tt lualatex}.
 \index{pdflatex}\index{xelatex}\index{lualatex} 
 LaTeX uses several auxiliary programs. 
 Above all {\tt bibtex} to create the bibliography 
-and {\tt makeindex} for the index. \index{bibtex}\index{makeindex}
+and {\tt makeindex} for the index and the glossary. 
+\index{bibtex}\index{makeindex}
+The latter two 
+also require the latex packages {\tt makeidx} and {\tt glossaries} 
+described in \cite{MkidxShIdxP} and in 
+
 
 To create html-files, or to be more precise any kind of sgml and xml, 
 from pdf-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
@@ -252,18 +294,76 @@ One may always recover by just creating with maven.
 
 \section{Usage of this Plugin and of this Task}\label{sec:usage}
 
+This plugin may be used both if the latex-sources are finished 
+to create the output described by them 
+and also to support development of the latex sources. 
+Accordingly, this section has two subsections. 
+
+\subsection{The source files}\label{subsec:sources}
+
+The latex-files and also files included via {\tt\textbackslash input} 
+are in the {\em tex-source directory}, 
+\index{tex-source directory}
+which is by default {\tt./src/site/tex}, 
+where {\tt.} is the {\em base directory} of this maven-project. 
+\index{base directory}
+The latex-files not included anywhere are called {\em latex main files}. 
+\index{latex main file}
+The included files may be again latex-files but also graphic files 
+in various formats. 
+There are three kinds of graphic formats, 
+as regards the way their files are included in latex files. 
+%
+\begin{itemize}
+\item
+The first can be included into latex files directly 
+via {\tt\textbackslash input}. 
+These formats are essentially latex and are defined in an according package. 
+An example is {\tt eepic} described in \cite{EEpic}. 
+\item
+the second one via {\tt\textbackslash includegraphics} 
+defined by the package {\tt graphicx} 
+which is described in \cite{GraX}. 
+Chapter 2 therein mentions the supported drivers, 
+among these also {\tt dvipdfm} and {\tt dvipdfmx}. 
+It is not the package but the driver 
+which decides on the support of graphic formats. 
+The dvipdfm user manual, \cite{DviPdfMx} lists the allowed formats 
+metapost-output (i.e. {\tt mps}), postscript, pdf, jpg and png. 
+\item
+and the third one must be transformed into a graphics format 
+of one of the former two kinds using an external tool for transformation. 
+Here, of course, only a limited support is possible, 
+because there is a broad variety of formats. 
+We have choosen the fig format **** citation **** because of its simplicity, 
+the gnuplot format, described in \cite{GnuPlot}, 
+because it allows computation of pictures, 
+likewise metapost, described in \cite{MPost}. 
+\end{itemize}
+
+The latex files and the graphic files belonging to a latex main file 
+are assumed to be in one single folder. 
+If one file is included by two different main files, 
+a link shall be used. 
+
+
+\subsection{Exporting in various formats}\label{sec:stableUsage}
+
+
 After having added the configuration of the plugin to the {\tt pom.xml}, 
 it can be used directly invoking maven through 
 {\tt mvn latex:cfg}. 
-Here {\tt latex} is the (short) name of the plugin and {\tt cfg} is the
-target. 
+Here {\tt latex} is the (short) name of the plugin and {\tt cfg} is the target. 
 It can also be interpreted as {\tt mvn $<$source$>$:$<$target$>$}: 
-The source file is of a latex file and the target(s) are configurable. 
-By default, the target comprises pdf-files and html-files. 
+The source files are in {\tt latex}-format and the target-format(s) 
+are read from the {\em configuration} in the pom 
+({\em configuration}h is what is what {\tt cfg} stands for). 
+By default, the target formats are {\tt pdf} and {\tt html}. 
 The following listing shows a configuration 
 with the full range of output formats including in addition 
-the open office document format, the current MS word-format 
-and also plain text in utf8 encoding. 
+the open office document format {\tt odt}, 
+the MS word-format(s) {\tt doc(x)} and {\tt rtf}
+and also plain text format {\tt txt} in utf8 encoding. 
 %
 \lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}
@@ -292,6 +392,20 @@ Note that the {\tt -X} switch activates debugging
 which results in a more verbose output. 
 Example: {\tt mvn -X latex:cfg}. 
 
+There is another target for clearing the LaTeX {\em source} directory 
+recursively, invoked by {\tt mvn latex:clr}. 
+For more details on that see Section \ref{sec:develUsage}. 
+
+In a standard maven project, 
+the above minimal configuration should be sufficient. 
+Only if the folder structure deviates from the standard 
+or if the latex sources require special configuation, 
+parameters have to be given explicitly, 
+because they deviate from the default values. 
+Section \ref{subsec:settingsOverview} summarizes all available parameters, 
+giving the default value and a description. 
+
+
 For sake of uniformity, 
 the name of the ant-task is {\tt latex:cfg} 
 and it can be invoked via {\tt ant latex:cfg}. 
@@ -301,7 +415,116 @@ The {\tt -d} switch activates debugging
 which results in a more verbose output. 
 Example: {\tt ant -d latex:cfg}. 
 
+FIXME: ant latex:clr 
 
+If this ant-task is used in an ant project 
+with folder structure conforming with a maven project 
+and if the latex sources do not require a special configuration, 
+the above configuration is sufficient. 
+Otherwise, parameters have to be given explicitly 
+overwriting the default values. 
+
+\subsection{Intermedate files, development and cleanup}\label{subsec:devel}
+
+During development, it is comfortable, 
+to have the log-file in the same directory as the latex main file. 
+Also if pdf- and tex-files are synchronized, 
+also the pdf-file should be in the same directory. 
+Likewise, files in graphic formats 
+which cannot be included into a latex file without conversion, 
+that converted file shall be in the same directory as the original one. 
+So, all files, manually created files 
+and files arising from automatic conversions 
+shall be in the same folder, at least during development. 
+Also, typically, one wants to mix creation by this maven-plugin or ant-task 
+with at least partial creation through external tools. 
+For example, if writing latex-files with emacs, 
+it is much more convenient, to compile the latex main file 
+via {\tt pdflatex} from within emacs 
+or to create a pdf-file from a fig-file through {\tt xfig}'s export dialog, 
+than using this maven-plugin or this ant-task. 
+Also these tools work best, if all is in one folder. 
+
+On the other hand, 
+conventionally, in a maven project, 
+sources are held in folder {\tt src}, 
+whereas created files occur in the folder {\tt target}. 
+Likewise for ant. 
+The compromise, this maven-plugin and this ant-task take, 
+is, that at the end of a run, 
+at most the files present at the beginning of the run 
+may be present in the source directory. 
+So, this software builds in the following steps: 
+%
+\begin{itemize}
+\item
+Store a list of all files present at the beginning of a run.
+\item
+Process all graphics files of the formats requiring preprocessing.
+\item
+Determine the latex main files.
+\item
+Run the latex converter, e.g. the one creating pdf-output or docx-output.
+\item
+Copy the results into the target folder.
+\item
+Remove all files not present at the begin of a run, by default. 
+\end{itemize}
+
+To keep e.g. the resulting pdf, 
+just create it via compilation through emacs, 
+even if not all graphic files to be included are present 
+or just by a {\tt touch}-command. 
+Then in the next run of this plugin, 
+this pdf will be re-created, 
+that time complete with the graphics output. 
+That way, synchronization between latex- and pdf-files is possible. 
+
+Likewise, to keep the log-file or the aux-file, just touch it. 
+This technique is really valuable for debugging. 
+
+To keep all created files after a run of this maven-plugin, 
+set the parameter {\tt cleanUp} in the pom 
+to {\tt false} as illustrated in the listing below. 
+For the ant-task likewise. 
+%
+\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}
+<!-- create html and pdf and other formats from latex -->
+<plugin>
+  <groupId>de.akquinet.jbosscc.latex</groupId>
+  <artifactId>latex-maven-plugin</artifactId>
+  <version>1.3-SNAPSHOT</version><!--uptodate?-->
+  <!--artifactId>maven-latex-plugin</artifactId>
+      <version>1.2</version--><!--uptodate?-->
+	
+  <configuration>
+    <settings>
+      <targets>pdf</targets>
+      <cleanUp>false</cleanUp>
+    </settings>
+  </configuration>
+</plugin>
+\end{lstlisting}
+
+
+But how can one get rid of all these newly created files? 
+That is what is the target {\tt latex:clr} is for: 
+It removes all created graphic files 
+and for each latex main file, it removes all files with ``similar'' names. 
+Typically, this suffices, to remove all files created. 
+If not, please inform the developer of this software. 
+Of course, if further software is used which creates additional files, 
+like emacs creates a folder {\tt auto}, 
+these files cannot be removed by this maven-pugin or this ant-task. 
+
+
+rsvg-convert -f pdf -o t.pdf t.svg
+inkscape t.svg --export-pdf=t.pdf
+convert file.svgz file.pdf 
+rasterizer -m application/pdf file.svgz -d file.pdf
+cairosvg in.svg -o out.pdf
+yyy
 \section{Conversions done by this Plugin and this Task}\label{sec:conversions}
 
 This section describes the conversions of source files into target files 
@@ -534,17 +757,19 @@ Files containing {\tt metapost} have the ending {\tt mp}.
 The interpreter for {\tt metapost} is {\tt mpost}. 
 Figure \ref{fig:mp2mps} illustrates how {\tt mpost} converts an mp-file 
 {\tt xxx.mp} 
-into one or more mps-files {\tt xxx1.mp}\dots {\tt xxxn.mp}, 
+into one or more mps-files {\tt xxx1.mps}\dots {\tt xxxn.mps}, 
 (as the mp-file may declare more than one figure) 
 creating a log-file {\tt xxx.log} like LaTeX does 
-and an mpx-file {\tt xxx.mpx}. 
+and an mpx-file {\tt xxx.mpx} containing the text of the figure. 
 The mps-files look like postscript, or more like encapsulated postscript, 
 but are not completely valid, since the prologue is missing, by default. 
-%**** reference to practical metapost ****
-To make it valid set in the mp-file {\tt prologues:=2;} 
+Inserting the line {\tt prologues := 2;} in the first line of the mp-file 
+solves the problem as \cite{MPost}, Section 14.2.1 explains. 
+Then it can be viewed in ghostscript. 
 
 Roughly speaking, the mpx-file contains text parts of the mp-file; 
-more knowledge is not necessary, as it is not used by this software. 
+more knowledge is not necessary, as the texts are also in the mps-files 
+and so the mpx-file is not used by this software. 
 
 Figure \ref{fig:metapost} gives an example of a metapost file 
 included in this LaTeX-file. 
@@ -569,9 +794,30 @@ with the {\tt\textbackslash includegraphics}-command.
 Converted sample metapost-file included as mps-file  }
 \end{figure}
 
+Note that metapost may also besides eps output svg and png, 
+just by setting {\tt outputformat:="svg"} or that like 
+(caution: case sensitive, assuming silently {\tt eps} if not recognized). 
+One would also adapt {\tt outputtemplate:="\%j\%c.svg"} 
+and {\tt prologues := 3;}. 
+So the mp-file starts 
+%
+\begin{lstlisting}[language=metapost]
+outputformat:="svg";
+outputtemplate:="\%j\%c.svg";
+prologues := 3;
+\end{lstlisting}
+
+As an alternative, {\tt mpost} compiler may be invoked with option 
+{\tt -s$<$key$>$=$<$value$>$} described in \cite{MPost}, Appendix B.2.1. 
+This would lead to invocation 
+%
+\begin{lstlisting}
+mpost -s ’outputformat="svg"’ -s ’outputtemplate:="%j%c.svg"' -s prologues=3 file.mp
+\end{lstlisting}
+
 \subsection{Pictures which are not created}\label{subsec:picasis}
 
-Figure \ref{fig:asIs} shows some picture included as jpg. 
+Figure \ref{fig:asIsJpg} shows some picture included as jpg. 
 This is done as usual with {\tt\textbackslash includegraphics}. 
 Note that both for {\tt pdflatex} and siblings creating pdf-output 
 and for {\tt htlatex} in conjunction with {\tt dvipdfmx} 
@@ -585,8 +831,28 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 \begin{center}
 \includegraphics[width=0.9\textwidth]{06oboeBaroqueDennerMIR370.jpg}%
 \end{center}
-\caption{\label{fig:asIs}
+\caption{\label{fig:asIsJpg}
 Some jpg-picture, directly included }
+\end{figure}
+
+
+Figure \ref{fig:asIsSvg} is a picture in svg-format and included directly. 
+This time, we did not use the {\tt graphicx}-package 
+but the package {\tt sng}. 
+Inclusion is with the {\tt\textbackslash includesvg}-command. 
+Note that the suffix of the filename shall be omitted. 
+So the command is {\tt \textbackslash
+includesvg[width=0.9\textbackslash textwidth]\{some\}}. 
+For more information see \cite{SvgP}. 
+Caution: {\tt inkscape} must be installed. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{07some.pdf_tex}
+%\includesvg[width=0.9\textwidth]{07some}%
+\end{center}
+\caption{\label{fig:asIsSvg}
+Some svg-picture, directly included }
 \end{figure}
 
 \subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
@@ -657,7 +923,7 @@ in the second run of {\tt latex2pdf}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{07tex2pdf.ptx}
+\input{08tex2pdf.ptx}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
 \end{figure}
@@ -686,7 +952,7 @@ whether {\tt bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{08aux2bbl.ptx}
+\input{09aux2bbl.ptx}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
@@ -714,7 +980,7 @@ whether {\tt makeindex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{09idx2ind.ptx}
+\input{10idx2ind.ptx}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
@@ -822,7 +1088,7 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{10tex2xml.ptx}
+\input{11tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -841,7 +1107,7 @@ which is illustrated in Figure \ref{fig:tex2doc}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{11tex2doc.ptx}
+\input{12tex2doc.ptx}
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -871,7 +1137,7 @@ Figure \ref{fig:tex2txt} illustrates this.
 
 \begin{figure}[htb]
 \begin{center}
-\input{12tex2txt.ptx}
+\input{13tex2txt.ptx}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
@@ -942,16 +1208,6 @@ containing all tex main documents
 (including subfolders) to be processed
 relative to {\tt\$baseDirectory}. 
 The default value is '{\tt src/site/tex}' on Unix systems. 
-\end{minipage}
-} \\
-\tt tempDirectory    & \tt m2latex       \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-The working directory, 
-for temporary files and LaTeX processing 
-relative to {\tt \$targetDirectory} 
-which is by default '{\tt\$baseDirectory/target}' on Unix systems. 
-%The default value is '{\tt m2latex}'. 
 \end{minipage}
 } \\
 \tt outputDirectory  & \tt .             \\
@@ -1241,13 +1497,6 @@ requires the following definition in {\tt pom.xml}.
        The default value is 'src/site/tex' on Unix systems. -->
     <texSrcDirectory>src/site/tex</texSrcDirectory>
 
-    <!-- The working directory, 
-	 for temporary files and LaTeX processing 
-	 relative to $targetDirectory 
-	 which is by default '$baseDirectory/target' on Unix systems. 
-	 The default value is 'm2latex'. -->
-    <tempDirectory>m2latex</tempDirectory>
-
     <!-- The generated artifacts will be copied to this folder 
 	 relative to $targetSiteDirectory 
 	 which is by default '$targetDirectory/site' on Unix systems. 
@@ -1481,7 +1730,7 @@ systemlayer/pgfsys-tex4ht.def
 
 It has to be placed in the build element where below dots are given. 
 
-\begin{lstlisting}
+\begin{lstlisting}[language=xml]
   <build>
     <plugins>
       ....
@@ -1505,7 +1754,6 @@ requires the following target and task definition in {\tt build.xml}.
       <!-- missing: baseDirectory, targetDirectory, targetSiteDirectory,
 	   texPath = null -->
       <settings texSrcDirectory="src/site/tex"
-		tempDirectory="m2latex"
 		outputDirectory="."
 		targets="pdf, html"
 		fig2devCommand="fig2dev"
