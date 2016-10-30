@@ -33,7 +33,7 @@ public enum Target {
      */
     pdf() {
 	private final String[] LATEX_OUTPUT_FILES = new String[] {
-	    ".pdf", ".dvi", ".ps"
+	    LatexProcessor.SUFFIX_PDF, ".dvi", ".ps"
 	};
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
