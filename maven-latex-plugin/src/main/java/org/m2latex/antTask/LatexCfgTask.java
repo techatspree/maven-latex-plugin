@@ -72,7 +72,7 @@ public class LatexCfgTask extends Task implements ParameterAdapter {
     public void execute() throws BuildException {
  	initialize();
 	try {
-	    this.latexProcessor.execute();
+	    this.latexProcessor.create();
 	} catch (MyBuildException e) {
 	    throw new BuildException(e.getMessage(), e.getCause());
 	}
