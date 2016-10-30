@@ -84,12 +84,11 @@ public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
 
     // api-docs inherited from ParameterAdapter 
     public void initialize() {
-	if ( this.settings == null )
-	    {
-		// Here, no configuration is defined in pom, 
-		// i.e. object is not created by Maven
-		this.settings = new Settings();
-	    }
+	if (this.settings == null) {
+	    // Here, no configuration is defined in pom, 
+	    // i.e. object is not created by Maven
+	    this.settings = new Settings();
+	}
 	this.settings.setBaseDirectory( this.baseDirectory );
 	this.settings.setTargetSiteDirectory( this.targetSiteDirectory );
 	this.settings.setTargetDirectory( this.targetDirectory );
@@ -99,7 +98,8 @@ public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
 						 this);
     }
 
-    // api-docs inherited from ParameterAdapter
+    // api-docs inherited from ParameterAdapter 
+    // FIXME: not required by ClearMojo 
     public SortedSet<Target> getTargetSet() {
 	return this.settings.getTargetSet();
     }
@@ -110,7 +110,7 @@ public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
     public void execute() throws MojoExecutionException, MojoFailureException {
 	initialize();
 	try {
-	    this.latexProcessor.execute();
+	    this.latexProcessor.create();
 	} catch (BuildExecutionException e) {
 	    throw new MojoExecutionException(e.getMessage(), e.getCause());
 	} catch (BuildFailureException e) {
