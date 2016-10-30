@@ -14,7 +14,7 @@ import java.io.File;
 
 import java.util.SortedSet;
 
-public class LatexCfgTask extends Task implements ParameterAdapter {
+abstract class AbstractLatexTask extends Task implements ParameterAdapter {
 
     /**
      * Contains all parameters for executing this task. 
@@ -61,20 +61,4 @@ public class LatexCfgTask extends Task implements ParameterAdapter {
 				this);
     }
 
-    // api-docs inherited from ParameterAdapter
-    public SortedSet<Target> getTargetSet() {
-	return this.settings.getTargetSet();
-    }
-
-    /**
-     * Invoked by ant executing the task. 
-     */
-    public void execute() throws BuildException {
- 	initialize();
-	try {
-	    this.latexProcessor.create();
-	} catch (MyBuildException e) {
-	    throw new BuildException(e.getMessage(), e.getCause());
-	}
-     }
  }

@@ -36,14 +36,12 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @phase site
  */
 //@Mojo( name = "clr")
-public class ClearMojo extends CfgLatexMojo {
+public class ClearMojo extends AbstractLatexMojo {
 
-    public SortedSet<Target> getTargetSet() {
-	throw new IllegalStateException();
-	// SortedSet<Target> res = new TreeSet<Target>();
-	// res.add(Target.docx);
-	// return res;
-	// //return EnumSet.of(Target.docx);
+    // api-docs inherited from ParameterAdapter 
+    // FIXME: not required by ClearMojo 
+     public SortedSet<Target> getTargetSet() {
+    	throw new IllegalStateException();
     }
 
     /**

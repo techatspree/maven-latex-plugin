@@ -14,52 +14,7 @@ import java.io.File;
 
 import java.util.SortedSet;
 
-public class LatexCfgTask extends Task implements ParameterAdapter {
-
-    /**
-     * Contains all parameters for executing this task. 
-     */
-    private Settings settings;
-
-    // set by {@link #initialize()}. 
-    protected LatexProcessor latexProcessor;
-
-    /**
-     * Invoked by ant returning a container for all parameters 
-     * and initializing {@link #settings}. 
-     */
-    public Settings createSettings() {
-	return this.settings = new Settings();
-    }
-
-    private File getPropertyFile(String prop) {
-	return new File(getProject().getProperty(prop));
-    }
-
-    // api-docs inherited from ParameterAdapter 
-    public void initialize() {
-	// use of the reference to Project-instance
-        //String message = getProperty("ant.project.name");
-        // Task's log method
-        //log("Here is project '" + message + "'. ");
-	// almost the same as getProject().log(this, msg, msgLevel)
-
-        // where this task is used?
-        //log("I am used in: " + getLocation() + "'. ");
-	if (this.settings == null) {
-            throw new BuildException("No settings found. ");
-        }
-	this.settings.setBaseDirectory(getPropertyFile("basedir"));
-	this.settings.setTargetSiteDirectory(getPropertyFile("targetSiteDir"));
-	this.settings.setTargetDirectory(getPropertyFile("targetDir"));
-
- 	//log("settings: \n" + this.settings);
-
-	 this.latexProcessor = 
-	     new LatexProcessor(this.settings,  
-				new AntLogWrapper(getProject()), 
-				this);
-    }
+public class LatexCfgTask extends AbstractLatexTask {
 
     // api-docs inherited from ParameterAdapter
     public SortedSet<Target> getTargetSet() {

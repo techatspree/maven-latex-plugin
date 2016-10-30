@@ -34,69 +34,12 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Abstract base class for all mojos. 
+ * Abstract base class for all creational mojos. 
  *
  * @goal cfg
  * @phase site
  */
-public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
-
-    /**
-     * The base directory of this maven project. 
-     * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
-     * 
-     * @parameter property="basedir"
-     * @readonly
-     */
-    protected File baseDirectory;
-
-    /**
-     * The target directory of this maven project. 
-     * Reinitializes {@link Settings#targetDirectory} 
-     * via {@link #initialize()}. 
-     * 
-     * @parameter property="project.build.directory"
-     * @readonly
-     */
-    protected File targetDirectory;
-
-    /**
-     * The target site directory of this maven project. 
-     * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
-     * 
-     * @parameter property="project.reporting.outputDirectory"
-     * @readonly
-     */
-    protected File targetSiteDirectory;
-
-    /**
-     * Contains all parameters for executing this maven plugin. 
-     * If not set in the pom prior to execution, 
-     * is set in {@link #initialize()}. 
-     * 
-     * @parameter
-     */
-    protected Settings settings;
-
-    // set by {@link #initialize()}. 
-    protected LatexProcessor latexProcessor;
-
-
-    // api-docs inherited from ParameterAdapter 
-    public void initialize() {
-	if (this.settings == null) {
-	    // Here, no configuration is defined in pom, 
-	    // i.e. object is not created by Maven
-	    this.settings = new Settings();
-	}
-	this.settings.setBaseDirectory( this.baseDirectory );
-	this.settings.setTargetSiteDirectory( this.targetSiteDirectory );
-	this.settings.setTargetDirectory( this.targetDirectory );
-
-	this.latexProcessor = new LatexProcessor(this.settings,  
-						 new MavenLogWrapper(getLog()), 
-						 this);
-    }
+public class CfgLatexMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 
     // FIXME: not required by ClearMojo 

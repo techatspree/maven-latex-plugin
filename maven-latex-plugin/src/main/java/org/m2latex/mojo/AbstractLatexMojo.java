@@ -36,10 +36,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 /**
  * Abstract base class for all mojos. 
  *
- * @goal cfg
- * @phase site
  */
-public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
+abstract class AbstractLatexMojo extends AbstractMojo 
+    implements ParameterAdapter {
 
     /**
      * The base directory of this maven project. 
@@ -97,25 +96,4 @@ public class CfgLatexMojo extends AbstractMojo implements ParameterAdapter {
 						 new MavenLogWrapper(getLog()), 
 						 this);
     }
-
-    // api-docs inherited from ParameterAdapter 
-    // FIXME: not required by ClearMojo 
-    public SortedSet<Target> getTargetSet() {
-	return this.settings.getTargetSet();
-    }
-
-    /**
-     * Invoked by maven executing the plugin. 
-     */
-    public void execute() throws MojoExecutionException, MojoFailureException {
-	initialize();
-	try {
-	    this.latexProcessor.create();
-	} catch (BuildExecutionException e) {
-	    throw new MojoExecutionException(e.getMessage(), e.getCause());
-	} catch (BuildFailureException e) {
-	    throw new MojoFailureException(e.getMessage(), e.getCause());
-	}
-    }
-
 }
