@@ -78,7 +78,7 @@
   </path>
 
   <taskdef name="latex"
-	   classname="org.m2latex.antTask.LatexTask"
+	   classname="org.m2latex.antTask.LatexCfgTask"
 	   classpathref="latex.classpath"/>
 
   <target name="latex:cfg"
@@ -86,12 +86,11 @@
 		       from latex. ">
     <latex>
       <settings texSrcDirectory="src/site/tex"
-		tempDirectory="m2latex"
 		outputDirectory="."
 		targets="pdf, html"
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
-		texCommandArgs="-interaction=nonstopmode -src-specials -recorder --shell-escape"
+		texCommandArgs="-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape"
 		debugBadBoxes='true'
 		debugWarnings='true'
 		bibtexCommand="bibtex"
