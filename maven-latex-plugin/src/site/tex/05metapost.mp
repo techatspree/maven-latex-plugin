@@ -1,3 +1,4 @@
+prologues := 2;
 outputtemplate:="%j%c.mps";
 beginfig(1);
 
