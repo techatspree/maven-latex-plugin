@@ -27,21 +27,21 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.BuildFailureException;
 
-
-public class TexFileUtilsImplTest
-{
+public class TexFileUtilsImplTest {
     private TexFileUtilsImpl utils = 
-	new TexFileUtilsImpl( new MavenLogWrapper(new SystemStreamLog()), 
-			      new Settings() );
+	new TexFileUtilsImpl(new MavenLogWrapper(new SystemStreamLog()));
 
-    @Test public void testGetTargetDir()
-        throws Exception
-    {
-        File expected = new File( "/dir2/subdir" );
-        File actual = utils.getTargetDirectory( new File( "/dir1/subdir/file" ),
-						new File( "/dir1" ),
-                                                new File( "/dir2" ) );
-        assertEquals( expected, actual );
+    @Test public void testGetTargetDir() 
+	throws BuildExecutionException, BuildFailureException {
+
+        File expected = new File("/dir2/subdir");
+	// may throw BuildExecutionException 
+        File actual = utils.getTargetDirectory(new File("/dir1/subdir/file"),
+					       new File("/dir1"),
+					       new File("/dir2"));
+        assertEquals(expected, actual);
     }
 }
