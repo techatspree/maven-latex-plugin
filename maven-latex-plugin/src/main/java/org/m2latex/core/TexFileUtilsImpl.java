@@ -37,84 +37,66 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 class TexFileUtilsImpl implements TexFileUtils {
 
+    private final static String SUFFIX_TEX = ".tex";
+
     private final LogWrapper log;
 
-    private final Settings settings;
-
-    TexFileUtilsImpl(LogWrapper log, Settings settings) {
+    TexFileUtilsImpl(LogWrapper log) {
         this.log = log;
-	this.settings = settings;
     }
 
     /**
-     * Returns a wildcard file filter containing all files 
-     * replacing teh suffix of <code>texFile</code> 
-     * with the pattern given by <code>filesPatterns</code>. 
+     * Returns the collection of files 
+     * in folder <code>dir</code> and subfolder. 
      *
-     * @param texFile
-     *    the tex-file to derive filenames from. 
-     * @param filesPatterns
-     *    patterns of the form <code>.&lt;suffix&gt;</code> 
-     *    or <code>*.&lt;suffix&gt;</code> 
+     * @param dir
+     *    a directory. 
      * @return
-     *    A file filter given by the wildcard 
-     *    replacing the suffix of <code>texFile</code> 
-     *    with the pattern given by <code>filesPatterns</code>. 
+     *    the collection of files in folder <code>dir</code> and subfolder. 
+     * @throws BuildExecutionException
+     *    if <code>dir</code> is not a folder or not readable. 
      */
-    public FileFilter getFileFilter(final File texFile, 
-				    final String[] filesPatterns) {
-        String texFilePrefix = getFileNameWithoutSuffix( texFile );
-        String[] fileNames = new String[filesPatterns.length];
-        for ( int i = 0; i < filesPatterns.length; i++ )
-        {
-            fileNames[i] = texFilePrefix + filesPatterns[i];
-        }
-
-	return new WildcardFileFilter(fileNames);
-    }
-
-    /**
-     * Invoked only by AbstractLatexMojo#execute()
-     * <code></code>
-     * @BuildExecutionException
-     *    wraps IOException when copying. 
-     */
-    public void copyOutputToTargetFolder(FileFilter fileFilter, 
-					 File texFile, 
-					 File targetDir)
+    public Collection<File> getFilesRec(File dir) 
 	throws BuildExecutionException {
 
-	File texFileDir = texFile.getParentFile();
-        File[] outputFiles = texFileDir.listFiles();
-
-        if (outputFiles == null) {
-	    log.error("File " + texFileDir + 
-		      " is not a directory as expected! " );
+        Collection<File> res = FileUtils.listFiles(dir,
+						   TrueFileFilter.INSTANCE,
+						   TrueFileFilter.INSTANCE);
+	if (res == null) {
+	    throw new BuildExecutionException
+		("File " + dir + " is not readable or no directory. ");
 	}
-
-        if (outputFiles.length == 0) {
-            log.warn( "LaTeX file " + texFile + 
-		      " did not generate any output in " + 
-		      texFileDir + "!" );
-        }
-
-	File file;
-	for (int idx = 0; idx < outputFiles.length; idx++) {
-	    file = outputFiles[idx];
-	    if (fileFilter.accept(file)) {
-		log.info("Copying " + file.getName() + " to " + targetDir);
-		try {
-		    FileUtils.copyFileToDirectory(file, targetDir);
-		} catch ( IOException e ) {
-		    throw new BuildExecutionException
-			("Error copying file " + file + 
-			 " to directory " + targetDir,
-			 e);
-		}
-	    }
-	}
+	return res;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see TexFileUtils#getLatexMainDocuments(File, String)
+     */
+    // used in only 
+    // LatexProcessor#create() and 
+    // in LatexProcessor#clearFromLatexMain(File)
+    public Collection<File> getLatexMainDocuments(File directory, 
+						  String patternLatexMainFile)
+	throws BuildExecutionException {
+
+        Collection<File> mainFiles = new ArrayList<File>();
+
+        Collection<File> latexFiles = FileUtils
+	    .listFiles(directory,
+		       FileFilterUtils.suffixFileFilter(SUFFIX_TEX),
+		       TrueFileFilter.INSTANCE);
+	// FIXME: may be null 
+	for (File file : latexFiles) {
+	    // may throw BuildExecutionException 
+	    if (matchInFile(file, patternLatexMainFile)) {
+		mainFiles.add(file);
+	    }
+        }
+        return mainFiles;
+    }
+ 
     /**
      * Returns the directory containing <code>sourceFile</code> 
      * with the prefix <code>sourceBaseDir</code> 
@@ -123,10 +105,10 @@ class TexFileUtilsImpl implements TexFileUtils {
      * <code>sourceBaseDir=/tmp</code>, <code>targetBaseDir=/home</code> 
      * returns <code>/home/adir/</code>. 
      *
-     * @param sourceFile
+     * @param srcFile
      *    the source file the parent directory of which 
      *    shall be converted to the target. 
-     * @param sourceBaseDir
+     * @param srcBaseDir
      *    the base directory of the source. 
      *    Immediately or not, 
      *    <code>sourceFile</code> shall be in <code>sourceBaseDir</code>. 
@@ -142,69 +124,111 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @throws BuildFailureException
      *    if <code>sourceFile</code> is not below <code>sourceBaseDir</code>. 
      */
-    public File getTargetDirectory(File sourceFile,
-				   File sourceBaseDir,
+    public File getTargetDirectory(File srcFile,
+				   File srcBaseDir,
 				   File targetBaseDir)
 	throws BuildExecutionException, BuildFailureException {
 
-        String sourceParentPath;
-        String sourceBasePath;
-        try {
+	try {
 	    // getCanonicalPath may throw IOException 
-	    sourceParentPath = sourceFile.getParentFile().getCanonicalPath();
+	    String srcParentPath = srcFile.getParentFile().getCanonicalPath();
 	    // getCanonicalPath may throw IOException 
-            sourceBasePath = sourceBaseDir.getCanonicalPath();
-         } catch (IOException e) {
+            String srcBasePath = srcBaseDir.getCanonicalPath();
+
+	    if (!srcParentPath.startsWith(srcBasePath)) {
+		throw new BuildFailureException
+		    ( "File " + srcFile + 
+		      " is expected to be somewhere under directory "
+		      + srcBasePath + ". ");
+	    }
+
+	    return new File(targetBaseDir, 
+			    srcParentPath.substring(srcBasePath.length()));
+	} catch (IOException e) {
             throw new BuildExecutionException
-		("Error getting canonical path", e);
+		("Error getting canonical path. ", e);
         }
-
-        if (!sourceParentPath.startsWith(sourceBasePath)) {
-            throw new BuildFailureException
-		( "File " + sourceFile + 
-		  " is expected to be somewhere under directory "
-		  + sourceBasePath + ". ");
-        }
-
-	return new File(targetBaseDir, 
-			sourceParentPath.substring(sourceBasePath.length()));
     }
 
     /**
-     * Copy <code>texDirectory</code> to <code>tempDirectory</code>, 
-     * the latter deleting before copy if it exists. 
+     * Returns a wildcard file filter containing all files 
+     * replacing the suffix of <code>file</code> 
+     * with the pattern given by <code>filesPatterns</code>. 
      *
-     * @throws BuildExecutionException
-     *    if either deleting or copying fails. 
-     * @see TexFileUtils#copyLatexSrcToTempDir(File, File)
+     * @param file
+     *    the file to derive filenames from. 
+     *    Typically, this is used for tex-files but also for mp-files. 
+     * @param filesPatterns
+     *    patterns of the form <code>.&lt;suffix&gt;</code> 
+     *    or <code>*.&lt;suffix&gt;</code> 
+     * @return
+     *    A file filter given by the wildcard 
+     *    replacing the suffix of <code>file</code> 
+     *    with the pattern given by <code>filesPatterns</code>. 
      */
-    // used in AbstractLatexMojo.execute() only. 
-    public void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
-        throws BuildExecutionException {
-        try {
-            if (tempDirectory.exists()) {
-                log.info("Deleting existing directory '" 
-			 + tempDirectory.getPath() + "'. ");
-		// may throw IOException 
-                FileUtils.deleteDirectory( tempDirectory );
-            }
-	} catch (IOException e) {
-            throw new BuildExecutionException
-		("Failure deleting the temporary directory '" + 
-		 tempDirectory.getPath() + "'. ", e );
+    // used in LatexProcessorOnly: in methods 
+    // - create on tex-file to determine output files. 
+    // - clearGraphics to clear xxx1.pmx-files 
+    // - clearFromLatexMain to clear files 
+    public FileFilter getFileFilter(File file, String[] filesPatterns) {
+        String filePrefix = getFileNameWithoutSuffix(file);
+        String[] fileNames = new String[filesPatterns.length];
+        for (int i = 0; i < filesPatterns.length; i++) {
+            fileNames[i] = filePrefix + filesPatterns[i];
         }
 
-	log.debug("Copying TeX source directory '" + texDirectory.getPath()
-		  + "' to temporary directory '" + tempDirectory + "'. " );
-	try {
- 	    // may throw IOException 
-	    FileUtils.copyDirectory( texDirectory, tempDirectory );
-	} catch (IOException e) {
-            throw new BuildExecutionException
-		("Failure copying the TeX directory '" + texDirectory.getPath()
-		 + "' to a temporary directory '" + tempDirectory.getPath() 
-		 + "'. ", e );
+	return new WildcardFileFilter(fileNames);
+    }
+
+    /**
+     * Copies output to target folder. 
+     * The source is the parent folder of <code>texFile</code>, 
+     * all its files passing <code>fileFilter</code> 
+     * are copied to <code>targetDir</code>. 
+     * This is invoked by {@link #LatexProcessor#execute()} only. 
+     *
+     * @BuildExecutionException
+     *    wraps IOException when reading <code>texFile</code>'s folder 
+     *    or when copying. 
+     */
+    public void copyOutputToTargetFolder(File texFile, 
+					 FileFilter fileFilter, 
+					 File targetDir)
+	throws BuildExecutionException {
+
+	File texFileDir = texFile.getParentFile();
+        File[] outputFiles = texFileDir.listFiles();
+
+        if (outputFiles == null) {
+	    // since outputFiles is a directory 
+	    throw new BuildExecutionException
+		("Error reading directory " + texFileDir + "! " );
+	}
+	assert outputFiles != null;
+
+	// Hm,... this means even that there is no latex file. 
+	// Also, there may be no file created although outputFiles is not empty
+        if (outputFiles.length == 0) {
+            log.warn("LaTeX file " + texFile + 
+		     " did not generate any output in " + texFileDir + "! " );
         }
+
+	File file;
+	for (int idx = 0; idx < outputFiles.length; idx++) {
+	    file = outputFiles[idx];
+	    if (fileFilter.accept(file)) {
+		log.info("Copying " + file.getName() + 
+			 " to " + targetDir + ". ");
+		try {
+		    FileUtils.copyFileToDirectory(file, targetDir);
+		} catch (IOException e) {
+		    throw new BuildExecutionException
+			("Error copying " + file.getName() + 
+			 " to " + targetDir + ". ",
+			 e);
+		}
+	    }
+	}
     }
 
     /**
@@ -220,80 +244,48 @@ class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
-     * Return a collection of xfig-files in the given directory. 
-     * 
-     * @see TexFileUtils#getFileNameWithoutSuffix(File)
+     * Return a collection of files in directory <code>dir</code> 
+     * with suffix <code>suffix</code>. 
+     *
+     * @param dir
+     *    the directory the listing of which is requested. 
+     * @param suffix
+     *    the suffix of the files to be returned. 
+     * @return
+     *    The collection of files in <code>dir</code>. 
+     *    This may never be <code>null</code>. 
+     * @throws BuildExecutionException
+     *    if <code>dir</code> is not a directory or if an IO-error occurs. 
+     * @see TexFileUtils#getFileNameWithoutSuffix(File, String)
      */
-   public Collection<File> getXFigDocuments(File directory) {
-	return FileUtils
-	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter(".fig"),
-		       TrueFileFilter.INSTANCE );
-    }
-
-    /**
-     * Return a collection of gnuplot-files in the given directory. 
-     * 
-     * @see TexFileUtils#getFileNameWithoutSuffix(File)
-     */
-    public Collection<File> getGnuplotDocuments(File directory) {
-	return FileUtils
-	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter(".plt"),
+    public Collection<File> getFilesWithSuffix(File dir, String suffix) 
+	throws BuildExecutionException {
+	Collection<File> res = FileUtils
+	    .listFiles(dir,
+		       FileFilterUtils.suffixFileFilter(suffix),
 		       TrueFileFilter.INSTANCE);
+	if (res == null) {
+	    throw new BuildExecutionException
+		("File " + dir + " is not readable or no directory. ");
+	}
+	return res;
     }
 
-    public Collection<File> getMetapostDocuments(File directory) {
-	return FileUtils
-	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter(".mp"),
-		       TrueFileFilter.INSTANCE);
-    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see TexFileUtils#getLatexMainDocuments(File)
-     */
-    // used in AbstractLatexMojo.execute() only. 
-    public Collection<File> getLatexMainDocuments(File directory)
-        throws BuildExecutionException {
-
-        Collection<File> mainFiles = new ArrayList<File>();
-
-        Collection<File> texFiles = FileUtils
-	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter(".tex"),
-		       TrueFileFilter.INSTANCE);
-	for (File file : texFiles) {
-	    if (isTexMainFile(file)) {
-		mainFiles.add(file);
-	    }
-        }
-        return mainFiles;
-    }
- 
-   private boolean isTexMainFile(File file) throws BuildExecutionException {
-        try {
-            return fileContainsPattern(file, 
-				       this.settings.getPatternLatexMainFile());
-
-        } catch (FileNotFoundException e) {
-            throw new BuildExecutionException("The TeX file '" + file.getPath()
-                + "' was removed while running this goal. ", e );
-        } catch (IOException e) {
-            throw new BuildExecutionException
-		("Problems reading the file '" + file.getPath()
-                + "' while checking if it is a TeX main file. ", e);
-        }
-    }
 
     // logFile may be .log or .blg or something 
     /**
+     * Returns whether the given file <code>file</code> (which shall exist) 
+     * contains the given pattern <code>pattern</code>. 
+     * This is typically applied to log files, 
+     * but also to latex-files to find the latex main files. 
      *
+     * @param file
+     *    an existing proper file, not a folder. 
+     * @param pattern
+     *    the pattern (regular expression) to look for in <code>file</code>. 
      * @throws BuildExecutionException
-     *    if the file <code>logFile</code> does not exist 
-     *    or cannot be read. 
+     *    if the file <code>file</code> does not exist or cannot be read. 
      */
     // used in LatexProcessor only: 
     // only in methods processLatex2pdf, runLatex2html, runLatex2odt, 
@@ -302,18 +294,11 @@ class TexFileUtilsImpl implements TexFileUtils {
     public boolean matchInFile(File file, String pattern)
         throws BuildExecutionException {
 
-        if (!file.exists()) {
-		throw new BuildExecutionException
-		    ("File " + file.getPath() 
-		     + " does not exist after running LaTeX. ");
-	}
-       
 	try {
 	    return fileContainsPattern(file, pattern);
 	} catch (FileNotFoundException e) {
 	    throw new BuildExecutionException
-		("File " + file.getPath() + " not found. ",
-		 e);
+		("File " + file.getPath() + " not found. ", e);
 	} catch (IOException e) {
 	    throw new BuildExecutionException
 		("Error reading file " + file.getPath() + ". ", e);
@@ -358,20 +343,50 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     public File replaceSuffix(File file, String suffix) {
         return new File(file.getParentFile(),
-			getFileNameWithoutSuffix(file) + "." + suffix );
+			getFileNameWithoutSuffix(file) + suffix );
     }
 
+    /**
+     * Deletes all files in the same folder as <code>pFile</code> directly, 
+     * i.e. not in subfolders, which are accepted by <code>filter</code>. 
+     */
+    public void delete(File pFile, FileFilter filter) 
+	throws BuildExecutionException {
 
-    public void cleanUp() {
-	File tempDir = this.settings.getTempDirectoryFile();
-        log.debug("Deleting temporary directory '" + 
-		  tempDir.getPath() + "'. ");
-        try {
-            FileUtils.deleteDirectory(tempDir);
-        } catch (IOException e) {
-            log.warn("The temporary directory '" + tempDir + 
-		     "' could be deleted. ", e);
-        }
+	File dir = pFile.getParentFile();
+	assert dir.isDirectory();
+	File[] files = dir.listFiles();
+	if (files == null) {
+	    // Here, dir is not readable because a directory 
+	    throw new BuildExecutionException
+		("Directory " + dir + " is not readable. ");
+	}
+	for (File delFile : files) {
+	    if (filter.accept(delFile)) {
+		delFile.delete();
+	    }
+	}
+    }
+
+    /**
+     * Deletes all files in <code>texDir</code> including subdirectories 
+     * which are not in <code>orgFiles</code>. 
+     * The background is, that <code>orFiles</code> are the files 
+     * originally in <code>texDir</code>. 
+     *
+     * @throws BuildExecutionException
+     *    if <code>texDir</code> is no directory or not readable. 
+     */
+    public void cleanUp(Collection<File> orgFiles, File texDir) 
+	throws BuildExecutionException {
+
+	log.debug("Clearing set of sources. ");
+	// may throw BuildExecutionException 
+	Collection<File> currFiles = getFilesRec(texDir);
+	currFiles.removeAll(orgFiles);
+	for (File file : currFiles) {
+	    file.delete();
+	}
     }
 
     public static void main(String[] args) {

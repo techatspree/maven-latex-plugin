@@ -18,30 +18,18 @@
 
 package org.m2latex.core;
 
+import java.util.Collection;
+
 import java.io.File;
 import java.io.FileFilter;
 
-import java.util.Collection;
+/**
+ * Required for mock tests only. 
+ */
 
-interface TexFileUtils
-{
-    FileFilter getFileFilter(final File texFile, final String[] filesPatterns);
+interface TexFileUtils {
 
-    void copyOutputToTargetFolder(FileFilter fileFilter, 
-				  File texFile, 
-				  File targetDir)
-        throws BuildExecutionException, BuildFailureException;
-
-    void copyLatexSrcToTempDir(File texDirectory, File tempDirectory)
-        throws BuildExecutionException;
-
-    String getFileNameWithoutSuffix(File texFile);
-
-    File replaceSuffix(File file, String suffix);
-
-    Collection<File> getXFigDocuments(File directory);
-    Collection<File> getGnuplotDocuments(File directory);
-    Collection<File> getMetapostDocuments(File directory);
+    Collection<File> getFilesRec(File dir) throws BuildExecutionException;
 
     /*
      * @param tempDir
@@ -51,17 +39,38 @@ interface TexFileUtils
      *    denoting the LaTeX documents to process.
      * @throws BuildExecutionException
      */
-    Collection<File> getLatexMainDocuments(File tempDir)
+    Collection<File> getLatexMainDocuments(File tempDir, 
+					   String patternLatexMainFile)
         throws BuildExecutionException;
-
-    boolean matchInFile(File file, String pattern) 
-	throws BuildExecutionException;
 
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
 			    File targetBaseDir)
 	throws BuildExecutionException, BuildFailureException;
 
-    public void cleanUp();
+    FileFilter getFileFilter(final File texFile, final String[] filesPatterns);
+
+    void copyOutputToTargetFolder(File texFile, 
+				  FileFilter fileFilter, 
+				  File targetDir)
+        throws BuildExecutionException, BuildFailureException;
+
+
+
+    String getFileNameWithoutSuffix(File texFile);
+
+    File replaceSuffix(File file, String suffix);
+
+    Collection<File> getFilesWithSuffix(File dir, String suffix) 
+	throws BuildExecutionException;
+
+    boolean matchInFile(File file, String pattern) 
+	throws BuildExecutionException;
+
+    void delete(File texFile, FileFilter filter) 
+	throws BuildExecutionException;
+
+    void cleanUp(Collection<File> sourceFiles, File texDir)
+	throws BuildExecutionException;
 
 }
