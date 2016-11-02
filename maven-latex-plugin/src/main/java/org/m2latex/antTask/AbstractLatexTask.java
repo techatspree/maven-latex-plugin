@@ -19,7 +19,7 @@ abstract class AbstractLatexTask extends Task implements ParameterAdapter {
     /**
      * Contains all parameters for executing this task. 
      */
-    private Settings settings;
+    protected Settings settings;
 
     // set by {@link #initialize()}. 
     protected LatexProcessor latexProcessor;
