@@ -85,12 +85,14 @@
 	  description="Create html and pdf and other formats and other formats 
 		       from latex. ">
     <latex>
+	<!--patternErrXindy="(^ERROR: )" -->
+
       <settings texSrcDirectory="src/site/tex"
 		outputDirectory="."
 		targets="pdf, html"
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
-		texCommandArgs="-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape"
+		texCommandArgs=""
 		debugBadBoxes='true'
 		debugWarnings='true'
 		bibtexCommand="bibtex"
@@ -99,7 +101,6 @@
 		makeGlossariesCommand="makeglossaries" 
 		makeGlossariesOptions=""
 		patternMakeGlossariesErr="^\*\*\* unable to execute: "
-		patternErrXindy="(^ERROR: )"
 		patternWarnXindy="(^WARNING: )"
 		tex4htCommand="htlatex"
 		tex4htStyOptions="xhtml,uni-html4,2,svg,pic-tabular"
@@ -115,6 +116,13 @@
 	<patternLatexMainFile>
 	  \s*\\(documentstyle|documentclass).*
 	</patternLatexMainFile>
+	<texCommandArgs>
+	  -interaction=nonstopmode
+	  -synctex=1 
+	  -src-specials 
+	  -recorder 
+	  -shell-escape
+	</texCommandArgs>
 	<patternErrLatex>(^! )</patternErrLatex>
 	<patternWarnLatex>
 	(^LaTeX Warning: |
