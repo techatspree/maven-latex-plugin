@@ -419,15 +419,15 @@ not allowed:
 
 	    <!-- The pattern in the ilg-file 
 		 indicating that $makeIndexCommand failed. 
-		 The default value is chosen 
-		 according to the 'makeindex' documentation. -->
-	    <patternErrMakeindex>!! Input index error </patternErrMakeindex>
+		 The default value '(!! Input index error )' 
+		 is chosen according to the 'makeindex' documentation. -->
+	    <patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
 
 	    <!-- The Pattern in the ilg-file 
 		 indicating a warning $makeIndexCommand emitted. 
-		 The default value is chosen 
-		 according to the 'makeindex' documentation. -->
-	    <patternWarnMakeindex>## Warning </patternWarnMakeindex>
+		 The default value '(## Warning )' 
+		 is chosen according to the 'makeindex' documentation. -->
+	    <patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
 
 	    <!-- The MakeGlossaries command to create a gls-file 
 		 from a glo-file (invoked without file ending) 
@@ -464,18 +464,20 @@ not allowed:
 	    <!-- The pattern in the 'glg' file 
 		 indicating an error when running 'xindy' 
 		 via $makeGlossariesCommand. 
-		 The default value is '^ERROR: ' (note the space). 
+		 The default value is '(^ERROR: )' 
+		 (note the space and the brackets). 
 		 If this is not appropriate, please modify 
 		 and notify the developer of this plugin. -->
-	    <patternErrXindy>^ERROR: </patternErrXindy>
+	    <patternErrXindy>(^ERROR: )</patternErrXindy>
  
 	    <!-- The pattern in the 'glg' file 
 		 indicating a warning when running 'xindy' 
 		 via $makeGlossariesCommand. 
-		 The default value is '^WARNING: ' (note the space). 
+		 The default value is '(^WARNING: )' 
+		 (note the space and the brackets). 
 		 If this is not appropriate, please modify 
 		 and notify the developer of this plugin. -->
-	    <patternErrXindy>^WARNING: </patternErrXindy>
+	    <patternErrXindy>(^WARNING: )</patternErrXindy>
  
             <!-- The tex4ht command. 
 		 Possible values are e.g. 'htlatex' and 'htxelatex'. 

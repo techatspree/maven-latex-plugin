@@ -99,8 +99,8 @@
 		makeGlossariesCommand="makeglossaries" 
 		makeGlossariesOptions=""
 		patternMakeGlossariesErr="^\*\*\* unable to execute: "
-		patternErrXindy="^ERROR: "
-		patternWarnXindy="^WARNING: "
+		patternErrXindy="(^ERROR: )"
+		patternWarnXindy="(^WARNING: )"
 		tex4htCommand="htlatex"
 		tex4htStyOptions="xhtml,uni-html4,2,svg,pic-tabular"
 		tex4htOptions=" -cunihtf -utf8"
@@ -127,8 +127,8 @@
 	</patternWarnLatex>
 	<patternErrBibtex>error message</patternErrBibtex>
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
-	<patternErrMakeindex>!! Input index error </patternErrMakeindex>
-	<patternWarnMakeindex>## Warning </patternWarnMakeindex>
+	<patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
+	<patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
 	<patternLatexNeedsReRun>
 (^LaTeX Warning: Label\(s\) may have changed. Rerun to get cross-references right.$|
 ^Package \w+ Warning: .*Rerun .*$|
