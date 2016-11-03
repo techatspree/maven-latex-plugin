@@ -1212,16 +1212,14 @@ public class LatexProcessor {
 			      args);
 
 	// detect errors and warnings 
-	// FIXME: only valid for use with makeindex 
 	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
-
-//this is wrong!! does not take xindy into account, only makeindex 
 	logErrs (glgFile, 
-		 this.settings.getMakeIndexCommand(), 
-		 this.settings.getPatternErrMakeindex());
+		 this.settings.getMakeGlossariesCommand(), 
+		 this.settings.getPatternMakeGlossariesErr());
 	logWarns(glgFile, 
-		 this.settings.getMakeIndexCommand(), 
-		 this.settings.getPatternWarnMakeindex());
+		 this.settings.getMakeGlossariesCommand(), 
+		 this.settings.getPatternWarnMakeindex() + "|" + 
+		 this.settings.getPatternWarnXindy());
 	return true;
     }
 
