@@ -355,22 +355,22 @@ public class Settings {
     /**
      * The Pattern in the ilg-file 
      * indicating an error when running {@link #makeIndexCommand}. 
-     * The default value is chosen 
-     * according to the <code>makeindex</code> documentation. 
+     * The default value <code>(!! Input index error )</code> 
+     * is chosen according to the <code>makeindex</code> documentation. 
      *
      * @parameter
      */
-    private String patternErrMakeindex = "!! Input index error ";
+    private String patternErrMakeindex = "(!! Input index error )";
 
     /**
      * The Pattern in the ilg-file 
      * indicating a warning when running {@link #makeIndexCommand}. 
-     * The default value is chosen 
-     * according to the <code>makeindex</code> documentation. 
+     * The default value <code>(## Warning )</code> 
+     * is chosen according to the <code>makeindex</code> documentation. 
      *
      * @parameter
      */
-    private String patternWarnMakeindex = "## Warning ";
+    private String patternWarnMakeindex = "(## Warning )";
 
     /**
      * The MakeGlossaries command to create a gls-file 
@@ -419,25 +419,27 @@ public class Settings {
      * The pattern in the <code>glg</code> file 
      * indicating an error when running <code>xindy</code> 
      * via {@link #makeGlossariesCommand}. 
-     * The default value is <code>^ERROR: </code> (note the space). 
+     * The default value is <code>(^ERROR: )</code> (note the space). 
      * If this is not appropriate, please modify 
      * and notify the developer of this plugin. 
+     * FIXME: This is not used. 
      *
      * @parameter
      */
-    private String patternErrXindy = "^ERROR: ";
+    private String patternErrXindy = "(^ERROR: )";
 
     /**
      * The pattern in the <code>glg</code> file 
      * indicating a warning when running <code>xindy</code> 
      * via {@link #makeGlossariesCommand}. 
-     * The default value is <code>^WARNING: </code> (note the space). 
+     * The default value is <code>(^WARNING: )</code> 
+     * (note the space and the brackets). 
      * If this is not appropriate, please modify 
      * and notify the developer of this plugin. 
      * 
      * @parameter
      */
-    private String patternWarnXindy = "^WARNING: ";
+    private String patternWarnXindy = "(^WARNING: )";
 
     /**
      * The tex4ht command. 
@@ -745,6 +747,10 @@ public class Settings {
 	return this.patternMakeGlossariesErr;
     }
 
+    public String getPatternWarnXindy() {
+	return this.patternWarnXindy;
+    }
+
     public String getTex4htCommand() {
         return this.tex4htCommand;
     }
@@ -1004,6 +1010,10 @@ public class Settings {
 	this.patternMakeGlossariesErr = patternMakeGlossariesErr;
     }
 
+     public void setPatternWarnXindy(String patternWarnXindy) {
+	this.patternWarnXindy = patternWarnXindy;
+    }
+
     public void setCleanUp(boolean cleanUp) {
         this.cleanUp = cleanUp;
     }
@@ -1153,9 +1163,10 @@ public class Settings {
 	    .append(this.makeGlossariesCommand);
         sb.append(", makeGlossariesOptions=")
 	    .append(this.makeGlossariesOptions);
-       sb.append(", patternMakeGlossariesErr=")
+	sb.append(", patternMakeGlossariesErr=")
 	   .append(this.patternMakeGlossariesErr);
- 
+	sb.append(", patternWarnXindy=").append(this.patternWarnXindy);
+
         sb.append(", tex4htCommand=")   .append(this.tex4htCommand);
         sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
         sb.append(", tex4htOptions=")   .append(this.tex4htOptions);
