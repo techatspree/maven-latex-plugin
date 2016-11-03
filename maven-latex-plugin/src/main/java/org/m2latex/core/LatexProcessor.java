@@ -103,6 +103,8 @@ public class LatexProcessor {
     // bibtex 
     final static String SUFFIX_BLG = ".blg";
 
+    // needed by makeglossaries 
+    final static String SUFFIX_VOID = "";
 
 
     private final Settings settings;
@@ -152,10 +154,12 @@ public class LatexProcessor {
      * via {@link ParameterAdapter#initialize()} 
      * processing graphic-files via {@link #processGraphics(File)} 
      * and processing the tex main files 
-     * via {@link ParameterAdapter#processSource(File)}. 
+     * via {@link Target#processSource(LatexProcessor, File)}. 
      * The resulting files are identified by its suffixes 
-     * via  {@link ParameterAdapter#getOutputFileSuffixes()} 
+     * via  {@link Target#getOutputFileSuffixes()} 
      * and copied to the target folder. 
+     * Finally, by default a cleanup is performed 
+     * invoking {@link TexFileUtils#cleanUp(Collection, File)}. 
      * <p>
      * Logging: 
      * <ul>
@@ -461,7 +465,8 @@ public class LatexProcessor {
      * A warning is logged if the LaTeX, a BibTeX run or MakeIndex fails 
      * or if a BibTeX run or a MakeIndex run issues a warning
      * in the according methods {@link #runLatex2pdf(File)}, 
-     * {@link #runBibtex(File)} and {@link #runMakeindex(File)}. 
+     * {@link #runBibtexByNeed(File)}, {@link #runMakeIndexByNeed(File)} and 
+     * {@link #runMakeGlossaryByNeed(File)}. 
      *
      * @param texFile
      *    the tex file to be processed. 
@@ -627,6 +632,20 @@ public class LatexProcessor {
 	}
     }
 
+    private void logWarns(File logFile, String command, String pattern) 
+	throws BuildExecutionException {
+	if (!logFile.exists()) {
+	    return;
+	}
+
+	if (this.fileUtils.matchInFile(logFile, pattern)) {
+	    log.warn("Running " + command + 
+		     " emitted warnings. For details see " + 
+		     logFile.getName() + ". ");
+	}
+    }
+
+
 
     /**
      * Runs conversion of <code>texFile</code> to html or xhtml 
@@ -733,7 +752,7 @@ public class LatexProcessor {
      *    the plt-file (gnuplot format) to be converted to pdf. 
      * @throws BuildExecutionException
      *    if running the ptx/pdf-conversion built in in gnuplot fails. 
-     * @see #execute()
+     * @see #create()
      */
     // used in execute() only 
      public void runGnuplot2Dev(File pltFile, LatexDev dev) 
@@ -788,7 +807,7 @@ public class LatexProcessor {
      *    returned by {@link Settings#getFig2devCommand()} failed. 
      *    This is invoked twice: once for creating the pdf-file 
      *    and once for creating the pdf_t-file. 
-     * @see #execute()
+     * @see #create()
      */
     // used in execute() only 
     public void runFig2Dev(File figFile, LatexDev dev) 
@@ -848,7 +867,7 @@ public class LatexProcessor {
      *    the metapost file to be processed. 
      * @throws BuildExecutionException
      *    if running the mpost command failed. 
-     * @see #execute()
+     * @see #create()
      */
     // used in execute() only 
     private void runMetapost2mps(File mpFile) throws BuildExecutionException {
@@ -1145,32 +1164,23 @@ public class LatexProcessor {
 			      this.settings.getMakeIndexCommand(), 
 			      args);
 
-	// detect errors 
+	// detect errors and warnings 
+
  	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
-	if (logFile.exists()) {
-	    boolean errOccurred = this.fileUtils.matchInFile
-		(logFile, this.settings.getPatternErrMakeindex());
-	    if (errOccurred) {
-		log.warn("Running MakeIndex on " + idxFile + 
-			 " failed. For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	    boolean warnOccurred = this.fileUtils.matchInFile
-		(logFile, this.settings.getPatternWarnMakeindex());
-	    if (warnOccurred) {
-		log.warn("Running MakeIndex on " + idxFile + 
-			 " emitted warnings. For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	} else {
-	    this.log.error("Makeindex failed: no log file found. ");
-	}
+	logErrs (logFile, 
+		 this.settings.getMakeIndexCommand(), 
+		 this.settings.getPatternErrMakeindex());
+	logWarns(logFile, 
+		 this.settings.getMakeIndexCommand(), 
+		 this.settings.getPatternWarnMakeindex());
 	return true;
     }
 
     private boolean runMakeGlossaryByNeed(File texFile)
 	throws BuildExecutionException {
 
+	// file name without ending 
+	File xxxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	File gloFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
 	File istFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IST);
 	File xdyFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_XDY);
@@ -1181,105 +1191,38 @@ public class LatexProcessor {
 	if (!needRun) {
 	    return false;
 	}
-	if (!istFile.exists()) {
-	    log.warn("Did not find " + istFile + " as expected. ");
-	}
-	if ( xdyFile.exists()) {
-	    log.warn("Found unsupported " + xdyFile + ". ");
-	}
 
-	log.debug("Running " + this.settings.getMakeIndexCommand() + 
-		  " on file " + gloFile.getName() + 
-		  " with style " + istFile.getName() + ". ");
+	// if (!istFile.exists()) {
+	//     log.warn("Did not find " + istFile + " as expected. ");
+	// }
+	// if ( xdyFile.exists()) {
+	//     log.warn("Found unsupported " + xdyFile + ". ");
+	// }
 
-	File glsFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLS);
-	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
-	String[] args = buildMakeIndexGlossaryArguments
-	    (this.settings.getMakeIndexOptions(), 
-	     istFile, glsFile, glgFile, gloFile);
+	log.debug("Running " + this.settings.getMakeGlossariesCommand() + 
+		  " on file " + xxxFile.getName()+ ". ");
+
+	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
+				       xxxFile);
 
 	// may throw BuildExecutionException 
 	this.executor.execute(texFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
-			      this.settings.getMakeIndexCommand(), 
+			      this.settings.getMakeGlossariesCommand(), 
 			      args);
 
-	// detect errors 
+	// detect errors and warnings 
 	// FIXME: only valid for use with makeindex 
- 	File logFile = glgFile;
-	File idxFile = gloFile;
-	// FIXME: same as for runMakeIndexByNeed
-	if (logFile.exists()) {
-	    boolean errOccurred = this.fileUtils.matchInFile
-		(logFile, this.settings.getPatternErrMakeindex());
-	    if (errOccurred) {
-		log.warn("Running MakeIndex on " + idxFile + 
-			 " failed. For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	    boolean warnOccurred = this.fileUtils.matchInFile
-		(logFile, this.settings.getPatternWarnMakeindex());
-	    if (warnOccurred) {
-		log.warn("Running MakeIndex on " + idxFile + 
-			 " emitted warnings. For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	} else {
-	    this.log.error("Makeindex failed: no log file found. ");
-	}
+	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
+
+//this is wrong!! does not take xindy into account, only makeindex 
+	logErrs (glgFile, 
+		 this.settings.getMakeIndexCommand(), 
+		 this.settings.getPatternErrMakeindex());
+	logWarns(glgFile, 
+		 this.settings.getMakeIndexCommand(), 
+		 this.settings.getPatternWarnMakeindex());
 	return true;
-    }
-
-    /**
-     * Returns the options for running {@link Settings#getMakeIndexCommand()} 
-     * to create a glossary. 
-     * To that end, <code>options</code> must be the options 
-     * for creating an index given by {@link Settings#getMakeIndexOptions()}. 
-     * This method appends the options 
-     * <ul>
-     * <li>
-     * <code>-s xxx.ist -o xxx.gls -t xxx.glg</code> using 
-     * <li>
-     * <code>istFile</code> as style-file via option <code>-s</code> 
-     * <li>
-     * <code>glsFile</code> as output-file (sorted index) 
-     * via option <code>-o</code> 
-     * <li>
-     * <code>glgFile</code> as log-file (transcript) via option <code>-t</code> 
-     * </ul>
-     * and specifying <code>gloFile</code> as input, 
-     * containing unsorted and uncollected entries. 
-     *
-     * @return
-     *    returns the arguments for running makeindex 
-     *    to create a glossary as described above. 
-     */
-    private String[] buildMakeIndexGlossaryArguments(String options, 
-						     File istFile, 
-						     File glsFile, 
-						     File glgFile,
-						     File gloFile) {
-	// Usage: makeindex [-ilqrcgLT] 
-	// [-s sty] [-o ind] [-t log] [-p num] [idx0 idx1 ...]
-
-	options += " -s xxx.ist -o xxx.gls -t xxx.glg xxx.glo";
-        String[] args = options.split(" ");
-	int idx = args.length;
-        args[--idx] = gloFile.getName();// index file xxx.glo
-
-	args[--idx] = glgFile.getName();// -t xxx.glg
-	--idx;
-	assert args[idx].equals("-t");// skipping option -t
-
-	args[--idx] = glsFile.getName();// -o xxx.gls 
-	--idx;
-	assert args[idx].equals("-o");// skipping option -o
-
-	args[--idx] = istFile.getName();// -s xxx.ist 
-	--idx;
-	assert args[idx].equals("-s");// skipping option -s
-
-	return args;
     }
 
     /**
