@@ -318,10 +318,35 @@ public class Settings {
 
     /**
      * The options for the MakeIndex command. 
-     * Note that the option <code>-t xxx.ilg</code> 
+     * Note that the option <code>-o xxx.ind</code> to specify the output file 
+     * is not allowed because this plugin 
+     * expects the output for the latex main file <code>xxx.tex</code> 
+     * <code>xxx.ind</code>. 
+     * Likewise, the option <code>-t xxx.ilg</code> 
      * to specify the logging file is not allowed, 
-     * because this software uses the standard logging file. 
+     * because this software uses the standard logging file 
+     * to detect failures processing the idx-file. 
+     * Also the option <code>-i</code> 
+     * which specifies reading the raw index from standard input 
+     * is not allowed. 
+     * Specifying a style file with option <code>-s yyy.ist</code> 
+     * is possible if only an index is used but no glossary. 
+     * FIXME: rethink what about multiple indices. 
+     * <p>
+     * Note that the options specified here 
+     * are also used to create glossaries. 
+     * In addition for glossaries, the options 
+     * <code>-s</code>, <code>-o</code> and <code>-t</code> are used. 
+     * Thus also these options should not be used. 
      * The default value is the empty string. 
+     * Useful options in this context are 
+     * <ul>
+     * <li><code>-c</code> remove blanks from index entries 
+     * <li><code>-g</code> german ordering
+     * <li><code>-l</code> letter ordering
+     * <li><code>-r</code> without collecting index entries 
+     * on 3 or more successive pages. 
+     * </ul>
      *
      * @parameter
      */
