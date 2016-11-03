@@ -281,6 +281,8 @@ public class LatexProcessorTest {
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossary) 
 	throws BuildExecutionException {
 
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
+        fileUtilsCtrl.setReturnValue( gloFile );
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
         fileUtilsCtrl.setReturnValue( gloFile );
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IST);
