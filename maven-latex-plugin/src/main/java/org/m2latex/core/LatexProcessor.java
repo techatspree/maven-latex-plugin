@@ -79,9 +79,23 @@ public class LatexProcessor {
     // odt2doc 
     private final static String SUFFIX_ODT = ".odt";
 
-    // makeindex 
+    // makeindex for index 
+    // unsorted and not unified index created by latex 
     final static String SUFFIX_IDX = ".idx";
+    // log file created by makeindex 
     final static String SUFFIX_ILG = ".ilg";
+
+    // makeindex for glossary 
+    // unsorted and not unified glossary created by latex 
+    final static String SUFFIX_GLO = ".glo";
+    // index style, better glossary style created by latex for makeindex. 
+    final static String SUFFIX_IST = ".ist";
+     // index style, better glossary style created by latex for xindy. 
+    final static String SUFFIX_XDY = ".xdy";
+    // sorted and unified glossary created by makeindex 
+    final static String SUFFIX_GLS = ".gls";
+    // logging file for makeindex used with glossaries 
+    final static String SUFFIX_GLG = ".glg";
 
     // bibtex 
     final static String SUFFIX_BLG = ".blg";
@@ -163,8 +177,7 @@ public class LatexProcessor {
      *    if processing xfig-files or gnuplot files fail. 
      *    </ul>
      */
-    public void create() 
-	throws BuildExecutionException, BuildFailureException {
+    public void create() throws BuildExecutionException, BuildFailureException {
 
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString() );
@@ -452,11 +465,14 @@ public class LatexProcessor {
 	// initial latex run 
         runLatex2pdf(texFile);
 
-	// run bibtex by need 
+	// create a bibliography by need 
 	boolean needLatexReRun = runBibtexByNeed(texFile);
 
-	// run makeindex by need 
-	needLatexReRun |= runMakeindexByNeed(texFile);
+	// create an index by need 
+	needLatexReRun |= runMakeIndexByNeed(texFile);
+
+	// create a glossary by need 
+	needLatexReRun |= runMakeGlossaryByNeed(texFile);
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
@@ -995,8 +1011,8 @@ public class LatexProcessor {
 
 	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
 	String command = this.settings.getOdt2docCommand();
-	log.debug( "Running " + command + 
-		   " on file " + odtFile.getName() + ". ");
+	log.debug("Running " + command + 
+		  " on file " + odtFile.getName() + ". ");
 
 	String[] args = buildArguments(this.settings.getOdt2docOptions(),
 				       odtFile);
@@ -1081,9 +1097,6 @@ public class LatexProcessor {
         return needRun;
     }
 
-
-
-
     /**
      * Runs the makeindex command 
      * given by {@link Settings#getMakeinexCommand()} 
@@ -1096,7 +1109,7 @@ public class LatexProcessor {
      *    whether makeindex is run. 
      *    Equivalently, whether LaTeX has to be rerun because of makeindex. 
      */
-    private boolean runMakeindexByNeed(File texFile)
+    private boolean runMakeIndexByNeed(File texFile)
 	throws BuildExecutionException {
 
 	File idxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
@@ -1140,6 +1153,120 @@ public class LatexProcessor {
 	return true;
     }
 
+    private boolean runMakeGlossaryByNeed(File texFile)
+	throws BuildExecutionException {
+
+	File gloFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
+	File istFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IST);
+	File xdyFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_XDY);
+	boolean needRun = gloFile.exists();
+	assert ( gloFile.exists() && ( istFile.exists() ^   xdyFile.exists()))
+	    || (!gloFile.exists() && (!istFile.exists() && !xdyFile.exists()));
+	log.debug("MakeGlossary run required? " + needRun);
+	if (!needRun) {
+	    return false;
+	}
+	if (!istFile.exists()) {
+	    log.warn("Did not find " + istFile + " as expected. ");
+	}
+	if ( xdyFile.exists()) {
+	    log.warn("Found unsupported " + xdyFile + ". ");
+	}
+
+	log.debug("Running " + this.settings.getMakeIndexCommand() + 
+		  " on file " + gloFile.getName() + 
+		  " with style " + istFile.getName() + ". ");
+
+	File glsFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLS);
+	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
+	String[] args = buildMakeIndexGlossaryArguments
+	    (this.settings.getMakeIndexOptions(), 
+	     istFile, glsFile, glgFile, gloFile);
+
+	// may throw BuildExecutionException 
+	this.executor.execute(texFile.getParentFile(), //workingDir 
+			      this.settings.getTexPath(), 
+			      this.settings.getMakeIndexCommand(), 
+			      args);
+
+	// detect errors 
+	// FIXME: only valid for use with makeindex 
+ 	File logFile = glgFile;
+	File idxFile = gloFile;
+	// FIXME: same as for runMakeIndexByNeed
+	if (logFile.exists()) {
+	    boolean errOccurred = this.fileUtils.matchInFile
+		(logFile, this.settings.getPatternErrMakeindex());
+	    if (errOccurred) {
+		log.warn("Running MakeIndex on " + idxFile + 
+			 " failed. For details see " + 
+			 logFile.getName() + ". ");
+	    }
+	    boolean warnOccurred = this.fileUtils.matchInFile
+		(logFile, this.settings.getPatternWarnMakeindex());
+	    if (warnOccurred) {
+		log.warn("Running MakeIndex on " + idxFile + 
+			 " emitted warnings. For details see " + 
+			 logFile.getName() + ". ");
+	    }
+	} else {
+	    this.log.error("Makeindex failed: no log file found. ");
+	}
+	return true;
+    }
+
+    /**
+     * Returns the options for running {@link Settings#getMakeIndexCommand()} 
+     * to create a glossary. 
+     * To that end, <code>options</code> must be the options 
+     * for creating an index given by {@link Settings#getMakeIndexOptions()}. 
+     * This method appends the options 
+     * <ul>
+     * <li>
+     * <code>-s xxx.ist -o xxx.gls -t xxx.glg</code> using 
+     * <li>
+     * <code>istFile</code> as style-file via option <code>-s</code> 
+     * <li>
+     * <code>glsFile</code> as output-file (sorted index) 
+     * via option <code>-o</code> 
+     * <li>
+     * <code>glgFile</code> as log-file (transcript) via option <code>-t</code> 
+     * </ul>
+     * and specifying <code>gloFile</code> as input, 
+     * containing unsorted and uncollected entries. 
+     *
+     * @return
+     *    returns the arguments for running makeindex 
+     *    to create a glossary as described above. 
+     */
+    private String[] buildMakeIndexGlossaryArguments(String options, 
+						     File istFile, 
+						     File glsFile, 
+						     File glgFile,
+						     File gloFile) {
+	// Usage: makeindex [-ilqrcgLT] 
+	// [-s sty] [-o ind] [-t log] [-p num] [idx0 idx1 ...]
+
+	options += " -s xxx.ist -o xxx.gls -t xxx.glg xxx.glo";
+        String[] args = options.split(" ");
+	int idx = args.length;
+        args[--idx] = gloFile.getName();// index file xxx.glo
+
+	args[--idx] = glgFile.getName();// -t xxx.glg
+	--idx;
+	assert args[idx].equals("-t");// skipping option -t
+
+	args[--idx] = glsFile.getName();// -o xxx.gls 
+	--idx;
+	assert args[idx].equals("-o");// skipping option -o
+
+	args[--idx] = istFile.getName();// -s xxx.ist 
+	--idx;
+	assert args[idx].equals("-s");// skipping option -s
+
+	return args;
+    }
+
     /**
      * Runs the bibtex command given by {@link Settings#getBibtexCommand()} 
      * on the aux-file corresponding with <code>texFile</code> 
@@ -1151,7 +1278,7 @@ public class LatexProcessor {
      *    whether bibtex is run. 
      *    Equivalently, whether LaTeX has to be rerun because of bibtex. 
      */
-    private boolean runBibtexByNeed(File texFile)
+    private boolean runBibtexByNeed(File texFile) 
 	throws BuildExecutionException {
 
 	File auxFile =  this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
