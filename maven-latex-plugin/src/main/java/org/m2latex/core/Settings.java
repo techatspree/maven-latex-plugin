@@ -200,7 +200,7 @@ public class Settings {
 
     /**
      * The pattern in the <code>log</code> file 
-     * indicating a failure when running {@link #texCommand}. 
+     * indicating an error when running {@link #texCommand}. 
      * The default value is <code>(^! )</code> (note the space). 
      * If this is not appropriate, please modify 
      * and notify the developer of this plugin. 
@@ -317,7 +317,7 @@ public class Settings {
     private String makeIndexCommand = "makeindex";
 
     /**
-     * The options for the MakeIndex command. 
+     * The options for the {@link #makeIndexCommand}. 
      * Note that the option <code>-o xxx.ind</code> to specify the output file 
      * is not allowed because this plugin 
      * expects the output for the latex main file <code>xxx.tex</code> 
@@ -354,7 +354,7 @@ public class Settings {
 
     /**
      * The Pattern in the ilg-file 
-     * indicating that {@link #makeIndexCommand} failed. 
+     * indicating an error when running {@link #makeIndexCommand}. 
      * The default value is chosen 
      * according to the <code>makeindex</code> documentation. 
      *
@@ -364,7 +364,7 @@ public class Settings {
 
     /**
      * The Pattern in the ilg-file 
-     * indicating a warning {@link #makeIndexCommand} emitted. 
+     * indicating a warning when running {@link #makeIndexCommand}. 
      * The default value is chosen 
      * according to the <code>makeindex</code> documentation. 
      *
@@ -372,6 +372,72 @@ public class Settings {
      */
     private String patternWarnMakeindex = "## Warning ";
 
+    /**
+     * The MakeGlossaries command to create a gls-file 
+     * from a glo-file (invoked without file ending) 
+     * also taking ist-file or xdy-file into account logging on a glg-file. 
+     * The default value is <code>makeglossaries</code>. 
+     *
+     * @parameter
+     */
+    private String makeGlossariesCommand = "makeglossaries";
+
+    /**
+     * The options for the {@link #makeGlossariesCommand}. 
+     * These are the options for <code>makeindex</code> 
+     * (not for {@link #makeIndexCommand}) 
+     * and for <code>xindy</code> (also hardcoded). 
+     * The aux-file decides on whether program is executed 
+     * and consequently which options are used. 
+     * <p>
+     * The default value is the empty option string. 
+     * Nevertheless, <code>xindy</code> is invoked as 
+     * <code>xindy -L english  -I xindy -M ...</code>. 
+     * With option <code>-L german</code>, this is added. 
+     * Options <code>-M</code> for <code>xindy</code> 
+     * <code>-s</code> for <code>makeindex</code> and 
+     * <code>-t</code> and <code>-o</code> for both, 
+     * <code>xindy</code> and <code>makeindex</code>. 
+     * 
+     * @parameter
+     */
+    private String makeGlossariesOptions = "";
+
+    /**
+     * The Pattern in the glg-file 
+     * indicating an error when running {@link #makeGlossariesCommand}. 
+     * The default value is <code>(^\*\*\* unable to execute: )</code>. 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     * 
+     * @parameter
+     */
+    private String patternMakeGlossariesErr = 
+	"^\\*\\*\\* unable to execute: ";
+
+    /**
+     * The pattern in the <code>glg</code> file 
+     * indicating an error when running <code>xindy</code> 
+     * via {@link #makeGlossariesCommand}. 
+     * The default value is <code>^ERROR: </code> (note the space). 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     *
+     * @parameter
+     */
+    private String patternErrXindy = "^ERROR: ";
+
+    /**
+     * The pattern in the <code>glg</code> file 
+     * indicating a warning when running <code>xindy</code> 
+     * via {@link #makeGlossariesCommand}. 
+     * The default value is <code>^WARNING: </code> (note the space). 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     * 
+     * @parameter
+     */
+    private String patternWarnXindy = "^WARNING: ";
 
     /**
      * The tex4ht command. 
@@ -667,6 +733,18 @@ public class Settings {
 	return this.patternWarnMakeindex;
     }
 
+    public String getMakeGlossariesCommand() {
+	return this.makeGlossariesCommand;
+    }
+
+    public String getMakeGlossariesOptions() {
+	return this.makeGlossariesOptions;
+    }
+
+    public String getPatternMakeGlossariesErr() {
+	return this.patternMakeGlossariesErr;
+    }
+
     public String getTex4htCommand() {
         return this.tex4htCommand;
     }
@@ -913,6 +991,18 @@ public class Settings {
    	}
     }
 
+    public void setMakeGlossariesCommand(String makeGlossariesCommand) {
+        this.makeGlossariesCommand = makeGlossariesCommand;
+    }
+
+    public void setMakeGlossariesOptions(String makeGlossariesOptions) {
+	this.makeGlossariesOptions = makeGlossariesOptions
+	    .replace("( \n)+", " ").trim();
+    }
+
+    public void setPatternMakeGlossariesErr(String patternMakeGlossariesErr) {
+	this.patternMakeGlossariesErr = patternMakeGlossariesErr;
+    }
 
     public void setCleanUp(boolean cleanUp) {
         this.cleanUp = cleanUp;
@@ -1054,11 +1144,18 @@ public class Settings {
         sb.append(", patternErrBibtex=").append(this.patternErrBibtex);
         sb.append(", patternWarnBibtex=").append(this.patternWarnBibtex);
 
-        sb.append(", makeIndexCommand=").append(this.makeIndexCommand);
-        sb.append(", makeIndexOptions=").append(this.makeIndexOptions);
-        sb.append(", patternErrMakeindex=").append(this.patternErrMakeindex);
+        sb.append(", makeIndexCommand=")    .append(this.makeIndexCommand);
+        sb.append(", makeIndexOptions=")    .append(this.makeIndexOptions);
+        sb.append(", patternErrMakeindex=") .append(this.patternErrMakeindex);
         sb.append(", patternWarnMakeindex=").append(this.patternWarnMakeindex);
 
+        sb.append(", makeGlossariesCommand=")
+	    .append(this.makeGlossariesCommand);
+        sb.append(", makeGlossariesOptions=")
+	    .append(this.makeGlossariesOptions);
+       sb.append(", patternMakeGlossariesErr=")
+	   .append(this.patternMakeGlossariesErr);
+ 
         sb.append(", tex4htCommand=")   .append(this.tex4htCommand);
         sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
         sb.append(", tex4htOptions=")   .append(this.tex4htOptions);
