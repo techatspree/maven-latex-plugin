@@ -1,6 +1,8 @@
 
 \documentclass[12pt]{article}
 
+% graphics 
+
 \makeatletter
 \@ifpackageloaded{tex4ht}{%
 \usepackage[dvipdfmx]{xcolor}
@@ -13,28 +15,36 @@
 }
 
 \usepackage{svg}
+
+% synchronization between tex and pdf 
 \usepackage[active]{srcltx}
 
 
 \usepackage{longtable}
 \usepackage{listings}
-\usepackage{makeidx}
+\usepackage{fancyvrb}
 
 % only with pdflatex, warnings for xelatex and for lualatex 
 % ifxetex, ifluatex, ifpdf
 \usepackage{ifpdf,ifxetex,ifluatex}
 \ifpdf
 %\usepackage[utf8]{inputenc}
-%\usepackage[T1]{fontenc}
+\usepackage[T1]{fontenc}
 \else
 \fi
 
-\usepackage[nottoc, numindex, numbib]{tocbibind}
+% index and glossary
+\usepackage{makeidx}
+\makeindex
 \usepackage[toc]{glossaries}
+%, xindy or even [xindy={language=english,codepage=utf8}]
+
+\makeglossaries
+
 \setacronymstyle{long-short}
 % file formats 
 \newacronym{pdf}{pdf}{portable document format}
-\newacronym{dvi}{dvi}{device independent}
+\newacronym{dvi}{dvi}{device independent file format}
 \newacronym{eps}{eps}{encapsulated postscript}
 \newacronym{tex}{tex}{tex the format, which may also be latex}
 \newacronym{html}{html}{hypertext markup language}
@@ -42,11 +52,14 @@
 \newacronym{odt}{odt}{open document text}
 \newacronym{doc}{doc}{outdated document format for MS word }
 \newacronym{docx}{docx}{current document format for MS word }
+\newacronym{sgml}{sgml}{Standard generalized markup language }
 \newacronym{xml}{xml}{extensible markup language }
 \newacronym{ptx}{ptx}{pdf/postscript tex format }% home brewed 
 % plt missing 
 \newacronym{fig}{fig}{native file format for xfig }
 \newacronym{png}{png}{Portable Network Graphics}
+\newacronym{jpg}{jpg}{Graphics format developed by the Joint Photographic Experts Group }
+\newacronym{gif}{gif}{Graphics Interchange Format, allows also animations }
 \newacronym{svg}{svg}{Scalable Vector Graphics}
 % latex file endings 
 \newacronym{toc}{toc}{table of contents}
@@ -54,16 +67,34 @@
 \newacronym{lot}{lot}{list of tables}
 \newacronym{aux}{aux}{auxiliary file}
 \newacronym{log}{log}{logging file (for LaTeX and mpost)}
+\newacronym{idx}{idx}{index file containing unsorted and multiple index entries}
+
 \newacronym{mp}{mp}{metapost}
+\newacronym{ps}{ps}{PostScript}
 \newacronym{mps}{mps}{metapost's postscript like output including text}
 \newacronym{mpx}{mpx}{metapost tex output: texts }
 
-\makeglossaries
+% \newglossaryentry{latex}{name={\latex},description={%
+% A document preparation system 
+% converting sources in the latex-format preferrably into pdf-output. 
+% Historically, output was in \gls{dvi}-format 
+% which is still used by htlatex as an intermediate format 
+% to produce \gls{html} resp.~\gls{xhtml} and \gls{odt} output. 
+% }}
+% \newglossaryentry{htlatex}{name={htlatex},description={%
+% A script which wraps latex 
+% but producing (x)html and odt output instead of pdf 
+% which is usual for latex. 
+% }}
+%\newglossaryentry{ps}{name={PostScript},description={%
+%A computer language for creating vector graphics. 
+%}}
+
+\usepackage[nottoc, numindex, numbib]{tocbibind}
 
 \title{Manual for the latex-maven-plugin and for an according ant-task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
 
-\makeindex
 
 \begin{document}
 \maketitle
@@ -76,11 +107,11 @@
 \section{Introduction}
 
 LaTeX is a beautyful way to create printable documents, 
-today in particular as pdf-files, 
+today in preferrably as \gls{pdf}-files, 
 with a particular strength in typesetting formulae like 
 %
 \begin{eqnarray*}
-\pi & = & \sqrt{12}\sum^\infty_{k=0} \frac{ (-3)^{-k} }{ 2k+1 }
+\pi & = & \sqrt{12}\;\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}. 
 \end{eqnarray*}
 %
 Here, portability of the format \gls{pdf} is a vital feature. 
@@ -88,8 +119,9 @@ Here, portability of the format \gls{pdf} is a vital feature.
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from LaTeX files 
 in an uniform way. 
-Besides pdf, these formats include the web-format (x)html, 
-open document format odt, microsoft's word formats like docx 
+Besides \gls{pdf}, these formats include the web-formats \gls{html} 
+and \gls{xhtml}, 
+open offices format \gls{odt}, microsoft's word formats like \gls{docx} 
 and finally plain text. 
 
 Uniformity of ant-task and a maven-plugin means in particular, 
@@ -103,11 +135,11 @@ The code specific for the ant-task is in {\tt org.m2latex.antTask}
 and that specific for the maven-plugin is in {\tt org.m2latex.mojo}. 
 
 It is very usual to endow LaTeX-files with figures. 
-We support figures created in the xfig-format by the program xfig, 
+We support figures created in the format \gls{fig} by the program xfig, 
 figures created by the plotting utility gnuplot, 
 the tex-specific graphic language metapost 
 and finally figures in formats which can be included into a latex-file 
-without preprocessing like png and jpg. 
+without preprocessing like \gls{png} and \gls{jpg}. 
 Further functionality on latex figures can be easily added. 
 If there is some need, please write an email to the author. 
 
@@ -160,19 +192,19 @@ The core just invokes various programs to do the actual work.
 
 Depending on what kinds of graphic formats are used, 
 the following programs are required: 
-To convert the fig-files into pdf-files, 
+To convert the \gls{fig}-files into \gls{pdf}-files, 
 by default {\tt fig2dev} is used. \index{fig2dev}
-It makes sense to have {\tt xfig} installed  \index{xfig}
+It makes sense to have {\tt xfig} installed \index{xfig}
 to create and edit fig-files, but this is not mandatory. 
 To convert gnuplot files into pdf-files, there is no alternative, 
 to have installed {\tt gnuplot}. \index{gnuplot}
 It serves as an interpreter and also as a converter. 
 Strictly speaking, only the latter functionality is required here. 
-To convert metapost-files (ending {\tt mp}) into encapsulated postscript, 
+To convert \gls{mp}-files into \gls{eps}-files, 
 \index{mpost}\index{metapost}
 the interpreter {\tt mpost} or equivalent is required. 
 This comes with a standard tex-installation. 
-To include svg-files into latex \index{svg}, 
+To include \gls{svg}-files into latex \index{svg}, 
 {\tt inkscape} must be installed. \index{inkscape}
 It also serves to create and edit svg-files. 
 
@@ -202,8 +234,9 @@ also require the latex packages {\tt makeidx} and {\tt glossaries}
 described in \cite{MkidxShIdxP} and in 
 
 
-To create html-files, or to be more precise any kind of sgml and xml, 
-from pdf-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
+To create \gls{html}-files, 
+or to be more precise any kind of \gls{sgml} and \gls{xml}, 
+from latex-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
 Currently the author is not aware of any alternative to the two. 
 This includes also creating open office documents like odt-files. 
 Thus open office documents are created in two steps, 
@@ -237,7 +270,7 @@ the listing of a pom entry given in Section \ref{sec:settings}
 can be added to {\tt pom.xml} and modified accordingly. 
 In a default maven project, 
 the default configuration is usable which creates pdf-documents and
-html-sites. 
+\gls{html}-sites. 
 The according entry to be added to the {\tt pom.xml} is then just 
 %
 \lstset{language=xml, basicstyle=\small}
@@ -329,13 +362,14 @@ among these also {\tt dvipdfm} and {\tt dvipdfmx}.
 It is not the package but the driver 
 which decides on the support of graphic formats. 
 The dvipdfm user manual, \cite{DviPdfMx} lists the allowed formats 
-metapost-output (i.e. {\tt mps}), postscript, pdf, jpg and png. 
+metapost-output (i.e. \gls{mps}), postscript, 
+\gls{pdf}, \gls{jpg} and \gls{png}. 
 \item
 and the third one must be transformed into a graphics format 
 of one of the former two kinds using an external tool for transformation. 
 Here, of course, only a limited support is possible, 
 because there is a broad variety of formats. 
-We have choosen the fig format **** citation **** because of its simplicity, 
+We have choosen the \gls{fig}-format **** citation **** because of its simplicity, 
 the gnuplot format, described in \cite{GnuPlot}, 
 because it allows computation of pictures, 
 likewise metapost, described in \cite{MPost}. 
@@ -364,6 +398,8 @@ with the full range of output formats including in addition
 the open office document format {\tt odt}, 
 the MS word-format(s) {\tt doc(x)} and {\tt rtf}
 and also plain text format {\tt txt} in utf8 encoding. 
+Note that the target {\tt docx} converts by default into \gls{docx} 
+but may also be configured to produce the old fashioned \gls{doc} format. 
 %
 \lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}
@@ -394,7 +430,7 @@ Example: {\tt mvn -X latex:cfg}.
 
 There is another target for clearing the LaTeX {\em source} directory 
 recursively, invoked by {\tt mvn latex:clr}. 
-For more details on that see Section \ref{sec:develUsage}. 
+For more details on that see Section \ref{subsec:devel}. 
 
 In a standard maven project, 
 the above minimal configuration should be sufficient. 
@@ -441,7 +477,8 @@ with at least partial creation through external tools.
 For example, if writing latex-files with emacs, 
 it is much more convenient, to compile the latex main file 
 via {\tt pdflatex} from within emacs 
-or to create a pdf-file from a fig-file through {\tt xfig}'s export dialog, 
+or to create a pdf-file from a \gls{fig}-file 
+through {\tt xfig}'s export dialog, 
 than using this maven-plugin or this ant-task. 
 Also these tools work best, if all is in one folder. 
 
@@ -525,14 +562,15 @@ convert file.svgz file.pdf
 rasterizer -m application/pdf file.svgz -d file.pdf
 cairosvg in.svg -o out.pdf
 yyy
-\section{Conversions done by this Plugin and this Task}\label{sec:conversions}
+
+\section{Conversions done by this Plugin and Task}\label{sec:conversions}
 
 This section describes the conversions of source files into target files 
 in detail. 
 
-The most important target file formats is pdf. 
+The most important target file formats is \gls{pdf}. 
 But pdf also occurs as an intermediate format for pictures. 
-For historical reasons, still eps (encapsulated postscript) is used. 
+For historical reasons, still \gls{eps} is used. 
 Section \ref{subsec:figpdf} shows that it suffices to stick to pictures 
 in pdf-format. 
 Section \ref{subsec:fig2dev} shows how {\tt fig2dev} converts fig-files 
@@ -551,7 +589,8 @@ Thus it makes sense, to allow including graphics as pdf-files
 in latex-files. 
 This is done in pdf mode 
 by the latex-packages {\tt xcolor} and {\tt graphicx}. 
-In contrast, in dvi-mode which is still used to create html output, 
+In contrast, traditionally latex produced output in the \gls{dvi}-format 
+which is still used to create \gls{html}-output, 
 this is not supported by the default driver, 
 Instead it shall be used the driver {\tt dvipdfmx}. 
 To obtain a latex-file which works both for creating pdf and html, 
@@ -574,7 +613,7 @@ insert in the header of the latex main file
 \end{lstlisting}
 
 An alternative, which we do not use 
-is replacing the pdf by an eps via configuration file {\tt myxhtml.cfg} 
+is replacing the pdf by an \gls{eps} via configuration file {\tt myxhtml.cfg} 
 which is listed below. 
 %
 \lstset{language=tex, basicstyle=\scriptsize}
@@ -621,8 +660,8 @@ fig2dev -L pdftex_t -p pdf xxx.fig xxx.ptx
 \end{verbatim}
 %
 yield {\tt xxx.pdf} and {\tt xxx.ptx}, respectively, 
-the latter containing latex and including the former via the 
-{\tt\textbackslash includegraphics}-command. 
+the latter, \gls{ptx}, containing latex and including the former 
+using the command {\tt\textbackslash includegraphics}. 
 Thus the according latex main document must use packages graphicx and xcolor 
 as indicated in Section \ref{subsec:figpdf}. 
 The file {\tt xxx.ptx} is ``inputted'' into the tex-file 
@@ -651,12 +690,13 @@ For more options type {\tt fig2def -h} or consult the manual pages.
 Note also that by convention, the ending for the included latex-file 
 is not {\tt ptx} but {\tt pdf\_t}. 
 In the long run, **** we shall support also creation of latex-files 
-including encapsulated postscript (eps)-files. 
+including \gls{eps}-files. 
 By convention, the according ending is {\tt pstex\_t}. 
 To handle both cases in one enclosing latex file, 
 a unified file ending is required. 
 We have chosen {\tt ptx} for ``picture-tex''. 
-Handling both pdf and eps, may be necessary e.g. for the tex4ht-package. 
+Handling both \gls{pdf} and \gls{eps}-files, 
+may be necessary e.g. for the tex4ht-package. 
 An alternative is usage of a certain driver. 
 
 
@@ -708,7 +748,7 @@ gnuplot -e  "set terminal cairolatex pdf;
 exports {\tt xxx.plt} to {\tt xxx.ptx} and to {\tt xxx.pdf}, 
 the former containing latex and including the latter. 
 Note that this is appropriate for latex creating pdf-files, 
-not postscript or dvi. 
+not postscript or \gls{dvi}. 
 
 FIXME: 
 Here further options are missing: 
@@ -739,7 +779,7 @@ and embedded in this latex file with the {\tt\textbackslash input}-command.
 
 \begin{figure}[htb]
 \begin{center}
-\input{03gnuplot.ptx}
+\input{03someGnuplot.ptx}
 \end{center}
 \caption{\label{fig:gnuplot}
 Converted sample gnuplot-file into ptx and pdf files }
@@ -755,12 +795,12 @@ Although seemingly supported by TeX only,
 Turing complete, much like postscript. 
 Files containing {\tt metapost} have the ending {\tt mp}. 
 The interpreter for {\tt metapost} is {\tt mpost}. 
-Figure \ref{fig:mp2mps} illustrates how {\tt mpost} converts an mp-file 
+Figure \ref{fig:mp2mps} illustrates how {\tt mpost} converts an \gls{mp}-file 
 {\tt xxx.mp} 
-into one or more mps-files {\tt xxx1.mps}\dots {\tt xxxn.mps}, 
+into one or more \gls{mps}-files {\tt xxx1.mps}\dots {\tt xxxn.mps}, 
 (as the mp-file may declare more than one figure) 
 creating a log-file {\tt xxx.log} like LaTeX does 
-and an mpx-file {\tt xxx.mpx} containing the text of the figure. 
+and an \gls{mpx}-file {\tt xxx.mpx} containing the text of the figure. 
 The mps-files look like postscript, or more like encapsulated postscript, 
 but are not completely valid, since the prologue is missing, by default. 
 Inserting the line {\tt prologues := 2;} in the first line of the mp-file 
@@ -771,9 +811,6 @@ Roughly speaking, the mpx-file contains text parts of the mp-file;
 more knowledge is not necessary, as the texts are also in the mps-files 
 and so the mpx-file is not used by this software. 
 
-Figure \ref{fig:metapost} gives an example of a metapost file 
-included in this LaTeX-file. 
-
 \begin{figure}[htb]
 \begin{center}
 \input{04mp2mps.ptx}
@@ -781,39 +818,63 @@ included in this LaTeX-file.
 \caption{\label{fig:mp2mps}Conversion of a metapost-file into an mps-file}
 \end{figure}
 
-Figure \ref{fig:metapost} shows an example of an mps-file 
-created from a metapost file 
+
+Figure \ref{fig:metapost} gives an example of a metapost file 
+included in this LaTeX-file as ab mps-file 
+created from the metapost file 
 and embedded in this latex file 
 with the {\tt\textbackslash includegraphics}-command. 
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics{05metapost1.mps}
+\includegraphics{05someMetapost1.mps}
 \end{center}
 \caption{\label{fig:metapost}
 Converted sample metapost-file included as mps-file  }
 \end{figure}
 
-Note that metapost may also besides eps output svg and png, 
-just by setting {\tt outputformat:="svg"} or that like 
+Note that metapost may also besides \gls{eps} output \gls{svg} and \gls{png}, 
+just by setting 
+%
+\begin{verbatim}
+outputformat:="svg" 
+\end{verbatim}
+%
+or that like 
 (caution: case sensitive, assuming silently {\tt eps} if not recognized). 
-One would also adapt {\tt outputtemplate:="\%j\%c.svg"} 
-and {\tt prologues := 3;}. 
+One would also adapt 
+%
+\begin{verbatim}
+outputtemplate:="\%j\%c.svg"
+\end{verbatim}
+%
+and finally: 
+%
+\begin{verbatim}
+prologues := 3;
+\end{verbatim}
+
 So the mp-file starts 
 %
-\begin{lstlisting}[language=metapost]
+\lstset{language=metapost, basicstyle=\normalsize}
+\begin{lstlisting}
 outputformat:="svg";
 outputtemplate:="\%j\%c.svg";
 prologues := 3;
 \end{lstlisting}
 
 As an alternative, {\tt mpost} compiler may be invoked with option 
-{\tt -s$<$key$>$=$<$value$>$} described in \cite{MPost}, Appendix B.2.1. 
+%
+\begin{verbatim}
+-s<key>=<value>
+\end{verbatim}
+%
+described in \cite{MPost}, Appendix B.2.1. 
 This would lead to invocation 
 %
-\begin{lstlisting}
+\begin{Verbatim}[fontsize=\scriptsize]
 mpost -s ’outputformat="svg"’ -s ’outputtemplate:="%j%c.svg"' -s prologues=3 file.mp
-\end{lstlisting}
+\end{Verbatim}
 
 \subsection{Pictures which are not created}\label{subsec:picasis}
 
@@ -822,21 +883,31 @@ This is done as usual with {\tt\textbackslash includegraphics}.
 Note that both for {\tt pdflatex} and siblings creating pdf-output 
 and for {\tt htlatex} in conjunction with {\tt dvipdfmx} 
 (see Section \ref{subsec:figpdf}) 
-files in the format pdf, png, jpg are supported. 
+files in the format pdf, \gls{png}, \gls{jpg} are supported. 
+ **** what about \gls{gif}? 
 This list may be incomplete. 
+As an example, Figure \ref{fig:asIsPng} shows the same picture 
+as png-file. 
 
 FIXME: at the moment, htlatex does not work with pictures at all. 
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{06oboeBaroqueDennerMIR370.jpg}%
+\includegraphics[width=0.9\textwidth]{06someJpgOboeBaroqueDennerMIR370.jpg}%
 \end{center}
-\caption{\label{fig:asIsJpg}
-Some jpg-picture, directly included }
+\caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
+\end{figure}
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{07somePngOboeBaroqueDennerMIR370.png}%
+\end{center}
+\caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
 
 
-Figure \ref{fig:asIsSvg} is a picture in svg-format and included directly. 
+Figure \ref{fig:asIsSvg} is a picture in \gls{svg}-format 
+and included directly. 
 This time, we did not use the {\tt graphicx}-package 
 but the package {\tt sng}. 
 Inclusion is with the {\tt\textbackslash includesvg}-command. 
@@ -848,11 +919,9 @@ Caution: {\tt inkscape} must be installed.
 
 \begin{figure}[htb]
 \begin{center}
-%\input{07some.pdf_tex}
-\includesvg[width=0.9\textwidth]{07some}%
+\includesvg[width=0.9\textwidth]{08someSvg}%
 \end{center}
-\caption{\label{fig:asIsSvg}
-Some svg-picture, directly included }
+\caption{\label{fig:asIsSvg}Some svg-picture, directly included }
 \end{figure}
 
 \subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
@@ -902,7 +971,7 @@ Based on the aux-file, {\tt bibtex} creates a bbl-file
 containing the bibliography, which is read in in the next {\tt latex2pdf} run. 
 For details see Section \ref{subsec:bibtex}. 
 
-If an index is demanded, in addition {\tt latex2pdf} creates an idx-file. 
+If an index is demanded, in addition {\tt latex2pdf} creates an \gls{idx}-file. 
 As the citations, it cannot be used directly to create an index in
 the next {\tt latex2pdf} run, 
 because the index entries must be collected and sorted before. 
@@ -923,7 +992,7 @@ in the second run of {\tt latex2pdf}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{08tex2pdf.ptx}
+\input{09tex2pdf.ptx}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
 \end{figure}
@@ -952,7 +1021,7 @@ whether {\tt bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{09aux2bbl.ptx}
+\input{10aux2bbl.ptx}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
@@ -965,11 +1034,32 @@ Also Chapter 10 in \cite{Gra} gives vital information on {\tt bibtex}.
 
 \subsection{Indices}\label{subsec:makeindex}
 
+Note that despite of the headline of this section, 
+only a single index is supported and this requires 
+the package {\tt makeidx} described in \cite{MkidxShIdxP}. 
+For an extension see Section \ref{sec:gaps}. 
 
-In case the latex to pdf converter creates idx-file, 
-an index must be generated. 
-% Well, this is not really the truth: it is needed only if ...
-To that end, a {\tt makeindex}-command must be run. 
+Interesting enough, 
+the commands {\tt\textbackslash index} and {\tt\textbackslash makeindex} 
+work even without using the package {\tt makeidx}. 
+The former essentially does nothing without the latter
+but if the latter is present, if {\tt xxx.tex} is the latex main file, 
+the former writes an according entry in a file {\tt xxx.idx}. 
+Essentially, 
+{\tt\textbackslash makeindex} prepares writing to the \gls{idx}-file, 
+whereas {\tt\textbackslash index} performs writing a line. 
+For example {\tt\textbackslash index\{ant-task\}} creates an entry 
+%
+\begin{verbatim}
+\textbackslash indexentry\{ant-task|hyperpage\}\{3\}
+\end{verbatim}
+%
+in {\tt xxx.idx}. 
+Note that {\tt xxx.idx} typically contains entries more than once 
+and that the entries are not sorted. 
+ 
+Running, the {\tt makeindex}-command performs sorting 
+and typically also unification. 
 Essentially, {\tt makeindex} sorts and combines index entries. 
 This software presupposes, that {\tt makeindex} converts the idx-file 
 into an ind-file containing the index 
@@ -978,9 +1068,21 @@ as shown in Figure \ref{fig:idx2ind}.
 From the ilg-file this software may determine 
 whether {\tt makeindex} emitted an error or warnings. 
 
+The package {\tt makeidx} provides a single command, 
+{\tt\textbackslash printindex} which reads in the ind-file 
+and prints the index in a separate section, 
+typically at the end of the pdf-file. 
+The package {\tt tocbibind} described in \cite{TocBibIndP}, 
+then writes the headline of the index into the table of contents. 
+\index{table of contents}
+
+In case the latex to pdf converter creates an idx-file, 
+an index must be generated. 
+% Well, this is not really the truth: it is needed only if ...
+
 \begin{figure}[htb]
 \begin{center}
-\input{10idx2ind.ptx}
+\input{11idx2ind.ptx}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
@@ -988,11 +1090,93 @@ whether {\tt makeindex} emitted an error or warnings.
 It is possible to configure the makeindex-command 
 and to pass arbitrary options. 
 CAUTION: For the usual {\tt makeindex}-command, 
-the option {\tt -t} specifying the logging file is not allowed, 
-because this bypasses the detection of errors and warnings of this software. 
+the options {\tt -o} specifying an output file 
+and {\tt -t} (transcript) specifying the logging file are not allowed, 
+because this breaks the expectation to find the sorted index 
+in file {\tt xxx.ind} 
+and bypasses the detection of errors and warnings of this software, 
+respectively. 
+Also specifying a style file via option {\tt -s} 
+is not recommended because this is used to create a glossary 
+and so breaks glossary creation 
+as described in Section \ref{subsec:glossaries}. 
 
 Information on the makeindex program can be found in \cite{MkIdxMoe} 
 and in \cite{MkIdxLam}. 
+Also there is a site \cite{MakeIdxOpts} 
+describing all available options for {\tt makeindex}. 
+
+
+
+\subsection{Glossaries}\label{subsec:glossaries}
+
+Creating glossaries 
+requires the package {\tt glossaries} described in \cite{GloP}. 
+Note that despite of the headline of this section, 
+an despite {\tt glossaries} itself supports multiple glossaries, 
+only a single glossary is supported by this software 
+and also sorting and unifying is done via {\tt makeindex} 
+as for indices, which is only one possible option. 
+
+For generalizations see Section \ref{sec:gaps}. 
+
+As for indices there is a command {\tt\textbackslash makeindex}, 
+to create a glossary there is a command {\tt\textbackslash makeglossaries} 
+but the latter is not builtin as {\tt\textbackslash makeindex} 
+but provided by the package {\tt glossaries}. 
+If {\tt xxx.tex} is the latex main file, 
+{\tt\textbackslash makeglossaries} opens the glo-file {\tt xxx.glo} 
+containing glossary entries for writing. 
+As the builtin command {\tt\textbackslash index} 
+writes entries into the idx-file defining the index, 
+the command {\tt\textbackslash gls} defined by the package {\tt glossaries} 
+writes an entry into the glo-file. 
+Note that {\tt xxx.glo} typically contains entries more than once 
+and that the entries are not sorted. 
+
+To perform sorting and typically also unification, 
+the package {\tt glossaries} allows three mechanisms. 
+This one uses the {\tt makeindex}-command as used for indices. 
+It is the default but can also be activated through 
+{\tt\textbackslash usepackage[makeindex]\{glossaries\}}. 
+Let us mention that the third option using {\tt xindy} 
+instead of {\tt makeindex} can be activated through 
+{\tt\textbackslash usepackage[xindy]\{glossaries\}}. 
+
+
+What the command {\tt\textbackslash makeglossaries} does is, 
+writing the style definition by creating an ist-file {\tt xxx.ist} 
+or an xdy-file {\tt xxx.xdy} 
+if {\tt makeindex} or {\tt xindy} is specified as package option, 
+respectively. 
+
+The style {\tt list} (which is the default) 
+is set in the form {\tt\textbackslash usepackage[style=list]\{glossaries\}}, 
+where \cite{GloP}, Section 15 lists predefined styles. 
+So, the style determines the content of the style definition, 
+whereas the options {\tt makeindex} and {\tt xindy} 
+specify the form in which the style is encoded. 
+
+Sorting the glo-file, as said above, 
+currently is only supported using {\tt makeindex}. 
+The options passed to {\tt makeindex} 
+are those also specified for creating an index 
+but supplemented with options to specify the ist-file, the log-file 
+which has the ending {\tt glg} and the gls-file 
+which is the result of sorting 
+and contains the entries of the glo-file 
+just sorted, formatted and unified. 
+
+
+\begin{figure}[htb]
+\begin{center}
+\input{11glo2gls.ptx}
+\end{center}
+\caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
+using {\tt makeindex}}
+\end{figure}
+
+
 
 \subsection{Rerunning the latex processor}\label{subsec:rerunLatex}
 
@@ -1053,31 +1237,30 @@ The other files, {\tt yyy.idv} and {\tt yyy.lg},
 are further processed by {\tt t4ht} 
 creating the stylesheet {\tt xxx.css} and graphic files. 
 
-The output of TeX is a standard dvi file 
+The output of TeX is a standard \gls{dvi}-file 
 interleaved with special instructions for the postprocessor tex4ht to use. 
 The special instructions come from implicit and explicit requests 
 made in the source file through commands of TeX4ht.
 
-The utility {\tt tex4ht} translates the dvi code into standard text, 
+The utility {\tt tex4ht} translates the dvi-code into standard text, 
 while obeying the requests it gets from the special instructions. 
 The special instructions may request the creation of files, 
-insertion of html code, filtering of pictures, and so forth.
-
+insertion of html code, filtering of pictures, and so forth. 
 In the extreme case that the source code contains no commands of TeX4ht, 
-{\tt tex4ht} gets pure dvi code and it outputs (almost) plain text 
+{\tt tex4ht} gets pure dvi-code and it outputs (almost) plain text 
 with no hypertext elements in it.
 
-The special ({\tt\textbackslash special}) instructions seeded in the dvi code 
+The special ({\tt\textbackslash special}) instructions seeded in the dvi-code 
 are not understood by dvi processors other than those of TeX4ht.
 
 
 {\tt xxx.idv}
-This is a dvi file extracted from {\tt xxx.dvi}, 
+This is a dvi-file extracted from {\tt xxx.dvi}, 
 and it contains the pictures needed in the html files.
 
 {\tt xxx.lg}
 This is a log file listing the pictures of {\tt xxx.idv}, 
-the png files that should be created, CSS information, 
+the \gls{png} files that should be created, CSS information, 
 and user directives introduced 
 through the ‘{\tt\textbackslash Needs\{...\}}’ command.
 
@@ -1088,7 +1271,7 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{11tex2xml.ptx}
+\input{12tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -1107,7 +1290,7 @@ which is illustrated in Figure \ref{fig:tex2doc}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{12tex2doc.ptx}
+\input{13tex2doc.ptx}
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -1137,7 +1320,7 @@ Figure \ref{fig:tex2txt} illustrates this.
 
 \begin{figure}[htb]
 \begin{center}
-\input{13tex2txt.ptx}
+\input{14tex2txt.ptx}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
@@ -1387,8 +1570,8 @@ according to the 'makeindex' documentation.
 \begin{minipage}{0.95\linewidth}
 The options for 't4ht' which converts idv-file and lg-file 
 into css-files, tmp-file and, 
-by need and if configured accordingly into png files. 
-The value '-p' prevents creation of png-pictures.
+by need and if configured accordingly into \gls{png}-files. 
+The value '-p' prevents creation of \gls{png}-pictures.
 %The default value is the empty string. 
 \end{minipage}
 } \\
@@ -1813,7 +1996,7 @@ TODO: do this.
 %\end{longtable}
 
 
-\section{Gaps}
+\section{Gaps}\label{sec:gaps}
 
 Only figures created with xfig and stored as files pdf and ptx 
 may be integrated into a latex document. 
@@ -1825,6 +2008,8 @@ or determined by pre-parsing the tex-files.
 
 It is also desirable to add support for further figure creation software, 
 other than xfig. 
+
+There is no support for pictures in \gls{gif}-format. 
 
 There is no proper make-mechanism taking dependencies into account. 
 Thus all documents in all formats specified are remade, 
@@ -1838,10 +2023,38 @@ odt is done twice (once for odt second for docx)
 and pdf is done even trice: 
 once for pdf itself, once for odt and once for docx. 
 
-No glossary is supported. 
+
 Creating more than one index is not supported. 
-To that end, makeindex has to be invoked with an argument 
+This could be done with one of the following packages 
+{\tt index} described in \cite{IndexP}, 
+{\tt amsmidx} described in \cite{AmsmidxP} and 
+{\tt imakeidx} described in \cite{ImakeidxP}.
+Somehow special is the package 
+{\tt splitidx} coming with the program {\tt SplitIndex} 
+which replaces {\tt makeindex} described in \cite{AmsmidxP}. 
+Note that the package {\tt multind} is obsolete. 
+To create multiple indices using makeindex, 
+this has to be invoked with an argument 
 specifying the type of index. 
+
+According to \cite{GloP}, Section 1, 
+there are three options to create a glossary, 
+whereas this software supports option two only, 
+which uses {\tt makeindex}. 
+Also, although the package {\tt glossaries} itself 
+supports multiple glossaries via the command
+%
+\begin{verbatim}
+\newglossary[log-ext]{name}{in-ext}{out-ext}{title}[counter]
+\end{verbatim}
+%
+described in \cite{GloP}, Section 12, 
+this software only supports creating a single glossary. 
+
+Reading \cite{GloP}, Section 15.1, the glossarystyle {\tt index} 
+seems to allow creating indices through the {\tt glossaries} package 
+making any index-package obsolete. 
+
 
 The ant-task does not allow to create single formats, e.g. pdf selectively. 
 
@@ -1859,6 +2072,16 @@ This manual is not finished.
 To test the overall functionality of the maven-plugin and of the ant-task 
 described here, this manual is created through plugin and task. 
 
+\section{Bugs}\label{sec:bugs}
+
+Seemingly, indices and glossaries based on page numbers 
+(there seems to be an alternative to this), 
+cannot be created e.g by {\tt makeindex} right after the first latex run 
+because the page numbers may change. 
+
+It must be checked whether the number of latex reruns suffices 
+if a glossary is added (one latex run) 
+and also added to the table of contents (another run?). 
 
 
 \bibliographystyle{alpha}

@@ -2,40 +2,88 @@
 @misc{BibPat,
     author  = {Oren Patashnik},
     title   = {BibTEXing},
-    month   = {2},
+    month   = {2.},
     year    = {1988},
     howpublished = {manuscript}
 }
 @misc{BibMar,
     author  = {Nicolas Markey},
     title   = {Tame the BeaST - The B to X of BibTEX},
-    month   = {10},
+    month   = {10.},
     year    = {2009},
     howpublished = {manuscript},
     note    = {markey@lsv.ens-cachan.fr}
 }
-% bib on makeindex 
+% bib on creating an index using makeindex 
 @misc{MkIdxMoe,
     author  = {Peter M{\"o}sgen},
     title   = {Makeindex {S}achregister erstellen mit {{\LaTeX}}},
-    month   = {5},
+    month   = {5.},
     year    = {1998},
     howpublished   = {Katholische Universit{\"a}t Eichst{\"a}tt Universit{\"a}tsrechenzentrum},
 }
 @misc{MkIdxLam,
     author  = {Leslie Lamport},
     title   = {{M}ake{I}ndex : {A}n {I}ndex {P}rocessor {F}or {{\LaTeX}}},
-    month   = {2},
+    month   = {2.},
     year    = {1987}
 }
 @Manual{MkidxShIdxP,
-  title = 	 {Standard {{\LaTeX}} 2ε packages makeidx and showidx},
+  title = 	 {Standard {{\LaTeX}} 2$\epsilon$ packages makeidx and showidx},
   author = 	 {J. Braams and L. Lamport and D. Carlisle and 
 F. Mittelbach and R. Sch{\"o}pf and A. Jeffrey and C. Rowley},
-  organization = { {{\LaTeX}} Project},
+  organization = {{{\LaTeX}} Project},
   address = 	 {http://latex-project.org/bugs.html},
-  month = 	 {9},
+  month = 	 {9.},
   year = 	 {2014}
+}
+
+@Misc{MakeIdxOpts,
+  title = 	 {MakeIndex - ein {I}ndexprozessor fuer {{\LaTeX}}},
+  key =          {LRZ},
+  howpublished = {https://www.lrz.de/services/software/textverarbeitung/makeindex/},
+  annote = 	 {Organization:  Leibnitz Rechenzentrum der Bayerischen Akademie der Wissenschaften}
+}
+
+% multiindex
+@Manual{IndexP,
+  title = 	 {A new implementation of {{\LaTeX}}{'}s indexing command},
+  author = 	 {D. M. Jones},
+  organization = {ctan},
+  address = 	 {https://www.ctan.org/tex-archive/macros/latex/contrib/index?lang=en},
+  edition = 	 {v4.1beta},
+  month = 	 {9.},
+  year = 	 {1995},
+  note = 	 {}
+}
+@Manual{AmsmidxP,
+  title = 	 {The amsmidx package},
+  author = 	 {B. Beeton},
+  organization = {American Mathematical Society},
+  address = 	 {https://www.ctan.org/pkg/amsmidx},
+  edition = 	 {Version 2.02},
+  month = 	 {9.},
+  year = 	 {2007}
+}
+@Manual{SplitidxP,
+  title = 	 {Creating More Than One Index Using splitidx and SplitIndex},
+  author = 	 {M. Kohm},
+  address = 	 {https://www.ctan.org/pkg/splitindex?lang=en},
+  edition = 	 { v1.2c},
+  month = 	 {2.},
+  year = 	 {2016},
+  note = 	 {komascript@gmx.info}
+}
+
+
+@Manual{ImakeidxP,
+  title = 	 {The package imakeidx},
+  author = 	 {E. Gregorio},
+  address = 	 {https://www.ctan.org/pkg/imakeidx},
+  edition = 	 {v1.3e},
+  month = 	 {10.},
+  year = 	 {2016},
+  note = 	 {Enrico.Gregorio@univr.it}
 }
 
 % bib on glossaries 
@@ -45,17 +93,31 @@ F. Mittelbach and R. Sch{\"o}pf and A. Jeffrey and C. Rowley},
   author = 	 {N. L.C. Talbot},
   title = 	 {The glossaries package v4.26: a guide for beginners},
   year = 	 {2016},
-  month = 	 {10}, 
+  month = 	 {10.}, 
   howpublished = {https://www.ctan.org/pkg/glossaries?lang=de}
 }
 
 @Manual{GloP,
   title = 	 {User Manual for glossaries.sty v4.26},
   author = 	 {N. L.C. Talbot},
- organization = {dickimaw-books},
+ organization =  {dickimaw-books},
   address = 	 {http://www.dickimaw-books.com/},
-  month = 	 {10},
+  month = 	 {10.},
   year = 	 {2016}
+}
+
+% writing bibliography, index and glossary into the table of contents 
+
+
+@Manual{TocBibIndP,
+  title = 	 {The tocbibind package},
+  author = 	 {Peter Wilson and Herries Press},
+  organization = {latex-project},
+  address = 	 {https://www.ctan.org/pkg/tocbibind?lang=de},
+  edition = 	 {v1.5k},
+  month = 	 {10.},
+  year = 	 {2010},
+  OPTnote = 	 {Maintainer: Will Robertson: will.robertson@latex-project.org}
 }
 
 % bib of graphic formats 
@@ -66,21 +128,21 @@ F. Mittelbach and R. Sch{\"o}pf and A. Jeffrey and C. Rowley},
   organization = {Department of Electrical Engineering and Computer Science
 University of California},
   address = 	 {Davis},
-  month = 	 {2},
+  month = 	 {2.},
   year = 	 {1988},
   note = 	 {https://www.ctan.org/pkg/eepic?lang=de}
 }
 @Manual{GraX,
-  title = 	 {{P}ackages in the ‘graphics’ bundle},
+  title = 	 {{P}ackages in the {`}graphics{'} bundle},
   author = 	 {D. P. Carlisle},
-  month = 	 {5},
+  month = 	 {5.},
   year = 	 {2016},
-  note = 	 {The LATEX3 Project, https://www.ctan.org/pkg/graphicx}
+  note = 	 {The {{\LaTeX}}3 Project, https://www.ctan.org/pkg/graphicx}
 }
 @Manual{DviPdfMx,
-  title = 	 {{D}vipdfm {U}ser’s {M}anual},
+  title = 	 {{D}vipdfm {U}ser{'}s {M}anual},
   author = 	 {Mark A. Wicks},
-  month = 	 {9},
+  month = 	 {9.},
   year = 	 {1999},
   note = 	 {Version 0.12.4b},
 }
@@ -88,7 +150,7 @@ University of California},
   title = 	 {gnuplot 5.0 -- {A}n {I}nteractive {P}lotting {P}rogram},
   author = 	 {Thomas Williams and Colin Kelley},
   address = 	 {http://sourceforge.net/projects/gnuplot},
-  month = 	 {1},
+  month = 	 {1.},
   year = 	 {2016},
   note = 	 {Version 5.0.2}
 }
@@ -99,22 +161,17 @@ University of California},
   author = 	 {Philip Ilten},
   organization = {Cern},
   edition = 	 {v1.0},
-  month = 	 {9},
+  month = 	 {9.},
   year = 	 {2012},
   note = 	 {philten@cern.ch}
 }
 
 @Manual{MPost,
-  title = 	 {METAPOST, a user’s manual},
-  OPTkey = 	 {},
+  title = 	 {METAPOST, a user{'}s manual},
   author = 	 {John D. Hobby},
-  OPTorganization = {},
-  OPTaddress = 	 {},
-  OPTedition = 	 {},
-  month = 	 {5},
+  month = 	 {5.},
   year = 	 {2014},
-  OPTnote = 	 {for version 1.999},
-  OPTannote = 	 {}
+  note = 	 {for version 1.999}
 }
 
 % general information 
