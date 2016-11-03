@@ -853,7 +853,7 @@ public class Settings {
 
     // setter method for patternLatexMainFile in maven 
     public void setPatternLatexMainFile(String patternLatexMainFile) {
-	this.patternLatexMainFile = patternLatexMainFile;
+	this.patternLatexMainFile = patternLatexMainFile.trim();
     }
 
     // method introduces patternLatexMainFile in ant 
@@ -895,11 +895,25 @@ public class Settings {
      *    Leading and trailing blank and newline are ignored. 
      *    Proper arguments are separated by blank and newline. 
      */
-    public void setTexCommandArgs(String args) {
-        this.texCommandArgs = args.replace("( \n)+", " ").trim();
+   // setter method for texCommandArgs in maven 
+     public void setTexCommandArgs(String args) {
+        this.texCommandArgs = args.replaceAll("(\t|\n| )+", " ").trim();
     }
 
+    // method introduces texCommandArgs in ant 
+    public TexCommandArgs createTexCommandArgs() {
+   	return new TexCommandArgs();
+    }
 
+   // defines e element with text in ant 
+    public class TexCommandArgs {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String args) {
+   	    Settings.this.setTexCommandArgs(args);
+   	}
+    }
 
     public void setBibtexCommand(String bibtexCommand) {
         this.bibtexCommand = bibtexCommand;
@@ -954,7 +968,7 @@ public class Settings {
     }
 
     public void setMakeIndexOptions(String makeIndexOptions) {
-	this.makeIndexOptions = makeIndexOptions.replace("( \n)+", " ").trim();
+	this.makeIndexOptions = makeIndexOptions.replaceAll("(\t|\n| )+", " ").trim();
     }
 
     // setter method for patternErrMakeindex in maven 
@@ -1003,7 +1017,7 @@ public class Settings {
 
     public void setMakeGlossariesOptions(String makeGlossariesOptions) {
 	this.makeGlossariesOptions = makeGlossariesOptions
-	    .replace("( \n)+", " ").trim();
+	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
     public void setPatternMakeGlossariesErr(String patternMakeGlossariesErr) {
@@ -1077,7 +1091,7 @@ public class Settings {
      }
 
     public void setOdt2docOptions(String odt2docOptions) {
-        this.odt2docOptions = odt2docOptions.replace("( \n)+", " ").trim();
+        this.odt2docOptions = odt2docOptions.replaceAll("(\t|\n| )+", " ").trim();
      }
 
     public void setPdf2txtCommand(String pdf2txtCommand) {
@@ -1085,7 +1099,7 @@ public class Settings {
     }
 
     public void setPdf2txtOptions(String pdf2txtOptions) {
-        this.pdf2txtOptions = pdf2txtOptions.replace("( \n)+", " ").trim();
+        this.pdf2txtOptions = pdf2txtOptions.replaceAll("(\t|\n| )+", " ").trim();
     }
 
     public void setTex4htCommand(String tex4htCommand) {
