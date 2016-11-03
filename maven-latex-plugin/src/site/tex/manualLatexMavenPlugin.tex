@@ -36,7 +36,7 @@
 % index and glossary
 \usepackage{makeidx}
 \makeindex
-\usepackage[toc]{glossaries}
+\usepackage[toc, xindy]{glossaries}
 %, xindy or even [xindy={language=english,codepage=utf8}]
 
 \makeglossaries
@@ -1114,14 +1114,18 @@ Creating glossaries
 requires the package {\tt glossaries} described in \cite{GloP}. 
 Note that despite of the headline of this section, 
 an despite {\tt glossaries} itself supports multiple glossaries, 
-only a single glossary is supported by this software 
-and also sorting and unifying is done via {\tt makeindex} 
-as for indices, which is only one possible option. 
+this software supports only a single glossary 
+and also sorting and unifying is done 
+either via {\tt makeindex} as for indices or via {\tt xindy}, 
+whereas the option to do without external programs 
+offered also by package {\tt glossaries} 
+is not supported by this software. 
 
 For generalizations see Section \ref{sec:gaps}. 
 
-As for indices there is a command {\tt\textbackslash makeindex}, 
-to create a glossary there is a command {\tt\textbackslash makeglossaries} 
+As for creating indices there is a latex-command {\tt\textbackslash makeindex}, 
+to create a glossary there is a latex-command 
+{\tt\textbackslash makeglossaries} 
 but the latter is not builtin as {\tt\textbackslash makeindex} 
 but provided by the package {\tt glossaries}. 
 If {\tt xxx.tex} is the latex main file, 
@@ -1134,59 +1138,108 @@ writes an entry into the glo-file.
 Note that {\tt xxx.glo} typically contains entries more than once 
 and that the entries are not sorted. 
 
+
+
 To perform sorting and typically also unification, 
 the package {\tt glossaries} allows three mechanisms. 
-This one uses the {\tt makeindex}-command as used for indices. 
-It is the default but can also be activated through 
+This software supports sorting 
+via the shell command {\tt makeindex} as used for indices
+and via the shell command {\tt xindy}. 
+Using {\tt makeindex} is the default but can also be activated through 
 {\tt\textbackslash usepackage[makeindex]\{glossaries\}}. 
-Let us mention that the third option using {\tt xindy} 
-instead of {\tt makeindex} can be activated through 
+Using {\tt xindy} can be activated through 
 {\tt\textbackslash usepackage[xindy]\{glossaries\}}. 
+Accordingly, for {\tt makeindex} the aux-file receives lines 
+%
+\begin{verbatim}
+\providecommand\@istfilename[1]{}
+\@istfilename{manualLatexMavenPlugin.ist}
+\end{verbatim}
+%
+whereas for {\tt xindy}, there are lines 
+%
+\begin{verbatim}
+\providecommand\@istfilename[1]{}
+\@istfilename{manualLatexMavenPlugin.xdy}
+...
+\providecommand\@xdylanguage[2]{}
+\@xdylanguage{main}{english}
+\providecommand\@gls@codepage[2]{}
+\@gls@codepage{main}{}
+\end{verbatim}
 
 
-What the command {\tt\textbackslash makeglossaries} does is, 
-writing the style definition by creating an ist-file {\tt xxx.ist} 
-or an xdy-file {\tt xxx.xdy} 
+
+This software neither invokes {\tt makeindex} nor {\tt xindy} directly. 
+Instead it invokes the shell command {\tt\textbackslash makeglossaries}. 
+What the command {\tt\textbackslash makeglossaries} 
+(which is invoked without file ending) does is, 
+it determines from the aux-file 
+whether to invoke {\tt makeindex} nor {\tt xindy}. 
+Accordingly, it writes the style definition 
+by creating an ist-file {\tt xxx.ist} or an xdy-file {\tt xxx.xdy} 
 if {\tt makeindex} or {\tt xindy} is specified as package option, 
 respectively. 
+
+Seemingly, {\tt\textbackslash makeglossaries} relies on the aux-file 
+to determine whether to invoke {\tt makeindex} or {\tt xindy} 
+for sorting and unification. 
+Then it invokes the according command and writes a log-file 
+with ending {\tt glg}, 
+redirecting the logging output of {\tt makeindex} or {\tt xindy} 
+adding own output so that a glg-file may be written, 
+even if e.g. {\tt makeindex} is invoked and does not. 
+In any case, if the glg-file is written, 
+{\tt\textbackslash makeglossaries} writes text matching 
+%
+\begin{verbatim}
+(^\*\*\* unable to execute: )
+\end{verbatim}
+%
+in the glg-file if an error occurs, 
+no matter whether {\tt makeindex} or {\tt xindy} is invoked. 
+Possibly, there are cases where an error causes no glg-file to be written. 
+If no error occurs, a glg-file is written 
+and if warnings are emitted, 
+they either come from {\tt makeindex} or from {\tt xindy}. 
+Thus warnings may be detected with the patterns 
+defined by {\tt makeindex} and by {\tt xindy}. 
+
+
 
 The style {\tt list} (which is the default) 
 is set in the form {\tt\textbackslash usepackage[style=list]\{glossaries\}}, 
 where \cite{GloP}, Section 15 lists predefined styles. 
 So, the style determines the content of the style definition, 
 whereas the options {\tt makeindex} and {\tt xindy} 
-specify the form in which the style is encoded. 
+specify the form in which the style is encoded 
+and thus the ending of the style file, which is either {\tt ist} or {\tt xdy}. 
 
 Sorting the glo-file, as said above, 
-currently is only supported using {\tt makeindex}. 
-The options passed to {\tt makeindex} 
-are those also specified for creating an index 
-but supplemented with options {\tt -s}, {\tt -t}, {\tt -o}, to specify the
-ist-file, the log-file (the transcript-file)
-which has the ending {\tt glg} and the gls-file 
+currently is only supported using {\tt makeglossaries}. 
+The allowed options are essentially those 
+making sense for {\tt makeindex} and those making sense for {\tt xindy}. 
+If the shell command {\tt makeglossaries} 
+invokes {\tt makeindex} of course only the according options 
+are passed supplemented by additional options 
+{\tt -s}, {\tt -t}, {\tt -o}, to specify the
+ist-file, the log-file (the transcript-file) and the gls-file 
 which is the result of sorting, the output file, 
 and contains the entries of the glo-file 
 just sorted, formatted and unified. 
-This is illustrated in Figure \ref{fig:gloIst2gls}. 
+Accordingly, if the shell command {\tt makeglossaries} 
+invokes {\tt xindy} of course only the according options 
+are passed supplemented by additional options 
+{\tt -M}, {\tt -t}, {\tt -o}. 
+This is illustrated in Figure \ref{fig:glo2gls}. 
 
 
 \begin{figure}[htb]
 \begin{center}
-\input{12gloIst2gls.ptx}
+\input{12glo2gls.ptx}
 \end{center}
-\caption{\label{fig:gloIst2gls}Conversion of a glo-file into a gls-file 
-using {\tt makeindex}}
-\end{figure}
-
-The mechanism to be supported in the long run as an alternative 
-is illustrated in Figure \ref{fig:gloXdy2gls}. 
-
-\begin{figure}[htb]
-\begin{center}
-\input{13gloXdy2gls.ptx}
-\end{center}
-\caption{\label{fig:gloXdy2gls}Conversion of a glo-file into a gls-file 
-using {\tt xindy}}
+\caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
+using {\tt makeglossaries}}
 \end{figure}
 
 
@@ -1284,7 +1337,7 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{14tex2xml.ptx}
+\input{13tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -1303,7 +1356,7 @@ which is illustrated in Figure \ref{fig:tex2doc}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{15tex2doc.ptx}
+\input{14tex2doc.ptx}
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -1333,7 +1386,7 @@ Figure \ref{fig:tex2txt} illustrates this.
 
 \begin{figure}[htb]
 \begin{center}
-\input{16tex2txt.ptx}
+\input{15tex2txt.ptx}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
@@ -1542,7 +1595,7 @@ The options for the MakeIndex command.
 % The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternErrMakeindex & \tt !! Input index error         \\
+\tt patternErrMakeindex & \tt (!! Input index error )        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
@@ -1551,13 +1604,68 @@ The default value is chosen
 according to the 'makeindex' documentation.
 \end{minipage}
 } \\
-\tt patternWarnMakeindex & \tt \#\# Warning         \\
+\tt patternWarnMakeindex & \tt (\#\# Warning )        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
 indicating a warning \$makeIndexCommand emitted. 
 The default value is chosen 
 according to the 'makeindex' documentation.
+\end{minipage}
+} \\
+\tt makeGlossariesCommand & \tt makeglossaries         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The MakeGlossaries command to create a gls-file 
+from a glo-file (invoked without file ending) 
+also taking ist-file or xdy-file 
+into account logging on a glg-file. 
+\end{minipage}
+} \\
+\tt makeGlossariesOptions & the empty string          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the \$makeGlossariesCommand. 
+These are the options for 'makeindex' (not for \$makeIndexCommand) 
+and for 'xindy' (also hardcoded). 
+The aux-file decides on whether program is executed 
+and consequently which options are used. 
+		 
+The default value is the empty option string. 
+Nevertheless, 'xindy' is invoked as 'xindy -L english  -I xindy -M ...'. 
+With option '-L german', this is added. 
+Options '-M<' for 'xindy' 
+'-s' for 'makeindex</code> and '-t' and '-o' for both, 'xindy' and 'makeindex'. 
+\end{minipage}
+} \\
+\tt patternMakeGlossariesErr & 
+\tt(\^\textbackslash*\textbackslash*\textbackslash* unable to execute: ) \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The Pattern in the glg-file 
+indicating an error when running \$makeGlossariesCommand. 
+If the default value is not appropriate, please modify 
+and notify the developer of this plugin. 
+\end{minipage}
+} \\
+\tt patternErrXindy & \tt (\^ERROR: )         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the 'glg' file 
+indicating an error when running 'xindy' 
+via \$makeGlossariesCommand. 
+If the default value is not appropriate, please modify 
+and notify the developer of this plugin. 
+\end{minipage}
+} \\
+\tt patternWarnXindy & \tt (\^WARNING: )         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the 'glg' file 
+indicating a warning when running 'xindy' 
+via \$makeGlossariesCommand. 
+If the default value is not appropriate, please modify 
+and notify the developer of this plugin. 
 \end{minipage}
 } \\
 \hline
@@ -1790,16 +1898,66 @@ requires the following definition in {\tt pom.xml}.
 
     <!-- The pattern in the ilg-file 
 	 indicating that $makeIndexCommand failed. 
-	 The default value is chosen 
-	 according to the 'makeindex' documentation.  -->
-    <patternErrMakeindex>!! Input index error </patternErrMakeindex>
+	 The default value '(!! Input index error )' 
+	 is chosen according to the 'makeindex' documentation.  -->
+    <patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
  
     <!-- The Pattern in the ilg-file 
 	 indicating a warning $makeIndexCommand emitted. 
-	 The default value is chosen 
-	 according to the 'makeindex' documentation. -->
-    <patternWarnMakeindex>## Warning </patternWarnMakeindex>
+	 The default value '(## Warning )' 
+	 is chosen according to the 'makeindex' documentation. -->
+    <patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
 
+    <!-- The MakeGlossaries command to create a gls-file 
+	 from a glo-file (invoked without file ending) 
+	 also taking ist-file or xdy-file 
+	 into account logging on a glg-file. 
+	 The default value is 'makeglossaries'. -->
+    <makeGlossariesCommand>makeglossaries</makeGlossariesCommand>
+
+    <!-- The options for the $makeGlossariesCommand. 
+	 These are the options for 'makeindex' 
+	 (not for $makeIndexCommand) 
+	 and for 'xindy' (also hardcoded). 
+	 The aux-file decides on whether program is executed 
+	 and consequently which options are used. 
+		 
+	 The default value is the empty option string. 
+	 Nevertheless, 'xindy' is invoked as 
+	 'xindy -L english  -I xindy -M ...'. 
+	 With option '-L german', this is added. 
+	 Options '-M<' for 'xindy' 
+	 '-s' for 'makeindex</code> and 
+	 '-t' and '-o' for both, 'xindy' and 'makeindex'. -->
+    <makeGlossariesOptions></makeGlossariesOptions>
+
+    <!-- The Pattern in the glg-file 
+	 indicating an error when running $makeGlossariesCommand. 
+	 The default value is '(^\*\*\* unable to execute: )'. 
+	 If this is not appropriate, please modify 
+	 and notify the developer of this plugin. -->
+    <patternMakeGlossariesErr>
+      (^\*\*\* unable to execute: )
+    </patternMakeGlossariesErr>
+
+    <!-- The pattern in the 'glg' file 
+	 indicating an error when running 'xindy' 
+	 via $makeGlossariesCommand. 
+	 The default value is '(^ERROR: )' 
+	 (note the space and the brackets). 
+	 If this is not appropriate, please modify 
+	 and notify the developer of this plugin. -->
+    <patternErrXindy>(^ERROR: )</patternErrXindy>
+ 
+    <!-- The pattern in the 'glg' file 
+	 indicating a warning when running 'xindy' 
+	 via $makeGlossariesCommand. 
+	 The default value is '(^WARNING: )' 
+	 (note the space and the brackets). 
+	 If this is not appropriate, please modify 
+	 and notify the developer of this plugin. -->
+    <patternErrXindy>(^WARNING: )</patternErrXindy>
+ 
     <!-- the tex4ht command htlatex-->
     <tex4htCommand>htlatex</tex4htCommand>
 
@@ -1954,12 +2112,17 @@ requires the following target and task definition in {\tt build.xml}.
 		targets="pdf, html"
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
-		texCommandArgs="-interaction=nonstopmode -src-specials"
+		texCommandArgs="-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape"
 		debugBadBoxes='true'
 		debugWarnings='true'
 		bibtexCommand="bibtex"
 		makeIndexCommand="makeindex"
 		makeIndexOptions=""
+		makeGlossariesCommand="makeglossaries" 
+		makeGlossariesOptions=""
+		patternMakeGlossariesErr="(^\*\*\* unable to execute: )"
+		patternErrXindy="(^ERROR: )"
+		patternWarnXindy="(^WARNING: )"
 		tex4htCommand="htlatex"
 		tex4htStyOptions="html,uni-html4,2,svg"
 		tex4htOptions=" -cunihtf -utf8"
@@ -1978,8 +2141,8 @@ requires the following target and task definition in {\tt build.xml}.
 	<patternErrLatex>(^! )</patternErrLatex>
 	<patternErrBibtex>error message</patternErrBibtex>
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
-	<patternErrMakeindex>!! Input index error </patternErrMakeindex>
-	<patternWarnMakeindex>## Warning </patternWarnMakeindex>
+	<patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
+	<patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
 	<patternLatexNeedsReRun>
 (^LaTeX Warning: Label\(s\) may have changed. \
 Rerun to get cross-references right.$|
@@ -2095,6 +2258,16 @@ because the page numbers may change.
 It must be checked whether the number of latex reruns suffices 
 if a glossary is added (one latex run) 
 and also added to the table of contents (another run?). 
+
+Take into account log messages like: 
+bibtex-Warnung "Please (re)run BibTeX on the file(s): (.....) And after that
+rerun LaTeX".
+This seems to be available for indices also using imakeidx instead of makeidx, 
+so we shall change.  
+See Package robustindex.sty
+What about glossaries? 
+https://github.com/shiblon/latex-makefile/issues/171
+Have a look at rerunfile check and in glossaries-code.pdf. 
 
 
 \bibliographystyle{alpha}
