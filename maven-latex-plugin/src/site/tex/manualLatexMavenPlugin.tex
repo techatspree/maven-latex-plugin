@@ -915,7 +915,7 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 Figure \ref{fig:asIsSvg} is a picture in \gls{svg}-format 
 and included directly. 
 This time, we did not use the {\tt graphicx}-package 
-but the package {\tt sng}. 
+but the package {\tt svg}. 
 Inclusion is with the {\tt\textbackslash includesvg}-command. 
 Note that the suffix of the filename shall be omitted. 
 So the command is {\tt \textbackslash
@@ -1852,9 +1852,14 @@ requires the following definition in {\tt pom.xml}.
          Leading and trailing blanks are ignored. 
 	 A sequence of at least one blank separate the proper options. 
 	 The default value is 
-	 '-interaction=nonstopmode -src-specials'. -->
+	 '-interaction=nonstopmode -synctex=1 -src-specials 
+	  -recorder -shell-escape'. -->
     <texCommandArgs>
-	      -interaction=nonstopmode -src-specials
+      -interaction=nonstopmode 
+      -synctex=1 
+      -src-specials 
+      -recorder 
+      -shell-escape 
     </texCommandArgs>
 
     <!-- The pattern in the log-file 
@@ -2122,7 +2127,6 @@ requires the following target and task definition in {\tt build.xml}.
 		targets="pdf, html"
 		fig2devCommand="fig2dev"
 		texCommand="pdflatex"
-		texCommandArgs="-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape"
 		debugBadBoxes='true'
 		debugWarnings='true'
 		bibtexCommand="bibtex"
@@ -2148,6 +2152,13 @@ requires the following target and task definition in {\tt build.xml}.
 	<patternLatexMainFile>
 	  \s*\\(documentstyle|documentclass).*
 	</patternLatexMainFile>
+	<texCommandArgs>
+	  -interaction=nonstopmode
+	  -synctex=1 
+	  -src-specials 
+	  -recorder 
+	  -shell-escape
+	</texCommandArgs>
 	<patternErrLatex>(^! )</patternErrLatex>
 	<patternErrBibtex>error message</patternErrBibtex>
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
