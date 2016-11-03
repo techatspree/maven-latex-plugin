@@ -31,16 +31,15 @@ import org.easymock.MockControl;
 import org.junit.Test;
 import org.junit.Ignore;
 
-public class LatexProcessorTest
-{
+public class LatexProcessorTest {
  
     private MockControl executorCtrl = MockControl
-	.createStrictControl( CommandExecutor.class );
+	.createStrictControl(CommandExecutor.class);
 
     private CommandExecutor executor = (CommandExecutor) executorCtrl.getMock();
 
     private MockControl fileUtilsCtrl = MockControl
-	.createStrictControl( TexFileUtils.class );
+	.createStrictControl(TexFileUtils.class);
 
     private TexFileUtils fileUtils = (TexFileUtils) fileUtilsCtrl.getMock();
 
@@ -49,7 +48,7 @@ public class LatexProcessorTest
     private LogWrapper log = new MavenLogWrapper(new SystemStreamLog());
 
     private LatexProcessor processor = new LatexProcessor
-	( settings, executor, log, fileUtils, new PdfMojo() );
+	(settings, executor, log, fileUtils, new PdfMojo());
 
     private File texFile = new File(System.getProperty("tmp.dir"), "test.tex");
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
@@ -58,6 +57,10 @@ public class LatexProcessorTest
     private File blgFile = new File(System.getProperty("tmp.dir"), "test.blg");
     private File idxFile = new File(System.getProperty("tmp.dir"), "test.idx");
     private File ilgFile = new File(System.getProperty("tmp.dir"), "test.ilg");
+    private File gloFile = new File(System.getProperty("tmp.dir"), "test.glo");
+    private File istFile = new File(System.getProperty("tmp.dir"), "test.ist");
+    private File xdyFile = new File(System.getProperty("tmp.dir"), "test.xdy");
+    private File glsFile = new File(System.getProperty("tmp.dir"), "test.gls");
 
     private File tocFile = new File(System.getProperty("tmp.dir"), "test.toc");
     private File lofFile = new File(System.getProperty("tmp.dir"), "test.lof");
@@ -83,6 +86,9 @@ public class LatexProcessorTest
 
 	// run makeIndex by need: no 
 	mockRunMakeIndexByNeed(false);
+
+	// run makeGlossary by need: no 
+	mockRunMakeGlossaryByNeed(false);
 
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
@@ -113,8 +119,8 @@ public class LatexProcessorTest
     }
 
     @Test public void testProcessLatexWithBibtex()
-	throws BuildExecutionException
-    {
+	throws BuildExecutionException {
+
 	// run latex 
         mockRunLatex();
 
@@ -123,6 +129,9 @@ public class LatexProcessorTest
 
 	// run makeIndex by need: no 
 	mockRunMakeIndexByNeed(false);
+
+	// run makeGlossary by need: no 
+	mockRunMakeGlossaryByNeed(false);
 
 	// determine from presence of toc, lof, lot (and idx and bibtex)
 	// whether to rerun latex: no 
@@ -167,6 +176,9 @@ public class LatexProcessorTest
 
 	// run makeIndex by need: no 
 	mockRunMakeIndexByNeed(false);
+
+	// run makeGlossary by need: no 
+	mockRunMakeGlossaryByNeed(false);
 
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
@@ -263,6 +275,41 @@ public class LatexProcessorTest
 
 	fileUtils.replaceSuffix(idxFile, LatexProcessor.SUFFIX_ILG);
 	fileUtilsCtrl.setReturnValue( ilgFile );
+
+    }
+
+    private void mockRunMakeGlossaryByNeed(boolean runMakeGlossary) 
+	throws BuildExecutionException {
+
+        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
+        fileUtilsCtrl.setReturnValue( gloFile );
+        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IST);
+        fileUtilsCtrl.setReturnValue( istFile );
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_XDY);
+        fileUtilsCtrl.setReturnValue( xdyFile );
+
+	if (!runMakeGlossary) {
+	    return;
+	}
+
+        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS);
+        fileUtilsCtrl.setReturnValue( glsFile );
+
+        executor.execute(texFile.getParentFile(),
+			 settings.getTexPath(),
+			 settings.getMakeIndexCommand(),
+			 new String[] {
+			     "-s",
+			     istFile.getName(),
+			     "-o",
+			     glsFile.getName(),
+			     gloFile.getName()
+			 } );
+	executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
+        executorCtrl.setReturnValue( null );
+
+	// fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG);
+	// fileUtilsCtrl.setReturnValue( ilgFile );
 
     }
 
