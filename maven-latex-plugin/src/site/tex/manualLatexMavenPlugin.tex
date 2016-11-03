@@ -1161,19 +1161,32 @@ Sorting the glo-file, as said above,
 currently is only supported using {\tt makeindex}. 
 The options passed to {\tt makeindex} 
 are those also specified for creating an index 
-but supplemented with options to specify the ist-file, the log-file 
+but supplemented with options {\tt -s}, {\tt -t}, {\tt -o}, to specify the
+ist-file, the log-file (the transcript-file)
 which has the ending {\tt glg} and the gls-file 
-which is the result of sorting 
+which is the result of sorting, the output file, 
 and contains the entries of the glo-file 
 just sorted, formatted and unified. 
+This is illustrated in Figure \ref{fig:gloIst2gls}. 
 
 
 \begin{figure}[htb]
 \begin{center}
-\input{11glo2gls.ptx}
+\input{12gloIst2gls.ptx}
 \end{center}
-\caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
+\caption{\label{fig:gloIst2gls}Conversion of a glo-file into a gls-file 
 using {\tt makeindex}}
+\end{figure}
+
+The mechanism to be supported in the long run as an alternative 
+is illustrated in Figure \ref{fig:gloXdy2gls}. 
+
+\begin{figure}[htb]
+\begin{center}
+\input{13gloXdy2gls.ptx}
+\end{center}
+\caption{\label{fig:gloXdy2gls}Conversion of a glo-file into a gls-file 
+using {\tt xindy}}
 \end{figure}
 
 
@@ -1271,7 +1284,7 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{12tex2xml.ptx}
+\input{14tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -1290,7 +1303,7 @@ which is illustrated in Figure \ref{fig:tex2doc}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{13tex2doc.ptx}
+\input{15tex2doc.ptx}
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -1320,7 +1333,7 @@ Figure \ref{fig:tex2txt} illustrates this.
 
 \begin{figure}[htb]
 \begin{center}
-\input{14tex2txt.ptx}
+\input{16tex2txt.ptx}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
