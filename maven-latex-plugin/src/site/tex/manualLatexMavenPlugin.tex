@@ -1400,12 +1400,10 @@ Figure \ref{fig:tex2txt} illustrates this.
 
 \subsection{Miscellaneous}
 
-Warn {}ing of failures occurs each time pdflatex is run. 
+Warning of failures occurs each time pdflatex is run. 
 Restricting this to the first run is not appropriate, 
 because the aux-file is read and so the failures may depend on the run. 
 
-
-a
 
 
 
@@ -1557,7 +1555,7 @@ rerun LaTeX and have a look at the log-file.
 \end{minipage}
 } \\
 \hline
-\multicolumn2{|l|}{makeindex} \\
+\multicolumn2{|l|}{bibtex} \\
 \hline
 \tt bibtexcommand    & \tt bibtex        \\
 \multicolumn2{|l|}{
@@ -1576,14 +1574,16 @@ The default value is chosen
 according to the 'bibtex' documentation. 
 \end{minipage}
 } \\
-\tt patternWarnBibtex    & \tt Warning--        \\
+\tt patternWarnBibtex    & \tt Warning-{}-        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the blg-file 
 indicating a warning \$bibtexCommand emitted. 
 The default value is chosen 
-according to the 'bibtex' documentation. \end{minipage}
+according to the 'bibtex' documentation. 
+\end{minipage}
 } \\
+\hline
 \multicolumn2{|l|}{makeindex} \\
 \hline
 \tt makeIndexCommand & \tt makeindex     \\
@@ -1619,6 +1619,9 @@ The default value is chosen
 according to the 'makeindex' documentation.
 \end{minipage}
 } \\
+\hline
+\multicolumn2{|l|}{makeglossaries} \\
+\hline
 \tt makeGlossariesCommand & \tt makeglossaries         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
