@@ -12,7 +12,7 @@ import java.util.SortedSet;
  * <p> 
  * TODO: describe getTarget()
  *
- * @see org.m2latex.antTask.LatexTask
+ * @see org.m2latex.antTask.LatexCfgTask
  * @see org.m2latex.mojo.AbstractLatexMojo
  */
 public interface ParameterAdapter {

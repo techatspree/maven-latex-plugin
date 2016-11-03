@@ -4,7 +4,7 @@ package org.m2latex.core;
  * The base class for {@link BuildExecutionException} 
  * and for {@link BuildFailureException}. 
  * This is needed as a wrapper to {@link org.apache.tools.ant.BuildException} 
- * in {@link org.m2latex.antTask.LatexTask#execute()} 
+ * in {@link org.m2latex.antTask.LatexCfgTask#execute()} 
  * to avoid ant-specific classes. 
  *
  *
