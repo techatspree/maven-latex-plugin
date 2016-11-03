@@ -1148,12 +1148,12 @@ and that the entries are not sorted.
 
 To perform sorting and typically also unification, 
 the package {\tt glossaries} allows three mechanisms. 
-This software supports sorting 
+This software supports two of them: 
 via the shell command {\tt makeindex} as used for indices
 and via the shell command {\tt xindy}. 
 Using {\tt makeindex} is the default but can also be activated through 
 {\tt\textbackslash usepackage[makeindex]\{glossaries\}}. 
-Using {\tt xindy} can be activated through 
+Using {\tt xindy} is triggered through 
 {\tt\textbackslash usepackage[xindy]\{glossaries\}}. 
 Accordingly, for {\tt makeindex} the aux-file receives lines 
 %
@@ -1177,10 +1177,9 @@ whereas for {\tt xindy}, there are lines
 
 
 This software neither invokes {\tt makeindex} nor {\tt xindy} directly. 
-Instead it invokes the shell command {\tt\textbackslash makeglossaries}. 
-What the command {\tt\textbackslash makeglossaries} 
-(which is invoked without file ending) does is, 
-it determines from the aux-file 
+Instead it invokes the shell command {\tt\textbackslash makeglossaries}
+(which is invoked without file ending)  
+which determines from the aux-file 
 whether to invoke {\tt makeindex} nor {\tt xindy}. 
 Accordingly, it writes the style definition 
 by creating an ist-file {\tt xxx.ist} or an xdy-file {\tt xxx.xdy} 
@@ -1211,10 +1210,12 @@ they either come from {\tt makeindex} or from {\tt xindy}.
 Thus warnings may be detected with the patterns 
 defined by {\tt makeindex} and by {\tt xindy}. 
 
-
-
-The style {\tt list} (which is the default) 
-is set in the form {\tt\textbackslash usepackage[style=list]\{glossaries\}}, 
+The style {\tt list} (which is the default) is set in the form 
+%
+\begin{verbatim}
+\usepackage[style=list]{glossaries}
+\end{verbatim}
+%
 where \cite{GloP}, Section 15 lists predefined styles. 
 So, the style determines the content of the style definition, 
 whereas the options {\tt makeindex} and {\tt xindy} 
