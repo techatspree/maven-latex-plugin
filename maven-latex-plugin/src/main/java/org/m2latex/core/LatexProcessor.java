@@ -62,12 +62,15 @@ public class LatexProcessor {
     private final static String SUFFIX_PTX = ".ptx";
     final static String SUFFIX_PDF = ".pdf";
     final static String SUFFIX_PSTEX = ".pstex";
+    final static String SUFFIX_PDFTEX = ".pdf_tex";
 
     // for LaTeX but also for mpost 
     final static String SUFFIX_LOG = ".log";
  
     // suffix for xfig
     private final static String SUFFIX_FIG = ".fig";
+    // suffix for svg
+    private final static String SUFFIX_SVG = ".svg";
     // suffix for gnuplot
     private final static String SUFFIX_PLT = ".plt";
     // suffix for metapost
@@ -328,6 +331,18 @@ public class LatexProcessor {
 	    // may throw BuildExecutionException 
 	    this.fileUtils.delete(mpFile, filter);
 	}
+
+	// delete targets of svg files 
+	// may throw BuildExecutionException 
+	Collection<File> svgFiles = this.fileUtils
+	    .getFilesWithSuffix(texDirectory, SUFFIX_SVG);
+	for (File svgFile : svgFiles) {
+	    this.log.info("Deleting targets of svg-file " + svgFile + ". ");
+	    // may throw BuildExecutionException 
+	    this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
+	    this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF).delete();
+	}
+
     }
 
     /**
