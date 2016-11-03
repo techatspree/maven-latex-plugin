@@ -135,15 +135,16 @@ The code specific for the ant-task is in {\tt org.m2latex.antTask}
 and that specific for the maven-plugin is in {\tt org.m2latex.mojo}. 
 
 It is very usual to endow LaTeX-files with figures. 
-We support figures created in the format \gls{fig} by the program xfig, 
+We support figures created in the \gls{fig} by the program xfig, 
 figures created by the plotting utility gnuplot, 
 the tex-specific graphic language metapost 
 and finally figures in formats which can be included into a latex-file 
-without preprocessing like \gls{png} and \gls{jpg}. 
+without preprocessing like \gls{png} and \gls{jpg} 
+or with automatic conversion like \gls{svg}. 
 Further functionality on latex figures can be easily added. 
 If there is some need, please write an email to the author. 
 
-The creation process supports makeindex and bibtex. 
+The creation process supports an index, a glossry and a bibliography. 
 Again, further functionality can be added by demand. 
 
 The present manual is created by the maven-pugin or the ant-task 
@@ -153,6 +154,8 @@ This manual is designed in a way that it covers the most important features
 but also to demand the most important features. 
 That way, creating this manual is a top level test 
 for the underlying software. 
+The maven-plugin is somehow superior 
+because it better supports the design process for the latex sources. 
 
 
 
@@ -227,12 +230,15 @@ like {\tt xelatex} or {\tt lualatex}.
 \index{pdflatex}\index{xelatex}\index{lualatex} 
 LaTeX uses several auxiliary programs. 
 Above all {\tt bibtex} to create the bibliography 
-and {\tt makeindex} for the index and the glossary. 
-\index{bibtex}\index{makeindex}
+and {\tt makeindex} for the index and {\tt makeglossaries} for the glossary. 
+\index{bibtex}\index{makeindex}\index{makeglossaries}
 The latter two 
 also require the latex packages {\tt makeidx} and {\tt glossaries} 
-described in \cite{MkidxShIdxP} and in 
-
+described in \cite{MkidxShIdxP} and in \cite{GloP}. 
+Note that {\tt makeglossaries} eiter invokes {\tt makeindex} 
+or {\tt xindy}, depending on the parametrization of {\tt glossaries}. 
+Both, {\tt makeglossaries} and {\tt xindy} are written in perl, 
+which shall also be installed if a glossary is required. 
 
 To create \gls{html}-files, 
 or to be more precise any kind of \gls{sgml} and \gls{xml}, 
@@ -761,7 +767,7 @@ Here further options are missing:
 %    //                      {size <XX>{unit},<YY>{unit}}
 
 Figure \ref{fig:plt2pdf} shows the transformation of the plots 
-and Figure \ref{fig:plt2pdf} shows an example of a latex-file 
+and Figure \ref{fig:gnuplot} shows an example of a latex-file 
 created from a gnuplot file 
 and embedded in this latex file with the {\tt\textbackslash input}-command. 
 %Note that the {\tt gnuplot}-command is configurable 
@@ -1927,7 +1933,7 @@ requires the following definition in {\tt pom.xml}.
 	 'xindy -L english  -I xindy -M ...'. 
 	 With option '-L german', this is added. 
 	 Options '-M<' for 'xindy' 
-	 '-s' for 'makeindex</code> and 
+	 '-s' for 'makeindex' and 
 	 '-t' and '-o' for both, 'xindy' and 'makeindex'. -->
     <makeGlossariesOptions></makeGlossariesOptions>
 
@@ -2266,8 +2272,17 @@ This seems to be available for indices also using imakeidx instead of makeidx,
 so we shall change.  
 See Package robustindex.sty
 What about glossaries? 
+See 
+%
+\begin{verbatim}
 https://github.com/shiblon/latex-makefile/issues/171
+\end{verbatim}
+%
 Have a look at rerunfile check and in glossaries-code.pdf. 
+
+Citations are missing in html output. 
+Figures are missing in html output 
+Formulae are missing in html output. 
 
 
 \bibliographystyle{alpha}
