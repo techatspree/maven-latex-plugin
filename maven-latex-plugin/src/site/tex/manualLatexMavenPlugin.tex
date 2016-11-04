@@ -68,6 +68,13 @@
 \newacronym{aux}{aux}{auxiliary file}
 \newacronym{log}{log}{logging file (for LaTeX and mpost)}
 \newacronym{idx}{idx}{index file containing unsorted and multiple index entries}
+\newacronym{ind}{ind}{%
+index file containing sorted, unified and formatted index entries}
+\newacronym{glo}{glo}{%
+glossary file containing unsorted and multiple glossary entries}
+\newacronym{gls}{gls}{%
+glossary file containing sorted, unified and formatted glossary entries}
+
 
 \newacronym{mp}{mp}{metapost}
 \newacronym{ps}{ps}{PostScript}
@@ -982,9 +989,20 @@ As the citations, it cannot be used directly to create an index in
 the next {\tt latex2pdf} run, 
 because the index entries must be collected and sorted before. 
 This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs. 
-Based on the idx-file, {\tt makeindex} creates an ind-file 
+Based on the idx-file, {\tt makeindex} creates an \gls{ind}-file 
 containing the index, which is read in in the next {\tt latex2pdf} run. 
-For details see Section \ref{subsec:makeindex}. 
+For details see Section \ref{subsec:indices}. 
+
+If a glossary is demanded, this can be read off the \gls{aux}-file 
+and a \gls{glo}-file is created. 
+As the index, it cannot be used directly to create a glossary in
+the next {\tt latex2pdf} run, 
+because the glossary entries must be collected and sorted before. 
+This is done by invoking {\tt makeglossaries} 
+between the two {\tt latex2pdf} runs. 
+Based on the glo-file, {\tt makeglossaries} creates a \gls{gls}-file 
+containing the glossary, which is read in in the next {\tt latex2pdf} run. 
+For details see Section \ref{subsec:glossaries}. 
 
 In addition, 
 if a table of contents, a list of figures or a list of tables is required, 
@@ -994,7 +1012,9 @@ If such a file is present, it is read in
 and is used to create a table of contents, a list of figures and of tables 
 in the second run of {\tt latex2pdf}. 
 
-
+FIXME: What if a table of contents 
+and either bibliography, index or glossary is present? 
+Required is a third latex run. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -1038,7 +1058,7 @@ and in \cite{BibMar}.
 Also Chapter 10 in \cite{Gra} gives vital information on {\tt bibtex}. 
 
 
-\subsection{Indices}\label{subsec:makeindex}
+\subsection{Indices}\label{subsec:indices}
 
 Note that despite of the headline of this section, 
 only a single index is supported and this requires 
@@ -1380,16 +1400,18 @@ in particular if writing a paper for a journal.
 Plain text files can be created from latex files 
 just by stripping off the tex-commands. 
 The disadvantage is, 
-that references, bibliography index, table of contents \dots 
+that references, bibliography, index, glossary, 
+table of contents, list of figures, list of tables, \dots 
 and symbols get lost. 
-Thus, the first step we take is just doing one LaTeX run, 
-followed by another LaTeX run to satisfy the links. 
+Thus, the first step we take is complete creation of a pdf-file 
+except display of warnings like bad boxes 
 as described in Section \ref{subsec:tex2pdf}. 
 This creates an appropriate pdf-file, 
+with correct numberings and links, 
 possibly with overfull boxes and that like. 
 As a final step, we convert the pdf-file into a text file 
 using, as a default {\tt pdftotext} with ending {\tt txt}. 
-Figure \ref{fig:tex2txt} illustrates this. 
+Figure \ref{fig:tex2txt} illustrates the translation process. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -1397,6 +1419,25 @@ Figure \ref{fig:tex2txt} illustrates this.
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
+
+Note that {\tt pdftotext} produces a text file with page numbers 
+and signifies the end of a page 
+(to see how, just have a look at the end of the file), 
+so that one can identify page numbers as such. 
+Thus references, index, glossary, table of contents and that like 
+referring to page numbers carry valuable information. 
+Also symbols available in utf8 encoding are preserved. 
+In contrast, heavily stacked formulae become unreadable, 
+because {\tt pdftotext} displays them line by line 
+and drops fraction bars completely. 
+Also formulae with complex subformulae in a root operator  
+become unreadable because the root operator becomes just a root symbol. 
+Likewise for integrals and that like. 
+
+Aspects of figures kept are the captions of course but also the latex-texts. 
+This is displayed linewise. 
+What gets lost is the postscript/pdf-parts, i.e. the plain graphics. 
+
 
 
 \subsection{Miscellaneous}
