@@ -2325,10 +2325,6 @@ Seemingly, indices and glossaries based on page numbers
 cannot be created e.g by {\tt makeindex} right after the first latex run 
 because the page numbers may change. 
 
-It must be checked whether the number of latex reruns suffices 
-if a glossary is added (one latex run) 
-and also added to the table of contents (another run?). 
-
 Take into account log messages like: 
 bibtex-Warnung "Please (re)run BibTeX on the file(s): (.....) And after that
 rerun LaTeX".
@@ -2347,8 +2343,6 @@ Have a look at rerunfile check and in glossaries-code.pdf.
 Citations are missing in html output. 
 Figures are missing in html output 
 Formulae are missing in html output. 
-
-For text output: rerun is insufficient to make pagenumbers right. 
 
 
 \bibliographystyle{alpha}
