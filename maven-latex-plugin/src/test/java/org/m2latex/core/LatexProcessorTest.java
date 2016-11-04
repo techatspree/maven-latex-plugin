@@ -78,6 +78,9 @@ public class LatexProcessorTest {
     @Test public void testProcessLatexSimple()
 	throws BuildExecutionException {
 
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
+	fileUtilsCtrl.setReturnValue(logFile);
+
 	// run latex 
         mockRunLatex();
 
@@ -100,8 +103,6 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(lotFile);
 
 	// determine whether to rerun latex: no 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue(logFile);
         mockNeedAnotherLatexRun(false);
 
 	// // detect bad boxes and warnings: none 
@@ -113,13 +114,16 @@ public class LatexProcessorTest {
 
         replay();
 
-        processor.processLatex2pdf( this.texFile );
+        processor.processLatex2pdf(this.texFile);
 
         verify();
     }
 
     @Test public void testProcessLatexWithBibtex()
 	throws BuildExecutionException {
+
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
+	fileUtilsCtrl.setReturnValue(logFile);
 
 	// run latex 
         mockRunLatex();
@@ -146,11 +150,9 @@ public class LatexProcessorTest {
         mockRunLatex();
 
 	// determine whether to rerun latex and run until no 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue( logFile );
-        mockNeedAnotherLatexRun( true );
+        mockNeedAnotherLatexRun(true);
         mockRunLatex();
-        mockNeedAnotherLatexRun( false );
+        mockNeedAnotherLatexRun(false);
 
 	// // detect bad boxes and warnings: none 
 	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
@@ -161,12 +163,15 @@ public class LatexProcessorTest {
 
         replay();
 
-        processor.processLatex2pdf( this.texFile );
+        processor.processLatex2pdf(this.texFile);
 
         verify();
     }
 
    @Test public void testProcessLatex2html() throws BuildExecutionException {
+
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
+	fileUtilsCtrl.setReturnValue(logFile);
 
  	// run latex 
         mockRunLatex();
@@ -190,8 +195,6 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(lotFile);
 
 	// // determine whether to rerun latex: no 
-	// fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	// fileUtilsCtrl.setReturnValue( logFile );
         // mockNeedAnotherLatexRun( false );
 
 	// // detect bad boxes and warnings: none 
@@ -205,14 +208,14 @@ public class LatexProcessorTest {
 
         replay();
 
-        processor.processLatex2html(this. texFile );
+        processor.processLatex2html(this. texFile);
 
         verify();
     }
 
     private void mockNeedAnotherLatexRun(boolean retVal)
-        throws BuildExecutionException
-    {
+        throws BuildExecutionException {
+
         fileUtils.matchInFile(logFile, 
 			      this.settings.getPatternLatexNeedsReRun());
         fileUtilsCtrl.setReturnValue( retVal );
@@ -229,9 +232,9 @@ public class LatexProcessorTest {
 	throws BuildExecutionException {
 
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_AUX);
-        fileUtilsCtrl.setReturnValue( auxFile );
+        fileUtilsCtrl.setReturnValue(auxFile);
         fileUtils.matchInFile(auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
-        fileUtilsCtrl.setReturnValue( runBibtex );
+        fileUtilsCtrl.setReturnValue(runBibtex);
 
 	if (!runBibtex) {
 	    return;
@@ -240,12 +243,12 @@ public class LatexProcessorTest {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getBibtexCommand(),
-			 new String[] { auxFile.getPath() } );
-        executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
-        executorCtrl.setReturnValue( null );
+			 new String[] {auxFile.getPath()});
+        executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        executorCtrl.setReturnValue(null);
 
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_BLG);
-	fileUtilsCtrl.setReturnValue( blgFile );
+	fileUtilsCtrl.setReturnValue(blgFile);
 
 	// fileUtils.matchInFile(blgFile, "Error");
 	// fileUtilsCtrl.setReturnValue( false );
@@ -259,22 +262,21 @@ public class LatexProcessorTest {
 	throws BuildExecutionException {
 
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
-        fileUtilsCtrl.setReturnValue( idxFile );
+        fileUtilsCtrl.setReturnValue(idxFile);
 
 	if (!runMakeIndex) {
 	    return;
 	}
 
-
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getMakeIndexCommand(),
-			 new String[] { idxFile.getPath() } );
-	executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
-        executorCtrl.setReturnValue( null );
+			 new String[] {idxFile.getPath()});
+	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        executorCtrl.setReturnValue(null);
 
 	fileUtils.replaceSuffix(idxFile, LatexProcessor.SUFFIX_ILG);
-	fileUtilsCtrl.setReturnValue( ilgFile );
+	fileUtilsCtrl.setReturnValue(ilgFile);
 
     }
 
@@ -282,20 +284,20 @@ public class LatexProcessorTest {
 	throws BuildExecutionException {
 
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
-        fileUtilsCtrl.setReturnValue( gloFile );
+        fileUtilsCtrl.setReturnValue(gloFile);
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
-        fileUtilsCtrl.setReturnValue( gloFile );
+        fileUtilsCtrl.setReturnValue(gloFile);
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IST);
-        fileUtilsCtrl.setReturnValue( istFile );
+        fileUtilsCtrl.setReturnValue(istFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_XDY);
-        fileUtilsCtrl.setReturnValue( xdyFile );
+        fileUtilsCtrl.setReturnValue(xdyFile);
 
 	if (!runMakeGlossary) {
 	    return;
 	}
 
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS);
-        fileUtilsCtrl.setReturnValue( glsFile );
+        fileUtilsCtrl.setReturnValue(glsFile);
 
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
@@ -307,8 +309,8 @@ public class LatexProcessorTest {
 			     glsFile.getName(),
 			     gloFile.getName()
 			 } );
-	executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
-        executorCtrl.setReturnValue( null );
+	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        executorCtrl.setReturnValue(null);
 
 	// fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG);
 	// fileUtilsCtrl.setReturnValue( ilgFile );
@@ -323,38 +325,33 @@ public class LatexProcessorTest {
 			 LatexProcessor
 			 .buildArguments(settings.getTexCommandArgs(), 
 					 texFile));
-        executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
-        executorCtrl.setReturnValue( null );
-
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue( logFile );
+        executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        executorCtrl.setReturnValue(null);
     }
 
     private void mockRunLatex2html() throws BuildExecutionException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
-			 tex2htmlArgsExpected );
-        executorCtrl.setMatcher( MockControl.ARRAY_MATCHER );
-        executorCtrl.setReturnValue( null );
+			 tex2htmlArgsExpected);
+        executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        executorCtrl.setReturnValue(null);
 
 	// logErrs
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue( logFile );
+	fileUtilsCtrl.setReturnValue(logFile);
 
 	// since log file does not exist 
 	// fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
-    private void replay()
-    {
+    private void replay() {
         executorCtrl.replay();
         fileUtilsCtrl.replay();
     }
 
-    private void verify()
-    {
+    private void verify() {
         executorCtrl.verify();
         fileUtilsCtrl.verify();
     }
