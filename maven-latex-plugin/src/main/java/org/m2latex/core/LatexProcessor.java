@@ -673,7 +673,7 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #preProcessLatex2pdf(File)
+     * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2html(File)
      */
     public void processLatex2html(File texFile)
@@ -692,7 +692,7 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #preProcessLatex2pdf(File)
+     * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2odt(File)
      */
     public void processLatex2odt(File texFile) throws BuildExecutionException {
@@ -710,7 +710,7 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #preProcessLatex2pdf(File)
+     * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2odt(File)
      * @see #runOdt2doc(File)
      */
@@ -743,7 +743,7 @@ public class LatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
-     * @see #preProcessLatex2pdf(File)
+     * @see #processLatex2pdfCore(File, File)
      * @see #runPdf2txt(File)
      */
     public void processLatex2txt(File texFile) throws BuildExecutionException {
