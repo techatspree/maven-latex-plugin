@@ -344,9 +344,8 @@ public class LatexProcessor {
 	    this.log.info("Deleting targets of svg-file " + svgFile + ". ");
 	    // may throw BuildExecutionException 
 	    this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
-	    this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF).delete();
+	    this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
 	}
-
     }
 
     /**
@@ -397,8 +396,7 @@ public class LatexProcessor {
         this.log.debug("Settings: " + this.settings.toString());
 
         File texDirectory = this.settings.getTexSrcDirectoryFile();
-
-	clearGraphics(texDirectory);
+	clearGraphics     (texDirectory);
 	clearFromLatexMain(texDirectory);
     }
 
@@ -458,32 +456,33 @@ public class LatexProcessor {
 
     /**
      * Runs LaTeX on <code>texFile</code> at once, 
-     * runs BibTeX and MakeIndex by need 
+     * runs BibTeX, MakeIndex and MakeGlossaries by need 
      * and returns whether a second LaTeX run is required. 
-
+     * The latter also holds, if a table of contents, a list of figures 
+     * or a list of tables is specified. 
      * <p>
-     * A warning is logged if the LaTeX, a BibTeX run or MakeIndex fails 
-     * or if a BibTeX run or a MakeIndex run issues a warning
-     * in the according methods {@link #runLatex2pdf(File)}, 
+     * A warning is logged if the LaTeX, a BibTeX run a MakeIndex 
+     * or a MakeGlossaries run fails 
+     * or if a BibTeX run or a MakeIndex or a MakeGlossary run issues a warning
+     * in the according methods {@link #runLatex2pdf(File, File)}, 
      * {@link #runBibtexByNeed(File)}, {@link #runMakeIndexByNeed(File)} and 
      * {@link #runMakeGlossaryByNeed(File)}. 
      *
      * @param texFile
-     *    the tex file to be processed. 
+     *    the latex-file to be processed. 
+     * @param logFile
+     *    the log-file after processing <code>texFile</code>. 
      * @return
      *    whether a second LaTeX run is required 
-     *    because either bibtex or makeindex had been run 
+     *    because bibtex, makeindex or makeglossaries had been run 
      *    or to update a table of contents or a list figures or tables. 
-     * @see #runLatex2pdf(File)
-     * @see #runBibtexByNeed(File)
-     * @see #runMakeindexByNeed(File)
      */
-    // FIXME: what about glossaries and things like that? 
-    private boolean preProcessLatex2pdf(final File texFile)
+    // FIXME: Maybe more than one second latex run is needed 
+    private boolean preProcessLatex2pdf(final File texFile, File logFile)
 	throws BuildExecutionException {
 
 	// initial latex run 
-        runLatex2pdf(texFile);
+        runLatex2pdf(texFile, logFile);
 
 	// create a bibliography by need 
 	boolean needLatexReRun = runBibtexByNeed(texFile);
@@ -508,7 +507,8 @@ public class LatexProcessor {
 
     /**
      * Runs LaTeX on <code>texFile</code> at once, 
-     * runs BibTeX and MakeIndex by need 
+     * runs BibTeX, MakeIndex and MakeGlossaries by need 
+     * according to {@link #preProcessLatex2pdf(File, File)} 
      * and reruns latex as long as needed to get all links 
      * or as threshold {@link Settings#maxNumReruns} specifies. 
      * <p>
@@ -516,7 +516,45 @@ public class LatexProcessor {
      * but it is also possible to specify the dvi-format 
      * (no longer recommended but still working). 
      * <p>
-     * A warning is logged under certain circumstances if 
+     * Note that no warnings are issued by the latex run. 
+     *
+     * @param texFile
+     *    the latex-file to be processed. 
+     * @param logFile
+     *    the log-file after processing <code>texFile</code>. 
+     * @see #processLatex2pdf(File)
+     * @see #processLatex2txt(File)
+      */
+    public void processLatex2pdfCore(final File texFile, File logFile) 
+	throws BuildExecutionException {
+
+	boolean needLatexReRun = preProcessLatex2pdf(texFile, logFile);
+	if (needLatexReRun) {
+	    log.debug("Rerun LaTeX to update table of contents, ... " + 
+		      "including bibliography, index, or that like. ");
+	    runLatex2pdf(texFile, logFile);
+	}
+
+	// rerun latex by need 
+        int retries = 0;
+	int maxNumReruns = this.settings.getMaxNumReruns();
+       while ((maxNumReruns == -1 || retries < maxNumReruns)
+	       && (needLatexReRun = needAnotherLatexRun(logFile))) {
+            log.debug("Latex must be rerun. ");
+            runLatex2pdf(texFile, logFile);
+            retries++;
+        }
+	if (needLatexReRun) {
+	    log.warn("Max rerun reached although LaTeX demands another run. ");
+	}
+    }
+
+    /**
+     * Runs LaTeX on <code>texFile</code> 
+     * BibTeX, MakeIndex and MakeGlossaries 
+     * and again LaTeX creating a pdf-file 
+     * as specified by {@link #preProcessLatex2pdf(File, File)} 
+     * and issues a warning if 
      * <ul>
      * <li>
      * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
@@ -529,30 +567,11 @@ public class LatexProcessor {
      *    the tex file to be processed. 
      * @see #needAnotherLatexRun(File)
      */
-    public void processLatex2pdf(final File texFile) 
-	throws BuildExecutionException {
+    public void processLatex2pdf(File texFile) throws BuildExecutionException {
 
         log.info("Converting into pdf: LaTeX file " + texFile + ". ");
-	boolean needLatexReRun = preProcessLatex2pdf(texFile);
-	if (needLatexReRun) {
-	    log.debug("Rerun LaTeX to update table of contents, ... " + 
-		      "including bibliography, index, or that like. ");
-	    runLatex2pdf(texFile);
-	}
-
-	// rerun latex by need 
-        int retries = 0;
-	int maxNumReruns = this.settings.getMaxNumReruns();
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-        while ((maxNumReruns == -1 || retries < maxNumReruns)
-	       && (needLatexReRun = needAnotherLatexRun(logFile))) {
-            log.debug("Latex must be rerun. ");
-            runLatex2pdf(texFile);
-            retries++;
-        }
-	if (needLatexReRun) {
-	    log.warn("Max rerun reached although LaTeX demands another run. ");
-	}
+	processLatex2pdfCore(texFile, logFile);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
 	logWarns(logFile, this.settings.getTexCommand());
@@ -660,8 +679,9 @@ public class LatexProcessor {
     public void processLatex2html(File texFile)
 	throws BuildExecutionException {
 	log.info("Converting into html: LaTeX file " + texFile + ". ");
-	preProcessLatex2pdf(texFile);
-        runLatex2html   (texFile);
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+	preProcessLatex2pdf(texFile, logFile);
+        runLatex2html      (texFile);
     }
 
     /**
@@ -677,8 +697,9 @@ public class LatexProcessor {
      */
     public void processLatex2odt(File texFile) throws BuildExecutionException {
 	log.info("Converting into odt: LaTeX file " + texFile + ". ");
-        preProcessLatex2pdf(texFile);
-        runLatex2odt    (texFile);
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+        preProcessLatex2pdf(texFile, logFile);
+        runLatex2odt       (texFile);
     }
 
     /**
@@ -695,9 +716,10 @@ public class LatexProcessor {
      */
     public void processLatex2docx(File texFile) throws BuildExecutionException {
 	log.info("Converting into doc(x): LaTeX file " + texFile + ". ");
-        preProcessLatex2pdf(texFile);
-        runLatex2odt    (texFile);
-        runOdt2doc      (texFile);
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+	preProcessLatex2pdf(texFile, logFile);
+        runLatex2odt       (texFile);
+        runOdt2doc         (texFile);
     }
 
     /**
@@ -726,10 +748,8 @@ public class LatexProcessor {
      */
     public void processLatex2txt(File texFile) throws BuildExecutionException {
 	log.info("Converting into txt: LaTeX file " + texFile + ". ");
-        boolean rerun = preProcessLatex2pdf(texFile);
-	if (rerun) {
-	    runLatex2pdf(texFile);
-	}
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+        processLatex2pdfCore(texFile, logFile);
 	// warnings emitted by LaTex are ignored 
 	// (errors are emitted by runLatex2pdf and that like.)
 	runPdf2txt      (texFile);
@@ -1192,13 +1212,6 @@ public class LatexProcessor {
 	    return false;
 	}
 
-	// if (!istFile.exists()) {
-	//     log.warn("Did not find " + istFile + " as expected. ");
-	// }
-	// if ( xdyFile.exists()) {
-	//     log.warn("Found unsupported " + xdyFile + ". ");
-	// }
-
 	log.debug("Running " + this.settings.getMakeGlossariesCommand() + 
 		  " on file " + xxxFile.getName()+ ". ");
 
@@ -1293,12 +1306,14 @@ public class LatexProcessor {
      * after the last LaTeX run only. 
      *
      * @param texFile
-     *    the latex file to be processed. 
+     *    the latex-file to be processed. 
+     * @param logFile
+     *    the log-file after processing <code>texFile</code>. 
      * @throws BuildExecutionException
      *    if running the latex command 
      *    returned by {@link Settings#getLatexCommand()} failed. 
      */
-    private void runLatex2pdf(File texFile)
+    private void runLatex2pdf(File texFile, File logFile)
 	throws BuildExecutionException {
 
 	String command = this.settings.getTexCommand();
@@ -1314,7 +1329,6 @@ public class LatexProcessor {
 			      args);
 
 	// logging errors (warnings are done in processLatex2pdf)
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	logErrs(logFile, command);
     }
 
