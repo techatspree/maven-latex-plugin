@@ -1012,9 +1012,17 @@ If such a file is present, it is read in
 and is used to create a table of contents, a list of figures and of tables 
 in the second run of {\tt latex2pdf}. 
 
-FIXME: What if a table of contents 
-and either bibliography, index or glossary is present? 
-Required is a third latex run. 
+To summarize, 
+if a table of contents, a list of figures, a list of tables or 
+a bibliography, an index or a glossary is present, 
+a second latex run is required to make them appear in the pdf-output. 
+
+If a table of contents and at the same time 
+a bibliography, an index or a glossary is present, 
+even two further latex runs are required: 
+After the first one, the bibliography, the index or the glossary 
+occurs in the pdf-file but not yet in the table of contents. 
+This happens after the second additional latex run. 
 
 \begin{figure}[htb]
 \begin{center}
