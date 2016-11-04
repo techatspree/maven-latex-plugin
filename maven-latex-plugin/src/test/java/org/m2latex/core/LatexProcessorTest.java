@@ -141,12 +141,8 @@ public class LatexProcessorTest {
 	// whether to rerun latex: no 
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC);
 	fileUtilsCtrl.setReturnValue(tocFile);
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOF);
-	fileUtilsCtrl.setReturnValue(lofFile);
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT);
-	fileUtilsCtrl.setReturnValue(lotFile);
 
-	// to run latex because bibtex had been run 
+	// run latex once because bibtex had been run and no toc present 
         mockRunLatex();
 
 	// determine whether to rerun latex and run until no 
