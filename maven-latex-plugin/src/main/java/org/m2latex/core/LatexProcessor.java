@@ -473,36 +473,53 @@ public class LatexProcessor {
      * @param logFile
      *    the log-file after processing <code>texFile</code>. 
      * @return
-     *    whether a second LaTeX run is required 
+     *    the number of LaTeX runs required 
      *    because bibtex, makeindex or makeglossaries had been run 
      *    or to update a table of contents or a list figures or tables. 
+     *    <ul>
+     *    <li>
+     *    If neither of these are present, no rerun is required. 
+     *    <li>
+     *    If a bibliography, an index and a glossary is included 
+     *    and a table of contents, 
+     *    we assume that these are in the table of contents. 
+     *    Thus two reruns are required: 
+     *    one to include the bibliography or that like 
+     *    and the second one to make it appear in the table of contents. 
+     *    <li>
+     *    In all other cases, a single rerun suffices 
+     *    </ul>
+     * @see #processLatex2pdfCore(File, File)
+     * @see #processLatex2html(File)
+     * @see #processLatex2odt(File)
+     * @see #processLatex2docx(File)
      */
     // FIXME: Maybe more than one second latex run is needed 
-    private boolean preProcessLatex2pdf(final File texFile, File logFile)
+    private int preProcessLatex2pdf(final File texFile, File logFile)
 	throws BuildExecutionException {
 
 	// initial latex run 
         runLatex2pdf(texFile, logFile);
 
-	// create a bibliography by need 
-	boolean needLatexReRun = runBibtexByNeed(texFile);
-
-	// create an index by need 
-	needLatexReRun |= runMakeIndexByNeed(texFile);
-
-	// create a glossary by need 
-	needLatexReRun |= runMakeGlossaryByNeed(texFile);
+	// create bibliography, index and glossary by need 
+	boolean hasBibIdxGls = runBibtexByNeed      (texFile);
+	hasBibIdxGls        |= runMakeIndexByNeed   (texFile);
+	hasBibIdxGls        |= runMakeGlossaryByNeed(texFile);
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
-	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)
-	    .exists();
-	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF)
-	    .exists();
-	needLatexReRun |= this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT)
-	    .exists();
+	boolean hasToc = 
+	    this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
+	if (hasBibIdxGls) {
+	    return hasToc ? 2 : 1;
+	}
+	// Here, result is either 0 or 1 
 
-	return needLatexReRun;
+	boolean needLatexReRun = hasToc 
+	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
+	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
+
+	return needLatexReRun ? 1 : 0;
     }
 
     /**
@@ -528,17 +545,31 @@ public class LatexProcessor {
     public void processLatex2pdfCore(final File texFile, File logFile) 
 	throws BuildExecutionException {
 
-	boolean needLatexReRun = preProcessLatex2pdf(texFile, logFile);
-	if (needLatexReRun) {
-	    log.debug("Rerun LaTeX to update table of contents, ... " + 
+	int numLatexReRuns = preProcessLatex2pdf(texFile, logFile);
+	switch (numLatexReRuns) {
+	case 2:
+	    log.debug("Rerun LaTeX twice to update table of contents, ... " + 
 		      "including bibliography, index, or that like. ");
 	    runLatex2pdf(texFile, logFile);
+	    runLatex2pdf(texFile, logFile);
+	    break;
+	case 1:
+	    log.debug("Rerun LaTeX once to update table of contents, ... " + 
+		      "bibliography, index, or that like. ");
+	    runLatex2pdf(texFile, logFile);
+	    break;
+	case 0:
+	    break;
+	default: 
+	    throw new IllegalStateException
+		("Unexpected number of reruns " + numLatexReRuns + ". ");
 	}
 
 	// rerun latex by need 
+	boolean needLatexReRun = false;// init: intuitive and superfluous
         int retries = 0;
 	int maxNumReruns = this.settings.getMaxNumReruns();
-       while ((maxNumReruns == -1 || retries < maxNumReruns)
+	while ((maxNumReruns == -1 || retries < maxNumReruns)
 	       && (needLatexReRun = needAnotherLatexRun(logFile))) {
             log.debug("Latex must be rerun. ");
             runLatex2pdf(texFile, logFile);
