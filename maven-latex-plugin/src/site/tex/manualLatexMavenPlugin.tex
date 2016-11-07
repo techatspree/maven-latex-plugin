@@ -1,8 +1,12 @@
 
 \documentclass[12pt]{article}
 
-% graphics 
+% used by hyperref and also to update index and glossary 
+% to avoid clash because of loading with different options: 
+% declare first 
+\usepackage[index, glossary]{rerunfilecheck}
 
+% graphics 
 \makeatletter
 \@ifpackageloaded{tex4ht}{%
 \usepackage[dvipdfmx]{xcolor}
@@ -38,7 +42,7 @@
 \makeindex
 \usepackage[toc, xindy]{glossaries}
 %, xindy or even [xindy={language=english,codepage=utf8}]
-
+% mainly for index and glossaries 
 \makeglossaries
 
 \setacronymstyle{long-short}
@@ -97,6 +101,7 @@ glossary file containing sorted, unified and formatted glossary entries}
 %A computer language for creating vector graphics. 
 %}}
 
+% how to number the glossary in the toc? seemingly a gap in tocbibind 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
 
 \title{Manual for the latex-maven-plugin and for an according ant-task }
@@ -2301,6 +2306,14 @@ Reading \cite{GloP}, Section 15.1, the glossarystyle {\tt index}
 seems to allow creating indices through the {\tt glossaries} package 
 making any index-package obsolete. 
 
+For development given the latex main file {\tt xxx.tex}, 
+the files {\tt xxx.pdf}, {\tt xxx.pdf}, {\tt xxx.synctex.gz} 
+and {\tt xxx.log} are vital. 
+Thus it would be fine to have a goal which touches these files 
+or to have a parameter to touch these prior to creation 
+to avoid that these are cleaned up after the run. 
+This is an alternative to setting parameter {\tt cleanup} to {\tt false}. 
+
 
 The ant-task does not allow to create single formats, e.g. pdf selectively. 
 
@@ -2322,27 +2335,50 @@ described here, this manual is created through plugin and task.
 
 Seemingly, indices and glossaries based on page numbers 
 (there seems to be an alternative to this), 
-cannot be created e.g by {\tt makeindex} right after the first latex run 
-because the page numbers may change. 
+may be out of date with the current algorithm: 
+First {\tt pdflatex} is run to create the raw index. 
+Then a sorting program like {\tt makeindex} is called 
+which creates the sorted, collected and formatted index. 
+Then one {\tt pdflatex} run is required to include this index 
+into the created pdf-file. 
+A second {\tt pdflatex} run is required 
+to write the index to the table of contents, as typically required. 
+The problem with this procedure is, 
+that the subsequent runs of {\tt pdflatex} change the raw index 
+which requires rerunning {\tt makeindex} and after that again {\tt pdflatex}. 
 
-Take into account log messages like: 
-bibtex-Warnung "Please (re)run BibTeX on the file(s): (.....) And after that
-rerun LaTeX".
-This seems to be available for indices also using imakeidx instead of makeidx, 
-so we shall change.  
-See Package robustindex.sty
-What about glossaries? 
-See 
-%
-\begin{verbatim}
-https://github.com/shiblon/latex-makefile/issues/171
-\end{verbatim}
-%
+One way to solve that problem is to use the package {\tt imakeidx} 
+(improved makeidx) instead of the traditional package {\tt makeidx}. 
+This offers also multiple indices, which is another gap to be filled. 
+Seemingly, {\tt imakeidx} does not support glossaries 
+and so for these, another solution is required, 
+although the problem is the same. 
+
+Another solution is 
+to use pacakges {\tt robustindex} and {\tt robustglossaries}. 
+The advantage would be to have handled both index and glossary. 
+Also support of hyperrefs within indices and glossaries seem to be expanded. 
+On the other hand, the two packages seem experimental 
+and seem to to play with package {\tt hyperref}. 
+
+
 Have a look at rerunfile check and in glossaries-code.pdf. 
+
+There is a problem in conjunction with emacs: 
+creates swap file {\tt .xxx.tex}. 
+This must be excluded from latex main files. 
+This may be done by ignoring files starting with {\tt.}. 
+
+In class {\tt TexFileUtilsImpl} there are several places marked FIXME. 
+These should be resolved. 
+
 
 Citations are missing in html output. 
 Figures are missing in html output 
 Formulae are missing in html output. 
+
+Did not find a way to add a numbered entry for the glossary 
+into the table of contents. 
 
 
 \bibliographystyle{alpha}
