@@ -369,7 +369,7 @@ public class LatexProcessor {
 	    filter = new FileFilter() {
 		    public boolean accept(File file) {
 			return !file.isDirectory()
-			    &&  file.getName().matches(root+".+")
+			    &&  file.getName().startsWith(root)
 			    && !file.equals(texFile);
 		    }
 		};
