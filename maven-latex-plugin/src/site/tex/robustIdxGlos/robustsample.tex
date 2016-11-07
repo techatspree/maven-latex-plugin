@@ -1,0 +1,260 @@
+% robustsample.tex
+\documentclass{book}
+
+\usepackage{makeidx}
+\usepackage{robustindex}
+\usepackage{robustglossary}
+\usepackage[plainpages=false,hyperindex=false]{hyperref}
+
+\title {A file with robust index}
+
+\author{Wilberd van der Kallen\index{Wilberd}}
+\date{}
+
+\makeindex    % obligatory with robustindex
+\makeglossary % obligatory with robustglossary
+
+\begin{document}
+\renewcommand\thepage{\roman{page}}
+
+\maketitle
+
+\tableofcontents
+\addcontentsline{toc}{chapter}{Contents}
+
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+\markboth{Preface}{Preface}
+We will recall the purpose of  \verb|robustindex.sty| in appendix
+\ref{purpose}.
+
+Although this is not a book, we have chosen the book style for illustration.
+
+If you want to see how \verb|robustindex.sty| may be used, compare the file
+\verb|robustsample.tex| or appendix \ref{appendix} with the output.
+
+If you are interested in our usage of \verb|robustglossary.sty|, you must read
+the file \verb|robustsample.tex|.
+
+This preface has an \emph{indexed term}.\index{indexed term}
+
+% Let us pretend this page explains $\mathrm{Ext}^i_B(M,N)$.
+\glossary{$\mathrm{Ext}^i_B(M,N)$&Ext group in the category $\mathcal C_B$}
+
+\chapter{Introduction}\sloppy
+\renewcommand\thepage{\arabic{page}}
+\addtocounter{page}{-2}% Just to get overlap in roman and arabic page numbers.
+This introduction has another indexed term
+\index{other term!cited twice on same page}
+as well as the old indexed term.\index{indexed term}
+The page number is again 5, but now in arabic.
+If you index the same term twice on the same page, then one simply gets
+a repeat in the index.\index{other term!cited twice on same page}
+That is inherent in our method.
+Indeed we had to disable the implicit page range formation of makeindex.
+% Let us pretend this page explains $H^0(X,\mathcal L)$.
+\glossary{$H^0(X,\mathcal L)$&the sections of the vector bundle
+$\mathcal L|_X$ over $X$}
+
+Of course the index file {\it filename}.\texttt{ind}
+may be edited to remedy such flaws. Such editing will actually be the
+recommended way to achieve more complicated effects like the page ranges on
+page \pageref{range}, which also use several fonts in their page numbers.
+
+Traditionally page ranges and fonts for page numbers could be done with the
+encapsulating construction of makeindex, but that construction is broken by our
+package.
+(The encapsulating construction uses the encap character $|$ in the argument of
+\verb|\index|.)
+We have restored it to some extent, sufficient for common practice,
+but our rules are more naive than those of makeindex.
+See the file \verb|robustsample.tex| for details.
+
+Subentries are still supported. We illustrate this in
+\verb|robustsample.tex| and appendix \ref{appendix} with alpha, beta and gamma.
+This also illustrates the use of \verb|\gobblepageref|.
+\index{alpha!see beta}
+\index{alpha!see also gamma\gobblepageref}
+
+After running \LaTeX\ on {\it filename} one must run makeindex on {\it
+filename} to get the index entries in {\it filename}.\texttt{ind}.
+Before this there may be error messages about labels or names.
+Do not exclude any relevant files. For instance, do not use
+\verb|\includeonly|.
+
+Say we wish the index to occur in the table of contents.
+We then give the command \verb|\indexincontents| before the index.
+
+The package \verb|hyperref| may break our code. Therefore
+one must use the option
+\verb|hyperindex=false|, as in
+\verb|\usepackage[hyperindex=false]{hyperref}|.
+Note that \verb|robustindex| already puts
+hyperlinks in the index. Alternatively one may go against the advice of
+\verb|hyperref| and put \verb|robustindex| later in the preamble.
+In the file \verb|robustsample.tex| we actually used
+\verb|\usepackage[plainpages=false,hyperindex=false]{hyperref}|
+because of the roman page numbers in the beginning.
+
+% For special effects you could simply edit the filename.ind file.
+% If you insist on using encapsulation, you can experiment with constructs
+% like those below.
+%
+% Let us first describe some rules.
+% In \index{arg} the argument "arg" may contain at most one "|".
+% If it contains "|", then the part after "|" is for encapsulating.
+% It may be of one of the following two types.
+%
+% 1. A sequence of letters like "texttt" with the property that if "\"
+% is prepended, as in "\texttt", the result is a valid command that takes
+% one argument. This command will be applied to the page number.
+%
+% 2. One of the brackets "(" or ")", or one of those brackets followed by
+% a sequence as in type 1.
+% Any "(" must be matched by its ")", and this ")" must occur in a later
+% \index command that shares the part before the "|". No intervening \index
+% command may have this same part before the "|".
+% So here we deviate from makeindex.
+%
+% Makeindex also attaches special meanings to @, !, ". These meanings stay,
+% but " can no longer be used to escape |. One must simply replace | with
+% \vert, when | is not intended to start encapsulation. Here is an example:
+%
+\index{page range!risky@this $\vert$is$\vert$ complicated|(textbf}%
+% The "(" means that this starts a page range, and "textbf" means that
+% one wants to apply \textbf to the page number that starts the range.
+% The name "risky" of the subentry is used for sorting by makeindex, and will
+% not be printed.
+%
+\index{page range|(textbf}%
+% This belongs to the entry "page range". The previous
+% \index command started a subentry of this entry.
+%
+\index{simpler!page range|(}%
+\index{simplest page range|(}%
+% encapsulating to be continued below
+
+\appendix
+\chapter{Structure of the \LaTeX\ file}\label{appendix}
+\begin{verbatim}
+\documentclass{book}
+
+\usepackage{makeidx}
+\usepackage{robustindex}
+...
+...\index{Wilberd}}                              % on page i
+...
+\makeindex    % obligatory with robustindex
+
+\begin{document}
+...
+\tableofcontents
+...\index{indexed term}                          % on page v
+...\index{other term!cited twice on same page}   % on page 5
+...\index{indexed term}                          % on page 5
+...\index{other term!cited twice on same page}   % on page 5
+...
+\index{alpha!see beta}                           % on page 5
+\index{alpha!see also gamma\gobblepageref}       % on page 5
+...
+% For special effects you could simply edit filename.ind
+% If you insist on using encapsulation,...
+\index{...|...}...                               % on page 5
+\index{...|...}...                               % on page 7
+\index{...|...}...                               % on page 9
+....
+\indexincontents % always put this before the index.
+\printindex
+
+\end{document}
+\end{verbatim}
+
+% continuation of encapsulating
+%
+\index{page range!risky@this $\vert$is$\vert$ complicated|)textit}
+% encapsulating to be continued below
+
+\chapter{Purpose of \texttt{robustindex.sty}}\label{purpose}
+The package \texttt{robustindex} tries to remedy two problems.
+\begin{itemize}
+\item Amazingly often a third party changes the page numbers without rerunning
+makeindex. It is much nicer to have an index that adapts itself to all
+changes that do not involve
+\verb|\index{|\textit{entry}\verb|}| commands.
+
+The package achieves this
+by invoking the \verb|\pageref| mechanism on automatically generated labels
+of the form \verb|ind.2|, \verb|ind.4|, \dots.
+
+Only after adding/deleting/modifying an \verb|\index{|\textit{entry}\verb|}|
+command, or after changing the order of \verb|\index{|\textit{entry}\verb|}|
+commands, does one have to run makeindex. But then it is important that you
+do run makeindex, even when no warning is issued. The robustness has its
+limits.
+\item The \texttt{theindex} environment lacks a destination for hyperlinks.
+That is a nuisance when one wants add the index to
+the bookmarks or to the table of contents in a pdf file: When one clicks on the
+link that displays the word Index, one wants to end up in the index.
+\end{itemize}
+
+% continuation of encapsulating
+%
+\index{page range|)textit}%
+\index{page range!risky@this $\vert$is$\vert$ complicated|texttt}
+%
+\index{page range!with risky label\label{range}}
+%
+%
+\index{simpler!page range|)}%
+\index{simplest page range|)}%
+% end of encapsulating
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Our glossary entries are given in the format
+%    \glossaryentry{$B$&Borel subgroup}{page number}
+%    which would be generated by \glossary{$B$&Borel subgroup}
+%    and written into the filename.glo file.
+%    So the & separates the formula from its explanation.
+%    We assume the explanation fits on the line.
+%
+%    Our implementation:
+
+\def\itemamp#1&#2{%
+   \mbox{%
+      \hbox to 10em{%
+         #1%        the formula
+         \hss
+      }%
+   }%
+     #2%        its explanation
+}%
+
+\def\glossaryentry#1#2{%
+   {\itemamp #1{\unskip, #2}%
+   }\par
+}%
+
+\newenvironment{theglossary}{\parindent0pt\parskip0pt}{}
+
+\chapter*{Glossary of Notations}
+
+\begin{theglossary}\addcontentsline{toc}{chapter}{Glossary of Notations}
+
+% Now we copy from filename.glo, making changes as appropriate.
+% In this example we just changed the order of the entries.
+
+\glossaryentry{$H^0(X,\mathcal L)$&the sections of the vector bundle $\mathcal
+L
+|_X$ over $X$}{\glopageref{4}}
+
+\glossaryentry{$\mathrm{Ext}^i_B(M,N)$&Ext group in the category $\mathcal
+C_B$}
+{\glopageref{2}}
+
+\end{theglossary}
+
+\indexincontents % always put this before the index.
+\printindex
+\end{document}
