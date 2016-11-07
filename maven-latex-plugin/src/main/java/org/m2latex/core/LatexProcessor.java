@@ -624,6 +624,14 @@ public class LatexProcessor {
 	logErrs(logFile, command, this.settings.getPatternErrLatex());
     }
 
+    /**
+     * Logs if an error occurred running <code>command</code> 
+     * by detecting that the log file <code>logFile</code> has not been created 
+     * or by detecting the error pattern <code>pattern</code> 
+     * in <code>logFile</code>. 
+     *
+     * @see #logWarns(File, String, String) 
+     */
     private void logErrs(File logFile, String command, String pattern) 
 	throws BuildExecutionException {
 
@@ -682,6 +690,15 @@ public class LatexProcessor {
 	}
     }
 
+    /**
+     * Logs if a warning occurred running <code>command</code> 
+     * by detecting the warning pattern <code>pattern</code> 
+     * in <code>logFile</code>. 
+     * If <code>logFile</code> then an error occurred 
+     * making detection of warnings obsolete. 
+     *
+     * @see #logErrs(File, String, String) 
+     */
     private void logWarns(File logFile, String command, String pattern) 
 	throws BuildExecutionException {
 	if (!logFile.exists()) {
@@ -694,8 +711,6 @@ public class LatexProcessor {
 		     logFile.getName() + ". ");
 	}
     }
-
-
 
     /**
      * Runs conversion of <code>texFile</code> to html or xhtml 
@@ -1183,20 +1198,21 @@ public class LatexProcessor {
     }
 
     /**
-     * Runs the makeindex command 
-     * given by {@link Settings#getMakeinexCommand()} 
+     * Runs the MakeIndex command 
+     * given by {@link Settings#getMakeIndexCommand()} 
      * on the idx-file corresponding with <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * provided that the existence of an idx-file indicates 
      * that an index shall be created. 
      *
      * @return
-     *    whether makeindex is run. 
-     *    Equivalently, whether LaTeX has to be rerun because of makeindex. 
+     *    whether MakeIndex had been run. 
+     *    Equivalently, whether LaTeX has to be rerun because of MakeIndex. 
      */
     private boolean runMakeIndexByNeed(File texFile)
 	throws BuildExecutionException {
 
+	// raw index file written by pdflatex 
 	File idxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
 	boolean needRun = idxFile.exists();
 	log.debug("MakeIndex run required? " + needRun);
@@ -1204,84 +1220,93 @@ public class LatexProcessor {
 	    return false;
 	}
 
-	log.debug("Running " + this.settings.getMakeIndexCommand() + 
-		  " on file " + idxFile.getName() + ". ");
-
+	String command = this.settings.getMakeIndexCommand();
+	log.debug("Running " + command  + " on " + idxFile.getName() + ". ");
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
 				       idxFile);
 	// may throw BuildExecutionException 
 	this.executor.execute(idxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
-			      this.settings.getMakeIndexCommand(), 
+			      command, 
 			      args);
 
-	// detect errors and warnings 
-
+	// detect errors and warnings makeindex wrote into xxx.ilg 
  	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
-	logErrs (logFile, 
-		 this.settings.getMakeIndexCommand(), 
-		 this.settings.getPatternErrMakeindex());
-	logWarns(logFile, 
-		 this.settings.getMakeIndexCommand(), 
-		 this.settings.getPatternWarnMakeindex());
+	logErrs (logFile, command, this.settings.getPatternErrMakeindex());
+	logWarns(logFile, command, this.settings.getPatternWarnMakeindex());
 	return true;
     }
 
-    private boolean runMakeGlossaryByNeed(File texFile)
+   /**
+     * Runs the MakeGlossaries command 
+     * given by {@link Settings#getMakeGlossariesCommand()} 
+     * on the aux-file corresponding with <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * provided that the existence of an glo-file indicates 
+     * that a glossary shall be created. 
+     * The MakeGlossaries command is just a wrapper 
+     * arround the programs <code>makeindex</code> and <code>xindy</code>. 
+     *
+     * @return
+     *    whether MakeGlossaries had been run. 
+     *    Equivalently, 
+     *    whether LaTeX has to be rerun because of MakeGlossaries. 
+     */
+     private boolean runMakeGlossaryByNeed(File texFile)
 	throws BuildExecutionException {
 
-	// file name without ending 
+	// file name without ending: parameter for makeglossaries 
 	File xxxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
+	// raw glossaries file created by pdflatex 
 	File gloFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
+	// style file for glossaries created by pdflatex for makeindex 
 	File istFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IST);
+	// style file for glossaries created by pdflatex for xindy 
 	File xdyFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_XDY);
+	// Note that LaTeX creates the ist-file if makeindex is specified 
+	// and the xdy-file if xindy is specified as sorting application. 
+
 	boolean needRun = gloFile.exists();
 	assert ( gloFile.exists() && ( istFile.exists() ^   xdyFile.exists()))
 	    || (!gloFile.exists() && (!istFile.exists() && !xdyFile.exists()));
-	log.debug("MakeGlossary run required? " + needRun);
+	log.debug("MakeGlossaries run required? " + needRun);
 	if (!needRun) {
 	    return false;
 	}
 
-	log.debug("Running " + this.settings.getMakeGlossariesCommand() + 
-		  " on file " + xxxFile.getName()+ ". ");
-
+	String command = this.settings.getMakeGlossariesCommand();
+	log.debug("Running " + command + " on " + xxxFile.getName()+ ". ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
 				       xxxFile);
-
 	// may throw BuildExecutionException 
 	this.executor.execute(texFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
-			      this.settings.getMakeGlossariesCommand(), 
+			      command, 
 			      args);
 
-	// detect errors and warnings 
+	// detect errors and warnings makeglossaries wrote into xxx.glg 
 	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
-	logErrs (glgFile, 
-		 this.settings.getMakeGlossariesCommand(), 
-		 this.settings.getPatternMakeGlossariesErr());
-	logWarns(glgFile, 
-		 this.settings.getMakeGlossariesCommand(), 
-		 this.settings.getPatternWarnMakeindex() + "|" + 
-		 this.settings.getPatternWarnXindy());
+	logErrs (glgFile, command, this.settings.getPatternMakeGlossariesErr());
+	logWarns(glgFile, command, this.settings.getPatternWarnMakeindex() 
+		 +           "|" + this.settings.getPatternWarnXindy());
 	return true;
     }
 
     /**
-     * Runs the bibtex command given by {@link Settings#getBibtexCommand()} 
+     * Runs the BibTeX command given by {@link Settings#getBibtexCommand()} 
      * on the aux-file corresponding with <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * provided an according pattern in the aux-file indicates 
      * that a bibliography shall be created. 
      *
      * @return
-     *    whether bibtex is run. 
-     *    Equivalently, whether LaTeX has to be rerun because of bibtex. 
+     *    whether BibTeX has been run. 
+     *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
      */
     private boolean runBibtexByNeed(File texFile) 
 	throws BuildExecutionException {
 
-	File auxFile =  this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
+	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
         boolean needRun = this.fileUtils.matchInFile(auxFile, 
 						     PATTERN_NEED_BIBTEX_RUN);
 	log.debug("BibTeX run required? " + needRun);
@@ -1289,38 +1314,18 @@ public class LatexProcessor {
 	    return false;
 	}
 
-	log.debug("Running " + this.settings.getBibtexCommand() + 
-		  " on file " + auxFile.getName() + ". ");
-
+	String command = this.settings.getBibtexCommand();
+	log.debug("Running " + command + " on " + auxFile.getName() + ". ");
 	String[] args = new String[] {auxFile.getName()};
 	// may throw BuildExecutionException 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
-			      this.settings.getBibtexCommand(), 
+			      command, 
 			      args);
 
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
-	if (logFile.exists()) {
-	    // FIXME: Could be further improved: 1 error but more warnings: 
-	    // The latter shall be displayed. (maybe)
-	    boolean errOccurred = this.fileUtils
-		.matchInFile(logFile, this.settings.getPatternErrBibtex());
-	    if (errOccurred) {
-		log.warn("Running BibTeX on " + texFile + 
-			 " failed: For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	    boolean warnOccurred = this.fileUtils
-		.matchInFile(logFile, this.settings.getPatternWarnBibtex());
-	    if (warnOccurred) {
-		log.warn("Running BibTeX on " + texFile + 
-			 " emitted warnings: For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	} else {
-	    this.log.error("Running BibTeX on " + texFile + 
-			   " failed: no log file found. ");
-	}
+	logErrs (logFile, command, this.settings.getPatternErrBibtex());
+	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
 	return true;
     }
 
