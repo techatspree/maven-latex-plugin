@@ -12,7 +12,7 @@
 \date{}
 
 \makeindex    % obligatory with robustindex
-\makeglossary % obligatory with robustglossary
+%\makeglossary % obligatory with robustglossary
 
 \begin{document}
 \renewcommand\thepage{\roman{page}}
@@ -39,7 +39,7 @@ the file \verb|robustsample.tex|.
 This preface has an \emph{indexed term}.\index{indexed term}
 
 % Let us pretend this page explains $\mathrm{Ext}^i_B(M,N)$.
-\glossary{$\mathrm{Ext}^i_B(M,N)$&Ext group in the category $\mathcal C_B$}
+%\glossary{$\mathrm{Ext}^i_B(M,N)$&Ext group in the category $\mathcal C_B$}
 
 \chapter{Introduction}\sloppy
 \renewcommand\thepage{\arabic{page}}
@@ -53,8 +53,8 @@ a repeat in the index.\index{other term!cited twice on same page}
 That is inherent in our method.
 Indeed we had to disable the implicit page range formation of makeindex.
 % Let us pretend this page explains $H^0(X,\mathcal L)$.
-\glossary{$H^0(X,\mathcal L)$&the sections of the vector bundle
-$\mathcal L|_X$ over $X$}
+%\glossary{$H^0(X,\mathcal L)$&the sections of the vector bundle
+%$\mathcal L|_X$ over $X$}
 
 Of course the index file {\it filename}.\texttt{ind}
 may be edited to remedy such flaws. Such editing will actually be the
@@ -238,22 +238,22 @@ link that displays the word Index, one wants to end up in the index.
 
 \newenvironment{theglossary}{\parindent0pt\parskip0pt}{}
 
-\chapter*{Glossary of Notations}
+% \chapter*{Glossary of Notations}
 
-\begin{theglossary}\addcontentsline{toc}{chapter}{Glossary of Notations}
+% \begin{theglossary}\addcontentsline{toc}{chapter}{Glossary of Notations}
 
-% Now we copy from filename.glo, making changes as appropriate.
-% In this example we just changed the order of the entries.
+% % Now we copy from filename.glo, making changes as appropriate.
+% % In this example we just changed the order of the entries.
 
-\glossaryentry{$H^0(X,\mathcal L)$&the sections of the vector bundle $\mathcal
-L
-|_X$ over $X$}{\glopageref{4}}
+% \glossaryentry{$H^0(X,\mathcal L)$&the sections of the vector bundle $\mathcal
+% L
+% |_X$ over $X$}{\glopageref{4}}
 
-\glossaryentry{$\mathrm{Ext}^i_B(M,N)$&Ext group in the category $\mathcal
-C_B$}
-{\glopageref{2}}
+% \glossaryentry{$\mathrm{Ext}^i_B(M,N)$&Ext group in the category $\mathcal
+% C_B$}
+% {\glopageref{2}}
 
-\end{theglossary}
+% \end{theglossary}
 
 \indexincontents % always put this before the index.
 \printindex
