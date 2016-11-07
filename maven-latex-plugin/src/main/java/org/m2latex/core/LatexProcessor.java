@@ -630,6 +630,8 @@ public class LatexProcessor {
      * or by detecting the error pattern <code>pattern</code> 
      * in <code>logFile</code>. 
      *
+     * @throws BuildExecutionException
+     *    if <code>logFile</code> does not exist or is not readable. 
      * @see #logWarns(File, String, String) 
      */
     private void logErrs(File logFile, String command, String pattern) 
@@ -637,8 +639,7 @@ public class LatexProcessor {
 
 	if (logFile.exists()) {
 	    // matchInFile may throw BuildExecutionException
-	    boolean errorOccurred = this.fileUtils.matchInFile(logFile,pattern);
-	    if (errorOccurred) {
+	    if (this.fileUtils.matchInFile(logFile, pattern)) {
 		log.warn("Running " + command + " failed. For details see " + 
 			 logFile.getName() + ". ");
 	    }
@@ -701,11 +702,7 @@ public class LatexProcessor {
      */
     private void logWarns(File logFile, String command, String pattern) 
 	throws BuildExecutionException {
-	if (!logFile.exists()) {
-	    return;
-	}
-
-	if (this.fileUtils.matchInFile(logFile, pattern)) {
+	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
 	    log.warn("Running " + command + 
 		     " emitted warnings. For details see " + 
 		     logFile.getName() + ". ");
@@ -849,7 +846,7 @@ public class LatexProcessor {
 
 //	if (update(pltFile, ptxFile)) {
 	    log.debug("Running " + command + 
-		      " -e...  on file " + pltFile.getName() + ". ");
+		      " -e...  on " + pltFile.getName() + ". ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(pltFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
@@ -897,7 +894,7 @@ public class LatexProcessor {
 		dev.getXFigInTexFile(this.fileUtils, figFile) // target 
 	    };
 	    log.debug("Running " + command + 
-		      " -Lpdftex  ... on file " + figFile.getName() + ". ");
+		      " -Lpdftex  ... on " + figFile.getName() + ". ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -915,7 +912,7 @@ public class LatexProcessor {
 		pdf_t // target 
 	    };
 	    log.debug("Running " + command + 
-		      " -Lpdftex_t... on file " + figFile.getName() + ". ");
+		      " -Lpdftex_t... on " + figFile.getName() + ". ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -925,7 +922,6 @@ public class LatexProcessor {
 	// no check: just warning that no output has been created. 
     }
 
- 
     /**
      * Runs mpost on mp-files to generate mps-files. 
      *
@@ -974,8 +970,7 @@ public class LatexProcessor {
             throws BuildExecutionException {
 
 	String command = this.settings.getLatex2rtfCommand();
-        log.debug("Running " + command + 
-		  " on file " + texFile.getName() + ". ");
+        log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
         String[] args = buildLatex2rtfArguments(texFile);
 	// may throw BuildExecutionException 
@@ -993,8 +988,7 @@ public class LatexProcessor {
     }
 
     // FIXME: take arguments for latex2rtf into account 
-    private String[] buildLatex2rtfArguments( File texFile )
-    {
+    private String[] buildLatex2rtfArguments(File texFile) {
 	return new String[] {texFile.getName()};
     }
 
@@ -1006,7 +1000,7 @@ public class LatexProcessor {
      * FIXME: document about errors and warnings. 
      *
      * @param texFile
-     *    the latex file to be processed. 
+     *    the latex-file to be processed. 
      * @throws BuildExecutionException
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
@@ -1015,8 +1009,7 @@ public class LatexProcessor {
 	throws BuildExecutionException {
 
 	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + 
-		  " on file " + texFile.getName() + ". ");
+        log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
         String[] args = buildHtlatexArguments(texFile);
 	// may throw BuildExecutionException 
@@ -1065,8 +1058,7 @@ public class LatexProcessor {
             throws BuildExecutionException {
 
 	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + 
-		  " on file " + texFile.getName() + ". ");
+        log.debug("Running " + command + " on" + texFile.getName() + ". ");
 
         String[] args = new String[] {
 	    texFile.getName(),
@@ -1111,8 +1103,7 @@ public class LatexProcessor {
 
 	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
 	String command = this.settings.getOdt2docCommand();
-	log.debug("Running " + command + 
-		  " on file " + odtFile.getName() + ". ");
+	log.debug("Running " + command + " on " + odtFile.getName() + ". ");
 
 	String[] args = buildArguments(this.settings.getOdt2docOptions(),
 				       odtFile);
@@ -1141,8 +1132,7 @@ public class LatexProcessor {
 
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
 	String command = this.settings.getPdf2txtCommand();
-	log.debug("Running " + command + 
-		  " on file " + pdfFile.getName() + ". ");
+	log.debug("Running " + command + " on " + pdfFile.getName() + ". ");
 
 	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
 				       pdfFile);
@@ -1205,6 +1195,8 @@ public class LatexProcessor {
      * provided that the existence of an idx-file indicates 
      * that an index shall be created. 
      *
+     * @param texFile
+     *    the latex-file MakeIndex is to be processed for. 
      * @return
      *    whether MakeIndex had been run. 
      *    Equivalently, whether LaTeX has to be rerun because of MakeIndex. 
@@ -1247,6 +1239,8 @@ public class LatexProcessor {
      * The MakeGlossaries command is just a wrapper 
      * arround the programs <code>makeindex</code> and <code>xindy</code>. 
      *
+     * @param texFile
+     *    the latex-file MakeGlossaries is to be processed for. 
      * @return
      *    whether MakeGlossaries had been run. 
      *    Equivalently, 
@@ -1299,6 +1293,8 @@ public class LatexProcessor {
      * provided an according pattern in the aux-file indicates 
      * that a bibliography shall be created. 
      *
+     * @param texFile
+     *    the latex-file BibTeX is to be processed for. 
      * @return
      *    whether BibTeX has been run. 
      *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
@@ -1353,8 +1349,7 @@ public class LatexProcessor {
 	throws BuildExecutionException {
 
 	String command = this.settings.getTexCommand();
-        log.debug("Running " + command + 
-		  " on file " + texFile.getName() + ". ");
+        log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
 	String[] args = buildArguments(this.settings.getTexCommandArgs(), 
 				       texFile);
