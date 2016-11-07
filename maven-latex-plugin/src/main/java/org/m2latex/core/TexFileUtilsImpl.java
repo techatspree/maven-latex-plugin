@@ -32,12 +32,16 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import static org.apache.commons.io.filefilter.FileFilterUtils.suffixFileFilter;
+import static org.apache.commons.io.filefilter.FileFilterUtils.prefixFileFilter;
+import static org.apache.commons.io.filefilter.FileFilterUtils.notFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 class TexFileUtilsImpl implements TexFileUtils {
 
     private final static String SUFFIX_TEX = ".tex";
+    private final static String PREFIX_HIDDEN = ".";
 
     private final LogWrapper log;
 
@@ -82,10 +86,12 @@ class TexFileUtilsImpl implements TexFileUtils {
 	throws BuildExecutionException {
 
         Collection<File> mainFiles = new ArrayList<File>();
-
+	//IOFileFilter ff = FileFilterUtils.suffixFileFilter(SUFFIX_TEX);
         Collection<File> latexFiles = FileUtils
 	    .listFiles(directory,
-		       FileFilterUtils.suffixFileFilter(SUFFIX_TEX),
+		       FileFilterUtils
+		       .and(/*          */suffixFileFilter(SUFFIX_TEX),
+			    notFileFilter(prefixFileFilter(PREFIX_HIDDEN))),
 		       TrueFileFilter.INSTANCE);
 	// FIXME: may be null 
 	for (File file : latexFiles) {
@@ -262,7 +268,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	throws BuildExecutionException {
 	Collection<File> res = FileUtils
 	    .listFiles(dir,
-		       FileFilterUtils.suffixFileFilter(suffix),
+		       suffixFileFilter(suffix),
 		       TrueFileFilter.INSTANCE);
 	if (res == null) {
 	    throw new BuildExecutionException
