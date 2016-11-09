@@ -377,7 +377,7 @@ not allowed:
 	      ^Missing character: There is no .* in font .*!$|
 	      ^pdfTeX warning (ext4): destination with the same identifier|
 	      ^* Font .+ does not contain script |
-	      ^A space is missing. (No warning).)
+	      ^A space is missing\. (No warning)\.)
 	    </patternWarnLatex>
 
 	    <!-- Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -433,6 +433,19 @@ not allowed:
 		 is chosen according to the 'makeindex' documentation. -->
 	    <patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
 
+	    <!-- The pattern in the log-file which triggers rerunning MakeIndex 
+		 followed by LaTeX. 
+		 This pattern only occurs, if package 'rerunfilecheck' 
+		 is used with option 'index'. 
+		 The default value 
+		 is chosen according to the package documentation. 
+		 If the user finds that default value is not appropriate, 
+		 (s)he is asked to contribute 
+		 and to notify the developer of this plugin. -->
+	    <patternMakeIndexNeedsReRun>
+	      (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
+	    </patternMakeIndexNeedsReRun>
+
 	    <!-- The MakeGlossaries command to create a gls-file 
 		 from a glo-file (invoked without file ending) 
 		 also taking ist-file or xdy-file 
@@ -482,6 +495,20 @@ not allowed:
 		 If this is not appropriate, please modify 
 		 and notify the developer of this plugin. -->
 	    <patternWarnXindy>(^WARNING: )</patternWarnXindy>
+
+
+	    <!-- The pattern in the log file which triggers 
+		 rerunning MakeGlossaries followed by LaTeX. 
+		 This pattern only occurs, if package 'rerunfilecheck' 
+		 is used with option 'glossary'. 
+		 The default value 
+		 is chosen according to the package documentation. 
+		 If the user finds that default value is not appropriate, 
+		 (s)he is asked to contribute 
+		 and to notify the developer of this plugin. -->
+	    <patternMakeGlossariesNeedsReRun>
+	   (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
+	    </patternMakeGlossariesNeedsReRun>
  
             <!-- The tex4ht command. 
 		 Possible values are e.g. 'htlatex' and 'htxelatex'. 
@@ -521,6 +548,39 @@ not allowed:
 		 The default value is the empty string. -->
             <t4htOptions>-cvalidate</t4htOptions>
 
+	    <!-- The pattern in the log file which triggers rerunning latex. 
+		 This pattern may never be ensured to be complete, 
+		 because any new package may break completeness. 
+		 Nevertheless, the default value aims completeness 
+		 while be restrictive enough not to trigger another latex run 
+		 if not needed. 
+		 if not needed. 
+		 Note that the log file may contain text from the tex file, 
+		 e.g. if warning for an overfull hbox. 
+		 Thus the pattern must be restrictive enough 
+		 to avoid false rerun warning 
+		 e.g. caused by occurrence of the word 'rerun'. 
+		 
+		 To ensure termination, let $maxNumReruns 
+		 specify the maximum number of latex runs. 
+		 If the user finds an extension, (s)he is asked to contribute 
+		 and to notify the developer of this plugin. 
+		 Then the default value will be extended. -->
+	    <patternLatexNeedsReRun>
+(^LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
+^Package \w+ Warning: .*Rerun .*$|
+^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+^LaTeX Warning: Etaremune labels have changed\.$|
+^\(rerunfilecheck\)                Rerun to get outlines right$)
+	    </patternLatexNeedsReRun>
+
+	    <!-- The maximal allowed number of reruns of the latex process. 
+		 This is to avoid endless repetitions. 
+		 The default value is 5. 
+		 This shall be non-negative 
+		 or -1 which signifies that there is no threshold. -->
+	    <maxNumReRuns>-1</maxNumReRuns>
+
             <!-- The latex2rtf command to create rtf from latex directly. 
 		 The default value is 'latex2rtf'. -->
 	    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
@@ -549,45 +609,10 @@ not allowed:
 		 The default value is the empty string. -->
             <pdf2txtOptions></pdf2txtOptions>
 
-
-
-	    <!-- The pattern in the log file which triggers rerunning latex. 
-		 This pattern may never be ensured to be complete, 
-		 because any new package may break completeness. 
-		 Nevertheless, the default value aims completeness 
-		 while be restrictive enough not to trigger another latex run 
-		 if not needed. 
-		 if not needed. 
-		 Note that the log file may contain text from the tex file, 
-		 e.g. if warning for an overfull hbox. 
-		 Thus the pattern must be restrictive enough 
-		 to avoid false rerun warning 
-		 e.g. caused by occurrence of the word 'rerun'. 
-		 
-		 To ensure termination, let $maxNumReruns 
-		 specify the maximum number of latex runs. 
-		 If the user finds an extension, (s)he is asked to contribute 
-		 and to notify the developer of this plugin. 
-		 Then the default value will be extended. -->
-	    <patternLatexNeedsReRun>
-(^LaTeX Warning: Label\(s\) may have changed. Rerun to get cross-references right.$|
-^Package \w+ Warning: .*Rerun .*$|
-^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
-^LaTeX Warning: Etaremune labels have changed.$|
-^\(rerunfilecheck\)                Rerun to get outlines right$)
-	    </patternLatexNeedsReRun>
-
-	    <!-- The maximal allowed number of reruns of the latex process. 
-		 This is to avoid endless repetitions. 
-		 The default value is 5. 
-		 This shall be non-negative 
-		 or -1 which signifies that there is no threshold. -->
-	    <maxNumReruns>-1</maxNumReruns>
-
             <!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
 		 The default value is 'true'. -->
-            <cleanUp>true</cleanUp>
+            <cleanUp>false</cleanUp>
 
  	  </settings>
 	</configuration>
