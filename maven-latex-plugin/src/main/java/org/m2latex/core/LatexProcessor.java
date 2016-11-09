@@ -582,6 +582,8 @@ public class LatexProcessor {
 	int maxNumReruns = this.settings.getMaxNumReRuns();
 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
 	    needMakeIndexReRun = needAnotherMakeIndexRun(logFile);
+	    // FIXME: superfluous since pattern rerunfileckeck 
+	    // triggering makeindex also fits rerun of LaTeX 
 	    needLatexReRun |= needMakeIndexReRun;
 	    if (!needLatexReRun) {
 		return;
