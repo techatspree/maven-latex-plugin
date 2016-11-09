@@ -242,7 +242,7 @@ public class Settings {
 	"^Missing character: There is no .* in font .*!$|" +
 	"^pdfTeX warning (ext4): destination with the same identifier|" +
 	"^* Font .+ does not contain script |" +
-	"^A space is missing. (No warning).)";
+	"^A space is missing\\. (No warning)\\.)";
 
     /**
      * Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -373,11 +373,11 @@ public class Settings {
     private String patternWarnMakeindex = "(## Warning )";
 
     /**
-     * The pattern in the log file which triggers rerunning MakeIndex 
-     * followed by LaTeX. 
+     * The pattern in the log file which triggers 
+     * rerunning MakeIndex followed by LaTeX. 
      * This pattern only occurs, if package <code>rerunfilecheck</code> 
      * is used with option <code>index</code>. 
-     * The default value <code>(## Warning )</code> 
+     * The default value 
      * is chosen according to the package documentation. 
      * If the user finds that default value is not appropriate, 
      * (s)he is asked to contribute 
@@ -439,11 +439,11 @@ public class Settings {
 	"^\\*\\*\\* unable to execute: ";
 
     /**
-     * The pattern in the log file which triggers rerunning MakeIndex 
-     * followed by LaTeX. 
+     * The pattern in the log file which triggers 
+     * rerunning MakeGlossaries followed by LaTeX. 
      * This pattern only occurs, if package <code>rerunfilecheck</code> 
-     * is used with option <code>index</code>. 
-     * The default value <code>(## Warning )</code> 
+     * is used with option <code>glossary</code>. 
+     * The default value 
      * is chosen according to the package documentation. 
      * If the user finds that default value is not appropriate, 
      * (s)he is asked to contribute 
