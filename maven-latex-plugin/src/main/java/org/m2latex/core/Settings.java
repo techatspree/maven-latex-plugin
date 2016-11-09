@@ -373,6 +373,29 @@ public class Settings {
     private String patternWarnMakeindex = "(## Warning )";
 
     /**
+     * The pattern in the log file which triggers rerunning MakeIndex 
+     * followed by LaTeX. 
+     * This pattern only occurs, if package <code>rerunfilecheck</code> 
+     * is used with option <code>index</code>. 
+     * The default value <code>(## Warning )</code> 
+     * is chosen according to the package documentation. 
+     * If the user finds that default value is not appropriate, 
+     * (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
+     *
+     * @parameter
+     */
+    // FIXME: should be included the full pattern. 
+    // First part works second also but not together. 
+    // Also did not find any way to connect the two parts. 
+    // This gives rise to the conjecture 
+    // that also other patterns do not work properly. 
+    private String patternMakeIndexNeedsReRun = 
+	//"^Package rerunfilecheck Warning: File `.*\\.idx' has changed\\.$" //+
+	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get index right\\.$";
+ 
+
+    /**
      * The MakeGlossaries command to create a gls-file 
      * from a glo-file (invoked without file ending) 
      * also taking ist-file or xdy-file into account logging on a glg-file. 
@@ -414,6 +437,26 @@ public class Settings {
      */
     private String patternMakeGlossariesErr = 
 	"^\\*\\*\\* unable to execute: ";
+
+    /**
+     * The pattern in the log file which triggers rerunning MakeIndex 
+     * followed by LaTeX. 
+     * This pattern only occurs, if package <code>rerunfilecheck</code> 
+     * is used with option <code>index</code>. 
+     * The default value <code>(## Warning )</code> 
+     * is chosen according to the package documentation. 
+     * If the user finds that default value is not appropriate, 
+     * (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
+     * 
+     * @parameter
+     */
+    private String patternMakeGlossariesNeedsReRun = 
+	//"^Package rerunfilecheck Warning: File `.*\\.glo' has changed\\.$" +
+	// FIXME: really MAKEINDEX! 
+	// Problem: package glossaries redefines makeglossary 
+	// which breaks this solution with rerunfilecheck 
+	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get glossary right\\.$";
 
     /**
      * The pattern in the <code>glg</code> file 
@@ -560,7 +603,7 @@ public class Settings {
      * e.g. caused by occurrence of the word 'rerun'. 
      * The default value is quite complex. 
      * <p>
-     * To ensure termination, let {@link #maxNumReruns} 
+     * To ensure termination, let {@link #maxNumReRuns} 
      * specify the maximum number of latex runs. 
      * If the user finds an extension, (s)he is asked to contribute 
      * and to notify the developer of this plugin. 
@@ -569,10 +612,12 @@ public class Settings {
      *
      * @parameter
      */
+    // FIXME: explicit tests required for each pattern. 
+    // Not only those but all patterns. 
    private String patternLatexNeedsReRun = 
        // general message 
        "(^LaTeX Warning: Label\\(s\\) may have changed. " 
-       + "Rerun to get cross-references right.$|" +
+       + "Rerun to get cross-references right\\.$|" +
        // default message in one line for packages 
        "^Package \\w+ Warning: .*Rerun .*$|" +
        // works for 
@@ -590,7 +635,7 @@ public class Settings {
        // (Changebar)                Rerun to get the bars right
        //
        // messages specific to various packages 
-       "^LaTeX Warning: Etaremune labels have changed.$|" +
+       "^LaTeX Warning: Etaremune labels have changed\\.$|" +
        // 'Rerun to get them right.' is on the next line
        //
        // from package rerunfilecheck used by other packages like new hyperref 
@@ -607,7 +652,7 @@ public class Settings {
      *
      * @parameter
      */
-    private int maxNumReruns = 5;
+    private int maxNumReRuns = 5;
 
 
     // cleanup 
@@ -735,6 +780,10 @@ public class Settings {
 	return this.patternWarnMakeindex;
     }
 
+    public String getPatternMakeIndexNeedsReRun() {
+	return this.patternMakeIndexNeedsReRun;
+    }
+
     public String getMakeGlossariesCommand() {
 	return this.makeGlossariesCommand;
     }
@@ -749,6 +798,10 @@ public class Settings {
 
     public String getPatternWarnXindy() {
 	return this.patternWarnXindy;
+    }
+
+    public String getPatternMakeGlossariesNeedsReRun() {
+	return this.patternMakeGlossariesNeedsReRun;
     }
 
     public String getTex4htCommand() {
@@ -796,8 +849,8 @@ public class Settings {
 	return this.patternLatexNeedsReRun;
     }
 
-    public int getMaxNumReruns() {
-	return this.maxNumReruns;
+    public int getMaxNumReRuns() {
+	return this.maxNumReRuns;
     }
 
     // setter methods 
@@ -991,6 +1044,7 @@ public class Settings {
    	}
     }
 
+    // FIXME: MakeIndex
     // setter method for patternWarnMakeindex in maven 
     public void setPatternWarnMakeindex(String patternWarnMakeindex) {
         this.patternWarnMakeindex = patternWarnMakeindex;
@@ -1011,6 +1065,26 @@ public class Settings {
    	}
     }
 
+    // setter method for patternMakeIndexNeedsReRun in maven 
+    public void setPatternMakeIndexNeedsReRun(String pattern) {
+        this.patternMakeIndexNeedsReRun = pattern;
+    }
+
+    // method introduces patternMakeIndexNeedsReRun in ant 
+    public PatternMakeIndexNeedsReRun createPatternMakeIndexNeedsReRun() {
+   	return new PatternMakeIndexNeedsReRun();
+    }
+
+    // defines patternMakeIndexNeedsReRun element with text in ant 
+    public class PatternMakeIndexNeedsReRun {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternMakeIndexNeedsReRun(pattern);
+   	}
+    }
+
     public void setMakeGlossariesCommand(String makeGlossariesCommand) {
         this.makeGlossariesCommand = makeGlossariesCommand;
     }
@@ -1026,6 +1100,26 @@ public class Settings {
 
      public void setPatternWarnXindy(String patternWarnXindy) {
 	this.patternWarnXindy = patternWarnXindy;
+    }
+
+    // setter method for patternMakeGlossariesNeedsReRun in maven 
+    public void setPatternMakeGlossariesNeedsReRun(String pattern) {
+        this.patternMakeGlossariesNeedsReRun = pattern;
+    }
+
+    // method introduces patternMakeGlossariesNeedsReRun in ant 
+    public PatternMakeGlossariesNeedsReRun createPatternMakeGlossariesNeedsReRun() {
+   	return new PatternMakeGlossariesNeedsReRun();
+    }
+
+    // defines patternMakeGlossariesNeedsReRun element with text in ant 
+    public class PatternMakeGlossariesNeedsReRun {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternMakeGlossariesNeedsReRun(pattern);
+   	}
     }
 
     public void setCleanUp(boolean cleanUp) {
@@ -1138,9 +1232,9 @@ public class Settings {
    	}
     }
 
-    public void setMaxNumReruns(int maxNumReruns) {
-	assert maxNumReruns >= -1;
-	this.maxNumReruns = maxNumReruns;
+    public void setMaxNumReRuns(int maxNumReRuns) {
+	assert maxNumReRuns >= -1;
+	this.maxNumReRuns = maxNumReRuns;
     }
 
     public String toString() {
@@ -1172,6 +1266,8 @@ public class Settings {
         sb.append(", makeIndexOptions=")    .append(this.makeIndexOptions);
         sb.append(", patternErrMakeindex=") .append(this.patternErrMakeindex);
         sb.append(", patternWarnMakeindex=").append(this.patternWarnMakeindex);
+        sb.append(", patternMakeIndexNeedsReRun=")
+	    .append(this.patternMakeIndexNeedsReRun);
 
         sb.append(", makeGlossariesCommand=")
 	    .append(this.makeGlossariesCommand);
@@ -1180,6 +1276,8 @@ public class Settings {
 	sb.append(", patternMakeGlossariesErr=")
 	   .append(this.patternMakeGlossariesErr);
 	sb.append(", patternWarnXindy=").append(this.patternWarnXindy);
+        sb.append(", patternMakeGlossariesNeedsReRun=")
+	    .append(this.patternMakeGlossariesNeedsReRun);
 
         sb.append(", tex4htCommand=")   .append(this.tex4htCommand);
         sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
@@ -1187,13 +1285,16 @@ public class Settings {
 	sb.append(", t4htOptions=")     .append(this.t4htOptions);
 
         sb.append(", latex2rtfCommand=").append(this.latex2rtfCommand);
+
         sb.append(", odt2docCommand=")  .append(this.odt2docCommand);
         sb.append(", odt2docOptions=")  .append(this.odt2docOptions);
+
         sb.append(", pdf2txtCommand=")  .append(this.pdf2txtCommand);
         sb.append(", pdf2txtOptions=")  .append(this.pdf2txtOptions);
+
 	sb.append(", patternLatexNeedsReRun=")
 	    .append(this.patternLatexNeedsReRun);
-	sb.append(", maxNumReruns=").append(this.maxNumReruns);
+	sb.append(", maxNumReRuns=").append(this.maxNumReRuns);
 	sb.append(", cleanUp=").append(this.cleanUp);
         sb.append(']');
         return sb.toString();
