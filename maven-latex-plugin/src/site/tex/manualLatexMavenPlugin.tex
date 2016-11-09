@@ -1,6 +1,8 @@
 
 \documentclass[12pt]{article}
 
+\listfiles
+
 % used by hyperref and also to update index and glossary 
 % to avoid clash because of loading with different options: 
 % declare first 
@@ -40,10 +42,11 @@
 % index and glossary
 \usepackage{makeidx}
 \makeindex
-\usepackage[toc, xindy]{glossaries}
+\usepackage[toc]{glossaries}
 %, xindy or even [xindy={language=english,codepage=utf8}]
 % mainly for index and glossaries 
-\makeglossaries
+%\makeglossaries
+\makeglossary% for rerunfilecheck
 
 \setacronymstyle{long-short}
 % file formats 
@@ -70,7 +73,7 @@
 \newacronym{lof}{lof}{list of figures}
 \newacronym{lot}{lot}{list of tables}
 \newacronym{aux}{aux}{auxiliary file}
-\newacronym{log}{log}{logging file (for LaTeX and mpost)}
+\newacronym{log}{log}{logging file (for \LaTeX{} and mpost)}
 \newacronym{idx}{idx}{index file containing unsorted and multiple index entries}
 \newacronym{ind}{ind}{%
 index file containing sorted, unified and formatted index entries}
@@ -85,7 +88,7 @@ glossary file containing sorted, unified and formatted glossary entries}
 \newacronym{mps}{mps}{metapost's postscript like output including text}
 \newacronym{mpx}{mpx}{metapost tex output: texts }
 
-% \newglossaryentry{latex}{name={\latex},description={%
+% \newglossaryentry{latex}{name={latex},description={%
 % A document preparation system 
 % converting sources in the latex-format preferrably into pdf-output. 
 % Historically, output was in \gls{dvi}-format 
@@ -118,7 +121,7 @@ glossary file containing sorted, unified and formatted glossary entries}
 
 \section{Introduction}
 
-LaTeX is a beautyful way to create printable documents, 
+\LaTeX{} is a beautyful way to create printable documents, 
 today in preferrably as \gls{pdf}-files, 
 with a particular strength in typesetting formulae like 
 %
@@ -129,7 +132,7 @@ with a particular strength in typesetting formulae like
 Here, portability of the format \gls{pdf} is a vital feature. 
 
 This piece of software implements both an ant-task and a maven-plugin 
-generating documentation of various formats from LaTeX files 
+generating documentation of various formats from \LaTeX-files 
 in an uniform way. 
 Besides \gls{pdf}, these formats include the web-formats \gls{html} 
 and \gls{xhtml}, 
@@ -146,14 +149,14 @@ which form the package {\tt org.m2latex.core}.
 The code specific for the ant-task is in {\tt org.m2latex.antTask} 
 and that specific for the maven-plugin is in {\tt org.m2latex.mojo}. 
 
-It is very usual to endow LaTeX-files with figures. 
+It is very usual to endow \LaTeX-files with figures. 
 We support figures created in the \gls{fig} by the program xfig, 
 figures created by the plotting utility gnuplot, 
 the tex-specific graphic language metapost 
-and finally figures in formats which can be included into a latex-file 
+and finally figures in formats which can be included into a \LaTeX-file 
 without preprocessing like \gls{png} and \gls{jpg} 
 or with automatic conversion like \gls{svg}. 
-Further functionality on latex figures can be easily added. 
+Further functionality on \LaTeX{} figures can be easily added. 
 If there is some need, please write an email to the author. 
 
 The creation process supports an index, a glossry and a bibliography. 
@@ -167,7 +170,7 @@ but also to demand the most important features.
 That way, creating this manual is a top level test 
 for the underlying software. 
 The maven-plugin is somehow superior 
-because it better supports the design process for the latex sources. 
+because it better supports the design process for the \LaTeX{} sources. 
 
 
 
@@ -219,7 +222,7 @@ To convert \gls{mp}-files into \gls{eps}-files,
 \index{mpost}\index{metapost}
 the interpreter {\tt mpost} or equivalent is required. 
 This comes with a standard tex-installation. 
-To include \gls{svg}-files into latex \index{svg}, 
+To include \gls{svg}-files into \LaTeX{} \index{svg}, 
 {\tt inkscape} must be installed. \index{inkscape}
 It also serves to create and edit svg-files. 
 
@@ -236,11 +239,11 @@ To include graphics, the grapics bundle described in \cite{GraX} is required,
 except for svg-files which requires the svg-package 
 described in \cite{SvgP}. 
 
-To create pdf-files from latex files we use {\tt pdflatex} 
-or some other kind of latex creating pdf-files 
+To create pdf-files from \LaTeX-files we use {\tt pdflatex} 
+or some other kind of \LaTeX{} creating pdf-files 
 like {\tt xelatex} or {\tt lualatex}. 
 \index{pdflatex}\index{xelatex}\index{lualatex} 
-LaTeX uses several auxiliary programs. 
+\LaTeX{} uses several auxiliary programs. 
 Above all {\tt bibtex} to create the bibliography 
 and {\tt makeindex} for the index and {\tt makeglossaries} for the glossary. 
 \index{bibtex}\index{makeindex}\index{makeglossaries}
@@ -254,7 +257,7 @@ which shall also be installed if a glossary is required.
 
 To create \gls{html}-files, 
 or to be more precise any kind of \gls{sgml} and \gls{xml}, 
-from latex-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
+from \LaTeX-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
 Currently the author is not aware of any alternative to the two. 
 This includes also creating open office documents like odt-files. 
 Thus open office documents are created in two steps, 
@@ -264,7 +267,7 @@ the second one is done by {\tt htlatex} or that like.
 
 To create rtf-files, currently {\tt latex2rtf} is used. 
 Note that this does not require {\tt pdflatex}. 
-As a drawback, not all latex-packages are supported. 
+As a drawback, not all \LaTeX-packages are supported. 
 \index{latex2rtf}
 
 MS word documents are created from open office documents via {\tt odt2doc} 
@@ -273,7 +276,7 @@ and thus require three steps.
 
 Finally, there is a way, to create plain text files from the pdf-files 
 via {\tt pdftotext}. 
-The way from latex to text via pdf makes sense 
+The way from \LaTeX{} to text via pdf makes sense 
 because that text is well formatted 
 and may contain unicode symbols like $\pi$. 
 \index{pdftotext}
@@ -345,31 +348,31 @@ One may always recover by just creating with maven.
 
 \section{Usage of this Plugin and of this Task}\label{sec:usage}
 
-This plugin may be used both if the latex-sources are finished 
+This plugin may be used both if the \LaTeX-sources are finished 
 to create the output described by them 
-and also to support development of the latex sources. 
+and also to support development of the \LaTeX{} sources. 
 Accordingly, this section has two subsections. 
 
 \subsection{The source files}\label{subsec:sources}
 
-The latex-files and also files included via {\tt\textbackslash input} 
+The \LaTeX-files and also files included via {\tt\textbackslash input} 
 are in the {\em tex-source directory}, 
 \index{tex-source directory}
 which is by default {\tt./src/site/tex}, 
 where {\tt.} is the {\em base directory} of this maven-project. 
 \index{base directory}
-The latex-files not included anywhere are called {\em latex main files}. 
+The \LaTeX-files not included anywhere are called {\em \LaTeX{} main files}. 
 \index{latex main file}
-The included files may be again latex-files but also graphic files 
+The included files may be again \LaTeX-files but also graphic files 
 in various formats. 
 There are three kinds of graphic formats, 
-as regards the way their files are included in latex files. 
+as regards the way their files are included in \LaTeX-files. 
 %
 \begin{itemize}
 \item
-The first can be included into latex files directly 
+The first can be included into \LaTeX-files directly 
 via {\tt\textbackslash input}. 
-These formats are essentially latex and are defined in an according package. 
+These formats are essentially \LaTeX{} and are defined in an according package. 
 An example is {\tt eepic} described in \cite{EEpic}. 
 \item
 the second one via {\tt\textbackslash includegraphics} 
@@ -393,7 +396,7 @@ because it allows computation of pictures,
 likewise metapost, described in \cite{MPost}. 
 \end{itemize}
 
-The latex files and the graphic files belonging to a latex main file 
+The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
 are assumed to be in one single folder. 
 If one file is included by two different main files, 
 a link shall be used. 
@@ -446,14 +449,14 @@ Note that the {\tt -X} switch activates debugging
 which results in a more verbose output. 
 Example: {\tt mvn -X latex:cfg}. 
 
-There is another target for clearing the LaTeX {\em source} directory 
+There is another target for clearing the \LaTeX{} {\em source} directory 
 recursively, invoked by {\tt mvn latex:clr}. 
 For more details on that see Section \ref{subsec:devel}. 
 
 In a standard maven project, 
 the above minimal configuration should be sufficient. 
 Only if the folder structure deviates from the standard 
-or if the latex sources require special configuation, 
+or if the \LaTeX{} sources require special configuation, 
 parameters have to be given explicitly, 
 because they deviate from the default values. 
 Section \ref{subsec:settingsOverview} summarizes all available parameters, 
@@ -473,7 +476,7 @@ FIXME: ant latex:clr
 
 If this ant-task is used in an ant project 
 with folder structure conforming with a maven project 
-and if the latex sources do not require a special configuration, 
+and if the \LaTeX{} sources do not require a special configuration, 
 the above configuration is sufficient. 
 Otherwise, parameters have to be given explicitly 
 overwriting the default values. 
@@ -481,19 +484,19 @@ overwriting the default values.
 \subsection{Intermedate files, development and cleanup}\label{subsec:devel}
 
 During development, it is comfortable, 
-to have the log-file in the same directory as the latex main file. 
+to have the log-file in the same directory as the \LaTeX{} main file. 
 Also if pdf- and tex-files are synchronized, 
 also the pdf-file should be in the same directory. 
 Likewise, files in graphic formats 
-which cannot be included into a latex file without conversion, 
+which cannot be included into a \LaTeX-file without conversion, 
 that converted file shall be in the same directory as the original one. 
 So, all files, manually created files 
 and files arising from automatic conversions 
 shall be in the same folder, at least during development. 
 Also, typically, one wants to mix creation by this maven-plugin or ant-task 
 with at least partial creation through external tools. 
-For example, if writing latex-files with emacs, 
-it is much more convenient, to compile the latex main file 
+For example, if writing \LaTeX-files with emacs, 
+it is much more convenient, to compile the \LaTeX{} main file 
 via {\tt pdflatex} from within emacs 
 or to create a pdf-file from a \gls{fig}-file 
 through {\tt xfig}'s export dialog, 
@@ -517,9 +520,9 @@ Store a list of all files present at the beginning of a run.
 \item
 Process all graphics files of the formats requiring preprocessing.
 \item
-Determine the latex main files.
+Determine the \LaTeX{} main files.
 \item
-Run the latex converter, e.g. the one creating pdf-output or docx-output.
+Run the \LaTeX{} converter, e.g. the one creating pdf-output or docx-output.
 \item
 Copy the results into the target folder.
 \item
@@ -533,7 +536,7 @@ or just by a {\tt touch}-command.
 Then in the next run of this plugin, 
 this pdf will be re-created, 
 that time complete with the graphics output. 
-That way, synchronization between latex- and pdf-files is possible. 
+That way, synchronization between \LaTeX- and pdf-files is possible. 
 
 Likewise, to keep the log-file or the aux-file, just touch it. 
 This technique is really valuable for debugging. 
@@ -592,27 +595,27 @@ For historical reasons, still \gls{eps} is used.
 Section \ref{subsec:figpdf} shows that it suffices to stick to pictures 
 in pdf-format. 
 Section \ref{subsec:fig2dev} shows how {\tt fig2dev} converts fig-files 
-into latex-files containing text and including graphics in as pdf-files. 
+into \LaTeX-files containing text and including graphics in as pdf-files. 
 Likewise, Section \ref{subsec:gnuplot2pdf} describes 
 how gnuplot converts gnuplot-files into pdf-files. 
 Currently, these are the only graphic formats which must be converted 
-before being able to be included into a latex file. 
+before being able to be included into a \LaTeX-file. 
 
 
 
 \subsection{Including pdf-files}\label{subsec:figpdf}
 
-Modern latex implementations directly create pdf-files. 
+Modern \LaTeX{} implementations directly create pdf-files. 
 Thus it makes sense, to allow including graphics as pdf-files 
-in latex-files. 
+in \LaTeX-files. 
 This is done in pdf mode 
-by the latex-packages {\tt xcolor} and {\tt graphicx}. 
-In contrast, traditionally latex produced output in the \gls{dvi}-format 
+by the \LaTeX-packages {\tt xcolor} and {\tt graphicx}. 
+In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}-format 
 which is still used to create \gls{html}-output, 
 this is not supported by the default driver, 
 Instead it shall be used the driver {\tt dvipdfmx}. 
-To obtain a latex-file which works both for creating pdf and html, 
-insert in the header of the latex main file 
+To obtain a \LaTeX-file which works both for creating pdf and html, 
+insert in the header of the \LaTeX{} main file 
 %
 \lstset{language=tex, basicstyle=\small}
 \begin{lstlisting}
@@ -651,12 +654,12 @@ which is listed below.
 \input{myxhtml.cfg}
 \end{lstlisting}
 %
-It applies when converting latex into html and that like 
+It applies when converting \LaTeX{} into html and that like 
 with htlatex if invoking someting like {\tt htlatex xxx.tex myxhtml,...} 
-where {\tt myxhtml} is located in the same directory as the latex-file 
+where {\tt myxhtml} is located in the same directory as the \LaTeX-file 
 to be processed. 
 The configuration file exxentially contains a graphics configuration, 
-which applies conversion to pdf-files included in the latex file {\tt xxx.tex}
+which applies conversion to pdf-files included in the \LaTeX-file {\tt xxx.tex}
 via {\tt \textbackslash includegraphics}. 
 
 
@@ -668,8 +671,8 @@ Currently, only figures drawn with {\tt xfig}, or, to be more precise,
 figures stored in .fig-files are supported. 
 To export a file {\tt xxx.fig} into several external formats, 
 {\tt xfig} uses {\tt fig2dev}. 
-Among others, {\tt fig2dev} supports export to mixed pdf and latex: 
-graphics in pdf and text in latex which yields the fonts typical for latex. 
+Among others, {\tt fig2dev} supports export to mixed pdf and \LaTeX{}: 
+graphics in pdf and text in \LaTeX{} which yields the fonts typical for \LaTeX{}. 
 Accordingly, the export requires two commands and yields two files: 
 %
 \begin{verbatim}
@@ -678,13 +681,13 @@ fig2dev -L pdftex_t -p pdf xxx.fig xxx.ptx
 \end{verbatim}
 %
 yield {\tt xxx.pdf} and {\tt xxx.ptx}, respectively, 
-the latter, \gls{ptx}, containing latex and including the former 
+the latter, \gls{ptx}, containing \LaTeX{} and including the former 
 using the command {\tt\textbackslash includegraphics}. 
-Thus the according latex main document must use packages graphicx and xcolor 
+Thus the according \LaTeX{} main document must use packages graphicx and xcolor 
 as indicated in Section \ref{subsec:figpdf}. 
 The file {\tt xxx.ptx} is ``inputted'' into the tex-file 
 with the {\tt\textbackslash input}-command. 
-Note that this is appropriate for latex creating pdf-files, 
+Note that this is appropriate for \LaTeX{} creating pdf-files, 
 not postscript or dvi. 
 
 In the {\tt fig2dev}-commands above, 
@@ -693,7 +696,7 @@ In the first command the language is {\tt pdftex}
 which is just the picture without text in pdf-format; 
 the according output file is  {\tt xxx.pdf}. 
 In the second command the lanugage is {\tt pdftex\_t} 
-which is just latex and 
+which is just \LaTeX{} and 
 comprises the text of the picture and the inclusion of {\tt xxx.pdf}
 via {\tt\textbackslash includegraphics\{xxx.pdf\}}; 
 the according output file is {\tt xxx.ptx}. 
@@ -705,12 +708,12 @@ but experiments show another truth.
 For more options type {\tt fig2def -h} or consult the manual pages. 
 
 
-Note also that by convention, the ending for the included latex-file 
+Note also that by convention, the ending for the included \LaTeX-file 
 is not {\tt ptx} but {\tt pdf\_t}. 
-In the long run, **** we shall support also creation of latex-files 
+In the long run, **** we shall support also creation of \LaTeX-files 
 including \gls{eps}-files. 
 By convention, the according ending is {\tt pstex\_t}. 
-To handle both cases in one enclosing latex file, 
+To handle both cases in one enclosing \LaTeX-file, 
 a unified file ending is required. 
 We have chosen {\tt ptx} for ``picture-tex''. 
 Handling both \gls{pdf} and \gls{eps}-files, 
@@ -733,8 +736,8 @@ performing exactly the transformations given in Figure \ref{fig:fig2dev},
 except {\tt fig2dev} itself. 
 
 At the same time, Figure \ref{fig:fig2dev} is an example 
-for a latex-file created from a fig-file 
-and embedded in this latex file 
+for a \LaTeX-file created from a fig-file 
+and embedded in this \LaTeX-file 
 with the {\tt\textbackslash input}-command. 
 
 
@@ -752,8 +755,8 @@ Plots drawn with {\tt gnuplot}, or, to be more precise,
 figures stored in .plt-files created by {\tt gnuplot} are supported. 
 To export a file {\tt xxx.plt} into several external formats, 
 uses {\tt gnuplot} itself. 
-Among others, {\tt gnuplot} supports export to mixed pdf and latex: 
-graphics in pdf and text in latex which yields the fonts typical for latex. 
+Among others, {\tt gnuplot} supports export to mixed pdf and \LaTeX{}: 
+graphics in pdf and text in \LaTeX{} which yields the fonts typical for \LaTeX{}. 
 Accordingly, the export requires two commands and yields two files: 
 The command 
 %
@@ -764,8 +767,8 @@ gnuplot -e  "set terminal cairolatex pdf;
 \end{verbatim}
 %
 exports {\tt xxx.plt} to {\tt xxx.ptx} and to {\tt xxx.pdf}, 
-the former containing latex and including the latter. 
-Note that this is appropriate for latex creating pdf-files, 
+the former containing \LaTeX{} and including the latter. 
+Note that this is appropriate for \LaTeX{} creating pdf-files, 
 not postscript or \gls{dvi}. 
 
 FIXME: 
@@ -779,9 +782,9 @@ Here further options are missing:
 %    //                      {size <XX>{unit},<YY>{unit}}
 
 Figure \ref{fig:plt2pdf} shows the transformation of the plots 
-and Figure \ref{fig:gnuplot} shows an example of a latex-file 
+and Figure \ref{fig:gnuplot} shows an example of a \LaTeX-file 
 created from a gnuplot file 
-and embedded in this latex file with the {\tt\textbackslash input}-command. 
+and embedded in this \LaTeX-file with the {\tt\textbackslash input}-command. 
 %Note that the {\tt gnuplot}-command is configurable 
 %via the parameter {\tt gnuplotCommand}, 
 %but there will be hardly any command with the same command line interface 
@@ -817,7 +820,7 @@ Figure \ref{fig:mp2mps} illustrates how {\tt mpost} converts an \gls{mp}-file
 {\tt xxx.mp} 
 into one or more \gls{mps}-files {\tt xxx1.mps}\dots {\tt xxxn.mps}, 
 (as the mp-file may declare more than one figure) 
-creating a log-file {\tt xxx.log} like LaTeX does 
+creating a log-file {\tt xxx.log} like \LaTeX{} does 
 and an \gls{mpx}-file {\tt xxx.mpx} containing the text of the figure. 
 The mps-files look like postscript, or more like encapsulated postscript, 
 but are not completely valid, since the prologue is missing, by default. 
@@ -838,9 +841,9 @@ and so the mpx-file is not used by this software.
 
 
 Figure \ref{fig:metapost} gives an example of a metapost file 
-included in this LaTeX-file as ab mps-file 
+included in this \LaTeX-file as ab mps-file 
 created from the metapost file 
-and embedded in this latex file 
+and embedded in this \LaTeX-file 
 with the {\tt\textbackslash includegraphics}-command. 
 
 \begin{figure}[htb]
@@ -945,7 +948,7 @@ Caution: {\tt inkscape} must be installed.
 \subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
 
 The next step is to create a pdf-file from the tex-files. 
-LaTeX distinguishes master tex-files from tex-files intended to be inputted
+\LaTeX{} distinguishes master tex-files from tex-files intended to be inputted
 from elsewhere. 
 Master tex-files have the form 
 %
@@ -958,14 +961,14 @@ Master tex-files have the form
 \end{document}
 \end{lstlisting}
 
-To satisfy this task, one may apply a latex to pdf converter {\tt latex2pdf} 
+To satisfy this task, one may apply a \LaTeX{} to pdf converter {\tt latex2pdf} 
 to a master tex-file {\tt xxx.tex}. 
-The latex to pdf converter {\tt latex2pdf} 
+The \LaTeX-to-pdf converter {\tt latex2pdf} 
 is configurable via the parameter {\tt texCommand} 
 (misleading name, I know, but short). 
 Possible values are {\tt pdflatex}, {\tt lualatex} and {\tt xelatex}, 
 where the first is the default for which this software is also tested. 
-It is also possible to pass parameters to the latex to pdf converter. 
+It is also possible to pass parameters to the \LaTeX{} to pdf converter. 
 
 In fact, the converter {\tt latex2pdf} 
 does much more than converting tex to pdf. 
@@ -1020,14 +1023,18 @@ in the second run of {\tt latex2pdf}.
 To summarize, 
 if a table of contents, a list of figures, a list of tables or 
 a bibliography, an index or a glossary is present, 
-a second latex run is required to make them appear in the pdf-output. 
+a second \LaTeX{} run is required to make them appear in the pdf-output. 
 
 If a table of contents and at the same time 
 a bibliography, an index or a glossary is present, 
-even two further latex runs are required: 
+even two further \LaTeX{} runs are required: 
 After the first one, the bibliography, the index or the glossary 
 occurs in the pdf-file but not yet in the table of contents. 
-This happens after the second additional latex run. 
+This happens after the second additional \LaTeX{} run. 
+As described in Sections \ref{subsec:rerunMakeIndexGlossaries} and 
+\ref{subsec:rerunLatex}, 
+further runs of {\tt makeindex}, {\tt makeglossaries} 
+and of the \LaTeX-processor {\tt latex2pdf} may be necessary. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -1038,18 +1045,25 @@ This happens after the second additional latex run.
 
 \subsection{Bibliographies}\label{subsec:bibtex}
 
-In case the latex to pdf converter writes bibliographic information, 
+In case the \LaTeX{} to pdf converter writes bibliographic information, 
 into its aux-file, a bibliography must be generated. 
 Bibliographic information are 
 citations, a link to the bib-file containing the bibliography data, 
 and optionally a link to the bibliography style file. 
 
-To create a bibliography, a {\tt bibtex}-command must be run. 
+To create a bibliography, a {\tt bibtex}-command must be run after the \LaTeX{} run. 
 Essentially, {\tt bibtex} extracts the citations in the aux-file, 
 unifies them, 
 retrieves the according entries from the bib-file, sorts these 
 and writes them into a bbl-file 
 which can be included in the next run of {\tt latex2pdf}. 
+Note that after a {\tt bibtex}-run, 
+two \LaTeX{} runs are required: 
+The first one just puts the bibliography in the bbl-file into the pdf-file 
+and the labels of the citations into the aux-file. 
+The second run places the labels at the citations 
+(and puts the bibiliography
+into the table of contents if there is one). 
 
 This software presupposes, that {\tt bibtex} reads the aux-file 
 and creates a bbl-file and also an blg-file with logging output 
@@ -1074,7 +1088,7 @@ Also Chapter 10 in \cite{Gra} gives vital information on {\tt bibtex}.
 \subsection{Indices}\label{subsec:indices}
 
 Note that despite of the headline of this section, 
-only a single index is supported and this requires 
+this software supports a single index only and this requires 
 the package {\tt makeidx} described in \cite{MkidxShIdxP}. 
 For an extension see Section \ref{sec:gaps}. 
 
@@ -1082,7 +1096,7 @@ Interesting enough,
 the commands {\tt\textbackslash index} and {\tt\textbackslash makeindex} 
 work even without using the package {\tt makeidx}. 
 The former essentially does nothing without the latter
-but if the latter is present, if {\tt xxx.tex} is the latex main file, 
+but if the latter is present, if {\tt xxx.tex} is the \LaTeX{} main file, 
 the former writes an according entry in a file {\tt xxx.idx}. 
 Essentially, 
 {\tt\textbackslash makeindex} prepares writing to the \gls{idx}-file, 
@@ -1097,7 +1111,7 @@ in {\tt xxx.idx}.
 Note that {\tt xxx.idx} typically contains entries more than once 
 and that the entries are not sorted. 
  
-Running, the {\tt makeindex}-command performs sorting 
+Running, the {\tt makeindex}-command performs sorting, formatting 
 and typically also unification. 
 Essentially, {\tt makeindex} sorts and combines index entries. 
 This software presupposes, that {\tt makeindex} converts the idx-file 
@@ -1115,7 +1129,7 @@ The package {\tt tocbibind} described in \cite{TocBibIndP},
 then writes the headline of the index into the table of contents. 
 \index{table of contents}
 
-In case the latex to pdf converter creates an idx-file, 
+In case the \LaTeX{} to pdf converter creates an idx-file, 
 an index must be generated. 
 % Well, this is not really the truth: it is needed only if ...
 
@@ -1162,12 +1176,12 @@ is not supported by this software.
 
 For generalizations see Section \ref{sec:gaps}. 
 
-As for creating indices there is a latex-command {\tt\textbackslash makeindex}, 
-to create a glossary there is a latex-command 
+As for creating indices there is a \LaTeX-command {\tt\textbackslash makeindex}, 
+to create a glossary there is a \LaTeX-command 
 {\tt\textbackslash makeglossaries} 
 but the latter is not builtin as {\tt\textbackslash makeindex} 
 but provided by the package {\tt glossaries}. 
-If {\tt xxx.tex} is the latex main file, 
+If {\tt xxx.tex} is the \LaTeX{} main file, 
 {\tt\textbackslash makeglossaries} opens the glo-file {\tt xxx.glo} 
 containing glossary entries for writing. 
 As the builtin command {\tt\textbackslash index} 
@@ -1177,12 +1191,10 @@ writes an entry into the glo-file.
 Note that {\tt xxx.glo} typically contains entries more than once 
 and that the entries are not sorted. 
 
-
-
-To perform sorting and typically also unification, 
+To perform sorting, formatting and typically also unification, 
 the package {\tt glossaries} allows three mechanisms. 
 This software supports two of them: 
-via the shell command {\tt makeindex} as used for indices
+via the shell command {\tt makeindex}, which is also used for indices, 
 and via the shell command {\tt xindy}. 
 Using {\tt makeindex} is the default but can also be activated through 
 {\tt\textbackslash usepackage[makeindex]\{glossaries\}}. 
@@ -1210,8 +1222,8 @@ whereas for {\tt xindy}, there are lines
 
 
 This software neither invokes {\tt makeindex} nor {\tt xindy} directly. 
-Instead it invokes the shell command {\tt\textbackslash makeglossaries}
-(which is invoked without file ending)  
+Instead it invokes the shell command {\tt makeglossaries}
+invoked without file ending)  
 which determines from the aux-file 
 whether to invoke {\tt makeindex} nor {\tt xindy}. 
 Accordingly, it writes the style definition 
@@ -1219,7 +1231,7 @@ by creating an ist-file {\tt xxx.ist} or an xdy-file {\tt xxx.xdy}
 if {\tt makeindex} or {\tt xindy} is specified as package option, 
 respectively. 
 
-Seemingly, {\tt\textbackslash makeglossaries} relies on the aux-file 
+Seemingly, {\tt makeglossaries} relies on the aux-file 
 to determine whether to invoke {\tt makeindex} or {\tt xindy} 
 for sorting and unification. 
 Then it invokes the according command and writes a log-file 
@@ -1228,7 +1240,7 @@ redirecting the logging output of {\tt makeindex} or {\tt xindy}
 adding own output so that a glg-file may be written, 
 even if e.g. {\tt makeindex} is invoked and does not. 
 In any case, if the glg-file is written, 
-{\tt\textbackslash makeglossaries} writes text matching 
+{\tt makeglossaries} writes text matching 
 %
 \begin{verbatim}
 (^\*\*\* unable to execute: )
@@ -1283,8 +1295,69 @@ using {\tt makeglossaries}}
 \end{figure}
 
 
+\subsection{Rerunning the index processor and the glossary processor}
+\label{subsec:rerunMakeIndexGlossaries}
 
-\subsection{Rerunning the latex processor}\label{subsec:rerunLatex}
+As described in Section \ref{subsec:tex2pdf}, 
+running a \LaTeX-to-pdf converter as {\tt latex2pdf} 
+may detect the presence of a bibliography, an index and/or of a glossary 
+and writes raw files to describe them. 
+After that, an intermediate step is required, 
+sorting, unifying and formatting the entries. 
+This is always done by an external program. 
+
+In the next step the \LaTeX{} processor must read in the unified entries again. 
+Whereas a \LaTeX-run does not affect the bibliography, 
+it may well invalidate the page numbers 
+of the entries of the index or of the glossary. 
+Thus the sorted index and glossary must be rebuild 
+before the next \LaTeX{} run makes them visible in the pdf-file. 
+
+To that end, we use the package {\tt rerunfilecheck}. 
+%
+\begin{verbatim}
+\usepackage[index, glossary]{rerunfilecheck}
+\end{verbatim}
+%
+must be put before 
+%
+\begin{verbatim}
+\usepackage{makeidx}
+\makeindex
+\usepackage[toc, xindy]{glossaries}
+%, xindy or even [xindy={language=english,codepage=utf8}]
+% mainly for index and glossaries 
+\makeglossaries
+\end{verbatim}
+%
+in particular before {\tt\textbackslash makeindex} and 
+{\tt\textbackslash makeglossaries}. 
+
+Note that the package {\tt hyperref} already loads {\tt rerunfilecheck} 
+but with the wrong options. 
+Thus the above declaration must come before 
+%
+\begin{verbatim}
+\usepackage[...]{hyperref}
+\end{verbatim}
+%
+to avoid error 
+%
+\begin{verbatim}
+Option clash for package rerunfilecheck
+\end{verbatim}
+
+
+Package {\tt rerunfilecheck} detects almost safely 
+changes of the raw index file writing an according message 
+into the log-file. 
+That way, it can be determined whether it is necessary 
+to rerun {\tt makeindex} and {\tt makeglossaries}. 
+After that, of course \LaTeX{} must be rerun at least once. 
+Note that Section \ref{subsec:rerunLatex} describes 
+when to rerun \LaTeX{} without prior running *****
+
+\subsection{Rerunning the \LaTeX{} processor}\label{subsec:rerunLatex}
 
 As indicated in the previous sections, 
 {\tt latex2pdf} must be rerun, if {\tt bibtex} or {\tt makeindex} had been run 
@@ -1322,14 +1395,14 @@ this would require a change in this software.
 
 \subsection{Creating hypertext}\label{subsec:tex2html}
 
-To create html and xhtml from latex files, 
+To create html and xhtml from \LaTeX-files, 
 a {\tt htlatex}-command is used. 
 This may be {\tt htlatex}, the default based on {\tt latex} 
 and {\tt htxelatex} based on {\tt xelatex}. 
 
 Figure \ref{fig:tex2xml} shows the steps {\tt htlatex} performs: 
-From the input latex file {\tt xxx.tex} 
-another latex file {\tt yyy.tex} is created 
+From the input \LaTeX-file {\tt xxx.tex} 
+another \LaTeX-file {\tt yyy.tex} is created 
 which arises from {\tt xxx.tex} by adding 
 {\tt \textbackslash usepackage[...]\{tex4ht\}}. 
 Then {\tt htlatex} runs {\tt latex} on {\tt yyy.tex} 
@@ -1386,8 +1459,8 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \subsection{Creating MX word files}\label{subsec:tex2doc}
 
-The best way to convert latex files into MS word files is via odt files. 
-Conversion from latex to odt 
+The best way to convert \LaTeX-files into MS word files is via odt files. 
+Conversion from \LaTeX{} to odt 
 is already described in Section \ref{subsec:tex2odt}. 
 The last step can be done by {\tt odt2doc} which can create both 
 doc-format and docx-format and many others 
@@ -1405,12 +1478,12 @@ which is illustrated in Figure \ref{fig:tex2doc}.
 
 \subsection{Creating plain text files}\label{subsec:tex2txt}
 
-Why should one create plain text from latex files? 
+Why should one create plain text from \LaTeX-files? 
 Maybe this is the minimal format the receiver can work with. 
 Another common application is wordcount, 
 in particular if writing a paper for a journal. 
 
-Plain text files can be created from latex files 
+Plain text files can be created from \LaTeX-files 
 just by stripping off the tex-commands. 
 The disadvantage is, 
 that references, bibliography, index, glossary, 
@@ -1447,7 +1520,7 @@ Also formulae with complex subformulae in a root operator
 become unreadable because the root operator becomes just a root symbol. 
 Likewise for integrals and that like. 
 
-Aspects of figures kept are the captions of course but also the latex-texts. 
+Aspects of figures kept are the captions of course but also the \LaTeX-texts. 
 This is displayed linewise. 
 What gets lost is the postscript/pdf-parts, i.e. the plain graphics. 
 
@@ -1534,19 +1607,22 @@ A comma separated list of targets to be stored in {\tt\$targetSet}.
 %The default value is '{\tt pdf, html}'. 
 \end{minipage}
 } \\
-\tt targets          & \tt pdf, html     \\
+\tt patternLatexMainFile          &  see below        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-A comma separated list of targets to be stored in {\tt\$targetSet}. 
-%The default value is '{\tt pdf, html}'. 
-\end{minipage}
-} \\
-\tt patternLatexMainFile          &  \textbackslash s*\textbackslash (documentstyle|documentclass).*        \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-The pattern which identifies a latex main file. 
+The pattern which identifies a \LaTeX{} main file. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
+\end{minipage}
+} \\
+\tt texPath          &  empty string        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Path to the TeX scripts or null. 
+In the latter case, the scripts must be on the system path. 
+Note that in the pom, $<$texPath/$>$ 
+and even $<$texPath$>$\ \ \ \ $<$/texPath$>$ represent the null-File. 
+The default value is null.
 \end{minipage}
 } \\
 \tt fig2devCommand   & \tt fig2dev  \index{fig2dev}     \\
@@ -1563,15 +1639,15 @@ Currently only {\tt pdf} combined with {\tt ptx} is supported.
 \tt texCommand       & \tt pdflatex      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The LaTeX command to create a pdf-file with. 
+The \LaTeX{} command to create a pdf-file with. 
 %The default value is '{\tt pdflatex}'. 
 \end{minipage}
 } \\
-\tt texCommandArgs   & see below  \\%\tt\small -interaction=nonstopmode -src-specials
+\tt texCommandArgs   & see below  \\%\tt\small -interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The arguments string to use 
-when calling LaTeX via {\tt\$texCommand}.
+when calling \LaTeX{} via {\tt\$texCommand}.
 Leading and trailing blanks are ignored. 
 A sequence of at least one blank separate the proper options. 
 %The default value is 
@@ -1589,13 +1665,25 @@ If this is not complete, please extend
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
+\tt patternWarnLatex & see below \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the log-file 
+indicating a warning when running \$texCommand. 
+It is designed to be as complete as possible 
+while not indicating a warning where not appropriate. 
+If the current default value is not appropriate, 
+please overwrite and notify the developer of this plugin. 
+% The default value is given below. 
+\end{minipage}
+} \\
 \tt debugbadboxes    & \tt true          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether debugging of overfull/underfull hboxes/vboxes is on: 
-If so, a bad box occurs in the last LaTeX run, a warning is displayed. 
+If so, a bad box occurs in the last \LaTeX{} run, a warning is displayed. 
 For details, set {\tt\$cleanUp} to false, 
-rerun LaTeX and have a look at the log-file.
+rerun \LaTeX{} and have a look at the log-file.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
@@ -1603,9 +1691,9 @@ rerun LaTeX and have a look at the log-file.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether debugging of warnings is on: 
-If so, a warning in the last LaTeX run is displayed. 
+If so, a warning in the last \LaTeX{} run is displayed. 
 For details, set {\tt\$cleanUp} to false, 
-rerun LaTeX and have a look at the log-file. 
+rerun \LaTeX{} and have a look at the log-file. 
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
@@ -1674,6 +1762,21 @@ The default value is chosen
 according to the 'makeindex' documentation.
 \end{minipage}
 } \\
+
+\tt patternMakeIndexNeedsReRun & see below         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the log-file which triggers 
+rerunning MakeIndex followed by \LaTeX{}. 
+This pattern only occurs, if package 'rerunfilecheck' 
+is used with option 'index'. 
+The default value 
+is chosen according to the package documentation. 
+If the user finds that default value is not appropriate, 
+(s)he is asked to contribute 
+and to notify the developer of this plugin. 
+\end{minipage}
+} \\
 \hline
 \multicolumn2{|l|}{makeglossaries} \\
 \hline
@@ -1732,6 +1835,20 @@ If the default value is not appropriate, please modify
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
+\tt  & see below         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the log file which triggers 
+rerunning MakeGlossaries followed by \LaTeX{}. 
+This pattern only occurs, if package 'rerunfilecheck' 
+is used with option 'glossary'. 
+The default value 
+is chosen according to the package documentation. 
+If the user finds that default value is not appropriate, 
+(s)he is asked to contribute 
+and to notify the developer of this plugin. 
+\end{minipage}
+} \\
 \hline
 \multicolumn2{|l|}{htlatex} \\
 \hline
@@ -1740,12 +1857,12 @@ and notify the developer of this plugin.
 \begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
-\tt tex4htStyOptions    & \tt xhtml,uni-html4,2,svg  \\
+\tt tex4htStyOptions    & \tt xhtml,uni-html4,2,svg,pic-tabular  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
-\tt tex4htOptions       & \tt -cunihtf -utf8         \\
+\tt tex4htOptions       & \tt' -cunihtf -utf8'         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 \end{minipage}
@@ -1763,13 +1880,13 @@ The value '-p' prevents creation of \gls{png}-pictures.
 \tt patternLatexNeedsReRun &  see below ****          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The pattern in the log file which triggers rerunning latex. 
+The pattern in the log file which triggers rerunning \LaTeX{}. 
 This pattern may never be ensured to be complete, 
 because any new package may break completeness. 
 Nevertheless, the default value aims completeness 
-while be restrictive enough not to trigger another latex run if not needed. 
+while be restrictive enough not to trigger another \LaTeX{} run if not needed. 
 To ensure termination, let \$maxNumReruns 
-specify the maximum number of latex runs. 
+specify the maximum number of \LaTeX{} runs. 
 If the user finds an extension, (s)he is asked to contribute 
 and to notify the developer of this plugin. 
 Then the default value will be extended. 
@@ -1778,7 +1895,7 @@ Then the default value will be extended.
 \tt maxNumReruns        & \tt 5               \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The maximal allowed number of reruns of the latex process. 
+The maximal allowed number of reruns of the \LaTeX{} process. 
 This is to avoid endless repetitions. 
 %The default value is 5. 
 This shall be non-negative 
@@ -2250,7 +2367,7 @@ TODO: do this.
 \section{Gaps}\label{sec:gaps}
 
 Only figures created with xfig and stored as files pdf and ptx 
-may be integrated into a latex document. 
+may be integrated into a \LaTeX{} document. 
 This could be extended to a broader variety of export file formats. 
 The problem is, that fig-files to not contain information on the export
 format. 
@@ -2266,7 +2383,7 @@ There is no proper make-mechanism taking dependencies into account.
 Thus all documents in all formats specified are remade, 
 whether they changed or not. 
 
-Also, if more than one target is created from one latex source, 
+Also, if more than one target is created from one \LaTeX{} source, 
 common steps are redone for each target. 
 E.g. if pdf and html are created, 
 pdf creation is done twice and if pdf, html, odt and docx are created, 
@@ -2306,7 +2423,7 @@ Reading \cite{GloP}, Section 15.1, the glossarystyle {\tt index}
 seems to allow creating indices through the {\tt glossaries} package 
 making any index-package obsolete. 
 
-For development given the latex main file {\tt xxx.tex}, 
+For development given the \LaTeX{} main file {\tt xxx.tex}, 
 the files {\tt xxx.pdf}, {\tt xxx.pdf}, {\tt xxx.synctex.gz} 
 and {\tt xxx.log} are vital. 
 Thus it would be fine to have a goal which touches these files 
@@ -2354,8 +2471,7 @@ Seemingly, {\tt imakeidx} does not support glossaries
 and so for these, another solution is required, 
 although the problem is the same. 
 
-Another solution is 
-to use pacakges {\tt robustindex} and {\tt robustglossaries}. 
+Packages {\tt robustindex} and {\tt robustglossaries} offer another solution. 
 The advantage would be to have handled both index and glossary. 
 Also support of hyperrefs within indices and glossaries seem to be expanded. 
 On the other hand, the two packages seem experimental 
@@ -2366,11 +2482,11 @@ Have a look at rerunfile check and in glossaries-code.pdf.
 
 There is a problem in conjunction with emacs: 
 creates swap file {\tt .xxx.tex}. 
-This must be excluded from latex main files. 
+This must be excluded from \LaTeX{} main files. 
 This may be done by ignoring files starting with {\tt.}. 
 
 In class {\tt TexFileUtilsImpl} there are several places marked FIXME. 
-These should be resolved. 
+All these should be resolved. 
 
 
 Citations are missing in html output. 
