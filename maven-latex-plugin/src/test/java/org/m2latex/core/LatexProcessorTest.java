@@ -102,8 +102,9 @@ public class LatexProcessorTest {
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT);
 	fileUtilsCtrl.setReturnValue(lotFile);
 
-	// determine whether to rerun latex: no 
+	// determine whether to rerun latex or makeindex: no 
         mockNeedAnotherLatexRun(false);
+        mockNeedAnotherMakeIndexRun(false);
 
 	// // detect bad boxes and warnings: none 
 	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
@@ -137,18 +138,17 @@ public class LatexProcessorTest {
 	// run makeGlossary by need: no 
 	mockRunMakeGlossaryByNeed(false);
 
-	// determine from presence of toc, lof, lot (and idx and bibtex)
-	// whether to rerun latex: no 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC);
-	fileUtilsCtrl.setReturnValue(tocFile);
-
-	// run latex once because bibtex had been run and no toc present 
+	// run latex twice because bibtex had been run 
         mockRunLatex();
+        //mockRunLatex();
 
 	// determine whether to rerun latex and run until no 
-        mockNeedAnotherLatexRun(true);
+        //mockNeedAnotherLatexRun(true); 
+	// no, because bibtex triggers two latex runs 
+	mockNeedAnotherMakeIndexRun(false);
         mockRunLatex();
         mockNeedAnotherLatexRun(false);
+	mockNeedAnotherMakeIndexRun(false);
 
 	// // detect bad boxes and warnings: none 
 	// fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
@@ -214,7 +214,15 @@ public class LatexProcessorTest {
 
         fileUtils.matchInFile(logFile, 
 			      this.settings.getPatternLatexNeedsReRun());
-        fileUtilsCtrl.setReturnValue( retVal );
+        fileUtilsCtrl.setReturnValue(retVal);
+    }
+
+    private void mockNeedAnotherMakeIndexRun(boolean retVal)
+        throws BuildExecutionException {
+
+        fileUtils.matchInFile(logFile, 
+			      this.settings.getPatternMakeIndexNeedsReRun());
+        fileUtilsCtrl.setReturnValue(retVal);
     }
 
     // private void mockNeedBibtexRun(boolean retVal) 
