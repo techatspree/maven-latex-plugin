@@ -2477,21 +2477,17 @@ Also support of hyperrefs within indices and glossaries seem to be expanded.
 On the other hand, the two packages seem experimental 
 and seem to to play with package {\tt hyperref}. 
 
-
-Have a look at rerunfile check and in glossaries-code.pdf. 
-
-There is a problem in conjunction with emacs: 
-creates swap file {\tt .xxx.tex}. 
-This must be excluded from \LaTeX{} main files. 
-This may be done by ignoring files starting with {\tt.}. 
+The current implementation is based on package {\tt rerunfilecheck} 
+which works for index but not for glossary. 
 
 In class {\tt TexFileUtilsImpl} there are several places marked FIXME. 
 All these should be resolved. 
 
 
-Citations are missing in html output. 
 Figures are missing in html output 
 Formulae are missing in html output. 
+Index is s missing in html output. 
+Glossary occurs in the toc but is not numbered. 
 
 Did not find a way to add a numbered entry for the glossary 
 into the table of contents. 
