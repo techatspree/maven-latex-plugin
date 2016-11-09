@@ -494,7 +494,6 @@ public class LatexProcessor {
      * @see #processLatex2odt(File)
      * @see #processLatex2docx(File)
      */
-    // FIXME: Maybe more than one second latex run is needed 
     private int preProcessLatex2pdf(final File texFile, File logFile)
 	throws BuildExecutionException {
 
@@ -502,18 +501,35 @@ public class LatexProcessor {
         runLatex2pdf(texFile, logFile);
 
 	// create bibliography, index and glossary by need 
-	boolean hasBibIdxGls = runBibtexByNeed      (texFile);
-	hasBibIdxGls        |= runMakeIndexByNeed   (texFile);
-	hasBibIdxGls        |= runMakeGlossaryByNeed(texFile);
+	boolean hasBib    = runBibtexByNeed      (texFile);
+	boolean hasIdxGls = runMakeIndexByNeed   (texFile)
+	    |               runMakeGlossaryByNeed(texFile);
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
+	if (hasBib) {
+	    // on run to include the bibliography from xxx.bbl into the pdf 
+	    // and the lables into the aux file 
+	    // and another run to put the lables from the aux file 
+	    // to the locations of the \cite commands. 
+
+	    // This suffices also to include a bib in a toc 
+	    return 2;
+	}
+
 	boolean hasToc = 
 	    this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
-	if (hasBibIdxGls) {
+	if (hasIdxGls) {
+	    // Here, an index or a glossary exists 
+	    // This requires at least one LaTeX run. 
+
+	    // if one of these has to be included in a toc, 
+	    // a second run is needed. 
 	    return hasToc ? 2 : 1;
 	}
-	// Here, result is either 0 or 1 
+	// Here, no bib, index or glossary exists. 
+	// The result is either 0 or 1, 
+	// depending on whether a toc, lof or lot exists 
 
 	boolean needLatexReRun = hasToc 
 	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
@@ -541,43 +557,46 @@ public class LatexProcessor {
      *    the log-file after processing <code>texFile</code>. 
      * @see #processLatex2pdf(File)
      * @see #processLatex2txt(File)
-      */
+     */
     public void processLatex2pdfCore(final File texFile, File logFile) 
 	throws BuildExecutionException {
 
 	int numLatexReRuns = preProcessLatex2pdf(texFile, logFile);
-	switch (numLatexReRuns) {
-	case 2:
-	    log.debug("Rerun LaTeX twice to update table of contents, ... " + 
-		      "including bibliography, index, or that like. ");
-	    runLatex2pdf(texFile, logFile);
-	    runLatex2pdf(texFile, logFile);
-	    break;
-	case 1:
-	    log.debug("Rerun LaTeX once to update table of contents, ... " + 
+	assert numLatexReRuns == 0 
+	    || numLatexReRuns == 1 
+	    || numLatexReRuns == 2;
+	if (numLatexReRuns > 0) {
+	    // rerun LaTeX without makeindex and makeglossaries 
+	    log.debug("Rerun LaTeX to update table of contents, ... " + 
 		      "bibliography, index, or that like. ");
 	    runLatex2pdf(texFile, logFile);
-	    break;
-	case 0:
-	    break;
-	default: 
-	    throw new IllegalStateException
-		("Unexpected number of reruns " + numLatexReRuns + ". ");
+	    numLatexReRuns--;
 	}
+	assert numLatexReRuns == 0 || numLatexReRuns == 1;
 
-	// rerun latex by need 
-	boolean needLatexReRun = false;// init: intuitive and superfluous
-        int retries = 0;
-	int maxNumReruns = this.settings.getMaxNumReruns();
-	while ((maxNumReruns == -1 || retries < maxNumReruns)
-	       && (needLatexReRun = needAnotherLatexRun(logFile))) {
+	// rerun latex by need patternRerunMakeIndex
+	boolean needMakeIndexReRun;
+	boolean needLatexReRun = (numLatexReRuns == 1)
+	    || needAnotherLatexRun(logFile);
+
+	int maxNumReruns = this.settings.getMaxNumReRuns();
+	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
+	    needMakeIndexReRun = needAnotherMakeIndexRun(logFile);
+	    needLatexReRun |= needMakeIndexReRun;
+	    if (!needLatexReRun) {
+		return;
+	    }
             log.debug("Latex must be rerun. ");
+	    if (needMakeIndexReRun) {
+		// FIXME: not by need 
+		runMakeIndexByNeed(texFile);
+	    }
+
             runLatex2pdf(texFile, logFile);
-            retries++;
+
+	    needLatexReRun = needAnotherLatexRun(logFile);
         }
-	if (needLatexReRun) {
-	    log.warn("Max rerun reached although LaTeX demands another run. ");
-	}
+	log.warn("Max rerun reached although LaTeX demands another run. ");
     }
 
     /**
@@ -599,7 +618,6 @@ public class LatexProcessor {
      * @see #needAnotherLatexRun(File)
      */
     public void processLatex2pdf(File texFile) throws BuildExecutionException {
-
         log.info("Converting into pdf: LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	processLatex2pdfCore(texFile, logFile);
@@ -1176,6 +1194,22 @@ public class LatexProcessor {
      * Returns whether another LaTeX run is necessary 
      * based on a pattern matching in the log file. 
      *
+     * @see Settings#getPatternMakeIndexNeedsReRun()
+     */
+    // FIXME: unification with needAnotherLatexRun? 
+    private boolean needAnotherMakeIndexRun(File logFile)
+	throws BuildExecutionException {
+        String reRunPattern = this.settings.getPatternMakeIndexNeedsReRun();
+	// may throw a BuildExecutionException
+        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
+        log.debug("Another MakeIndex run? " + needRun);
+        return needRun;
+    }
+
+    /**
+     * Returns whether another LaTeX run is necessary 
+     * based on a pattern matching in the log file. 
+     *
      * @see Settings#getPatternLatexNeedsReRun()
      */
     private boolean needAnotherLatexRun(File logFile)
@@ -1183,7 +1217,7 @@ public class LatexProcessor {
         String reRunPattern = this.settings.getPatternLatexNeedsReRun();
 	// may throw a BuildExecutionException
         boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
-        log.debug( "Another LaTeX run? " + needRun );
+        log.debug("Another LaTeX run? " + needRun);
         return needRun;
     }
 
@@ -1201,6 +1235,10 @@ public class LatexProcessor {
      *    whether MakeIndex had been run. 
      *    Equivalently, whether LaTeX has to be rerun because of MakeIndex. 
      */
+    // FIXME: bad name since now there are reruns. 
+    // Suggestion: runMakeIndexInitByNeed 
+    // Other methods accordingly. 
+    // maybe better: eliminate altogether 
     private boolean runMakeIndexByNeed(File texFile)
 	throws BuildExecutionException {
 
@@ -1208,10 +1246,25 @@ public class LatexProcessor {
 	File idxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
 	boolean needRun = idxFile.exists();
 	log.debug("MakeIndex run required? " + needRun);
-	if (!needRun) {
-	    return false;
+	if (needRun) {
+	    // may throw BuildExecutionException 
+	    runMakeIndex(idxFile);
 	}
+	return needRun;
+    }
 
+    /**
+     * Runs the MakeIndex command 
+     * given by {@link Settings#getMakeIndexCommand()}. 
+     *
+     * @param idxFile
+     *    the idx-file MakeIndex is to be run on. 
+     */
+    // FIXME: strange:  runMakeIndexByNeed based on tex-file 
+    // and this one based on idx-file. 
+    // no longer appropriate to create idx-file 
+    // because makeIndex is rerun. 
+    private void runMakeIndex(File idxFile) throws BuildExecutionException {
 	String command = this.settings.getMakeIndexCommand();
 	log.debug("Running " + command  + " on " + idxFile.getName() + ". ");
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
@@ -1226,7 +1279,6 @@ public class LatexProcessor {
  	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
 	logErrs (logFile, command, this.settings.getPatternErrMakeindex());
 	logWarns(logFile, command, this.settings.getPatternWarnMakeindex());
-	return true;
     }
 
    /**
@@ -1349,7 +1401,7 @@ public class LatexProcessor {
 	throws BuildExecutionException {
 
 	String command = this.settings.getTexCommand();
-        log.debug("Running " + command + " on " + texFile.getName() + ". ");
+	log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
 	String[] args = buildArguments(this.settings.getTexCommandArgs(), 
 				       texFile);
