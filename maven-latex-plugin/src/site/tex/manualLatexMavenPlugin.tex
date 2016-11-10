@@ -1,52 +1,7 @@
 
 \documentclass[12pt]{article}
 
-\listfiles
-
-% used by hyperref and also to update index and glossary 
-% to avoid clash because of loading with different options: 
-% declare first 
-\usepackage[index, glossary]{rerunfilecheck}
-
-% graphics 
-\makeatletter
-\@ifpackageloaded{tex4ht}{%
-\usepackage[dvipdfmx]{xcolor}
-\usepackage[dvipdfmx]{graphicx}
-\usepackage[tex4ht]{hyperref}
-}{%
-\usepackage{xcolor}  % [pdftex] explicit specification works for pdflatex only 
-\usepackage{graphicx}% [pdftex] explicit specification works for pdflatex only 
-\usepackage{hyperref}% driver [hpdftex] is autodetected 
-}
-
-\usepackage{svg}
-
-% synchronization between tex and pdf 
-\usepackage[active]{srcltx}
-
-
-\usepackage{longtable}
-\usepackage{listings}
-\usepackage{fancyvrb}
-
-% only with pdflatex, warnings for xelatex and for lualatex 
-% ifxetex, ifluatex, ifpdf
-\usepackage{ifpdf,ifxetex,ifluatex}
-\ifpdf
-%\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\else
-\fi
-
-% index and glossary
-\usepackage{makeidx}
-\makeindex
-\usepackage[toc]{glossaries}
-%, xindy or even [xindy={language=english,codepage=utf8}]
-% mainly for index and glossaries 
-%\makeglossaries
-\makeglossary% for rerunfilecheck
+\input{header.tex}
 
 \setacronymstyle{long-short}
 % file formats 
@@ -618,41 +573,14 @@ To obtain a \LaTeX-file which works both for creating pdf and html,
 insert in the header of the \LaTeX{} main file 
 %
 \lstset{language=tex, basicstyle=\small}
-\begin{lstlisting}
-\makeatletter
-\@ifpackageloaded{tex4ht}{%
-\usepackage[dvipdfmx]{xcolor}
-\usepackage[dvipdfmx]{graphicx}
-\usepackage[tex4ht]{hyperref}
-}{%
-% for the next two lines: 
-% [pdftex] explicit specification works for pdflatex only 
-\usepackage{xcolor}
-\usepackage{graphicx}
-%\usepackage{hyperref}% driver [hpdftex] is autodetected 
-}
-\end{lstlisting}
+\lstinputlisting[firstline=9, lastline=21]{header.tex}
 
 An alternative, which we do not use 
 is replacing the pdf by an \gls{eps} via configuration file {\tt myxhtml.cfg} 
 which is listed below. 
 %
 \lstset{language=tex, basicstyle=\scriptsize}
-\begin{lstlisting}
-\Preamble{xhtml}
-%\makeatletter
-\Configure{graphics*}  
-  {pdf}  
-  {
-    \Needs{"convert      \csname Gin@base\endcsname.pdf %
-                         \csname Gin@base\endcsname.eps"}%  
-    \Picture[picture not present]      {\csname Gin@base\endcsname.eps}%  
-    \special{t4ht+@File: \csname Gin@base\endcsname.eps}
-  }
-\begin{document}
-\EndPreamble
-\input{myxhtml.cfg}
-\end{lstlisting}
+\lstinputlisting{myxhtml.cfg}
 %
 It applies when converting \LaTeX{} into html and that like 
 with htlatex if invoking someting like {\tt htlatex xxx.tex myxhtml,...} 
@@ -1966,307 +1894,7 @@ The maven-plugin described here,
 requires the following definition in {\tt pom.xml}. 
 
 \lstset{language=xml, basicstyle=\scriptsize}
-\begin{lstlisting}
-<!-- create html and pdf and other formats from latex -->
-<plugin>
-  <groupId>de.akquinet.jbosscc.latex</groupId>
-  <artifactId>latex-maven-plugin</artifactId>
-  <version>1.3-SNAPSHOT</version><!--uptodate?-->
-  <!--artifactId>maven-latex-plugin</artifactId>
-      <version>1.2</version--><!--uptodate?-->
-  <configuration>
-  <settings>
-  <!-- The tex source directory as a string, containing 
-       all tex main documents (including subfolders) to be processed 
-       relative to $baseDirectory. 
-       The default value is 'src/site/tex' on Unix systems. -->
-    <texSrcDirectory>src/site/tex</texSrcDirectory>
-
-    <!-- The generated artifacts will be copied to this folder 
-	 relative to $targetSiteDirectory 
-	 which is by default '$targetDirectory/site' on Unix systems. 
-	 The default value is '.'.  -->
-    <outputDirectory>.</outputDirectory>
-
-    <!-- A comma separated list of targets 
-	 to be stored in $targetSet. 
-	 The default value is 'pdf, html'. -->
-    <targets>pdf, html</targets>
-
-    <!-- The pattern which identifies a latex main file. 
-	 The default value is '\s*\\(documentstyle|documentclass).*'. 
-	 If this is not appropriate, please modify 
-	 and notify the developer of this plugin. -->
-    <patternLatexMainFile>
-      \s*\\(documentstyle|documentclass).*
-    </patternLatexMainFile>
-
-    <!-- Path to the TeX scripts or null. 
-	 In the latter case, the scripts must be on the system path. 
-	 Note that in the pom, <texPath/> 
-	 and even <texPath>    </texPath> represent the null-File. 
-	T he default value is null. -->
-    <texPath/> 
-
-    <!-- The fig2dev command for conversion of fig-files 
-	 into various formats. 
-	 Currently only pdf combined with ptx is supported. 
-	 The default value is 'fig2dev'.  -->
-    <fig2devCommand>fig2dev</fig2devCommand>
-  
-    <!-- The LaTeX command to create a pdf-file. 
-	 The default value is 'pdflatex'. -->
-    <texCommand>pdflatex</texCommand>
-
-    <!-- The arguments string to use 
-         when calling latex via $texCommand 
-         Leading and trailing blanks are ignored. 
-	 A sequence of at least one blank separate the proper options. 
-	 The default value is 
-	 '-interaction=nonstopmode -synctex=1 -src-specials 
-	  -recorder -shell-escape'. -->
-    <texCommandArgs>
-      -interaction=nonstopmode 
-      -synctex=1 
-      -src-specials 
-      -recorder 
-      -shell-escape 
-    </texCommandArgs>
-
-    <!-- The pattern in the log-file 
-	 indicating a failure when running $texCommand. 
-	 The default value is 
-	 '(^! )'. 
-	 If this is not complete, please extend 
-	 and notify the developer of this plugin. -->
-    <patternErrLatex>(\^! )</patternErrLatex>
-
-    <!-- Whether debugging of overfull/underfull hboxes/vboxes is on: 
-	 If so, a bad box occurs in the last LaTeX run, 
-	 a warning is displayed. 
-	 For details, set $cleanUp to false, 
-	 rerun LaTeX and have a look at the log-file.
-	 The default value is 'true'. -->
-    <debugBadBoxes>true</debugBadBoxes>
-
-    <!-- Whether debugging of warnings is on: 
-	 If so, a warning in the last LaTeX run is displayed. 
-	 For details, set $cleanUp to false, 
-	 rerun LaTeX and have a look at the log-file. 
-	 The default value is 'true'. -->
-    <debugWarnings>true</debugWarnings>
-
-    <!-- The BibTeX command to create a bbl-file 
-	 from an aux-file and a bib-file (using a bst-style file). 
-	 The default value is 'bibtex'. -->
-    <bibtexCommand>bibtex</bibtexCommand>
-
-    <!-- The Pattern in the blg-file 
-	 indicating that $bibtexCommand failed. 
-	 The default value is chosen 
-	 according to the 'bibtex' documentation. -->
-    <patternErrBibtex>error message</patternErrBibtex>
-
-    <!-- The Pattern in the blg-file 
-	 indicating a warning $bibtexCommand emitted. 
-	 The default value is chosen 
-	 according to the 'bibtex' documentation. -->
-    <patternWarnBibtex>Warning--</patternWarnBibtex>
-
-    <!-- The MakeIndex command to create an ind-file 
-	 from an idx-file logging on an ilg-file. 
-	 The default value is 'makeindex'. -->
-    <makeIndexCommand>makeindex</makeIndexCommand>
-
-    <!-- The options for the MakeIndex command. 
-	 The default value is the empty string. -->
-    <makeIndexOptions></makeIndexOptions>
-
-    <!-- The pattern in the ilg-file 
-	 indicating that $makeIndexCommand failed. 
-	 The default value '(!! Input index error )' 
-	 is chosen according to the 'makeindex' documentation.  -->
-    <patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
- 
-    <!-- The Pattern in the ilg-file 
-	 indicating a warning $makeIndexCommand emitted. 
-	 The default value '(## Warning )' 
-	 is chosen according to the 'makeindex' documentation. -->
-    <patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
-
-    <!-- The MakeGlossaries command to create a gls-file 
-	 from a glo-file (invoked without file ending) 
-	 also taking ist-file or xdy-file 
-	 into account logging on a glg-file. 
-	 The default value is 'makeglossaries'. -->
-    <makeGlossariesCommand>makeglossaries</makeGlossariesCommand>
-
-    <!-- The options for the $makeGlossariesCommand. 
-	 These are the options for 'makeindex' 
-	 (not for $makeIndexCommand) 
-	 and for 'xindy' (also hardcoded). 
-	 The aux-file decides on whether program is executed 
-	 and consequently which options are used. 
-		 
-	 The default value is the empty option string. 
-	 Nevertheless, 'xindy' is invoked as 
-	 'xindy -L english  -I xindy -M ...'. 
-	 With option '-L german', this is added. 
-	 Options '-M<' for 'xindy' 
-	 '-s' for 'makeindex' and 
-	 '-t' and '-o' for both, 'xindy' and 'makeindex'. -->
-    <makeGlossariesOptions></makeGlossariesOptions>
-
-    <!-- The Pattern in the glg-file 
-	 indicating an error when running $makeGlossariesCommand. 
-	 The default value is '(^\*\*\* unable to execute: )'. 
-	 If this is not appropriate, please modify 
-	 and notify the developer of this plugin. -->
-    <patternMakeGlossariesErr>
-      (^\*\*\* unable to execute: )
-    </patternMakeGlossariesErr>
-
-    <!-- The pattern in the 'glg' file 
-	 indicating an error when running 'xindy' 
-	 via $makeGlossariesCommand. 
-	 The default value is '(^ERROR: )' 
-	 (note the space and the brackets). 
-	 If this is not appropriate, please modify 
-	 and notify the developer of this plugin. -->
-    <patternErrXindy>(^ERROR: )</patternErrXindy>
- 
-    <!-- The pattern in the 'glg' file 
-	 indicating a warning when running 'xindy' 
-	 via $makeGlossariesCommand. 
-	 The default value is '(^WARNING: )' 
-	 (note the space and the brackets). 
-	 If this is not appropriate, please modify 
-	 and notify the developer of this plugin. -->
-    <patternErrXindy>(^WARNING: )</patternErrXindy>
- 
-    <!-- the tex4ht command htlatex-->
-    <tex4htCommand>htlatex</tex4htCommand>
-
-    <!-- options for tex4ht.sty
-	 Format: 
-	 <Output format>, <index>, <depth>, 
-	 ['info'], ['next'], ['fn-in'], ['frames'], 
-	 ['pmathml'], ['pmathml-css'], ...
-	 
-	 options in [] are optional 
-	 DEFAULT: html,2 
-	 Available formats are html, xhtml, mathml, ooffice 
-	 index=2  index in 2 columns. 
-	 depth is the depth of sectioning 
-	 to which separate files are created. 
-	 fn-in specifies inline footnotes 
-	 frames specifies separate frames for contents and toc 
-	 mathml specifies mathml 
-	 uni-html4 is used for unicode -->
-	    <!-- xhtml,uni-html4,0 mathml,-->
-    <tex4htStyOptions>xhtml,uni-html4,2,svg</tex4htStyOptions>
-
-    <!-- options for tex4ht.c, default is empty -->
-    <!-- ' -cunihtf' forces unicode -->
-    <tex4htOptions> -cunihtf -utf8</tex4htOptions>
-
-    <!-- The options for 't4ht' which converts idv-file and lg-file 
-	 into css-files, tmp-file and, 
-	 by need and if configured accordingly into png files. 
-	 The value <code>-p</code> prevents creation of png-pictures.
-	 The default value is the empty string. -->
-    <t4htOptions>-cvalidate</t4htOptions>
-
-    <!-- The pattern in the log file which triggers rerunning latex. 
-	 This pattern may never be ensured to be complete, 
-	 because any new package may break completeness. 
-	 Nevertheless, the default value aims completeness 
-	 while be restrictive enough not to trigger another latex run 
-	 if not needed. 
-	 To ensure termination, let $maxNumReruns 
-	 specify the maximum number of latex runs. 
-	 If the user finds an extension, (s)he is asked to contribute 
-	 and to notify the developer of this plugin. 
-	 Then the default value will be extended. -->
-    <patternLatexNeedsReRun>
-      (^LaTeX Warning: Label\(s\) may have changed. \
-Rerun to get cross-references right.$|
-      ^Package \\w+ Warning: .*Rerun .*$|
-      ^Package \\w+ Warning: .*$^\(\w+\) .*Rerun .*$|
-      ^LaTeX Warning: Etaremune labels have changed.$|
-      ^\(rerunfilecheck\)                Rerun to get outlines right$)
-    </patternLatexNeedsReRun>
-
-    <!-- The maximal allowed number of reruns of the latex process. 
-	 This is to avoid endless repetitions. 
-	 The default value is 5. 
-	 This shall be non-negative 
-	 or -1 which signifies that there is no threshold. -->
-    <maxNumReruns>-1</maxNumReruns>
-
-    <!-- The latex2rtf command to create rtf from latex directly. 
-	 The default value is 'latex2rtf'. -->
-    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
-
-    <!-- The odt2doc command to create MS word-formats from otd-files. 
-	 The default value is 'odt2doc'. -->
-    <odt2docCommand>odt2doc</odt2docCommand>
-
-    <!-- The options of the odt2doc command. 
-	 Above all specification of output format via the option '-f'. 
-	 Invocation is 'odt2doc -f<format> <file>.odt'. 
-	 All output formats are shown by 'odt2doc - -show' 
-	 but the formats interesting in this context 
-	 are doc, doc6, doc95,docbook, docx, docx7, ooxml, rtf. 
-	 Interesting also the verbosity options '-v', '-vv', '-vvv' 
-	 the timeout '-T=secs' and '- -preserve' 
-	 to keep permissions and timestamp of the original document. 
-	 The default value is '-fdocx'. -->
-    <odt2docOptions>-fdocx</odt2docOptions>
-
-    <!-- The pdf2txt command converting pdf into plain text. 
-    	 The default value is 'pdftotext'.  -->
-    <pdf2txtCommand>pdftotext</pdf2txtCommand>
-
-    <!-- The options of the pdf2txt command. 
-	 The default value is the empty string. -->
-    <pdf2txtOptions></pdf2txtOptions>
-
-    <!-- Clean up the working directory in the end? 
-	 May be used for debugging when setting false. 
-	 The default value is 'true'. -->
-    <cleanUp>true</cleanUp>
-
-  </settings>
-</configuration>
-
-<executions>
-<!-- execute latex goal automatically during the site phase -->
-    <execution><!-- DEFAULT -->
-      <phase>site</phase>
-      <goals>
-        <goal>pdf</goal>
-        <goal>html</goal>
-        <!--goal>rtf</goal-->
-        <!--goal>odt</goal-->
-        <!--goal>doc</goal-->
-        <!--goal>txt</goal-->
- <!--
-Here is a bug affecting goal odt: 
-/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/
-systemlayer/pgfsys-tex4ht.def
-89c89
- \def\pgfsys@svg@newline{{?nl}} % replacement 
-- - -
- \def\pgfsys@svg@newline{\Hnewline} % original 
--->
-        <goal>odt</goal>
-        <goal>cfg</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
-\end{lstlisting}
+\lstinputlisting[firstline=214, lastline=667]{../../../pom.xml}
 
 It has to be placed in the build element where below dots are given. 
 
@@ -2283,71 +1911,7 @@ The ant-task described here,
 requires the following target and task definition in {\tt build.xml}. 
 
 \lstset{language=xml, basicstyle=\scriptsize}
-\begin{lstlisting}
-  <taskdef name="latex"
-	   classname="org.m2latex.antTask.LatexTask"
-	   classpathref="latex.classpath"/>
-
-  <target name="pdf"
-	  description="create pdf from latex. ">
-    <latex>
-      <!-- missing: baseDirectory, targetDirectory, targetSiteDirectory,
-	   texPath = null -->
-      <settings texSrcDirectory="src/site/tex"
-		outputDirectory="."
-		targets="pdf, html"
-		fig2devCommand="fig2dev"
-		texCommand="pdflatex"
-		debugBadBoxes='true'
-		debugWarnings='true'
-		bibtexCommand="bibtex"
-		makeIndexCommand="makeindex"
-		makeIndexOptions=""
-		makeGlossariesCommand="makeglossaries" 
-		makeGlossariesOptions=""
-		patternMakeGlossariesErr="(^\*\*\* unable to execute: )"
-		patternErrXindy="(^ERROR: )"
-		patternWarnXindy="(^WARNING: )"
-		tex4htCommand="htlatex"
-		tex4htStyOptions="html,uni-html4,2,svg"
-		tex4htOptions=" -cunihtf -utf8"
-		t4htOptions="-cvalidate"
-		maxNumReruns='-1'
-		latex2rtfCommand="latex2rtf"
-		odt2docCommand="odt2doc"
-		odt2docOptions="-fdocx"
-		pdf2txtCommand="pdftotext"
-		pdf2txtOptions=""
-		cleanUp='true'>
-	<!-- texPath is null -->
-	<patternLatexMainFile>
-	  \s*\\(documentstyle|documentclass).*
-	</patternLatexMainFile>
-	<texCommandArgs>
-	  -interaction=nonstopmode
-	  -synctex=1 
-	  -src-specials 
-	  -recorder 
-	  -shell-escape
-	</texCommandArgs>
-	<patternErrLatex>(^! )</patternErrLatex>
-	<patternErrBibtex>error message</patternErrBibtex>
-	<patternWarnBibtex>Warning--</patternWarnBibtex>
-	<patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
-	<patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
-	<patternLatexNeedsReRun>
-(^LaTeX Warning: Label\(s\) may have changed. \
-Rerun to get cross-references right.$|
-^Package \w+ Warning: .*Rerun .*$|
-^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
-^LaTeX Warning: Etaremune labels have changed.$|
-^\(rerunfilecheck\)                \
-Rerun to get outlines right$)
-	</patternLatexNeedsReRun>
-      </settings>
-    </latex>
-  </target>
-\end{lstlisting}
+\lstinputlisting[firstline=80, lastline=154]{../../../build.xml}
 
 \subsection{Details}\label{subsec:settingsDetail}
 
@@ -2357,7 +1921,10 @@ We now discuss the individual parameters in depth.
 
 TODO: do this. 
 
-\section{Goals}
+\section{Messages}
+FIXME: to be added. 
+\subsection{Warnings}
+\subsection{Errors}
 
 %\begin{longtable}
 
