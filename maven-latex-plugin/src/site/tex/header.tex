@@ -1,0 +1,45 @@
+
+\listfiles
+
+% used by hyperref and also to update index and glossary 
+% to avoid clash because of loading with different options: 
+% declare first 
+\usepackage[index, glossary]{rerunfilecheck}
+
+% graphics 
+\makeatletter
+\@ifpackageloaded{tex4ht}{%
+\usepackage[dvipdfmx]{xcolor}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[tex4ht]{hyperref}
+}{%
+\usepackage{xcolor}  % [pdftex]  
+\usepackage{graphicx}% [pdftex] 
+\usepackage{hyperref}% driver [hpdftex] is autodetected 
+}
+
+\usepackage{svg}
+
+% synchronization between tex and pdf 
+\usepackage[active]{srcltx}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{fancyvrb}
+
+% only with pdflatex, warnings for xelatex and for lualatex 
+% ifxetex, ifluatex, ifpdf
+\usepackage{ifpdf,ifxetex,ifluatex}
+\ifpdf
+%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\else
+\fi
+
+% index and glossary
+\usepackage{makeidx}
+\makeindex
+\usepackage[toc]{glossaries}
+%, xindy or even [xindy={language=english,codepage=utf8}]
+% mainly for index and glossaries 
+%\makeglossaries
+\makeglossary% for rerunfilecheck
