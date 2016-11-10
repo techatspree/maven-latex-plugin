@@ -76,8 +76,8 @@ public class Settings {
     // and there is an according field of type File. 
 
     /**
-     * The tex source directory as a string, containing 
-     * all tex main documents (including subfolders) to be processed
+     * The latex source directory as a string, 
+     * containing all tex main documents (including subfolders) to be processed
      * relative to {@link #baseDirectory}. 
      * The default value is {@link #SST}. 
      * The according file is given by {@link #texSrcDirectoryFile}. 
@@ -122,7 +122,8 @@ public class Settings {
 
     /**
      * The pattern which identifies a latex main file. 
-     * The default value is <code>\s*\\(documentstyle|documentclass).*</code>. 
+     * The default value is 
+     * <code>\s*\\(documentstyle|documentclass).*</code>. 
      * If this is not appropriate, please modify 
      * and notify the developer of this plugin. 
      *
@@ -158,8 +159,8 @@ public class Settings {
 
     /**
      * The LaTeX command to create a pdf-file. 
-     * Possible values are e.g. <code>pdflatex</code>, <code>lualatex</code> 
-     * and <code>xelatex</code>. 
+     * Possible values are e.g. 
+     * <code>pdflatex</code>, <code>lualatex</code> and <code>xelatex</code>. 
      * The default value (for which this software is also tested) 
      * is <code>pdflatex</code>. 
      * FIXME: unintuitive name. 
@@ -169,7 +170,8 @@ public class Settings {
     private String texCommand = "pdflatex";
 
     /**
-     * The arguments string to use when calling latex via {@link #texCommand}. 
+     * The arguments string to use 
+     * when calling latex via {@link #texCommand}. 
      * Leading and trailing blanks are ignored. 
      * The setter method {@link #setTexCommandArgs(String)} ensures, 
      * that exactly one blank separate the proper options. 
@@ -178,8 +180,8 @@ public class Settings {
      * <li><code>-interaction=nonstopmode</code> 
      * prevents latex from stopping at the first error. 
      * <li><code>-synctex=1</code> 
-     * makes latex create a pdf file which synchronizes with an editor 
-     * supporting synchtex. 
+     * makes latex create a pdf file 
+     * which synchronizes with an editor supporting synchtex. 
      * <li><code>-src-specials</code> 
      * includes source specials into the output. dvi only? 
      * <li><code>-recorder</code> 
@@ -211,7 +213,9 @@ public class Settings {
 
     /**
      * The pattern in the <code>log</code> file 
-     * indicating a warning when running {@link #texCommand}. 
+     * indicating that {@link #texCommand} emitted a warning, 
+     * disragarding warnings on bad boxes 
+     * and taking {@link #debugWarnings} into account. 
      * The default value is 
      * <pre>
      *(^LaTeX Warning: |
@@ -227,6 +231,7 @@ public class Settings {
      * If the current default value is not appropriate, 
      * please overwrite and notify the developer of this plugin. 
      *
+     * @see #debugBadBoxes
      * @parameter
      */
     // Note that there are warnings not indicated by a pattern containing 
@@ -267,330 +272,9 @@ public class Settings {
     private boolean debugWarnings = true;
 
     /**
-     * The BibTeX command to create a bbl-file 
-     * from an aux-file and a bib-file (using a bst-style file). 
-     * The default value is <code>bibtex</code>. 
-     *
-     * @parameter
-     */
-    private String bibtexCommand = "bibtex";
-
-    // FIXME: Any parameters for bibtex? 
-// Usage: bibtex [OPTION]... AUXFILE[.aux]
-//   Write bibliography for entries in AUXFILE to AUXFILE.bbl,
-//   along with a log file AUXFILE.blg.
-// -min-crossrefs=NUMBER  include item after NUMBER cross-refs; default 2
-// -terse                 do not print progress reports
-// -help                  display this help and exit
-// -version               output version information and exit
-
-// how to detect errors/warnings??? 
-//Process exited with error(s)
-
-    /**
-     * The Pattern in the blg-file 
-     * indicating that {@link #bibtexCommand} failed. 
-     * The default value is chosen 
-     * according to the <code>bibtex</code> documentation. 
-     *
-     * @parameter
-     */
-    private String patternErrBibtex = "error message";
-
-    /**
-     * The Pattern in the blg-file 
-     * indicating a warning {@link #bibtexCommand} emitted. 
-     * The default value is chosen 
-     * according to the <code>bibtex</code> documentation. 
-     *
-     * @parameter
-     */
-    private String patternWarnBibtex = "Warning--";
-
-    /**
-     * The MakeIndex command to create an ind-file 
-     * from an idx-file logging on an ilg-file. 
-     * The default value is <code>makeindex</code>. 
-     *
-     * @parameter
-     */
-    private String makeIndexCommand = "makeindex";
-
-    /**
-     * The options for the {@link #makeIndexCommand}. 
-     * Note that the option <code>-o xxx.ind</code> to specify the output file 
-     * is not allowed because this plugin 
-     * expects the output for the latex main file <code>xxx.tex</code> 
-     * <code>xxx.ind</code>. 
-     * Likewise, the option <code>-t xxx.ilg</code> 
-     * to specify the logging file is not allowed, 
-     * because this software uses the standard logging file 
-     * to detect failures processing the idx-file. 
-     * Also the option <code>-i</code> 
-     * which specifies reading the raw index from standard input 
-     * is not allowed. 
-     * Specifying a style file with option <code>-s yyy.ist</code> 
-     * is possible if only an index is used but no glossary. 
-     * FIXME: rethink what about multiple indices. 
-     * <p>
-     * Note that the options specified here 
-     * are also used to create glossaries. 
-     * In addition for glossaries, the options 
-     * <code>-s</code>, <code>-o</code> and <code>-t</code> are used. 
-     * Thus also these options should not be used. 
-     * The default value is the empty string. 
-     * Useful options in this context are 
-     * <ul>
-     * <li><code>-c</code> remove blanks from index entries 
-     * <li><code>-g</code> german ordering
-     * <li><code>-l</code> letter ordering
-     * <li><code>-r</code> without collecting index entries 
-     * on 3 or more successive pages. 
-     * </ul>
-     *
-     * @parameter
-     */
-    private String makeIndexOptions = "";
-
-    /**
-     * The Pattern in the ilg-file 
-     * indicating an error when running {@link #makeIndexCommand}. 
-     * The default value <code>(!! Input index error )</code> 
-     * is chosen according to the <code>makeindex</code> documentation. 
-     *
-     * @parameter
-     */
-    private String patternErrMakeindex = "(!! Input index error )";
-
-    /**
-     * The Pattern in the ilg-file 
-     * indicating a warning when running {@link #makeIndexCommand}. 
-     * The default value <code>(## Warning )</code> 
-     * is chosen according to the <code>makeindex</code> documentation. 
-     *
-     * @parameter
-     */
-    private String patternWarnMakeindex = "(## Warning )";
-
-    /**
-     * The pattern in the log file which triggers 
-     * rerunning MakeIndex followed by LaTeX. 
-     * This pattern only occurs, if package <code>rerunfilecheck</code> 
-     * is used with option <code>index</code>. 
-     * The default value 
-     * is chosen according to the package documentation. 
-     * If the user finds that default value is not appropriate, 
-     * (s)he is asked to contribute 
-     * and to notify the developer of this plugin. 
-     *
-     * @parameter
-     */
-    // FIXME: should be included the full pattern. 
-    // First part works second also but not together. 
-    // Also did not find any way to connect the two parts. 
-    // This gives rise to the conjecture 
-    // that also other patterns do not work properly. 
-    private String patternMakeIndexNeedsReRun = 
-	//"^Package rerunfilecheck Warning: File `.*\\.idx' has changed\\.$" //+
-	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get index right\\.$";
- 
-
-    /**
-     * The MakeGlossaries command to create a gls-file 
-     * from a glo-file (invoked without file ending) 
-     * also taking ist-file or xdy-file into account logging on a glg-file. 
-     * The default value is <code>makeglossaries</code>. 
-     *
-     * @parameter
-     */
-    private String makeGlossariesCommand = "makeglossaries";
-
-    /**
-     * The options for the {@link #makeGlossariesCommand}. 
-     * These are the options for <code>makeindex</code> 
-     * (not for {@link #makeIndexCommand}) 
-     * and for <code>xindy</code> (also hardcoded). 
-     * The aux-file decides on whether program is executed 
-     * and consequently which options are used. 
-     * <p>
-     * The default value is the empty option string. 
-     * Nevertheless, <code>xindy</code> is invoked as 
-     * <code>xindy -L english  -I xindy -M ...</code>. 
-     * With option <code>-L german</code>, this is added. 
-     * Options <code>-M</code> for <code>xindy</code> 
-     * <code>-s</code> for <code>makeindex</code> and 
-     * <code>-t</code> and <code>-o</code> for both, 
-     * <code>xindy</code> and <code>makeindex</code>. 
-     * 
-     * @parameter
-     */
-    private String makeGlossariesOptions = "";
-
-    /**
-     * The Pattern in the glg-file 
-     * indicating an error when running {@link #makeGlossariesCommand}. 
-     * The default value is <code>(^\*\*\* unable to execute: )</code>. 
-     * If this is not appropriate, please modify 
-     * and notify the developer of this plugin. 
-     * 
-     * @parameter
-     */
-    private String patternMakeGlossariesErr = 
-	"^\\*\\*\\* unable to execute: ";
-
-    /**
-     * The pattern in the log file which triggers 
-     * rerunning MakeGlossaries followed by LaTeX. 
-     * This pattern only occurs, if package <code>rerunfilecheck</code> 
-     * is used with option <code>glossary</code>. 
-     * The default value 
-     * is chosen according to the package documentation. 
-     * If the user finds that default value is not appropriate, 
-     * (s)he is asked to contribute 
-     * and to notify the developer of this plugin. 
-     * 
-     * @parameter
-     */
-    private String patternMakeGlossariesNeedsReRun = 
-	//"^Package rerunfilecheck Warning: File `.*\\.glo' has changed\\.$" +
-	// FIXME: really MAKEINDEX! 
-	// Problem: package glossaries redefines makeglossary 
-	// which breaks this solution with rerunfilecheck 
-	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get glossary right\\.$";
-
-    /**
-     * The pattern in the <code>glg</code> file 
-     * indicating an error when running <code>xindy</code> 
-     * via {@link #makeGlossariesCommand}. 
-     * The default value is <code>(^ERROR: )</code> (note the space). 
-     * If this is not appropriate, please modify 
-     * and notify the developer of this plugin. 
-     * FIXME: This is not used. 
-     *
-     * @parameter
-     */
-    private String patternErrXindy = "(^ERROR: )";
-
-    /**
-     * The pattern in the <code>glg</code> file 
-     * indicating a warning when running <code>xindy</code> 
-     * via {@link #makeGlossariesCommand}. 
-     * The default value is <code>(^WARNING: )</code> 
-     * (note the space and the brackets). 
-     * If this is not appropriate, please modify 
-     * and notify the developer of this plugin. 
-     * 
-     * @parameter
-     */
-    private String patternWarnXindy = "(^WARNING: )";
-
-    /**
-     * The tex4ht command. 
-     * Possible values are e.g. 
-     * <code>htlatex</code> and <code>htxelatex</code>. 
-     * The default value (for which this software is also tested) 
-     * is <code>htlatex</code>. 
-     *
-     * @parameter
-     */
-    private String tex4htCommand = "htlatex";
-
-    /**
-     * The options for the <code>tex4ht</code>-style 
-     * which creates a dvi-file or a pdf-file 
-     * with information to create sgml, 
-     * e.g. html or odt or something like that. 
-     *
-     * @parameter
-     */
-    private String tex4htStyOptions = "html,2";
-
-    /**
-     * The options for <code>tex4ht</code> which extracts information 
-     * from a dvi-file or from a pdf-file 
-     * into the according lg-file and idv-file producing html-files 
-     * and by need and if configured accordingly 
-     * svg-files, 4ct-files and 4tc-files and a css-file and a tmp-file.
-     * The former two are used by <code>t4ht</code> 
-     * which is configured via {@link #t4htOptions}. 
-     *
-     * @parameter
-     */
-    private String tex4htOptions = "";
-
-    /**
-     * The options for <code>t4ht</code> which converts idv-file and lg-file 
-     * into css-files, tmp-file and, 
-     * by need and if configured accordingly into png files. 
-     * The value <code>-p</code> prevents creation of png-pictures.
-     * The default value is the empty string. 
-     *
-     * @parameter
-     */
-    private String t4htOptions = "";
-
-    /**
-     * The latex2rtf command to create rtf from latex directly. 
-     * The default value is <code>latex2rtf</code>. 
-     *
-     * @parameter
-     */
-    private String latex2rtfCommand = "latex2rtf";
-
-    // FIXME: provide parameters for latex2rtf 
-
-    /**
-     * The odt2doc command to create MS word-formats from otd-files. 
-     * The default value is <code>odt2doc</code>; 
-     * equivalent here is <code>unoconv</code>. 
-     * Note that <code>odt2doc</code> just calls <code>unoconv</code> 
-     * with odt-files as input and doc-file as default output. 
-     *
-     * @see #odt2docOptions
-     * @parameter
-     */
-    private String odt2docCommand = "odt2doc";
-
-    /**
-     * The options of the odt2doc command. 
-     * Above all specification of output format via the option <code>-f</code>. 
-     * Invocation is <code>odt2doc -f&lt;format> &lt;file>.odt</code>. 
-     * All output formats are shown by <code>odt2doc --show</code> 
-     * but the formats interesting in this context 
-     * are <code>doc, doc6, doc95,docbook, docx, docx7, ooxml, rtf</code>. 
-     * Interesting also the verbosity options <code>-v, -vv, -vvv</code> 
-     * the timeout <code>-T=secs</code> and <code>--preserve</code> 
-     * to keep permissions and timestamp of the original document. 
-     * The default value is <code>-fdocx</code>. 
-     *
-     * @see #odt2docCommand
-     * @parameter
-     */
-    private String odt2docOptions = "-fdocx";
-
-    /**
-     * The pdf2txt command converting pdf into plain text. 
-     * The default value is <code>pdftotext</code>. 
-     *
-     * @see #pdf2txtOptions
-     * @parameter
-     */
-    private String pdf2txtCommand = "pdftotext";
-
-    /**
-     * The options of the pdf2txt command. 
-     * The default value is the empty string. 
-     *
-     * @see #pdf2txtCommand
-     * @parameter
-     */
-    private String pdf2txtOptions = "";
-
-
-    // rerunning latex 
-
-    /**
-     * The pattern in the log file which triggers rerunning latex. 
+     * The pattern in the log-file 
+     * which triggers rerunning {@link #texCommand} 
+     * taking {@link #maxNumReRuns} into account. 
      * This pattern may never be ensured to be complete, 
      * because any new package may break completeness. 
      * Nevertheless, the default value aims completeness 
@@ -644,7 +328,7 @@ public class Settings {
        //  (rerunfilecheck)                or use package `xxx'.
 
     /**
-     * The maximal allowed number of reruns of the latex process. 
+     * The maximal allowed number of reruns of {@link #texCommand}. 
      * This is to avoid endless repetitions. 
      * The default value is 5. 
      * This shall be non-negative 
@@ -653,6 +337,331 @@ public class Settings {
      * @parameter
      */
     private int maxNumReRuns = 5;
+
+    /**
+     * The BibTeX command to create a bbl-file 
+     * from an aux-file and a bib-file 
+     * (using a bst-style file). 
+     * The default value is <code>bibtex</code>. 
+     *
+     * @parameter
+     */
+    private String bibtexCommand = "bibtex";
+
+    // FIXME: Any parameters for bibtex? 
+// Usage: bibtex [OPTION]... AUXFILE[.aux]
+//   Write bibliography for entries in AUXFILE to AUXFILE.bbl,
+//   along with a log file AUXFILE.blg.
+// -min-crossrefs=NUMBER  include item after NUMBER cross-refs; default 2
+// -terse                 do not print progress reports
+// -help                  display this help and exit
+// -version               output version information and exit
+
+// how to detect errors/warnings??? 
+//Process exited with error(s)
+
+    /**
+     * The Pattern in the blg-file 
+     * indicating that {@link #bibtexCommand} failed. 
+     * The default value is chosen 
+     * according to the <code>bibtex</code> documentation. 
+     *
+     * @parameter
+     */
+    private String patternErrBibtex = "error message";
+
+    /**
+     * The Pattern in the blg-file 
+     * indicating a warning {@link #bibtexCommand} emitted. 
+     * The default value is chosen 
+     * according to the <code>bibtex</code> documentation. 
+     *
+     * @parameter
+     */
+    private String patternWarnBibtex = "Warning--";
+
+    /**
+     * The MakeIndex command to create an ind-file 
+     * from an idx-file logging on an ilg-file. 
+     * The default value is <code>makeindex</code>. 
+     *
+     * @parameter
+     */
+    private String makeIndexCommand = "makeindex";
+
+    /**
+     * The options for the command {@link #makeIndexCommand}. 
+     * Note that the option <code>-o xxx.ind</code> to specify the output file 
+     * is not allowed because this plugin 
+     * expects the output for the latex main file <code>xxx.tex</code> 
+     * <code>xxx.ind</code>. 
+     * Likewise, the option <code>-t xxx.ilg</code> 
+     * to specify the logging file is not allowed, 
+     * because this software uses the standard logging file 
+     * to detect failures processing the idx-file. 
+     * Also the option <code>-i</code> 
+     * which specifies reading the raw index from standard input 
+     * is not allowed. 
+     * Specifying a style file with option <code>-s yyy.ist</code> 
+     * is possible if only an index is used but no glossary. 
+     * FIXME: rethink what about multiple indices. 
+     * <p>
+     * Note that the options specified here 
+     * are also used to create glossaries. 
+     * In addition for glossaries, the options 
+     * <code>-s</code>, <code>-o</code> and <code>-t</code> are used. 
+     * Thus also these options should not be used. 
+     * The default value is the empty string. 
+     * Useful options in this context are 
+     * <ul>
+     * <li><code>-c</code> remove blanks from index entries 
+     * <li><code>-g</code> german ordering
+     * <li><code>-l</code> letter ordering
+     * <li><code>-r</code> without collecting index entries 
+     * on 3 or more successive pages. 
+     * </ul>
+     *
+     * @parameter
+     */
+    private String makeIndexOptions = "";
+
+    /**
+     * The Pattern in the ilg-file 
+     * indicating that {@link #makeIndexCommand} failed. 
+     * The default value <code>(!! Input index error )</code> 
+     * is chosen according to the <code>makeindex</code> documentation. 
+     *
+     * @parameter
+     */
+    private String patternErrMakeindex = "(!! Input index error )";
+
+    /**
+     * The Pattern in the ilg-file 
+     * indicating a warning {@link #makeIndexCommand} emitted. 
+     * The default value <code>(## Warning )</code> 
+     * is chosen according to the <code>makeindex</code> documentation. 
+     *
+     * @parameter
+     */
+    private String patternWarnMakeindex = "(## Warning )";
+
+    /**
+     * The pattern in the log-file which triggers 
+     * rerunning {@link #makeIndexCommand} 
+     * followed by {@link #texCommand}. 
+     * This pattern only occurs, if package <code>rerunfilecheck</code> 
+     * is used with option <code>index</code>. 
+     * The default value 
+     * is chosen according to the package documentation. 
+     * If the user finds that default value is not appropriate, 
+     * (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
+     *
+     * @parameter
+     */
+    // FIXME: should be included the full pattern. 
+    // First part works second also but not together. 
+    // Also did not find any way to connect the two parts. 
+    // This gives rise to the conjecture 
+    // that also other patterns do not work properly. 
+    private String patternMakeIndexNeedsReRun = 
+	//"^Package rerunfilecheck Warning: File `.*\\.idx' has changed\\.$" //+
+	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get index right\\.$";
+ 
+
+    /**
+     * The MakeGlossaries command to create a gls-file 
+     * from a glo-file (invoked without file ending) 
+     * also taking ist-file or xdy-file 
+     * into account logging on a glg-file. 
+     * The default value is <code>makeglossaries</code>. 
+     *
+     * @parameter
+     */
+    private String makeGlossariesCommand = "makeglossaries";
+
+    /**
+     * The options for the command {@link #makeGlossariesCommand}. 
+     * These are the options for <code>makeindex</code> 
+     * (not for {@link #makeIndexCommand}) 
+     * and for <code>xindy</code> (also hardcoded). 
+     * The aux-file decides on whether program is executed 
+     * and consequently which options are used. 
+     * <p>
+     * The default value is the empty option string. 
+     * Nevertheless, <code>xindy</code> is invoked as 
+     * <code>xindy -L english  -I xindy -M ...</code>. 
+     * With option <code>-L german</code>, this is added. 
+     * Options <code>-M</code> for <code>xindy</code> 
+     * <code>-s</code> for <code>makeindex</code> and 
+     * <code>-t</code> and <code>-o</code> for both, 
+     * <code>xindy</code> and <code>makeindex</code>. 
+     * 
+     * @parameter
+     */
+    private String makeGlossariesOptions = "";
+
+    /**
+     * The Pattern in the glg-file 
+     * indicating that {@link #makeGlossariesCommand} failed. 
+     * The default value is <code>(^\*\*\* unable to execute: )</code>. 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     * 
+     * @parameter
+     */
+    private String patternMakeGlossariesErr = 
+	"^\\*\\*\\* unable to execute: ";
+
+    /**
+     * The pattern in the glg-file 
+     * indicating that running <code>xindy</code> 
+     * via {@link #makeGlossariesCommand} failed. 
+     * The default value is <code>(^ERROR: )</code> (note the space). 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     * FIXME: This is not used. 
+     *
+     * @parameter
+     */
+    private String patternErrXindy = "(^ERROR: )";
+
+    /**
+     * The pattern in the glg-file 
+     * indicating a warning when running <code>xindy</code> 
+     * via {@link #makeGlossariesCommand}. 
+     * The default value is <code>(^WARNING: )</code> 
+     * (note the space and the brackets). 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     * 
+     * @parameter
+     */
+    private String patternWarnXindy = "(^WARNING: )";
+
+    /**
+     * The pattern in the log-file which triggers 
+     * rerunning {@link #makeGlossariesCommand} 
+     * followed by {@link #texCommand}. 
+     * This pattern only occurs, if package <code>rerunfilecheck</code> 
+     * is used with option <code>glossary</code>. 
+     * The default value 
+     * is chosen according to the package documentation. 
+     * If the user finds that default value is not appropriate, 
+     * (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
+     * 
+     * @parameter
+     */
+    private String patternMakeGlossariesNeedsReRun = 
+	//"^Package rerunfilecheck Warning: File `.*\\.glo' has changed\\.$" +
+	// FIXME: really MAKEINDEX! 
+	// Problem: package glossaries redefines makeglossary 
+	// which breaks this solution with rerunfilecheck 
+	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get glossary right\\.$";
+
+    /**
+     * The tex4ht command. 
+     * Possible values are e.g. 
+     * <code>htlatex</code> and <code>htxelatex</code>. 
+     * The default value (for which this software is also tested) 
+     * is <code>htlatex</code>. 
+     *
+     * @parameter
+     */
+    private String tex4htCommand = "htlatex";
+
+    /**
+     * The options for the <code>tex4ht</code>-style 
+     * which creates a dvi-file or a pdf-file 
+     * with information to create sgml, 
+     * e.g. html or odt or something like that. 
+     * The default value is <code>html,2</code>. 
+     *
+     * @parameter
+     */
+    private String tex4htStyOptions = "html,2";
+
+    /**
+     * The options for <code>tex4ht</code> which extracts information 
+     * from a dvi-file or from a pdf-file 
+     * into the according lg-file and idv-file producing html-files 
+     * and by need and if configured accordingly 
+     * svg-files, 4ct-files and 4tc-files and a css-file and a tmp-file.
+     * The former two are used by <code>t4ht</code> 
+     * which is configured via {@link #t4htOptions}. 
+     *
+     * @parameter
+     */
+    private String tex4htOptions = "";
+
+    /**
+     * The options for <code>t4ht</code> which converts idv-file and lg-file 
+     * into css-files, tmp-file and, 
+     * by need and if configured accordingly into png files. 
+     * The value <code>-p</code> prevents creation of png-pictures.
+     * The default value is the empty string. 
+     *
+     * @parameter
+     */
+    private String t4htOptions = "";
+
+    /**
+     * The latex2rtf command to create rtf from latex directly. 
+     * The default value is <code>latex2rtf</code>. 
+     *
+     * @parameter
+     */
+    private String latex2rtfCommand = "latex2rtf";
+
+    // FIXME: provide parameters for latex2rtf 
+
+    /**
+     * The odt2doc command to create MS word-formats from otd-files. 
+     * The default value is <code>odt2doc</code>; 
+     * equivalent here is <code>unoconv</code>. 
+     * Note that <code>odt2doc</code> just calls <code>unoconv</code> 
+     * with odt-files as input and doc-file as default output. 
+     *
+     * @see #odt2docOptions
+     * @parameter
+     */
+    private String odt2docCommand = "odt2doc";
+
+    /**
+     * The options of the command {@link #odt2docCommand}. 
+     * Above all specification of output format via the option <code>-f</code>. 
+     * Invocation is <code>odt2doc -f&lt;format> &lt;file>.odt</code>. 
+     * All output formats are shown by <code>odt2doc --show</code> 
+     * but the formats interesting in this context 
+     * are <code>doc, doc6, doc95,docbook, docx, docx7, ooxml, rtf</code>. 
+     * Interesting also the verbosity options <code>-v, -vv, -vvv</code> 
+     * the timeout <code>-T=secs</code> and <code>--preserve</code> 
+     * to keep permissions and timestamp of the original document. 
+     * The default value is <code>-fdocx</code>. 
+     *
+     * @see #odt2docCommand
+     * @parameter
+     */
+    private String odt2docOptions = "-fdocx";
+
+    /**
+     * The pdf2txt command converting pdf into plain text. 
+     * The default value is <code>pdftotext</code>. 
+     *
+     * @see #pdf2txtOptions
+     * @parameter
+     */
+    private String pdf2txtCommand = "pdftotext";
+
+    /**
+     * The options of the pdf2txt command. 
+     * The default value is the empty string. 
+     *
+     * @see #pdf2txtCommand
+     * @parameter
+     */
+    private String pdf2txtOptions = "";
 
 
     // cleanup 
@@ -665,8 +674,6 @@ public class Settings {
      * @parameter
      */
     private boolean cleanUp = true;
-
-    // errors and warnings 
 
 
 
@@ -684,7 +691,6 @@ public class Settings {
     private File getTargetSiteDirectory() {
         return this.targetSiteDirectory;
     }
-
 
     public File getTexSrcDirectoryFile() {
 	return this.texSrcDirectoryFile;
@@ -719,10 +725,12 @@ public class Settings {
         return this.fig2devCommand;
     }
 
+// FIXME: to be renamed: latex2pdf-command 
     public String getTexCommand() {
         return this.texCommand;
     }
 
+    // FIXME: to be renamed: texOptions 
     public String getTexCommandArgs() {
         return this.texCommandArgs;
     }
@@ -731,6 +739,7 @@ public class Settings {
 	return this.patternErrLatex;
     }
 
+    // same pattern as for latex 
     public String getPatternErrMPost() {
 	return this.patternErrLatex;
     }
@@ -747,6 +756,13 @@ public class Settings {
 	return this.debugWarnings;
     }
 
+    public String getPatternLatexNeedsReRun() {
+	return this.patternLatexNeedsReRun;
+    }
+
+    public int getMaxNumReRuns() {
+	return this.maxNumReRuns;
+    }
 
 
     public String getBibtexCommand() {
@@ -760,8 +776,6 @@ public class Settings {
     public String getPatternWarnBibtex() {
 	return this.patternWarnBibtex;
     }
-
-
 
 
     public String getMakeIndexCommand() {
@@ -784,6 +798,7 @@ public class Settings {
 	return this.patternMakeIndexNeedsReRun;
     }
 
+
     public String getMakeGlossariesCommand() {
 	return this.makeGlossariesCommand;
     }
@@ -804,21 +819,23 @@ public class Settings {
 	return this.patternMakeGlossariesNeedsReRun;
     }
 
+
     public String getTex4htCommand() {
         return this.tex4htCommand;
-    }
-
-    public String getTex4htOptions() {
-        return this.tex4htOptions;
     }
 
     public String getTex4htStyOptions() {
         return this.tex4htStyOptions;
     }
 
+    public String getTex4htOptions() {
+        return this.tex4htOptions;
+    }
+
     public String getT4htOptions() {
         return this.t4htOptions;
     }
+
 
     public String getLatex2rtfCommand() {
         return this.latex2rtfCommand;
@@ -845,13 +862,6 @@ public class Settings {
     }
 
 
-    public String getPatternLatexNeedsReRun() {
-	return this.patternLatexNeedsReRun;
-    }
-
-    public int getMaxNumReRuns() {
-	return this.maxNumReRuns;
-    }
 
     // setter methods 
 
@@ -968,6 +978,84 @@ public class Settings {
    	}
     }
 
+ 
+    // setter method for patternErrLatex in maven 
+    public void setPatternErrLatex(String patternErrLatex) {
+	this.patternErrLatex = patternErrLatex;
+    }
+
+    // method introduces patternErrLatex in ant 
+    public PatternErrLatex createPatternErrLatex() {
+   	return new PatternErrLatex();
+    }
+
+    // defines patternErrLatex element with text in ant 
+    public class PatternErrLatex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternErrLatex(pattern);
+   	}
+    }
+
+
+
+    // setter method for patternWarnLatex in maven 
+    public void setPatternWarnLatex(String patternWarnLatex) {
+	this.patternWarnLatex = patternWarnLatex;
+    }
+
+    // method introduces patternWarnLatex in ant 
+    public PatternWarnLatex createPatternWarnLatex() {
+   	return new PatternWarnLatex();
+    }
+
+    // defines patternWarnLatex element with text in ant 
+    public class PatternWarnLatex {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternWarnLatex(pattern);
+   	}
+    }
+
+    public void setDebugBadBoxes(boolean debugBadBoxes) {
+	this.debugBadBoxes = debugBadBoxes;
+    }
+
+    public void setDebugWarnings(boolean debugWarnings) {
+	this.debugWarnings = debugWarnings;
+    }
+
+
+    // setter method for patternLatexNeedsReRun in maven 
+    public void setPatternLatexNeedsReRun(String pattern) {
+	this.patternLatexNeedsReRun = pattern;
+    }
+
+    // method introduces patternLatexNeedsReRun in ant 
+    public PatternLatexNeedsReRun createPatternLatexNeedsReRun() {
+   	return new PatternLatexNeedsReRun();
+    }
+
+    // defines patternNeedAnotherLatexRun element with text in ant 
+    public class PatternLatexNeedsReRun {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternLatexNeedsReRun(pattern);
+   	}
+    }
+
+    public void setMaxNumReRuns(int maxNumReRuns) {
+	assert maxNumReRuns >= -1;
+	this.maxNumReRuns = maxNumReRuns;
+    }
+
+
     public void setBibtexCommand(String bibtexCommand) {
         this.bibtexCommand = bibtexCommand;
     }
@@ -1011,9 +1099,6 @@ public class Settings {
    	    Settings.this.setPatternWarnBibtex(pattern);
    	}
     }
-
-
-
 
 
     public void setMakeIndexCommand(String makeIndexCommand) {
@@ -1122,58 +1207,24 @@ public class Settings {
    	}
     }
 
-    public void setCleanUp(boolean cleanUp) {
-        this.cleanUp = cleanUp;
+ 
+    public void setTex4htCommand(String tex4htCommand) {
+        this.tex4htCommand = tex4htCommand;
     }
 
-    // setter method for patternErrLatex in maven 
-    public void setPatternErrLatex(String patternErrLatex) {
-	this.patternErrLatex = patternErrLatex;
+    public void setTex4htStyOptions(String tex4htStyOptions) {
+	this.tex4htStyOptions = tex4htStyOptions;
+   }
+
+    public void setTex4htOptions(String tex4htOptions) {
+	this.tex4htOptions = tex4htOptions;
     }
 
-    // method introduces patternErrLatex in ant 
-    public PatternErrLatex createPatternErrLatex() {
-   	return new PatternErrLatex();
-    }
-
-    // defines patternErrLatex element with text in ant 
-    public class PatternErrLatex {
-	// FIXME: this is without property resolution. 
-	// to add this need  pattern = getProject().replaceProperties(pattern)
-	// with Task.getProject() 
-   	public void addText(String pattern) {
-   	    Settings.this.setPatternErrLatex(pattern);
-   	}
+     public void setT4htOptions(String t4htOptions) {
+	this.t4htOptions = t4htOptions;
     }
 
 
-    // setter method for patternWarnLatex in maven 
-    public void setPatternWarnLatex(String patternWarnLatex) {
-	this.patternWarnLatex = patternWarnLatex;
-    }
-
-    // method introduces patternWarnLatex in ant 
-    public PatternWarnLatex createPatternWarnLatex() {
-   	return new PatternWarnLatex();
-    }
-
-    // defines patternWarnLatex element with text in ant 
-    public class PatternWarnLatex {
-	// FIXME: this is without property resolution. 
-	// to add this need  pattern = getProject().replaceProperties(pattern)
-	// with Task.getProject() 
-   	public void addText(String pattern) {
-   	    Settings.this.setPatternWarnLatex(pattern);
-   	}
-    }
-
-    public void setDebugBadBoxes(boolean debugBadBoxes) {
-	this.debugBadBoxes = debugBadBoxes;
-    }
-
-    public void setDebugWarnings(boolean debugWarnings) {
-	this.debugWarnings = debugWarnings;
-    }
 
 
     public void setLatex2rtfCommand(String latex2rtfCommand) {
@@ -1196,46 +1247,13 @@ public class Settings {
         this.pdf2txtOptions = pdf2txtOptions.replaceAll("(\t|\n| )+", " ").trim();
     }
 
-    public void setTex4htCommand(String tex4htCommand) {
-        this.tex4htCommand = tex4htCommand;
+
+
+
+   public void setCleanUp(boolean cleanUp) {
+        this.cleanUp = cleanUp;
     }
 
-    public void setTex4htStyOptions(String tex4htStyOptions) {
-	this.tex4htStyOptions = tex4htStyOptions;
-   }
-
-     public void setTex4htOptions(String tex4htOptions) {
-	this.tex4htOptions = tex4htOptions;
-    }
-
-     public void setT4htOptions(String t4htOptions) {
-	this.t4htOptions = t4htOptions;
-    }
-
-    // setter method for patternLatexNeedsReRun in maven 
-    public void setPatternLatexNeedsReRun(String pattern) {
-	this.patternLatexNeedsReRun = pattern;
-    }
-
-    // method introduces patternLatexNeedsReRun in ant 
-    public PatternLatexNeedsReRun createPatternLatexNeedsReRun() {
-   	return new PatternLatexNeedsReRun();
-    }
-
-    // defines patternNeedAnotherLatexRun element with text in ant 
-    public class PatternLatexNeedsReRun {
-	// FIXME: this is without property resolution. 
-	// to add this need  pattern = getProject().replaceProperties(pattern)
-	// with Task.getProject() 
-   	public void addText(String pattern) {
-   	    Settings.this.setPatternLatexNeedsReRun(pattern);
-   	}
-    }
-
-    public void setMaxNumReRuns(int maxNumReRuns) {
-	assert maxNumReRuns >= -1;
-	this.maxNumReRuns = maxNumReRuns;
-    }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -1251,12 +1269,17 @@ public class Settings {
 
         sb.append(", texPath=")         .append(this.texPath);
         sb.append(", fig2devCommand=")  .append(this.fig2devCommand);
+
+
         sb.append(", texCommand=")      .append(this.texCommand);
 	sb.append(", texCommandArgs=")  .append(this.texCommandArgs);
 	sb.append(", patternErrLatex=") .append(this.patternErrLatex);
 	sb.append(", patternWarnLatex=").append(this.patternWarnLatex);
  	sb.append(", debugBadBoxes=")   .append(this.debugBadBoxes);
  	sb.append(", debugWarnings=")   .append(this.debugWarnings);
+	sb.append(", patternLatexNeedsReRun=")
+	    .append(this.patternLatexNeedsReRun);
+	sb.append(", maxNumReRuns=").append(this.maxNumReRuns);
 
         sb.append(", bibtexCommand=")   .append(this.bibtexCommand);
         sb.append(", patternErrBibtex=").append(this.patternErrBibtex);
@@ -1292,9 +1315,6 @@ public class Settings {
         sb.append(", pdf2txtCommand=")  .append(this.pdf2txtCommand);
         sb.append(", pdf2txtOptions=")  .append(this.pdf2txtOptions);
 
-	sb.append(", patternLatexNeedsReRun=")
-	    .append(this.patternLatexNeedsReRun);
-	sb.append(", maxNumReRuns=").append(this.maxNumReRuns);
 	sb.append(", cleanUp=").append(this.cleanUp);
         sb.append(']');
         return sb.toString();
