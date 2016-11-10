@@ -91,9 +91,11 @@
 		outputDirectory="."
 		targets="pdf, html"
 		fig2devCommand="fig2dev"
+		cleanUp='true'
 		texCommand="pdflatex"
 		debugBadBoxes='true'
 		debugWarnings='true'
+		maxNumReRuns='-1'
 		bibtexCommand="bibtex"
 		makeIndexCommand="makeindex"
 		makeIndexOptions="-c"
@@ -109,9 +111,7 @@
 		odt2docCommand="odt2doc"
 		odt2docOptions="-fdocx"
 		pdf2txtCommand="pdftotext"
-		pdf2txtOptions=""
-		maxNumReRuns='-1'
-		cleanUp='true'>
+		pdf2txtOptions="">
 	<patternLatexMainFile>
 	  \s*\\(documentstyle|documentclass).*
 	</patternLatexMainFile>
@@ -132,17 +132,6 @@
 	^* Font .+ does not contain script |
 	^A space is missing\. (No warning)\.)
 	</patternWarnLatex>
-	<patternErrBibtex>error message</patternErrBibtex>
-	<patternWarnBibtex>Warning--</patternWarnBibtex>
-	<patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
-	<patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
-	<patternMakeIndexNeedsReRun>
-	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
-	</patternMakeIndexNeedsReRun>
-	<patternMakeGlossariesNeedsReRun>
-	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
-	</patternMakeGlossariesNeedsReRun>
-
 	<patternLatexNeedsReRun>
 (^LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
 ^Package \w+ Warning: .*Rerun .*$|
@@ -150,6 +139,19 @@
 ^LaTeX Warning: Etaremune labels have changed\.$|
 ^\(rerunfilecheck\)                Rerun to get outlines right$)
 	</patternLatexNeedsReRun>
+
+	<patternErrBibtex>error message</patternErrBibtex>
+	<patternWarnBibtex>Warning--</patternWarnBibtex>
+
+	<patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
+	<patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
+	<patternMakeIndexNeedsReRun>
+	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
+	</patternMakeIndexNeedsReRun>
+
+	<patternMakeGlossariesNeedsReRun>
+	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
+	</patternMakeGlossariesNeedsReRun>
       </settings>
     </latex>
   </target>

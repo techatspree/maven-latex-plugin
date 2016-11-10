@@ -261,6 +261,11 @@
 		 The default value is 'fig2dev'.  -->
 	    <fig2devCommand>fig2dev</fig2devCommand>
   
+            <!-- Clean up the working directory in the end? 
+		 May be used for debugging when setting false. 
+		 The default value is 'true'. -->
+            <cleanUp>false</cleanUp>
+
             <!-- The LaTeX command to create a pdf-file. 
 		 Possible values are e.g. 
 		 'pdflatex', 'lualatex' and 'xelatex'. 
@@ -631,12 +636,7 @@ not allowed:
 		 The default value is the empty string. -->
             <pdf2txtOptions></pdf2txtOptions>
 
-            <!-- Clean up the working directory in the end? 
-		 May be used for debugging when setting false. 
-		 The default value is 'true'. -->
-            <cleanUp>false</cleanUp>
-
- 	  </settings>
+  	  </settings>
 	</configuration>
 
 	<executions>
