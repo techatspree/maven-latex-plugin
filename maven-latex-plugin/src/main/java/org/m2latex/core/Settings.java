@@ -158,6 +158,17 @@ public class Settings {
     private String fig2devCommand = "fig2dev";
 
     /**
+     * Clean up the working directory in the end? 
+     * May be used for debugging when setting to <code>false</code>. 
+     * The default value is <code>true</code>. 
+     *
+     * @parameter
+     */
+    private boolean cleanUp = true;
+
+
+
+    /**
      * The LaTeX command to create a pdf-file. 
      * Possible values are e.g. 
      * <code>pdflatex</code>, <code>lualatex</code> and <code>xelatex</code>. 
@@ -664,18 +675,6 @@ public class Settings {
     private String pdf2txtOptions = "";
 
 
-    // cleanup 
-
-    /**
-     * Clean up the working directory in the end? 
-     * May be used for debugging when setting to <code>false</code>. 
-     * The default value is <code>true</code>. 
-     *
-     * @parameter
-     */
-    private boolean cleanUp = true;
-
-
 
     // getter methods partially implementing default values. 
 
@@ -724,6 +723,12 @@ public class Settings {
     public String getFig2devCommand() {
         return this.fig2devCommand;
     }
+
+    public boolean isCleanUp() {
+        return this.cleanUp;
+    }
+
+
 
 // FIXME: to be renamed: latex2pdf-command 
     public String getTexCommand() {
@@ -857,10 +862,6 @@ public class Settings {
         return this.pdf2txtOptions;
     }
 
-    public boolean isCleanUp() {
-        return this.cleanUp;
-    }
-
 
 
     // setter methods 
@@ -941,6 +942,13 @@ public class Settings {
     public void setFig2devCommand(String fig2devCommand) {
         this.fig2devCommand = fig2devCommand;
     }
+
+    public void setCleanUp(boolean cleanUp) {
+        this.cleanUp = cleanUp;
+    }
+
+
+
 
     public void setTexCommand(String texCommand) {
         this.texCommand = texCommand;
@@ -1250,10 +1258,6 @@ public class Settings {
 
 
 
-   public void setCleanUp(boolean cleanUp) {
-        this.cleanUp = cleanUp;
-    }
-
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -1269,7 +1273,8 @@ public class Settings {
 
         sb.append(", texPath=")         .append(this.texPath);
         sb.append(", fig2devCommand=")  .append(this.fig2devCommand);
-
+	sb.append(", cleanUp=").append(this.cleanUp);
+ 
 
         sb.append(", texCommand=")      .append(this.texCommand);
 	sb.append(", texCommandArgs=")  .append(this.texCommandArgs);
@@ -1315,8 +1320,7 @@ public class Settings {
         sb.append(", pdf2txtCommand=")  .append(this.pdf2txtCommand);
         sb.append(", pdf2txtOptions=")  .append(this.pdf2txtOptions);
 
-	sb.append(", cleanUp=").append(this.cleanUp);
-        sb.append(']');
+       sb.append(']');
         return sb.toString();
     }
 
