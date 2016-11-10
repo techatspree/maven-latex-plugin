@@ -1287,6 +1287,8 @@ when to rerun \LaTeX{} without prior running *****
 
 \subsection{Rerunning the \LaTeX{} processor}\label{subsec:rerunLatex}
 
+FIXME: a word on change in toc, lof and lot. 
+
 As indicated in the previous sections, 
 {\tt latex2pdf} must be rerun, if {\tt bibtex} or {\tt makeindex} had been run 
 to read in the bibliography created by {\tt bibtex} 
@@ -1507,8 +1509,6 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\multicolumn2{|l|}{directories, miscellaneous } \\
-\hline
 \tt texSrcDirectory  & \tt src/site/tex  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -1561,8 +1561,24 @@ Currently only {\tt pdf} combined with {\tt ptx} is supported.
 %The default value is '{\tt fig2dev}'. 
 \end{minipage}
 } \\
+\tt cleanUp             & \tt true             \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Clean up the working directory in the end? 
+May be used for debugging when setting {\tt false}. 
+%The default value is '{\tt true}'. 
+\end{minipage}
+} \\
 \hline
-\multicolumn2{|l|}{latex to pdf} \\
+\caption{\label{tab:paramGen} General parameters}
+\end{longtable}
+
+
+\begin{longtable}{|ll|}
+\hline
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
 \hline
 \tt texCommand       & \tt pdflatex      \\
 \multicolumn2{|l|}{
@@ -1625,8 +1641,43 @@ rerun \LaTeX{} and have a look at the log-file.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
+\tt patternLatexNeedsReRun &  see below ****          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the log file which triggers rerunning \LaTeX{}. 
+This pattern may never be ensured to be complete, 
+because any new package may break completeness. 
+Nevertheless, the default value aims completeness 
+while be restrictive enough not to trigger another \LaTeX{} run if not needed. 
+To ensure termination, let \$maxNumReruns 
+specify the maximum number of \LaTeX{} runs. 
+If the user finds an extension, (s)he is asked to contribute 
+and to notify the developer of this plugin. 
+Then the default value will be extended. 
+\end{minipage}
+} \\
+\tt maxNumReruns        & \tt 5               \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The maximal allowed number of reruns of the \LaTeX{} process. 
+This is to avoid endless repetitions. 
+%The default value is 5. 
+This shall be non-negative 
+or -1 which signifies that there is no threshold. 
+\end{minipage}
+} \\
 \hline
-\multicolumn2{|l|}{bibtex} \\
+\caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
+\end{longtable}
+
+\begin{longtable}{|ll|}
+\hline
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\multicolumn2{|l|}{directories, miscellaneous } \\
+\hline
 \hline
 \tt bibtexcommand    & \tt bibtex        \\
 \multicolumn2{|l|}{
@@ -1655,7 +1706,19 @@ according to the 'bibtex' documentation.
 \end{minipage}
 } \\
 \hline
-\multicolumn2{|l|}{makeindex} \\
+\caption{\label{tab:paramBibTeX} The BibTeX-utility }
+\end{longtable}
+
+
+
+\begin{longtable}{|ll|}
+\hline
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\multicolumn2{|l|}{directories, miscellaneous } \\
+\hline
 \hline
 \tt makeIndexCommand & \tt makeindex     \\
 \multicolumn2{|l|}{
@@ -1690,7 +1753,6 @@ The default value is chosen
 according to the 'makeindex' documentation.
 \end{minipage}
 } \\
-
 \tt patternMakeIndexNeedsReRun & see below         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -1706,7 +1768,17 @@ and to notify the developer of this plugin.
 \end{minipage}
 } \\
 \hline
-\multicolumn2{|l|}{makeglossaries} \\
+\caption{\label{tab:paramMakeIndex} The MakeIndex-utility }
+\end{longtable}
+
+\begin{longtable}{|ll|}
+\hline
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\multicolumn2{|l|}{directories, miscellaneous } \\
+\hline
 \hline
 \tt makeGlossariesCommand & \tt makeglossaries         \\
 \multicolumn2{|l|}{
@@ -1778,7 +1850,18 @@ and to notify the developer of this plugin.
 \end{minipage}
 } \\
 \hline
-\multicolumn2{|l|}{htlatex} \\
+\caption{\label{tab:paramMakeGlossaries} The MakeGlossaries-utility }
+\end{longtable}
+
+
+\begin{longtable}{|ll|}
+\hline
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\multicolumn2{|l|}{directories, miscellaneous } \\
+\hline
 \hline
 \tt tex4htCommand       & \tt htlatex  \\
 \multicolumn2{|l|}{
@@ -1805,31 +1888,28 @@ The value '-p' prevents creation of \gls{png}-pictures.
 %The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternLatexNeedsReRun &  see below ****          \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-The pattern in the log file which triggers rerunning \LaTeX{}. 
-This pattern may never be ensured to be complete, 
-because any new package may break completeness. 
-Nevertheless, the default value aims completeness 
-while be restrictive enough not to trigger another \LaTeX{} run if not needed. 
-To ensure termination, let \$maxNumReruns 
-specify the maximum number of \LaTeX{} runs. 
-If the user finds an extension, (s)he is asked to contribute 
-and to notify the developer of this plugin. 
-Then the default value will be extended. 
-\end{minipage}
-} \\
-\tt maxNumReruns        & \tt 5               \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-The maximal allowed number of reruns of the \LaTeX{} process. 
-This is to avoid endless repetitions. 
-%The default value is 5. 
-This shall be non-negative 
-or -1 which signifies that there is no threshold. 
-\end{minipage}
-} \\
+\hline
+\caption{\label{tab:paramLatex2Html} The \LaTeX-to-html-converter }
+\end{longtable}
+
+
+
+\begin{longtable}{|ll|}
+\hline
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\multicolumn2{|l|}{directories, miscellaneous } \\
+\hline
+\multicolumn2{|l|}{latex to pdf} \\
+\multicolumn2{|l|}{bibtex} \\
+\multicolumn2{|l|}{makeindex} \\
+\hline
+\multicolumn2{|l|}{makeglossaries} \\
+\hline
+\multicolumn2{|l|}{htlatex} \\
+\hline
 \tt latex2rtfCommand    & \tt latex2rtf        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -1874,14 +1954,6 @@ The pdf2txt command converting pdf into plain text.
 \begin{minipage}{0.95\linewidth}
 The options of the pdf2txt command. 
 %The default value is the empty string. 
-\end{minipage}
-} \\
-\tt cleanUp             & \tt true             \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Clean up the working directory in the end? 
-May be used for debugging when setting {\tt false}. 
-%The default value is '{\tt true}'. 
 \end{minipage}
 } \\
 \hline
