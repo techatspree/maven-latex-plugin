@@ -26,7 +26,7 @@ public enum LatexDev {
 	}
 	String getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
 	    return fileUtils.replaceSuffix(srcFile, LatexProcessor.SUFFIX_PDF)
-		.toString();
+		.getName();
 	}
     },
     // latex creates dvi but not with the given drivers. 
@@ -42,7 +42,7 @@ public enum LatexDev {
 	}
 	String getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
 	    return fileUtils.replaceSuffix(srcFile, LatexProcessor.SUFFIX_PSTEX)
-		.toString();
+		.getName();
 	}
     };
 
