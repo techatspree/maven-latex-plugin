@@ -414,7 +414,7 @@ Only if the folder structure deviates from the standard
 or if the \LaTeX{} sources require special configuation, 
 parameters have to be given explicitly, 
 because they deviate from the default values. 
-Section \ref{subsec:settingsOverview} summarizes all available parameters, 
+Section \ref{sec:settings} summarizes all available parameters, 
 giving the default value and a description. 
 
 
@@ -600,41 +600,50 @@ figures stored in .fig-files are supported.
 To export a file {\tt xxx.fig} into several external formats, 
 {\tt xfig} uses {\tt fig2dev}. 
 Among others, {\tt fig2dev} supports export to mixed pdf and \LaTeX{}: 
-graphics in pdf and text in \LaTeX{} which yields the fonts typical for \LaTeX{}. 
+graphics in pdf 
+and text typically in \LaTeX{} which yields the fonts 
+characteristic for \LaTeX{} or also in pdf, 
+which yields postscript fonts. 
+the alternative is controlled via the ``special''-flag in the fig-file: 
+if set, the text is typeset in \LaTeX- or in pdf-format, 
+depending on whether the special-flag is set for that text. 
+\index{special-flag}%maybe glossary 
+
+
 Accordingly, the export requires two commands and yields two files: 
 %
-\begin{verbatim}
-fig2dev -L pdftex          xxx.fig xxx.pdf   
-fig2dev -L pdftex_t -p pdf xxx.fig xxx.ptx
-\end{verbatim}
+\begin{Verbatim}[fontsize=\scriptsize]
+fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfOptions>            xxx.fig xxx.pdf   
+fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions> -p xxx.pdf xxx.fig xxx.ptx
+\end{Verbatim}
 %
-yield {\tt xxx.pdf} and {\tt xxx.ptx}, respectively, 
-the latter, \gls{ptx}, containing \LaTeX{} and including the former 
+Both commands specify the input file {\tt xxx.fig}, 
+both use the options given by the parameter {\tt fig2devGenOptions} 
+while each invocation allows to specify also specific options, 
+{\tt fig2devPdfOptions} and {\tt fig2devPtxOptions}, respectively, 
+and both use the option {\tt -L} to specify the output language. 
+
+Here, {\tt pdftex} means pdf-format but without text with special-flag set. 
+Accordingly, {\tt xxx.pdf} corresponds with {\tt xxx.fig} in pdf-format 
+without ``special texts''. 
+Correspongdingly, {\tt pdftex\_t} specifies 
+that the ouput file {\tt xxx.ptx} is in the \LaTeX-format 
+including only ``special texts'' in {\tt xxx.fig}. 
+Unlike one can read in the documentation of {\tt fig2dev}, 
+the option {\tt -p xxx.pdf} does not stand for ``portrait'' 
+as opposed to {\tt -l xxx.pdf} for ``landscape'' 
+with dummy argument {\tt xxx.pdf}. 
+The truth is that {\tt -p xxx.pdf} says, 
+that in {\tt xxx.ptx} the file {\tt xxx.pdf} must be included 
 using the command {\tt\textbackslash includegraphics}. 
-Thus the according \LaTeX{} main document must use packages graphicx and xcolor 
+
+Thus the according \LaTeX{} main document 
+must use packages {\tt graphicx} and {\tt xcolor} 
 as indicated in Section \ref{subsec:figpdf}. 
 The file {\tt xxx.ptx} is ``inputted'' into the tex-file 
 with the {\tt\textbackslash input}-command. 
 Note that this is appropriate for \LaTeX{} creating pdf-files, 
 not postscript or dvi. 
-
-In the {\tt fig2dev}-commands above, 
-the option {\tt -L} specifies the language of the output file. 
-In the first command the language is {\tt pdftex} 
-which is just the picture without text in pdf-format; 
-the according output file is  {\tt xxx.pdf}. 
-In the second command the lanugage is {\tt pdftex\_t} 
-which is just \LaTeX{} and 
-comprises the text of the picture and the inclusion of {\tt xxx.pdf}
-via {\tt\textbackslash includegraphics\{xxx.pdf\}}; 
-the according output file is {\tt xxx.ptx}. 
-
-{\tt -p pdf} specifies portrait 
-(also {\tt -l pdf} for landscape would be possible). 
-According to the documentation, {\tt pdf} is ignored, 
-but experiments show another truth. 
-For more options type {\tt fig2def -h} or consult the manual pages. 
-
 
 Note also that by convention, the ending for the included \LaTeX-file 
 is not {\tt ptx} but {\tt pdf\_t}. 
@@ -664,9 +673,13 @@ performing exactly the transformations given in Figure \ref{fig:fig2dev},
 except {\tt fig2dev} itself. 
 
 At the same time, Figure \ref{fig:fig2dev} is an example 
-for a \LaTeX-file created from a fig-file 
+for a \LaTeX-file {\tt xxx.ptx} created from a fig-file 
 and embedded in this \LaTeX-file 
 with the {\tt\textbackslash input}-command. 
+Note that all text labels are created with the special-option, 
+and are thus included as \LaTeX-text, 
+except the text {\bf\tiny postscript} 
+which is typeset with a postscipt font. 
 
 
 \begin{figure}[htb]
@@ -679,28 +692,49 @@ with the {\tt\textbackslash input}-command.
 
 \subsection{Conversion of gnuplot-files}\label{subsec:gnuplot2pdf}
 
-Plots drawn with {\tt gnuplot}, or, to be more precise, 
-figures stored in .plt-files created by {\tt gnuplot} are supported. 
+This software supports plots drawn with {\tt gnuplot}, or, to be more precise, 
+figures stored in .plt-files created by {\tt gnuplot}. 
 To export a file {\tt xxx.plt} into several external formats, 
-uses {\tt gnuplot} itself. 
-Among others, {\tt gnuplot} supports export to mixed pdf and \LaTeX{}: 
-graphics in pdf and text in \LaTeX{} which yields the fonts typical for \LaTeX{}. 
-Accordingly, the export requires two commands and yields two files: 
-The command 
+it uses {\tt gnuplot} itself. 
+According to the manual \cite{GnuPlot}, Part IV, 
+{\tt gnuplot} supports output formats through so called {\em terminals}. 
+Among those are several ones intended for inclusion into latex-files, 
+like {\tt Cairolatex}, {\tt Eepic}, {\tt Epslatex}, {\tt Latex}, {\tt Lua}, 
+{\tt Mf}, {\tt Mp}, {\tt Postscript}, {\tt Ps(la)tex}, {\tt Pstricks}, 
+{\tt Texdraw} and {\tt Tpic}. 
+Note that also export into the fig-format via the terminal {\tt Fig} 
+is supported which in turn may be included in latex 
+as described in Section \ref{subsec:fig2dev}. 
+Also {\tt gnuplot} pictures may be exported in metapost format 
+which in turn may be included in latex 
+as described in Section \ref{subsec:metapost}. 
+
+This software supports only the export via the terminal {\tt Cairolatex} 
+which offers export to mixed pdf and \LaTeX: 
+graphics in pdf and text in \LaTeX{}
+which yields the fonts typical for \LaTeX{} 
+as described for fig-files in Section \ref{subsec:fig2dev}. 
+
+Accordingly, the export yields two files 
+but unlike for fig-files these are created with a single command: 
 %
 \begin{verbatim}
-gnuplot -e  "set terminal cairolatex pdf;
-             set output 'gnuplot.ptx';
-             load 'gnuplot.plt'"
+gnuplot -e "set terminal cairolatex pdf <gnuplotOptions>;
+            set output 'gnuplot.ptx';
+            load 'gnuplot.plt'"
 \end{verbatim}
 %
 exports {\tt xxx.plt} to {\tt xxx.ptx} and to {\tt xxx.pdf}, 
-the former containing \LaTeX{} and including the latter. 
+the former containing \LaTeX{} and including the latter 
+using options given by the parameter {\tt gnuplotOptions}. 
 Note that this is appropriate for \LaTeX{} creating pdf-files, 
 not postscript or \gls{dvi}. 
+Strictly speaking, {\tt pdf} is another option, 
+but it is set internally and may thus not be specified 
+explicitly via the parameter {\tt gnuplotOptions}. 
 
-FIXME: 
-Here further options are missing: 
+%FIXME: 
+%Here further options are missing: 
 %   // set terminal pdf {monochrome|color|colour}
 %    //                      {{no}enhanced}
 %    //                      {fname "<font>"} {fsize <fontsize>}
@@ -740,21 +774,36 @@ Converted sample gnuplot-file into ptx and pdf files }
 A graphic format, very native to TeX is {\tt metapost}, 
 a derivative of {\tt metafont} originally used to describe shape of fonts. 
 Although seemingly supported by TeX only, 
-{\tt metapost} is interesting as it is a graphical programming language, 
+{\tt metapost} is interesting at its own, 
+as it is a graphical programming language, 
 Turing complete, much like postscript. 
 Files containing {\tt metapost} have the ending {\tt mp}. 
-The interpreter for {\tt metapost} is {\tt mpost}. 
+The interpreter for {\tt metapost} 
+is given by the parameter {\tt metapostCommand} 
+which defaults to {\tt mpost}. 
+
+
 Figure \ref{fig:mp2mps} illustrates how {\tt mpost} converts an \gls{mp}-file 
-{\tt xxx.mp} 
+{\tt xxx.mp} by default: 
+%
+\begin{itemize}
+\item
 into one or more \gls{mps}-files {\tt xxx1.mps}\dots {\tt xxxn.mps}, 
 (as the mp-file may declare more than one figure) 
-creating a log-file {\tt xxx.log} like \LaTeX{} does 
+\item
+creating a log-file {\tt xxx.log} much like \LaTeX{} does 
+\item
 and an \gls{mpx}-file {\tt xxx.mpx} containing the text of the figure. 
+\end{itemize}
+
 The mps-files look like postscript, or more like encapsulated postscript, 
 but are not completely valid, since the prologue is missing, by default. 
 Inserting the line {\tt prologues := 2;} in the first line of the mp-file 
 solves the problem as \cite{MPost}, Section 14.2.1 explains. 
 Then it can be viewed in ghostscript. 
+
+A much better alternative is to specify the the option 
+
 
 Roughly speaking, the mpx-file contains text parts of the mp-file; 
 more knowledge is not necessary, as the texts are also in the mps-files 
@@ -782,7 +831,8 @@ with the {\tt\textbackslash includegraphics}-command.
 Converted sample metapost-file included as mps-file  }
 \end{figure}
 
-Note that metapost may also besides \gls{eps} output \gls{svg} and \gls{png}, 
+Note that {\tt metapostCommand} may also besides \gls{eps} 
+output \gls{svg} and \gls{png}, 
 just by setting 
 %
 \begin{verbatim}
@@ -797,7 +847,15 @@ One would also adapt
 outputtemplate:="\%j\%c.svg"
 \end{verbatim}
 %
-and finally: 
+to control the names of the mps-files created. 
+Here {\tt\%j} represents the jobname and $\%c$ the number. 
+One may well define alternatively 
+%
+\begin{verbatim}
+outputtemplate:="\%j-\%c.svg"
+\end{verbatim}
+
+Finally we may set: 
 %
 \begin{verbatim}
 prologues := 3;
@@ -819,11 +877,18 @@ As an alternative, {\tt mpost} compiler may be invoked with option
 \end{verbatim}
 %
 described in \cite{MPost}, Appendix B.2.1. 
+That way we can set internal variables with values 
+overwriting those given by the mp-files. 
+We recommend specification of internal variables through options 
+if required globally. 
+
 This would lead to invocation 
 %
 \begin{Verbatim}[fontsize=\scriptsize]
-mpost -s ’outputformat="svg"’ -s ’outputtemplate:="%j%c.svg"' -s prologues=3 file.mp
+mpost -s 'outputformat="svg"' -s 'outputtemplate:="%j%c.svg"' -s prologues=3 file.mp
 \end{Verbatim}
+
+
 
 \subsection{Pictures which are not created}\label{subsec:picasis}
 
@@ -892,8 +957,7 @@ Master tex-files have the form
 To satisfy this task, one may apply a \LaTeX{} to pdf converter {\tt latex2pdf} 
 to a master tex-file {\tt xxx.tex}. 
 The \LaTeX-to-pdf converter {\tt latex2pdf} 
-is configurable via the parameter {\tt texCommand} 
-(misleading name, I know, but short). 
+is configurable via the parameter {\tt latex2pdfCommand}. 
 Possible values are {\tt pdflatex}, {\tt lualatex} and {\tt xelatex}, 
 where the first is the default for which this software is also tested. 
 It is also possible to pass parameters to the \LaTeX{} to pdf converter. 
@@ -1482,26 +1546,76 @@ How to work on: First step: %
 Then have a look at the logging file. 
 
 
-\section{Settings}\label{sec:settings}
+\section{Parameters resp. Settings}\label{sec:settings}
 
 This section describes the parameters 
 of both the ant-task and the maven-plugin. 
-After an overview in Section \ref{subsec:settingsOverview}, 
-We give in depth explanations in Section \ref{subsec:settingsDetail}. 
-
-\section{Overview and Listings}\label{subsec:settingsOverview}
-
-First we provide a table, Table \ref{tab:parameters} 
-with parameter names, default values 
-and explanation, then listings of the configuration 
-in the {\tt pom.xml} for the maven-plugin 
-and in the {\tt build.xml} for the ant-task. 
-The listing of the {\tt build.xml} shows 
-which parameters are attributes and which ones are text elements. 
-In {\tt pom.xml} only text elements occur. 
+The parameters are listed 
+in Tables \ref{tab:paramGen} through  \ref{tab:paramExt} 
+with names, default values and short explanations. 
 Note that neither of the parameters is mandatory, 
 as there are always valid default values. 
 
+Each of the tables is described in a separate section. 
+Table \ref{tab:paramGen} 
+shows parameter controlling the general conversion process 
+described in detail in Section \ref{subsec:settingsGen}. 
+These are directories with names {\tt xxxDirectory} 
+and further parameters not following a naming convention. 
+The other tables show parameters after a certain naming scheme: 
+Command names have the form {\tt xxxCommand} 
+and the parameter with the according options have the form {\tt xxxOptions}. 
+Here {\tt xxx} represents a certain converter. 
+This is one of 
+%
+\begin{itemize}
+\item[fig2dev]
+The converter of fig-files into mixed latex- and pdf-files. 
+\item[gnuplot]
+The converter of gnuplot-files into mixed latex- and pdf-files. 
+\item[metapost]
+The converter of metapost-files into mixed latex- and pdf-files.
+\item[latex2pdf]
+The converter of latex-files into pdf-files. 
+\item[bibtex]
+The creator of a bibliography from an aux-file.
+\item[MakeIndex]
+The makeindex utility creating an index. 
+\item[MakeGlossaries]
+The makeglossaries utility creating a glossary. 
+\item[tex4ht]
+The converter of latex into html and also into odt, 
+depending on the parameters. 
+\item[latex2rtf]
+The converter of latex-files into rtf-files. 
+\item[odt2doc]
+The converter of odt-files into doc(x)-files. 
+\item[pdf2txt]
+The converter of pdf-files into txt-files. 
+\end{itemize}
+
+It is a little more complicated 
+with the parameters in Section \ref{subsec:settingsLatex2Html}. 
+
+There are some parameters of the form {\tt patternXxxYyy}, 
+referring to a pattern in the log-file of the converter {\tt Xxx} 
+indicating an event {\tt Yyy} which is one of the following: 
+%
+\begin{itemize}
+\item[ReRun]
+indicates that {\tt Xxx} needs to be rerun.
+\item[Err]
+indicates that {\tt Xxx} had an error. 
+\item[Warn]
+indicates that {\tt Xxx} had a warning. 
+\end{itemize}
+
+
+\subsection{General Parameters}\label{subsec:settingsGen}
+
+This section describes the parameters of Table \ref{tab:paramGen}. 
+
+TODO: do this. 
 
 \begin{longtable}{|ll|}
 \hline
@@ -1553,14 +1667,6 @@ and even $<$texPath$>$\ \ \ \ $<$/texPath$>$ represent the null-File.
 The default value is null.
 \end{minipage}
 } \\
-\tt fig2devCommand   & \tt fig2dev  \index{fig2dev}     \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-The fig2dev command for conversion of fig-files into various formats. 
-Currently only {\tt pdf} combined with {\tt ptx} is supported. 
-%The default value is '{\tt fig2dev}'. 
-\end{minipage}
-} \\
 \tt cleanUp             & \tt true             \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -1573,6 +1679,13 @@ May be used for debugging when setting {\tt false}.
 \caption{\label{tab:paramGen} General parameters}
 \end{longtable}
 
+\subsection{Parameters for graphical preprocessing}\label{subsec:settingsGraph}
+
+This section describes the parameters for graphical preprocessing 
+given in Table \ref{tab:paramGraphics}. 
+
+TODO: do this. 
+
 
 \begin{longtable}{|ll|}
 \hline
@@ -1580,18 +1693,128 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\tt texCommand       & \tt pdflatex      \\
+\tt fig2devCommand   & \tt fig2dev  \index{fig2dev}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The fig2dev command for conversion of fig-files into various formats. 
+Currently only {\tt pdf} combined with {\tt ptx} is supported. 
+%The default value is '{\tt fig2dev}'. 
+\end{minipage}
+} \\
+\tt fig2devGenOptions   & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \$fig2devCommand 
+common to both output languages. 
+For the options specific for the two output langugages 
+'pdftex' and 'pdftex\_t', 
+see \$fig2devPtxOptions and \$fig2devPdfOptions, 
+respectively. 
+% The default value is the empty string. 
+\end{minipage}
+} \\
+\tt fig2devPtxOptions   & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \$fig2devCommand 
+specific for the output language 'pdftex\_t'. 
+Note that in addition to these options, 
+the option '-L pdftex\_t' specifies the language, 
+\$fig2devGenOptions specifies the options 
+common for the two output langugages 
+'pdftex' and 'pdftex\_t' 
+and '-p xxx.pdf' specifies the pdf-file to be included. 
+% The default value for this option is the empty string. 
+\end{minipage}
+} \\
+\tt fig2devPdfOptions   & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \$fig2devCommand 
+specific for the output language 'pdftex'. 
+Note that in addition to these option1s, 
+the option '-L pdftex' specifies the language and 
+\$fig2devGenOptions specifies the options 
+common for the two output langugages 
+'pdftex' and 'pdftex\_t'. 
+% The default value for this option is the empty string. 
+\end{minipage}
+} \\
+\hline
+\tt gnuplotCommand   & \tt gnuplot  \index{gnuplot}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command for conversion of gnuplot-files 
+into various formats. 
+Currently only pdf (graphics) 
+combined with pdf\_t (latex-texts) is supported. 
+% The default value is 'gnuplot'. 
+\end{minipage}
+} \\
+\tt gnuplotOptions   & empty    \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options specific for \$gnuplotCommand's 
+output terminal 'cairolatex', 
+used for mixed latex/pdf-creation. 
+Note that the option 'pdf|eps' 
+of the terminal 'cairolatex' is not available, 
+because it is set internally. 
+% The default option string is empty. 
+\end{minipage}
+} \\
+\hline
+\tt metapostCommand   & \tt mpost  \index{metapost}\index{mpost}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command for conversion of gnuplot-files 
+into metapost's postscript. 
+% The default value is 'mpost'. 
+\end{minipage}
+} \\
+\tt metapostOptions   & see below  \\%\tt\small -interaction=nonstopmode -recorder -s prologues=2
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command {\tt\$metapostCommand}.
+Leading and trailing blanks are ignored. 
+A sequence of at least one blank separate the proper options. 
+%The default value is 
+%'{\tt-interaction=nonstopmode -recorder -s prologues=2}'. 
+\end{minipage}
+} \\
+\hline
+\caption{\label{tab:paramGraphics} Parameters for graphics preprocessing}
+\end{longtable}
+
+
+
+\subsection{Parameters for the \LaTeX-to-pdf Conversion}
+\label{subsec:settingsLatex2pdf}
+
+This section describes the parameters 
+of the \LaTeX-to-pdf converter 
+which are given in Table \ref{tab:paramLatex2pdf}. 
+
+TODO: do this. 
+
+
+\begin{longtable}{|ll|}
+\hline
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\tt latex2pdfCommand       & \tt pdflatex      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The \LaTeX{} command to create a pdf-file with. 
 %The default value is '{\tt pdflatex}'. 
 \end{minipage}
 } \\
-\tt texCommandArgs   & see below  \\%\tt\small -interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
+\tt latex2pdfOptions   & see below  \\%\tt\small -interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The arguments string to use 
-when calling \LaTeX{} via {\tt\$texCommand}.
+The options for the command {\tt\$latex2pdfCommand}.
 Leading and trailing blanks are ignored. 
 A sequence of at least one blank separate the proper options. 
 %The default value is 
@@ -1602,7 +1825,7 @@ A sequence of at least one blank separate the proper options.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-indicating a failure when running the {\tt\$texCommand}. 
+indicating a failure when running the {\tt\$latex2pdfCommand}. 
 %The default value is 
 %'{\tt ! $|$Fatal error$|$LaTeX Error$|$Emergency stop}'. 
 If this is not complete, please extend 
@@ -1613,7 +1836,7 @@ and notify the developer of this plugin.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-indicating a warning when running \$texCommand. 
+indicating a warning when running \$latex2pdfCommand. 
 It is designed to be as complete as possible 
 while not indicating a warning where not appropriate. 
 If the current default value is not appropriate, 
@@ -1621,7 +1844,7 @@ please overwrite and notify the developer of this plugin.
 % The default value is given below. 
 \end{minipage}
 } \\
-\tt debugbadboxes    & \tt true          \\
+\tt debugBadBoxes    & \tt true          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -1631,7 +1854,7 @@ rerun \LaTeX{} and have a look at the log-file.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
-\tt debugwarnings    & \tt true          \\
+\tt debugWarnings    & \tt true          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether debugging of warnings is on: 
@@ -1641,7 +1864,7 @@ rerun \LaTeX{} and have a look at the log-file.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
-\tt patternLatexNeedsReRun &  see below ****          \\
+\tt patternReRunLatex &  see below ****          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers rerunning \LaTeX{}. 
@@ -1649,14 +1872,14 @@ This pattern may never be ensured to be complete,
 because any new package may break completeness. 
 Nevertheless, the default value aims completeness 
 while be restrictive enough not to trigger another \LaTeX{} run if not needed. 
-To ensure termination, let \$maxNumReruns 
+To ensure termination, let \$maxNumRerunsLatex 
 specify the maximum number of \LaTeX{} runs. 
 If the user finds an extension, (s)he is asked to contribute 
 and to notify the developer of this plugin. 
 Then the default value will be extended. 
 \end{minipage}
 } \\
-\tt maxNumReruns        & \tt 5               \\
+\tt maxNumRerunsLatex        & \tt 5               \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The maximal allowed number of reruns of the \LaTeX{} process. 
@@ -1670,21 +1893,35 @@ or -1 which signifies that there is no threshold.
 \caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
 \end{longtable}
 
+
+\subsection{Parameters for Creation of the Bibliography}
+\label{subsec:settingsBibTeX}
+
+This section describes the parameters 
+or creation of the bibliography
+which are given in Table \ref{tab:paramBibTeX}. 
+
+TODO: do this. 
+
 \begin{longtable}{|ll|}
 \hline
 Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\multicolumn2{|l|}{directories, miscellaneous } \\
-\hline
-\hline
-\tt bibtexcommand    & \tt bibtex        \\
+\tt bibtexCommand    & \tt bibtex        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The BibTeX command to create a bbl-file 
 from an aux-file and a bib-file (using a bst-style file). 
 %The default value is '{\tt bibtex}'. 
+\end{minipage}
+} \\
+\tt bibtexOptions    & empty        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \$bibtexCommand. 
+% The default value is the empty string.
 \end{minipage}
 } \\
 \tt patternErrBibtex    & \tt error message        \\
@@ -1709,15 +1946,20 @@ according to the 'bibtex' documentation.
 \caption{\label{tab:paramBibTeX} The BibTeX-utility }
 \end{longtable}
 
+\subsection{Parameters for Creation of the Index}
+\label{subsec:settingsMakeIndex}
+
+This section describes the parameters 
+or creation of the index
+which are given in Table \ref{tab:paramMakeIndex}. 
+
+TODO: do this. 
 
 
 \begin{longtable}{|ll|}
 \hline
 Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
-\hline
-\hline
-\multicolumn2{|l|}{directories, miscellaneous } \\
 \hline
 \hline
 \tt makeIndexCommand & \tt makeindex     \\
@@ -1735,7 +1977,7 @@ The options for the MakeIndex command.
 % The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternErrMakeindex & \tt (!! Input index error )        \\
+\tt patternErrMakeIndex & \tt (!! Input index error )        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
@@ -1744,7 +1986,7 @@ The default value is chosen
 according to the 'makeindex' documentation.
 \end{minipage}
 } \\
-\tt patternWarnMakeindex & \tt (\#\# Warning )        \\
+\tt patternWarnMakeIndex & \tt (\#\# Warning )        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
@@ -1753,7 +1995,7 @@ The default value is chosen
 according to the 'makeindex' documentation.
 \end{minipage}
 } \\
-\tt patternMakeIndexNeedsReRun & see below         \\
+\tt patternReRunMakeIndex & see below         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file which triggers 
@@ -1771,13 +2013,21 @@ and to notify the developer of this plugin.
 \caption{\label{tab:paramMakeIndex} The MakeIndex-utility }
 \end{longtable}
 
+\subsection{Parameters for Creation of the Glossary}
+\label{subsec:settingsMakeGlossaries}
+
+This section describes the parameters 
+or creation of the glossary
+which are given in Table \ref{tab:paramMakeGlossaries}. 
+
+TODO: do this. 
+
+
+
 \begin{longtable}{|ll|}
 \hline
 Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
-\hline
-\hline
-\multicolumn2{|l|}{directories, miscellaneous } \\
 \hline
 \hline
 \tt makeGlossariesCommand & \tt makeglossaries         \\
@@ -1805,7 +2055,7 @@ Options '-M<' for 'xindy'
 '-s' for 'makeindex</code> and '-t' and '-o' for both, 'xindy' and 'makeindex'. 
 \end{minipage}
 } \\
-\tt patternMakeGlossariesErr & 
+\tt patternErrMakeGlossaries & 
 \tt(\^\textbackslash*\textbackslash*\textbackslash* unable to execute: ) \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -1835,7 +2085,7 @@ If the default value is not appropriate, please modify
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt  & see below         \\
+\tt patternReRunMakeGlossaries  & see below         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers 
@@ -1854,13 +2104,22 @@ and to notify the developer of this plugin.
 \end{longtable}
 
 
+
+\subsection{Parameters for the \LaTeX-to-html Conversion}
+\label{subsec:settingsLatex2Html}
+
+This section describes the parameters 
+of the \LaTeX-to-html converter 
+which are given in Table \ref{tab:paramLatex2Html}. 
+
+TODO: do this. 
+
+
+
 \begin{longtable}{|ll|}
 \hline
 Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
-\hline
-\hline
-\multicolumn2{|l|}{directories, miscellaneous } \\
 \hline
 \hline
 \tt tex4htCommand       & \tt htlatex  \\
@@ -1892,6 +2151,15 @@ The value '-p' prevents creation of \gls{png}-pictures.
 \caption{\label{tab:paramLatex2Html} The \LaTeX-to-html-converter }
 \end{longtable}
 
+\subsection{Parameters for Conversion into further Formats}
+\label{subsec:settingsExt}
+
+This section describes the parameters 
+of the converter of \LaTeX{} to further formats 
+which are given in Table \ref{tab:paramExt}. 
+
+TODO: do this. 
+
 
 
 \begin{longtable}{|ll|}
@@ -1900,21 +2168,18 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\multicolumn2{|l|}{directories, miscellaneous } \\
-\hline
-\multicolumn2{|l|}{latex to pdf} \\
-\multicolumn2{|l|}{bibtex} \\
-\multicolumn2{|l|}{makeindex} \\
-\hline
-\multicolumn2{|l|}{makeglossaries} \\
-\hline
-\multicolumn2{|l|}{htlatex} \\
-\hline
 \tt latex2rtfCommand    & \tt latex2rtf        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The latex2rtf command to create rtf from latex directly. 
 %The default value is '{\tt latex2rtf}'. 
+\end{minipage}
+} \\
+\tt latex2rtfOptions    & empty        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options of the command \$latex2rtfCommand. 
+% The default value is the empty string. 
 \end{minipage}
 } \\
 \tt odt2docCommand      & \tt odt2doc          \\
@@ -1957,9 +2222,27 @@ The options of the pdf2txt command.
 \end{minipage}
 } \\
 \hline
-\caption{\label{tab:parameters} The parameters of task and plugin }
+\caption{\label{tab:paramExt} The parameters of further converters }
 \end{longtable}
 
+\section{Messages}
+FIXME: to be added. 
+\subsection{Warnings}
+\subsection{Errors}
+
+%\begin{longtable}
+
+%\end{longtable}
+
+
+\section{Listings}\label{subsec:listings}
+
+First we provide listings of the configuration 
+in the {\tt pom.xml} for the maven-plugin 
+and in the {\tt build.xml} for the ant-task. 
+The listing of the {\tt build.xml} shows 
+which parameters are attributes and which ones are text elements. 
+In {\tt pom.xml} only text elements occur. 
 
 
 The maven-plugin described here, 
@@ -1985,22 +2268,6 @@ requires the following target and task definition in {\tt build.xml}.
 \lstset{language=xml, basicstyle=\scriptsize}
 \lstinputlisting[firstline=80, lastline=154]{../../../build.xml}
 
-\subsection{Details}\label{subsec:settingsDetail}
-
-Note that all parameters have default values 
-and that thus neither has to be specified explicitly. 
-We now discuss the individual parameters in depth. 
-
-TODO: do this. 
-
-\section{Messages}
-FIXME: to be added. 
-\subsection{Warnings}
-\subsection{Errors}
-
-%\begin{longtable}
-
-%\end{longtable}
 
 
 \section{Gaps}\label{sec:gaps}
