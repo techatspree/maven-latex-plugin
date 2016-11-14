@@ -56,6 +56,8 @@ public class LatexProcessor {
     final static String SUFFIX_LOF = ".lof";
     final static String SUFFIX_LOT = ".lot";
     final static String SUFFIX_AUX = ".aux";
+    // LaTeX and mpost with option -recorder 
+    final static String SUFFIX_FLS = ".fls";
 
 
     // home-brewed ending to represent tex including postscript 
@@ -321,6 +323,7 @@ public class LatexProcessor {
 	    this.log.info("Deleting targets of metapost-file " + mpFile + ". ");
 	    // may throw BuildExecutionException 
 	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG).delete();
+	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS).delete();
 	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX).delete();
 	    // delete files xxxNumber.mps 
 	    String name1 = mpFile.getName();
@@ -543,7 +546,7 @@ public class LatexProcessor {
      * runs BibTeX, MakeIndex and MakeGlossaries by need 
      * according to {@link #preProcessLatex2pdf(File, File)} 
      * and reruns latex as long as needed to get all links 
-     * or as threshold {@link Settings#maxNumReruns} specifies. 
+     * or as threshold {@link Settings#maxNumRerunsLatex} specifies. 
      * <p>
      * The result of the LaTeX run is typically some pdf-file, 
      * but it is also possible to specify the dvi-format 
@@ -562,6 +565,7 @@ public class LatexProcessor {
 	throws BuildExecutionException {
 
 	int numLatexReRuns = preProcessLatex2pdf(texFile, logFile);
+				      
 	assert numLatexReRuns == 0 
 	    || numLatexReRuns == 1 
 	    || numLatexReRuns == 2;
@@ -579,7 +583,7 @@ public class LatexProcessor {
 	boolean needLatexReRun = (numLatexReRuns == 1)
 	    || needAnotherLatexRun(logFile);
 
-	int maxNumReruns = this.settings.getMaxNumReRuns();
+	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
 	    needMakeIndexReRun = needAnotherMakeIndexRun(logFile);
 	    // FIXME: superfluous since pattern rerunfileckeck 
@@ -625,7 +629,7 @@ public class LatexProcessor {
 	processLatex2pdfCore(texFile, logFile);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
-	logWarns(logFile, this.settings.getTexCommand());
+	logWarns(logFile, this.settings.getLatex2pdfCommand());
     }
 
    /**
@@ -670,28 +674,32 @@ public class LatexProcessor {
     }
 
     /**
-     * Logs warnings detected in the according log file: 
-     * The log file is by replacing the ending of <code>texFile</code> 
-     * by <code>log</code>. 
+     * Logs warnings detected in the according log-file <code>logFile</code>: 
      * Before logging warnings, 
      * errors are logged via {@link #logErrs(File, String)}. 
      * So, if the log-file does not exist, 
      * an error was already shown and so nothing is to be done here. 
-     * If the log file exists, a <em>warning</em> is logged if 
+     * If the log-file exists, a <em>warning</em> is logged if 
      * <ul>
      * <li>
      * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
      * <li>
      * bad boxes occurred and shall be logged 
-     * according to {@link Settings#getDebugBadBoxes()} 
+     * according to {@link Settings#getDebugBadBoxes()}. 
      * <li>
      * warnings occurred and shall be logged 
-     * according to {@link Settings#getDebugWarnings()} 
+     * according to {@link Settings#getDebugWarnings()}. 
      * </ul>
      * Both criteria are based on pattern recognized in the log file: 
      * {@link #PATTERN_OUFULL_HVBOX} for bad boxes is fixed, 
      * whereas {@link Settings#getPatternWarnLatex()} is configurable. 
      * The message logged refers to the <code>command</code> which failed. 
+     *
+     * @param logFile
+     *    the log-file to detect warnings in. 
+     * @param command
+     *    the command which created <code>logFile</code> 
+     *    and which maybe created warnings. 
      */
     private void logWarns(File logFile, String command) 
 	throws BuildExecutionException {
@@ -838,9 +846,10 @@ public class LatexProcessor {
      * @see #create()
      */
     // used in execute() only 
-     public void runGnuplot2Dev(File pltFile, LatexDev dev) 
+    public void runGnuplot2Dev(File pltFile, LatexDev dev) 
 	throws BuildExecutionException {
-	String command = "gnuplot";
+
+	String command = this.settings.getGnuplotCommand();
 	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
 	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
 
@@ -848,12 +857,13 @@ public class LatexProcessor {
 	    "-e",   // run a command string "..." with commands sparated by ';' 
 	    // 
 	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
+	    " " + this.settings.getGnuplotOptions() + 
 	    ";set output \"" + ptxFile.getName() + 
 	    "\";load \"" + pltFile.getName() + "\""
 	};
 	// FIXME: include options. 
 // set terminal cairolatex
-// {eps | pdf}
+// {eps | pdf} done before. 
 // {standalone | input}
 // {blacktext | colortext | colourtext}
 // {header <header> | noheader}
@@ -896,23 +906,22 @@ public class LatexProcessor {
     public void runFig2Dev(File figFile, LatexDev dev) 
 	throws BuildExecutionException {
 
+
 	String command = this.settings.getFig2devCommand();
 	File workingDir = figFile.getParentFile();
 	String[] args;
 
 	//File pdfFile   = this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF);
-	File pdf_tFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
 
-	//String pdf   = pdfFile  .toString();
-	String pdf_t = pdf_tFile.toString();
+
+	// create pdf-file (graphics without text) 
+	// embedded in some tex-file 
 
 	//if (update(figFile, pdfFile)) {
-	    args = new String[] {
-		"-L", // language 
-		dev.getXFigInTexLanguage(),
-		figFile.getName(), // source 
-		dev.getXFigInTexFile(this.fileUtils, figFile) // target 
-	    };
+ 	    args = buildArgumentsFig2Pdf(dev, 
+					 this.settings.getFig2devGenOptions(), 
+					 this.settings.getFig2devPdfOptions(), 
+					 figFile);
 	    log.debug("Running " + command + 
 		      " -Lpdftex  ... on " + figFile.getName() + ". ");
 	    // may throw BuildExecutionException 
@@ -922,15 +931,14 @@ public class LatexProcessor {
 				  args);
 	    //}
 
-	    //if (update(figFile, pdf_tFile)) {
-	    args = new String[] {
-		"-L",// language 
-		dev.getXFigTexLanguage(),
-		"-p",// portrait (-l for landscape), next argument not ignored 
-		dev.getXFigInTexFile(this.fileUtils, figFile),
-		figFile.getName(), // source 
-		pdf_t // target 
-	    };
+	    // create tex-file (text without grapics) 
+	    // enclosing the pdf-file above 
+
+  	    //if (update(figFile, pdf_tFile)) {
+ 	    args = buildArgumentsFig2Ptx(dev, 
+					 this.settings.getFig2devGenOptions(), 
+					 this.settings.getFig2devPtxOptions(), 
+					 figFile);
 	    log.debug("Running " + command + 
 		      " -Lpdftex_t... on " + figFile.getName() + ". ");
 	    // may throw BuildExecutionException 
@@ -942,6 +950,64 @@ public class LatexProcessor {
 	// no check: just warning that no output has been created. 
     }
 
+    String[] buildArgumentsFig2Pdf(LatexDev dev, 
+				   String optionsGen, 
+				   String optionsPdf, 
+				   File figFile) {
+	String[] optionsGenArr = optionsGen.isEmpty() 
+	    ? new String[0] : optionsGen.split(" ");
+	String[] optionsPdfArr = optionsPdf.isEmpty() 
+	    ? new String[0] : optionsPdf.split(" ");
+	int lenSum = optionsGenArr.length +optionsPdfArr.length;
+
+	String[] args = new String[lenSum + 4];
+	// language 
+	args[0] = "-L";
+	args[1] = dev.getXFigInTexLanguage();
+	// general options 
+	System.arraycopy(optionsGenArr, 0, args, 2, optionsGenArr.length);
+	// language specific options 
+	System.arraycopy(optionsPdfArr, 0, 
+			 args, 2+optionsGenArr.length, optionsPdfArr.length);
+	// input: fig-file 
+        args[2+lenSum] = figFile.getName();
+	// output: pdf-file 
+	args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
+	return args;
+    }
+
+    String[] buildArgumentsFig2Ptx(LatexDev dev, 
+				   String optionsGen,
+				   String optionsPtx,
+				   File figFile) {
+	String[] optionsGenArr = optionsGen.isEmpty() 
+	    ? new String[0] : optionsGen.split(" ");
+	String[] optionsPtxArr = optionsPtx.isEmpty() 
+	    ? new String[0] : optionsPtx.split(" ");
+	int lenSum = optionsGenArr.length +optionsPtxArr.length;
+
+	String[] args = new String[lenSum + 6];
+	// language 
+	args[0] = "-L";
+	args[1] = dev.getXFigTexLanguage();
+	// general options 
+	System.arraycopy(optionsGenArr, 0, 
+			 args, 2, optionsGenArr.length);
+	// language specific options 
+	System.arraycopy(optionsPtxArr, 0, 
+			 args, 2+optionsGenArr.length, optionsPtxArr.length);
+	// -p pdf-file in ptx-file 
+	args[2+lenSum] = "-p";
+        args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
+	// input: fig-file 
+        args[4+lenSum] = figFile.getName();
+	// output: ptx-file 
+	args[5+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX)
+	    .getName();
+	return args;
+     }
+
+
     /**
      * Runs mpost on mp-files to generate mps-files. 
      *
@@ -949,17 +1015,15 @@ public class LatexProcessor {
      *    the metapost file to be processed. 
      * @throws BuildExecutionException
      *    if running the mpost command failed. 
-     * @see #create()
+     * @see #processGraphics(File)
      */
-    // used in execute() only 
+    // used in processGraphics(File) only 
     private void runMetapost2mps(File mpFile) throws BuildExecutionException {
-	String command = "mpost";
+	String command = this.settings.getMetapostCommand();
 	File workingDir = mpFile.getParentFile();
 	// for more information just type mpost --help 
-	String[] args = new String[] {
-	    "-interaction=nonstopmode",
-	    mpFile.getName()
-	};
+	String[] args = buildArguments(this.settings.getMetapostOptions(), 
+				       mpFile);
 	log.debug("Running " + command + " on " + mpFile.getName() + ". ");
 	// may throw BuildExecutionException 
 	this.executor.execute(workingDir, 
@@ -992,7 +1056,8 @@ public class LatexProcessor {
 	String command = this.settings.getLatex2rtfCommand();
         log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
-        String[] args = buildLatex2rtfArguments(texFile);
+        String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
+				       texFile);
 	// may throw BuildExecutionException 
         this.executor.execute(texFile.getParentFile(), // workingDir
 			      this.settings.getTexPath(), 
@@ -1004,12 +1069,6 @@ public class LatexProcessor {
 	// and by default listed in the console window. 
 	// aThey can be redirected to a file “latex2rtf.log” by
 	// appending 2>latex2rtf.log to the command line.
-
-    }
-
-    // FIXME: take arguments for latex2rtf into account 
-    private String[] buildLatex2rtfArguments(File texFile) {
-	return new String[] {texFile.getName()};
     }
 
     /**
@@ -1051,7 +1110,7 @@ public class LatexProcessor {
 	    this.settings.getTex4htStyOptions(),
 	    this.settings.getTex4htOptions(),
 	    this.settings.getT4htOptions(),
-	    this.settings.getTexCommandArgs()
+	    this.settings.getLatex2pdfOptions()
 	};
     }
 
@@ -1118,7 +1177,7 @@ public class LatexProcessor {
      *    if running the odt2doc command 
      *    returned by {@link Settings#getOdt2docCommand()} failed. 
      */
-    private void runOdt2doc( File texFile)
+    private void runOdt2doc(File texFile)
             throws BuildExecutionException {
 
 	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
@@ -1196,12 +1255,12 @@ public class LatexProcessor {
      * Returns whether another LaTeX run is necessary 
      * based on a pattern matching in the log file. 
      *
-     * @see Settings#getPatternMakeIndexNeedsReRun()
+     * @see Settings#getPatternReRunMakeIndex()
      */
     // FIXME: unification with needAnotherLatexRun? 
     private boolean needAnotherMakeIndexRun(File logFile)
 	throws BuildExecutionException {
-        String reRunPattern = this.settings.getPatternMakeIndexNeedsReRun();
+        String reRunPattern = this.settings.getPatternReRunMakeIndex();
 	// may throw a BuildExecutionException
         boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
         log.debug("Another MakeIndex run? " + needRun);
@@ -1212,11 +1271,11 @@ public class LatexProcessor {
      * Returns whether another LaTeX run is necessary 
      * based on a pattern matching in the log file. 
      *
-     * @see Settings#getPatternLatexNeedsReRun()
+     * @see Settings#getPatternReRunLatex()
      */
     private boolean needAnotherLatexRun(File logFile)
 	throws BuildExecutionException {
-        String reRunPattern = this.settings.getPatternLatexNeedsReRun();
+        String reRunPattern = this.settings.getPatternReRunLatex();
 	// may throw a BuildExecutionException
         boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
         log.debug("Another LaTeX run? " + needRun);
@@ -1279,8 +1338,8 @@ public class LatexProcessor {
 
 	// detect errors and warnings makeindex wrote into xxx.ilg 
  	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
-	logErrs (logFile, command, this.settings.getPatternErrMakeindex());
-	logWarns(logFile, command, this.settings.getPatternWarnMakeindex());
+	logErrs (logFile, command, this.settings.getPatternErrMakeIndex());
+	logWarns(logFile, command, this.settings.getPatternWarnMakeIndex());
     }
 
    /**
@@ -1334,8 +1393,8 @@ public class LatexProcessor {
 
 	// detect errors and warnings makeglossaries wrote into xxx.glg 
 	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
-	logErrs (glgFile, command, this.settings.getPatternMakeGlossariesErr());
-	logWarns(glgFile, command, this.settings.getPatternWarnMakeindex() 
+	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
+	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
 		 +           "|" + this.settings.getPatternWarnXindy());
 	return true;
     }
@@ -1366,7 +1425,9 @@ public class LatexProcessor {
 
 	String command = this.settings.getBibtexCommand();
 	log.debug("Running " + command + " on " + auxFile.getName() + ". ");
-	String[] args = new String[] {auxFile.getName()};
+
+	String[] args = buildArguments(this.settings.getBibtexOptions(), 
+				       auxFile);
 	// may throw BuildExecutionException 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
@@ -1402,10 +1463,10 @@ public class LatexProcessor {
     private void runLatex2pdf(File texFile, File logFile)
 	throws BuildExecutionException {
 
-	String command = this.settings.getTexCommand();
+	String command = this.settings.getLatex2pdfCommand();
 	log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
-	String[] args = buildArguments(this.settings.getTexCommandArgs(), 
+	String[] args = buildArguments(this.settings.getLatex2pdfOptions(), 
 				       texFile);
 	// may throw BuildExecutionException 
         this.executor.execute(texFile.getParentFile(), // workingDir 
