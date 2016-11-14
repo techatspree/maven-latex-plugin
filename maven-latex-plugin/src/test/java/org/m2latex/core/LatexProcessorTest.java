@@ -72,7 +72,7 @@ public class LatexProcessorTest {
         "html,2",
         "",
         "",
-        settings.getTexCommandArgs()
+        settings.getLatex2pdfOptions()
     };
 
     @Test public void testProcessLatexSimple()
@@ -213,7 +213,7 @@ public class LatexProcessorTest {
         throws BuildExecutionException {
 
         fileUtils.matchInFile(logFile, 
-			      this.settings.getPatternLatexNeedsReRun());
+			      this.settings.getPatternReRunLatex());
         fileUtilsCtrl.setReturnValue(retVal);
     }
 
@@ -221,7 +221,7 @@ public class LatexProcessorTest {
         throws BuildExecutionException {
 
         fileUtils.matchInFile(logFile, 
-			      this.settings.getPatternMakeIndexNeedsReRun());
+			      this.settings.getPatternReRunMakeIndex());
         fileUtilsCtrl.setReturnValue(retVal);
     }
 
@@ -258,7 +258,7 @@ public class LatexProcessorTest {
 	// fileUtilsCtrl.setReturnValue( false );
 
 	// fileUtils.matchInFile(blgFile, 
-	//                       this.settings.getPatternLatexNeedsReRun());
+	//                       this.settings.getPatternReRunLatex());
 	// fileUtilsCtrl.setReturnValue( false );
     }
 
@@ -325,9 +325,9 @@ public class LatexProcessorTest {
     private void mockRunLatex() throws BuildExecutionException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
-			 settings.getTexCommand(),
+			 settings.getLatex2pdfCommand(),
 			 LatexProcessor
-			 .buildArguments(settings.getTexCommandArgs(), 
+			 .buildArguments(settings.getLatex2pdfOptions(), 
 					 texFile));
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
