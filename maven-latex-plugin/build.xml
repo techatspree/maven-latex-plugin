@@ -82,7 +82,7 @@
 	   classpathref="latex.classpath"/>
 
   <target name="latex:cfg"
-	  description="Create html and pdf and other formats and other formats 
+	  description="Create pdf, html and other formats 
 		       from latex. ">
     <latex>
 	<!--patternErrXindy="(^ERROR: )" -->
@@ -90,13 +90,20 @@
       <settings texSrcDirectory="src/site/tex"
 		outputDirectory="."
 		targets="pdf, html"
-		fig2devCommand="fig2dev"
 		cleanUp='true'
-		texCommand="pdflatex"
+		fig2devCommand="fig2dev"
+		fig2devGenOptions=""
+		fig2devPtxOptions=""
+		fig2devPdfOptions=""
+		gnuplotCommand="gnuplot"
+		gnuplotOptions=""
+		metapostCommand="mpost"
+		latex2pdfCommand="pdflatex"
 		debugBadBoxes='true'
 		debugWarnings='true'
-		maxNumReRuns='-1'
+		maxNumReRunsLatex='-1'
 		bibtexCommand="bibtex"
+		bibtexOptions=""
 		makeIndexCommand="makeindex"
 		makeIndexOptions="-c"
 		makeGlossariesCommand="makeglossaries" 
@@ -108,6 +115,7 @@
 		tex4htOptions=" -cunihtf -utf8"
 		t4htOptions="-cvalidate"
 		latex2rtfCommand="latex2rtf"
+		latex2rtfOptions=""
 		odt2docCommand="odt2doc"
 		odt2docOptions="-fdocx"
 		pdf2txtCommand="pdftotext"
@@ -115,13 +123,16 @@
 	<patternLatexMainFile>
 	  \s*\\(documentstyle|documentclass).*
 	</patternLatexMainFile>
-	<texCommandArgs>
+	<metapostOptions>
+	  -interaction=nonstopmode -recorder -s prologues=2
+	</metapostOptions>
+	<latex2pdfOptions>
 	  -interaction=nonstopmode
 	  -synctex=1 
 	  -src-specials 
 	  -recorder 
 	  -shell-escape
-	</texCommandArgs>
+	</latex2pdfOptions>
 	<patternErrLatex>(^! )</patternErrLatex>
 	<patternWarnLatex>
 	(^LaTeX Warning: |
@@ -132,26 +143,26 @@
 	^* Font .+ does not contain script |
 	^A space is missing\. (No warning)\.)
 	</patternWarnLatex>
-	<patternLatexNeedsReRun>
+	<patternReRunLatex>
 (^LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
 ^Package \w+ Warning: .*Rerun .*$|
 ^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
 ^LaTeX Warning: Etaremune labels have changed\.$|
 ^\(rerunfilecheck\)                Rerun to get outlines right$)
-	</patternLatexNeedsReRun>
+	</patternReRunLatex>
 
 	<patternErrBibtex>error message</patternErrBibtex>
 	<patternWarnBibtex>Warning--</patternWarnBibtex>
 
-	<patternErrMakeindex>(!! Input index error )</patternErrMakeindex>
-	<patternWarnMakeindex>(## Warning )</patternWarnMakeindex>
-	<patternMakeIndexNeedsReRun>
+	<patternErrMakeIndex>(!! Input index error )</patternErrMakeIndex>
+	<patternWarnMakeIndex>(## Warning )</patternWarnMakeIndex>
+	<patternReRunMakeIndex>
 	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
-	</patternMakeIndexNeedsReRun>
+	</patternReRunMakeIndex>
 
-	<patternMakeGlossariesNeedsReRun>
+	<patternReRunMakeGlossaries>
 	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
-	</patternMakeGlossariesNeedsReRun>
+	</patternReRunMakeGlossaries>
       </settings>
     </latex>
   </target>
