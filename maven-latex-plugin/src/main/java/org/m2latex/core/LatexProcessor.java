@@ -835,56 +835,6 @@ public class LatexProcessor {
 	return source.lastModified() > target.lastModified();
     }
 
-    /**
-     * Converts a gnuplot file into a tex-file with ending ptx 
-     * including a pdf-file. 
-     *
-     * @param pltFile 
-     *    the plt-file (gnuplot format) to be converted to pdf. 
-     * @throws BuildExecutionException
-     *    if running the ptx/pdf-conversion built in in gnuplot fails. 
-     * @see #create()
-     */
-    // used in execute() only 
-    public void runGnuplot2Dev(File pltFile, LatexDev dev) 
-	throws BuildExecutionException {
-
-	String command = this.settings.getGnuplotCommand();
-	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
-	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
-
-	String[] args = new String[] {
-	    "-e",   // run a command string "..." with commands sparated by ';' 
-	    // 
-	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
-	    " " + this.settings.getGnuplotOptions() + 
-	    ";set output \"" + ptxFile.getName() + 
-	    "\";load \"" + pltFile.getName() + "\""
-	};
-	// FIXME: include options. 
-// set terminal cairolatex
-// {eps | pdf} done before. 
-// {standalone | input}
-// {blacktext | colortext | colourtext}
-// {header <header> | noheader}
-// {mono|color}
-// {{no}transparent} {{no}crop} {background <rgbcolor>}
-// {font <font>} {fontscale <scale>}
-// {linewidth <lw>} {rounded|butt|square} {dashlength <dl>}
-// {size <XX>{unit},<YY>{unit}}
-
-
-//	if (update(pltFile, ptxFile)) {
-	    log.debug("Running " + command + 
-		      " -e...  on " + pltFile.getName() + ". ");
-	    // may throw BuildExecutionException 
-	    this.executor.execute(pltFile.getParentFile(), //workingDir 
-				  this.settings.getTexPath(), //**** 
-				  command, 
-				  args);
-//	}
-	// no check: just warning that no output has been created. 
-    }
 
     // suffix for tex files containing text and including pdf 
 
@@ -950,10 +900,10 @@ public class LatexProcessor {
 	// no check: just warning that no output has been created. 
     }
 
-    String[] buildArgumentsFig2Pdf(LatexDev dev, 
-				   String optionsGen, 
-				   String optionsPdf, 
-				   File figFile) {
+    private String[] buildArgumentsFig2Pdf(LatexDev dev, 
+					   String optionsGen, 
+					   String optionsPdf, 
+					   File figFile) {
 	String[] optionsGenArr = optionsGen.isEmpty() 
 	    ? new String[0] : optionsGen.split(" ");
 	String[] optionsPdfArr = optionsPdf.isEmpty() 
@@ -976,10 +926,10 @@ public class LatexProcessor {
 	return args;
     }
 
-    String[] buildArgumentsFig2Ptx(LatexDev dev, 
-				   String optionsGen,
-				   String optionsPtx,
-				   File figFile) {
+    private String[] buildArgumentsFig2Ptx(LatexDev dev, 
+					   String optionsGen,
+					   String optionsPtx,
+					   File figFile) {
 	String[] optionsGenArr = optionsGen.isEmpty() 
 	    ? new String[0] : optionsGen.split(" ");
 	String[] optionsPtxArr = optionsPtx.isEmpty() 
@@ -1007,6 +957,56 @@ public class LatexProcessor {
 	return args;
      }
 
+    /**
+     * Converts a gnuplot file into a tex-file with ending ptx 
+     * including a pdf-file. 
+     *
+     * @param pltFile 
+     *    the plt-file (gnuplot format) to be converted to pdf. 
+     * @throws BuildExecutionException
+     *    if running the ptx/pdf-conversion built in in gnuplot fails. 
+     * @see #create()
+     */
+    // used in execute() only 
+    public void runGnuplot2Dev(File pltFile, LatexDev dev) 
+	throws BuildExecutionException {
+
+	String command = this.settings.getGnuplotCommand();
+	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
+	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
+
+	String[] args = new String[] {
+	    "-e",   // run a command string "..." with commands sparated by ';' 
+	    // 
+	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
+	    " " + this.settings.getGnuplotOptions() + 
+	    ";set output \"" + ptxFile.getName() + 
+	    "\";load \"" + pltFile.getName() + "\""
+	};
+	// FIXME: include options. 
+// set terminal cairolatex
+// {eps | pdf} done before. 
+// {standalone | input}
+// {blacktext | colortext | colourtext}
+// {header <header> | noheader}
+// {mono|color}
+// {{no}transparent} {{no}crop} {background <rgbcolor>}
+// {font <font>} {fontscale <scale>}
+// {linewidth <lw>} {rounded|butt|square} {dashlength <dl>}
+// {size <XX>{unit},<YY>{unit}}
+
+
+//	if (update(pltFile, ptxFile)) {
+	    log.debug("Running " + command + 
+		      " -e...  on " + pltFile.getName() + ". ");
+	    // may throw BuildExecutionException 
+	    this.executor.execute(pltFile.getParentFile(), //workingDir 
+				  this.settings.getTexPath(), //**** 
+				  command, 
+				  args);
+//	}
+	// no check: just warning that no output has been created. 
+    }
 
     /**
      * Runs mpost on mp-files to generate mps-files. 
