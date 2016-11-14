@@ -303,7 +303,7 @@
 		 The default value is 'gnuplot'. -->
 	    <gnuplotCommand>gnuplot</gnuplotCommand>
 
-	    <!-- The options specific for $gnuplotCommand's 
+	    <!-- The options specific for $gnuplotCommand s
 		 output terminal 'cairolatex', 
 		 used for mixed latex/pdf-creation. 
 		 Note that the option 'pdf|eps' 
@@ -317,6 +317,11 @@
 		 The default value is 'mpost'. -->
 	    <metapostCommand>mpost</metapostCommand>
 
+	    <!-- The options for the command $metapostCommand. 
+		 Leading and trailing blanks are ignored. 
+		 A sequence of at least one blank separate the proper options. 
+		 The default value is 
+		 '-interaction=nonstopmode -recorder -s prologues=2'. -->
 	    <metapostOptions>
 	    -interaction=nonstopmode -recorder -s prologues=2
 	    </metapostOptions>
