@@ -1354,9 +1354,11 @@ when to rerun \LaTeX{} without prior running *****
 FIXME: a word on change in toc, lof and lot. 
 
 As indicated in the previous sections, 
-{\tt latex2pdf} must be rerun, if {\tt bibtex} or {\tt makeindex} had been run 
+{\tt latex2pdf} must be rerun, 
+if {\tt bibtex} or {\tt makeindex} or {\tt makeglossaries} had been run 
 to read in the bibliography created by {\tt bibtex} 
-or the index created by {\tt makeindex}. 
+or the index created by {\tt makeindex} 
+or the glossary created by {\tt makeglossaries}. 
 Likewise, if a toc-file, a lof-file or a lot-file 
 had been created in the first {\tt latex2pdf} run, 
 another run is needed to read in these files 
@@ -1367,11 +1369,33 @@ the log-file does not allow to detect that {\tt latex2pdf} has to be rerun,
 by matching a fixed pattern. 
 
 After the second run of {\tt latex2pdf}, 
-the table of contents is included and the references and citations are
-inserted 
+the table of contents, the list of figures and the list of tables 
+are included and a section with the bibliography, 
+the index and the glossary are
+inserted. 
+It takes a thtird run of {\tt latex2pdf} 
+to include the bibliography the index and the glossary 
+into the table of contents. 
+Also it takes that third run to replace the citations 
+with the proper labels given in the bibliography. 
+
+Inserting the table of contents, the list of figures and the list of tables 
 which may shift the subsequent text 
 which may require another run of {\tt latex2pdf} 
-This may be detected by pattern matching on the log-file. 
+to get the page numbers right. 
+As described in Section \ref{subsec:rerunMakeIndexGlossaries} 
+intermediate runs of {\tt makeindex} and {\tt makeglossaries} 
+may be required 
+and these also require another run of {\tt latex2pdf} 
+also to get the page numbers right. 
+The package {\tt rerunfileckeck} allows to detect this need to rerun 
+by pattern matching on the log-file almost for sure: 
+Still there is some chance 
+that the lengths and the md5-sum of all relevant files 
+remain the same, although there is a relevant change. 
+In this case, this software fails to update 
+triggering another {\tt latex2pdf} run. 
+
 
 Note that there are several packages which require additional runs, 
 such as the longtable-package, 
