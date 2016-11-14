@@ -1,4 +1,4 @@
-prologues := 2;
+prologues := 1;% overwritten by command line setting 
 outputtemplate:="%j%c.mps";
 beginfig(1);
 
