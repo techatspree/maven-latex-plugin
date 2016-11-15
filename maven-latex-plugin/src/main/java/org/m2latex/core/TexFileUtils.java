@@ -55,14 +55,11 @@ interface TexFileUtils {
 				  File targetDir)
         throws BuildExecutionException, BuildFailureException;
 
-
-
-    String getFileNameWithoutSuffix(File texFile);
+    String getSuffix(File file);
 
     File replaceSuffix(File file, String suffix);
 
-    Collection<File> getFilesWithSuffix(File dir, String suffix) 
-	throws BuildExecutionException;
+    Collection<File> getFilesWithSuffix(Collection<File> files, String suffix);
 
     boolean matchInFile(File file, String pattern) 
 	throws BuildExecutionException;
