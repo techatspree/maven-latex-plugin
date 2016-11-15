@@ -23,6 +23,8 @@ import java.io.FileFilter;
 
 import java.util.Collection;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
@@ -37,6 +39,15 @@ import java.util.Arrays;
  * given by the parameters. 
  */
 public class LatexProcessor {
+
+    private final static Map<String, SuffixHandler> SUFFIX2HANDLER = 
+	new HashMap<String, SuffixHandler>();
+
+    static {
+	for (SuffixHandler handler : SuffixHandler.values()) {
+	    SUFFIX2HANDLER.put(handler.getSuffix(), handler);
+	}
+    } // static 
 
     // For pattern matching, it is vital to avoid false positive matches. 
     // e.g. Overfull \box with text '! ' is not an error 
@@ -202,7 +213,8 @@ public class LatexProcessor {
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 
 	try {
-	    processGraphics(texDirectory);
+	    // may throw BuildExecutionException 
+	    processGraphics(orgFiles);
 
 	    // process latex main files 
 	    // may throw BuildExecutionException 
@@ -255,100 +267,136 @@ public class LatexProcessor {
      *
      * @throws BuildExecutionException
      */
-    private void processGraphics(File texDirectory) 
+    private void processGraphics(Collection<File> files) 
 	throws BuildExecutionException {
 
-	// process xfig files 
-	// may throw BuildExecutionException 
-	Collection<File> figFiles = this.fileUtils
-	    .getFilesWithSuffix(texDirectory, SUFFIX_FIG);
-	for (File figFile : figFiles) {
-	    this.log.info("Processing fig-file " + figFile + ". ");
-	    // may throw BuildExecutionException 
-	    runFig2Dev(figFile, LatexDev.pdf);
+	SuffixHandler handler;
+	for (File file : files) {
+	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
+	    if (handler != null) {
+		handler.transformSrc(file, this);
+	    }
 	}
 
-	// process gnuplot files 
-	// may throw BuildExecutionException 
-	Collection<File> pltFiles = this.fileUtils
-	    .getFilesWithSuffix(texDirectory, SUFFIX_PLT);
-	for (File pltFile : pltFiles) {
-	    this.log.info("Processing gnuplot-file " + pltFile + ". ");
-	    // may throw BuildExecutionException 
-	    runGnuplot2Dev(pltFile, LatexDev.pdf);
-	}
+	// // process xfig files 
+	// // may throw BuildExecutionException 
+	// Collection<File> figFiles = this.fileUtils
+	//     .getFilesWithSuffix(files, SUFFIX_FIG);
+	// for (File figFile : figFiles) {
+	//     // may throw BuildExecutionException 
+	//     runFig2Dev(figFile, LatexDev.pdf);
+	// }
 
-	// process metapost files 
-	// may throw BuildExecutionException 
-	Collection<File> mpFiles = this.fileUtils
-	    .getFilesWithSuffix(texDirectory, SUFFIX_MP);
-	for (File mpFile : mpFiles) {
-	    this.log.info("Processing metapost-file " + mpFile + ". ");
-	    // may throw BuildExecutionException 
-	    runMetapost2mps(mpFile);
-	}
+	// // process gnuplot files 
+	// // may throw BuildExecutionException 
+	// Collection<File> pltFiles = this.fileUtils
+	//     .getFilesWithSuffix(files, SUFFIX_PLT);
+	// for (File pltFile : pltFiles) {
+	//     // may throw BuildExecutionException 
+	//     runGnuplot2Dev(pltFile, LatexDev.pdf);
+	// }
+
+	// // process metapost files 
+	// // may throw BuildExecutionException 
+	// Collection<File> mpFiles = this.fileUtils
+	//     .getFilesWithSuffix(files, SUFFIX_MP);
+	// for (File mpFile : mpFiles) {
+	//     // may throw BuildExecutionException 
+	//     runMetapost2mps(mpFile);
+	// }
     }
 
-    private void clearGraphics(File texDirectory) 
+    private void clearTargetFig(File figFile) 
 	throws BuildExecutionException {
 
-	// delete targets of xfig files 
+	this.log.info("Deleting targets of fig-file " + figFile + ". ");
 	// may throw BuildExecutionException 
-	Collection<File> figFiles = this.fileUtils
-	    .getFilesWithSuffix(texDirectory, SUFFIX_FIG);
-	for (File figFile : figFiles) {
-	    this.log.info("Deleting targets of fig-file " + figFile + ". ");
-	    // may throw BuildExecutionException 
-	    this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
-	    this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
+	this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
+	this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
+    }
+
+    private void clearTargetPlt(File pltFile) 
+	throws BuildExecutionException {
+
+	this.log.info("Deleting targets of gnuplot-file " + pltFile + ". ");
+	// may throw BuildExecutionException 
+	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX).delete();
+	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF).delete();
+    }
+
+    private void clearTargetMp(File mpFile) 
+	throws BuildExecutionException {
+
+	this.log.info("Deleting targets of metapost-file " + mpFile + ". ");
+	// may throw BuildExecutionException 
+	this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG).delete();
+	this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS).delete();
+	this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX).delete();
+	// delete files xxxNumber.mps 
+	String name1 = mpFile.getName();
+	final String root = name1.substring(0, name1.lastIndexOf("."));
+	FileFilter filter = new FileFilter() {
+		public boolean accept(File file) {
+		    return !file.isDirectory()
+			&&  file.getName().matches(root + "\\d+" + SUFFIX_MPS);
+		}
+	    };
+
+	// may throw BuildExecutionException 
+	this.fileUtils.delete(mpFile, filter);
+    }
+    private void clearTargetSvg(File svgFile) 
+	throws BuildExecutionException {
+
+       this.log.info("Deleting targets of svg-file " + svgFile + ". ");
+       // may throw BuildExecutionException 
+       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
+       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
+   }
+
+    private void clearGraphics(Collection<File> files) 
+	throws BuildExecutionException {
+
+	SuffixHandler handler;
+	for (File file : files) {
+	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
+	    if (handler != null) {
+		handler.clearTarget(file, this);
+	    }
 	}
 
-	// delete targets of gnuplot files 
-	// may throw BuildExecutionException 
-	Collection<File> pltFiles = this.fileUtils
-	    .getFilesWithSuffix(texDirectory, SUFFIX_PLT);
-	for (File pltFile : pltFiles) {
-	    this.log.info("Deleting targets of gnuplot-file " + pltFile + ". ");
-	    // may throw BuildExecutionException 
-	    this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX).delete();
-	    this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF).delete();
-	}
 
-	// delete targets of metapost files 
-	// may throw BuildExecutionException 
-	Collection<File> mpFiles = this.fileUtils
-	    .getFilesWithSuffix(texDirectory, SUFFIX_MP);
-	FileFilter filter;
-	for (File mpFile : mpFiles) {
-	    this.log.info("Deleting targets of metapost-file " + mpFile + ". ");
-	    // may throw BuildExecutionException 
-	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG).delete();
-	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS).delete();
-	    this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX).delete();
-	    // delete files xxxNumber.mps 
-	    String name1 = mpFile.getName();
-	    final String root = name1.substring(0, name1.lastIndexOf("."));
-	    filter = new FileFilter() {
-		    public boolean accept(File file) {
-			return !file.isDirectory()
-			    &&  file.getName().matches(root+"\\d+"+SUFFIX_MPS);
-		    }
-		};
+	// // delete targets of xfig files 
+	// // may throw BuildExecutionException 
+	// Collection<File> figFiles = this.fileUtils
+	//     .getFilesWithSuffix(files, SUFFIX_FIG);
+	// for (File figFile : figFiles) {
+	//     clearTargetFig(figFile);
+	// }
 
-	    // may throw BuildExecutionException 
-	    this.fileUtils.delete(mpFile, filter);
-	}
+	// // delete targets of gnuplot files 
+	// // may throw BuildExecutionException 
+	// Collection<File> pltFiles = this.fileUtils
+	//     .getFilesWithSuffix(files, SUFFIX_PLT);
+	// for (File pltFile : pltFiles) {
+	//     clearTargetPlt(pltFile);
+	// }
 
-	// delete targets of svg files 
-	// may throw BuildExecutionException 
-	Collection<File> svgFiles = this.fileUtils
-	    .getFilesWithSuffix(texDirectory, SUFFIX_SVG);
-	for (File svgFile : svgFiles) {
-	    this.log.info("Deleting targets of svg-file " + svgFile + ". ");
-	    // may throw BuildExecutionException 
-	    this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
-	    this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
-	}
+	// // delete targets of metapost files 
+	// // may throw BuildExecutionException 
+	// Collection<File> mpFiles = this.fileUtils
+	//     .getFilesWithSuffix(files, SUFFIX_MP);
+	// for (File mpFile : mpFiles) {
+	//     clearTargetMp(mpFile);
+	// }
+
+	// // delete targets of svg files 
+	// // may throw BuildExecutionException 
+	// Collection<File> svgFiles = this.fileUtils
+	//     .getFilesWithSuffix(files, SUFFIX_SVG);
+	// for (File svgFile : svgFiles) {
+	//     clearTargetSvg(svgFile);
+	// }
     }
 
     /**
@@ -399,7 +447,10 @@ public class LatexProcessor {
         this.log.debug("Settings: " + this.settings.toString());
 
         File texDirectory = this.settings.getTexSrcDirectoryFile();
-	clearGraphics     (texDirectory);
+	// may throw BuildExecutionException 
+	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
+
+	clearGraphics     (orgFiles);
 	clearFromLatexMain(texDirectory);
     }
 
@@ -840,6 +891,73 @@ public class LatexProcessor {
 
 
     /**
+     *
+     */
+    enum SuffixHandler {
+	fig {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		proc.runFig2Dev(file, LatexDev.pdf);
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetFig(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_FIG;
+	    }
+	},
+	plt {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		proc.runGnuplot2Dev(file, LatexDev.pdf);
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetPlt(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_PLT;
+	    }
+	},
+	mp {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		proc.runMetapost2mps(file);
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetMp(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_MP;
+	    }
+	},
+	svg {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		// proc.log.info("Processing svg-file " + file + 
+		// 	      " done implicitly. ");
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetSvg(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_SVG;
+	    }
+	};
+
+	abstract void transformSrc(File file, LatexProcessor proc)
+	throws BuildExecutionException;
+
+	abstract void clearTarget(File file, LatexProcessor proc)
+	throws BuildExecutionException;
+
+	abstract String getSuffix();
+    } // enum SuffixHandler 
+
+    /**
      * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
      * This is a quite restricted usage of fig2dev. 
      *
@@ -852,11 +970,11 @@ public class LatexProcessor {
      *    and once for creating the pdf_t-file. 
      * @see #create()
      */
-    // used in execute() only 
-    public void runFig2Dev(File figFile, LatexDev dev) 
+    // used in processGraphics(File) only 
+    private void runFig2Dev(File figFile, LatexDev dev) 
 	throws BuildExecutionException {
 
-
+	this.log.info("Processing fig-file " + figFile + ". ");
 	String command = this.settings.getFig2devCommand();
 	File workingDir = figFile.getParentFile();
 	String[] args;
@@ -967,10 +1085,11 @@ public class LatexProcessor {
      *    if running the ptx/pdf-conversion built in in gnuplot fails. 
      * @see #create()
      */
-    // used in execute() only 
-    public void runGnuplot2Dev(File pltFile, LatexDev dev) 
+    // used in processGraphics(Collection) only 
+    private void runGnuplot2Dev(File pltFile, LatexDev dev) 
 	throws BuildExecutionException {
 
+	this.log.info("Processing gnuplot-file " + pltFile + ". ");
 	String command = this.settings.getGnuplotCommand();
 	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
 	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
@@ -1017,8 +1136,10 @@ public class LatexProcessor {
      *    if running the mpost command failed. 
      * @see #processGraphics(File)
      */
-    // used in processGraphics(File) only 
+    // used in processGraphics(Collection) only 
     private void runMetapost2mps(File mpFile) throws BuildExecutionException {
+
+	this.log.info("Processing metapost-file " + mpFile + ". ");
 	String command = this.settings.getMetapostCommand();
 	File workingDir = mpFile.getParentFile();
 	// for more information just type mpost --help 
@@ -1105,6 +1226,7 @@ public class LatexProcessor {
 
     private String[] buildHtlatexArguments(File texFile)
 	throws BuildExecutionException {
+
         return new String[] {
 	    texFile.getName(),
 	    this.settings.getTex4htStyOptions(),
@@ -1134,7 +1256,7 @@ public class LatexProcessor {
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
     private void runLatex2odt(File texFile)
-            throws BuildExecutionException {
+	throws BuildExecutionException {
 
 	String command = this.settings.getTex4htCommand();
         log.debug("Running " + command + " on" + texFile.getName() + ". ");
@@ -1477,7 +1599,6 @@ public class LatexProcessor {
 	// logging errors (warnings are done in processLatex2pdf)
 	logErrs(logFile, command);
     }
-
  }
 
 
