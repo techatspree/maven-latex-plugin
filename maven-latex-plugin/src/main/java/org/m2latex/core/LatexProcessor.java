@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
@@ -53,6 +54,8 @@ public class LatexProcessor {
 	}
     } // static 
 
+    private final Collection<File> latexMainFiles = new ArrayList<File>();
+
     // For pattern matching, it is vital to avoid false positive matches. 
     // e.g. Overfull \box with text '! ' is not an error 
     // and Overfull \box with text 'Warning' is no warning. 
@@ -76,7 +79,8 @@ public class LatexProcessor {
     // for LaTeX but also for mpost 
     final static String SUFFIX_LOG = ".log";
  
-
+    // used in preprocessing only 
+    private final static String SUFFIX_TEX = ".tex";
 
     
     // home-brewed ending to represent tex including postscript 
@@ -223,14 +227,10 @@ public class LatexProcessor {
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 
 	try {
+	    // process graphics and determine latexMainFiles 
 	    // may throw BuildExecutionException 
-	    processGraphics(orgFiles);
-
-	    // process latex main files 
-	    // may throw BuildExecutionException 
-	    Collection<File> latexMainFiles = this.fileUtils
-		.getLatexMainDocuments(orgFiles, 
-				       this.settings.getPatternLatexMainFile());
+	    Collection<File> latexMainFiles = 
+		processGraphicsSelectMain(orgFiles);
 	    for (File texFile : latexMainFiles) {
 		// may throw BuildExecutionException, BuildFailureException 
 		File targetDir = this.fileUtils.getTargetDirectory
@@ -264,6 +264,8 @@ public class LatexProcessor {
      */
     enum SuffixHandler {
 	fig {
+	    // converts a fig-file into pdf 
+	    // invoking {@link #runFig2Dev(File, LatexDev)}
 	    void transformSrc(File file, LatexProcessor proc) 
 		throws BuildExecutionException {
 		proc.runFig2Dev(file, LatexDev.pdf);
@@ -277,6 +279,8 @@ public class LatexProcessor {
 	    }
 	},
 	plt {
+	    // converts a gnuplot-file into pdf 
+	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
 	    void transformSrc(File file, LatexProcessor proc) 
 		throws BuildExecutionException {
 		proc.runGnuplot2Dev(file, LatexDev.pdf);
@@ -290,6 +294,8 @@ public class LatexProcessor {
 	    }
 	},
 	mp {
+	    // converts a metapost-file into mps-format 
+	    // invoking {@link #runMetapost2mps(File)} 
 	    void transformSrc(File file, LatexProcessor proc) 
 		throws BuildExecutionException {
 		proc.runMetapost2mps(file);
@@ -315,24 +321,20 @@ public class LatexProcessor {
 	    String getSuffix() {
 		return LatexProcessor.SUFFIX_SVG;
 	    }
-	}
-// ,
-// 	tex {
-// 	    void transformSrc(File file, LatexProcessor proc) 
-// 		throws BuildExecutionException {
-// FIXME: to be implemented. 
-// 		// proc.log.info("Processing svg-file " + file + 
-// 		// 	      " done implicitly. ");
-// 	    }
-// 	    void clearTarget(File file, LatexProcessor proc)
-// 	    	throws BuildExecutionException {
-// 		proc.clearTargetTex(file);
-// 	    }
-// 	    String getSuffix() {
-// 		return LatexProcessor.SUFFIX_TEX;
-// 	    }
-// 	}
-;
+	},
+	tex {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		proc.addMainFile(file);
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetTex(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_TEX;
+	    }
+	};
 
 	abstract void transformSrc(File file, LatexProcessor proc)
 	throws BuildExecutionException;
@@ -547,28 +549,27 @@ public class LatexProcessor {
     }
 
 
+    private void addMainFile(File texFile) throws BuildExecutionException {
+	// may throw BuildExecutionException
+	if (this.fileUtils
+	    .matchInFile(texFile, 
+			 this.settings.getPatternLatexMainFile())) {
+	    this.log.info("Detected latex-main-file " + texFile + ". ");
+	    this.latexMainFiles.add(texFile);
+	}
+    }
 
     /**
      * Converts files in various graphic formats incompatible with LaTeX 
      * into formats which can be inputted or included directly 
-     * into a latex file: 
-     *
-     * <ul>
-     * <li>
-     * {@link #runFig2Dev(File, LatexDev)} converts a fig-file into pdf, 
-     * except the text which is converted into latex-file including the pdf-file
-     * <li>
-     * {@link #runGnuplot2Dev(File, LatexDev)} converts a gnuplot-file into pdf,
-     * except the text which is converted into latex-file including the pdf-file
-     * <li>
-     * {@link #runMetapost2mps(File)} converts a metapost-file into mps-format. 
-     * </ul>
+     * into a latex file. 
      *
      * @throws BuildExecutionException
      */
-    private void processGraphics(Collection<File> files) 
+    private void processSuffixes(Collection<File> files) 
 	throws BuildExecutionException {
 
+	this.latexMainFiles.clear();
 	SuffixHandler handler;
 	for (File file : files) {
 	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
@@ -576,6 +577,15 @@ public class LatexProcessor {
 		handler.transformSrc(file, this);
 	    }
 	}
+    }
+
+    private Collection<File> processGraphicsSelectMain(Collection<File> files) 
+	throws BuildExecutionException {
+	processSuffixes(files);
+	return this.latexMainFiles;
+	// return this.fileUtils
+	//     .getLatexMainDocuments(files, 
+	// 			   this.settings.getPatternLatexMainFile());
     }
 
     private void clearTargetFig(File figFile) 
@@ -627,18 +637,6 @@ public class LatexProcessor {
        this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
    }
 
-    private void clearGraphics(Collection<File> files) 
-	throws BuildExecutionException {
-
-	SuffixHandler handler;
-	for (File file : files) {
-	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
-	    if (handler != null) {
-		handler.clearTarget(file, this);
-	    }
-	}
-    }
-
     private void clearTargetTex(final File texFile) 
 	throws BuildExecutionException {
 
@@ -661,26 +659,17 @@ public class LatexProcessor {
 	new File(texFile.getParent(), "zz" + root + ".eps").delete();
     }
 
-    /**
-     * Clear all files in <code>texDirectory</code> and folders therein 
-     * with name starting as the name of a latex main file without suffix 
-     * (which is called the root) but do not clear the latex file itself. 
-     * Clear also the eps file <code>zz&lt;root>.eps</code>. 
-     */
-    private void clearFromLatexMain(Collection<File> orgFiles) 
+    private void clearSuffixes(Collection<File> files) 
 	throws BuildExecutionException {
 
-	// may throw BuildExecutionException 
-	Collection<File> texMainFiles = this.fileUtils
-	    .getLatexMainDocuments(orgFiles, 
-				   this.settings.getPatternLatexMainFile());
-	
-	for (final File texFile : texMainFiles) {
-	    // may throw BuildExecutionException 
-	    clearTargetTex(texFile);
+	SuffixHandler handler;
+	for (File file : files) {
+	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
+	    if (handler != null) {
+		handler.clearTarget(file, this);
+	    }
 	}
     }
-
 
     /**
      * Defines clearing ant-task and the maven plugin. 
@@ -698,9 +687,8 @@ public class LatexProcessor {
 	// may throw BuildExecutionException 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 
-	clearGraphics     (orgFiles);
-	clearFromLatexMain(orgFiles);
-    }
+	clearSuffixes     (orgFiles);
+   }
 
 
     // FIXME: use the -recorder option to resolve dependencies. 
