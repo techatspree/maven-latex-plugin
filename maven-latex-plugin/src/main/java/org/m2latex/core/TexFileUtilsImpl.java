@@ -239,10 +239,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     /**
      * Return the name of the given file without the suffix. 
-     * 
-     * @see TexFileUtils#getFileNameWithoutSuffix(File)
      */
-    public String getFileNameWithoutSuffix(File texFile) {
+    private String getFileNameWithoutSuffix(File texFile) {
         String nameTexFile = texFile.getName();
         String namePrefixTexFile = nameTexFile
 	    .substring(0, nameTexFile.lastIndexOf("."));
@@ -250,34 +248,39 @@ class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
-     * Return a collection of files in directory <code>dir</code> 
+     * Return the suffix of the name of the given file 
+     * including the <code>.</code>. 
+     */
+    public String getSuffix(File file) {
+        String nameFile = file.getName();
+        String suffix = nameFile.substring(nameFile.lastIndexOf("."), 
+					   nameFile.length());
+        return suffix;
+    }
+
+    /**
+     * Return a collection of files in <code>files</code> 
      * with suffix <code>suffix</code>. 
      *
-     * @param dir
-     *    the directory the listing of which is requested. 
+     * @param files
+     *    the collection of files in the latex source directory. 
      * @param suffix
      *    the suffix of the files to be returned. 
      * @return
-     *    The collection of files in <code>dir</code>. 
+     *    The collection of files in <code>files</code> 
+     *    with suffix <code>suffix</code>. 
      *    This may never be <code>null</code>. 
-     * @throws BuildExecutionException
-     *    if <code>dir</code> is not a directory or if an IO-error occurs. 
-     * @see TexFileUtils#getFileNameWithoutSuffix(File, String)
      */
-    public Collection<File> getFilesWithSuffix(File dir, String suffix) 
-	throws BuildExecutionException {
-	Collection<File> res = FileUtils
-	    .listFiles(dir,
-		       suffixFileFilter(suffix),
-		       TrueFileFilter.INSTANCE);
-	if (res == null) {
-	    throw new BuildExecutionException
-		("File " + dir + " is not readable or no directory. ");
+    public Collection<File> getFilesWithSuffix(Collection<File> files, 
+					       String suffix) {
+	Collection<File> res = new ArrayList<File>();
+	for (File file : files) {
+	    if (suffixFileFilter(suffix).accept(file)) {
+		res.add(file);
+	    }
 	}
 	return res;
     }
-
-
 
     // logFile may be .log or .blg or something 
     /**
