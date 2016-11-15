@@ -40,6 +40,10 @@ import java.util.HashMap;
  */
 public class LatexProcessor {
 
+    /**
+     * Maps the suffix to the according handler. 
+     * If the handler is <code>null</code>, there is no handler. 
+     */
     private final static Map<String, SuffixHandler> SUFFIX2HANDLER = 
 	new HashMap<String, SuffixHandler>();
 
@@ -69,28 +73,34 @@ public class LatexProcessor {
     final static String SUFFIX_AUX = ".aux";
     // LaTeX and mpost with option -recorder 
     final static String SUFFIX_FLS = ".fls";
-
-
-    // home-brewed ending to represent tex including postscript 
-    private final static String SUFFIX_PTX = ".ptx";
-    final static String SUFFIX_PDF = ".pdf";
-    final static String SUFFIX_PSTEX = ".pstex";
-    final static String SUFFIX_PDFTEX = ".pdf_tex";
-
     // for LaTeX but also for mpost 
     final static String SUFFIX_LOG = ".log";
  
+
+
+    
+    // home-brewed ending to represent tex including postscript 
+    private final static String SUFFIX_PTX = ".ptx";// For preprocessing only 
+    // the next two for preprocessing and in LatexDev only 
+    final static String SUFFIX_PSTEX = ".pstex";
+    final static String SUFFIX_PDFTEX = ".pdf_tex";
+
+ 
     // suffix for xfig
-    private final static String SUFFIX_FIG = ".fig";
+    private final static String SUFFIX_FIG = ".fig";// in SuffixHandler only 
     // suffix for svg
-    private final static String SUFFIX_SVG = ".svg";
+    private final static String SUFFIX_SVG = ".svg";// in SuffixHandler only 
     // suffix for gnuplot
-    private final static String SUFFIX_PLT = ".plt";
+    private final static String SUFFIX_PLT = ".plt";// in SuffixHandler only 
     // suffix for metapost
-    private final static String SUFFIX_MP  = ".mp";
+    private final static String SUFFIX_MP  = ".mp";// in SuffixHandler only 
     // from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
-    private final static String SUFFIX_MPS = ".mps";
-    private final static String SUFFIX_MPX = ".mpx";
+    private final static String SUFFIX_MPS = ".mps";// For preprocessing only 
+    private final static String SUFFIX_MPX = ".mpx";// For preprocessing only 
+
+
+    final static String SUFFIX_PDF = ".pdf";
+
 
     // odt2doc 
     private final static String SUFFIX_ODT = ".odt";
@@ -219,7 +229,7 @@ public class LatexProcessor {
 	    // process latex main files 
 	    // may throw BuildExecutionException 
 	    Collection<File> latexMainFiles = this.fileUtils
-		.getLatexMainDocuments(texDirectory, 
+		.getLatexMainDocuments(orgFiles, 
 				       this.settings.getPatternLatexMainFile());
 	    for (File texFile : latexMainFiles) {
 		// may throw BuildExecutionException, BuildFailureException 
@@ -250,6 +260,295 @@ public class LatexProcessor {
     }
 
     /**
+     *
+     */
+    enum SuffixHandler {
+	fig {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		proc.runFig2Dev(file, LatexDev.pdf);
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetFig(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_FIG;
+	    }
+	},
+	plt {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		proc.runGnuplot2Dev(file, LatexDev.pdf);
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetPlt(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_PLT;
+	    }
+	},
+	mp {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		proc.runMetapost2mps(file);
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetMp(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_MP;
+	    }
+	},
+	svg {
+	    void transformSrc(File file, LatexProcessor proc) 
+		throws BuildExecutionException {
+		// proc.log.info("Processing svg-file " + file + 
+		// 	      " done implicitly. ");
+	    }
+	    void clearTarget(File file, LatexProcessor proc)
+	    	throws BuildExecutionException {
+		proc.clearTargetSvg(file);
+	    }
+	    String getSuffix() {
+		return LatexProcessor.SUFFIX_SVG;
+	    }
+	}
+// ,
+// 	tex {
+// 	    void transformSrc(File file, LatexProcessor proc) 
+// 		throws BuildExecutionException {
+// FIXME: to be implemented. 
+// 		// proc.log.info("Processing svg-file " + file + 
+// 		// 	      " done implicitly. ");
+// 	    }
+// 	    void clearTarget(File file, LatexProcessor proc)
+// 	    	throws BuildExecutionException {
+// 		proc.clearTargetTex(file);
+// 	    }
+// 	    String getSuffix() {
+// 		return LatexProcessor.SUFFIX_TEX;
+// 	    }
+// 	}
+;
+
+	abstract void transformSrc(File file, LatexProcessor proc)
+	throws BuildExecutionException;
+
+	abstract void clearTarget(File file, LatexProcessor proc)
+	throws BuildExecutionException;
+
+	abstract String getSuffix();
+    } // enum SuffixHandler 
+
+
+
+    /**
+     * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
+     * This is a quite restricted usage of fig2dev. 
+     *
+     * @param figFile
+     *    the fig file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the fig2dev command 
+     *    returned by {@link Settings#getFig2devCommand()} failed. 
+     *    This is invoked twice: once for creating the pdf-file 
+     *    and once for creating the pdf_t-file. 
+     * @see #create()
+     */
+    // used in processGraphics(File) only 
+    private void runFig2Dev(File figFile, LatexDev dev) 
+	throws BuildExecutionException {
+
+	this.log.info("Processing fig-file " + figFile + ". ");
+	String command = this.settings.getFig2devCommand();
+	File workingDir = figFile.getParentFile();
+	String[] args;
+
+	//File pdfFile   = this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF);
+
+
+	// create pdf-file (graphics without text) 
+	// embedded in some tex-file 
+
+	//if (update(figFile, pdfFile)) {
+ 	    args = buildArgumentsFig2Pdf(dev, 
+					 this.settings.getFig2devGenOptions(), 
+					 this.settings.getFig2devPdfOptions(), 
+					 figFile);
+	    log.debug("Running " + command + 
+		      " -Lpdftex  ... on " + figFile.getName() + ". ");
+	    // may throw BuildExecutionException 
+	    this.executor.execute(workingDir, 
+				  this.settings.getTexPath(), //**** 
+				  command, 
+				  args);
+	    //}
+
+	    // create tex-file (text without grapics) 
+	    // enclosing the pdf-file above 
+
+  	    //if (update(figFile, pdf_tFile)) {
+ 	    args = buildArgumentsFig2Ptx(dev, 
+					 this.settings.getFig2devGenOptions(), 
+					 this.settings.getFig2devPtxOptions(), 
+					 figFile);
+	    log.debug("Running " + command + 
+		      " -Lpdftex_t... on " + figFile.getName() + ". ");
+	    // may throw BuildExecutionException 
+	    this.executor.execute(workingDir, 
+				  this.settings.getTexPath(), //**** 
+				  command, 
+				  args);
+	    //}
+	// no check: just warning that no output has been created. 
+    }
+
+    private String[] buildArgumentsFig2Pdf(LatexDev dev, 
+					   String optionsGen, 
+					   String optionsPdf, 
+					   File figFile) {
+	String[] optionsGenArr = optionsGen.isEmpty() 
+	    ? new String[0] : optionsGen.split(" ");
+	String[] optionsPdfArr = optionsPdf.isEmpty() 
+	    ? new String[0] : optionsPdf.split(" ");
+	int lenSum = optionsGenArr.length +optionsPdfArr.length;
+
+	String[] args = new String[lenSum + 4];
+	// language 
+	args[0] = "-L";
+	args[1] = dev.getXFigInTexLanguage();
+	// general options 
+	System.arraycopy(optionsGenArr, 0, args, 2, optionsGenArr.length);
+	// language specific options 
+	System.arraycopy(optionsPdfArr, 0, 
+			 args, 2+optionsGenArr.length, optionsPdfArr.length);
+	// input: fig-file 
+        args[2+lenSum] = figFile.getName();
+	// output: pdf-file 
+	args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
+	return args;
+    }
+
+    private String[] buildArgumentsFig2Ptx(LatexDev dev, 
+					   String optionsGen,
+					   String optionsPtx,
+					   File figFile) {
+	String[] optionsGenArr = optionsGen.isEmpty() 
+	    ? new String[0] : optionsGen.split(" ");
+	String[] optionsPtxArr = optionsPtx.isEmpty() 
+	    ? new String[0] : optionsPtx.split(" ");
+	int lenSum = optionsGenArr.length +optionsPtxArr.length;
+
+	String[] args = new String[lenSum + 6];
+	// language 
+	args[0] = "-L";
+	args[1] = dev.getXFigTexLanguage();
+	// general options 
+	System.arraycopy(optionsGenArr, 0, 
+			 args, 2, optionsGenArr.length);
+	// language specific options 
+	System.arraycopy(optionsPtxArr, 0, 
+			 args, 2+optionsGenArr.length, optionsPtxArr.length);
+	// -p pdf-file in ptx-file 
+	args[2+lenSum] = "-p";
+        args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
+	// input: fig-file 
+        args[4+lenSum] = figFile.getName();
+	// output: ptx-file 
+	args[5+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX)
+	    .getName();
+	return args;
+     }
+
+    /**
+     * Converts a gnuplot file into a tex-file with ending ptx 
+     * including a pdf-file. 
+     *
+     * @param pltFile 
+     *    the plt-file (gnuplot format) to be converted to pdf. 
+     * @throws BuildExecutionException
+     *    if running the ptx/pdf-conversion built in in gnuplot fails. 
+     * @see #create()
+     */
+    // used in processGraphics(Collection) only 
+    private void runGnuplot2Dev(File pltFile, LatexDev dev) 
+	throws BuildExecutionException {
+
+	this.log.info("Processing gnuplot-file " + pltFile + ". ");
+	String command = this.settings.getGnuplotCommand();
+	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
+	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
+
+	String[] args = new String[] {
+	    "-e",   // run a command string "..." with commands sparated by ';' 
+	    // 
+	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
+	    " " + this.settings.getGnuplotOptions() + 
+	    ";set output \"" + ptxFile.getName() + 
+	    "\";load \"" + pltFile.getName() + "\""
+	};
+	// FIXME: include options. 
+// set terminal cairolatex
+// {eps | pdf} done before. 
+// {standalone | input}
+// {blacktext | colortext | colourtext}
+// {header <header> | noheader}
+// {mono|color}
+// {{no}transparent} {{no}crop} {background <rgbcolor>}
+// {font <font>} {fontscale <scale>}
+// {linewidth <lw>} {rounded|butt|square} {dashlength <dl>}
+// {size <XX>{unit},<YY>{unit}}
+
+
+//	if (update(pltFile, ptxFile)) {
+	    log.debug("Running " + command + 
+		      " -e...  on " + pltFile.getName() + ". ");
+	    // may throw BuildExecutionException 
+	    this.executor.execute(pltFile.getParentFile(), //workingDir 
+				  this.settings.getTexPath(), //**** 
+				  command, 
+				  args);
+//	}
+	// no check: just warning that no output has been created. 
+    }
+
+    /**
+     * Runs mpost on mp-files to generate mps-files. 
+     *
+     * @param mpFile
+     *    the metapost file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the mpost command failed. 
+     * @see #processGraphics(File)
+     */
+    // used in processGraphics(Collection) only 
+    private void runMetapost2mps(File mpFile) throws BuildExecutionException {
+
+	this.log.info("Processing metapost-file " + mpFile + ". ");
+	String command = this.settings.getMetapostCommand();
+	File workingDir = mpFile.getParentFile();
+	// for more information just type mpost --help 
+	String[] args = buildArguments(this.settings.getMetapostOptions(), 
+				       mpFile);
+	log.debug("Running " + command + " on " + mpFile.getName() + ". ");
+	// may throw BuildExecutionException 
+	this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), //**** 
+			      command, 
+			      args);
+	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
+	// FIXME: what is xxx.mpx for? 
+	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
+	logErrs(logFile, command, this.settings.getPatternErrMPost());
+	// FIXME: what about warnings?
+    }
+
+
+
+    /**
      * Converts files in various graphic formats incompatible with LaTeX 
      * into formats which can be inputted or included directly 
      * into a latex file: 
@@ -277,33 +576,6 @@ public class LatexProcessor {
 		handler.transformSrc(file, this);
 	    }
 	}
-
-	// // process xfig files 
-	// // may throw BuildExecutionException 
-	// Collection<File> figFiles = this.fileUtils
-	//     .getFilesWithSuffix(files, SUFFIX_FIG);
-	// for (File figFile : figFiles) {
-	//     // may throw BuildExecutionException 
-	//     runFig2Dev(figFile, LatexDev.pdf);
-	// }
-
-	// // process gnuplot files 
-	// // may throw BuildExecutionException 
-	// Collection<File> pltFiles = this.fileUtils
-	//     .getFilesWithSuffix(files, SUFFIX_PLT);
-	// for (File pltFile : pltFiles) {
-	//     // may throw BuildExecutionException 
-	//     runGnuplot2Dev(pltFile, LatexDev.pdf);
-	// }
-
-	// // process metapost files 
-	// // may throw BuildExecutionException 
-	// Collection<File> mpFiles = this.fileUtils
-	//     .getFilesWithSuffix(files, SUFFIX_MP);
-	// for (File mpFile : mpFiles) {
-	//     // may throw BuildExecutionException 
-	//     runMetapost2mps(mpFile);
-	// }
     }
 
     private void clearTargetFig(File figFile) 
@@ -351,6 +623,7 @@ public class LatexProcessor {
        this.log.info("Deleting targets of svg-file " + svgFile + ". ");
        // may throw BuildExecutionException 
        this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
+//       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PSTEX ).delete();
        this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
    }
 
@@ -364,39 +637,28 @@ public class LatexProcessor {
 		handler.clearTarget(file, this);
 	    }
 	}
+    }
 
+    private void clearTargetTex(final File texFile) 
+	throws BuildExecutionException {
 
-	// // delete targets of xfig files 
-	// // may throw BuildExecutionException 
-	// Collection<File> figFiles = this.fileUtils
-	//     .getFilesWithSuffix(files, SUFFIX_FIG);
-	// for (File figFile : figFiles) {
-	//     clearTargetFig(figFile);
-	// }
+	// filter to delete 
+	String name1 = texFile.getName();
+	final String root = name1.substring(0, name1.lastIndexOf("."));
+	FileFilter filter = new FileFilter() {
+		public boolean accept(File file) {
+		    return !file.isDirectory()
+			&&  file.getName().startsWith(root)
+			&& !file.equals(texFile);
+		}
+	    };
+	this.log.info("Deleting files " + root + "... . ");
+	// may throw BuildExecutionException 
+	this.fileUtils.delete(texFile, filter);
 
-	// // delete targets of gnuplot files 
-	// // may throw BuildExecutionException 
-	// Collection<File> pltFiles = this.fileUtils
-	//     .getFilesWithSuffix(files, SUFFIX_PLT);
-	// for (File pltFile : pltFiles) {
-	//     clearTargetPlt(pltFile);
-	// }
-
-	// // delete targets of metapost files 
-	// // may throw BuildExecutionException 
-	// Collection<File> mpFiles = this.fileUtils
-	//     .getFilesWithSuffix(files, SUFFIX_MP);
-	// for (File mpFile : mpFiles) {
-	//     clearTargetMp(mpFile);
-	// }
-
-	// // delete targets of svg files 
-	// // may throw BuildExecutionException 
-	// Collection<File> svgFiles = this.fileUtils
-	//     .getFilesWithSuffix(files, SUFFIX_SVG);
-	// for (File svgFile : svgFiles) {
-	//     clearTargetSvg(svgFile);
-	// }
+	this.log.info("Deleting file zz" + root + ".eps. ");
+	// FIXME: eliminate literal ".eps" 
+	new File(texFile.getParent(), "zz" + root + ".eps").delete();
     }
 
     /**
@@ -405,31 +667,17 @@ public class LatexProcessor {
      * (which is called the root) but do not clear the latex file itself. 
      * Clear also the eps file <code>zz&lt;root>.eps</code>. 
      */
-    private void clearFromLatexMain(File texDirectory) 
+    private void clearFromLatexMain(Collection<File> orgFiles) 
 	throws BuildExecutionException {
 
 	// may throw BuildExecutionException 
 	Collection<File> texMainFiles = this.fileUtils
-	    .getLatexMainDocuments(texDirectory, 
+	    .getLatexMainDocuments(orgFiles, 
 				   this.settings.getPatternLatexMainFile());
-	FileFilter filter;
-	for (final File texFile : texMainFiles) {	    
-	    // filter to delete 
-	    String name1 = texFile.getName();
-	    final String root = name1.substring(0, name1.lastIndexOf("."));
-	    filter = new FileFilter() {
-		    public boolean accept(File file) {
-			return !file.isDirectory()
-			    &&  file.getName().startsWith(root)
-			    && !file.equals(texFile);
-		    }
-		};
-	    this.log.info("Deleting files " + root + "... . ");
+	
+	for (final File texFile : texMainFiles) {
 	    // may throw BuildExecutionException 
-	    this.fileUtils.delete(texFile, filter);
-
-	    this.log.info("Deleting file zz" + root + ".eps. ");
-	    new File(texFile.getParent(), "zz" + root + ".eps").delete();
+	    clearTargetTex(texFile);
 	}
     }
 
@@ -451,7 +699,7 @@ public class LatexProcessor {
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 
 	clearGraphics     (orgFiles);
-	clearFromLatexMain(texDirectory);
+	clearFromLatexMain(orgFiles);
     }
 
 
@@ -890,273 +1138,6 @@ public class LatexProcessor {
     // suffix for tex files containing text and including pdf 
 
 
-    /**
-     *
-     */
-    enum SuffixHandler {
-	fig {
-	    void transformSrc(File file, LatexProcessor proc) 
-		throws BuildExecutionException {
-		proc.runFig2Dev(file, LatexDev.pdf);
-	    }
-	    void clearTarget(File file, LatexProcessor proc)
-	    	throws BuildExecutionException {
-		proc.clearTargetFig(file);
-	    }
-	    String getSuffix() {
-		return LatexProcessor.SUFFIX_FIG;
-	    }
-	},
-	plt {
-	    void transformSrc(File file, LatexProcessor proc) 
-		throws BuildExecutionException {
-		proc.runGnuplot2Dev(file, LatexDev.pdf);
-	    }
-	    void clearTarget(File file, LatexProcessor proc)
-	    	throws BuildExecutionException {
-		proc.clearTargetPlt(file);
-	    }
-	    String getSuffix() {
-		return LatexProcessor.SUFFIX_PLT;
-	    }
-	},
-	mp {
-	    void transformSrc(File file, LatexProcessor proc) 
-		throws BuildExecutionException {
-		proc.runMetapost2mps(file);
-	    }
-	    void clearTarget(File file, LatexProcessor proc)
-	    	throws BuildExecutionException {
-		proc.clearTargetMp(file);
-	    }
-	    String getSuffix() {
-		return LatexProcessor.SUFFIX_MP;
-	    }
-	},
-	svg {
-	    void transformSrc(File file, LatexProcessor proc) 
-		throws BuildExecutionException {
-		// proc.log.info("Processing svg-file " + file + 
-		// 	      " done implicitly. ");
-	    }
-	    void clearTarget(File file, LatexProcessor proc)
-	    	throws BuildExecutionException {
-		proc.clearTargetSvg(file);
-	    }
-	    String getSuffix() {
-		return LatexProcessor.SUFFIX_SVG;
-	    }
-	};
-
-	abstract void transformSrc(File file, LatexProcessor proc)
-	throws BuildExecutionException;
-
-	abstract void clearTarget(File file, LatexProcessor proc)
-	throws BuildExecutionException;
-
-	abstract String getSuffix();
-    } // enum SuffixHandler 
-
-    /**
-     * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
-     * This is a quite restricted usage of fig2dev. 
-     *
-     * @param figFile
-     *    the fig file to be processed. 
-     * @throws BuildExecutionException
-     *    if running the fig2dev command 
-     *    returned by {@link Settings#getFig2devCommand()} failed. 
-     *    This is invoked twice: once for creating the pdf-file 
-     *    and once for creating the pdf_t-file. 
-     * @see #create()
-     */
-    // used in processGraphics(File) only 
-    private void runFig2Dev(File figFile, LatexDev dev) 
-	throws BuildExecutionException {
-
-	this.log.info("Processing fig-file " + figFile + ". ");
-	String command = this.settings.getFig2devCommand();
-	File workingDir = figFile.getParentFile();
-	String[] args;
-
-	//File pdfFile   = this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF);
-
-
-	// create pdf-file (graphics without text) 
-	// embedded in some tex-file 
-
-	//if (update(figFile, pdfFile)) {
- 	    args = buildArgumentsFig2Pdf(dev, 
-					 this.settings.getFig2devGenOptions(), 
-					 this.settings.getFig2devPdfOptions(), 
-					 figFile);
-	    log.debug("Running " + command + 
-		      " -Lpdftex  ... on " + figFile.getName() + ". ");
-	    // may throw BuildExecutionException 
-	    this.executor.execute(workingDir, 
-				  this.settings.getTexPath(), //**** 
-				  command, 
-				  args);
-	    //}
-
-	    // create tex-file (text without grapics) 
-	    // enclosing the pdf-file above 
-
-  	    //if (update(figFile, pdf_tFile)) {
- 	    args = buildArgumentsFig2Ptx(dev, 
-					 this.settings.getFig2devGenOptions(), 
-					 this.settings.getFig2devPtxOptions(), 
-					 figFile);
-	    log.debug("Running " + command + 
-		      " -Lpdftex_t... on " + figFile.getName() + ". ");
-	    // may throw BuildExecutionException 
-	    this.executor.execute(workingDir, 
-				  this.settings.getTexPath(), //**** 
-				  command, 
-				  args);
-	    //}
-	// no check: just warning that no output has been created. 
-    }
-
-    private String[] buildArgumentsFig2Pdf(LatexDev dev, 
-					   String optionsGen, 
-					   String optionsPdf, 
-					   File figFile) {
-	String[] optionsGenArr = optionsGen.isEmpty() 
-	    ? new String[0] : optionsGen.split(" ");
-	String[] optionsPdfArr = optionsPdf.isEmpty() 
-	    ? new String[0] : optionsPdf.split(" ");
-	int lenSum = optionsGenArr.length +optionsPdfArr.length;
-
-	String[] args = new String[lenSum + 4];
-	// language 
-	args[0] = "-L";
-	args[1] = dev.getXFigInTexLanguage();
-	// general options 
-	System.arraycopy(optionsGenArr, 0, args, 2, optionsGenArr.length);
-	// language specific options 
-	System.arraycopy(optionsPdfArr, 0, 
-			 args, 2+optionsGenArr.length, optionsPdfArr.length);
-	// input: fig-file 
-        args[2+lenSum] = figFile.getName();
-	// output: pdf-file 
-	args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
-	return args;
-    }
-
-    private String[] buildArgumentsFig2Ptx(LatexDev dev, 
-					   String optionsGen,
-					   String optionsPtx,
-					   File figFile) {
-	String[] optionsGenArr = optionsGen.isEmpty() 
-	    ? new String[0] : optionsGen.split(" ");
-	String[] optionsPtxArr = optionsPtx.isEmpty() 
-	    ? new String[0] : optionsPtx.split(" ");
-	int lenSum = optionsGenArr.length +optionsPtxArr.length;
-
-	String[] args = new String[lenSum + 6];
-	// language 
-	args[0] = "-L";
-	args[1] = dev.getXFigTexLanguage();
-	// general options 
-	System.arraycopy(optionsGenArr, 0, 
-			 args, 2, optionsGenArr.length);
-	// language specific options 
-	System.arraycopy(optionsPtxArr, 0, 
-			 args, 2+optionsGenArr.length, optionsPtxArr.length);
-	// -p pdf-file in ptx-file 
-	args[2+lenSum] = "-p";
-        args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
-	// input: fig-file 
-        args[4+lenSum] = figFile.getName();
-	// output: ptx-file 
-	args[5+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX)
-	    .getName();
-	return args;
-     }
-
-    /**
-     * Converts a gnuplot file into a tex-file with ending ptx 
-     * including a pdf-file. 
-     *
-     * @param pltFile 
-     *    the plt-file (gnuplot format) to be converted to pdf. 
-     * @throws BuildExecutionException
-     *    if running the ptx/pdf-conversion built in in gnuplot fails. 
-     * @see #create()
-     */
-    // used in processGraphics(Collection) only 
-    private void runGnuplot2Dev(File pltFile, LatexDev dev) 
-	throws BuildExecutionException {
-
-	this.log.info("Processing gnuplot-file " + pltFile + ". ");
-	String command = this.settings.getGnuplotCommand();
-	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
-	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
-
-	String[] args = new String[] {
-	    "-e",   // run a command string "..." with commands sparated by ';' 
-	    // 
-	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
-	    " " + this.settings.getGnuplotOptions() + 
-	    ";set output \"" + ptxFile.getName() + 
-	    "\";load \"" + pltFile.getName() + "\""
-	};
-	// FIXME: include options. 
-// set terminal cairolatex
-// {eps | pdf} done before. 
-// {standalone | input}
-// {blacktext | colortext | colourtext}
-// {header <header> | noheader}
-// {mono|color}
-// {{no}transparent} {{no}crop} {background <rgbcolor>}
-// {font <font>} {fontscale <scale>}
-// {linewidth <lw>} {rounded|butt|square} {dashlength <dl>}
-// {size <XX>{unit},<YY>{unit}}
-
-
-//	if (update(pltFile, ptxFile)) {
-	    log.debug("Running " + command + 
-		      " -e...  on " + pltFile.getName() + ". ");
-	    // may throw BuildExecutionException 
-	    this.executor.execute(pltFile.getParentFile(), //workingDir 
-				  this.settings.getTexPath(), //**** 
-				  command, 
-				  args);
-//	}
-	// no check: just warning that no output has been created. 
-    }
-
-    /**
-     * Runs mpost on mp-files to generate mps-files. 
-     *
-     * @param mpFile
-     *    the metapost file to be processed. 
-     * @throws BuildExecutionException
-     *    if running the mpost command failed. 
-     * @see #processGraphics(File)
-     */
-    // used in processGraphics(Collection) only 
-    private void runMetapost2mps(File mpFile) throws BuildExecutionException {
-
-	this.log.info("Processing metapost-file " + mpFile + ". ");
-	String command = this.settings.getMetapostCommand();
-	File workingDir = mpFile.getParentFile();
-	// for more information just type mpost --help 
-	String[] args = buildArguments(this.settings.getMetapostOptions(), 
-				       mpFile);
-	log.debug("Running " + command + " on " + mpFile.getName() + ". ");
-	// may throw BuildExecutionException 
-	this.executor.execute(workingDir, 
-			      this.settings.getTexPath(), //**** 
-			      command, 
-			      args);
-	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
-	// FIXME: what is xxx.mpx for? 
-	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
-	logErrs(logFile, command, this.settings.getPatternErrMPost());
-	// FIXME: what about warnings?
-    }
 
     /**
      * Runs the latex2rtf command 
