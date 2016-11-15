@@ -31,15 +31,7 @@ interface TexFileUtils {
 
     Collection<File> getFilesRec(File dir) throws BuildExecutionException;
 
-    /*
-     * @param tempDir
-     * 
-     * @return
-     *    A List of java.io.File objects 
-     *    denoting the LaTeX documents to process.
-     * @throws BuildExecutionException
-     */
-    Collection<File> getLatexMainDocuments(File tempDir, 
+    Collection<File> getLatexMainDocuments(Collection<File> texFiles, 
 					   String patternLatexMainFile)
         throws BuildExecutionException;
 

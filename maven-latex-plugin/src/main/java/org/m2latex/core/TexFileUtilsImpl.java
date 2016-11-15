@@ -73,35 +73,26 @@ class TexFileUtilsImpl implements TexFileUtils {
 	return res;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see TexFileUtils#getLatexMainDocuments(File, String)
-     */
+    // invoked with files with suffix .tex only 
     // used in only 
     // LatexProcessor#create() and 
     // in LatexProcessor#clearFromLatexMain(File)
-    public Collection<File> getLatexMainDocuments(File directory, 
-						  String patternLatexMainFile)
+    public Collection<File> getLatexMainDocuments(Collection<File> latexFiles, 
+						  String patternLatexMainFile) 
 	throws BuildExecutionException {
 
         Collection<File> mainFiles = new ArrayList<File>();
-	//IOFileFilter ff = FileFilterUtils.suffixFileFilter(SUFFIX_TEX);
-        Collection<File> latexFiles = FileUtils
-	    .listFiles(directory,
-		       FileFilterUtils
-		       .and(/*          */suffixFileFilter(SUFFIX_TEX),
-			    notFileFilter(prefixFileFilter(PREFIX_HIDDEN))),
-		       TrueFileFilter.INSTANCE);
-	// FIXME: may be null 
 	for (File file : latexFiles) {
 	    // may throw BuildExecutionException 
-	    if (matchInFile(file, patternLatexMainFile)) {
+// FIXME: exists is superfluous in the long run. 
+	    if (file.exists() && matchInFile(file, patternLatexMainFile)) {
 		mainFiles.add(file);
 	    }
         }
         return mainFiles;
     }
+
+
  
     /**
      * Returns the directory containing <code>sourceFile</code> 
