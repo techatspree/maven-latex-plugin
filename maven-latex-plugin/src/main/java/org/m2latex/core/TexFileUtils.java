@@ -31,10 +31,6 @@ interface TexFileUtils {
 
     Collection<File> getFilesRec(File dir) throws BuildExecutionException;
 
-    Collection<File> getLatexMainDocuments(Collection<File> texFiles, 
-					   String patternLatexMainFile)
-        throws BuildExecutionException;
-
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
 			    File targetBaseDir)

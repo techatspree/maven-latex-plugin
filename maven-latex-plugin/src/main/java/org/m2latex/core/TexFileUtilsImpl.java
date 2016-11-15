@@ -40,7 +40,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 class TexFileUtilsImpl implements TexFileUtils {
 
-    private final static String SUFFIX_TEX = ".tex";
     private final static String PREFIX_HIDDEN = ".";
 
     private final LogWrapper log;
@@ -73,27 +72,6 @@ class TexFileUtilsImpl implements TexFileUtils {
 	return res;
     }
 
-    // invoked with files with suffix .tex only 
-    // used in only 
-    // LatexProcessor#create() and 
-    // in LatexProcessor#clearFromLatexMain(File)
-    public Collection<File> getLatexMainDocuments(Collection<File> latexFiles, 
-						  String patternLatexMainFile) 
-	throws BuildExecutionException {
-
-        Collection<File> mainFiles = new ArrayList<File>();
-	for (File file : latexFiles) {
-	    // may throw BuildExecutionException 
-// FIXME: exists is superfluous in the long run. 
-	    if (file.exists() && matchInFile(file, patternLatexMainFile)) {
-		mainFiles.add(file);
-	    }
-        }
-        return mainFiles;
-    }
-
-
- 
     /**
      * Returns the directory containing <code>sourceFile</code> 
      * with the prefix <code>sourceBaseDir</code> 
