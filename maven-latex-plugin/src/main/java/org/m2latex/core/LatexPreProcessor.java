@@ -591,7 +591,7 @@ public class LatexPreProcessor {
      *
      * @throws BuildExecutionException
      */
-    private Collection<File> processGraphicsSelectMain(Collection<File> files) 
+    Collection<File> processGraphicsSelectMain(Collection<File> files) 
     	throws BuildExecutionException {
 
 	this.latexMainFiles.clear();

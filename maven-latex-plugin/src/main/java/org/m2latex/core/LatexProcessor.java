@@ -234,11 +234,15 @@ public class LatexProcessor {
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 
 	try {
-
 	    // process graphics and determine latexMainFiles 
 	    // may throw BuildExecutionException 
 	    Collection<File> latexMainFiles = 
-		processGraphicsSelectMain(orgFiles);
+		new LatexPreProcessor(this.settings,
+				      this.executor,
+				      this.log,
+				      this.fileUtils,
+				      this.paramAdapt)
+		.processGraphicsSelectMain(orgFiles);
 	    for (File texFile : latexMainFiles) {
 		// may throw BuildExecutionException, BuildFailureException 
 		File targetDir = this.fileUtils.getTargetDirectory
