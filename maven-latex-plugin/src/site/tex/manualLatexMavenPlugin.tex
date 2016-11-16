@@ -2469,10 +2469,6 @@ and seem to to play with package {\tt hyperref}.
 The current implementation is based on package {\tt rerunfilecheck} 
 which works for index but not for glossary. 
 
-In class {\tt TexFileUtilsImpl} there are several places marked FIXME. 
-All these should be resolved. 
-
-
 Figures are missing in html output 
 Formulae are missing in html output. 
 Index is s missing in html output. 
@@ -2481,6 +2477,21 @@ Glossary occurs in the toc but is not numbered.
 Did not find a way to add a numbered entry for the glossary 
 into the table of contents. 
 
+The pattern for detection of an error 
+does not work with option {\tt -file-line-error}. 
+
+
+./manualLatexMavenPlugin.tex:2484: Undefined control sequence.
+l.2484 \bla
+
+instead of 
+
+! Undefined control sequence.
+l.2488 \bla
+
+i ask myself how to detect this error in file line error mode! 
+
+\bla
 
 \bibliographystyle{alpha}
 \bibliography{lit}{}
