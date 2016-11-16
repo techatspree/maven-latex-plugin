@@ -731,6 +731,7 @@ not allowed:
               <!--goal>doc</goal-->
               <!--goal>txt</goal-->
               <!--goal>clr</goal-->
+              <!--goal>grp</goal-->
  <!--
 here is a bug affecting goal odt: 
 /usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
