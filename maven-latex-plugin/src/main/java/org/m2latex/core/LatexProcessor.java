@@ -281,7 +281,7 @@ public class LatexProcessor {
 
 	// may throw BuildExecutionException 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
-	this.processGraphicsSelectMain(orgFiles);
+	processGraphicsSelectMain(orgFiles);
     }
 
     /**
