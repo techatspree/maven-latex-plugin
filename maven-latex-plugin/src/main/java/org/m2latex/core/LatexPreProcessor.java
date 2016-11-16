@@ -43,7 +43,7 @@ import java.util.HashMap;
  * and main processing of the latex file according to the target(s) 
  * given by the parameters. 
  */
-public class LatexProcessor {
+public class LatexPreProcessor {
 
     /**
      * Maps the suffix to the according handler. 
@@ -149,11 +149,11 @@ public class LatexProcessor {
     private final ParameterAdapter paramAdapt;
 
     // also for tests 
-    LatexProcessor(Settings settings, 
-		   CommandExecutor executor, 
-		   LogWrapper log, 
-		   TexFileUtils fileUtils,
-		   ParameterAdapter paramAdapt) {
+    LatexPreProcessor(Settings settings, 
+		      CommandExecutor executor, 
+		      LogWrapper log, 
+		      TexFileUtils fileUtils,
+		      ParameterAdapter paramAdapt) {
         this.settings = settings;
         this.log = log;
         this.executor = executor;
@@ -172,14 +172,14 @@ public class LatexProcessor {
      * @param paramAdapt
      *    the parameter adapter, refers to maven-plugin or ant-task. 
      */
-    public LatexProcessor(Settings settings, 
-			  LogWrapper log, 
-			  ParameterAdapter paramAdapt) {
+    public LatexPreProcessor(Settings settings, 
+			     LogWrapper log, 
+			     ParameterAdapter paramAdapt) {
 	this(settings, new CommandExecutorImpl(log), log, 
 	     new TexFileUtilsImpl(log), paramAdapt);
     }
 
-    /**
+    /*
      * Defines creational ant-task and the maven plugin 
      * in {@link CfgLatexMojo} and subclasses. 
      * This consists in reading the parameters 
@@ -217,55 +217,55 @@ public class LatexProcessor {
      *    if processing xfig-files or gnuplot files fail. 
      *    </ul>
      */
-    public void create() throws BuildExecutionException, BuildFailureException {
+//    public void create() throws BuildExecutionException, BuildFailureException // {
 
-        this.paramAdapt.initialize();
-        this.log.debug("Settings: " + this.settings.toString() );
+    //     this.paramAdapt.initialize();
+    //     this.log.debug("Settings: " + this.settings.toString() );
 
-        File texDirectory = this.settings.getTexSrcDirectoryFile();
+    //     File texDirectory = this.settings.getTexSrcDirectoryFile();
 
-        if (!texDirectory.exists()) {
-            this.log.info("No tex directory - skipping LaTeX processing. ");
-            return;
-        }
+    //     if (!texDirectory.exists()) {
+    //         this.log.info("No tex directory - skipping LaTeX processing. ");
+    //         return;
+    //     }
 
-	// may throw BuildExecutionException 
-	// should fail without finally cleanup 
-	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
+    // 	// may throw BuildExecutionException 
+    // 	// should fail without finally cleanup 
+    // 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 
-	try {
+    // 	try {
 
-	    // process graphics and determine latexMainFiles 
-	    // may throw BuildExecutionException 
-	    Collection<File> latexMainFiles = 
-		processGraphicsSelectMain(orgFiles);
-	    for (File texFile : latexMainFiles) {
-		// may throw BuildExecutionException, BuildFailureException 
-		File targetDir = this.fileUtils.getTargetDirectory
-		    (texFile, 
-		     texDirectory,
-		     this.settings.getOutputDirectoryFile());
+    // 	    // process graphics and determine latexMainFiles 
+    // 	    // may throw BuildExecutionException 
+    // 	    Collection<File> latexMainFiles = 
+    // 		processGraphicsSelectMain(orgFiles);
+    // 	    for (File texFile : latexMainFiles) {
+    // 		// may throw BuildExecutionException, BuildFailureException 
+    // 		File targetDir = this.fileUtils.getTargetDirectory
+    // 		    (texFile, 
+    // 		     texDirectory,
+    // 		     this.settings.getOutputDirectoryFile());
 
-		for (Target target : this.paramAdapt.getTargetSet()) {
-		    // may throw BuildExecutionException 
-		    target.processSource(this, texFile);
-		    FileFilter fileFilter = this.fileUtils
-			.getFileFilter(texFile, 
-				       target.getOutputFileSuffixes());
-		    // may throw BuildExecutionException, BuildFailureException
-		    this.fileUtils.copyOutputToTargetFolder(texFile,
-							    fileFilter,
-							    targetDir);
+    // 		for (Target target : this.paramAdapt.getTargetSet()) {
+    // 		    // may throw BuildExecutionException 
+    // 		    target.processSource(this, texFile);
+    // 		    FileFilter fileFilter = this.fileUtils
+    // 			.getFileFilter(texFile, 
+    // 				       target.getOutputFileSuffixes());
+    // 		    // may throw BuildExecutionException, BuildFailureException
+    // 		    this.fileUtils.copyOutputToTargetFolder(texFile,
+    // 							    fileFilter,
+    // 							    targetDir);
 
-		} // target 
-	    } // texFile 
-	} finally {
-	    if (this.settings.isCleanUp()) {
-		// may throw BuildExecutionException
-                this.fileUtils.cleanUp(orgFiles, texDirectory);
-            }
-        }
-    }
+    // 		} // target 
+    // 	    } // texFile 
+    // 	} finally {
+    // 	    if (this.settings.isCleanUp()) {
+    // 		// may throw BuildExecutionException
+    //             this.fileUtils.cleanUp(orgFiles, texDirectory);
+    //         }
+    //     }
+    // }
 
     /**
      * Used by {@link GraphicsMojo}. 
@@ -291,80 +291,80 @@ public class LatexProcessor {
 	fig {
 	    // converts a fig-file into pdf 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
-	    void transformSrc(File file, LatexProcessor proc) 
+	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
 		proc.runFig2Dev(file, LatexDev.pdf);
 	    }
-	    void clearTarget(File file, LatexProcessor proc)
+	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
 		proc.clearTargetFig(file);
 	    }
 	    String getSuffix() {
-		return LatexProcessor.SUFFIX_FIG;
+		return LatexPreProcessor.SUFFIX_FIG;
 	    }
 	},
 	plt {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
-	    void transformSrc(File file, LatexProcessor proc) 
+	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
 		proc.runGnuplot2Dev(file, LatexDev.pdf);
 	    }
-	    void clearTarget(File file, LatexProcessor proc)
+	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
 		proc.clearTargetPlt(file);
 	    }
 	    String getSuffix() {
-		return LatexProcessor.SUFFIX_PLT;
+		return LatexPreProcessor.SUFFIX_PLT;
 	    }
 	},
 	mp {
 	    // converts a metapost-file into mps-format 
 	    // invoking {@link #runMetapost2mps(File)} 
-	    void transformSrc(File file, LatexProcessor proc) 
+	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
 		proc.runMetapost2mps(file);
 	    }
-	    void clearTarget(File file, LatexProcessor proc)
+	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
 		proc.clearTargetMp(file);
 	    }
 	    String getSuffix() {
-		return LatexProcessor.SUFFIX_MP;
+		return LatexPreProcessor.SUFFIX_MP;
 	    }
 	},
 	svg {
-	    void transformSrc(File file, LatexProcessor proc) 
+	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
 		// proc.log.info("Processing svg-file " + file + 
 		// 	      " done implicitly. ");
 	    }
-	    void clearTarget(File file, LatexProcessor proc)
+	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
 		proc.clearTargetSvg(file);
 	    }
 	    String getSuffix() {
-		return LatexProcessor.SUFFIX_SVG;
+		return LatexPreProcessor.SUFFIX_SVG;
 	    }
 	},
 	tex {
-	    void transformSrc(File file, LatexProcessor proc) 
+	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
 		proc.addMainFile(file);
 	    }
-	    void clearTarget(File file, LatexProcessor proc)
+	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
 		proc.clearTargetTex(file);
 	    }
 	    String getSuffix() {
-		return LatexProcessor.SUFFIX_TEX;
+		return LatexPreProcessor.SUFFIX_TEX;
 	    }
 	};
 
-	abstract void transformSrc(File file, LatexProcessor proc)
+	abstract void transformSrc(File file, LatexPreProcessor proc)
 	throws BuildExecutionException;
 
-	abstract void clearTarget(File file, LatexProcessor proc)
+	abstract void clearTarget(File file, LatexPreProcessor proc)
 	throws BuildExecutionException;
 
 	abstract String getSuffix();
