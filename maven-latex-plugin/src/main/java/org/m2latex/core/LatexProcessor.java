@@ -562,30 +562,23 @@ public class LatexProcessor {
     /**
      * Converts files in various graphic formats incompatible with LaTeX 
      * into formats which can be inputted or included directly 
-     * into a latex file. 
+     * into a latex file and returns the latex main files. 
      *
      * @throws BuildExecutionException
      */
-    private void processSuffixes(Collection<File> files) 
-	throws BuildExecutionException {
+    private Collection<File> processGraphicsSelectMain(Collection<File> files) 
+    	throws BuildExecutionException {
 
 	this.latexMainFiles.clear();
 	SuffixHandler handler;
 	for (File file : files) {
 	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
 	    if (handler != null) {
+		// may throw BuildExecutionException 
 		handler.transformSrc(file, this);
 	    }
 	}
-    }
-
-    private Collection<File> processGraphicsSelectMain(Collection<File> files) 
-	throws BuildExecutionException {
-	processSuffixes(files);
 	return this.latexMainFiles;
-	// return this.fileUtils
-	//     .getLatexMainDocuments(files, 
-	// 			   this.settings.getPatternLatexMainFile());
     }
 
     private void clearTargetFig(File figFile) 
@@ -640,6 +633,13 @@ public class LatexProcessor {
     private void clearTargetTex(final File texFile) 
 	throws BuildExecutionException {
 
+	// may throw BuildExecutionException
+	if (!this.fileUtils
+	    .matchInFile(texFile, 
+			 this.settings.getPatternLatexMainFile())) {
+	    return;
+	}
+
 	// filter to delete 
 	String name1 = texFile.getName();
 	final String root = name1.substring(0, name1.lastIndexOf("."));
@@ -659,18 +659,6 @@ public class LatexProcessor {
 	new File(texFile.getParent(), "zz" + root + ".eps").delete();
     }
 
-    private void clearSuffixes(Collection<File> files) 
-	throws BuildExecutionException {
-
-	SuffixHandler handler;
-	for (File file : files) {
-	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
-	    if (handler != null) {
-		handler.clearTarget(file, this);
-	    }
-	}
-    }
-
     /**
      * Defines clearing ant-task and the maven plugin. 
      * Consists in clearing created graphic files 
@@ -685,9 +673,15 @@ public class LatexProcessor {
 
         File texDirectory = this.settings.getTexSrcDirectoryFile();
 	// may throw BuildExecutionException 
-	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
+	Collection<File> files = this.fileUtils.getFilesRec(texDirectory);
 
-	clearSuffixes     (orgFiles);
+	SuffixHandler handler;
+	for (File file : files) {
+	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
+	    if (handler != null) {
+		handler.clearTarget(file, this);
+	    }
+	}
    }
 
 
