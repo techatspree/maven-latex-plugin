@@ -18,6 +18,10 @@
 
 package org.m2latex.core;
 
+import org.m2latex.mojo.CfgLatexMojo;
+import org.m2latex.mojo.GraphicsMojo;
+import org.m2latex.mojo.ClearMojo;
+
 import java.io.File;
 import java.io.FileFilter;
 
@@ -176,10 +180,12 @@ public class LatexProcessor {
     }
 
     /**
-     * Defines creational ant-task and the maven plugin. 
+     * Defines creational ant-task and the maven plugin 
+     * in {@link CfgLatexMojo} and subclasses. 
      * This consists in reading the parameters 
      * via {@link ParameterAdapter#initialize()} 
-     * processing graphic-files via {@link #processGraphics(File)} 
+     * processing graphic-files 
+     * via {@link #processGraphicsSelectMain(Collection)} 
      * and processing the tex main files 
      * via {@link Target#processSource(LatexProcessor, File)}. 
      * The resulting files are identified by its suffixes 
@@ -224,9 +230,11 @@ public class LatexProcessor {
         }
 
 	// may throw BuildExecutionException 
+	// should fail without finally cleanup 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 
 	try {
+
 	    // process graphics and determine latexMainFiles 
 	    // may throw BuildExecutionException 
 	    Collection<File> latexMainFiles = 
@@ -257,6 +265,23 @@ public class LatexProcessor {
                 this.fileUtils.cleanUp(orgFiles, texDirectory);
             }
         }
+    }
+
+    /**
+     * Used by {@link GraphicsMojo}. 
+     */
+    public void processGraphics() throws BuildExecutionException {
+	File texDirectory = this.settings.getTexSrcDirectoryFile();
+
+	if (!texDirectory.exists()) {
+	    this.log.info("No tex directory - " + 
+			  "skipping graphics processing. ");
+	    return;
+	}
+
+	// may throw BuildExecutionException 
+	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
+	this.processGraphicsSelectMain(orgFiles);
     }
 
     /**
@@ -660,12 +685,12 @@ public class LatexProcessor {
     }
 
     /**
-     * Defines clearing ant-task and the maven plugin. 
+     * Defines clearing ant-task and the maven plugin 
+     * in {@link ClearMojo}. 
      * Consists in clearing created graphic files 
      * and created files derived from latex main file. 
      *
-     * @see #clearGraphics(File)
-     * @see #clearFromLatexMain(File)
+     * @throws BuildExecutionException 
      */
     public void clearAll() throws BuildExecutionException {
         this.paramAdapt.initialize();
@@ -827,7 +852,7 @@ public class LatexProcessor {
      * runs BibTeX, MakeIndex and MakeGlossaries by need 
      * according to {@link #preProcessLatex2pdf(File, File)} 
      * and reruns latex as long as needed to get all links 
-     * or as threshold {@link Settings#maxNumRerunsLatex} specifies. 
+     * or as threshold {@link Settings#maxNumReRunsLatex} specifies. 
      * <p>
      * The result of the LaTeX run is typically some pdf-file, 
      * but it is also possible to specify the dvi-format 
@@ -894,7 +919,8 @@ public class LatexProcessor {
      * and issues a warning if 
      * <ul>
      * <li>
-     * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
+     * another LaTeX rerun is required 
+     * beyond {@link Settings#maxNumReRunsLatex}, 
      * <li>
      * bad boxes or warnings occurred. 
      * For details see {@link #logWarns(File, String)}. 
