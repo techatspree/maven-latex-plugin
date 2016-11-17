@@ -351,7 +351,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// create bibliography, index and glossary by need 
 	boolean hasBib    = runBibtexByNeed      (texFile);
 	boolean hasIdxGls = runMakeIndexByNeed   (desc)
-	    |               runMakeGlossaryByNeed(texFile);
+	    |               runMakeGlossaryByNeed(desc);
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
@@ -489,10 +489,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	private final File idxFile;
 
+	private final File gloFile;
+	private final File xxxFile;
+	private final File glgFile;
+
 	LatexMainDesc(File texFile, TexFileUtils fileUtils) {
 	    this.texFile = texFile;
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
+	    this.gloFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
+	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
+	    this.glgFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
 	}
 
 	File texFile() {
@@ -505,6 +512,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	File idxFile() {
 	    return this.idxFile;
+	}
+	File gloFile() {
+	    return this.gloFile;
+	}
+	File xxxFile() {
+	    return this.xxxFile;
+	}
+	File glgFile() {
+	    return this.glgFile;
 	}
     } // class LatexMainDesc 
 
@@ -821,21 +837,18 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    Equivalently, 
      *    whether LaTeX has to be rerun because of MakeGlossaries. 
      */
-     private boolean runMakeGlossaryByNeed(File texFile)
+     private boolean runMakeGlossaryByNeed(LatexMainDesc desc)
 	throws BuildExecutionException {
 
 	// raw glossaries file created by pdflatex 
-	File gloFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
-
-	boolean needRun = gloFile.exists();
+	boolean needRun = desc.gloFile().exists();
 	log.debug("MakeGlossaries run required? " + needRun);
 	if (!needRun) {
 	    return false;
 	}
 
 	// file name without ending: parameter for makeglossaries 
-	File xxxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
-
+	File xxxFile = desc.xxxFile();
 	String command = this.settings.getMakeGlossariesCommand();
 	log.debug("Running " + command + " on " + xxxFile.getName()+ ". ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
@@ -847,7 +860,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 
 	// detect errors and warnings makeglossaries wrote into xxx.glg 
-	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
+	File glgFile = desc.glgFile();
 	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
 	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
 		 +           "|" + this.settings.getPatternWarnXindy());
