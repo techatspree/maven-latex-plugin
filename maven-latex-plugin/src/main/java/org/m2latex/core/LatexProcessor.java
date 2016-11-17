@@ -82,10 +82,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // makeindex for glossary 
     // unsorted and not unified glossary created by latex 
     final static String SUFFIX_GLO = ".glo";
-    // index style, better glossary style created by latex for makeindex. 
-    final static String SUFFIX_IST = ".ist";
-     // index style, better glossary style created by latex for xindy. 
-    final static String SUFFIX_XDY = ".xdy";
     // sorted and unified glossary created by makeindex 
     final static String SUFFIX_GLS = ".gls";
     // logging file for makeindex used with glossaries 
@@ -769,8 +765,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildExecutionException {
 
 	// raw index file written by pdflatex 
-	File idxFile = desc.idxFile();
-	boolean needRun = idxFile.exists();
+	boolean needRun = desc.idxFile().exists();
 	log.debug("MakeIndex run required? " + needRun);
 	if (needRun) {
 	    // may throw BuildExecutionException 
@@ -829,31 +824,24 @@ public class LatexProcessor extends AbstractLatexProcessor {
      private boolean runMakeGlossaryByNeed(File texFile)
 	throws BuildExecutionException {
 
-	// file name without ending: parameter for makeglossaries 
-	File xxxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	// raw glossaries file created by pdflatex 
 	File gloFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
-	// style file for glossaries created by pdflatex for makeindex 
-	File istFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IST);
-	// style file for glossaries created by pdflatex for xindy 
-	File xdyFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_XDY);
-	// Note that LaTeX creates the ist-file if makeindex is specified 
-	// and the xdy-file if xindy is specified as sorting application. 
 
 	boolean needRun = gloFile.exists();
-	assert ( gloFile.exists() && ( istFile.exists() ^   xdyFile.exists()))
-	    || (!gloFile.exists() && (!istFile.exists() && !xdyFile.exists()));
 	log.debug("MakeGlossaries run required? " + needRun);
 	if (!needRun) {
 	    return false;
 	}
+
+	// file name without ending: parameter for makeglossaries 
+	File xxxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 
 	String command = this.settings.getMakeGlossariesCommand();
 	log.debug("Running " + command + " on " + xxxFile.getName()+ ". ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
 				       xxxFile);
 	// may throw BuildExecutionException 
-	this.executor.execute(texFile.getParentFile(), //workingDir 
+	this.executor.execute(xxxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
 			      args);
