@@ -50,7 +50,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	"^(Ov|Und)erfull \\\\[hv]box \\(";
 
 
-    // LaTeX 
+    // LaTeX (notably, .tex is not needed )
     final static String SUFFIX_TOC = ".toc";
     final static String SUFFIX_LOF = ".lof";
     final static String SUFFIX_LOT = ".lot";
@@ -193,7 +193,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		    this.fileUtils.copyOutputToTargetFolder(texFile,
 							    fileFilter,
 							    targetDir);
-
 		} // target 
 	    } // texFile 
 	} finally {
@@ -229,15 +228,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @throws BuildExecutionException 
      */
-    // FIXME: maybe to be moved to LatexPreProcessor 
     public void clearAll() throws BuildExecutionException {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString());
 
         File texDirectory = this.settings.getTexSrcDirectoryFile();
 	// may throw BuildExecutionException 
-	Collection<File> files = this.fileUtils.getFilesRec(texDirectory);
-	this.preProc.clearCreated(files);
+	this.preProc.clearCreated(texDirectory);
    }
 
 
