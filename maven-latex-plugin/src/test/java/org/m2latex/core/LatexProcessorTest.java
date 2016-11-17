@@ -75,11 +75,12 @@ public class LatexProcessorTest {
         settings.getLatex2pdfOptions()
     };
 
+
+
     @Test public void testProcessLatexSimple()
 	throws BuildExecutionException {
 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue(logFile);
+	mockConstrLatexMainDesc();
 
 	// run latex 
         mockRunLatex();
@@ -120,11 +121,10 @@ public class LatexProcessorTest {
         verify();
     }
 
-    @Test public void testProcessLatexWithBibtex()
+    @Test public void testProcessLatexWithBibtex() 
 	throws BuildExecutionException {
 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue(logFile);
+	mockConstrLatexMainDesc();
 
 	// run latex 
         mockRunLatex();
@@ -164,10 +164,9 @@ public class LatexProcessorTest {
         verify();
     }
 
-   @Test public void testProcessLatex2html() throws BuildExecutionException {
+    @Test public void testProcessLatex2html() throws BuildExecutionException {
 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue(logFile);
+	mockConstrLatexMainDesc();
 
  	// run latex 
         mockRunLatex();
@@ -207,6 +206,14 @@ public class LatexProcessorTest {
         processor.processLatex2html(this. texFile);
 
         verify();
+    }
+
+
+    private void mockConstrLatexMainDesc() {
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
+	fileUtilsCtrl.setReturnValue(logFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
+	fileUtilsCtrl.setReturnValue(idxFile);
     }
 
     private void mockNeedAnotherLatexRun(boolean retVal)
@@ -264,9 +271,6 @@ public class LatexProcessorTest {
 
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
 	throws BuildExecutionException {
-
-        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
-        fileUtilsCtrl.setReturnValue(idxFile);
 
 	if (!runMakeIndex) {
 	    return;
