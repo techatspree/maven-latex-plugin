@@ -19,8 +19,6 @@
 package org.m2latex.core;
 
 import org.m2latex.mojo.CfgLatexMojo;
-import org.m2latex.mojo.GraphicsMojo;
-import org.m2latex.mojo.ClearMojo;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -31,17 +29,14 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
-// idea: use latex2rtf and unoconv
-// idea: targets for latex2html, latex2man, latex2png and many more. 
+
 /**
- * The latex processor creates various output from latex sources 
- * including also preprocessing of graphic files in several formats. 
- * This is the core class of this piece of software. 
- * The main method is {@link #create()} which is executed by the ant task 
- * and by the maven plugin. 
- * It does preprocessing of the graphic files 
- * and main processing of the latex file according to the target(s) 
- * given by the parameters. 
+ * The latex pre-processor is for preprocessing graphic files 
+ * in formats which cannot be included directly into a latex-file 
+ * and in finding the latex main files 
+ * which is done in {@link #processGraphicsSelectMain(Collection)} 
+ * and in clearing the created files from the latex source directory 
+ * in {@link #clearCreated(Collection)}. 
  */
 public class LatexPreProcessor {
 
@@ -64,22 +59,25 @@ public class LatexPreProcessor {
     // e.g. Overfull \box with text '! ' is not an error 
     // and Overfull \box with text 'Warning' is no warning. 
 
-    static final String PATTERN_NEED_BIBTEX_RUN = "^\\\\bibdata";
+    //static final String PATTERN_NEED_BIBTEX_RUN = "^\\\\bibdata";
 
     // Note that two \\ represent a single \ in the string. 
     // Thus \\\\ represents '\\' in the pattern, 
     // which in turn represents a single \. 
-    static final String PATTERN_OUFULL_HVBOX = 
-	"^(Ov|Und)erfull \\\\[hv]box \\(";
+    //static final String PATTERN_OUFULL_HVBOX = 
+//	"^(Ov|Und)erfull \\\\[hv]box \\(";
 
 
     // LaTeX 
-    final static String SUFFIX_TOC = ".toc";
-    final static String SUFFIX_LOF = ".lof";
-    final static String SUFFIX_LOT = ".lot";
-    final static String SUFFIX_AUX = ".aux";
+    // final static String SUFFIX_TOC = ".toc";
+    // final static String SUFFIX_LOF = ".lof";
+    // final static String SUFFIX_LOT = ".lot";
+    // final static String SUFFIX_AUX = ".aux";
+
+    // both LatexProcessor and LatexPreProcessor 
     // LaTeX and mpost with option -recorder 
     final static String SUFFIX_FLS = ".fls";
+    // both LatexProcessor and LatexPreProcessor 
     // for LaTeX but also for mpost 
     final static String SUFFIX_LOG = ".log";
  
@@ -107,61 +105,64 @@ public class LatexPreProcessor {
     private final static String SUFFIX_MPX = ".mpx";// For preprocessing only 
 
 
+    // both LatexProcessor and LatexPreProcessor 
     final static String SUFFIX_PDF = ".pdf";
 
 
-    // odt2doc 
-    private final static String SUFFIX_ODT = ".odt";
+    // // odt2doc 
+    // private final static String SUFFIX_ODT = ".odt";
 
-    // makeindex for index 
-    // unsorted and not unified index created by latex 
-    final static String SUFFIX_IDX = ".idx";
-    // log file created by makeindex 
-    final static String SUFFIX_ILG = ".ilg";
+    // // makeindex for index 
+    // // unsorted and not unified index created by latex 
+    // final static String SUFFIX_IDX = ".idx";
+    // // log file created by makeindex 
+    // final static String SUFFIX_ILG = ".ilg";
 
-    // makeindex for glossary 
-    // unsorted and not unified glossary created by latex 
-    final static String SUFFIX_GLO = ".glo";
-    // index style, better glossary style created by latex for makeindex. 
-    final static String SUFFIX_IST = ".ist";
-     // index style, better glossary style created by latex for xindy. 
-    final static String SUFFIX_XDY = ".xdy";
-    // sorted and unified glossary created by makeindex 
-    final static String SUFFIX_GLS = ".gls";
-    // logging file for makeindex used with glossaries 
-    final static String SUFFIX_GLG = ".glg";
+    // // makeindex for glossary 
+    // // unsorted and not unified glossary created by latex 
+    // final static String SUFFIX_GLO = ".glo";
+    // // index style, better glossary style created by latex for makeindex. 
+    // final static String SUFFIX_IST = ".ist";
+    //  // index style, better glossary style created by latex for xindy. 
+    // final static String SUFFIX_XDY = ".xdy";
+    // // sorted and unified glossary created by makeindex 
+    // final static String SUFFIX_GLS = ".gls";
+    // // logging file for makeindex used with glossaries 
+    // final static String SUFFIX_GLG = ".glg";
 
-    // bibtex 
-    final static String SUFFIX_BLG = ".blg";
+    // // bibtex 
+    // final static String SUFFIX_BLG = ".blg";
 
     // needed by makeglossaries 
-    final static String SUFFIX_VOID = "";
+    // final static String SUFFIX_VOID = "";
 
 
+    // both LatexProcessor and LatexPreProcessor 
     private final Settings settings;
 
+    // both LatexProcessor and LatexPreProcessor 
     private final CommandExecutor executor;
 
+    // both LatexProcessor and LatexPreProcessor 
     private final LogWrapper log;
 
+    // both LatexProcessor and LatexPreProcessor 
     private final TexFileUtils fileUtils;
 
-    private final ParameterAdapter paramAdapt;
+    //private final ParameterAdapter paramAdapt;
 
-    // also for tests 
     LatexPreProcessor(Settings settings, 
 		      CommandExecutor executor, 
 		      LogWrapper log, 
-		      TexFileUtils fileUtils,
-		      ParameterAdapter paramAdapt) {
+		      TexFileUtils fileUtils) {
         this.settings = settings;
         this.log = log;
         this.executor = executor;
         this.fileUtils = fileUtils;
-	this.paramAdapt = paramAdapt;
+	//this.paramAdapt = paramAdapt;
     }
 
-    /**
+    /*
      * Creates a LatexProcessor with parameters given by <code>settings</code> 
      * which logs onto <code>log</code> and used by <code>paramAdapt</code>. 
      *
@@ -172,16 +173,15 @@ public class LatexPreProcessor {
      * @param paramAdapt
      *    the parameter adapter, refers to maven-plugin or ant-task. 
      */
-    public LatexPreProcessor(Settings settings, 
-			     LogWrapper log, 
-			     ParameterAdapter paramAdapt) {
-	this(settings, new CommandExecutorImpl(log), log, 
-	     new TexFileUtilsImpl(log), paramAdapt);
-    }
+    // public LatexPreProcessor(Settings settings, 
+    // 			     LogWrapper log, 
+    // 			     ParameterAdapter paramAdapt) {
+    // 	this(settings, new CommandExecutorImpl(log), log, 
+    // 	     new TexFileUtilsImpl(log), paramAdapt);
+    // }
 
     /*
      * Defines creational ant-task and the maven plugin 
-     * in {@link CfgLatexMojo} and subclasses. 
      * This consists in reading the parameters 
      * via {@link ParameterAdapter#initialize()} 
      * processing graphic-files 
@@ -267,10 +267,7 @@ public class LatexPreProcessor {
     //     }
     // }
 
-    /**
-     * Used by {@link GraphicsMojo}. 
-     */
-    public void processGraphics() throws BuildExecutionException {
+    private void processGraphics() throws BuildExecutionException {
 	File texDirectory = this.settings.getTexSrcDirectoryFile();
 
 	if (!texDirectory.exists()) {
@@ -685,20 +682,16 @@ public class LatexPreProcessor {
     }
 
     /**
-     * Defines clearing ant-task and the maven plugin 
-     * in {@link ClearMojo}. 
-     * Consists in clearing created graphic files 
-     * and created files derived from latex main file. 
-     *
-     * @throws BuildExecutionException 
+     * Deletes all created files. 
      */
-    public void clearAll() throws BuildExecutionException {
-        this.paramAdapt.initialize();
-        this.log.debug("Settings: " + this.settings.toString());
+    void clearCreated(Collection<File> files) 
+	throws BuildExecutionException {
+        // this.paramAdapt.initialize();
+        // this.log.debug("Settings: " + this.settings.toString());
 
-        File texDirectory = this.settings.getTexSrcDirectoryFile();
-	// may throw BuildExecutionException 
-	Collection<File> files = this.fileUtils.getFilesRec(texDirectory);
+        // File texDirectory = this.settings.getTexSrcDirectoryFile();
+	// // may throw BuildExecutionException 
+	// Collection<File> files = this.fileUtils.getFilesRec(texDirectory);
 
 	SuffixHandler handler;
 	for (File file : files) {
@@ -763,7 +756,7 @@ public class LatexPreProcessor {
 
     // FIXME: determine whether to use latexmk makes sense 
 
-    /**
+    /*
      * Runs LaTeX on <code>texFile</code> at once, 
      * runs BibTeX, MakeIndex and MakeGlossaries by need 
      * and returns whether a second LaTeX run is required. 
@@ -803,51 +796,51 @@ public class LatexPreProcessor {
      * @see #processLatex2odt(File)
      * @see #processLatex2docx(File)
      */
-    private int preProcessLatex2pdf(final File texFile, File logFile)
-	throws BuildExecutionException {
+    // private int preProcessLatex2pdf(final File texFile, File logFile)
+    // 	throws BuildExecutionException {
 
-	// initial latex run 
-        runLatex2pdf(texFile, logFile);
+    // 	// initial latex run 
+    //     runLatex2pdf(texFile, logFile);
 
-	// create bibliography, index and glossary by need 
-	boolean hasBib    = runBibtexByNeed      (texFile);
-	boolean hasIdxGls = runMakeIndexByNeed   (texFile)
-	    |               runMakeGlossaryByNeed(texFile);
+    // 	// create bibliography, index and glossary by need 
+    // 	boolean hasBib    = runBibtexByNeed      (texFile);
+    // 	boolean hasIdxGls = runMakeIndexByNeed   (texFile)
+    // 	    |               runMakeGlossaryByNeed(texFile);
 
-	// rerun LaTeX at least once if bibtex or makeindex had been run 
-	// or if a toc, a lof or a lot exists. 
-	if (hasBib) {
-	    // on run to include the bibliography from xxx.bbl into the pdf 
-	    // and the lables into the aux file 
-	    // and another run to put the lables from the aux file 
-	    // to the locations of the \cite commands. 
+    // 	// rerun LaTeX at least once if bibtex or makeindex had been run 
+    // 	// or if a toc, a lof or a lot exists. 
+    // 	if (hasBib) {
+    // 	    // on run to include the bibliography from xxx.bbl into the pdf 
+    // 	    // and the lables into the aux file 
+    // 	    // and another run to put the lables from the aux file 
+    // 	    // to the locations of the \cite commands. 
 
-	    // This suffices also to include a bib in a toc 
-	    return 2;
-	}
+    // 	    // This suffices also to include a bib in a toc 
+    // 	    return 2;
+    // 	}
 
-	boolean hasToc = 
-	    this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
-	if (hasIdxGls) {
-	    // Here, an index or a glossary exists 
-	    // This requires at least one LaTeX run. 
+    // 	boolean hasToc = 
+    // 	    this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
+    // 	if (hasIdxGls) {
+    // 	    // Here, an index or a glossary exists 
+    // 	    // This requires at least one LaTeX run. 
 
-	    // if one of these has to be included in a toc, 
-	    // a second run is needed. 
-	    return hasToc ? 2 : 1;
-	}
-	// Here, no bib, index or glossary exists. 
-	// The result is either 0 or 1, 
-	// depending on whether a toc, lof or lot exists 
+    // 	    // if one of these has to be included in a toc, 
+    // 	    // a second run is needed. 
+    // 	    return hasToc ? 2 : 1;
+    // 	}
+    // 	// Here, no bib, index or glossary exists. 
+    // 	// The result is either 0 or 1, 
+    // 	// depending on whether a toc, lof or lot exists 
 
-	boolean needLatexReRun = hasToc 
-	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
-	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
+    // 	boolean needLatexReRun = hasToc 
+    // 	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
+    // 	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
 
-	return needLatexReRun ? 1 : 0;
-    }
+    // 	return needLatexReRun ? 1 : 0;
+    // }
 
-    /**
+    /*
      * Runs LaTeX on <code>texFile</code> at once, 
      * runs BibTeX, MakeIndex and MakeGlossaries by need 
      * according to {@link #preProcessLatex2pdf(File, File)} 
@@ -867,51 +860,51 @@ public class LatexPreProcessor {
      * @see #processLatex2pdf(File)
      * @see #processLatex2txt(File)
      */
-    public void processLatex2pdfCore(final File texFile, File logFile) 
-	throws BuildExecutionException {
+    // public void processLatex2pdfCore(final File texFile, File logFile) 
+    // 	throws BuildExecutionException {
 
-	int numLatexReRuns = preProcessLatex2pdf(texFile, logFile);
+    // 	int numLatexReRuns = preProcessLatex2pdf(texFile, logFile);
 				      
-	assert numLatexReRuns == 0 
-	    || numLatexReRuns == 1 
-	    || numLatexReRuns == 2;
-	if (numLatexReRuns > 0) {
-	    // rerun LaTeX without makeindex and makeglossaries 
-	    log.debug("Rerun LaTeX to update table of contents, ... " + 
-		      "bibliography, index, or that like. ");
-	    runLatex2pdf(texFile, logFile);
-	    numLatexReRuns--;
-	}
-	assert numLatexReRuns == 0 || numLatexReRuns == 1;
+    // 	assert numLatexReRuns == 0 
+    // 	    || numLatexReRuns == 1 
+    // 	    || numLatexReRuns == 2;
+    // 	if (numLatexReRuns > 0) {
+    // 	    // rerun LaTeX without makeindex and makeglossaries 
+    // 	    log.debug("Rerun LaTeX to update table of contents, ... " + 
+    // 		      "bibliography, index, or that like. ");
+    // 	    runLatex2pdf(texFile, logFile);
+    // 	    numLatexReRuns--;
+    // 	}
+    // 	assert numLatexReRuns == 0 || numLatexReRuns == 1;
 
-	// rerun latex by need patternRerunMakeIndex
-	boolean needMakeIndexReRun;
-	boolean needLatexReRun = (numLatexReRuns == 1)
-	    || needAnotherLatexRun(logFile);
+    // 	// rerun latex by need patternRerunMakeIndex
+    // 	boolean needMakeIndexReRun;
+    // 	boolean needLatexReRun = (numLatexReRuns == 1)
+    // 	    || needAnotherLatexRun(logFile);
 
-	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
-	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
-	    needMakeIndexReRun = needAnotherMakeIndexRun(logFile);
-	    // FIXME: superfluous since pattern rerunfileckeck 
-	    // triggering makeindex also fits rerun of LaTeX 
-	    needLatexReRun |= needMakeIndexReRun;
-	    if (!needLatexReRun) {
-		return;
-	    }
-            log.debug("Latex must be rerun. ");
-	    if (needMakeIndexReRun) {
-		// FIXME: not by need 
-		runMakeIndexByNeed(texFile);
-	    }
+    // 	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
+    // 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
+    // 	    needMakeIndexReRun = needAnotherMakeIndexRun(logFile);
+    // 	    // FIXME: superfluous since pattern rerunfileckeck 
+    // 	    // triggering makeindex also fits rerun of LaTeX 
+    // 	    needLatexReRun |= needMakeIndexReRun;
+    // 	    if (!needLatexReRun) {
+    // 		return;
+    // 	    }
+    //         log.debug("Latex must be rerun. ");
+    // 	    if (needMakeIndexReRun) {
+    // 		// FIXME: not by need 
+    // 		runMakeIndexByNeed(texFile);
+    // 	    }
 
-            runLatex2pdf(texFile, logFile);
+    //         runLatex2pdf(texFile, logFile);
 
-	    needLatexReRun = needAnotherLatexRun(logFile);
-        }
-	log.warn("Max rerun reached although LaTeX demands another run. ");
-    }
+    // 	    needLatexReRun = needAnotherLatexRun(logFile);
+    //     }
+    // 	log.warn("Max rerun reached although LaTeX demands another run. ");
+    // }
 
-    /**
+    /*
      * Runs LaTeX on <code>texFile</code> 
      * BibTeX, MakeIndex and MakeGlossaries 
      * and again LaTeX creating a pdf-file 
@@ -930,16 +923,16 @@ public class LatexPreProcessor {
      *    the tex file to be processed. 
      * @see #needAnotherLatexRun(File)
      */
-    public void processLatex2pdf(File texFile) throws BuildExecutionException {
-        log.info("Converting into pdf: LaTeX file " + texFile + ". ");
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-	processLatex2pdfCore(texFile, logFile);
+    // public void processLatex2pdf(File texFile) throws BuildExecutionException {
+    //     log.info("Converting into pdf: LaTeX file " + texFile + ". ");
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+    // 	processLatex2pdfCore(texFile, logFile);
 
-	// emit warnings (errors are emitted by runLatex2pdf and that like.)
-	logWarns(logFile, this.settings.getLatex2pdfCommand());
-    }
+    // 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
+    // 	logWarns(logFile, this.settings.getLatex2pdfCommand());
+    // }
 
-   /**
+    /*
      * Logs errors detected in the according log file: 
      * The log file is by replacing the ending of <code>texFile</code> 
      * by <code>log</code>. 
@@ -950,10 +943,10 @@ public class LatexPreProcessor {
      * In both cases, the message logged refers to the <code>command</code> 
      * which failed. 
      */
-    private void logErrs(File logFile, String command) 
-	throws BuildExecutionException {
-	logErrs(logFile, command, this.settings.getPatternErrLatex());
-    }
+    // private void logErrs(File logFile, String command) 
+    // 	throws BuildExecutionException {
+    // 	logErrs(logFile, command, this.settings.getPatternErrLatex());
+    // }
 
     /**
      * Logs if an error occurred running <code>command</code> 
@@ -965,22 +958,23 @@ public class LatexPreProcessor {
      *    if <code>logFile</code> does not exist or is not readable. 
      * @see #logWarns(File, String, String) 
      */
+    // for both LatexProcessor and LatexPreProcessor 
     private void logErrs(File logFile, String command, String pattern) 
-	throws BuildExecutionException {
+    	throws BuildExecutionException {
 
-	if (logFile.exists()) {
-	    // matchInFile may throw BuildExecutionException
-	    if (this.fileUtils.matchInFile(logFile, pattern)) {
-		log.warn("Running " + command + " failed. For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	} else {
-	    this.log.error("Running " + command + " failed: no log file " + 
-			   logFile.getName() + " found. ");
-	}
+    	if (logFile.exists()) {
+    	    // matchInFile may throw BuildExecutionException
+    	    if (this.fileUtils.matchInFile(logFile, pattern)) {
+    		log.warn("Running " + command + " failed. For details see " + 
+    			 logFile.getName() + ". ");
+    	    }
+    	} else {
+    	    this.log.error("Running " + command + " failed: no log file " + 
+    			   logFile.getName() + " found. ");
+    	}
     }
 
-    /**
+    /*
      * Logs warnings detected in the according log-file <code>logFile</code>: 
      * Before logging warnings, 
      * errors are logged via {@link #logErrs(File, String)}. 
@@ -1008,23 +1002,23 @@ public class LatexPreProcessor {
      *    the command which created <code>logFile</code> 
      *    and which maybe created warnings. 
      */
-    private void logWarns(File logFile, String command) 
-	throws BuildExecutionException {
+    // private void logWarns(File logFile, String command) 
+    // 	throws BuildExecutionException {
 
-	if (!logFile.exists()) {
-	    return;
-	}
+    // 	if (!logFile.exists()) {
+    // 	    return;
+    // 	}
 
-	if (this.settings.getDebugBadBoxes() && 
-	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
-	    log.warn("Running " + command + " created bad boxes. ");
-	}
-	if (this.settings.getDebugWarnings() && 
-	    this.fileUtils.matchInFile(logFile, 
-				       this.settings.getPatternWarnLatex())) {
-	    log.warn("Running " + command + " emited warnings. ");
-	}
-    }
+    // 	if (this.settings.getDebugBadBoxes() && 
+    // 	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
+    // 	    log.warn("Running " + command + " created bad boxes. ");
+    // 	}
+    // 	if (this.settings.getDebugWarnings() && 
+    // 	    this.fileUtils.matchInFile(logFile, 
+    // 				       this.settings.getPatternWarnLatex())) {
+    // 	    log.warn("Running " + command + " emited warnings. ");
+    // 	}
+    // }
 
     /**
      * Logs if a warning occurred running <code>command</code> 
@@ -1035,16 +1029,17 @@ public class LatexPreProcessor {
      *
      * @see #logErrs(File, String, String) 
      */
+    // for both LatexProcessor and LatexPreProcessor 
     private void logWarns(File logFile, String command, String pattern) 
-	throws BuildExecutionException {
-	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
-	    log.warn("Running " + command + 
-		     " emitted warnings. For details see " + 
-		     logFile.getName() + ". ");
-	}
+    	throws BuildExecutionException {
+    	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
+    	    log.warn("Running " + command + 
+    		     " emitted warnings. For details see " + 
+    		     logFile.getName() + ". ");
+    	}
     }
 
-    /**
+    /*
      * Runs conversion of <code>texFile</code> to html or xhtml 
      * after processing latex to set up the references, 
      * bibliography, index and that like. 
@@ -1054,15 +1049,15 @@ public class LatexPreProcessor {
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2html(File)
      */
-    public void processLatex2html(File texFile)
-	throws BuildExecutionException {
-	log.info("Converting into html: LaTeX file " + texFile + ". ");
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-	preProcessLatex2pdf(texFile, logFile);
-        runLatex2html      (texFile);
-    }
+    // public void processLatex2html(File texFile)
+    // 	throws BuildExecutionException {
+    // 	log.info("Converting into html: LaTeX file " + texFile + ". ");
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+    // 	preProcessLatex2pdf(texFile, logFile);
+    //     runLatex2html      (texFile);
+    // }
 
-    /**
+    /*
      * Runs conversion of <code>texFile</code> 
      * to odt or other open office formats 
      * after processing latex to set up the references, 
@@ -1073,14 +1068,14 @@ public class LatexPreProcessor {
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2odt(File)
      */
-    public void processLatex2odt(File texFile) throws BuildExecutionException {
-	log.info("Converting into odt: LaTeX file " + texFile + ". ");
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-        preProcessLatex2pdf(texFile, logFile);
-        runLatex2odt       (texFile);
-    }
+    // public void processLatex2odt(File texFile) throws BuildExecutionException {
+    // 	log.info("Converting into odt: LaTeX file " + texFile + ". ");
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+    //     preProcessLatex2pdf(texFile, logFile);
+    //     runLatex2odt       (texFile);
+    // }
 
-    /**
+    /*
      * Runs conversion of <code>texFile</code> 
      * to docx or other MS word formats 
      * after processing latex to set up the references, 
@@ -1092,15 +1087,15 @@ public class LatexPreProcessor {
      * @see #runLatex2odt(File)
      * @see #runOdt2doc(File)
      */
-    public void processLatex2docx(File texFile) throws BuildExecutionException {
-	log.info("Converting into doc(x): LaTeX file " + texFile + ". ");
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-	preProcessLatex2pdf(texFile, logFile);
-        runLatex2odt       (texFile);
-        runOdt2doc         (texFile);
-    }
+    // public void processLatex2docx(File texFile) throws BuildExecutionException {
+    // 	log.info("Converting into doc(x): LaTeX file " + texFile + ". ");
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+    // 	preProcessLatex2pdf(texFile, logFile);
+    //     runLatex2odt       (texFile);
+    //     runOdt2doc         (texFile);
+    // }
 
-    /**
+    /*
      * Runs direct conversion of <code>texFile</code> to rtf format. 
      * <p>
      * FIXME: Maybe prior invocation of LaTeX MakeIndex and BibTeX 
@@ -1111,12 +1106,12 @@ public class LatexPreProcessor {
      *    the tex file to be processed. 
      * @see #runLatex2rtf(File)
      */
-    public void processLatex2rtf(File texFile) throws BuildExecutionException {
-	log.info("Converting into rtf: LaTeX file " + texFile + ". ");
-	runLatex2rtf(texFile);
-    }
+    // public void processLatex2rtf(File texFile) throws BuildExecutionException {
+    // 	log.info("Converting into rtf: LaTeX file " + texFile + ". ");
+    // 	runLatex2rtf(texFile);
+    // }
 
-    /**
+    /*
      * Runs conversion of <code>texFile</code> to txt format via pdf. 
      *
      * @param texFile
@@ -1124,15 +1119,16 @@ public class LatexPreProcessor {
      * @see #processLatex2pdfCore(File, File)
      * @see #runPdf2txt(File)
      */
-    public void processLatex2txt(File texFile) throws BuildExecutionException {
-	log.info("Converting into txt: LaTeX file " + texFile + ". ");
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-        processLatex2pdfCore(texFile, logFile);
-	// warnings emitted by LaTex are ignored 
-	// (errors are emitted by runLatex2pdf and that like.)
-	runPdf2txt      (texFile);
-    }
+    // public void processLatex2txt(File texFile) throws BuildExecutionException {
+    // 	log.info("Converting into txt: LaTeX file " + texFile + ". ");
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+    //     processLatex2pdfCore(texFile, logFile);
+    // 	// warnings emitted by LaTex are ignored 
+    // 	// (errors are emitted by runLatex2pdf and that like.)
+    // 	runPdf2txt      (texFile);
+    // }
 
+    // for both LatexProcessor and LatexPreProcessor 
     private boolean update(File source, File target) {
 	if (!target.exists()) {
 	    return true;
@@ -1147,7 +1143,7 @@ public class LatexPreProcessor {
 
 
 
-    /**
+    /*
      * Runs the latex2rtf command 
      * given by {@link Settings#getLatex2rtfCommand()} 
      * on <code>texFile</code> 
@@ -1160,28 +1156,28 @@ public class LatexPreProcessor {
      *    if running the latex2rtf command 
      *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      */
-    private void runLatex2rtf(File texFile)
-            throws BuildExecutionException {
+    // private void runLatex2rtf(File texFile)
+    //         throws BuildExecutionException {
 
-	String command = this.settings.getLatex2rtfCommand();
-        log.debug("Running " + command + " on " + texFile.getName() + ". ");
+    // 	String command = this.settings.getLatex2rtfCommand();
+    //     log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
-        String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
-				       texFile);
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), // workingDir
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
+    //     String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
+    // 				       texFile);
+    // 	// may throw BuildExecutionException 
+    //     this.executor.execute(texFile.getParentFile(), // workingDir
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
 
-	// FIXME: no check: just warning that no output has been created. 
-	// Warnings and error messages are output to stderr 
-	// and by default listed in the console window. 
-	// aThey can be redirected to a file “latex2rtf.log” by
-	// appending 2>latex2rtf.log to the command line.
-    }
+    // 	// FIXME: no check: just warning that no output has been created. 
+    // 	// Warnings and error messages are output to stderr 
+    // 	// and by default listed in the console window. 
+    // 	// aThey can be redirected to a file “latex2rtf.log” by
+    // 	// appending 2>latex2rtf.log to the command line.
+    // }
 
-    /**
+    /*
      * Runs the tex4ht command given by {@link Settings#getTex4htCommand()} 
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
@@ -1194,38 +1190,38 @@ public class LatexPreProcessor {
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
-    private void runLatex2html(File texFile)
-	throws BuildExecutionException {
+    // private void runLatex2html(File texFile)
+    // 	throws BuildExecutionException {
 
-	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + " on " + texFile.getName() + ". ");
+    // 	String command = this.settings.getTex4htCommand();
+    //     log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
-        String[] args = buildHtlatexArguments(texFile);
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), // workingDir 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
+    //     String[] args = buildHtlatexArguments(texFile);
+    // 	// may throw BuildExecutionException 
+    //     this.executor.execute(texFile.getParentFile(), // workingDir 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
 
-	// logging errors and warnings 
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-	logErrs (logFile, command);
-	logWarns(logFile, command);
-    }
+    // 	// logging errors and warnings 
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+    // 	logErrs (logFile, command);
+    // 	logWarns(logFile, command);
+    // }
 
-    private String[] buildHtlatexArguments(File texFile)
-	throws BuildExecutionException {
+    // private String[] buildHtlatexArguments(File texFile)
+    // 	throws BuildExecutionException {
 
-        return new String[] {
-	    texFile.getName(),
-	    this.settings.getTex4htStyOptions(),
-	    this.settings.getTex4htOptions(),
-	    this.settings.getT4htOptions(),
-	    this.settings.getLatex2pdfOptions()
-	};
-    }
+    //     return new String[] {
+    // 	    texFile.getName(),
+    // 	    this.settings.getTex4htStyOptions(),
+    // 	    this.settings.getTex4htOptions(),
+    // 	    this.settings.getT4htOptions(),
+    // 	    this.settings.getLatex2pdfOptions()
+    // 	};
+    // }
 
-    /**
+    /*
      * Runs conversion from latex to odt 
      * executing {@link Settings#getTex4htCommand()} 
      * on <code>texFile</code> 
@@ -1244,29 +1240,29 @@ public class LatexPreProcessor {
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
-    private void runLatex2odt(File texFile)
-	throws BuildExecutionException {
+    // private void runLatex2odt(File texFile)
+    // 	throws BuildExecutionException {
 
-	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + " on" + texFile.getName() + ". ");
+    // 	String command = this.settings.getTex4htCommand();
+    //     log.debug("Running " + command + " on" + texFile.getName() + ". ");
 
-        String[] args = new String[] {
-	    texFile.getName(),
-	    "xhtml,ooffice", // there is no choice here 
-	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
-	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
-	};
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
+    //     String[] args = new String[] {
+    // 	    texFile.getName(),
+    // 	    "xhtml,ooffice", // there is no choice here 
+    // 	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
+    // 	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
+    // 	};
+    // 	// may throw BuildExecutionException 
+    //     this.executor.execute(texFile.getParentFile(), 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
 
-	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-	logErrs (logFile, command);
-	logWarns(logFile, command);
-    }
+    // 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+    // 	logErrs (logFile, command);
+    // 	logWarns(logFile, command);
+    // }
 
 
     // FIXME: missing options. 
@@ -1275,7 +1271,7 @@ public class LatexPreProcessor {
     // available: odt2doc --show. 
     // among those also: latex and rtf !!!!!! 
     // This is important to define the copy filter accordingly 
-    /**
+    /*
      * Runs conversion from odt to doc or docx-file  
      * executing {@link Settings#getOdt2docCommand()} 
      * on an odt-file created from <code>texFile</code> 
@@ -1288,24 +1284,24 @@ public class LatexPreProcessor {
      *    if running the odt2doc command 
      *    returned by {@link Settings#getOdt2docCommand()} failed. 
      */
-    private void runOdt2doc(File texFile)
-            throws BuildExecutionException {
+    // private void runOdt2doc(File texFile)
+    //         throws BuildExecutionException {
 
-	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
-	String command = this.settings.getOdt2docCommand();
-	log.debug("Running " + command + " on " + odtFile.getName() + ". ");
+    // 	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
+    // 	String command = this.settings.getOdt2docCommand();
+    // 	log.debug("Running " + command + " on " + odtFile.getName() + ". ");
 
-	String[] args = buildArguments(this.settings.getOdt2docOptions(),
-				       odtFile);
+    // 	String[] args = buildArguments(this.settings.getOdt2docOptions(),
+    // 				       odtFile);
 
-	// may throw BuildExecutionException 
-	this.executor.execute(texFile.getParentFile(), 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-    }
+    // 	// may throw BuildExecutionException 
+    // 	this.executor.execute(texFile.getParentFile(), 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
+    // }
 
-    /**
+    /*
      * Runs conversion from pdf to txt-file  
      * executing {@link Settings#getPdf2txtCommand()} 
      * on a pdf-file created from <code>texFile</code> 
@@ -1318,22 +1314,22 @@ public class LatexPreProcessor {
      *    if running the pdf2txt command 
      *    returned by {@link Settings#getPdf2txtCommand()} failed. 
      */
-    private void runPdf2txt(File texFile) throws BuildExecutionException {
+    // private void runPdf2txt(File texFile) throws BuildExecutionException {
 
-	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
-	String command = this.settings.getPdf2txtCommand();
-	log.debug("Running " + command + " on " + pdfFile.getName() + ". ");
+    // 	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
+    // 	String command = this.settings.getPdf2txtCommand();
+    // 	log.debug("Running " + command + " on " + pdfFile.getName() + ". ");
 
-	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
-				       pdfFile);
-	// may throw BuildExecutionException 
-	this.executor.execute(texFile.getParentFile(), 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-	// FIXME: what about error logging? 
-	// Seems not to create a log-file. 
-    }
+    // 	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
+    // 				       pdfFile);
+    // 	// may throw BuildExecutionException 
+    // 	this.executor.execute(texFile.getParentFile(), 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
+    // 	// FIXME: what about error logging? 
+    // 	// Seems not to create a log-file. 
+    // }
 
     /**
      * Returns an array of strings, 
@@ -1351,49 +1347,50 @@ public class LatexPreProcessor {
      *    The others, if <code>options</code> is not empty, 
      *    are the options in <code>options</code>. 
      */
+    // for both LatexProcessor and LatexPreProcessor 
     static String[] buildArguments(String options, File file) {
-	if (options.isEmpty()) {
-	    return new String[] {file.getName()};
-	}
+    	if (options.isEmpty()) {
+    	    return new String[] {file.getName()};
+    	}
         String[] optionsArr = options.split(" ");
         String[] args = Arrays.copyOf(optionsArr, optionsArr.length + 1);
         args[optionsArr.length] = file.getName();
 	
-	return args;
+    	return args;
      }
 
-    /**
+    /*
      * Returns whether another LaTeX run is necessary 
      * based on a pattern matching in the log file. 
      *
      * @see Settings#getPatternReRunMakeIndex()
      */
     // FIXME: unification with needAnotherLatexRun? 
-    private boolean needAnotherMakeIndexRun(File logFile)
-	throws BuildExecutionException {
-        String reRunPattern = this.settings.getPatternReRunMakeIndex();
-	// may throw a BuildExecutionException
-        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
-        log.debug("Another MakeIndex run? " + needRun);
-        return needRun;
-    }
+    // private boolean needAnotherMakeIndexRun(File logFile)
+    // 	throws BuildExecutionException {
+    //     String reRunPattern = this.settings.getPatternReRunMakeIndex();
+    // 	// may throw a BuildExecutionException
+    //     boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
+    //     log.debug("Another MakeIndex run? " + needRun);
+    //     return needRun;
+    // }
 
-    /**
+    /*
      * Returns whether another LaTeX run is necessary 
      * based on a pattern matching in the log file. 
      *
      * @see Settings#getPatternReRunLatex()
      */
-    private boolean needAnotherLatexRun(File logFile)
-	throws BuildExecutionException {
-        String reRunPattern = this.settings.getPatternReRunLatex();
-	// may throw a BuildExecutionException
-        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
-        log.debug("Another LaTeX run? " + needRun);
-        return needRun;
-    }
+    // private boolean needAnotherLatexRun(File logFile)
+    // 	throws BuildExecutionException {
+    //     String reRunPattern = this.settings.getPatternReRunLatex();
+    // 	// may throw a BuildExecutionException
+    //     boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
+    //     log.debug("Another LaTeX run? " + needRun);
+    //     return needRun;
+    // }
 
-    /**
+    /*
      * Runs the MakeIndex command 
      * given by {@link Settings#getMakeIndexCommand()} 
      * on the idx-file corresponding with <code>texFile</code> 
@@ -1411,21 +1408,21 @@ public class LatexPreProcessor {
     // Suggestion: runMakeIndexInitByNeed 
     // Other methods accordingly. 
     // maybe better: eliminate altogether 
-    private boolean runMakeIndexByNeed(File texFile)
-	throws BuildExecutionException {
+    // private boolean runMakeIndexByNeed(File texFile)
+    // 	throws BuildExecutionException {
 
-	// raw index file written by pdflatex 
-	File idxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
-	boolean needRun = idxFile.exists();
-	log.debug("MakeIndex run required? " + needRun);
-	if (needRun) {
-	    // may throw BuildExecutionException 
-	    runMakeIndex(idxFile);
-	}
-	return needRun;
-    }
+    // 	// raw index file written by pdflatex 
+    // 	File idxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
+    // 	boolean needRun = idxFile.exists();
+    // 	log.debug("MakeIndex run required? " + needRun);
+    // 	if (needRun) {
+    // 	    // may throw BuildExecutionException 
+    // 	    runMakeIndex(idxFile);
+    // 	}
+    // 	return needRun;
+    // }
 
-    /**
+    /*
      * Runs the MakeIndex command 
      * given by {@link Settings#getMakeIndexCommand()}. 
      *
@@ -1436,24 +1433,24 @@ public class LatexPreProcessor {
     // and this one based on idx-file. 
     // no longer appropriate to create idx-file 
     // because makeIndex is rerun. 
-    private void runMakeIndex(File idxFile) throws BuildExecutionException {
-	String command = this.settings.getMakeIndexCommand();
-	log.debug("Running " + command  + " on " + idxFile.getName() + ". ");
-	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
-				       idxFile);
-	// may throw BuildExecutionException 
-	this.executor.execute(idxFile.getParentFile(), //workingDir 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
+    // private void runMakeIndex(File idxFile) throws BuildExecutionException {
+    // 	String command = this.settings.getMakeIndexCommand();
+    // 	log.debug("Running " + command  + " on " + idxFile.getName() + ". ");
+    // 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
+    // 				       idxFile);
+    // 	// may throw BuildExecutionException 
+    // 	this.executor.execute(idxFile.getParentFile(), //workingDir 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
 
-	// detect errors and warnings makeindex wrote into xxx.ilg 
- 	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
-	logErrs (logFile, command, this.settings.getPatternErrMakeIndex());
-	logWarns(logFile, command, this.settings.getPatternWarnMakeIndex());
-    }
+    // 	// detect errors and warnings makeindex wrote into xxx.ilg 
+    // 	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
+    // 	logErrs (logFile, command, this.settings.getPatternErrMakeIndex());
+    // 	logWarns(logFile, command, this.settings.getPatternWarnMakeIndex());
+    // }
 
-   /**
+    /*
      * Runs the MakeGlossaries command 
      * given by {@link Settings#getMakeGlossariesCommand()} 
      * on the aux-file corresponding with <code>texFile</code> 
@@ -1470,47 +1467,47 @@ public class LatexPreProcessor {
      *    Equivalently, 
      *    whether LaTeX has to be rerun because of MakeGlossaries. 
      */
-     private boolean runMakeGlossaryByNeed(File texFile)
-	throws BuildExecutionException {
+    //  private boolean runMakeGlossaryByNeed(File texFile)
+    // 	throws BuildExecutionException {
 
-	// file name without ending: parameter for makeglossaries 
-	File xxxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
-	// raw glossaries file created by pdflatex 
-	File gloFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
-	// style file for glossaries created by pdflatex for makeindex 
-	File istFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IST);
-	// style file for glossaries created by pdflatex for xindy 
-	File xdyFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_XDY);
-	// Note that LaTeX creates the ist-file if makeindex is specified 
-	// and the xdy-file if xindy is specified as sorting application. 
+    // 	// file name without ending: parameter for makeglossaries 
+    // 	File xxxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
+    // 	// raw glossaries file created by pdflatex 
+    // 	File gloFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
+    // 	// style file for glossaries created by pdflatex for makeindex 
+    // 	File istFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IST);
+    // 	// style file for glossaries created by pdflatex for xindy 
+    // 	File xdyFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_XDY);
+    // 	// Note that LaTeX creates the ist-file if makeindex is specified 
+    // 	// and the xdy-file if xindy is specified as sorting application. 
 
-	boolean needRun = gloFile.exists();
-	assert ( gloFile.exists() && ( istFile.exists() ^   xdyFile.exists()))
-	    || (!gloFile.exists() && (!istFile.exists() && !xdyFile.exists()));
-	log.debug("MakeGlossaries run required? " + needRun);
-	if (!needRun) {
-	    return false;
-	}
+    // 	boolean needRun = gloFile.exists();
+    // 	assert ( gloFile.exists() && ( istFile.exists() ^   xdyFile.exists()))
+    // 	    || (!gloFile.exists() && (!istFile.exists() && !xdyFile.exists()));
+    // 	log.debug("MakeGlossaries run required? " + needRun);
+    // 	if (!needRun) {
+    // 	    return false;
+    // 	}
 
-	String command = this.settings.getMakeGlossariesCommand();
-	log.debug("Running " + command + " on " + xxxFile.getName()+ ". ");
-	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
-				       xxxFile);
-	// may throw BuildExecutionException 
-	this.executor.execute(texFile.getParentFile(), //workingDir 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
+    // 	String command = this.settings.getMakeGlossariesCommand();
+    // 	log.debug("Running " + command + " on " + xxxFile.getName()+ ". ");
+    // 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
+    // 				       xxxFile);
+    // 	// may throw BuildExecutionException 
+    // 	this.executor.execute(texFile.getParentFile(), //workingDir 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
 
-	// detect errors and warnings makeglossaries wrote into xxx.glg 
-	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
-	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
-	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
-		 +           "|" + this.settings.getPatternWarnXindy());
-	return true;
-    }
+    // 	// detect errors and warnings makeglossaries wrote into xxx.glg 
+    // 	File glgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
+    // 	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
+    // 	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
+    // 		 +           "|" + this.settings.getPatternWarnXindy());
+    // 	return true;
+    // }
 
-    /**
+    /*
      * Runs the BibTeX command given by {@link Settings#getBibtexCommand()} 
      * on the aux-file corresponding with <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
@@ -1523,35 +1520,35 @@ public class LatexPreProcessor {
      *    whether BibTeX has been run. 
      *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
      */
-    private boolean runBibtexByNeed(File texFile) 
-	throws BuildExecutionException {
+    // private boolean runBibtexByNeed(File texFile) 
+    // 	throws BuildExecutionException {
 
-	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
-        boolean needRun = this.fileUtils.matchInFile(auxFile, 
-						     PATTERN_NEED_BIBTEX_RUN);
-	log.debug("BibTeX run required? " + needRun);
-	if (!needRun) {
-	    return false;
-	}
+    // 	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
+    //     boolean needRun = this.fileUtils.matchInFile(auxFile, 
+    // 						     PATTERN_NEED_BIBTEX_RUN);
+    // 	log.debug("BibTeX run required? " + needRun);
+    // 	if (!needRun) {
+    // 	    return false;
+    // 	}
 
-	String command = this.settings.getBibtexCommand();
-	log.debug("Running " + command + " on " + auxFile.getName() + ". ");
+    // 	String command = this.settings.getBibtexCommand();
+    // 	log.debug("Running " + command + " on " + auxFile.getName() + ". ");
 
-	String[] args = buildArguments(this.settings.getBibtexOptions(), 
-				       auxFile);
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), // workingDir 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
+    // 	String[] args = buildArguments(this.settings.getBibtexOptions(), 
+    // 				       auxFile);
+    // 	// may throw BuildExecutionException 
+    //     this.executor.execute(texFile.getParentFile(), // workingDir 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
 
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
-	logErrs (logFile, command, this.settings.getPatternErrBibtex());
-	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
-	return true;
-    }
+    // 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
+    // 	logErrs (logFile, command, this.settings.getPatternErrBibtex());
+    // 	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
+    // 	return true;
+    // }
 
-    /**
+    /*
      * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
@@ -1571,23 +1568,23 @@ public class LatexPreProcessor {
      *    if running the latex command 
      *    returned by {@link Settings#getLatexCommand()} failed. 
      */
-    private void runLatex2pdf(File texFile, File logFile)
-	throws BuildExecutionException {
+    // private void runLatex2pdf(File texFile, File logFile)
+    // 	throws BuildExecutionException {
 
-	String command = this.settings.getLatex2pdfCommand();
-	log.debug("Running " + command + " on " + texFile.getName() + ". ");
+    // 	String command = this.settings.getLatex2pdfCommand();
+    // 	log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
-	String[] args = buildArguments(this.settings.getLatex2pdfOptions(), 
-				       texFile);
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), // workingDir 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
+    // 	String[] args = buildArguments(this.settings.getLatex2pdfOptions(), 
+    // 				       texFile);
+    // 	// may throw BuildExecutionException 
+    //     this.executor.execute(texFile.getParentFile(), // workingDir 
+    // 			      this.settings.getTexPath(), 
+    // 			      command, 
+    // 			      args);
 
-	// logging errors (warnings are done in processLatex2pdf)
-	logErrs(logFile, command);
-    }
+    // 	// logging errors (warnings are done in processLatex2pdf)
+    // 	logErrs(logFile, command);
+    // }
  }
 
 
