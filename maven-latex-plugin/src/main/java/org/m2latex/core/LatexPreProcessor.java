@@ -91,7 +91,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      }
 
     /**
-     *
+     * Handler for each suffix of a souce file. 
+     * Mostly, these represent graphic formats 
+     * but also {@link #SUFFIX_TEX} is required 
+     * to detect the latex main files 
+     * and {@link #SUFFIX_TEX} and {@link #SUFFIX_BIB} 
+     * are needed for proper cleaning of the tex souce directory. 
      */
     enum SuffixHandler {
 	fig {
@@ -204,12 +209,31 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	};
 
+	/**
+	 * Does the transformation of the file <code>file</code> 
+	 * using <code>proc</code>. 
+	 *
+	 * @param file
+	 *    a file with ending given by {@link #getSuffix()}. 
+	 */
 	abstract void transformSrc(File file, LatexPreProcessor proc)
 	throws BuildExecutionException;
 
+	/**
+	 * Deletes the files potentially 
+	 * created from the source file <code>file</code> 
+	 * using <code>proc</code>. 
+	 *
+	 * @param file
+	 *    a file with ending given by {@link #getSuffix()}. 
+	 */
 	abstract void clearTarget(File file, LatexPreProcessor proc)
 	throws BuildExecutionException;
 
+	/**
+	 * Returns the suffix of the file type 
+	 * this is the handler for. 
+	 */
 	abstract String getSuffix();
     } // enum SuffixHandler 
 
@@ -331,6 +355,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	return args;
     }
 
+    /**
+     * Deletes the graphic files 
+     * created from the fig-file <code>figFile</code>. 
+     *
+     * @param figFile
+     *    a fig file. 
+     */
     private void clearTargetFig(File figFile) 
 	throws BuildExecutionException {
 
@@ -339,8 +370,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
 	this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
     }
-
-
 
     /**
      * Converts a gnuplot file into a tex-file with ending ptx 
@@ -394,6 +423,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// no check: just warning that no output has been created. 
     }
 
+    /**
+     * Deletes the graphic files 
+     * created from the gnuplot-file <code>pltFile</code>. 
+     */
     private void clearTargetPlt(File pltFile) 
 	throws BuildExecutionException {
 
@@ -433,6 +466,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
     }
+
+    /**
+     * Deletes the graphic files 
+     * created from the metapost-file <code>mpFile</code>. 
+     */
     private void clearTargetMp(File mpFile) 
 	throws BuildExecutionException {
 
@@ -455,8 +493,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.fileUtils.delete(mpFile, filter);
     }
 
-    // FIXME: missing skip messages for svg 
-
+    /**
+     * Deletes the graphic files 
+     * created from the svg-file <code>svgFile</code>. 
+     */
     private void clearTargetSvg(File svgFile) 
 	throws BuildExecutionException {
 
@@ -467,6 +507,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
        this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
    }
 
+    /**
+     * If the tex-file <code>texFile</code> is a latex main file, 
+     * add it to {@link #latexMainFiles}. 
+     *
+     * @param texFile
+     *    the tex-file to be added to {@link #latexMainFiles} 
+     *    if it is a latex main file. 
+     */
     private void addMainFile(File texFile) throws BuildExecutionException {
 	// may throw BuildExecutionException
 	if (this.fileUtils
@@ -477,6 +525,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
     }
 
+    /**
+     * Deletes the files 
+     * created from the tex-file <code>texFile</code>, 
+     * if that is a latex main file. 
+     *
+     * @param texFile
+     *    the tex-file of which the created files shall be deleted 
+     *    if it is a latex main file. 
+     */
     private void clearTargetTex(final File texFile) 
 	throws BuildExecutionException {
 
