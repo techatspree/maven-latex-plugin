@@ -38,7 +38,7 @@ import java.util.HashMap;
  * and in clearing the created files from the latex source directory 
  * in {@link #clearCreated(Collection)}. 
  */
-public class LatexPreProcessor {
+public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Maps the suffix to the according handler. 

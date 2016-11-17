@@ -43,7 +43,7 @@ import java.util.HashMap;
  * and main processing of the latex file according to the target(s) 
  * given by the parameters. 
  */
-public class LatexProcessor {
+public class LatexProcessor extends AbstractLatexProcessor {
 
     static final String PATTERN_NEED_BIBTEX_RUN = "^\\\\bibdata";
 
