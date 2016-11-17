@@ -23,6 +23,7 @@ import java.io.FileFilter;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.TreeSet;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -78,22 +79,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		      LogWrapper log, 
 		      TexFileUtils fileUtils) {
 	super(settings, executor, log, fileUtils);
-	this.latexMainFiles = new ArrayList<File>();
+	this.latexMainFiles = new TreeSet<File>();
      }
-
-    private void processGraphics() throws BuildExecutionException {
-	File texDirectory = this.settings.getTexSrcDirectoryFile();
-
-	if (!texDirectory.exists()) {
-	    this.log.info("No tex directory - " + 
-			  "skipping graphics processing. ");
-	    return;
-	}
-
-	// may throw BuildExecutionException 
-	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
-	processGraphicsSelectMain(orgFiles);
-    }
 
     /**
      *
@@ -297,7 +284,18 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	args[5+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX)
 	    .getName();
 	return args;
-     }
+    }
+
+    private void clearTargetFig(File figFile) 
+	throws BuildExecutionException {
+
+	this.log.info("Deleting targets of fig-file " + figFile + ". ");
+	// may throw BuildExecutionException 
+	this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
+	this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
+    }
+
+
 
     /**
      * Converts a gnuplot file into a tex-file with ending ptx 
@@ -351,6 +349,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// no check: just warning that no output has been created. 
     }
 
+    private void clearTargetPlt(File pltFile) 
+	throws BuildExecutionException {
+
+	this.log.info("Deleting targets of gnuplot-file " + pltFile + ". ");
+	// may throw BuildExecutionException 
+	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX).delete();
+	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF).delete();
+    }
+
     /**
      * Runs mpost on mp-files to generate mps-files. 
      *
@@ -381,58 +388,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
     }
-
-
-    private void addMainFile(File texFile) throws BuildExecutionException {
-	// may throw BuildExecutionException
-	if (this.fileUtils
-	    .matchInFile(texFile, 
-			 this.settings.getPatternLatexMainFile())) {
-	    this.log.info("Detected latex-main-file " + texFile + ". ");
-	    this.latexMainFiles.add(texFile);
-	}
-    }
-
-    /**
-     * Converts files in various graphic formats incompatible with LaTeX 
-     * into formats which can be inputted or included directly 
-     * into a latex file and returns the latex main files. 
-     *
-     * @throws BuildExecutionException
-     */
-    Collection<File> processGraphicsSelectMain(Collection<File> files) 
-    	throws BuildExecutionException {
-
-	this.latexMainFiles.clear();
-	SuffixHandler handler;
-	for (File file : files) {
-	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
-	    if (handler != null) {
-		// may throw BuildExecutionException 
-		handler.transformSrc(file, this);
-	    }
-	}
-	return this.latexMainFiles;
-    }
-
-    private void clearTargetFig(File figFile) 
-	throws BuildExecutionException {
-
-	this.log.info("Deleting targets of fig-file " + figFile + ". ");
-	// may throw BuildExecutionException 
-	this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
-	this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
-    }
-
-    private void clearTargetPlt(File pltFile) 
-	throws BuildExecutionException {
-
-	this.log.info("Deleting targets of gnuplot-file " + pltFile + ". ");
-	// may throw BuildExecutionException 
-	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX).delete();
-	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF).delete();
-    }
-
     private void clearTargetMp(File mpFile) 
 	throws BuildExecutionException {
 
@@ -455,6 +410,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.fileUtils.delete(mpFile, filter);
     }
 
+    // FIXME: missing skip messages for svg 
+
     private void clearTargetSvg(File svgFile) 
 	throws BuildExecutionException {
 
@@ -464,6 +421,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 //       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PSTEX ).delete();
        this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
    }
+
+    private void addMainFile(File texFile) throws BuildExecutionException {
+	// may throw BuildExecutionException
+	if (this.fileUtils
+	    .matchInFile(texFile, 
+			 this.settings.getPatternLatexMainFile())) {
+	    this.log.info("Detected latex-main-file " + texFile + ". ");
+	    this.latexMainFiles.add(texFile);
+	}
+    }
 
     private void clearTargetTex(final File texFile) 
 	throws BuildExecutionException {
@@ -492,6 +459,28 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting file zz" + root + ".eps. ");
 	// FIXME: eliminate literal ".eps" 
 	new File(texFile.getParent(), "zz" + root + ".eps").delete();
+    }
+
+    /**
+     * Converts files in various graphic formats incompatible with LaTeX 
+     * into formats which can be inputted or included directly 
+     * into a latex file and returns the latex main files. 
+     *
+     * @throws BuildExecutionException
+     */
+    Collection<File> processGraphicsSelectMain(Collection<File> files) 
+    	throws BuildExecutionException {
+
+	this.latexMainFiles.clear();
+	SuffixHandler handler;
+	for (File file : files) {
+	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
+	    if (handler != null) {
+		// may throw BuildExecutionException 
+		handler.transformSrc(file, this);
+	    }
+	}
+	return this.latexMainFiles;
     }
 
     /**
