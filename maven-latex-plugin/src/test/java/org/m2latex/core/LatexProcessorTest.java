@@ -342,8 +342,8 @@ public class LatexProcessorTest {
         executorCtrl.setReturnValue(null);
 
 	// logErrs
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue(logFile);
+	// fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
+	// fileUtilsCtrl.setReturnValue(logFile);
 
 	// since log file does not exist 
 	// fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
