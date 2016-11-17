@@ -346,7 +346,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// initial latex run 
         runLatex2pdf(desc);
-	File texFile = desc.texFile();
+	File texFile = desc.texFile;
 
 	// create bibliography, index and glossary by need 
 	boolean hasBib    = runBibtexByNeed      (texFile);
@@ -426,11 +426,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// rerun latex by need patternRerunMakeIndex
 	boolean needMakeIndexReRun;
 	boolean needLatexReRun = (numLatexReRuns == 1)
-	    || needAnotherLatexRun(desc.logFile());
+	    || needAnotherLatexRun(desc.logFile);
 
 	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
-	    needMakeIndexReRun = needAnotherMakeIndexRun(desc.logFile());
+	    needMakeIndexReRun = needAnotherMakeIndexRun(desc.logFile);
 	    // FIXME: superfluous since pattern rerunfileckeck 
 	    // triggering makeindex also fits rerun of LaTeX 
 	    needLatexReRun |= needMakeIndexReRun;
@@ -445,7 +445,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
             runLatex2pdf(desc);
 
-	    needLatexReRun = needAnotherLatexRun(desc.logFile());
+	    needLatexReRun = needAnotherLatexRun(desc.logFile);
         }
 	log.warn("Max rerun reached although LaTeX demands another run. ");
     }
@@ -501,27 +501,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	    this.glgFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
 	}
-
-	File texFile() {
-	    return this.texFile;
-	}
-
-	File logFile() {
-	    return this.logFile;
-	}
-
-	File idxFile() {
-	    return this.idxFile;
-	}
-	File gloFile() {
-	    return this.gloFile;
-	}
-	File xxxFile() {
-	    return this.xxxFile;
-	}
-	File glgFile() {
-	    return this.glgFile;
-	}
     } // class LatexMainDesc 
 
     /**
@@ -550,7 +529,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	processLatex2pdfCore(desc);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
-	logWarns(desc.logFile(), this.settings.getLatex2pdfCommand());
+	logWarns(desc.logFile, this.settings.getLatex2pdfCommand());
     }
 
    /**
@@ -781,7 +760,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildExecutionException {
 
 	// raw index file written by pdflatex 
-	boolean needRun = desc.idxFile().exists();
+	boolean needRun = desc.idxFile.exists();
 	log.debug("MakeIndex run required? " + needRun);
 	if (needRun) {
 	    // may throw BuildExecutionException 
@@ -804,7 +783,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void runMakeIndex(LatexMainDesc desc) 
 	throws BuildExecutionException {
 	String command = this.settings.getMakeIndexCommand();
-	File idxFile = desc.idxFile();
+	File idxFile = desc.idxFile;
 	log.debug("Running " + command  + " on " + idxFile.getName() + ". ");
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
 				       idxFile);
@@ -841,14 +820,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildExecutionException {
 
 	// raw glossaries file created by pdflatex 
-	boolean needRun = desc.gloFile().exists();
+	boolean needRun = desc.gloFile.exists();
 	log.debug("MakeGlossaries run required? " + needRun);
 	if (!needRun) {
 	    return false;
 	}
 
 	// file name without ending: parameter for makeglossaries 
-	File xxxFile = desc.xxxFile();
+	File xxxFile = desc.xxxFile;
 	String command = this.settings.getMakeGlossariesCommand();
 	log.debug("Running " + command + " on " + xxxFile.getName()+ ". ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
@@ -860,7 +839,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 
 	// detect errors and warnings makeglossaries wrote into xxx.glg 
-	File glgFile = desc.glgFile();
+	File glgFile = desc.glgFile;
 	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
 	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
 		 +           "|" + this.settings.getPatternWarnXindy());
@@ -890,7 +869,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void runLatex2pdf(LatexMainDesc desc)
 	throws BuildExecutionException {
 
-	File texFile = desc.texFile();
+	File texFile = desc.texFile;
 	String command = this.settings.getLatex2pdfCommand();
 	log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
@@ -903,7 +882,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 
 	// logging errors (warnings are done in processLatex2pdf)
-	logErrs(desc.logFile(), command);
+	logErrs(desc.logFile, command);
     }
 
     /**
@@ -922,7 +901,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void runLatex2html(LatexMainDesc desc)
 	throws BuildExecutionException {
 
-	File texFile = desc.texFile();
+	File texFile = desc.texFile;
 	String command = this.settings.getTex4htCommand();
         log.debug("Running " + command + " on " + texFile.getName() + ". ");
 
@@ -934,9 +913,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 
 	// logging errors and warnings 
-	File logFile = desc.logFile();
-	logErrs (logFile, command);
-	logWarns(logFile, command);
+	logErrs (desc.logFile, command);
+	logWarns(desc.logFile, command);
     }
 
     private String[] buildHtlatexArguments(File texFile)
@@ -1007,7 +985,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void runLatex2odt(LatexMainDesc desc)
 	throws BuildExecutionException {
 
-	File texFile = desc.texFile();
+	File texFile = desc.texFile;
 	String command = this.settings.getTex4htCommand();
         log.debug("Running " + command + " on" + texFile.getName() + ". ");
 
@@ -1024,9 +1002,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	File logFile = desc.logFile();
-	logErrs (logFile, command);
-	logWarns(logFile, command);
+	logErrs (desc.logFile, command);
+	logWarns(desc.logFile, command);
     }
 
 
