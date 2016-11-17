@@ -61,6 +61,9 @@ public class LatexProcessorTest {
     private File istFile = new File(System.getProperty("tmp.dir"), "test.ist");
     private File xdyFile = new File(System.getProperty("tmp.dir"), "test.xdy");
     private File glsFile = new File(System.getProperty("tmp.dir"), "test.gls");
+    private File glgFile = new File(System.getProperty("tmp.dir"), "test.glg");
+    // this one does never exist. 
+    private File xxxFile = new File(System.getProperty("tmp.dir"), "test");
 
     private File tocFile = new File(System.getProperty("tmp.dir"), "test.toc");
     private File lofFile = new File(System.getProperty("tmp.dir"), "test.lof");
@@ -214,6 +217,12 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(logFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
 	fileUtilsCtrl.setReturnValue(idxFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
+	fileUtilsCtrl.setReturnValue(gloFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
+	fileUtilsCtrl.setReturnValue(xxxFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLG);
+	fileUtilsCtrl.setReturnValue(glgFile);
     }
 
     private void mockNeedAnotherLatexRun(boolean retVal)
@@ -290,35 +299,17 @@ public class LatexProcessorTest {
 
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossary) 
 	throws BuildExecutionException {
-
-        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
-        fileUtilsCtrl.setReturnValue(gloFile);
-
+ 
 	if (!runMakeGlossary) {
 	    return;
 	}
 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
-        fileUtilsCtrl.setReturnValue(gloFile);
-        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS);
-        fileUtilsCtrl.setReturnValue(glsFile);
-
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
-			 settings.getMakeIndexCommand(),
-			 new String[] {
-			     "-s",
-			     istFile.getName(),
-			     "-o",
-			     glsFile.getName(),
-			     gloFile.getName()
-			 } );
+			 settings.getMakeGlossariesCommand(),
+			 new String[] {xxxFile.getName()} );
 	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
-
-	// fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG);
-	// fileUtilsCtrl.setReturnValue( ilgFile );
-
     }
 
 
