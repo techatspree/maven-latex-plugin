@@ -72,8 +72,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private final static String SUFFIX_MPS = ".mps";
     private final static String SUFFIX_MPX = ".mpx";
 
+    // just for message 
     private final static String SUFFIX_JPG = ".jpg";
     private final static String SUFFIX_PNG = ".png";
+    // just for silently skipping 
+    private final static String SUFFIX_BIB = ".bib";
+    // for latex main file creating html 
+    private final static String SUFFIX_EPS = ".eps";
 
     private final Collection<File> latexMainFiles;
 
@@ -185,6 +190,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_TEX;
+	    }
+	},
+	bib {
+	    void transformSrc(File file, LatexPreProcessor proc) 
+		throws BuildExecutionException {
+	    }
+	    void clearTarget(File file, LatexPreProcessor proc)
+	    	throws BuildExecutionException {
+	    }
+	    String getSuffix() {
+		return LatexPreProcessor.SUFFIX_BIB;
 	    }
 	};
 
@@ -470,6 +486,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			 this.settings.getPatternLatexMainFile())) {
 	    return;
 	}
+	this.log.info("Deleting targets of latex main file " + texFile + ". ");
 
 	// filter to delete 
 	String name1 = texFile.getName();
@@ -481,13 +498,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			&& !file.equals(texFile);
 		}
 	    };
-	this.log.info("Deleting files " + root + "... . ");
 	// may throw BuildExecutionException 
 	this.fileUtils.delete(texFile, filter);
-
-	this.log.info("Deleting file zz" + root + ".eps. ");
-	// FIXME: eliminate literal ".eps" 
-	new File(texFile.getParent(), "zz" + root + ".eps").delete();
+	// may throw BuildExecutionException 
+	new File(texFile.getParent(), "zz" + root + SUFFIX_EPS).delete();
     }
 
     /**
@@ -501,9 +515,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     	throws BuildExecutionException {
 
 	this.latexMainFiles.clear();
+	String suffix;
 	SuffixHandler handler;
 	Collection<String> skipped = new TreeSet<String>();
-	String suffix;
 	for (File file : files) {
 	    suffix = this.fileUtils.getSuffix(file);
 	    handler = SUFFIX2HANDLER.get(suffix);
@@ -523,15 +537,41 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Deletes all created files. 
+     * Deletes all created files in <code>texDirectory</code>. 
+     *
+     * @param texDirector
+     *    the tex-source directory. 
      */
-    void clearCreated(Collection<File> files) throws BuildExecutionException {
+    void clearCreated(File texDirectory) throws BuildExecutionException {
+
+	// try to clear targets 
+
+	// may throw BuildExecutionException 
+	Collection<File> files = this.fileUtils.getFilesRec(texDirectory);
+	String suffix;
 	SuffixHandler handler;
 	for (File file : files) {
-	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
+	    suffix = this.fileUtils.getSuffix(file);
+	    handler = SUFFIX2HANDLER.get(suffix);
 	    if (handler != null) {
 		handler.clearTarget(file, this);
 	    }
+	}
+
+	// check whether clearing succeeded 
+	Collection<String> skipped = new TreeSet<String>();
+	// may throw BuildExecutionException 
+	files = this.fileUtils.getFilesRec(texDirectory);
+	for (File file : files) {
+	    suffix = this.fileUtils.getSuffix(file);
+	    handler = SUFFIX2HANDLER.get(suffix);
+	    if (handler == null) {
+		skipped.add(suffix);
+	    }
+	}
+	if (!skipped.isEmpty()) {
+	    this.log.warn("After deletion still files with suffixes " + 
+			  skipped + ". ");
 	}
    }
  
