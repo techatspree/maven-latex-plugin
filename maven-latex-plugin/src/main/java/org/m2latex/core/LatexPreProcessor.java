@@ -55,22 +55,25 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private final static String SUFFIX_TEX = ".tex";
 
     // home-brewed ending to represent tex including postscript 
-    private final static String SUFFIX_PTX = ".ptx";// For preprocessing only 
+    private final static String SUFFIX_PTX = ".ptx";
     // the next two for preprocessing and in LatexDev only 
     final static String SUFFIX_PSTEX = ".pstex";
     final static String SUFFIX_PDFTEX = ".pdf_tex";
 
     // suffix for xfig
-    private final static String SUFFIX_FIG = ".fig";// in SuffixHandler only 
+    private final static String SUFFIX_FIG = ".fig";
     // suffix for svg
-    private final static String SUFFIX_SVG = ".svg";// in SuffixHandler only 
+    private final static String SUFFIX_SVG = ".svg";
     // suffix for gnuplot
-    private final static String SUFFIX_PLT = ".plt";// in SuffixHandler only 
+    private final static String SUFFIX_PLT = ".plt";
     // suffix for metapost
-    private final static String SUFFIX_MP  = ".mp";// in SuffixHandler only 
+    private final static String SUFFIX_MP  = ".mp";
     // from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
-    private final static String SUFFIX_MPS = ".mps";// For preprocessing only 
-    private final static String SUFFIX_MPX = ".mpx";// For preprocessing only 
+    private final static String SUFFIX_MPS = ".mps";
+    private final static String SUFFIX_MPX = ".mpx";
+
+    private final static String SUFFIX_JPG = ".jpg";
+    private final static String SUFFIX_PNG = ".png";
 
     private final Collection<File> latexMainFiles;
 
@@ -134,8 +137,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	svg {
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
-		// proc.log.info("Processing svg-file " + file + 
-		// 	      " done implicitly. ");
+		proc.log.info("Processing svg-file " + file + 
+		 	      " done implicitly in latex run. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
@@ -143,6 +146,32 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_SVG;
+	    }
+	},
+	jpg {
+	    void transformSrc(File file, LatexPreProcessor proc) 
+		throws BuildExecutionException {
+		proc.log.info("No processing for jpg-file " + file + 
+			      " needed. ");
+	    }
+	    void clearTarget(File file, LatexPreProcessor proc)
+	    	throws BuildExecutionException {
+	    }
+	    String getSuffix() {
+		return LatexPreProcessor.SUFFIX_JPG;
+	    }
+	},
+	png {
+	    void transformSrc(File file, LatexPreProcessor proc) 
+		throws BuildExecutionException {
+		proc.log.info("No processing for png-file " + file + 
+			      " needed. ");
+	    }
+	    void clearTarget(File file, LatexPreProcessor proc)
+	    	throws BuildExecutionException {
+	    }
+	    String getSuffix() {
+		return LatexPreProcessor.SUFFIX_PNG;
 	    }
 	},
 	tex {
@@ -473,12 +502,22 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	this.latexMainFiles.clear();
 	SuffixHandler handler;
+	Collection<String> skipped = new TreeSet<String>();
+	String suffix;
 	for (File file : files) {
-	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
-	    if (handler != null) {
+	    suffix = this.fileUtils.getSuffix(file);
+	    handler = SUFFIX2HANDLER.get(suffix);
+	    if (handler == null) {
+		this.log.debug("Skipping processing of file " + file + ". ");
+		skipped.add(suffix);
+	    } else {
 		// may throw BuildExecutionException 
 		handler.transformSrc(file, this);
 	    }
+	}
+	if (!skipped.isEmpty()) {
+	    this.log.warn("Skipped processing of files with suffixes " + 
+			  skipped + ". ");
 	}
 	return this.latexMainFiles;
     }
