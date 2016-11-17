@@ -454,6 +454,37 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
     /**
+     * Returns whether another LaTeX run is necessary 
+     * based on a pattern matching in the log file. 
+     *
+     * @see Settings#getPatternReRunMakeIndex()
+     */
+    // FIXME: unification with needAnotherLatexRun? 
+    private boolean needAnotherMakeIndexRun(File logFile)
+	throws BuildExecutionException {
+        String reRunPattern = this.settings.getPatternReRunMakeIndex();
+	// may throw a BuildExecutionException
+        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
+        log.debug("Another MakeIndex run? " + needRun);
+        return needRun;
+    }
+
+    /**
+     * Returns whether another LaTeX run is necessary 
+     * based on a pattern matching in the log file. 
+     *
+     * @see Settings#getPatternReRunLatex()
+     */
+    private boolean needAnotherLatexRun(File logFile)
+	throws BuildExecutionException {
+        String reRunPattern = this.settings.getPatternReRunLatex();
+	// may throw a BuildExecutionException
+        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
+        log.debug("Another LaTeX run? " + needRun);
+        return needRun;
+    }
+
+    /**
      * Runs LaTeX on <code>texFile</code> 
      * BibTeX, MakeIndex and MakeGlossaries 
      * and again LaTeX creating a pdf-file 
@@ -495,6 +526,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     private void logErrs(File logFile, String command) 
 	throws BuildExecutionException {
+	// may throw BuildExecutionException 
 	logErrs(logFile, command, this.settings.getPatternErrLatex());
     }
 
@@ -527,17 +559,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    and which maybe created warnings. 
      */
     private void logWarns(File logFile, String command) 
-	throws BuildExecutionException {
+    	throws BuildExecutionException {
 
 	if (!logFile.exists()) {
 	    return;
 	}
 
 	if (this.settings.getDebugBadBoxes() && 
+	    // may throw BuildExecutionException: not really 
 	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
 	    log.warn("Running " + command + " created bad boxes. ");
 	}
 	if (this.settings.getDebugWarnings() && 
+	    // may throw BuildExecutionException: not really 
 	    this.fileUtils.matchInFile(logFile, 
 				       this.settings.getPatternWarnLatex())) {
 	    log.warn("Running " + command + " emited warnings. ");
@@ -560,6 +594,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	log.info("Converting into html: LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	preProcessLatex2pdf(texFile, logFile);
+	// may throw BuildExecutionException 
         runLatex2html      (texFile);
     }
 
@@ -579,6 +614,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	log.info("Converting into odt: LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
         preProcessLatex2pdf(texFile, logFile);
+	// may throw BuildExecutionException 
         runLatex2odt       (texFile);
     }
 
@@ -599,7 +635,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	log.info("Converting into doc(x): LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	preProcessLatex2pdf(texFile, logFile);
+	// may throw BuildExecutionException 
         runLatex2odt       (texFile);
+	// may throw BuildExecutionException 
         runOdt2doc         (texFile);
     }
 
@@ -617,6 +655,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2rtf(File texFile) throws BuildExecutionException {
 	log.info("Converting into rtf: LaTeX file " + texFile + ". ");
+	// may throw BuildExecutionException 
 	runLatex2rtf(texFile);
     }
 
@@ -635,38 +674,49 @@ public class LatexProcessor extends AbstractLatexProcessor {
         processLatex2pdfCore(texFile, logFile);
 	// warnings emitted by LaTex are ignored 
 	// (errors are emitted by runLatex2pdf and that like.)
+	// may throw BuildExecutionException 
 	runPdf2txt      (texFile);
     }
 
     /**
-     * Returns whether another LaTeX run is necessary 
-     * based on a pattern matching in the log file. 
+     * Runs the BibTeX command given by {@link Settings#getBibtexCommand()} 
+     * on the aux-file corresponding with <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * provided an according pattern in the aux-file indicates 
+     * that a bibliography shall be created. 
      *
-     * @see Settings#getPatternReRunMakeIndex()
+     * @param texFile
+     *    the latex-file BibTeX is to be processed for. 
+     * @return
+     *    whether BibTeX has been run. 
+     *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
      */
-    // FIXME: unification with needAnotherLatexRun? 
-    private boolean needAnotherMakeIndexRun(File logFile)
+    private boolean runBibtexByNeed(File texFile) 
 	throws BuildExecutionException {
-        String reRunPattern = this.settings.getPatternReRunMakeIndex();
-	// may throw a BuildExecutionException
-        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
-        log.debug("Another MakeIndex run? " + needRun);
-        return needRun;
-    }
 
-    /**
-     * Returns whether another LaTeX run is necessary 
-     * based on a pattern matching in the log file. 
-     *
-     * @see Settings#getPatternReRunLatex()
-     */
-    private boolean needAnotherLatexRun(File logFile)
-	throws BuildExecutionException {
-        String reRunPattern = this.settings.getPatternReRunLatex();
-	// may throw a BuildExecutionException
-        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
-        log.debug("Another LaTeX run? " + needRun);
-        return needRun;
+	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
+        boolean needRun = this.fileUtils.matchInFile(auxFile, 
+						     PATTERN_NEED_BIBTEX_RUN);
+	log.debug("BibTeX run required? " + needRun);
+	if (!needRun) {
+	    return false;
+	}
+
+	String command = this.settings.getBibtexCommand();
+	log.debug("Running " + command + " on " + auxFile.getName() + ". ");
+
+	String[] args = buildArguments(this.settings.getBibtexOptions(), 
+				       auxFile);
+	// may throw BuildExecutionException 
+        this.executor.execute(texFile.getParentFile(), // workingDir 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args);
+
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
+	logErrs (logFile, command, this.settings.getPatternErrBibtex());
+	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
+	return true;
     }
 
     /**
@@ -783,47 +833,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
 	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
 		 +           "|" + this.settings.getPatternWarnXindy());
-	return true;
-    }
-
-    /**
-     * Runs the BibTeX command given by {@link Settings#getBibtexCommand()} 
-     * on the aux-file corresponding with <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * provided an according pattern in the aux-file indicates 
-     * that a bibliography shall be created. 
-     *
-     * @param texFile
-     *    the latex-file BibTeX is to be processed for. 
-     * @return
-     *    whether BibTeX has been run. 
-     *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
-     */
-    private boolean runBibtexByNeed(File texFile) 
-	throws BuildExecutionException {
-
-	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
-        boolean needRun = this.fileUtils.matchInFile(auxFile, 
-						     PATTERN_NEED_BIBTEX_RUN);
-	log.debug("BibTeX run required? " + needRun);
-	if (!needRun) {
-	    return false;
-	}
-
-	String command = this.settings.getBibtexCommand();
-	log.debug("Running " + command + " on " + auxFile.getName() + ". ");
-
-	String[] args = buildArguments(this.settings.getBibtexOptions(), 
-				       auxFile);
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), // workingDir 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
-	logErrs (logFile, command, this.settings.getPatternErrBibtex());
-	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
 	return true;
     }
 
