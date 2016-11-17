@@ -29,15 +29,29 @@ import java.util.Collection;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
+
 /**
  * The latex processor creates various output from latex sources 
  * including also preprocessing of graphic files in several formats. 
  * This is the core class of this piece of software. 
  * The main method is {@link #create()} which is executed by the ant task 
- * and by the maven plugin. 
- * It does preprocessing of the graphic files 
- * and main processing of the latex file according to the target(s) 
- * given by the parameters. 
+ * and by the maven plugin given by {@link CfgLatexMojo}. 
+ * Also important are {@link #clearAll()} which is executed by 
+ * the maven plugin given by {@link ClearMojo}. 
+ * also {@link #processGraphics()} which is executed by 
+ * the maven plugin given by {@link GraphicsMojo} 
+ * which is helpful for information development. 
+ * <p>
+ * This class delegates preprocessing of the graphic files, 
+ * selection of the latex main files and deleting their targets 
+ * to {@link LatexPreProcessor}. 
+ * Processing of the latex main files is done in {@link #create()} 
+ * according to the target(s) given by the parameters. 
+ * The elements of the enumeration {@link Target} 
+ * use methods {@link #processLatex2rtf(File)}, 
+ * {@link #processLatex2rtf(File)}, {@link #processLatex2pdf(File)}, 
+ * {@link #processLatex2html(File)}, {@link #processLatex2odt(File)}, 
+ * {@link #processLatex2docx(File)} and {@link #processLatex2tex(File)}. 
  */
 public class LatexProcessor extends AbstractLatexProcessor {
 
@@ -395,7 +409,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #processLatex2pdf(File)
      * @see #processLatex2txt(File)
      */
-    public void processLatex2pdfCore(final File texFile, File logFile) 
+    private void processLatex2pdfCore(final File texFile, File logFile) 
 	throws BuildExecutionException {
 
 	int numLatexReRuns = preProcessLatex2pdf(texFile, logFile);
@@ -457,8 +471,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @see #needAnotherLatexRun(File)
+     * @see Target#pdf
      */
-    public void processLatex2pdf(File texFile) throws BuildExecutionException {
+    void processLatex2pdf(File texFile) throws BuildExecutionException {
         log.info("Converting into pdf: LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	processLatex2pdfCore(texFile, logFile);
@@ -538,8 +553,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the tex file to be processed. 
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2html(File)
+     * @see Target#html
      */
-    public void processLatex2html(File texFile)
+    void processLatex2html(File texFile)
 	throws BuildExecutionException {
 	log.info("Converting into html: LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
@@ -557,8 +573,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the tex file to be processed. 
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2odt(File)
+     * @see Target#odt
      */
-    public void processLatex2odt(File texFile) throws BuildExecutionException {
+    void processLatex2odt(File texFile) throws BuildExecutionException {
 	log.info("Converting into odt: LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
         preProcessLatex2pdf(texFile, logFile);
@@ -576,8 +593,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2odt(File)
      * @see #runOdt2doc(File)
+     * @see Target#docx
      */
-    public void processLatex2docx(File texFile) throws BuildExecutionException {
+    void processLatex2docx(File texFile) throws BuildExecutionException {
 	log.info("Converting into doc(x): LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	preProcessLatex2pdf(texFile, logFile);
@@ -595,8 +613,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @see #runLatex2rtf(File)
+     * @see Target#rtf
      */
-    public void processLatex2rtf(File texFile) throws BuildExecutionException {
+    void processLatex2rtf(File texFile) throws BuildExecutionException {
 	log.info("Converting into rtf: LaTeX file " + texFile + ". ");
 	runLatex2rtf(texFile);
     }
@@ -608,202 +627,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the tex file to be processed. 
      * @see #processLatex2pdfCore(File, File)
      * @see #runPdf2txt(File)
+     * @see Target#rtf
      */
-    public void processLatex2txt(File texFile) throws BuildExecutionException {
+    void processLatex2txt(File texFile) throws BuildExecutionException {
 	log.info("Converting into txt: LaTeX file " + texFile + ". ");
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
         processLatex2pdfCore(texFile, logFile);
 	// warnings emitted by LaTex are ignored 
 	// (errors are emitted by runLatex2pdf and that like.)
 	runPdf2txt      (texFile);
-    }
-
-    /**
-     * Runs the latex2rtf command 
-     * given by {@link Settings#getLatex2rtfCommand()} 
-     * on <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatex2rtfArguments(String, File)}. 
-     *
-     * @param texFile
-     *    the latex file to be processed. 
-     * @throws BuildExecutionException
-     *    if running the latex2rtf command 
-     *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
-     */
-    private void runLatex2rtf(File texFile)
-            throws BuildExecutionException {
-
-	String command = this.settings.getLatex2rtfCommand();
-        log.debug("Running " + command + " on " + texFile.getName() + ". ");
-
-        String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
-				       texFile);
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), // workingDir
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-
-	// FIXME: no check: just warning that no output has been created. 
-	// Warnings and error messages are output to stderr 
-	// and by default listed in the console window. 
-	// aThey can be redirected to a file “latex2rtf.log” by
-	// appending 2>latex2rtf.log to the command line.
-    }
-
-    /**
-     * Runs the tex4ht command given by {@link Settings#getTex4htCommand()} 
-     * on <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildHtlatexArguments(String, File)}. 
-     * FIXME: document about errors and warnings. 
-     *
-     * @param texFile
-     *    the latex-file to be processed. 
-     * @throws BuildExecutionException
-     *    if running the tex4ht command 
-     *    returned by {@link Settings#getTex4htCommand()} failed. 
-     */
-    private void runLatex2html(File texFile)
-	throws BuildExecutionException {
-
-	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + " on " + texFile.getName() + ". ");
-
-        String[] args = buildHtlatexArguments(texFile);
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), // workingDir 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-
-	// logging errors and warnings 
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-	logErrs (logFile, command);
-	logWarns(logFile, command);
-    }
-
-    private String[] buildHtlatexArguments(File texFile)
-	throws BuildExecutionException {
-
-        return new String[] {
-	    texFile.getName(),
-	    this.settings.getTex4htStyOptions(),
-	    this.settings.getTex4htOptions(),
-	    this.settings.getT4htOptions(),
-	    this.settings.getLatex2pdfOptions()
-	};
-    }
-
-    /**
-     * Runs conversion from latex to odt 
-     * executing {@link Settings#getTex4htCommand()} 
-     * on <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(String, File)}. 
-     * <p>
-     * Logs a warning or an error if the latex run failed 
-     * invoking {@link #logErrs(File, String)}
-     * but not if bad boxes ocurred or if warnings occurred. 
-     * This is done in {@link #processLatex2pdf(File)} 
-     * after the last LaTeX run only. 
-     *
-     * @param texFile
-     *    the latex file to be processed. 
-     * @throws BuildExecutionException
-     *    if running the tex4ht command 
-     *    returned by {@link Settings#getTex4htCommand()} failed. 
-     */
-    private void runLatex2odt(File texFile)
-	throws BuildExecutionException {
-
-	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + " on" + texFile.getName() + ". ");
-
-        String[] args = new String[] {
-	    texFile.getName(),
-	    "xhtml,ooffice", // there is no choice here 
-	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
-	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
-	};
-	// may throw BuildExecutionException 
-        this.executor.execute(texFile.getParentFile(), 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-
-	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
-	logErrs (logFile, command);
-	logWarns(logFile, command);
-    }
-
-
-    // FIXME: missing options. 
-    // above all (input) doctype: -ddoc, -ddocx 
-    // and (output) doctype: -fdoc, -fdocx, 
-    // available: odt2doc --show. 
-    // among those also: latex and rtf !!!!!! 
-    // This is important to define the copy filter accordingly 
-    /**
-     * Runs conversion from odt to doc or docx-file  
-     * executing {@link Settings#getOdt2docCommand()} 
-     * on an odt-file created from <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(String, File)}. 
-     *
-     * @param texFile
-     *    the latex file to be processed. 
-     * @throws BuildExecutionException
-     *    if running the odt2doc command 
-     *    returned by {@link Settings#getOdt2docCommand()} failed. 
-     */
-    private void runOdt2doc(File texFile)
-            throws BuildExecutionException {
-
-	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
-	String command = this.settings.getOdt2docCommand();
-	log.debug("Running " + command + " on " + odtFile.getName() + ". ");
-
-	String[] args = buildArguments(this.settings.getOdt2docOptions(),
-				       odtFile);
-
-	// may throw BuildExecutionException 
-	this.executor.execute(texFile.getParentFile(), 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-    }
-
-    /**
-     * Runs conversion from pdf to txt-file  
-     * executing {@link Settings#getPdf2txtCommand()} 
-     * on a pdf-file created from <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(String, File)}. 
-     *
-     * @param texFile
-     *    the latex file to be processed. 
-     * @throws BuildExecutionException
-     *    if running the pdf2txt command 
-     *    returned by {@link Settings#getPdf2txtCommand()} failed. 
-     */
-    private void runPdf2txt(File texFile) throws BuildExecutionException {
-
-	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
-	String command = this.settings.getPdf2txtCommand();
-	log.debug("Running " + command + " on " + pdfFile.getName() + ". ");
-
-	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
-				       pdfFile);
-	// may throw BuildExecutionException 
-	this.executor.execute(texFile.getParentFile(), 
-			      this.settings.getTexPath(), 
-			      command, 
-			      args);
-	// FIXME: what about error logging? 
-	// Seems not to create a log-file. 
     }
 
     /**
@@ -1031,5 +863,193 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// logging errors (warnings are done in processLatex2pdf)
 	logErrs(logFile, command);
+    }
+
+    /**
+     * Runs the tex4ht command given by {@link Settings#getTex4htCommand()} 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildHtlatexArguments(String, File)}. 
+     * FIXME: document about errors and warnings. 
+     *
+     * @param texFile
+     *    the latex-file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the tex4ht command 
+     *    returned by {@link Settings#getTex4htCommand()} failed. 
+     */
+    private void runLatex2html(File texFile)
+	throws BuildExecutionException {
+
+	String command = this.settings.getTex4htCommand();
+        log.debug("Running " + command + " on " + texFile.getName() + ". ");
+
+        String[] args = buildHtlatexArguments(texFile);
+	// may throw BuildExecutionException 
+        this.executor.execute(texFile.getParentFile(), // workingDir 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args);
+
+	// logging errors and warnings 
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+	logErrs (logFile, command);
+	logWarns(logFile, command);
+    }
+
+    private String[] buildHtlatexArguments(File texFile)
+	throws BuildExecutionException {
+
+        return new String[] {
+	    texFile.getName(),
+	    this.settings.getTex4htStyOptions(),
+	    this.settings.getTex4htOptions(),
+	    this.settings.getT4htOptions(),
+	    this.settings.getLatex2pdfOptions()
+	};
+    }
+
+    /**
+     * Runs the latex2rtf command 
+     * given by {@link Settings#getLatex2rtfCommand()} 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatex2rtfArguments(String, File)}. 
+     *
+     * @param texFile
+     *    the latex file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the latex2rtf command 
+     *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
+     */
+    private void runLatex2rtf(File texFile)
+            throws BuildExecutionException {
+
+	String command = this.settings.getLatex2rtfCommand();
+        log.debug("Running " + command + " on " + texFile.getName() + ". ");
+
+        String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
+				       texFile);
+	// may throw BuildExecutionException 
+        this.executor.execute(texFile.getParentFile(), // workingDir
+			      this.settings.getTexPath(), 
+			      command, 
+			      args);
+
+	// FIXME: no check: just warning that no output has been created. 
+	// Warnings and error messages are output to stderr 
+	// and by default listed in the console window. 
+	// aThey can be redirected to a file “latex2rtf.log” by
+	// appending 2>latex2rtf.log to the command line.
+    }
+
+    /**
+     * Runs conversion from latex to odt 
+     * executing {@link Settings#getTex4htCommand()} 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * <p>
+     * Logs a warning or an error if the latex run failed 
+     * invoking {@link #logErrs(File, String)}
+     * but not if bad boxes ocurred or if warnings occurred. 
+     * This is done in {@link #processLatex2pdf(File)} 
+     * after the last LaTeX run only. 
+     *
+     * @param texFile
+     *    the latex file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the tex4ht command 
+     *    returned by {@link Settings#getTex4htCommand()} failed. 
+     */
+    private void runLatex2odt(File texFile)
+	throws BuildExecutionException {
+
+	String command = this.settings.getTex4htCommand();
+        log.debug("Running " + command + " on" + texFile.getName() + ". ");
+
+        String[] args = new String[] {
+	    texFile.getName(),
+	    "xhtml,ooffice", // there is no choice here 
+	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
+	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
+	};
+	// may throw BuildExecutionException 
+        this.executor.execute(texFile.getParentFile(), 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args);
+
+	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
+	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+	logErrs (logFile, command);
+	logWarns(logFile, command);
+    }
+
+
+    // FIXME: missing options. 
+    // above all (input) doctype: -ddoc, -ddocx 
+    // and (output) doctype: -fdoc, -fdocx, 
+    // available: odt2doc --show. 
+    // among those also: latex and rtf !!!!!! 
+    // This is important to define the copy filter accordingly 
+    /**
+     * Runs conversion from odt to doc or docx-file  
+     * executing {@link Settings#getOdt2docCommand()} 
+     * on an odt-file created from <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     *
+     * @param texFile
+     *    the latex file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the odt2doc command 
+     *    returned by {@link Settings#getOdt2docCommand()} failed. 
+     */
+    private void runOdt2doc(File texFile)
+            throws BuildExecutionException {
+
+	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
+	String command = this.settings.getOdt2docCommand();
+	log.debug("Running " + command + " on " + odtFile.getName() + ". ");
+
+	String[] args = buildArguments(this.settings.getOdt2docOptions(),
+				       odtFile);
+
+	// may throw BuildExecutionException 
+	this.executor.execute(texFile.getParentFile(), 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args);
+    }
+
+    /**
+     * Runs conversion from pdf to txt-file  
+     * executing {@link Settings#getPdf2txtCommand()} 
+     * on a pdf-file created from <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     *
+     * @param texFile
+     *    the latex file to be processed. 
+     * @throws BuildExecutionException
+     *    if running the pdf2txt command 
+     *    returned by {@link Settings#getPdf2txtCommand()} failed. 
+     */
+    private void runPdf2txt(File texFile) throws BuildExecutionException {
+
+	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
+	String command = this.settings.getPdf2txtCommand();
+	log.debug("Running " + command + " on " + pdfFile.getName() + ". ");
+
+	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
+				       pdfFile);
+	// may throw BuildExecutionException 
+	this.executor.execute(texFile.getParentFile(), 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args);
+	// FIXME: what about error logging? 
+	// Seems not to create a log-file. 
     }
  }
