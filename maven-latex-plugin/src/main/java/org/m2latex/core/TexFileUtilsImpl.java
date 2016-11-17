@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import java.util.regex.Pattern;
 
@@ -49,26 +50,29 @@ class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
-     * Returns the collection of files 
+     * Returns the ordered collection of files 
      * in folder <code>dir</code> and subfolder. 
      *
      * @param dir
      *    a directory. 
      * @return
-     *    the collection of files in folder <code>dir</code> and subfolder. 
+     *    the ordered collection of files 
+     *    in folder <code>dir</code> and subfolder. 
      * @throws BuildExecutionException
      *    if <code>dir</code> is not a folder or not readable. 
      */
     public Collection<File> getFilesRec(File dir) 
 	throws BuildExecutionException {
 
-        Collection<File> res = FileUtils.listFiles(dir,
+        Collection<File> res1 = FileUtils.listFiles(dir,
 						   TrueFileFilter.INSTANCE,
 						   TrueFileFilter.INSTANCE);
-	if (res == null) {
+	if (res1 == null) {
 	    throw new BuildExecutionException
 		("File " + dir + " is not readable or no directory. ");
 	}
+	Collection<File> res = new TreeSet<File>();
+	res.addAll(res1);
 	return res;
     }
 
