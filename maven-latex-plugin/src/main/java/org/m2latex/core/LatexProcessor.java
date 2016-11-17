@@ -354,7 +354,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// create bibliography, index and glossary by need 
 	boolean hasBib    = runBibtexByNeed      (texFile);
-	boolean hasIdxGls = runMakeIndexByNeed   (texFile)
+	boolean hasIdxGls = runMakeIndexByNeed   (desc)
 	    |               runMakeGlossaryByNeed(texFile);
 
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
@@ -444,7 +444,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
             log.debug("Latex must be rerun. ");
 	    if (needMakeIndexReRun) {
 		// FIXME: not by need 
-		runMakeIndexByNeed(desc.texFile());
+		runMakeIndexByNeed(desc);
 	    }
 
             runLatex2pdf(desc);
@@ -491,9 +491,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	private final File logFile;
 
+	private final File idxFile;
+
 	LatexMainDesc(File texFile, TexFileUtils fileUtils) {
 	    this.texFile = texFile;
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
 	}
 
 	File texFile() {
@@ -504,6 +507,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    return this.logFile;
 	}
 
+	File idxFile() {
+	    return this.idxFile;
+	}
     } // class LatexMainDesc 
 
     /**
@@ -759,16 +765,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // Suggestion: runMakeIndexInitByNeed 
     // Other methods accordingly. 
     // maybe better: eliminate altogether 
-    private boolean runMakeIndexByNeed(File texFile)
+    private boolean runMakeIndexByNeed(LatexMainDesc desc)
 	throws BuildExecutionException {
 
 	// raw index file written by pdflatex 
-	File idxFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
+	File idxFile = desc.idxFile();
 	boolean needRun = idxFile.exists();
 	log.debug("MakeIndex run required? " + needRun);
 	if (needRun) {
 	    // may throw BuildExecutionException 
-	    runMakeIndex(idxFile);
+	    runMakeIndex(desc);
 	}
 	return needRun;
     }
@@ -784,8 +790,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // and this one based on idx-file. 
     // no longer appropriate to create idx-file 
     // because makeIndex is rerun. 
-    private void runMakeIndex(File idxFile) throws BuildExecutionException {
+    private void runMakeIndex(LatexMainDesc desc) 
+	throws BuildExecutionException {
 	String command = this.settings.getMakeIndexCommand();
+	File idxFile = desc.idxFile();
 	log.debug("Running " + command  + " on " + idxFile.getName() + ". ");
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
 				       idxFile);
