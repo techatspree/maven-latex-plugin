@@ -291,19 +291,15 @@ public class LatexProcessorTest {
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossary) 
 	throws BuildExecutionException {
 
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
-        fileUtilsCtrl.setReturnValue(gloFile);
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
         fileUtilsCtrl.setReturnValue(gloFile);
-        fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IST);
-        fileUtilsCtrl.setReturnValue(istFile);
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_XDY);
-        fileUtilsCtrl.setReturnValue(xdyFile);
 
 	if (!runMakeGlossary) {
 	    return;
 	}
 
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
+        fileUtilsCtrl.setReturnValue(gloFile);
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS);
         fileUtilsCtrl.setReturnValue(glsFile);
 
