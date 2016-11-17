@@ -26,10 +26,6 @@ import java.io.File;
 import java.io.FileFilter;
 
 import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
@@ -60,18 +56,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
     final static String SUFFIX_LOT = ".lot";
     final static String SUFFIX_AUX = ".aux";
 
-    // both LatexProcessor and LatexPreProcessor 
-    // LaTeX and mpost with option -recorder 
-    final static String SUFFIX_FLS = ".fls";
-
-    // both LatexProcessor and LatexPreProcessor 
-    // for LaTeX but also for mpost 
-    final static String SUFFIX_LOG = ".log";
-
-    // both LatexProcessor and LatexPreProcessor 
-    final static String SUFFIX_PDF = ".pdf";
-
-
     // odt2doc 
     private final static String SUFFIX_ODT = ".odt";
 
@@ -99,24 +83,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // needed by makeglossaries 
     final static String SUFFIX_VOID = "";
 
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final Settings settings;
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final CommandExecutor executor;
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final LogWrapper log;
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final TexFileUtils fileUtils;
-
     private final ParameterAdapter paramAdapt;
 
-
     private final LatexPreProcessor preProc;
-
 
     // also for tests 
     LatexProcessor(Settings settings, 
@@ -124,10 +93,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		   LogWrapper log, 
 		   TexFileUtils fileUtils,
 		   ParameterAdapter paramAdapt) {
-        this.settings = settings;
-        this.log = log;
-        this.executor = executor;
-        this.fileUtils = fileUtils;
+	super(settings, executor, log, fileUtils);
 	this.paramAdapt = paramAdapt;
 	this.preProc = new LatexPreProcessor
 	    (this.settings, this.executor, this.log, this.fileUtils);
@@ -254,18 +220,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
 	this.preProc.processGraphicsSelectMain(orgFiles);
     }
-
-
-
- 
-
- 
-
-
-
-
-
-
 
     /**
      * Defines clearing ant-task and the maven plugin 
@@ -533,32 +487,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Logs if an error occurred running <code>command</code> 
-     * by detecting that the log file <code>logFile</code> has not been created 
-     * or by detecting the error pattern <code>pattern</code> 
-     * in <code>logFile</code>. 
-     *
-     * @throws BuildExecutionException
-     *    if <code>logFile</code> does not exist or is not readable. 
-     * @see #logWarns(File, String, String) 
-     */
-    // for both LatexProcessor and LatexPreProcessor 
-    private void logErrs(File logFile, String command, String pattern) 
-	throws BuildExecutionException {
-
-	if (logFile.exists()) {
-	    // matchInFile may throw BuildExecutionException
-	    if (this.fileUtils.matchInFile(logFile, pattern)) {
-		log.warn("Running " + command + " failed. For details see " + 
-			 logFile.getName() + ". ");
-	    }
-	} else {
-	    this.log.error("Running " + command + " failed: no log file " + 
-			   logFile.getName() + " found. ");
-	}
-    }
-
-    /**
      * Logs warnings detected in the according log-file <code>logFile</code>: 
      * Before logging warnings, 
      * errors are logged via {@link #logErrs(File, String)}. 
@@ -602,25 +530,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 				       this.settings.getPatternWarnLatex())) {
 	    log.warn("Running " + command + " emited warnings. ");
 	}
-    }
-
-    /**
-     * Logs if a warning occurred running <code>command</code> 
-     * by detecting the warning pattern <code>pattern</code> 
-     * in <code>logFile</code>. 
-     * If <code>logFile</code> then an error occurred 
-     * making detection of warnings obsolete. 
-     *
-     * @see #logErrs(File, String, String) 
-     */
-    // for both LatexProcessor and LatexPreProcessor 
-    private void logWarns(File logFile, String command, String pattern) 
-    	throws BuildExecutionException {
-    	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
-    	    log.warn("Running " + command + 
-    		     " emitted warnings. For details see " + 
-    		     logFile.getName() + ". ");
-    	}
     }
 
     /**
@@ -711,20 +620,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// (errors are emitted by runLatex2pdf and that like.)
 	runPdf2txt      (texFile);
     }
-
-    // private boolean update(File source, File target) {
-    // 	if (!target.exists()) {
-    // 	    return true;
-    // 	}
-    // 	assert source.exists();
-
-    // 	return source.lastModified() > target.lastModified();
-    // }
-
-
-    // suffix for tex files containing text and including pdf 
-
-
 
     /**
      * Runs the latex2rtf command 
@@ -913,34 +808,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// FIXME: what about error logging? 
 	// Seems not to create a log-file. 
     }
-
-    /**
-     * Returns an array of strings, 
-     * each entry with a single option given by <code>options</code> 
-     * except the last one which is the name of <code>file</code>. 
-     *
-     * @param options
-     *    the options string. The individual options 
-     *    are expected to be separated by a single blank. 
-     * @param file
-     *    
-     * @return
-     *    An array of strings: 
-     *    The 0th entry is the file name, 
-     *    The others, if <code>options</code> is not empty, 
-     *    are the options in <code>options</code>. 
-     */
-    // for both LatexProcessor and LatexPreProcessor 
-    static String[] buildArguments(String options, File file) {
-    	if (options.isEmpty()) {
-    	    return new String[] {file.getName()};
-    	}
-        String[] optionsArr = options.split(" ");
-        String[] args = Arrays.copyOf(optionsArr, optionsArr.length + 1);
-        args[optionsArr.length] = file.getName();
-	
-    	return args;
-     }
 
     /**
      * Returns whether another LaTeX run is necessary 
@@ -1169,5 +1036,3 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	logErrs(logFile, command);
     }
  }
-
-

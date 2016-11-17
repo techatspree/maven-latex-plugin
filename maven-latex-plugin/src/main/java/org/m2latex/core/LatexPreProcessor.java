@@ -18,17 +18,13 @@
 
 package org.m2latex.core;
 
-import org.m2latex.mojo.CfgLatexMojo;
-
 import java.io.File;
 import java.io.FileFilter;
 
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
-
 
 /**
  * The latex pre-processor is for preprocessing graphic files 
@@ -53,26 +49,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
     } // static 
 
-    private final Collection<File> latexMainFiles = new ArrayList<File>();
-
-    // both LatexProcessor and LatexPreProcessor 
-    // LaTeX and mpost with option -recorder 
-    final static String SUFFIX_FLS = ".fls";
-    // both LatexProcessor and LatexPreProcessor 
-    // for LaTeX but also for mpost 
-    final static String SUFFIX_LOG = ".log";
- 
+  
     // used in preprocessing only 
     private final static String SUFFIX_TEX = ".tex";
 
-    
     // home-brewed ending to represent tex including postscript 
     private final static String SUFFIX_PTX = ".ptx";// For preprocessing only 
     // the next two for preprocessing and in LatexDev only 
     final static String SUFFIX_PSTEX = ".pstex";
     final static String SUFFIX_PDFTEX = ".pdf_tex";
 
- 
     // suffix for xfig
     private final static String SUFFIX_FIG = ".fig";// in SuffixHandler only 
     // suffix for svg
@@ -85,32 +71,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private final static String SUFFIX_MPS = ".mps";// For preprocessing only 
     private final static String SUFFIX_MPX = ".mpx";// For preprocessing only 
 
-
-    // both LatexProcessor and LatexPreProcessor 
-    final static String SUFFIX_PDF = ".pdf";
-
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final Settings settings;
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final CommandExecutor executor;
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final LogWrapper log;
-
-    // both LatexProcessor and LatexPreProcessor 
-    private final TexFileUtils fileUtils;
+    private final Collection<File> latexMainFiles;
 
     LatexPreProcessor(Settings settings, 
 		      CommandExecutor executor, 
 		      LogWrapper log, 
 		      TexFileUtils fileUtils) {
-        this.settings = settings;
-        this.log = log;
-        this.executor = executor;
-        this.fileUtils = fileUtils;
-   }
+	super(settings, executor, log, fileUtils);
+	this.latexMainFiles = new ArrayList<File>();
+     }
 
     private void processGraphics() throws BuildExecutionException {
 	File texDirectory = this.settings.getTexSrcDirectoryFile();
@@ -485,6 +454,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// may throw BuildExecutionException 
 	this.fileUtils.delete(mpFile, filter);
     }
+
     private void clearTargetSvg(File svgFile) 
 	throws BuildExecutionException {
 
@@ -536,89 +506,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	}
    }
-
-
-
-    /**
-     * Logs if an error occurred running <code>command</code> 
-     * by detecting that the log file <code>logFile</code> has not been created 
-     * or by detecting the error pattern <code>pattern</code> 
-     * in <code>logFile</code>. 
-     *
-     * @throws BuildExecutionException
-     *    if <code>logFile</code> does not exist or is not readable. 
-     * @see #logWarns(File, String, String) 
-     */
-    // for both LatexProcessor and LatexPreProcessor 
-    private void logErrs(File logFile, String command, String pattern) 
-    	throws BuildExecutionException {
-
-    	if (logFile.exists()) {
-    	    // matchInFile may throw BuildExecutionException
-    	    if (this.fileUtils.matchInFile(logFile, pattern)) {
-    		log.warn("Running " + command + " failed. For details see " + 
-    			 logFile.getName() + ". ");
-    	    }
-    	} else {
-    	    this.log.error("Running " + command + " failed: no log file " + 
-    			   logFile.getName() + " found. ");
-    	}
-    }
-
-    /**
-     * Logs if a warning occurred running <code>command</code> 
-     * by detecting the warning pattern <code>pattern</code> 
-     * in <code>logFile</code>. 
-     * If <code>logFile</code> then an error occurred 
-     * making detection of warnings obsolete. 
-     *
-     * @see #logErrs(File, String, String) 
-     */
-    // for both LatexProcessor and LatexPreProcessor 
-    private void logWarns(File logFile, String command, String pattern) 
-    	throws BuildExecutionException {
-    	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
-    	    log.warn("Running " + command + 
-    		     " emitted warnings. For details see " + 
-    		     logFile.getName() + ". ");
-    	}
-    }
-
-    // for both LatexProcessor and LatexPreProcessor 
-    private boolean update(File source, File target) {
-	if (!target.exists()) {
-	    return true;
-	}
-	assert source.exists();
-
-	return source.lastModified() > target.lastModified();
-    }
-
-    /**
-     * Returns an array of strings, 
-     * each entry with a single option given by <code>options</code> 
-     * except the last one which is the name of <code>file</code>. 
-     *
-     * @param options
-     *    the options string. The individual options 
-     *    are expected to be separated by a single blank. 
-     * @param file
-     *    
-     * @return
-     *    An array of strings: 
-     *    The 0th entry is the file name, 
-     *    The others, if <code>options</code> is not empty, 
-     *    are the options in <code>options</code>. 
-     */
-    // for both LatexProcessor and LatexPreProcessor 
-    static String[] buildArguments(String options, File file) {
-    	if (options.isEmpty()) {
-    	    return new String[] {file.getName()};
-    	}
-        String[] optionsArr = options.split(" ");
-        String[] args = Arrays.copyOf(optionsArr, optionsArr.length + 1);
-        args[optionsArr.length] = file.getName();
-	
-    	return args;
-     }
+ 
+    // FIXME: suffix for tex files containing text and including pdf 
  }
