@@ -88,9 +88,9 @@ abstract class AbstractLatexMojo extends AbstractMojo
 	    // i.e. object is not created by Maven
 	    this.settings = new Settings();
 	}
-	this.settings.setBaseDirectory( this.baseDirectory );
-	this.settings.setTargetSiteDirectory( this.targetSiteDirectory );
-	this.settings.setTargetDirectory( this.targetDirectory );
+	this.settings.setBaseDirectory(this.baseDirectory);
+	this.settings.setTargetSiteDirectory(this.targetSiteDirectory);
+	this.settings.setTargetDirectory(this.targetDirectory);
 
 	this.latexProcessor = new LatexProcessor(this.settings,  
 						 new MavenLogWrapper(getLog()), 
