@@ -25,7 +25,8 @@ public enum LatexDev {
 	    return "pdf";
 	}
 	String getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
-	    return fileUtils.replaceSuffix(srcFile, LatexProcessor.SUFFIX_PDF)
+	    return fileUtils.replaceSuffix(srcFile, 
+					   LatexPreProcessor.SUFFIX_PDF)
 		.getName();
 	}
     },
@@ -41,7 +42,8 @@ public enum LatexDev {
 	    return "eps";
 	}
 	String getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
-	    return fileUtils.replaceSuffix(srcFile, LatexProcessor.SUFFIX_PSTEX)
+	    return fileUtils.replaceSuffix(srcFile, 
+					   LatexPreProcessor.SUFFIX_PSTEX)
 		.getName();
 	}
     };
