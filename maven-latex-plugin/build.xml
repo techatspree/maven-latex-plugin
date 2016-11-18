@@ -126,6 +126,7 @@
 	<metapostOptions>
 	  -interaction=nonstopmode -recorder -s prologues=2
 	</metapostOptions>
+
 	<latex2pdfOptions>
 	  -interaction=nonstopmode
 	  -synctex=1 
