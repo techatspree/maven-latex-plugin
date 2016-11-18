@@ -33,7 +33,7 @@ import java.util.HashMap;
  * and in finding the latex main files 
  * which is done in {@link #processGraphicsSelectMain(Collection)} 
  * and in clearing the created files from the latex source directory 
- * in {@link #clearCreated(Collection)}. 
+ * in {@link #clearCreated(File)}. 
  */
 public class LatexPreProcessor extends AbstractLatexProcessor {
 

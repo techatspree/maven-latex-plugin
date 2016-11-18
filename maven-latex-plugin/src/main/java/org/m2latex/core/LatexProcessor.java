@@ -51,7 +51,7 @@ import java.util.Collection;
  * use methods {@link #processLatex2rtf(File)}, 
  * {@link #processLatex2rtf(File)}, {@link #processLatex2pdf(File)}, 
  * {@link #processLatex2html(File)}, {@link #processLatex2odt(File)}, 
- * {@link #processLatex2docx(File)} and {@link #processLatex2tex(File)}. 
+ * {@link #processLatex2docx(File)} and {@link #processLatex2txt(File)}. 
  */
 public class LatexProcessor extends AbstractLatexProcessor {
 
@@ -133,7 +133,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * This consists in reading the parameters 
      * via {@link ParameterAdapter#initialize()} 
      * processing graphic-files 
-     * via {@link #processGraphicsSelectMain(Collection)} 
+     * via {@link LatexPreProcessor#processGraphicsSelectMain(Collection)} 
      * and processing the tex main files 
      * via {@link Target#processSource(LatexProcessor, File)}. 
      * The resulting files are identified by its suffixes 
