@@ -546,13 +546,25 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of latex main file " + texFile + ". ");
 
 	// filter to delete 
-	String name1 = texFile.getName();
-	final String root = name1.substring(0, name1.lastIndexOf("."));
+	final String root = this.fileUtils.getFileNameWithoutSuffix(texFile);
 	FileFilter filter = new FileFilter() {
 		public boolean accept(File file) {
-		    return !file.isDirectory()
-			&&  file.getName().startsWith(root)
-			&& !file.equals(texFile);
+		    if (file.isDirectory() || file.equals(texFile)) {
+			return false;
+		    }
+		    String fRoot = LatexPreProcessor.this.fileUtils
+			.getFileNameWithoutSuffix(file);
+		    // FIXME: constant for literal '.synctex' 
+		    if (root.equals(fRoot) || (root+".synctex").equals(fRoot)) {
+			return true;
+		    }
+		    // FIXME: seems more appropriate to move to regex 
+		    // FIXME: not taken into account: 
+		    // e.g. png-files with fonts created by Target.html. 
+		    return LatexPreProcessor.this.fileUtils
+			.getFileFilter(texFile,
+				       Target.html.getOutputFileSuffixes())
+			.accept(file);
 		}
 	    };
 	// may throw BuildExecutionException 
