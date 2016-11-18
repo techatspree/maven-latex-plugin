@@ -481,20 +481,22 @@ public class LatexProcessor extends AbstractLatexProcessor {
         return needRun;
     }
 
+    /**
+     * Container which comprises, besides the latex main file 
+     * also several files creation of which shall be done once for ever. 
+     */
     static class LatexMainDesc {
 
 	private final File texFile;
-
 	private final File logFile;
-
 	private final File idxFile;
-
 	private final File gloFile;
 	private final File xxxFile;
 	private final File glgFile;
 
 	LatexMainDesc(File texFile, TexFileUtils fileUtils) {
 	    this.texFile = texFile;
+	    // FIXME: easier to create xxxFile first 
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
 	    this.gloFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
