@@ -43,6 +43,8 @@ interface TexFileUtils {
 				  File targetDir)
         throws BuildExecutionException, BuildFailureException;
 
+    String getFileNameWithoutSuffix(File file);
+
     String getSuffix(File file);
 
     File replaceSuffix(File file, String suffix);
