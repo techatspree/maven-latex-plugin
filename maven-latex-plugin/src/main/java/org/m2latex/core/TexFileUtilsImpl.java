@@ -56,7 +56,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @param dir
      *    a directory. 
      * @return
-     *    the ordered collection of files 
+     *    the ordered collection of files without directories 
      *    in folder <code>dir</code> and subfolder. 
      * @throws BuildExecutionException
      *    if <code>dir</code> is not a folder or not readable. 
@@ -212,23 +212,32 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     /**
      * Return the name of the given file without the suffix. 
+     * If the suffix is empty, this is just the name of that file. 
+     *
+     * @see #getSuffix(File)
      */
-    private String getFileNameWithoutSuffix(File texFile) {
-        String nameTexFile = texFile.getName();
-        String namePrefixTexFile = nameTexFile
-	    .substring(0, nameTexFile.lastIndexOf("."));
-        return namePrefixTexFile;
+    public String getFileNameWithoutSuffix(File file) {
+        String nameFile = file.getName();
+	int idxDot = nameFile.lastIndexOf(".");
+	return idxDot == -1
+	    ? nameFile
+	    : nameFile.substring(0, idxDot);
     }
 
     /**
      * Return the suffix of the name of the given file 
-     * including the <code>.</code>. 
+     * including the <code>.</code>, 
+     * except there is no <code>.</code>. 
+     * Then the suffix is empty. 
+     *
+     * @see #getFileNameWithoutSuffix(File)
      */
     public String getSuffix(File file) {
         String nameFile = file.getName();
-        String suffix = nameFile.substring(nameFile.lastIndexOf("."), 
-					   nameFile.length());
-        return suffix;
+	int idxDot = nameFile.lastIndexOf(".");
+	return idxDot == -1 
+	    ? "" 
+	    : nameFile.substring(idxDot, nameFile.length());
     }
 
     /**
