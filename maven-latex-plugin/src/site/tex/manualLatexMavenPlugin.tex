@@ -2276,16 +2276,17 @@ The odt2doc command to create MS word-formats from otd-files.
 \tt odt2docOptions      & \tt -fdocx          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the odt2doc command. 
-Above all specification of output format via the option '-f'. 
-The odt2doc command is invoked in the form 
-'{\tt odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
+The options of the command \$odt2docCommand. 
+Above all specification of output format 
+via the option '-f'. 
+Invocation is '{\tt odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
 All output formats are shown by '{\tt odt2doc --show}' 
 but the formats interesting in this context 
 are the following: 
 {\tt doc}, {\tt doc6}, {\tt doc95}, {\tt docbook}, {\tt docx}, 
 {\tt docx7}, {\tt ooxml} and {\tt rtf}. 
-Interesting also the verbosity options '{\tt -v}', '{\tt -vv}', '{\tt -vvv}' 
+Interesting also the verbosity options 
+'{\tt -v}', '{\tt -vv}', '{\tt -vvv}' 
 the timeout '{\tt -T=secs}' and '{\tt --preserve}' 
 to keep permissions and timestamp of the original document. 
 %The default value is '{\tt -fdocx}'. 
@@ -2301,7 +2302,7 @@ The pdf2txt command converting pdf into plain text.
 \tt pdf2txtOptions      & the empty string  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the pdf2txt command. 
+The options of the command \$pdf2txtCommand. 
 %The default value is the empty string. 
 \end{minipage}
 } \\
@@ -2500,6 +2501,25 @@ l.2500 \bla
 I ask myself how to detect this error in file line error mode! 
 
 %\bla
+
+
+A problem is also that the ending .svg may occur as a source 
+and as a target file of htlatex. 
+Thus {\tt mvn latex:clr} tries to delete the targets of the svg-files, 
+although these are not sources but themselves targets. 
+
+In target html, there seem to be created files {\tt$<$font$>$.png} 
+and things like that. 
+Neither {\tt mvn latex:html} copies them to the target folder 
+nor {\tt mvn latex:clr} deletes them in the source folder. 
+It seems more appropriate at least for target html, 
+to specify the files to be deleted and the files to be copied 
+through regular expressions, rather than by wildcards. 
+
+For {\tt mvn latex:clr} maybe a new parameter would be helpful: 
+suffixes to be ignored which also applies to creational targets, 
+because preprocessing otherwise yields a warning 
+for each of these files. 
 
 \bibliographystyle{alpha}
 \bibliography{lit}{}
