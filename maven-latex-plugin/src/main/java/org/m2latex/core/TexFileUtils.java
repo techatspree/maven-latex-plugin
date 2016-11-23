@@ -36,7 +36,7 @@ interface TexFileUtils {
 			    File targetBaseDir)
 	throws BuildExecutionException, BuildFailureException;
 
-    FileFilter getFileFilter(final File texFile, final String[] filesPatterns);
+    FileFilter getFileFilter(final File texFile, final Target target);
 
     void copyOutputToTargetFolder(File texFile, 
 				  FileFilter fileFilter, 
@@ -54,7 +54,7 @@ interface TexFileUtils {
     boolean matchInFile(File file, String pattern) 
 	throws BuildExecutionException;
 
-    void delete(File texFile, FileFilter filter) 
+    void deleteX(File texFile, FileFilter filter) 
 	throws BuildExecutionException;
 
     void cleanUp(Collection<File> sourceFiles, File texDir)
