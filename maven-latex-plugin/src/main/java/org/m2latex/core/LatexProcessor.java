@@ -137,7 +137,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * and processing the tex main files 
      * via {@link Target#processSource(LatexProcessor, File)}. 
      * The resulting files are identified by its suffixes 
-     * via  {@link Target#getOutputFileSuffixes()} 
+     * via  {@link Target#getPatternOutputFileSuffixes()} 
      * and copied to the target folder. 
      * Finally, by default a cleanup is performed 
      * invoking {@link TexFileUtils#cleanUp(Collection, File)}. 
@@ -525,7 +525,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#pdf
      */
     void processLatex2pdf(File texFile) throws BuildExecutionException {
-        log.info("Converting into pdf: LaTeX file " + texFile + ". ");
+        log.info("Converting into pdf: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 	processLatex2pdfCore(desc);
 
@@ -611,7 +611,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2html(File texFile)
 	throws BuildExecutionException {
-	log.info("Converting into html: LaTeX file " + texFile + ". ");
+	log.info("Converting into html: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 	preProcessLatex2pdf(desc);
 	// may throw BuildExecutionException 
@@ -631,7 +631,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#odt
      */
     void processLatex2odt(File texFile) throws BuildExecutionException {
-	log.info("Converting into odt: LaTeX file " + texFile + ". ");
+	log.info("Converting into odt: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
         preProcessLatex2pdf(desc);
 	// may throw BuildExecutionException 
@@ -652,7 +652,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#docx
      */
     void processLatex2docx(File texFile) throws BuildExecutionException {
-	log.info("Converting into doc(x): LaTeX file " + texFile + ". ");
+	log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 	preProcessLatex2pdf(desc);
 	// may throw BuildExecutionException 
@@ -674,7 +674,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#rtf
      */
     void processLatex2rtf(File texFile) throws BuildExecutionException {
-	log.info("Converting into rtf: LaTeX file " + texFile + ". ");
+	log.info("Converting into rtf: LaTeX file '" + texFile + "'. ");
 	// may throw BuildExecutionException 
 	runLatex2rtf(texFile);
     }
@@ -689,7 +689,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#rtf
      */
     void processLatex2txt(File texFile) throws BuildExecutionException {
-	log.info("Converting into txt: LaTeX file " + texFile + ". ");
+	log.info("Converting into txt: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 	processLatex2pdfCore(desc);
 	// warnings emitted by LaTex are ignored 
@@ -723,7 +723,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	}
 
 	String command = this.settings.getBibtexCommand();
-	log.debug("Running " + command + " on " + auxFile.getName() + ". ");
+	log.debug("Running " + command + " on '" + auxFile.getName() + "'. ");
 
 	String[] args = buildArguments(this.settings.getBibtexOptions(), 
 				       auxFile);
@@ -785,7 +785,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildExecutionException {
 	String command = this.settings.getMakeIndexCommand();
 	File idxFile = desc.idxFile;
-	log.debug("Running " + command  + " on " + idxFile.getName() + ". ");
+	log.debug("Running " + command  + " on '" + idxFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
 				       idxFile);
 	// may throw BuildExecutionException 
@@ -830,7 +830,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// file name without ending: parameter for makeglossaries 
 	File xxxFile = desc.xxxFile;
 	String command = this.settings.getMakeGlossariesCommand();
-	log.debug("Running " + command + " on " + xxxFile.getName()+ ". ");
+	log.debug("Running " + command + " on '" + xxxFile.getName()+ "'. ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
 				       xxxFile);
 	// may throw BuildExecutionException 
@@ -872,7 +872,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	File texFile = desc.texFile;
 	String command = this.settings.getLatex2pdfCommand();
-	log.debug("Running " + command + " on " + texFile.getName() + ". ");
+	log.debug("Running " + command + " on '" + texFile.getName() + "'. ");
 
 	String[] args = buildArguments(this.settings.getLatex2pdfOptions(), 
 				       texFile);
@@ -904,7 +904,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	File texFile = desc.texFile;
 	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + " on " + texFile.getName() + ". ");
+        log.debug("Running " + command + " on '" + texFile.getName() + "'. ");
 
         String[] args = buildHtlatexArguments(texFile);
 	// may throw BuildExecutionException 
@@ -947,7 +947,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
             throws BuildExecutionException {
 
 	String command = this.settings.getLatex2rtfCommand();
-        log.debug("Running " + command + " on " + texFile.getName() + ". ");
+        log.debug("Running " + command + " on '" + texFile.getName() + "'. ");
 
         String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
 				       texFile);
@@ -988,7 +988,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	File texFile = desc.texFile;
 	String command = this.settings.getTex4htCommand();
-        log.debug("Running " + command + " on" + texFile.getName() + ". ");
+        log.debug("Running " + command + " on '" + texFile.getName() + "'. ");
 
         String[] args = new String[] {
 	    texFile.getName(),
@@ -1032,7 +1032,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
 	String command = this.settings.getOdt2docCommand();
-	log.debug("Running " + command + " on " + odtFile.getName() + ". ");
+	log.debug("Running " + command + " on '" + odtFile.getName() + "'. ");
 
 	String[] args = buildArguments(this.settings.getOdt2docOptions(),
 				       odtFile);
@@ -1063,7 +1063,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
 	String command = this.settings.getPdf2txtCommand();
-	log.debug("Running " + command + " on " + pdfFile.getName() + ". ");
+	log.debug("Running " + command + " on '" + pdfFile.getName() + "'. ");
 
 	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
 				       pdfFile);
