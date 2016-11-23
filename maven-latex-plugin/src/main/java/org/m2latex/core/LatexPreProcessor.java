@@ -490,7 +490,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    };
 
 	// may throw BuildExecutionException 
-	this.fileUtils.delete(mpFile, filter);
+	this.fileUtils.deleteX(mpFile, filter);
     }
 
     /**
@@ -537,8 +537,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetTex(final File texFile) 
 	throws BuildExecutionException {
 
-	// may throw BuildExecutionException
+	// exclude files which are no latex main files 
 	if (!this.fileUtils
+	    // may throw BuildExecutionException
 	    .matchInFile(texFile, 
 			 this.settings.getPatternLatexMainFile())) {
 	    return;
@@ -554,21 +555,23 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		    }
 		    String fRoot = LatexPreProcessor.this.fileUtils
 			.getFileNameWithoutSuffix(file);
-		    // FIXME: constant for literal '.synctex' 
-		    if (root.equals(fRoot) || (root+".synctex").equals(fRoot)) {
+
+		    // FIXME: constant for literals '.synctex' and '.out'
+		    if (root.equals(fRoot) || 
+			(root+".synctex.gz").equals(file.getName()) || 
+			(root+".out.ps"    ).equals(file.getName())) {
 			return true;
 		    }
 		    // FIXME: seems more appropriate to move to regex 
 		    // FIXME: not taken into account: 
 		    // e.g. png-files with fonts created by Target.html. 
 		    return LatexPreProcessor.this.fileUtils
-			.getFileFilter(texFile,
-				       Target.html.getOutputFileSuffixes())
+			.getFileFilter(texFile, Target.html)
 			.accept(file);
 		}
 	    };
 	// may throw BuildExecutionException 
-	this.fileUtils.delete(texFile, filter);
+	this.fileUtils.deleteX(texFile, filter);
 	// may throw BuildExecutionException 
 	new File(texFile.getParent(), "zz" + root + SUFFIX_EPS).delete();
     }
