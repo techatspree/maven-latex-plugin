@@ -28,11 +28,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build documents in plain text weakly formatted (e.g. symbols).
- *
- * @goal txt
- * @phase site
  */
-//@Mojo( name = "txt")
+@Mojo(name = "txt")
 public class TxtMojo extends CfgLatexMojo {
 
    public SortedSet<Target> getTargetSet() {

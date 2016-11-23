@@ -28,11 +28,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build documents in msword formats, above all docx from LaTeX sources.
- *
- * @goal docx
- * @phase site
  */
-//@Mojo( name = "msword")
+@Mojo(name = "docx")
 public class DocxMojo extends CfgLatexMojo {
 
     public SortedSet<Target> getTargetSet() {

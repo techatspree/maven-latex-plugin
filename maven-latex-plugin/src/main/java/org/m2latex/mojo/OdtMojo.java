@@ -28,11 +28,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build documents in open office formats from LaTeX sources.
- *
- * @goal odt
- * @phase site
  */
-//@Mojo( name = "odt")
+@Mojo(name = "odt")
 public class OdtMojo extends CfgLatexMojo {
 
     public SortedSet<Target> getTargetSet() {

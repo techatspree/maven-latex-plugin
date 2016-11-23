@@ -27,15 +27,13 @@ import java.util.TreeSet;
 import org.m2latex.core.BuildExecutionException;
 
 import org.apache.maven.plugins.annotations.Mojo;
+
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Clears all created files in the folders containing the LaTeX sources.
- *
- * @goal grp
- * @phase site
  */
-//@Mojo( name = "grp")
+@Mojo(name = "grp")
 public class GraphicsMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 

@@ -26,14 +26,12 @@ import java.util.TreeSet;
 
 import org.m2latex.core.Target;
 
+import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build HTML documents and XHTML documents from LaTeX sources.
- *
- * @goal html
- * @phase site
  */
-//@Mojo( name = "html")
+@Mojo(name = "html")
 public class HtmlMojo extends CfgLatexMojo {
 
    public SortedSet<Target> getTargetSet() {

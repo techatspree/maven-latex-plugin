@@ -28,11 +28,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build PDF or DVI documents from LaTeX sources.
- * 
- * @goal pdf
- * @phase site
  */
-//@Mojo( name = "latex")
+@Mojo(name = "pdf")
 public class PdfMojo extends CfgLatexMojo {
 
    public SortedSet<Target> getTargetSet() {

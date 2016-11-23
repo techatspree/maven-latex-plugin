@@ -28,11 +28,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build rtf documents from LaTeX sources.
- * 
- * @goal rtf
- * @phase site
  */
-//@Mojo( name = "latex2rtf")
+@Mojo(name = "rtf")
 public class RtfMojo extends CfgLatexMojo {
 
    public SortedSet<Target> getTargetSet() {

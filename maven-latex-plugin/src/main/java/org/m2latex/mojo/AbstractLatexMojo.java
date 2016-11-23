@@ -33,6 +33,8 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 
+import org.apache.maven.plugins.annotations.Parameter;
+
 /**
  * Abstract base class for all mojos. 
  *
@@ -43,38 +45,37 @@ abstract class AbstractLatexMojo extends AbstractMojo
     /**
      * The base directory of this maven project. 
      * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
-     * 
-     * @parameter property="basedir"
-     * @readonly
      */
+    @Parameter(name = "baseDirectory", 
+	       defaultValue = "${basedir}", 
+	       readonly = true)
     protected File baseDirectory;
 
     /**
      * The target directory of this maven project. 
      * Reinitializes {@link Settings#targetDirectory} 
      * via {@link #initialize()}. 
-     * 
-     * @parameter property="project.build.directory"
-     * @readonly
      */
+    @Parameter(name = "targetDirectory", 
+	       defaultValue = "${project.build.directory}", 
+	       readonly = true)
     protected File targetDirectory;
 
     /**
      * The target site directory of this maven project. 
      * Reinitializes {@link Settings#baseDirectory} via {@link #initialize()}. 
-     * 
-     * @parameter property="project.reporting.outputDirectory"
-     * @readonly
      */
+    @Parameter(name = "targetSiteDirectory", 
+	       defaultValue = "${project.reporting.outputDirectory}", 
+	       readonly = true)
     protected File targetSiteDirectory;
 
     /**
      * Contains all parameters for executing this maven plugin. 
      * If not set in the pom prior to execution, 
      * is set in {@link #initialize()}. 
-     * 
-     * @parameter
      */
+    @Parameter(name = "settings")
     protected Settings settings;
 
     // set by {@link #initialize()}. 
