@@ -151,36 +151,84 @@ Apache Maven 3.2.1
 (ea8b2b07643dbb1b84b6d16e1f08391b666bc1e9; 
 2014-02-14T18:37:52+01:00). 
 \end{verbatim}
-The java\index{java} version is {\tt 1.8.0\_101, vendor: Oracle Corporation}. 
+%
+Both, ant and maven are written in java and require a java installation. 
+The java\index{java} version used for tests 
+is {\tt 1.8.0\_101, vendor: Oracle Corporation}. 
+
 
 So, a java installation is the base for running either the ant-task 
 or the maven-plugin. 
+Also this plugin is written in java. 
 To use the maven-plugin, of course maven must be installed 
 and to use the ant-task, ant must be installed. 
 
 The ant-task just passes parameters in the build file to the core 
 and accordingly the maven-plugin passes parameters in the pom 
-to the core. 
+to the core of this software. 
 The core just invokes various programs to do the actual work. 
 \index{ant-task}
 
+Besides plain building of documentation, 
+this software also supports documentation development. 
+\LaTeX{} and related programs are based on text files mainly 
+and so a good editor is required for development. 
+The author recommends and uses good old 
+{\tt GNU Emacs 24.3.1 (x86\_64-suse-linux-gnu, GTK+ Version 3.16.7)} 
+together with several packages to support 
+various file formats. 
+To list the available packages type 
+{\tt M-x list-packages}. 
+For comfortable development with \LaTeX, 
+the {\tt auctex} package, version {\tt 11.88} is recommended. 
+The version is displayed from within emacs 
+by typing {\tt C-h v AUCTeX-version RET}. 
+For an overview on {\tt auctex} see \cite{AucTeX}. 
+
+
+FIXME: gnuplot-mode expects file extension gp. 
+Should be made configurable. 
+
+To edit metapost, the mode built-in mode {\tt Metamode} is used. 
+
+Built-in mode {\tt Docview} to view pdf, ps and dvi. 
+
+latexmk
+
+Builtin modes bib-mode and bibtex
+
+Built in reftex-modes
+
+Useful: 
+ac-math, auto-complete-auctex
+
 Depending on what kinds of graphic formats are used, 
 the following programs are required: 
+%
+\begin{itemize}
+\item
 To convert the \gls{fig}-files into \gls{pdf}-files, 
 by default {\tt fig2dev}\index{fig2dev} is used. 
 It makes sense to have {\tt xfig}\index{xfig} installed 
 to create and edit fig-files, but this is not mandatory. 
+\item
 To convert gnuplot files into pdf-files, there is no alternative, 
 to have installed {\tt gnuplot}\index{gnuplot}. 
 It serves as an interpreter and also as a converter. 
 Strictly speaking, only the latter functionality is required here. 
+\item
 To convert \gls{mp}-files into \gls{eps}-files, 
 \index{mpost}\index{metapost}
 the interpreter {\tt mpost} or equivalent is required. 
 This comes with a standard tex-installation. 
+With the standard configuration, 
+the resultign eps-file can be viewed with {\tt ghostscript} 
+and for developping it is recommended to have {\tt ghostscript} installed. 
+\item
 To include \gls{svg}-files into \LaTeX\index{svg}, 
 {\tt inkscape}\index{inkscape} must be installed. 
-It also serves to create and edit svg-files. 
+It also serves to create and to edit svg-files. 
+\end{itemize}
 
 
 
@@ -195,6 +243,13 @@ To include graphics, the grapics bundle described in~\cite{GraX} is required,
 except for svg-files which requires the svg-package 
 described in~\cite{SvgP}. 
 
+As the set of required software depends on the graphic formats 
+which shall be imported, 
+it depends also on the set of ouput-formats 
+to be supported: 
+%
+\begin{itemize}
+\item
 To create pdf-files from \LaTeX-files we use {\tt pdflatex} 
 or some other kind of \LaTeX{} creating pdf-files 
 like {\tt xelatex} or {\tt lualatex}. 
@@ -211,6 +266,17 @@ or {\tt xindy}, depending on the parametrization of {\tt glossaries}.
 Both, {\tt makeglossaries} and {\tt xindy} are written in perl, 
 which shall also be installed if a glossary is required. 
 
+The package {\tt rerunfilecheck} is in any standard \LaTeX-installation. 
+It is almost mandatory 
+because this software presupposes {\tt rerunfilecheck} 
+to ensure that the table of contents, list of figures, list of tables, 
+the index and the glossary are up to date. 
+
+It is standard to endow a pdf-file with hyperlinks. 
+To support this, the package {\tt hyperref} is required. 
+
+****
+\item
 To create \gls{html}-files, 
 or to be more precise any kind of \gls{sgml} and \gls{xml}, 
 from \LaTeX-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
@@ -220,22 +286,26 @@ Thus open office documents are created in two steps,
 the first is to create pdf-files with the according tools, 
 the second one is done by {\tt htlatex} or that like. 
 \index{htlatex}\index{htxelatex}
-
+\item
 To create rtf-files, currently {\tt latex2rtf} is used. 
 Note that this does not require {\tt pdflatex}. 
 As a drawback, not all \LaTeX-packages are supported. 
 \index{latex2rtf}
-
+\item
 MS word documents are created from open office documents via {\tt odt2doc} 
-and thus require three steps. 
+and thus require three steps 
+and so the according tool chain. 
 \index{odt2doc} 
-
+\item
 Finally, there is a way, to create plain text files from the pdf-files 
 via {\tt pdftotext}. 
 The way from \LaTeX{} to text via pdf makes sense 
-because that text is well formatted 
-and may contain unicode symbols like $\pi$. 
+because that text is well formatted math mode symbols like $\pi$. 
+and because table of contents, index, glossary and that like are included. 
+So, for that task, besides {\tt pdftotext} the whole toolchain to create
+pdf-files is required. 
 \index{pdftotext}
+\end{itemize}
 
 So to run this software, the abovementioned programs 
 or at least the subset used, must be installed. 
@@ -300,7 +370,7 @@ and run {\tt ant latex:cfg} to create this manual.
 Mixing ant and maven builds is not so good. 
 One may always recover by just creating with maven. 
 
-
+\subsubsection{Test}
 
 \section{Usage of this Plugin and of this Task}\label{sec:usage}
 
@@ -656,7 +726,10 @@ via {\tt \textbackslash includegraphics}.
 \index{xfig}
 \index{fig2dev}
 Currently, only figures drawn with {\tt xfig}, or, to be more precise, 
-figures stored in .fig-files are supported. 
+figures stored in the transfig image file format 
+with file extension {\tt .fig} are supported. 
+The file extension .fig is also used by matlab to store plots 
+but this is something different. 
 To export a file {\tt xxx.fig} into several external formats, 
 {\tt xfig} uses {\tt fig2dev}. 
 Among others, {\tt fig2dev} supports export to mixed pdf and \LaTeX{}: 
@@ -754,8 +827,14 @@ which is typeset with a postscipt font.
 
 This software supports plots drawn with {\tt gnuplot}, or, to be more precise, 
 figures stored in .plt-files created by {\tt gnuplot}. 
+Note that there seems to official file extension 
+to identify gnuplot files. 
+From the most common extensions {\tt.plt}, {\tt.gpi} and {\tt.gp} 
+we have choosen an arbitrary one. 
+% FIXME: should be configurable. 
 To export a file {\tt xxx.plt} into several external formats, 
 it uses {\tt gnuplot} itself. 
+% FIXME: look at https://www.file-extensions.org/
 According to the manual~\cite{GnuPlot}, Part IV, 
 {\tt gnuplot} supports output formats through so called {\em terminals}. 
 Among those are several ones intended for inclusion into latex-files, 
@@ -837,7 +916,12 @@ Although seemingly supported by TeX only,
 {\tt metapost} is interesting at its own, 
 as it is a graphical programming language, 
 Turing complete, much like postscript. 
-Files containing {\tt metapost} have the ending {\tt mp}. 
+Files containing {\tt metapost} have the ending {\tt .mp}. 
+Note that there are other graphic formats 
+like monochrome pictures in TIFF-format 
+which are identified with the same extension 
+but the metapost format has nothing to do with this. 
+
 The interpreter for {\tt metapost} 
 is given by the parameter {\tt metapostCommand} 
 which defaults to {\tt mpost}. 
@@ -2526,10 +2610,11 @@ for each of these files.
 
 \printindex
 \printglossaries
+%  "-src-specials -shell-escape -recorder" 
 \end{document}
 
 %%% Local Variables: 
 %%% mode: latex
+%%% TeX-command-extra-options:"-src-specials -recorder-shell-escape " 
 %%% TeX-master: t
-%%% TeX-command-extra-options: "-src-specials -recorder -shell-escape"
 %%% End: 
