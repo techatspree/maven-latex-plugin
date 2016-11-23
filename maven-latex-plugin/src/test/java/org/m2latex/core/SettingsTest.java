@@ -40,7 +40,7 @@ public class SettingsTest {
 	settings.setTargetSiteDirectory(targetSiteDirectory);
 
 	// test getTexSrcDirectoryFile() and setTexSrcDirectory(...) 
-	assertEquals(new File(baseDirectory, "src/site/tex"),
+	assertEquals(new File(baseDirectory, Settings.SST),
 		     settings.getTexSrcDirectoryFile());
 	settings.setTexSrcDirectory("site");
 	settings.setBaseDirectory(targetDirectory);
