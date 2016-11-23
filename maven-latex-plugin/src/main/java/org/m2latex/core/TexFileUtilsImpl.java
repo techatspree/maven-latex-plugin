@@ -190,22 +190,22 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// Hm,... this means even that there is no latex file. 
 	// Also, there may be no file created although outputFiles is not empty
         if (outputFiles.length == 0) {
-            log.warn("LaTeX file " + texFile + 
-		     " did not generate any output in " + texFileDir + "! " );
+            log.warn("LaTeX file '" + texFile + 
+		     "' did not generate any output in '" + texFileDir + "'! ");
         }
 
 	File file;
 	for (int idx = 0; idx < outputFiles.length; idx++) {
 	    file = outputFiles[idx];
 	    if (fileFilter.accept(file)) {
-		log.info("Copying " + file.getName() + 
-			 " to " + targetDir + ". ");
+		log.info("Copying '" + file.getName() + 
+			 "' to '" + targetDir + "'. ");
 		try {
 		    FileUtils.copyFileToDirectory(file, targetDir);
 		} catch (IOException e) {
 		    throw new BuildExecutionException
-			("Error copying " + file.getName() + 
-			 " to " + targetDir + ". ",
+			("Error copying '" + file.getName() + 
+			 "' to '" + targetDir + "'. ",
 			 e);
 		}
 	    }
