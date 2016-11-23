@@ -80,6 +80,7 @@ public class LatexProcessorTest {
 
 
 
+    //@Ignore 
     @Test public void testProcessLatexSimple()
 	throws BuildExecutionException {
 
@@ -124,6 +125,7 @@ public class LatexProcessorTest {
         verify();
     }
 
+    //@Ignore 
     @Test public void testProcessLatexWithBibtex() 
 	throws BuildExecutionException {
 
@@ -167,6 +169,7 @@ public class LatexProcessorTest {
         verify();
     }
 
+    //@Ignore 
     @Test public void testProcessLatex2html() throws BuildExecutionException {
 
 	mockConstrLatexMainDesc();
@@ -213,14 +216,14 @@ public class LatexProcessorTest {
 
 
     private void mockConstrLatexMainDesc() {
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
+	fileUtilsCtrl.setReturnValue(xxxFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	fileUtilsCtrl.setReturnValue(logFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
 	fileUtilsCtrl.setReturnValue(idxFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
 	fileUtilsCtrl.setReturnValue(gloFile);
-	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
-	fileUtilsCtrl.setReturnValue(xxxFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLG);
 	fileUtilsCtrl.setReturnValue(glgFile);
     }
