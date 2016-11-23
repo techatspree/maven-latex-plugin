@@ -145,18 +145,20 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    replacing the suffix of <code>file</code> 
      *    with the pattern given by <code>filesPatterns</code>. 
      */
-    // used in LatexProcessorOnly: in methods 
-    // - create on tex-file to determine output files. 
-    // - clearGraphics to clear xxx1.pmx-files 
-    // - clearFromLatexMain to clear files 
-    public FileFilter getFileFilter(File file, String[] filesPatterns) {
+    // used only: in methods 
+    // - LatexProcessor.create on tex-file to determine output files. 
+    // - LatexPreProcessor.clearTargetTex to clear files 
+    public FileFilter getFileFilter(File file, final Target target) {
+	String suffixPattern = target.getPatternOutputFileSuffixes();
         String filePrefix = getFileNameWithoutSuffix(file);
-        String[] fileNames = new String[filesPatterns.length];
-        for (int i = 0; i < filesPatterns.length; i++) {
-            fileNames[i] = filePrefix + filesPatterns[i];
-        }
+        final String filePattern= "^" + filePrefix + suffixPattern + "$";
 
-	return new WildcardFileFilter(fileNames);
+	return new FileFilter() {
+	    public boolean accept(File file) {
+		return file.getName().matches(filePattern)
+		    || file.getName().matches(target.getPatternOutputFiles());
+	    }
+	};
     }
 
     /**
@@ -341,7 +343,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * Deletes all files in the same folder as <code>pFile</code> directly, 
      * i.e. not in subfolders, which are accepted by <code>filter</code>. 
      */
-    public void delete(File pFile, FileFilter filter) 
+    public void deleteX(File pFile, FileFilter filter) 
 	throws BuildExecutionException {
 
 	File dir = pFile.getParentFile();
