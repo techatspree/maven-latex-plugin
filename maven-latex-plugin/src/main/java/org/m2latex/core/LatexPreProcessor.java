@@ -147,8 +147,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	svg {
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
-		proc.log.info("Processing svg-file " + file + 
-		 	      " done implicitly in latex run. ");
+		proc.log.info("Processing svg-file '" + file + 
+		 	      "' done implicitly in latex run. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
@@ -161,8 +161,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	jpg {
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
-		proc.log.info("No processing for jpg-file " + file + 
-			      " needed. ");
+		proc.log.info("No processing for jpg-file '" + file + 
+			      "' needed. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
@@ -174,8 +174,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	png {
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildExecutionException {
-		proc.log.info("No processing for png-file " + file + 
-			      " needed. ");
+		proc.log.info("No processing for png-file '" + file + 
+			      "' needed. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
@@ -254,7 +254,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void runFig2Dev(File figFile, LatexDev dev) 
 	throws BuildExecutionException {
 
-	this.log.info("Processing fig-file " + figFile + ". ");
+	this.log.info("Processing fig-file '" + figFile + "'. ");
 	String command = this.settings.getFig2devCommand();
 	File workingDir = figFile.getParentFile();
 	String[] args;
@@ -271,7 +271,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 this.settings.getFig2devPdfOptions(), 
 					 figFile);
 	    log.debug("Running " + command + 
-		      " -Lpdftex  ... on " + figFile.getName() + ". ");
+		      " -Lpdftex  ... on '" + figFile.getName() + "'. ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -288,7 +288,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 this.settings.getFig2devPtxOptions(), 
 					 figFile);
 	    log.debug("Running " + command + 
-		      " -Lpdftex_t... on " + figFile.getName() + ". ");
+		      " -Lpdftex_t... on '" + figFile.getName() + "'. ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -365,7 +365,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetFig(File figFile) 
 	throws BuildExecutionException {
 
-	this.log.info("Deleting targets of fig-file " + figFile + ". ");
+	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
 	// may throw BuildExecutionException 
 	this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
 	this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
@@ -385,7 +385,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void runGnuplot2Dev(File pltFile, LatexDev dev) 
 	throws BuildExecutionException {
 
-	this.log.info("Processing gnuplot-file " + pltFile + ". ");
+	this.log.info("Processing gnuplot-file '" + pltFile + "'. ");
 	String command = this.settings.getGnuplotCommand();
 	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
 	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
@@ -413,7 +413,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 //	if (update(pltFile, ptxFile)) {
 	    log.debug("Running " + command + 
-		      " -e...  on " + pltFile.getName() + ". ");
+		      " -e...  on '" + pltFile.getName() + "'. ");
 	    // may throw BuildExecutionException 
 	    this.executor.execute(pltFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
@@ -430,7 +430,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetPlt(File pltFile) 
 	throws BuildExecutionException {
 
-	this.log.info("Deleting targets of gnuplot-file " + pltFile + ". ");
+	this.log.info("Deleting targets of gnuplot-file '" + pltFile + "'. ");
 	// may throw BuildExecutionException 
 	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX).delete();
 	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF).delete();
@@ -448,13 +448,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // used in processGraphics(Collection) only 
     private void runMetapost2mps(File mpFile) throws BuildExecutionException {
 
-	this.log.info("Processing metapost-file " + mpFile + ". ");
+	this.log.info("Processing metapost-file '" + mpFile + "'. ");
 	String command = this.settings.getMetapostCommand();
 	File workingDir = mpFile.getParentFile();
 	// for more information just type mpost --help 
 	String[] args = buildArguments(this.settings.getMetapostOptions(), 
 				       mpFile);
-	log.debug("Running " + command + " on " + mpFile.getName() + ". ");
+	log.debug("Running " + command + " on '" + mpFile.getName() + "'. ");
 	// may throw BuildExecutionException 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
@@ -474,7 +474,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetMp(File mpFile) 
 	throws BuildExecutionException {
 
-	this.log.info("Deleting targets of metapost-file " + mpFile + ". ");
+	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
 	// may throw BuildExecutionException 
 	this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG).delete();
 	this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS).delete();
@@ -500,7 +500,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetSvg(File svgFile) 
 	throws BuildExecutionException {
 
-       this.log.info("Deleting targets of svg-file " + svgFile + ". ");
+       this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
        // may throw BuildExecutionException 
        this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
 //       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PSTEX ).delete();
@@ -520,7 +520,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	if (this.fileUtils
 	    .matchInFile(texFile, 
 			 this.settings.getPatternLatexMainFile())) {
-	    this.log.info("Detected latex-main-file " + texFile + ". ");
+	    this.log.info("Detected latex-main-file '" + texFile + "'. ");
 	    this.latexMainFiles.add(texFile);
 	}
     }
@@ -544,7 +544,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			 this.settings.getPatternLatexMainFile())) {
 	    return;
 	}
-	this.log.info("Deleting targets of latex main file " + texFile + ". ");
+	this.log.info("Deleting targets of latex main file '" + texFile + 
+		      "'. ");
 
 	// filter to delete 
 	final String root = this.fileUtils.getFileNameWithoutSuffix(texFile);
@@ -594,7 +595,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    suffix = this.fileUtils.getSuffix(file);
 	    handler = SUFFIX2HANDLER.get(suffix);
 	    if (handler == null) {
-		this.log.debug("Skipping processing of file " + file + ". ");
+		this.log.debug("Skipping processing of file '" + file + "'. ");
 		skipped.add(suffix);
 	    } else {
 		// may throw BuildExecutionException 
