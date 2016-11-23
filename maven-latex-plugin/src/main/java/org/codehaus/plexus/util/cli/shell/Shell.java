@@ -94,6 +94,7 @@ public class Shell
      * Get the command to execute the shell
      *
      * @return
+     *    the command to be executed. 
      */
     public String getShellCommand()
     {
@@ -116,6 +117,7 @@ public class Shell
      * Get the shell arguments
      *
      * @return
+     *    the arguments of the shell. 
      */
     public String[] getShellArgs()
     {

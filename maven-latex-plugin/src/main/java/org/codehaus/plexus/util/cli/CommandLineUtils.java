@@ -96,7 +96,6 @@ public abstract class CommandLineUtils
      * @param timeoutInSeconds Positive integer to specify timeout, zero and negative integers for no timeout.
      * @return A return value, see {@link Process#exitValue()}
      * @throws CommandLineException or CommandLineTimeOutException if time out occurs
-     * @noinspection ThrowableResultOfMethodCallIgnored
      */
     public static int executeCommandLine( Commandline cl, InputStream systemIn, StreamConsumer systemOut,
                                           StreamConsumer systemErr, int timeoutInSeconds )
@@ -109,21 +108,32 @@ public abstract class CommandLineUtils
 
     /**
      * Immediately forks a process, returns a callable that will block until process is complete.
-     * @param cl               The command line to execute
-     * @param systemIn         The input to read from, must be thread safe
-     * @param systemOut        A consumer that receives output, must be thread safe
-     * @param systemErr        A consumer that receives system error stream output, must be thread safe
-     * @param timeoutInSeconds Positive integer to specify timeout, zero and negative integers for no timeout.
-     * @return A CommandLineCallable that provides the process return value, see {@link Process#exitValue()}. "call" must be called on
-     *         this to be sure the forked process has terminated, no guarantees is made about
-     *         any internal state before after the completion of the call statements
-     * @throws CommandLineException or CommandLineTimeOutException if time out occurs
-     * @noinspection ThrowableResultOfMethodCallIgnored
+     * @param cl 
+     *              The command line to execute
+     * @param systemIn
+     *         The input to read from, must be thread safe
+     * @param systemOut
+     *        A consumer that receives output, must be thread safe
+     * @param systemErr
+     *        A consumer that receives system error stream output, 
+     *  must be thread safe
+     * @param timeoutInSeconds
+     * Positive integer to specify timeout, 
+     * zero and negative integers for no timeout.
+     * @return 
+     * A CommandLineCallable that provides the process return value, 
+     * see {@link Process#exitValue()}. "call" must be called on
+     *         this to be sure the forked process has terminated, 
+     * no guarantees is made about any internal state 
+     * before after the completion of the call statements
+     * @throws CommandLineException 
+     * or CommandLineTimeOutException if time out occurs
      */
-    public static CommandLineCallable executeCommandLineAsCallable( final Commandline cl, final InputStream systemIn,
-                                                                  final StreamConsumer systemOut,
-                                                                  final StreamConsumer systemErr,
-                                                                  final int timeoutInSeconds )
+    public static CommandLineCallable executeCommandLineAsCallable
+	(final Commandline cl, final InputStream systemIn,
+	 final StreamConsumer systemOut,
+	 final StreamConsumer systemErr,
+	 final int timeoutInSeconds )
         throws CommandLineException
     {
         if ( cl == null )

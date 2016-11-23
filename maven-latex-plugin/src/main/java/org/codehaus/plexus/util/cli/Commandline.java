@@ -371,7 +371,8 @@ public class Commandline
     /**
      * Adds an argument object to our list of args.
      *
-     * @return the argument object.
+     * @param argument
+     *     the argument object.
      * @see #addArg(Arg,boolean)
      */
     public void addArg( Arg argument )
