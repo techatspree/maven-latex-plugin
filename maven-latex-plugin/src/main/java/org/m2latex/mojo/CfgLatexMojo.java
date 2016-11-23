@@ -33,12 +33,13 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+
 /**
- * Abstract base class for all creational mojos. 
- *
- * @goal cfg
- * @phase site
+ * Builds documents in the formats configured in the pom. 
  */
+@Mojo(name = "cfg", defaultPhase = LifecyclePhase.SITE)
 public class CfgLatexMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 

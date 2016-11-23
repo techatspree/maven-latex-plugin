@@ -27,15 +27,14 @@ import java.util.TreeSet;
 import org.m2latex.core.BuildExecutionException;
 
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Clears all created files in the folders containing the LaTeX sources.
- *
- * @goal clr
- * @phase site
  */
-//@Mojo( name = "clr")
+@Mojo(name = "clr", defaultPhase = LifecyclePhase.CLEAN)
 public class ClearMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 
