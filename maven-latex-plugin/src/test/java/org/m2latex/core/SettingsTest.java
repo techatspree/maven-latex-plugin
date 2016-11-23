@@ -25,11 +25,9 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-public class SettingsTest
-{
-    @Test public void testSettings()
-        throws Exception
-    {
+public class SettingsTest {
+
+    @Test public void testSettings() {
         Settings settings = new Settings();
 
 	// invoked from within maven in base directory with pom.xml 
@@ -42,7 +40,7 @@ public class SettingsTest
 	settings.setTargetSiteDirectory(targetSiteDirectory);
 
 	// test getTexSrcDirectoryFile() and setTexSrcDirectory(...) 
-	assertEquals(new File(baseDirectory, Settings.SST),
+	assertEquals(new File(baseDirectory, "src/site/tex"),
 		     settings.getTexSrcDirectoryFile());
 	settings.setTexSrcDirectory("site");
 	settings.setBaseDirectory(targetDirectory);
@@ -51,6 +49,14 @@ public class SettingsTest
 
 	// FIXME: Further tests required. 
 
+    }
+
+    public static void main(String[] args) throws Exception {
+	Class cls = SettingsTest.class
+	    .getMethod("testSettings")
+	    .getAnnotation(Test.class).getClass();
+	//System.out.println("cls: "+);
+	
     }
 
 }
