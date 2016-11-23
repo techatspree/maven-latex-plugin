@@ -61,7 +61,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @throws BuildExecutionException
      *    if <code>dir</code> is not a folder or not readable. 
      */
-    public Collection<File> getFilesReq(File dir) 
+    public Collection<File> getFilesRec(File dir) 
 	throws BuildExecutionException {
 
         Collection<File> res1 = FileUtils.listFiles(dir,
