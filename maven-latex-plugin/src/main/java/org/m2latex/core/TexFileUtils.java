@@ -36,7 +36,7 @@ interface TexFileUtils {
 			    File targetBaseDir)
 	throws BuildExecutionException, BuildFailureException;
 
-    FileFilter getFileFilter(final File texFile, final Target target);
+    FileFilter getFileFilter(File texFile, String pattern);
 
     void copyOutputToTargetFolder(File texFile, 
 				  FileFilter fileFilter, 
