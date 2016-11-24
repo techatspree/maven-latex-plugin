@@ -33,15 +33,16 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.suffixFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.prefixFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.notFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 class TexFileUtilsImpl implements TexFileUtils {
 
     private final static String PREFIX_HIDDEN = ".";
+
+    private final static String PATTERN_INS_LATEX_MAIN = "T\\$T";
 
     private final LogWrapper log;
 
@@ -147,15 +148,16 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
+    // - LatexPreProcessor.clearTargetTex to clear also intermediate files. 
     public FileFilter getFileFilter(File texFile, String pattern) {
-	// filter to copy 
-	String root = getFileNameWithoutSuffix(texFile);
 	final String patternAccept = pattern
-	    .replaceAll(LatexPreProcessor.PATTERN_INS_LATEX_MAIN, root);
-
+	    .replaceAll(PATTERN_INS_LATEX_MAIN, 
+			getFileNameWithoutSuffix(texFile));
 	return new FileFilter() {
 	    public boolean accept(File file) {
-		if (file.isDirectory()) {
+		// the second is superfluous for copying 
+		// and only needed for deletion. 
+		if (file.isDirectory() || file.equals(texFile)) {
 		    return false;
 		}
 		return file.getName().matches(patternAccept);
