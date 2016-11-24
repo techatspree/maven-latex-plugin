@@ -183,6 +183,8 @@ public class Settings {
      * The pattern is designed 
      * to match quite exactly the created files, 
      * not much more and at any case not less. 
+     * In particular it has to comprise the files matching pattern 
+     * {@link #patternT4htOutputFiles}. 
      * Nevertheless, since any new package may break the pattern, 
      * and not every package is well documented, 
      * this pattern cannot be guaranteed to be final. 
@@ -926,6 +928,59 @@ public class Settings {
     @Parameter(name = "t4htOptions", defaultValue = "")
     private String t4htOptions = "";
 
+    /**
+     * The pattern for the target files of goal {@link Target.html} 
+     * for a given latex main file <code>xxx.tex</code>. 
+     * The patterns for the other targets 
+     * are hardcoded and take the form 
+     * <code>^T$T\.yyy$</code>, where <code>yyy</code> 
+     * may be an ending or an alternative of endings. 
+     * <p>
+     * For an explanation of the pattern <code>T$T</code>, 
+     * see {@link #patternClearFromLatexMain}. 
+     * Spaces and newlines are removed 
+     * from that pattern before processing. 
+     * <p>
+     * The default value has the following components: 
+     * <ul>
+     * <li><code>^T$T\.x?html?$</code> 
+     * is the main file. 
+     * <li><code>^T$Tli\d+\.x?html?$</code> 
+     * are lists: toc, lof, lot, indices, glossaries, NOT the bibliography. 
+     * <li><code>^T$T(se|su)\d+\.x?html?$</code> 
+     * are sections and subsections or below. 
+     * <li><code>^T$T\d+\.x?html?$</code> 
+     * are footnotes. 
+     * <li><code>^T$T\.css$</code> 
+     * are cascaded stylesheets. 
+     * <li><code>^T$T-\\d+\\.svg$</code> 
+     * are svg-files representing figures. 
+     * <li><code>^(cmsy)\\d+(-c)?-\\d+c?\\.png$</code> 
+     * represents special symbols. 
+     * </ul>
+     * Note that the patterns for the html-files 
+     * can be summarized as <code>^T$T((se|su|li)?\d+)?\.x?html?$</code>. 
+     * Adding the patterns for the css-file and the svg-files, we obtain 
+     * <code>^T$T(((se|su|li)?\d+)?\.x?html?|\.css|-\\d+\\.svg)$</code>. 
+     * <p>
+     * The pattern is designed to match quite exactly 
+     * the files to be copied to {@link #targetSiteDirectory}, 
+     * for the goal {@link Target.html}, 
+     * not much more and at any case not less. 
+     * since {@link #tex2htCommand} is not well documented, 
+     * and still subject to development, 
+     * this pattern cannot be guaranteed to be final. 
+     * If the user finds an extension, (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
+     * Then the default value will be extended. 
+     */
+    @Parameter(name = "patternT4htOutputFiles", defaultValue = "")
+    private String patternT4htOutputFiles = 
+	"^(T$T(((se|su|li)?\\d+)?\\.x?html?|" + 
+	"\\.css|" + 
+	"-\\d+\\.svg)|" + 
+	"(cmsy)\\d+(-c)?-\\d+c?\\.png)$";
+
 
    // parameters for further conversions 
 
@@ -1194,6 +1249,9 @@ public class Settings {
         return  this.t4htOptions;
     }
 
+    public String getPatternT4htOutputFiles() {
+	return  this.patternT4htOutputFiles;
+    }
 
     public String getLatex2rtfCommand() {
         return  this.latex2rtfCommand;
@@ -1309,7 +1367,7 @@ public class Settings {
 	    .replaceAll("(\t|\n| )+", "").trim();
     }
 
-    // method introduces pattern in ant 
+    // method introduces patternClearFromLatexMain in ant 
     public PatternClearFromLatexMain createPatternClearFromLatexMain() {
    	return new PatternClearFromLatexMain();
     }
@@ -1664,8 +1722,26 @@ public class Settings {
 	this.t4htOptions = t4htOptions;
     }
 
+    // setter method for patternT4htOutputFiles in maven 
+    public void setPatternT4htOutputFiles(String patternT4htOutputFiles) {
+	this.patternT4htOutputFiles = patternT4htOutputFiles
+	    .replaceAll("(\t|\n| )+", "").trim();
+    }
 
+    // method introduces patternT4htOutputFiles in ant 
+    public PatternT4htOutputFiles createPatternT4htOutputFiles() {
+   	return new PatternT4htOutputFiles();
+    }
 
+    // defines patternT4htOutputFiles element with text in ant 
+    public class PatternT4htOutputFiles {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternT4htOutputFiles(pattern);
+   	}
+    }
 
     public void setLatex2rtfCommand(String latex2rtfCommand) {
         this.latex2rtfCommand = latex2rtfCommand;
@@ -1757,6 +1833,8 @@ public class Settings {
         sb.append(", tex4htStyOptions=")    .append(this.tex4htStyOptions);
         sb.append(", tex4htOptions=")       .append(this.tex4htOptions);
 	sb.append(", t4htOptions=")         .append(this.t4htOptions);
+	sb.append(", patternT4htOutputFiles=")
+	    .append(this.patternT4htOutputFiles);
 	// parameters for latex2rtf 
         sb.append(", latex2rtfCommand=")    .append(this.latex2rtfCommand);
         sb.append(", latex2rtfOptions=")    .append(this.latex2rtfOptions);
@@ -1773,7 +1851,5 @@ public class Settings {
 
     public static void main(String[] args) {
 	System.out.println("texpath: "+new Settings().getTexPath());
-	
     }
-
 }
