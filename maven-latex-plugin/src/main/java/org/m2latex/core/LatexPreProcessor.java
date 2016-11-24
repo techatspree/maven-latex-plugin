@@ -50,7 +50,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
     } // static 
 
-    private final static String PATTERN_INS_LATEX_MAIN = "T\\$T";
+    // FIXME: to be moved to TexFilesUtilsImpl 
+    final static String PATTERN_INS_LATEX_MAIN = "T\\$T";
 
  
     // used in preprocessing only 
