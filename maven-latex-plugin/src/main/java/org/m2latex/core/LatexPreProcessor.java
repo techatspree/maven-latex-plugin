@@ -50,7 +50,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
     } // static 
 
-  
+    private final static String PATTERN_INS_LATEX_MAIN = "T\\$T";
+
+ 
     // used in preprocessing only 
     private final static String SUFFIX_TEX = ".tex";
 
@@ -548,33 +550,20 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		      "'. ");
 
 	// filter to delete 
-	final String root = this.fileUtils.getFileNameWithoutSuffix(texFile);
+	String root = this.fileUtils.getFileNameWithoutSuffix(texFile);
+	final String patternClear = this.settings.getPatternClearFromLatexMain()
+	    .replaceAll(PATTERN_INS_LATEX_MAIN, root);
+	
 	FileFilter filter = new FileFilter() {
 		public boolean accept(File file) {
 		    if (file.isDirectory() || file.equals(texFile)) {
 			return false;
 		    }
-		    String fRoot = LatexPreProcessor.this.fileUtils
-			.getFileNameWithoutSuffix(file);
-
-		    // FIXME: constant for literals '.synctex' and '.out'
-		    if (root.equals(fRoot) || 
-			(root+".synctex.gz").equals(file.getName()) || 
-			(root+".out.ps"    ).equals(file.getName())) {
-			return true;
-		    }
-		    // FIXME: seems more appropriate to move to regex 
-		    // FIXME: not taken into account: 
-		    // e.g. png-files with fonts created by Target.html. 
-		    return LatexPreProcessor.this.fileUtils
-			.getFileFilter(texFile, Target.html)
-			.accept(file);
+		    return file.getName().matches(patternClear);
 		}
 	    };
 	// may throw BuildExecutionException 
 	this.fileUtils.deleteX(texFile, filter);
-	// may throw BuildExecutionException 
-	new File(texFile.getParent(), "zz" + root + SUFFIX_EPS).delete();
     }
 
     /**
