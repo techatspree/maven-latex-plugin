@@ -20,12 +20,12 @@ public enum Target {
      *
      */
     rtf() {
-	private final String RTF_OUTPUT_FILES = "\\.rtf";
+	private final String RTF_OUTPUT_FILES = "^T$T\\.rtf$";
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
 	    latexProcessor.processLatex2rtf(texFile);
 	}
-	public String getPatternOutputFileSuffixes() {
+	public String getPatternOutputFiles() {
 	    return RTF_OUTPUT_FILES;
 	}
 
@@ -35,13 +35,13 @@ public enum Target {
      */
     pdf() {
 	private final String LATEX_OUTPUT_FILES = 
-	    "(" + LatexProcessor.SUFFIX_PDF + "|\\.dvi|\\.ps)";
+	    "^T$T\\.(pdf|dvi|ps)$";
 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
 	    latexProcessor.processLatex2pdf(texFile);
 	}
-	public String getPatternOutputFileSuffixes() {
+	public String getPatternOutputFiles() {
 	    return LATEX_OUTPUT_FILES;
 	}
     },
@@ -60,20 +60,17 @@ public enum Target {
 	// - xxxsud.(x)htm(l) with digit(s) d are subsections or below. 
 	// - xxxd.(x)htm(l)   with digit(s) d are footnotes 
 	private final String HTML_OUTPUT_FILES = 
-	    "(((se|su|li)?\\d+)?\\.x?html?|" + 
+	    "^(T$T(((se|su|li)?\\d+)?\\.x?html?|" + 
 	    "\\.css|" + 
-	    ".\\d+\\.svg)";
+	    ".\\d+\\.svg)|" + 
+	    "(cmsy)\\d+(-c)?-\\d+c?\\.png)$";
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
 	    latexProcessor.processLatex2html(texFile);
 	}
-	public String getPatternOutputFileSuffixes() {
+	public String getPatternOutputFiles() {
 	    return HTML_OUTPUT_FILES;
 	}
-	public String getPatternOutputFiles() {
-	    return "(cmsy)\\d+(-c)?-\\d+c?\\.png";
-	}
-
     },
     /**
      * Based on {@link #pdf}
@@ -81,13 +78,13 @@ public enum Target {
      */
     odt() {
 	private final String OOFFICE_OUTPUT_FILES =
-	    "(.odt|.fodt|.uot|.uot)";
+	    "^T$T\\.(odt|fodt|uot|uot)$";
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
 	    latexProcessor.processLatex2odt(texFile);
 	}
 
-	public String getPatternOutputFileSuffixes() {
+	public String getPatternOutputFiles() {
 	    return OOFFICE_OUTPUT_FILES;
 	}
     },
@@ -97,12 +94,12 @@ public enum Target {
      */
     docx() {
 	private final String MSWORD_OUTPUT_FILES = 
-	    "(\\.doc(|6|.95|.x|.x7)|\\.rtf)";
+	    "^T$T\\.(doc(|6|.95|.x|.x7)|rtf)$";
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
 	    latexProcessor.processLatex2docx(texFile);
 	}
-	public String getPatternOutputFileSuffixes() {
+	public String getPatternOutputFiles() {
 	    return MSWORD_OUTPUT_FILES;
 	}
 
@@ -111,12 +108,12 @@ public enum Target {
      * Based on {@link #pdf}
      */
     txt() {
-	private final String TXT_OUTPUT_FILES = ".txt";
+	private final String TXT_OUTPUT_FILES = "^T$T\\.txt$";
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildExecutionException {
 	    latexProcessor.processLatex2txt(texFile);
 	}
-	public String getPatternOutputFileSuffixes() {
+	public String getPatternOutputFiles() {
 	    return TXT_OUTPUT_FILES;
 	}
     };
@@ -137,11 +134,7 @@ public enum Target {
      * but if various html files are created, it is <code>*.html</code>, 
      * the asterisk representing a wildcard. 
      */
-    public abstract String getPatternOutputFileSuffixes();
-
-    public String getPatternOutputFiles() {
-	return "^$";
-    }
+    public abstract String getPatternOutputFiles();
 
 }
  
