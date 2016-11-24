@@ -1890,6 +1890,8 @@ and package 'tex4ht' is for all the rest.
 The pattern is designed 
 to match quite exactly the created files, 
 not much more and at any case not less. 
+In particular it has to comprise the files matching pattern 
+\$patternT4htOutputFiles. 
 Nevertheless, since any new package may break the pattern, 
 and not every package is well documented, 
 this pattern cannot be guaranteed to be final. 
@@ -2368,6 +2370,53 @@ into css-files, tmp-file and,
 by need and if configured accordingly into \gls{png}-files. 
 The value '-p' prevents creation of \gls{png}-pictures.
 %The default value is the empty string. 
+\end{minipage}
+} \\
+\tt patternT4htOutputFiles         & see below              \\%-cvalidate
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern for the target files of goal 'html' 
+for a given latex main file 'xxx.tex'. 
+The patterns for the other targets 
+are hardcoded and take the form 
+'\textasciicircum T\$T\textbackslash.yyy\$', where 'yyy' 
+may be an ending or an alternative of endings. 
+		 
+For an explanation of the pattern 'T\$T', 
+see \$patternClearFromLatexMain. 
+Spaces and newlines are removed 
+from that pattern before processing. 
+		 
+The default value has the following components: 
+- '\textasciicircum T\$T\textbackslash.x?html?\$' is the main file. 
+- '\textasciicircum T\$Tli\d+\textbackslash.x?html?\$' are lists: 
+toc, lof, lot, indices, glossaries, NOT the bibliography. 
+- '\textasciicircum T\$T(se|su)\textbackslash d+\textbackslash.x?html?\$' 
+are sections and subsections or below. 
+- '\textasciicircum T\$T\textbackslash d+\textbackslash.x?html?\$' are footnotes. 
+- '\textasciicircum T\$T\textbackslash.css\$' are cascaded stylesheets. 
+- '\textasciicircum T\$T-\textbackslash d+\textbackslash.svg\$' 
+are svg-files representing figures. 
+- '\textasciicircum(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$' 
+represents special symbols. 
+		 
+Note that the patterns for the html-files 
+can be summarized as '\textasciicircum T\$T((se|su|li)?\d+)?\.x?html?\$'. 
+Adding the patterns for the css-file and the svg-files, 
+we obtain 
+'\textasciicircum T\$T(((se|su|li)?\textbackslash
+d+)?\textbackslash.x?html?|\textbackslash.css|-\textbackslash d+\textbackslash.svg)\$'. 
+		 
+The pattern is designed to match quite exactly 
+the files to be copied to \$targetSiteDirectory, 
+for the goal 'html', 
+not much more and at any case not less. 
+since \$tex2htCommand is not well documented, 
+and still subject to development, 
+this pattern cannot be guaranteed to be final. 
+If the user finds an extension, (s)he is asked to contribute 
+and to notify the developer of this plugin. 
+Then the default value will be extended. 
 \end{minipage}
 } \\
 \hline
