@@ -147,7 +147,6 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
-    // - LatexPreProcessor.clearTargetTex to clear files 
     public FileFilter getFileFilter(File file, final Target target) {
 	String suffixPattern = target.getPatternOutputFileSuffixes();
         String filePrefix = getFileNameWithoutSuffix(file);
