@@ -1857,6 +1857,47 @@ May be used for debugging when setting {\tt false}.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
+\tt patternClearFromLatexMain             & see below              \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+For goal 'clr', 
+the tex source directory \$texSrcDirectory is cleared, 
+i.e. all generated files should be removed, 
+e.g. those coming from graphic files. 
+This pattern defines the files to be removed 
+which were created from a latex main file 'xxx.tex'. 
+It is neither applied to directories 
+nor to 'xxx.tex' itself. 
+		 
+The sequence 'T\$T' 
+is replaced by the prefix 'xxx'. 
+The sequence 'T\$T' must always be replaced: 
+The symbol '\$' occurs as end-sign as ')\$' 
+or as literal symbol as '\$'. 
+Thus 'T\$T' is no regular occurrence 
+and must always be replaced with 'xxx'. 
+		 
+Spaces and newlines are removed 
+from that pattern before processing. 
+		 
+The default value 
+'\textasciicircum T\$T\textbackslash.$[$\textasciicircum.$]*$' 
+is appropriate for most parameters and packages. 
+Package 'srcltx' 
+requires in addition 
+'\textasciicircum T\$T\textbackslash.synctex\textbackslash.gz' 
+and package 'tex4ht' is for all the rest. 
+The pattern is designed 
+to match quite exactly the created files, 
+not much more and at any case not less. 
+Nevertheless, since any new package may break the pattern, 
+and not every package is well documented, 
+this pattern cannot be guaranteed to be final. 
+If the user finds an extension, (s)he is asked to contribute 
+and to notify the developer of this plugin. 
+Then the default value will be extended. 
+\end{minipage}
+} \\
 \hline
 \caption{\label{tab:paramGen} General parameters}
 \end{longtable}
@@ -2432,7 +2473,7 @@ The maven-plugin described here,
 requires the following definition in {\tt pom.xml}. 
 
 \lstset{language=xml, basicstyle=\scriptsize}
-\lstinputlisting[firstline=203, lastline=741]{../../../pom.xml}
+\lstinputlisting[firstline=203, lastline=788]{../../../pom.xml}
 
 It has to be placed in the build element where below dots are given. 
 
