@@ -50,9 +50,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
     } // static 
 
-    // FIXME: to be moved to TexFilesUtilsImpl 
-    final static String PATTERN_INS_LATEX_MAIN = "T\\$T";
-
  
     // used in preprocessing only 
     private final static String SUFFIX_TEX = ".tex";
@@ -550,19 +547,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of latex main file '" + texFile + 
 		      "'. ");
 
-	// filter to delete 
-	String root = this.fileUtils.getFileNameWithoutSuffix(texFile);
-	final String patternAccept = this.settings.getPatternClearFromLatexMain()
-	    .replaceAll(PATTERN_INS_LATEX_MAIN, root);
-	
-	FileFilter filter = new FileFilter() {
-		public boolean accept(File file) {
-		    if (file.isDirectory() || file.equals(texFile)) {
-			return false;
-		    }
-		    return file.getName().matches(patternAccept);
-		}
-	    };
+	FileFilter filter = this.fileUtils
+	    .getFileFilter(texFile, 
+			   this.settings.getPatternClearFromLatexMain());
+
 	// may throw BuildExecutionException 
 	this.fileUtils.deleteX(texFile, filter);
     }
