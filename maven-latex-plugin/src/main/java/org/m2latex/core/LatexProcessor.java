@@ -197,7 +197,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		    // may throw BuildExecutionException 
 		    target.processSource(this, texFile);
 		    FileFilter fileFilter = this.fileUtils
-			.getFileFilter(texFile, target);
+			.getFileFilter(texFile, target.getPatternOutputFiles());
 		    // may throw BuildExecutionException, BuildFailureException
 		    this.fileUtils.copyOutputToTargetFolder(texFile,
 							    fileFilter,
