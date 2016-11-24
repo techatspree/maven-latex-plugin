@@ -137,7 +137,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * and processing the tex main files 
      * via {@link Target#processSource(LatexProcessor, File)}. 
      * The resulting files are identified by its suffixes 
-     * via  {@link Target#getPatternOutputFileSuffixes()} 
+     * via  {@link Target#getPatternOutputFiles(Settings)} 
      * and copied to the target folder. 
      * Finally, by default a cleanup is performed 
      * invoking {@link TexFileUtils#cleanUp(Collection, File)}. 
@@ -196,8 +196,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		for (Target target : this.paramAdapt.getTargetSet()) {
 		    // may throw BuildExecutionException 
 		    target.processSource(this, texFile);
-		    FileFilter fileFilter = this.fileUtils
-			.getFileFilter(texFile, target.getPatternOutputFiles());
+		    FileFilter fileFilter = this.fileUtils.getFileFilter
+			(texFile, target.getPatternOutputFiles(this.settings));
 		    // may throw BuildExecutionException, BuildFailureException
 		    this.fileUtils.copyOutputToTargetFolder(texFile,
 							    fileFilter,
