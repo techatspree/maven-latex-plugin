@@ -205,7 +205,7 @@ public class Settings {
 	// ... and scripts cmsy....png 
 	"(cmsy)\\d+(-c)?-\\d+c?\\.png|" + 
 	// The following occurs sporadic 
-	"(pdf)latex\\d+\\.fls)$";
+	"(pdf)?latex\\d+\\.fls)$";
 
 
     // parameters for graphics preprocessing 
@@ -1299,6 +1299,9 @@ public class Settings {
     public void setCleanUp(boolean cleanUp) {
         this.cleanUp = cleanUp;
     }
+
+    // FIXME: as patternClearFromLatexMain 
+    // replace "\n" (canonical newline in xml) also for other patterns by ""
 
     // setter method for patternClearFromLatexMain in maven 
     public void setPatternClearFromLatexMain(String patternClearFromLatexMain) {
