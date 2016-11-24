@@ -130,12 +130,12 @@ class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
-     * Returns a wildcard file filter containing all files 
+     * Returns a file filter containing all files 
      * replacing the suffix of <code>file</code> 
      * with the pattern given by <code>filesPatterns</code>. 
      *
-     * @param file
-     *    the file to derive filenames from. 
+     * @param texFile
+     *    a latex main file for which the result must be copied **** 
      *    Typically, this is used for tex-files but also for mp-files. 
      * @param filesPatterns
      *    patterns of the form <code>.&lt;suffix&gt;</code> 
@@ -147,15 +147,15 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
-    public FileFilter getFileFilter(File file, final Target target) {
-	String suffixPattern = target.getPatternOutputFileSuffixes();
-        String filePrefix = getFileNameWithoutSuffix(file);
-        final String filePattern= "^" + filePrefix + suffixPattern + "$";
+    public FileFilter getFileFilter(File texFile, final Target target) {
+	// filter to copy 
+	String root = getFileNameWithoutSuffix(texFile);
+	final String patternCopy = target.getPatternOutputFiles()
+	    .replaceAll(LatexPreProcessor.PATTERN_INS_LATEX_MAIN, root);
 
 	return new FileFilter() {
 	    public boolean accept(File file) {
-		return file.getName().matches(filePattern)
-		    || file.getName().matches(target.getPatternOutputFiles());
+		return file.getName().matches(patternCopy);
 	    }
 	};
     }
