@@ -2391,8 +2391,9 @@ The default value has the following components:
 - '\textasciicircum T\$T\textbackslash.x?html?\$' is the main file. 
 - '\textasciicircum T\$Tli\d+\textbackslash.x?html?\$' are lists: 
 toc, lof, lot, indices, glossaries, NOT the bibliography. 
-- '\textasciicircum T\$T(se|su)\textbackslash d+\textbackslash.x?html?\$' 
-are sections and subsections or below. 
+- '\textasciicircum T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$' 
+are chapters, sections and subsections or below 
+and appendices. 
 - '\textasciicircum T\$T\textbackslash d+\textbackslash.x?html?\$' are footnotes. 
 - '\textasciicircum T\$T\textbackslash.css\$' are cascaded stylesheets. 
 - '\textasciicircum T\$T-\textbackslash d+\textbackslash.svg\$' 
@@ -2401,10 +2402,10 @@ are svg-files representing figures.
 represents special symbols. 
 		 
 Note that the patterns for the html-files 
-can be summarized as '\textasciicircum T\$T((se|su|li)?\d+)?\.x?html?\$'. 
+can be summarized as '\textasciicircum T\$T((ch|se|su|ap|li)?\d+)?\.x?html?\$'. 
 Adding the patterns for the css-file and the svg-files, 
 we obtain 
-'\textasciicircum T\$T(((se|su|li)?\textbackslash
+'\textasciicircum T\$T(((ch|se|su|ap|li)?\textbackslash
 d+)?\textbackslash.x?html?|\textbackslash.css|-\textbackslash d+\textbackslash.svg)\$'. 
 		 
 The pattern is designed to match quite exactly 
