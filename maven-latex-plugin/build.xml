@@ -132,7 +132,7 @@ T$T             (\.([^.]*|synctex\.gz|out\.ps)|
              -\d+\.svg)|
 zzT$T\.eps|
 (cmsy)\d+(-c)?-\d+c?\.png|
-(pdf)latex\d+\.fls)$
+(pdf)?latex\d+\.fls)$
 	</patternClearFromLatexMain>
 
 	<metapostOptions>
