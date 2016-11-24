@@ -496,10 +496,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexMainDesc(File texFile, TexFileUtils fileUtils) {
 	    this.texFile = texFile;
 	    // FIXME: easier to create xxxFile first 
+	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
 	    this.gloFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
-	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	    this.glgFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
 	}
     } // class LatexMainDesc 
