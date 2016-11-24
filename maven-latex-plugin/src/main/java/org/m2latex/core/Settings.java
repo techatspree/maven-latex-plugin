@@ -198,7 +198,7 @@ public class Settings {
 	// we allow T$T.synctex.gz and T$T.out.ps 
 	"^(T$T(\\.([^.]*|synctex\\.gz|out\\.ps)|" + 
 	// tex4ht creates files T$Tyy.(x)htm(l)... 
-	"(se|su|li)?\\d+\\.x?html?|" + 
+	"(ch|se|su|ap|li)?\\d+\\.x?html?|" + 
 	// ... and T$Tddx.png and T$T-dd.svg... 
 	"\\d+x\\.png|" + 
 	"-\\d+\\.svg)|" + 
@@ -947,8 +947,9 @@ public class Settings {
      * is the main file. 
      * <li><code>^T$Tli\d+\.x?html?$</code> 
      * are lists: toc, lof, lot, indices, glossaries, NOT the bibliography. 
-     * <li><code>^T$T(se|su)\d+\.x?html?$</code> 
-     * are sections and subsections or below. 
+     * <li><code>^T$T(ch|se|su|ap)\d+\.x?html?$</code> 
+     * are chapters, sections and subsections or below 
+     * and appendices. 
      * <li><code>^T$T\d+\.x?html?$</code> 
      * are footnotes. 
      * <li><code>^T$T\.css$</code> 
@@ -959,9 +960,9 @@ public class Settings {
      * represents special symbols. 
      * </ul>
      * Note that the patterns for the html-files 
-     * can be summarized as <code>^T$T((se|su|li)?\d+)?\.x?html?$</code>. 
+     * can be summarized as <code>^T$T((ch|se|su|ap|li)?\d+)?\.x?html?$</code>. 
      * Adding the patterns for the css-file and the svg-files, we obtain 
-     * <code>^T$T(((se|su|li)?\d+)?\.x?html?|\.css|-\\d+\\.svg)$</code>. 
+     * <code>^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|\.css|-\\d+\\.svg)$</code>. 
      * <p>
      * The pattern is designed to match quite exactly 
      * the files to be copied to {@link #targetSiteDirectory}, 
@@ -976,7 +977,7 @@ public class Settings {
      */
     @Parameter(name = "patternT4htOutputFiles", defaultValue = "")
     private String patternT4htOutputFiles = 
-	"^(T$T(((se|su|li)?\\d+)?\\.x?html?|" + 
+	"^(T$T(((ch|se|su|ap|li)?\\d+)?\\.x?html?|" + 
 	"\\.css|" + 
 	"-\\d+\\.svg)|" + 
 	"(cmsy)\\d+(-c)?-\\d+c?\\.png)$";
