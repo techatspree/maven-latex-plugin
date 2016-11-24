@@ -67,7 +67,7 @@
     </developer>
 
     <developer>
-      <id>ernstreissner</id>
+      <id>ereissner</id>
       <name>Ernst Reissner</name>
       <email>rei3ner at arcor dot de</email>
     </developer>
@@ -95,7 +95,7 @@
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.4</version>
+      <version>3.5</version>
       <scope>provided</scope>
     </dependency>
  
@@ -109,25 +109,27 @@
         <artifactId>commons-lang3</artifactId>
         <version>3.4</version>
         </dependency-->
- <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
-<dependency>
-    <groupId>org.codehaus.plexus</groupId>
-    <artifactId>plexus-utils</artifactId>
-    <version>1.5.7</version>
-</dependency>
+    <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.5.7</version>
+    </dependency>
 
-   <dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-site-plugin</artifactId>
       <version>3.5.1</version>
       <type>maven-plugin</type>
     </dependency>
+
     <dependency>
       <!-- not up to date -->
       <groupId>easymock</groupId>
@@ -142,39 +144,28 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-	<version>3.5.1</version>
+	<version>3.6.0</version>
 	<configuration>
  	  <compilerArgs>
 	    <arg>-g</arg>
   	    <arg>-Xlint:unchecked</arg>
 	  </compilerArgs>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.3</version>
       </plugin>
-      <!--plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.2</version>
-          <configuration>
-          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-          </configuration>
-	  
-          <executions>
-          <execution>
-          <id>mojo-descriptor</id>
-          <goals>
-          <goal>descriptor</goal>
-          </goals>
-          </execution>
-          </executions>
-          </plugin-->
-      
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.3</version><!-- does not work with 3.4! -->
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -259,6 +250,51 @@
 		 May be used for debugging when setting false. 
 		 The default value is 'true'. -->
             <cleanUp>false</cleanUp>
+
+	    <!-- For goal 'clr', 
+		 the tex source directory $texSrcDirectory is cleared, 
+		 i.e. all generated files should be removed, 
+		 e.g. those coming from graphic files. 
+		 This pattern defines the files to be removed 
+		 which were created from a latex main file 'xxx.tex'. 
+		 It is neither applied to directories 
+		 nor to 'xxx.tex' itself. 
+		 
+		 The sequence 'T$T' 
+		 is replaced by the prefix 'xxx'. 
+		 The sequence 'T$T' must always be replaced: 
+		 The symbol '$' occurs as end-sign as ')$' 
+		 or as literal symbol as '\$'. 
+		 Thus 'T$T' is no regular occurrence 
+		 and must always be replaced with 'xxx'. 
+		 
+		 Spaces and newlines are removed 
+		 from that pattern before processing. 
+		 
+		 The default value '^T$T\.[^.]*' 
+		 is appropriate for most parameters and packages. 
+		 Package 'srcltx' 
+		 requires in addition '^T$T\.synctex\.gz' 
+		 and package 'tex4ht' is for all the rest. 
+		 The pattern is designed 
+		 to match quite exactly the created files, 
+		 not much more and at any case not less. 
+		 Nevertheless, since any new package may break the pattern, 
+		 and not every package is well documented, 
+		 this pattern cannot be guaranteed to be final. 
+		 If the user finds an extension, (s)he is asked to contribute 
+		 and to notify the developer of this plugin. 
+		 Then the default value will be extended.  -->
+	    <patternClearFromLatexMain>
+^(
+T$T             (\.([^.]*|synctex\.gz|out\.ps)|
+   (se|su|li)?\d+\.x?html?|
+             \d+x\.png|
+             -\d+\.svg)|
+zzT$T\.eps|
+(cmsy)\d+(-c)?-\d+c?\.png|
+(pdf)latex\d+\.fls)$
+	    </patternClearFromLatexMain>
 
 	    <!-- The fig2dev command for conversion of fig-files 
 		 into various formats. 
@@ -719,17 +755,19 @@ not allowed:
 	<executions>
           <!-- execute latex goal automatically during the site phase -->
           <execution><!-- DEFAULT -->
+	    <id>process latex sources</id>
             <phase>site</phase>
             <goals>
-              <goal>pdf</goal>
-              <goal>html</goal>
-              <!--goal>rtf</goal-->
-              <!--goal>odt</goal-->
-              <!--goal>doc</goal-->
-              <!--goal>txt</goal-->
+              <goal>cfg</goal>
               <!--goal>clr</goal-->
               <!--goal>grp</goal-->
- <!--
+              <!--goal>pdf</goal-->
+              <!--goal>html</goal-->
+              <!--goal>rtf</goal-->
+              <!--goal>odt</goal-->
+              <!--goal>docx</goal-->
+              <!--goal>txt</goal-->
+  <!--
 here is a bug affecting goal odt: 
 /usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
 89c89
@@ -737,11 +775,16 @@ here is a bug affecting goal odt:
 - - -
  \def\pgfsys@svg@newline{\Hnewline} % original 
 -->
-              <goal>odt</goal>
-              <goal>cfg</goal>
             </goals>
           </execution>
-	</executions>
+          <execution><!-- DEFAULT -->
+	    <id>clear latex sources</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clr</goal>
+            </goals>
+          </execution>
+  	</executions>
       </plugin>
     </plugins>
   </build>
