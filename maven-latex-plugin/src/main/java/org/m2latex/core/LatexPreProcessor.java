@@ -552,7 +552,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	// filter to delete 
 	String root = this.fileUtils.getFileNameWithoutSuffix(texFile);
-	final String patternClear = this.settings.getPatternClearFromLatexMain()
+	final String patternAccept = this.settings.getPatternClearFromLatexMain()
 	    .replaceAll(PATTERN_INS_LATEX_MAIN, root);
 	
 	FileFilter filter = new FileFilter() {
@@ -560,7 +560,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		    if (file.isDirectory() || file.equals(texFile)) {
 			return false;
 		    }
-		    return file.getName().matches(patternClear);
+		    return file.getName().matches(patternAccept);
 		}
 	    };
 	// may throw BuildExecutionException 
