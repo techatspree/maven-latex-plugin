@@ -147,15 +147,18 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
-    public FileFilter getFileFilter(File texFile, final Target target) {
+    public FileFilter getFileFilter(File texFile, String pattern) {
 	// filter to copy 
 	String root = getFileNameWithoutSuffix(texFile);
-	final String patternCopy = target.getPatternOutputFiles()
+	final String patternAccept = pattern
 	    .replaceAll(LatexPreProcessor.PATTERN_INS_LATEX_MAIN, root);
 
 	return new FileFilter() {
 	    public boolean accept(File file) {
-		return file.getName().matches(patternCopy);
+		if (file.isDirectory()) {
+		    return false;
+		}
+		return file.getName().matches(patternAccept);
 	    }
 	};
     }
