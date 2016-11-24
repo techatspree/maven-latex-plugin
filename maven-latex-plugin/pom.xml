@@ -279,6 +279,8 @@
 		 The pattern is designed 
 		 to match quite exactly the created files, 
 		 not much more and at any case not less. 
+		 In particular it has to comprise the files matching pattern 
+		 $patternT4htOutputFiles. 
 		 Nevertheless, since any new package may break the pattern, 
 		 and not every package is well documented, 
 		 this pattern cannot be guaranteed to be final. 
@@ -288,7 +290,7 @@
 	    <patternClearFromLatexMain>
 ^(
 T$T             (\.([^.]*|synctex\.gz|out\.ps)|
-   (se|su|li)?\d+\.x?html?|
+   (ch|se|su|ap|li)?\d+\.x?html?|
              \d+x\.png|
              -\d+\.svg)|
 zzT$T\.eps|
@@ -712,6 +714,53 @@ not allowed:
 		 The value '-p' prevents creation of png-pictures.
 		 The default value is the empty string. -->
             <t4htOptions>-cvalidate</t4htOptions>
+
+	    <!-- The pattern for the target files of goal 'html' 
+		 for a given latex main file 'xxx.tex'. 
+		 The patterns for the other targets 
+		 are hardcoded and take the form 
+		 '^T$T\.yyy$', where 'yyy' 
+		 may be an ending or an alternative of endings. 
+		 
+		 For an explanation of the pattern 'T$T', 
+		 see $patternClearFromLatexMain. 
+		 Spaces and newlines are removed 
+		 from that pattern before processing. 
+		 
+		 The default value has the following components: 
+		 - '^T$T\.x?html?$' is the main file. 
+		 - '^T$Tli\d+\.x?html?$' are lists: 
+		 toc, lof, lot, indices, glossaries, NOT the bibliography. 
+		 - '^T$T(ch|se|su|ap)\d+\.x?html?$' 
+		 are chapters, sections and subsections or below 
+		 and appendices. 
+		 - '^T$T\d+\.x?html?$' are footnotes. 
+		 - '^T$T\.css$' are cascaded stylesheets. 
+		 - '^T$T-\d+\.svg$' are svg-files representing figures. 
+		 - '^(cmsy)\d+(-c)?-\d+c?\.png$' represents special symbols. 
+		 
+		 Note that the patterns for the html-files 
+		 can be summarized as '^T$T((ch|se|su|ap|li)?\d+)?\.x?html?$'. 
+		 Adding the patterns for the css-file and the svg-files, 
+		 we obtain 
+		 '^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|\.css|-\d+\.svg)$'. 
+		 
+		 The pattern is designed to match quite exactly 
+		 the files to be copied to $targetSiteDirectory, 
+		 for the goal 'html', 
+		 not much more and at any case not less. 
+		 since $tex2htCommand is not well documented, 
+		 and still subject to development, 
+		 this pattern cannot be guaranteed to be final. 
+		 If the user finds an extension, (s)he is asked to contribute 
+		 and to notify the developer of this plugin. 
+		 Then the default value will be extended. -->
+	    <patternT4htOutputFiles>
+	      ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
+	      \.css|
+	      -\d+\.svg)|
+	      (cmsy)\d+(-c)?-\d+c?\.png)$
+	    </patternT4htOutputFiles>
 
             <!-- The latex2rtf command to create rtf from latex directly. 
 		 The default value is 'latex2rtf'. -->
