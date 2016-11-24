@@ -127,7 +127,7 @@
 	<patternClearFromLatexMain>
 ^(
 T$T             (\.([^.]*|synctex\.gz|out\.ps)|
-   (se|su|li)?\d+\.x?html?|
+   (ch|se|su|ap|li)?\d+\.x?html?|
              \d+x\.png|
              -\d+\.svg)|
 zzT$T\.eps|
@@ -176,6 +176,13 @@ zzT$T\.eps|
 	<patternReRunMakeGlossaries>
 	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
 	</patternReRunMakeGlossaries>
+
+	<patternT4htOutputFiles>
+	  ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
+	  \.css|
+	  -\d+\.svg)|
+	  (cmsy)\d+(-c)?-\d+c?\.png)$
+	</patternT4htOutputFiles>
       </settings>
     </latex>
   </target>
