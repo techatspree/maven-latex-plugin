@@ -154,6 +154,59 @@ public class Settings {
     @Parameter(name = "cleanUp", defaultValue = "true")
     private boolean cleanUp;
 
+    /**
+     * For goal <code>clr</code>, 
+     * the tex source directory {@link #texSrcDirectory} is cleared, 
+     * i.e. all generated files should be removed, 
+     * e.g. those coming from graphic files. 
+     * This pattern defines the files to be removed 
+     * which were created from a latex main file <code>xxx.tex</code>. 
+     * It is neither applied to directories 
+     * nor to <code>xxx.tex</code> itself. 
+     * <p>
+     * The sequence <code>T$T</code> 
+     * is replaced by the prefix <code>xxx</code>. 
+     * The sequence <code>T$T</code> must always be replaced: 
+     * The symbol <code>$</code> occurs as end-sign as <code>)$</code> 
+     * or as literal symbol as <code>\$</code>. 
+     * Thus <code>T$T</code> is no regular occurrence 
+     * and must always be replaced with <code>xxx</code>. 
+     * <p>
+     * Spaces and newlines are removed 
+     * from that pattern before processing. 
+     * <p>
+     * The default value <code>^T$T\.[^.]*</code> 
+     * is appropriate for most parameters and packages. 
+     * Package <code>srcltx</code> 
+     * requires in addition <code>^T$T\.synctex\.gz</code> 
+     * and package <code>tex4ht</code> is for all the rest. 
+     * The pattern is designed 
+     * to match quite exactly the created files, 
+     * not much more and at any case not less. 
+     * Nevertheless, since any new package may break the pattern, 
+     * and not every package is well documented, 
+     * this pattern cannot be guaranteed to be final. 
+     * If the user finds an extension, (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
+     * Then the default value will be extended. 
+     */
+    @Parameter(name = "patternClearFromLatexMain")
+    private String patternClearFromLatexMain = 
+	// besides T$T.xxx, with xxx not containing ., 
+	// we allow T$T.synctex.gz and T$T.out.ps 
+	"^(T$T(\\.([^.]*|synctex\\.gz|out\\.ps)|" + 
+	// tex4ht creates files T$Tyy.(x)htm(l)... 
+	"(se|su|li)?\\d+\\.x?html?|" + 
+	// ... and T$Tddx.png and T$T-dd.svg... 
+	"\\d+x\\.png|" + 
+	"-\\d+\\.svg)|" + 
+	// ... and xxT$T.eps... 
+	"zzT$T\\.eps|" + 
+	// ... and scripts cmsy....png 
+	"(cmsy)\\d+(-c)?-\\d+c?\\.png|" + 
+	// The following occurs sporadic 
+	"(pdf)latex\\d+\\.fls)$";
+
 
     // parameters for graphics preprocessing 
 
@@ -990,6 +1043,11 @@ public class Settings {
     }
 
 
+    public String getPatternClearFromLatexMain() {
+	return  this.patternClearFromLatexMain;
+    }
+
+
     public String getFig2devCommand() {
         return  this.fig2devCommand;
     }
@@ -1240,6 +1298,27 @@ public class Settings {
 
     public void setCleanUp(boolean cleanUp) {
         this.cleanUp = cleanUp;
+    }
+
+    // setter method for patternClearFromLatexMain in maven 
+    public void setPatternClearFromLatexMain(String patternClearFromLatexMain) {
+	this.patternClearFromLatexMain = patternClearFromLatexMain
+	    .replaceAll("(\t|\n| )+", "").trim();
+    }
+
+    // method introduces pattern in ant 
+    public PatternClearFromLatexMain createPatternClearFromLatexMain() {
+   	return new PatternClearFromLatexMain();
+    }
+
+    // defines patternClearFromLatexMain element with text in ant 
+    public class PatternClearFromLatexMain {
+	// FIXME: this is without property resolution. 
+	// to add this need  pattern = getProject().replaceProperties(pattern)
+	// with Task.getProject() 
+   	public void addText(String pattern) {
+   	    Settings.this.setPatternClearFromLatexMain(pattern);
+   	}
     }
 
     public void setFig2devCommand(String fig2devCommand) {
@@ -1627,6 +1706,9 @@ public class Settings {
  	sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
         sb.append(", texPath=")             .append(this.texPath);
 	sb.append(", cleanUp=")             .append(this.cleanUp);
+	sb.append(", patternClearFromLatexMain=")
+	    .append(this.patternClearFromLatexMain);
+
 	// parameters for graphical preprocessors 
         sb.append(", fig2devCommand=")      .append(this.fig2devCommand);
         sb.append(", fig2devGenOptions")    .append(this.fig2devGenOptions);
