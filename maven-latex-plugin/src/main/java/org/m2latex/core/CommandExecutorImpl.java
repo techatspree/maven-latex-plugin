@@ -33,8 +33,7 @@ class CommandExecutorImpl implements CommandExecutor {
 
     private final LogWrapper log;
 
-    CommandExecutorImpl( LogWrapper log )
-    {
+    CommandExecutorImpl(LogWrapper log) {
         this.log = log;
     }
 
@@ -43,6 +42,9 @@ class CommandExecutorImpl implements CommandExecutor {
      * in the working directory <code>workingDir</code>. 
      * Here, <code>pathToExecutable</code> is the path 
      * to the executable. May be null? 
+     * <p>
+     * Logs a warning, if the <code>executable</code> returns 
+     * with return code other than <code>0</code>. 
      *
      * @param workingDir
      *    the working directory. 
@@ -73,11 +75,17 @@ class CommandExecutorImpl implements CommandExecutor {
 	StringStreamConsumer output = new StringStreamConsumer();
 	log.debug("Executing: " + cl + " in: " + workingDir + ". ");
 
-        try {
+	try {
 	    // may throw CommandLineException 
-	    CommandLineUtils.executeCommandLine(cl, output, output);
+	    int returnValue = CommandLineUtils
+		.executeCommandLine(cl, output, output);
+	    if (returnValue != 0) {
+		log.warn("Executing '" + executable + 
+			 "' returned with code " + returnValue + ". ");
+	    }
 	} catch (CommandLineException e) {
-	    throw new BuildExecutionException("Error executing command ", e);
+	    throw new BuildExecutionException
+		("Error executing command '" + executable +  ". ", e);
         }
 
 	log.debug("Output:\n" + output.getOutput() + "\n");
