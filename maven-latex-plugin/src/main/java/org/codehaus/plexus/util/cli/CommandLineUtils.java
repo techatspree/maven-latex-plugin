@@ -133,25 +133,25 @@ public abstract class CommandLineUtils
      * Immediately forks a process, 
      * returns a callable that will block until process is complete.
      * @param cl 
-     *              The command line to execute
+     *    The command line to execute
      * @param systemIn
-     *         The input to read from, must be thread safe
+     *    The input to read from, must be thread safe
      * @param systemOut
-     *        A consumer that receives output, must be thread safe
+     *    A consumer that receives output, must be thread safe
      * @param systemErr
-     *        A consumer that receives system error stream output, 
-     *  must be thread safe
+     *    A consumer that receives system error stream output, 
+     *    must be thread safe
      * @param timeoutInSeconds
-     * Positive integer to specify timeout, 
-     * zero and negative integers for no timeout.
+     *     Positive integer to specify timeout, 
+     *     zero and negative integers for no timeout.
      * @return 
-     * A CommandLineCallable that provides the process return value, 
-     * see {@link Process#exitValue()}. "call" must be called on
-     *         this to be sure the forked process has terminated, 
-     * no guarantees is made about any internal state 
-     * before after the completion of the call statements
+     *     A CommandLineCallable that provides the process return value, 
+     *     see {@link Process#exitValue()}. "call" must be called on
+     *     this to be sure the forked process has terminated, 
+     *     no guarantees is made about any internal state 
+     *     before after the completion of the call statements
      * @throws CommandLineException 
-     * or CommandLineTimeOutException if time out occurs
+     *     or CommandLineTimeOutException if time out occurs
      */
     public static CommandLineCallable 
 	executeCommandLineAsCallable(final Commandline cl, 
@@ -267,8 +267,8 @@ public abstract class CommandLineUtils
 
     private static void waitForAllPumpers(StreamFeeder inputFeeder, 
 					  StreamPumper outputPumper,
-                                           StreamPumper errorPumper )
-    throws InterruptedException
+					  StreamPumper errorPumper)
+	throws InterruptedException
     {
         if ( inputFeeder != null )
         {
@@ -293,8 +293,6 @@ public abstract class CommandLineUtils
      * @return 
      * The shell environment variables, 
      * can be empty but never <code>null</code>.
-     * @throws IOException 
-     * If the environment variables could not be queried from the shell.
      * @see System#getenv() 
      * System.getenv() API, new in JDK 5.0, to get the same result
      *      <b>since 2.0.2 System#getenv() will be used 
@@ -315,7 +313,6 @@ public abstract class CommandLineUtils
      * @return 
      * Properties object of (possibly modified) envar keys 
      * mapped to their values.
-     * @throws IOException .
      * @see System#getenv() 
      * System.getenv() API, new in JDK 5.0, to get the same result
      *      <b>since 2.0.2 System#getenv() will be used 
