@@ -2676,13 +2676,13 @@ Glossary occurs in the toc but is not numbered.
 Did not find a way to add a numbered entry for the glossary 
 into the table of contents. 
 
-The pattern for detection of an error requires option {\tt -no-file-line-error}
-(which is the default) 
+The pattern {\tt(! )} detects an error only 
+{\tt -no-file-line-error} (which is the default) is set 
 but does not work with option {\tt -file-line-error}. 
 This yields 
 %
 \begin{verbatim}
-./manualLatexMavenPlugin.tex:2484: Undefined control sequence.
+./manualLatexMavenPlugin.tex:2500: Undefined control sequence.
 l.2500 \bla
 \end{verbatim}
 %
