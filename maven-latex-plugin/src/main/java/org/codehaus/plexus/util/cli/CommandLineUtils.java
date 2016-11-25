@@ -68,46 +68,67 @@ public abstract class CommandLineUtils
     }
 
 
-    public static int executeCommandLine( Commandline cl, StreamConsumer systemOut, StreamConsumer systemErr )
+    public static int executeCommandLine(Commandline cl, 
+					 StreamConsumer systemOut, 
+					 StreamConsumer systemErr)
         throws CommandLineException
     {
-        return executeCommandLine( cl, null, systemOut, systemErr, 0 );
+        return executeCommandLine(cl, null, systemOut, systemErr, 0);
     }
 
-    public static int executeCommandLine( Commandline cl, StreamConsumer systemOut, StreamConsumer systemErr,
-                                          int timeoutInSeconds )
+    public static int executeCommandLine(Commandline cl, 
+					 StreamConsumer systemOut, 
+					 StreamConsumer systemErr,
+					 int timeoutInSeconds)
         throws CommandLineException
     {
-        return executeCommandLine( cl, null, systemOut, systemErr, timeoutInSeconds );
+        return executeCommandLine
+	    (cl, null, systemOut, systemErr, timeoutInSeconds);
     }
 
-    public static int executeCommandLine( Commandline cl, InputStream systemIn, StreamConsumer systemOut,
-                                          StreamConsumer systemErr )
+    public static int executeCommandLine(Commandline cl, 
+					 InputStream systemIn, 
+					 StreamConsumer systemOut,
+					 StreamConsumer systemErr)
         throws CommandLineException
     {
-        return executeCommandLine( cl, systemIn, systemOut, systemErr, 0 );
+        return executeCommandLine(cl, systemIn, systemOut, systemErr, 0);
     }
 
     /**
-     * @param cl               The command line to execute
-     * @param systemIn         The input to read from, must be thread safe
-     * @param systemOut        A consumer that receives output, must be thread safe
-     * @param systemErr        A consumer that receives system error stream output, must be thread safe
-     * @param timeoutInSeconds Positive integer to specify timeout, zero and negative integers for no timeout.
-     * @return A return value, see {@link Process#exitValue()}
-     * @throws CommandLineException or CommandLineTimeOutException if time out occurs
+     * @param cl               
+     * The command line to execute
+     * @param systemIn         
+     * The input to read from, must be thread safe
+     * @param systemOut        
+     * A consumer that receives output, must be thread safe
+     * @param systemErr        
+     * A consumer that receives system error stream output, must be thread safe
+     * @param timeoutInSeconds 
+     * Positive integer to specify timeout, 
+     * zero and negative integers for no timeout.
+     * @return 
+     * A return value, see {@link Process#exitValue()}
+     * @throws CommandLineException or CommandLineTimeOutException 
+     * if time out occurs
      */
-    public static int executeCommandLine( Commandline cl, InputStream systemIn, StreamConsumer systemOut,
-                                          StreamConsumer systemErr, int timeoutInSeconds )
-        throws CommandLineException
+    public static int executeCommandLine(Commandline cl, 
+					 InputStream systemIn, 
+					 StreamConsumer systemOut,
+					 StreamConsumer systemErr, 
+					 int timeoutInSeconds)
+    throws CommandLineException
     {
-        final CommandLineCallable future =
-            executeCommandLineAsCallable( cl, systemIn, systemOut, systemErr, timeoutInSeconds );
+	// may throw CommandLineException 
+        final CommandLineCallable future = executeCommandLineAsCallable
+            (cl, systemIn, systemOut, systemErr, timeoutInSeconds);
+	// may throw CommandLineException 
         return future.call();
     }
 
     /**
-     * Immediately forks a process, returns a callable that will block until process is complete.
+     * Immediately forks a process, 
+     * returns a callable that will block until process is complete.
      * @param cl 
      *              The command line to execute
      * @param systemIn
@@ -129,26 +150,29 @@ public abstract class CommandLineUtils
      * @throws CommandLineException 
      * or CommandLineTimeOutException if time out occurs
      */
-    public static CommandLineCallable executeCommandLineAsCallable
-	(final Commandline cl, final InputStream systemIn,
-	 final StreamConsumer systemOut,
-	 final StreamConsumer systemErr,
-	 final int timeoutInSeconds )
-        throws CommandLineException
+    public static CommandLineCallable 
+	executeCommandLineAsCallable(final Commandline cl, 
+				     final InputStream systemIn,
+				     final StreamConsumer systemOut,
+				     final StreamConsumer systemErr,
+				     final int timeoutInSeconds)
+	throws CommandLineException
     {
         if ( cl == null )
         {
             throw new IllegalArgumentException( "cl cannot be null." );
         }
-
+	// may throw CommandLineException (sole) 
         final Process p = cl.execute();
 
         final StreamFeeder inputFeeder = systemIn != null ?
              new StreamFeeder( systemIn, p.getOutputStream() ) : null;
 
-        final StreamPumper outputPumper = new StreamPumper( p.getInputStream(), systemOut );
+        final StreamPumper outputPumper = new StreamPumper(p.getInputStream(), 
+							   systemOut);
 
-        final StreamPumper errorPumper = new StreamPumper( p.getErrorStream(), systemErr );
+        final StreamPumper errorPumper = new StreamPumper(p.getErrorStream(), 
+							  systemErr);
 
         if ( inputFeeder != null )
         {
@@ -163,57 +187,56 @@ public abstract class CommandLineUtils
 
         ShutdownHookUtils.addShutDownHook( processHook );
 
-        return new CommandLineCallable()
-        {
+        return new CommandLineCallable() {
             public Integer call()
-                throws CommandLineException
+		throws CommandLineException
             {
-                try
-                {
+                try {
                     int returnValue;
-                    if ( timeoutInSeconds <= 0 )
-                    {
-                        returnValue = p.waitFor();
-                    }
-                    else
-                    {
-                        long now = System.currentTimeMillis();
-                        long timeoutInMillis = 1000L * timeoutInSeconds;
-                        long finish = now + timeoutInMillis;
-                        while ( isAlive( p ) && ( System.currentTimeMillis() < finish ) )
-                        {
-                            Thread.sleep( 10 );
-                        }
-                        if ( isAlive( p ) )
-                        {
-                            throw new InterruptedException( "Process timeout out after " + timeoutInSeconds + " seconds" );
-                        }
-                        returnValue = p.exitValue();
-                    }
+                    if (timeoutInSeconds <= 0) {
+			returnValue = p.waitFor();
+		    } else {
+			long now = System.currentTimeMillis();
+			long timeoutInMillis = 1000L * timeoutInSeconds;
+			long finish = now + timeoutInMillis;
+			while (isAlive(p) && 
+			       System.currentTimeMillis() < finish)
+			    {
+				Thread.sleep( 10 );
+			    }
+			if ( isAlive( p ) )
+			    {
+				throw new InterruptedException
+				    ("Process timeout out after " + 
+				     timeoutInSeconds + " seconds" );
+			    }
+			returnValue = p.exitValue();
+		    }
 
-                    waitForAllPumpers( inputFeeder, outputPumper, errorPumper );
+                    waitForAllPumpers(inputFeeder, outputPumper, errorPumper);
 
-                    if ( outputPumper.getException() != null )
-                    {
-                        throw new CommandLineException( "Error inside systemOut parser", outputPumper.getException() );
-                    }
+                    if ( outputPumper.getException() != null ) {
+			throw new CommandLineException
+			    ("Error inside systemOut parser", 
+			     outputPumper.getException());
+		    }
 
-                    if ( errorPumper.getException() != null )
-                    {
-                        throw new CommandLineException( "Error inside systemErr parser", errorPumper.getException() );
-                    }
+                    if ( errorPumper.getException() != null ) {
+			throw new CommandLineException
+			    ("Error inside systemErr parser", 
+			     errorPumper.getException() );
+		    }
 
                     return returnValue;
-                }
-                catch ( InterruptedException ex )
-                {
-                    if ( inputFeeder != null )
-                    {
+                } catch ( InterruptedException ex ) {
+                    if ( inputFeeder != null ) {
                         inputFeeder.disable();
                     }
                     outputPumper.disable();
-                    errorPumper.disable();
-                    throw new CommandLineTimeOutException( "Error while executing external command, process killed.", ex );
+                    errorPumper .disable();
+                    throw new CommandLineTimeOutException
+			("Error while executing external command, " + 
+			 "process killed.", ex );
                 }
                 finally
                 {
@@ -234,7 +257,8 @@ public abstract class CommandLineUtils
         };
     }
 
-    private static void waitForAllPumpers( StreamFeeder inputFeeder, StreamPumper outputPumper,
+    private static void waitForAllPumpers(StreamFeeder inputFeeder, 
+					  StreamPumper outputPumper,
                                            StreamPumper errorPumper )
         throws InterruptedException
     {
@@ -248,15 +272,25 @@ public abstract class CommandLineUtils
     }
 
     /**
-     * Gets the shell environment variables for this process. Note that the returned mapping from variable names to
-     * values will always be case-sensitive regardless of the platform, i.e. <code>getSystemEnvVars().get("path")</code>
-     * and <code>getSystemEnvVars().get("PATH")</code> will in general return different values. However, on platforms
-     * with case-insensitive environment variables like Windows, all variable names will be normalized to upper case.
+     * Gets the shell environment variables for this process. 
+     * Note that the returned mapping from variable names to
+     * values will always be case-sensitive regardless of the platform, 
+     * i.e. <code>getSystemEnvVars().get("path")</code>
+     * and <code>getSystemEnvVars().get("PATH")</code>
+     *  will in general return different values. 
+     * However, on platforms
+     * with case-insensitive environment variables like Windows, 
+     * all variable names will be normalized to upper case.
      *
-     * @return The shell environment variables, can be empty but never <code>null</code>.
-     * @throws IOException If the environment variables could not be queried from the shell.
-     * @see System#getenv() System.getenv() API, new in JDK 5.0, to get the same result
-     *      <b>since 2.0.2 System#getenv() will be used if available in the current running jvm.</b>
+     * @return 
+     * The shell environment variables, 
+     * can be empty but never <code>null</code>.
+     * @throws IOException 
+     * If the environment variables could not be queried from the shell.
+     * @see System#getenv() 
+     * System.getenv() API, new in JDK 5.0, to get the same result
+     *      <b>since 2.0.2 System#getenv() will be used 
+     * if available in the current running jvm.</b>
      */
     public static Properties getSystemEnvVars()
         throws IOException
@@ -265,14 +299,20 @@ public abstract class CommandLineUtils
     }
 
     /**
-     * Return the shell environment variables. If <code>caseSensitive == true</code>, then envar
+     * Return the shell environment variables. 
+     * If <code>caseSensitive == true</code>, then envar
      * keys will all be upper-case.
      *
-     * @param caseSensitive Whether environment variable keys should be treated case-sensitively.
-     * @return Properties object of (possibly modified) envar keys mapped to their values.
+     * @param caseSensitive 
+     * Whether environment variable keys should be treated case-sensitively.
+     * @return 
+     * Properties object of (possibly modified) envar keys 
+     * mapped to their values.
      * @throws IOException .
-     * @see System#getenv() System.getenv() API, new in JDK 5.0, to get the same result
-     *      <b>since 2.0.2 System#getenv() will be used if available in the current running jvm.</b>
+     * @see System#getenv() 
+     * System.getenv() API, new in JDK 5.0, to get the same result
+     *      <b>since 2.0.2 System#getenv() will be used 
+     * if available in the current running jvm.</b>
      */
     public static Properties getSystemEnvVars( boolean caseSensitive )
         throws IOException
@@ -384,7 +424,8 @@ public abstract class CommandLineUtils
 
         if ( ( state == inQuote ) || ( state == inDoubleQuote ) )
         {
-            throw new CommandLineException( "unbalanced quotes in " + toProcess );
+            throw new CommandLineException
+		("unbalanced quotes in " + toProcess);
         }
 
         String[] args = new String[v.size()];
@@ -400,9 +441,12 @@ public abstract class CommandLineUtils
      *
      * @throws CommandLineException if the argument contains both, single
      *                              and double quotes.
-     * @deprecated Use {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
-     *             {@link StringUtils#quoteAndEscape(String, char, char[], char, boolean)}, or
-     *             {@link StringUtils#quoteAndEscape(String, char)} instead.
+     * @deprecated 
+     * Use 
+     * {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
+     * {@link StringUtils#quoteAndEscape(String, char, char[], char, boolean)} 
+     * or
+     * {@link StringUtils#quoteAndEscape(String, char)} instead.
      */
     @SuppressWarnings( { "JavaDoc", "deprecation" } )
     public static String quote( String argument )
@@ -419,9 +463,11 @@ public abstract class CommandLineUtils
      *
      * @throws CommandLineException if the argument contains both, single
      *                              and double quotes.
-     * @deprecated Use {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
-     *             {@link StringUtils#quoteAndEscape(String, char, char[], char, boolean)}, or
-     *             {@link StringUtils#quoteAndEscape(String, char)} instead.
+     * @deprecated Use 
+     * {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
+     * {@link StringUtils#quoteAndEscape(String, char, char[], char, boolean)} 
+     * or
+     * {@link StringUtils#quoteAndEscape(String, char)} instead.
      */
     @SuppressWarnings( { "JavaDoc", "UnusedDeclaration", "deprecation" } )
     public static String quote( String argument, boolean wrapExistingQuotes )
@@ -431,20 +477,25 @@ public abstract class CommandLineUtils
     }
 
     /**
-     * @deprecated Use {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
-     *             {@link StringUtils#quoteAndEscape(String, char, char[], char, boolean)}, or
-     *             {@link StringUtils#quoteAndEscape(String, char)} instead.
+     * @deprecated Use 
+     * {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
+     * {@link StringUtils#quoteAndEscape(String, char, char[], char, boolean)} 
+     * or
+     * {@link StringUtils#quoteAndEscape(String, char)} instead.
      */
     @SuppressWarnings( { "JavaDoc" } )
-    public static String quote( String argument, boolean escapeSingleQuotes, boolean escapeDoubleQuotes,
-                                boolean wrapExistingQuotes )
+    public static String quote(String argument, 
+			       boolean escapeSingleQuotes, 
+			       boolean escapeDoubleQuotes,
+			       boolean wrapExistingQuotes)
         throws CommandLineException
     {
         if ( argument.contains( "\"" ) )
         {
             if ( argument.contains( "\'" ) )
             {
-                throw new CommandLineException( "Can't handle single and double quotes in same argument" );
+                throw new CommandLineException
+		    ("Can't handle single and double quotes in same argument");
             }
             else
             {
@@ -506,7 +557,7 @@ public abstract class CommandLineUtils
             }
             catch ( Exception e )
             {
-                System.err.println( "Error quoting argument: " + e.getMessage() );
+                System.err.println("Error quoting argument: " + e.getMessage());
             }
         }
         return result.toString();
