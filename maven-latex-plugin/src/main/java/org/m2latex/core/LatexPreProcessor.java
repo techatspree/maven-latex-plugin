@@ -65,7 +65,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // suffix for svg
     private final static String SUFFIX_SVG = ".svg";
     // suffix for gnuplot
-    private final static String SUFFIX_PLT = ".plt";
+    // FIXME: to be made configurable 
+    private final static String SUFFIX_GP = ".gp";
     // suffix for metapost
     private final static String SUFFIX_MP  = ".mp";
     // from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
@@ -114,7 +115,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_FIG;
 	    }
 	},
-	plt {
+	gp {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
 	    void transformSrc(File file, LatexPreProcessor proc) 
@@ -123,10 +124,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc)
 	    	throws BuildExecutionException {
-		proc.clearTargetPlt(file);
+		proc.clearTargetGp(file);
 	    }
 	    String getSuffix() {
-		return LatexPreProcessor.SUFFIX_PLT;
+		return LatexPreProcessor.SUFFIX_GP;
 	    }
 	},
 	mp {
@@ -375,20 +376,20 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Converts a gnuplot file into a tex-file with ending ptx 
      * including a pdf-file. 
      *
-     * @param pltFile 
-     *    the plt-file (gnuplot format) to be converted to pdf. 
+     * @param gpFile 
+     *    the gp-file (gnuplot format) to be converted to pdf. 
      * @throws BuildExecutionException
      *    if running the ptx/pdf-conversion built in in gnuplot fails. 
      * @see #create()
      */
     // used in processGraphics(Collection) only 
-    private void runGnuplot2Dev(File pltFile, LatexDev dev) 
+    private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildExecutionException {
 
-	this.log.info("Processing gnuplot-file '" + pltFile + "'. ");
+	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	String command = this.settings.getGnuplotCommand();
-	File pdfFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF);
-	File ptxFile = this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX);
+	File pdfFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF);
+	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
 	String[] args = new String[] {
 	    "-e",   // run a command string "..." with commands sparated by ';' 
@@ -396,7 +397,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
 	    " " + this.settings.getGnuplotOptions() + 
 	    ";set output \"" + ptxFile.getName() + 
-	    "\";load \"" + pltFile.getName() + "\""
+	    "\";load \"" + gpFile.getName() + "\""
 	};
 	// FIXME: include options. 
 // set terminal cairolatex
@@ -411,11 +412,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 // {size <XX>{unit},<YY>{unit}}
 
 
-//	if (update(pltFile, ptxFile)) {
+//	if (update(gpFile, ptxFile)) {
 	    log.debug("Running " + command + 
-		      " -e...  on '" + pltFile.getName() + "'. ");
+		      " -e...  on '" + gpFile.getName() + "'. ");
 	    // may throw BuildExecutionException 
-	    this.executor.execute(pltFile.getParentFile(), //workingDir 
+	    this.executor.execute(gpFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
 				  command, 
 				  args);
@@ -425,15 +426,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Deletes the graphic files 
-     * created from the gnuplot-file <code>pltFile</code>. 
+     * created from the gnuplot-file <code>gpFile</code>. 
      */
-    private void clearTargetPlt(File pltFile) 
+    private void clearTargetGp(File gpFile) 
 	throws BuildExecutionException {
 
-	this.log.info("Deleting targets of gnuplot-file '" + pltFile + "'. ");
+	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
 	// may throw BuildExecutionException 
-	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PTX).delete();
-	this.fileUtils.replaceSuffix(pltFile, SUFFIX_PDF).delete();
+	this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX).delete();
+	this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF).delete();
     }
 
     /**
