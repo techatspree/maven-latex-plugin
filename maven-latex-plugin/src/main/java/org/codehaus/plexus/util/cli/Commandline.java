@@ -105,15 +105,15 @@ import java.util.Vector;
 public class Commandline
     implements Cloneable
 {
-    /**
-     * @deprecated Use {@link org.codehaus.plexus.util.Os} class instead.
-     */
-    protected static final String OS_NAME = "os.name";
+    // /**
+    //  * @deprecated Use {@link org.codehaus.plexus.util.Os} class instead.
+    //  */
+    // protected static final String OS_NAME = "os.name";
 
-    /**
-     * @deprecated Use {@link org.codehaus.plexus.util.Os} class instead.
-     */
-    protected static final String WINDOWS = "Windows";
+    // /**
+    //  * @deprecated Use {@link org.codehaus.plexus.util.Os} class instead.
+    //  */
+    // protected static final String WINDOWS = "Windows";
 
     protected Vector<Arg> arguments = new Vector<Arg>();
 
@@ -126,15 +126,18 @@ public class Commandline
 
     private Shell shell;
 
-    /**
-     * @deprecated Use {@link Commandline#setExecutable(String)} instead.
-     */
-    protected String executable;
+     /**
+      * @deprecated Use {@link Commandline#setExecutable(String)} instead.
+      */
+    // FIXME: not really deprecated: setExecutable uses this also 
+    //protected 
+    private String executable;
 
     /**
      * @deprecated Use {@link Commandline#setWorkingDirectory(File)} or
      * {@link Commandline#setWorkingDirectory(String)} instead.
      */
+    // FIXME: not really deprecated: used by set/get 
     private File workingDir;
 
     /**
@@ -517,13 +520,14 @@ public class Commandline
      * Returns the shell, executable and all defined arguments.
      * Shell usage is only desirable when generating code for remote execution.
      */
+    // used by toString()
     public String[] getShellCommandline()
     {
         // TODO: Provided only for backward compat. with <= 1.4
         verifyShellState();
 
         return (String[]) getShell()
-	    .getShellCommandLine(getArguments()).toArray(new String[0]);
+    	    .getShellCommandLine(getArguments()).toArray(new String[0]);
     }
 
     /**
@@ -647,6 +651,7 @@ public class Commandline
      * throwing an {@link IOException}. 
      * </ul>
      */
+    // used 
     public Process execute()
 	throws CommandLineException // thrown 3 times explicitly
     {
@@ -692,6 +697,7 @@ public class Commandline
      * Remove once backward compat with plexus-utils <= 1.4 
      * is no longer a consideration
      */
+    // used by execute()
     private void verifyShellState()
     {
         if ( shell.getWorkingDirectory() == null )

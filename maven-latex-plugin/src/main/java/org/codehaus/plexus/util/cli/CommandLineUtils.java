@@ -67,7 +67,7 @@ public abstract class CommandLineUtils
         }
     }
 
-
+    // used in org.m2latex.core.CommandExecutorImpl 
     public static int executeCommandLine(Commandline cl, 
 					 StreamConsumer systemOut, 
 					 StreamConsumer systemErr)
@@ -77,26 +77,26 @@ public abstract class CommandLineUtils
         return executeCommandLine(cl, null, systemOut, systemErr, 0);
     }
 
-    public static int executeCommandLine(Commandline cl, 
-					 StreamConsumer systemOut, 
-					 StreamConsumer systemErr,
-					 int timeoutInSeconds)
-        throws CommandLineException
-    {
-	// may throw CommandLineException 
-        return executeCommandLine
-	    (cl, null, systemOut, systemErr, timeoutInSeconds);
-    }
+    // public static int executeCommandLine(Commandline cl, 
+    // 					 StreamConsumer systemOut, 
+    // 					 StreamConsumer systemErr,
+    // 					 int timeoutInSeconds)
+    //     throws CommandLineException
+    // {
+    // 	// may throw CommandLineException 
+    //     return executeCommandLine
+    // 	    (cl, null, systemOut, systemErr, timeoutInSeconds);
+    // }
 
-    public static int executeCommandLine(Commandline cl, 
-					 InputStream systemIn, 
-					 StreamConsumer systemOut,
-					 StreamConsumer systemErr)
-        throws CommandLineException
-    {
-	// may throw CommandLineException 
-        return executeCommandLine(cl, systemIn, systemOut, systemErr, 0);
-    }
+    // public static int executeCommandLine(Commandline cl, 
+    // 					 InputStream systemIn, 
+    // 					 StreamConsumer systemOut,
+    // 					 StreamConsumer systemErr)
+    //     throws CommandLineException
+    // {
+    // 	// may throw CommandLineException 
+    //     return executeCommandLine(cl, systemIn, systemOut, systemErr, 0);
+    // }
 
     /**
      * @param cl               
@@ -115,6 +115,7 @@ public abstract class CommandLineUtils
      * @throws CommandLineException or CommandLineTimeOutException 
      * if time out occurs
      */
+    // used 
     public static int executeCommandLine(Commandline cl, 
 					 InputStream systemIn, 
 					 StreamConsumer systemOut,
@@ -125,7 +126,10 @@ public abstract class CommandLineUtils
 	// may throw CommandLineException 
         final CommandLineCallable future = executeCommandLineAsCallable
             (cl, systemIn, systemOut, systemErr, timeoutInSeconds);
-	// may throw CommandLineException 
+	// may throw CommandLineException: 
+	// see docs of executeCommandLineAsCallable: 
+	// - error inside systemOut/systemErr parser 
+	// - wrapping InterruptedException 
         return future.call();
     }
 
@@ -149,10 +153,15 @@ public abstract class CommandLineUtils
      *     see {@link Process#exitValue()}. "call" must be called on
      *     this to be sure the forked process has terminated, 
      *     no guarantees is made about any internal state 
-     *     before after the completion of the call statements
+     *     before after the completion of the call statements 
+     *     <p>
+     *     It is documented in which cases the return value throws exceptions 
+     *     if {@link CommandLineCallable#call()} is executed. 
      * @throws CommandLineException 
-     *     or CommandLineTimeOutException if time out occurs
+     *     or CommandLineTimeOutException: 
+     *     see {@link CommandLine#execute()}. 
      */
+    // used 
     public static CommandLineCallable 
 	executeCommandLineAsCallable(final Commandline cl, 
 				     final InputStream systemIn,
@@ -168,8 +177,8 @@ public abstract class CommandLineUtils
 	// may throw CommandLineException (sole) 
         final Process p = cl.execute();
 
-        final StreamFeeder inputFeeder = systemIn != null ?
-             new StreamFeeder( systemIn, p.getOutputStream() ) : null;
+        final StreamFeeder inputFeeder = systemIn != null 
+	    ? new StreamFeeder(systemIn, p.getOutputStream()) : null;
 
         final StreamPumper outputPumper = new StreamPumper(p.getInputStream(), 
 							   systemOut);
@@ -203,46 +212,46 @@ public abstract class CommandLineUtils
             public Integer call()
 		throws CommandLineException
             {
-                try {
+		try {
                     int returnValue;
                     if (timeoutInSeconds <= 0) {
+			// may throw InterruptedException 
 			returnValue = p.waitFor();
 		    } else {
 			long now = System.currentTimeMillis();
 			long timeoutInMillis = 1000L * timeoutInSeconds;
 			long finish = now + timeoutInMillis;
 			while (isAlive(p) && 
-			       System.currentTimeMillis() < finish)
-			    {
-				Thread.sleep( 10 );
-			    }
-			if ( isAlive( p ) )
-			    {
-				// caught in catch block 
-				throw new InterruptedException
-				    ("Process timeout out after " + 
-				     timeoutInSeconds + " seconds" );
-			    }
+			       System.currentTimeMillis() < finish) {
+			    // may throw InterruptedException 
+			    Thread.sleep( 10 );
+			}
+			if ( isAlive( p ) ) {
+			    // caught in catch block 
+			    throw new InterruptedException
+				("Process timeout out after " + 
+				 timeoutInSeconds + " seconds" );
+			}
 			returnValue = p.exitValue();
 		    }
-
+		    // may throw InterruptedException 
                     waitForAllPumpers(inputFeeder, outputPumper, errorPumper);
 
-                    if ( outputPumper.getException() != null ) {
+                    if (outputPumper.getException() != null) {
 			throw new CommandLineException
 			    ("Error inside systemOut parser", 
 			     outputPumper.getException());
 		    }
 
-                    if ( errorPumper.getException() != null ) {
+                    if (errorPumper.getException() != null) {
 			throw new CommandLineException
 			    ("Error inside systemErr parser", 
 			     errorPumper.getException() );
 		    }
 
                     return returnValue;
-                } catch ( InterruptedException ex ) {
-                    if ( inputFeeder != null ) {
+                } catch (InterruptedException ex) {
+                    if (inputFeeder != null) {
                         inputFeeder.disable();
                     }
                     outputPumper.disable();
@@ -352,7 +361,12 @@ public abstract class CommandLineUtils
         }
     }
 
-    public static String[] translateCommandline( String toProcess )
+    /**
+     *
+     * @throws CommandLineException
+     *    If the quotes are not ballanced 
+     */
+    public static String[] translateCommandline(String toProcess)
 	throws CommandLineException// thrown only once: explicitly 
     {
         if ( ( toProcess == null ) || ( toProcess.length() == 0 ) )
@@ -428,7 +442,7 @@ public abstract class CommandLineUtils
         if ( ( state == inQuote ) || ( state == inDoubleQuote ) )
         {
             throw new CommandLineException
-		("unbalanced quotes in " + toProcess);
+		("Unbalanced quotes in " + toProcess);
         }
 
         String[] args = new String[v.size()];
@@ -442,8 +456,8 @@ public abstract class CommandLineUtils
      * as is. If it contains double quotes, use single quotes - else
      * surround the argument by double quotes.</p>
      *
-     * @throws CommandLineException if the argument contains both, single
-     *                              and double quotes.
+     * @throws CommandLineException
+     *    if the argument contains both, single and double quotes.
      * @deprecated 
      * Use 
      * {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
@@ -456,7 +470,7 @@ public abstract class CommandLineUtils
         throws CommandLineException
     {
 	// may throw CommandLineException 
-        return quote( argument, false, false, true );
+        return quote(argument, false, false, true);
     }
 
     /**
@@ -465,8 +479,8 @@ public abstract class CommandLineUtils
      * as is. If it contains double quotes, use single quotes - else
      * surround the argument by double quotes.</p>
      *
-     * @throws CommandLineException if the argument contains both, single
-     *                              and double quotes.
+     * @throws CommandLineException
+     *    if the argument contains both, single and double quotes.
      * @deprecated Use 
      * {@link StringUtils#quoteAndEscape(String, char, char[], char[], char, boolean)},
      * {@link StringUtils#quoteAndEscape(String, char, char[], char, boolean)} 
@@ -478,7 +492,7 @@ public abstract class CommandLineUtils
         throws CommandLineException
     {
 	// may throw CommandLineException 
-        return quote( argument, false, false, wrapExistingQuotes );
+        return quote(argument, false, false, wrapExistingQuotes);
     }
 
     /**
