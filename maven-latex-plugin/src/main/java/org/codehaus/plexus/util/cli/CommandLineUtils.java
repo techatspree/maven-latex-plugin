@@ -73,6 +73,7 @@ public abstract class CommandLineUtils
 					 StreamConsumer systemErr)
         throws CommandLineException
     {
+	// may throw CommandLineException 
         return executeCommandLine(cl, null, systemOut, systemErr, 0);
     }
 
@@ -82,6 +83,7 @@ public abstract class CommandLineUtils
 					 int timeoutInSeconds)
         throws CommandLineException
     {
+	// may throw CommandLineException 
         return executeCommandLine
 	    (cl, null, systemOut, systemErr, timeoutInSeconds);
     }
@@ -92,6 +94,7 @@ public abstract class CommandLineUtils
 					 StreamConsumer systemErr)
         throws CommandLineException
     {
+	// may throw CommandLineException 
         return executeCommandLine(cl, systemIn, systemOut, systemErr, 0);
     }
 
@@ -187,6 +190,15 @@ public abstract class CommandLineUtils
 
         ShutdownHookUtils.addShutDownHook( processHook );
 
+	/**
+	 * @throws CommandLineException
+	 *    only explicitly (3 occurrences) 
+	 *    <ul>
+	 *    <li> Error inside systemOut parser 
+	 *    <li> Error inside systemErr parser 
+	 *    <li> Wrapping an {@link InterruptedException} 
+	 *    </ul>
+	 */
         return new CommandLineCallable() {
             public Integer call()
 		throws CommandLineException
@@ -206,6 +218,7 @@ public abstract class CommandLineUtils
 			    }
 			if ( isAlive( p ) )
 			    {
+				// caught in catch block 
 				throw new InterruptedException
 				    ("Process timeout out after " + 
 				     timeoutInSeconds + " seconds" );
@@ -237,21 +250,16 @@ public abstract class CommandLineUtils
                     throw new CommandLineTimeOutException
 			("Error while executing external command, " + 
 			 "process killed.", ex );
-                }
-                finally
-                {
-                    ShutdownHookUtils.removeShutdownHook( processHook );
-
+                } finally {
+                    ShutdownHookUtils.removeShutdownHook(processHook);
                     processHook.run();
 
-                    if ( inputFeeder != null )
-                    {
+                    if (inputFeeder != null) {
                         inputFeeder.close();
                     }
 
                     outputPumper.close();
-
-                    errorPumper.close();
+                    errorPumper .close();
                 }
             }
         };
