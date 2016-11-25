@@ -118,7 +118,8 @@ public class Commandline
 
     //protected Vector envVars = new Vector();
     // synchronized added to preserve synchronize of Vector class
-    protected Map<String,String> envVars = Collections.synchronizedMap( new LinkedHashMap<String,String>() );
+    protected Map<String,String> envVars = Collections
+	.synchronizedMap( new LinkedHashMap<String,String>() );
 
     private long pid = -1;
 
@@ -178,7 +179,8 @@ public class Commandline
     }
 
     /**
-     * Create a new command line object, given a command following POSIX sh quoting rules
+     * Create a new command line object, 
+     * given a command following POSIX sh quoting rules
      *
      * @param toProcess
      */
@@ -216,7 +218,7 @@ public class Commandline
     {
         if ( pid == -1 )
         {
-            pid = Long.parseLong( String.valueOf( System.currentTimeMillis() ) );
+            pid = Long.parseLong(String.valueOf(System.currentTimeMillis()));
         }
 
         return pid;
@@ -267,12 +269,14 @@ public class Commandline
     }
 
     /**
-     * <p>Sets the shell or command-line interpretor for the detected operating system,
+     * <p>Sets the shell or command-line interpretor 
+     * for the detected operating system,
      * and the shell arguments.</p>
      */
     private void setDefaultShell()
     {
-        //If this is windows set the shell to command.com or cmd.exe with correct arguments.
+        // If this is windows set the shell to command.com 
+	// or cmd.exe with correct arguments.
         if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
         {
             if ( Os.isFamily( Os.FAMILY_WIN9X ) )
@@ -312,8 +316,9 @@ public class Commandline
      * <p>Each commandline object has at most one instance of the
      * argument class.</p>
      *
-     * @param insertAtStart if true, the argument is inserted at the
-     *                      beginning of the list of args, otherwise it is appended.
+     * @param insertAtStart 
+     *    if true, the argument is inserted at the
+     *    beginning of the list of args, otherwise it is appended.
      * @deprecated Use {@link Commandline#createArg(boolean)} instead
      */
     public Argument createArgument( boolean insertAtStart )
@@ -351,8 +356,9 @@ public class Commandline
      * <p>Each commandline object has at most one instance of the
      * argument class.</p>
      *
-     * @param insertAtStart if true, the argument is inserted at the
-     *                      beginning of the list of args, otherwise it is appended.
+     * @param insertAtStart 
+     *    if true, the argument is inserted at the
+     *    beginning of the list of args, otherwise it is appended.
      */
     public Arg createArg( boolean insertAtStart )
     {
@@ -383,8 +389,9 @@ public class Commandline
     /**
      * Adds an argument object to our list of args.
      *
-     * @param insertAtStart if true, the argument is inserted at the
-     *                      beginning of the list of args, otherwise it is appended.
+     * @param insertAtStart 
+     *    if true, the argument is inserted at the
+     *    beginning of the list of args, otherwise it is appended.
      */
     public void addArg( Arg argument, boolean insertAtStart )
     {
@@ -408,7 +415,8 @@ public class Commandline
     }
 
     /**
-     * @return Executable to be run, as a literal string (no shell quoting/munging)
+     * @return 
+     * Executable to be run, as a literal string (no shell quoting/munging)
      */
     public String getLiteralExecutable()
     {
@@ -417,10 +425,10 @@ public class Commandline
 
     /**
      * Return an executable name, quoted for shell use.
-     *
      * Shell usage is only desirable when generating code for remote execution.
      *
-     * @return Executable to be run, quoted for shell interpretation
+     * @return 
+     * Executable to be run, quoted for shell interpretation
      */
     public String getExecutable()
     {
@@ -481,7 +489,8 @@ public class Commandline
         }
         catch ( Exception e )
         {
-            throw new CommandLineException( "Error setting up environmental variables", e );
+            throw new CommandLineException
+		("Error setting up environmental variables", e);
         }
         String[] environmentVars = new String[envVars.size()];
         int i = 0;
@@ -515,7 +524,6 @@ public class Commandline
 
     /**
      * Returns the shell, executable and all defined arguments.
-     *
      * Shell usage is only desirable when generating code for remote execution.
      */
     public String[] getShellCommandline()
@@ -523,7 +531,8 @@ public class Commandline
         // TODO: Provided only for backward compat. with <= 1.4
         verifyShellState();
 
-        return (String[]) getShell().getShellCommandLine( getArguments() ).toArray( new String[0] );
+        return (String[]) getShell()
+	    .getShellCommandLine(getArguments()).toArray(new String[0]);
     }
 
     /**
@@ -583,7 +592,8 @@ public class Commandline
     }
 
     /**
-     * Clear out the arguments but leave the executable in place for another operation.
+     * Clear out the arguments 
+     * but leave the executable in place for another operation.
      */
     public void clearArgs()
     {
@@ -653,34 +663,38 @@ public class Commandline
         {
             if ( workingDir == null )
             {
-                process = Runtime.getRuntime().exec( getCommandline(), environment, workingDir );
+                process = Runtime.getRuntime()
+		    .exec(getCommandline(), environment, workingDir);
             }
             else
             {
                 if ( !workingDir.exists() )
                 {
-                    throw new CommandLineException( "Working directory \"" + workingDir.getPath()
-                        + "\" does not exist!" );
+                    throw new CommandLineException("Working directory \"" + 
+						   workingDir.getPath() + 
+						   "\" does not exist!");
                 }
                 else if ( !workingDir.isDirectory() )
                 {
-                    throw new CommandLineException( "Path \"" + workingDir.getPath()
-                        + "\" does not specify a directory." );
+                    throw new CommandLineException("Path \"" + 
+						   workingDir.getPath() + 
+						   "\" is no directory.");
                 }
 
-                process = Runtime.getRuntime().exec( getCommandline(), environment, workingDir );
+                process = Runtime.getRuntime()
+		    .exec(getCommandline(), environment, workingDir);
             }
-        }
-        catch ( IOException ex )
-        {
-            throw new CommandLineException( "Error while executing process.", ex );
+        } catch ( IOException ex ) {
+            throw new CommandLineException("Error while executing process.",ex);
         }
 
         return process;
     }
 
     /**
-     * @deprecated Remove once backward compat with plexus-utils <= 1.4 is no longer a consideration
+     * @deprecated 
+     * Remove once backward compat with plexus-utils <= 1.4 
+     * is no longer a consideration
      */
     private void verifyShellState()
     {
@@ -726,7 +740,8 @@ public class Commandline
     }
 
     /**
-     * @deprecated Use {@link CommandLineUtils#translateCommandline(String)} instead.
+     * @deprecated 
+     * Use {@link CommandLineUtils#translateCommandline(String)} instead.
      */
     public static String[] translateCommandline( String toProcess )
         throws Exception
