@@ -180,6 +180,7 @@ zzT$T\.eps|
 	<patternT4htOutputFiles>
 	  ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
 	  \.css|
+	  \d+x\.png|
 	  -\d+\.svg)|
 	  (cmsy)\d+(-c)?-\d+c?\.png)$
 	</patternT4htOutputFiles>
