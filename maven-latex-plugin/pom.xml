@@ -701,7 +701,7 @@ not allowed:
 	    <!-- xhtml,uni-html4,0 mathml,
 ,uni-html4,2,svg-->
             <tex4htStyOptions>
-	    xhtml,uni-html4,2,svg,pic-tabular
+	    xhtml,uni-html4,2,pic-tabular
 	    </tex4htStyOptions>
 
 	    <!-- options for tex4ht.c, default is empty -->
@@ -736,14 +736,16 @@ not allowed:
 		 and appendices. 
 		 - '^T$T\d+\.x?html?$' are footnotes. 
 		 - '^T$T\.css$' are cascaded stylesheets. 
-		 - '^T$T-\d+\.svg$' are svg-files representing figures. 
+		 - '^T$T-\d+\.svg$' and '^T$T\d+x\.png$' 
+		 are svg/png-files representing figures. 
 		 - '^(cmsy)\d+(-c)?-\d+c?\.png$' represents special symbols. 
 		 
 		 Note that the patterns for the html-files 
 		 can be summarized as '^T$T((ch|se|su|ap|li)?\d+)?\.x?html?$'. 
-		 Adding the patterns for the css-file and the svg-files, 
+		 Adding the patterns for the css-file and the svg/png-files, 
 		 we obtain 
-		 '^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|\.css|-\d+\.svg)$'. 
+		 '^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
+		 \.css|\d+x\.png|-\d+\.svg)$'. 
 		 
 		 The pattern is designed to match quite exactly 
 		 the files to be copied to $targetSiteDirectory, 
@@ -758,6 +760,7 @@ not allowed:
 	    <patternT4htOutputFiles>
 	      ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
 	      \.css|
+	      \d+x\.png|
 	      -\d+\.svg)|
 	      (cmsy)\d+(-c)?-\d+c?\.png)$
 	    </patternT4htOutputFiles>
