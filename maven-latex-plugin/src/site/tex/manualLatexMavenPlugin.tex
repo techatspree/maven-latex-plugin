@@ -2396,17 +2396,21 @@ are chapters, sections and subsections or below
 and appendices. 
 - '\textasciicircum T\$T\textbackslash d+\textbackslash.x?html?\$' are footnotes. 
 - '\textasciicircum T\$T\textbackslash.css\$' are cascaded stylesheets. 
-- '\textasciicircum T\$T-\textbackslash d+\textbackslash.svg\$' 
-are svg-files representing figures. 
+- '\textasciicircum T\$T-\textbackslash d+\textbackslash.svg\$' and 
+  '\textasciicircum T\$T\textbackslash d+x\textbackslash.png\$' 
+are svg/png-files representing figures. 
 - '\textasciicircum(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$' 
 represents special symbols. 
 		 
 Note that the patterns for the html-files 
 can be summarized as '\textasciicircum T\$T((ch|se|su|ap|li)?\d+)?\.x?html?\$'. 
-Adding the patterns for the css-file and the svg-files, 
+Adding the patterns for the css-file and the svg/png-files, 
 we obtain 
-'\textasciicircum T\$T(((ch|se|su|ap|li)?\textbackslash
-d+)?\textbackslash.x?html?|\textbackslash.css|-\textbackslash d+\textbackslash.svg)\$'. 
+'\textasciicircum T\$T
+(((ch|se|su|ap|li)?\textbackslash d+)?\textbackslash.x?html?|
+\textbackslash.css|
+\textbackslash d+x\textbackslash.png|
+-\textbackslash d+\textbackslash.svg)\$'. 
 		 
 The pattern is designed to match quite exactly 
 the files to be copied to \$targetSiteDirectory, 
@@ -2697,13 +2701,6 @@ and as a target file of htlatex.
 Thus {\tt mvn latex:clr} tries to delete the targets of the svg-files, 
 although these are not sources but themselves targets. 
 
-In target html, there seem to be created files {\tt$<$font$>$.png} 
-and things like that. 
-Neither {\tt mvn latex:html} copies them to the target folder 
-nor {\tt mvn latex:clr} deletes them in the source folder. 
-It seems more appropriate at least for target html, 
-to specify the files to be deleted and the files to be copied 
-through regular expressions, rather than by wildcards. 
 
 For {\tt mvn latex:clr} maybe a new parameter would be helpful: 
 suffixes to be ignored which also applies to creational targets, 
@@ -2712,6 +2709,11 @@ for each of these files.
 
 Target html: references to figures are missing. 
 jpg and png-pictures oddly represented. 
+With option svg: problem. 
+Leave away, then at least the formula occurs. 
+But then, from the mixed pictures only the text occur, 
+whereas the pdf is still missing. 
+Maybe htlatex still relies on eps-format. 
 Table is very wide. 
 Umlauts and sz maybe also not properly represented. 
 
