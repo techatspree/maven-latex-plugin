@@ -464,9 +464,7 @@ public class Commandline
      * Add system environment variables
      */
     public void addSystemEnvironment()
-            throws IOException
     {
-	// may throw IOException 
         Properties systemEnvVars = CommandLineUtils.getSystemEnvVars();
 
         for ( Object o : systemEnvVars.keySet() )
@@ -481,20 +479,10 @@ public class Commandline
 
     /**
      * Return the list of environment variables
-     *
-     * @throws CommandLineException
-     *    wrapping an {@link IOException} 
-     *    thrown by {@link #addSystemEnvironment()}. 
      */
     public String[] getEnvironmentVariables()
-	throws CommandLineException// explicitly only 
     {
-        try {
-            addSystemEnvironment();
-        } catch (IOException e) {
-            throw new CommandLineException
-		("Error setting up environmental variables", e);
-        }
+	addSystemEnvironment();
         String[] environmentVars = new String[envVars.size()];
         int i = 0;
         for ( Object o : envVars.keySet() )
@@ -652,8 +640,6 @@ public class Commandline
      * if 
      * <ul>
      * <li>
-     * {@link #getEnvironmentVariables()} throws an exception. 
-     * <li>
      * if the file expected to be the working directory 
      * does not exist or is not a directory. 
      * <li>
@@ -662,7 +648,7 @@ public class Commandline
      * </ul>
      */
     public Process execute()
-	throws CommandLineException // thrown once implicitly and 3 times expl.
+	throws CommandLineException // thrown 3 times explicitly
     {
         // TODO: Provided only for backward compat. with <= 1.4
         verifyShellState();
@@ -670,7 +656,7 @@ public class Commandline
         Process process;
 
         //addEnvironment( "MAVEN_TEST_ENVAR", "MAVEN_TEST_ENVAR_VALUE" );
-	// may throw CommandLineException
+
         String[] environment = getEnvironmentVariables();
 
         File workingDir = shell.getWorkingDirectory();
