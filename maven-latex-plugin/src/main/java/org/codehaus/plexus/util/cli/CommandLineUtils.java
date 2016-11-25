@@ -268,15 +268,15 @@ public abstract class CommandLineUtils
     private static void waitForAllPumpers(StreamFeeder inputFeeder, 
 					  StreamPumper outputPumper,
                                            StreamPumper errorPumper )
-        throws InterruptedException
+    throws InterruptedException
     {
         if ( inputFeeder != null )
         {
-            inputFeeder.waitUntilDone();
+            inputFeeder.waitUntilDone();// may throw InterruptedException 
         }
 
-        outputPumper.waitUntilDone();
-        errorPumper.waitUntilDone();
+        outputPumper.waitUntilDone();// may throw InterruptedException 
+        errorPumper .waitUntilDone();// may throw InterruptedException 
     }
 
     /**
@@ -301,7 +301,6 @@ public abstract class CommandLineUtils
      * if available in the current running jvm.</b>
      */
     public static Properties getSystemEnvVars()
-        throws IOException
     {
         return getSystemEnvVars( !Os.isFamily( Os.FAMILY_WINDOWS ) );
     }
@@ -323,7 +322,6 @@ public abstract class CommandLineUtils
      * if available in the current running jvm.</b>
      */
     public static Properties getSystemEnvVars( boolean caseSensitive )
-        throws IOException
     {
         Properties envVars = new Properties();
         Map<String, String> envs = System.getenv();
@@ -358,7 +356,7 @@ public abstract class CommandLineUtils
     }
 
     public static String[] translateCommandline( String toProcess )
-        throws Exception
+	throws CommandLineException// thrown only once: explicitly 
     {
         if ( ( toProcess == null ) || ( toProcess.length() == 0 ) )
         {
@@ -460,6 +458,7 @@ public abstract class CommandLineUtils
     public static String quote( String argument )
         throws CommandLineException
     {
+	// may throw CommandLineException 
         return quote( argument, false, false, true );
     }
 
@@ -481,6 +480,7 @@ public abstract class CommandLineUtils
     public static String quote( String argument, boolean wrapExistingQuotes )
         throws CommandLineException
     {
+	// may throw CommandLineException 
         return quote( argument, false, false, wrapExistingQuotes );
     }
 
@@ -496,7 +496,7 @@ public abstract class CommandLineUtils
 			       boolean escapeSingleQuotes, 
 			       boolean escapeDoubleQuotes,
 			       boolean wrapExistingQuotes)
-        throws CommandLineException
+	throws CommandLineException// thrown once only: explicitly 
     {
         if ( argument.contains( "\"" ) )
         {

@@ -66,6 +66,7 @@ import org.codehaus.plexus.util.cli.shell.Shell;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -463,8 +464,9 @@ public class Commandline
      * Add system environment variables
      */
     public void addSystemEnvironment()
-        throws Exception
+            throws IOException
     {
+	// may throw IOException 
         Properties systemEnvVars = CommandLineUtils.getSystemEnvVars();
 
         for ( Object o : systemEnvVars.keySet() )
@@ -479,16 +481,17 @@ public class Commandline
 
     /**
      * Return the list of environment variables
+     *
+     * @throws CommandLineException
+     *    wrapping an {@link IOException} 
+     *    thrown by {@link #addSystemEnvironment()}. 
      */
     public String[] getEnvironmentVariables()
-        throws CommandLineException
+	throws CommandLineException// explicitly only 
     {
-        try
-        {
+        try {
             addSystemEnvironment();
-        }
-        catch ( Exception e )
-        {
+        } catch (IOException e) {
             throw new CommandLineException
 		("Error setting up environmental variables", e);
         }
@@ -643,10 +646,23 @@ public class Commandline
     }
 
     /**
-     * Executes the command.
+     * Executes the command. 
+     *
+     * @throws CommandLineException
+     * if 
+     * <ul>
+     * <li>
+     * {@link #getEnvironmentVariables()} throws an exception. 
+     * <li>
+     * if the file expected to be the working directory 
+     * does not exist or is not a directory. 
+     * <li>
+     * If {@link Runtime#exec(String, String[], File)} fails 
+     * throwing an {@link IOException}. 
+     * </ul>
      */
     public Process execute()
-        throws CommandLineException
+	throws CommandLineException // thrown once implicitly and 3 times expl.
     {
         // TODO: Provided only for backward compat. with <= 1.4
         verifyShellState();
@@ -654,39 +670,33 @@ public class Commandline
         Process process;
 
         //addEnvironment( "MAVEN_TEST_ENVAR", "MAVEN_TEST_ENVAR_VALUE" );
-
+	// may throw CommandLineException
         String[] environment = getEnvironmentVariables();
 
         File workingDir = shell.getWorkingDirectory();
 
-        try
-        {
-            if ( workingDir == null )
-            {
+	try {
+            if (workingDir == null) {
+		// may throw IOException 
                 process = Runtime.getRuntime()
 		    .exec(getCommandline(), environment, workingDir);
-            }
-            else
-            {
-                if ( !workingDir.exists() )
-                {
+            } else {
+                if (!workingDir.exists()) {
                     throw new CommandLineException("Working directory \"" + 
 						   workingDir.getPath() + 
 						   "\" does not exist!");
-                }
-                else if ( !workingDir.isDirectory() )
-                {
+                } else if (!workingDir.isDirectory()) {
                     throw new CommandLineException("Path \"" + 
 						   workingDir.getPath() + 
 						   "\" is no directory.");
                 }
-
+		// may throw IOException 
                 process = Runtime.getRuntime()
 		    .exec(getCommandline(), environment, workingDir);
             }
-        } catch ( IOException ex ) {
-            throw new CommandLineException("Error while executing process.",ex);
-        }
+	} catch (IOException ex) {
+	    throw new CommandLineException("Error while executing process.",ex);
+	}
 
         return process;
     }
@@ -710,7 +720,6 @@ public class Commandline
     }
 
     public Properties getSystemEnvVars()
-        throws Exception
     {
         return CommandLineUtils.getSystemEnvVars();
     }
@@ -744,17 +753,19 @@ public class Commandline
      * Use {@link CommandLineUtils#translateCommandline(String)} instead.
      */
     public static String[] translateCommandline( String toProcess )
-        throws Exception
+	throws CommandLineException
     {
-        return CommandLineUtils.translateCommandline( toProcess );
+	// may throw CommandLineException
+	return CommandLineUtils.translateCommandline( toProcess );
     }
 
     /**
      * @deprecated Use {@link CommandLineUtils#quote(String)} instead.
      */
     public static String quoteArgument( String argument )
-        throws CommandLineException
+	throws CommandLineException
     {
+	// may throw CommandLineException
         return CommandLineUtils.quote( argument );
     }
 
