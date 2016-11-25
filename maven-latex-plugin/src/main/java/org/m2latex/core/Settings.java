@@ -954,15 +954,15 @@ public class Settings {
      * are footnotes. 
      * <li><code>^T$T\.css$</code> 
      * are cascaded stylesheets. 
-     * <li><code>^T$T-\\d+\\.svg$</code> 
-     * are svg-files representing figures. 
-     * <li><code>^(cmsy)\\d+(-c)?-\\d+c?\\.png$</code> 
+     * <li><code>^T$T-\d+\.svg$</code> and <code>^T$T\d+x\.png$</code>
+     * are svg/png-files representing figures. 
+     * <li><code>^(cmsy)\d+(-c)?-\d+c?\.png$</code> 
      * represents special symbols. 
      * </ul>
      * Note that the patterns for the html-files 
      * can be summarized as <code>^T$T((ch|se|su|ap|li)?\d+)?\.x?html?$</code>. 
      * Adding the patterns for the css-file and the svg-files, we obtain 
-     * <code>^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|\.css|-\\d+\\.svg)$</code>. 
+     * <code>^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|\.css|\d+x\.png|-\d+\.svg)$</code>. 
      * <p>
      * The pattern is designed to match quite exactly 
      * the files to be copied to {@link #targetSiteDirectory}, 
@@ -979,6 +979,7 @@ public class Settings {
     private String patternT4htOutputFiles = 
 	"^(T$T(((ch|se|su|ap|li)?\\d+)?\\.x?html?|" + 
 	"\\.css|" + 
+	"\\d+x\\.png|" +
 	"-\\d+\\.svg)|" + 
 	"(cmsy)\\d+(-c)?-\\d+c?\\.png)$";
 
@@ -1332,6 +1333,7 @@ public class Settings {
     }
 
     // setter method for patternLatexMainFile in maven 
+    // trims parameter before setting 
     public void setPatternLatexMainFile(String patternLatexMainFile) {
 	this.patternLatexMainFile = patternLatexMainFile.trim();
     }
@@ -1363,6 +1365,7 @@ public class Settings {
     // replace "\n" (canonical newline in xml) also for other patterns by ""
 
     // setter method for patternClearFromLatexMain in maven 
+    // eliminates tab, newline and blanks and trims parameter before setting 
     public void setPatternClearFromLatexMain(String patternClearFromLatexMain) {
 	this.patternClearFromLatexMain = patternClearFromLatexMain
 	    .replaceAll("(\t|\n| )+", "").trim();
@@ -1496,7 +1499,8 @@ public class Settings {
 
     // setter method for patternWarnLatex in maven 
     public void setPatternWarnLatex(String patternWarnLatex) {
-	this.patternWarnLatex = patternWarnLatex;
+	this.patternWarnLatex = patternWarnLatex
+	    .replaceAll("(\t|\n)+", "").trim();
     }
 
     // method introduces patternWarnLatex in ant 
@@ -1525,7 +1529,8 @@ public class Settings {
 
     // setter method for patternReRunLatex in maven 
     public void setPatternReRunLatex(String pattern) {
-	this.patternReRunLatex = pattern;
+	this.patternReRunLatex = pattern
+	    .replaceAll("(\t|\n)+", "").trim();
     }
 
     // method introduces patternReRunLatex in ant 
@@ -1610,7 +1615,8 @@ public class Settings {
 
     // setter method for patternErrMakeIndex in maven 
     public void setPatternErrMakeIndex(String patternErrMakeIndex) {
-        this.patternErrMakeIndex = patternErrMakeIndex;
+        this.patternErrMakeIndex = patternErrMakeIndex
+	    .replaceAll("\n+", "").trim();
     }
 
     // method introduces patternErrMakeIndex in ant 
@@ -1631,7 +1637,8 @@ public class Settings {
     // FIXME: MakeIndex
     // setter method for patternWarnMakeIndex in maven 
     public void setPatternWarnMakeIndex(String patternWarnMakeIndex) {
-        this.patternWarnMakeIndex = patternWarnMakeIndex;
+        this.patternWarnMakeIndex = patternWarnMakeIndex
+	    .replaceAll("\n+", "").trim();
     }
 
     // method introduces patternWarnMakeIndex in ant 
@@ -1651,7 +1658,8 @@ public class Settings {
 
     // setter method for patternReRunMakeIndex in maven 
     public void setPatternReRunMakeIndex(String pattern) {
-        this.patternReRunMakeIndex = pattern;
+        this.patternReRunMakeIndex = pattern
+	    .replaceAll("\n+", "").trim();
     }
 
     // method introduces patternMakeIndex in ant 
@@ -1679,16 +1687,19 @@ public class Settings {
     }
 
     public void setPatternErrMakeGlossaries(String patternErrMakeGlossaries) {
-	this      .patternErrMakeGlossaries =      patternErrMakeGlossaries;
+	this      .patternErrMakeGlossaries =      patternErrMakeGlossaries
+	    .replaceAll("\n+", "").trim();
     }
 
      public void setPatternWarnXindy(String patternWarnXindy) {
-	this.patternWarnXindy = patternWarnXindy;
+	this.patternWarnXindy = patternWarnXindy
+	    .replaceAll("\n+", "").trim();
     }
 
     // setter method for patternReRunMakeGlossaries in maven 
     public void setPatternReRunMakeGlossaries(String pattern) {
-        this.patternReRunMakeGlossaries = pattern;
+        this.patternReRunMakeGlossaries = pattern
+	    .replaceAll("\n+", "").trim();
     }
 
     // method introduces patternReRunMakeGlossaries in ant 
@@ -1751,7 +1762,7 @@ public class Settings {
     // FIXME: replaceAll: should be unified. 
     public void setLatex2rtfOptions(String latex2rtfOptions) {
         this.latex2rtfOptions = latex2rtfOptions
-	    .replaceAll("(\t|\n| )+", " ").trim();;
+	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
     public void setOdt2docCommand(String odt2docCommand) {
