@@ -2560,10 +2560,8 @@ format.
 This has to be either given elsewhere in a config file 
 or determined by pre-parsing the tex-files. 
 
-It is also desirable to add support for further figure creation software, 
-other than xfig. 
-
-There is no support for pictures in \gls{gif}-format. 
+There is no support for pictures in \gls{gif}-format 
+but maybe a converter to \gls{png} is all needed. 
 
 There is no proper make-mechanism taking dependencies into account. 
 Thus all documents in all formats specified are remade, 
@@ -2616,18 +2614,15 @@ Thus it would be fine to have a goal which touches these files
 or to have a parameter to touch these prior to creation 
 to avoid that these are cleaned up after the run. 
 This is an alternative to setting parameter {\tt cleanup} to {\tt false}. 
+On the other hand, goal {\tt grp} creating graphics 
+in conjunction with a development tool like {\tt auctex} for {\tt emacs}, 
+allows to compile a latex main file in that tool 
+and thus to access {\tt xxx.log} and {\tt xxx.pdf}. 
 
 
 The ant-task does not allow to create single formats, e.g.~pdf selectively. 
 
-
-In my opinion, it would be desirable not to copy the tex sources into a
-working directory. 
-That way one could use the maven-plugin 
-not only for final creation of documentation 
-but it could better support development of the documentation. 
-
-The ant-build is not finished: tests are not run and 
+The ant-build is not completed: tests are not run and 
 test runs are no prerequisite for installation. 
 
 This manual is not finished. 
@@ -2635,6 +2630,7 @@ To test the overall functionality of the maven-plugin and of the ant-task
 described here, this manual is created through plugin and task. 
 
 What about support for {\tt chktex}? 
+
 
 \section{Bugs}\label{sec:bugs}
 
@@ -2667,6 +2663,9 @@ and seem to to play with package {\tt hyperref}.
 
 The current implementation is based on package {\tt rerunfilecheck} 
 which works for index but not for glossary. 
+
+Since this software heavily relies on {\tt rerunfilecheck}, 
+maybe a warning if not used is a good idea. 
 
 Figures are missing in html output 
 Formulae are missing in html output. 
@@ -2703,11 +2702,13 @@ and as a target file of htlatex.
 Thus {\tt mvn latex:clr} tries to delete the targets of the svg-files, 
 although these are not sources but themselves targets. 
 
+A way to solve this problem is, 
+to apply the delete pattern to graphic source files 
+and the files created. 
+CAUTION: for svg, 
+the files created by the latex run shall be taken into account. 
+A warning shall be issued for each matching. 
 
-For {\tt mvn latex:clr} maybe a new parameter would be helpful: 
-suffixes to be ignored which also applies to creational targets, 
-because preprocessing otherwise yields a warning 
-for each of these files. 
 
 Target html: references to figures are missing. 
 jpg and png-pictures oddly represented. 
@@ -2718,6 +2719,20 @@ whereas the pdf is still missing.
 Maybe htlatex still relies on eps-format. 
 Table is very wide. 
 Umlauts and sz maybe also not properly represented. 
+
+For files {\tt .directory} (. first), 
+the separation of root and suffix does not work. 
+Maybe the best to ignore files like that. 
+
+Target {\tt txt}: seems as if index and glossary not up to date. 
+
+target {\tt pdf}: Idea to run {\tt makeglossaries} 
+always prior to pdflatex. 
+
+Maybe this is more a gap than a bug: 
+support for dvi-creation should be provided separately. 
+
+
 
 \bibliographystyle{alpha}
 \bibliography{lit}{}
