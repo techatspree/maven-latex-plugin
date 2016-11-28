@@ -61,12 +61,26 @@ class CommandExecutorImpl implements CommandExecutor {
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
      * @throws BuildExecutionException
-     *    if invocation of <code>executable</code> fails. 
+     *    if invocation of <code>executable</code> fails very basically: 
+     *    <ul>
+     *    <li><!-- see Commandline.execute() -->
+     *    the file expected to be the working directory 
+     *    does not exist or is not a directory. 
+     *    <li><!-- see Commandline.execute() -->
+     *    {@link Runtime#exec(String, String[], File)} fails 
+     *    throwing an {@link IOException}. 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemOut parser occurs 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemErr parser occurs 
+     *    <li> Wrapping an {@link InterruptedException} 
+     *    on the process to be executed thrown by {@link Process#waitFor()}. 
+     *    </ul>
      */
     public final String execute(File workingDir, 
 				File pathToExecutable, 
 				String executable, 
-				String[] args)throws BuildExecutionException {
+				String[] args) throws BuildExecutionException {
 	String command = new File(pathToExecutable, executable).getPath();
 	Commandline cl = new Commandline(command);
 	cl.getShell().setQuotedArgumentsEnabled(false);
@@ -85,7 +99,7 @@ class CommandExecutorImpl implements CommandExecutor {
 	    }
 	} catch (CommandLineException e) {
 	    throw new BuildExecutionException
-		("Error executing command '" + executable +  ". ", e);
+		("Error executing command '" + executable +  "'. ", e);
         }
 
 	log.debug("Output:\n" + output.getOutput() + "\n");
