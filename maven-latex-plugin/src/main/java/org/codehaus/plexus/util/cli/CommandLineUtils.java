@@ -67,6 +67,25 @@ public abstract class CommandLineUtils
         }
     }
 
+    /**
+     * @throws CommandLineException 
+     *    (without {@link CommandLineTimeOutException}) if 
+     *    <ul>
+     *    <li><!-- see Commandline.execute() -->
+     *    the file expected to be the working directory 
+     *    does not exist or is not a directory. 
+     *    <li><!-- see Commandline.execute() -->
+     *    {@link Runtime#exec(String, String[], File)} fails 
+     *    throwing an {@link IOException}. 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemOut parser occurs 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemErr parser occurs 
+     *    </ul>
+     * @throws CommandLineTimeOutException 
+     *    Wrapping an {@link InterruptedException} 
+     *    on the process to be executed thrown by {@link Process#waitFor()}. 
+     */
     // used in org.m2latex.core.CommandExecutorImpl 
     public static int executeCommandLine(Commandline cl, 
 					 StreamConsumer systemOut, 
@@ -100,29 +119,53 @@ public abstract class CommandLineUtils
 
     /**
      * @param cl               
-     * The command line to execute
+     *    The command line to execute
      * @param systemIn         
-     * The input to read from, must be thread safe
+     *    The input to read from, must be thread safe
      * @param systemOut        
-     * A consumer that receives output, must be thread safe
+     *    A consumer that receives output, must be thread safe
      * @param systemErr        
-     * A consumer that receives system error stream output, must be thread safe
+     *    A consumer that receives system error stream output, 
+     *    must be thread safe
      * @param timeoutInSeconds 
-     * Positive integer to specify timeout, 
-     * zero and negative integers for no timeout.
+     *    Positive integer to specify timeout, 
+     *    zero and negative integers for no timeout.
      * @return 
-     * A return value, see {@link Process#exitValue()}
-     * @throws CommandLineException or CommandLineTimeOutException 
-     * if time out occurs
+     *    A return value, see {@link Process#exitValue()}
+     * @throws CommandLineException 
+     *    (without {@link CommandLineTimeOutException}) if 
+     *    <ul>
+     *    <li><!-- see Commandline.execute() -->
+     *    the file expected to be the working directory 
+     *    does not exist or is not a directory. 
+     *    <li><!-- see Commandline.execute() -->
+     *    {@link Runtime#exec(String, String[], File)} fails 
+     *    throwing an {@link IOException}. 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemOut parser occurs 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemErr parser occurs 
+     *    </ul>
+     * @throws CommandLineTimeOutException 
+     *    Wrapping an {@link InterruptedException} 
+     *    on the process to be executed: 
+     *    If <code>timeoutInSeconds<=0</code> 
+     *    thrown by {@link Process#waitFor()}. 
+     *    If <code>timeoutInSeconds > 0</code> thrown 
+     *    <ul>
+     *    <li>by {@link Thread#sleep(int)} 
+     *    <li>if after sleep {@link #isAlive(Process)} holds. 
+     *    <li>by 
+     *    {@link #waitForAllPumpers(StreamFeeder, StreamPumper, StreamPumper)}
+     *     </ul>
      */
-    // used 
+    // used but invoked only with sytemIn==null and timeoutInSeconds==0 
     public static int executeCommandLine(Commandline cl, 
 					 InputStream systemIn, 
 					 StreamConsumer systemOut,
 					 StreamConsumer systemErr, 
 					 int timeoutInSeconds)
-    throws CommandLineException
-    {
+    throws CommandLineException {
 	// may throw CommandLineException 
         final CommandLineCallable future = executeCommandLineAsCallable
             (cl, systemIn, systemOut, systemErr, timeoutInSeconds);
@@ -161,30 +204,28 @@ public abstract class CommandLineUtils
      *     or CommandLineTimeOutException: 
      *     see {@link CommandLine#execute()}. 
      */
-    // used 
+    // used but invoked only with sytemIn==null and timeoutInSeconds==0 
     public static CommandLineCallable 
 	executeCommandLineAsCallable(final Commandline cl, 
 				     final InputStream systemIn,
 				     final StreamConsumer systemOut,
 				     final StreamConsumer systemErr,
 				     final int timeoutInSeconds)
-	throws CommandLineException
-    {
-        if ( cl == null )
-        {
-            throw new IllegalArgumentException( "cl cannot be null." );
+	throws CommandLineException {
+        if (cl == null) {
+            throw new IllegalArgumentException("Commandline cannot be null." );
         }
 	// may throw CommandLineException (sole) 
-        final Process p = cl.execute();
+        final Process proc = cl.execute();
 
         final StreamFeeder inputFeeder = systemIn != null 
-	    ? new StreamFeeder(systemIn, p.getOutputStream()) : null;
+	    ? new StreamFeeder(systemIn, proc.getOutputStream()) : null;
 
-        final StreamPumper outputPumper = new StreamPumper(p.getInputStream(), 
-							   systemOut);
+        final StreamPumper outputPumper = new StreamPumper
+	    (proc.getInputStream(), systemOut);
 
-        final StreamPumper errorPumper = new StreamPumper(p.getErrorStream(), 
-							  systemErr);
+        final StreamPumper errorPumper = new StreamPumper
+	    (proc.getErrorStream(), systemErr);
 
         if ( inputFeeder != null )
         {
@@ -195,7 +236,7 @@ public abstract class CommandLineUtils
 
         errorPumper.start();
 
-        final ProcessHook processHook = new ProcessHook( p );
+        final ProcessHook processHook = new ProcessHook(proc);
 
         ShutdownHookUtils.addShutDownHook( processHook );
 
@@ -205,34 +246,41 @@ public abstract class CommandLineUtils
 	 *    <ul>
 	 *    <li> Error inside systemOut parser 
 	 *    <li> Error inside systemErr parser 
-	 *    <li> Wrapping an {@link InterruptedException} 
+	 *    <li> Even CommandLineTimeoutException
+	 *    Wrapping an {@link InterruptedException} on the process 
+	 *    <code>proc</code> to be executed: 
+	 *         <ul>
+	 *         <li>timeoutInSeconds <= 0 and {@link Process#waitFor()}
+	 *         <li>timeoutInSeconds > 0 and {@link Thread#sleep(int)}
+	 *         <li>timeoutInSeconds > 0 and {@link #isAlive(Process)}
+	 *         <li>timeoutInSeconds > 0 and 
+	 * {@link #waitForAllPumpers(StreamFeeder, StreamPumper, StreamPumper)}
+	 *         </ul>
 	 *    </ul>
 	 */
         return new CommandLineCallable() {
-            public Integer call()
-		throws CommandLineException
-            {
+            public Integer call() throws CommandLineException {
 		try {
                     int returnValue;
                     if (timeoutInSeconds <= 0) {
 			// may throw InterruptedException 
-			returnValue = p.waitFor();
+			returnValue = proc.waitFor();
 		    } else {
 			long now = System.currentTimeMillis();
 			long timeoutInMillis = 1000L * timeoutInSeconds;
 			long finish = now + timeoutInMillis;
-			while (isAlive(p) && 
+			while (isAlive(proc) && 
 			       System.currentTimeMillis() < finish) {
 			    // may throw InterruptedException 
-			    Thread.sleep( 10 );
+			    Thread.sleep(10);
 			}
-			if ( isAlive( p ) ) {
+			if (isAlive(proc)) {
 			    // caught in catch block 
 			    throw new InterruptedException
 				("Process timeout out after " + 
 				 timeoutInSeconds + " seconds" );
 			}
-			returnValue = p.exitValue();
+			returnValue = proc.exitValue();
 		    }
 		    // may throw InterruptedException 
                     waitForAllPumpers(inputFeeder, outputPumper, errorPumper);
@@ -258,7 +306,7 @@ public abstract class CommandLineUtils
                     errorPumper .disable();
                     throw new CommandLineTimeOutException
 			("Error while executing external command, " + 
-			 "process killed.", ex );
+			 "process killed.", ex);
                 } finally {
                     ShutdownHookUtils.removeShutdownHook(processHook);
                     processHook.run();
@@ -274,6 +322,11 @@ public abstract class CommandLineUtils
         };
     }
 
+    /**
+     *
+     * @throws InterruptedException
+     *    if one of the parameters waitUntilDone throws such an exception. 
+     */
     private static void waitForAllPumpers(StreamFeeder inputFeeder, 
 					  StreamPumper outputPumper,
 					  StreamPumper errorPumper)

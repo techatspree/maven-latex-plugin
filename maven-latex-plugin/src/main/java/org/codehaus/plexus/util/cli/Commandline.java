@@ -651,10 +651,9 @@ public class Commandline
      * throwing an {@link IOException}. 
      * </ul>
      */
-    // used 
-    public Process execute()
-	throws CommandLineException // thrown 3 times explicitly
-    {
+    // used, exception thrown 3 times explicitly 
+    public Process execute() throws CommandLineException {
+	
         // TODO: Provided only for backward compat. with <= 1.4
         verifyShellState();
 
@@ -676,10 +675,11 @@ public class Commandline
                     throw new CommandLineException("Working directory \"" + 
 						   workingDir.getPath() + 
 						   "\" does not exist!");
-                } else if (!workingDir.isDirectory()) {
+                } 
+		if (!workingDir.isDirectory()) {
                     throw new CommandLineException("Path \"" + 
 						   workingDir.getPath() + 
-						   "\" is no directory.");
+						   "\" is no directory!");
                 }
 		// may throw IOException 
                 process = Runtime.getRuntime()
