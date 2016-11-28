@@ -18,13 +18,13 @@
 
 package org.m2latex.mojo;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-//import java.util.EnumSet;
-
 import org.m2latex.core.Target;
 
 import org.apache.maven.plugins.annotations.Mojo;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
+//import java.util.EnumSet;
 
 /**
  * Build rtf documents from LaTeX sources.

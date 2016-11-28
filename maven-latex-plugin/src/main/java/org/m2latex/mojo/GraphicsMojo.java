@@ -19,16 +19,13 @@
 package org.m2latex.mojo;
 
 import org.m2latex.core.Target;
-
-import java.util.SortedSet;
-import java.util.TreeSet;
-//import java.util.EnumSet;
-
 import org.m2latex.core.BuildExecutionException;
 
 import org.apache.maven.plugins.annotations.Mojo;
-
 import org.apache.maven.plugin.MojoExecutionException;
+
+import java.util.SortedSet;
+//import java.util.EnumSet;
 
 /**
  * Clears all created files in the folders containing the LaTeX sources.

@@ -18,15 +18,13 @@
 
 package org.m2latex.mojo;
 
-import java.io.File;
+import org.m2latex.core.Target;
+
+import org.apache.maven.plugins.annotations.Mojo;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
 //import java.util.EnumSet;
-
-import org.m2latex.core.Target;
-
-import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Build HTML documents and XHTML documents from LaTeX sources.

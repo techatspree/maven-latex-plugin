@@ -18,23 +18,18 @@
 
 package org.m2latex.mojo;
 
-import java.io.File;
-
-import java.util.SortedSet;
-
-import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.BuildFailureException;
 import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.ParameterAdapter;
-import org.m2latex.core.Settings;
 import org.m2latex.core.Target;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
+
+import java.util.SortedSet;
 
 /**
  * Builds documents in the formats configured in the pom. 
