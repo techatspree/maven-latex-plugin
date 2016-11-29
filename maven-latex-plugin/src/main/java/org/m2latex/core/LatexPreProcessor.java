@@ -591,15 +591,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     /**
      * Deletes all created files in <code>texDirectory</code>. 
      *
-     * @param texDirector
+     * @param texDir
      *    the tex-source directory. 
      */
-    void clearCreated(File texDirectory) throws BuildExecutionException {
+    void clearCreated(File texDir) throws BuildExecutionException {
 
 	// try to clear targets 
 
 	// may throw BuildExecutionException 
-	Collection<File> files = this.fileUtils.getFilesRec(texDirectory);
+	Collection<File> files = this.fileUtils.getFilesRec(texDir);
 	String suffix;
 	SuffixHandler handler;
 	for (File file : files) {
@@ -613,7 +613,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// check whether clearing succeeded 
 	Collection<String> skipped = new TreeSet<String>();
 	// may throw BuildExecutionException 
-	files = this.fileUtils.getFilesRec(texDirectory);
+	files = this.fileUtils.getFilesRec(texDir);
 	for (File file : files) {
 	    suffix = this.fileUtils.getSuffix(file);
 	    handler = SUFFIX2HANDLER.get(suffix);

@@ -170,16 +170,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString() );
 
-        File texDirectory = this.settings.getTexSrcDirectoryFile();
+        File texDir = this.settings.getTexSrcDirectoryFile();
 
-        if (!texDirectory.exists()) {
+        if (!texDir.exists()) {
             this.log.info("No tex directory - skipping LaTeX processing. ");
             return;
         }
 
 	// may throw BuildExecutionException 
 	// should fail without finally cleanup 
-	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
+	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 
 	try {
 	    // process graphics and determine latexMainFiles 
@@ -190,7 +190,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		// may throw BuildExecutionException, BuildFailureException 
 		File targetDir = this.fileUtils.getTargetDirectory
 		    (texFile, 
-		     texDirectory,
+		     texDir,
 		     this.settings.getOutputDirectoryFile());
 
 		for (Target target : this.paramAdapt.getTargetSet()) {
@@ -207,7 +207,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	} finally {
 	    if (this.settings.isCleanUp()) {
 		// may throw BuildExecutionException
-                this.fileUtils.cleanUp(orgFiles, texDirectory);
+                this.fileUtils.cleanUp(orgFiles, texDir);
             }
         }
     }
@@ -216,16 +216,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Used by {@link GraphicsMojo}. 
      */
     public void processGraphics() throws BuildExecutionException {
-	File texDirectory = this.settings.getTexSrcDirectoryFile();
+	File texDir = this.settings.getTexSrcDirectoryFile();
 
-	if (!texDirectory.exists()) {
+	if (!texDir.exists()) {
 	    this.log.info("No tex directory - " + 
 			  "skipping graphics processing. ");
 	    return;
 	}
 
 	// may throw BuildExecutionException 
-	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDirectory);
+	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 	this.preProc.processGraphicsSelectMain(orgFiles);
     }
 
@@ -241,9 +241,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString());
 
-        File texDirectory = this.settings.getTexSrcDirectoryFile();
+        File texDir = this.settings.getTexSrcDirectoryFile();
 	// may throw BuildExecutionException 
-	this.preProc.clearCreated(texDirectory);
+	this.preProc.clearCreated(texDir);
    }
 
 
