@@ -49,8 +49,6 @@ interface TexFileUtils {
 
     File replaceSuffix(File file, String suffix);
 
-    Collection<File> getFilesWithSuffix(Collection<File> files, String suffix);
-
     boolean matchInFile(File file, String pattern) 
 	throws BuildFailureException;
 

@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.copyFileToDirectory;
 import        org.apache.commons.io.filefilter.TrueFileFilter;// with listFiles only
-import static org.apache.commons.io.filefilter.FileFilterUtils.suffixFileFilter;
 // FIXME: jdee bug: delete static imports: does not find superfluous 
 
 /**
@@ -272,30 +271,6 @@ class TexFileUtilsImpl implements TexFileUtils {
 	return idxDot == -1 
 	    ? "" 
 	    : nameFile.substring(idxDot, nameFile.length());
-    }
-
-    /**
-     * Return a collection of files in <code>files</code> 
-     * with suffix <code>suffix</code>. 
-     *
-     * @param files
-     *    the collection of files in the latex source directory. 
-     * @param suffix
-     *    the suffix of the files to be returned. 
-     * @return
-     *    The collection of files in <code>files</code> 
-     *    with suffix <code>suffix</code>. 
-     *    This may never be <code>null</code>. 
-     */
-    public Collection<File> getFilesWithSuffix(Collection<File> files, 
-					       String suffix) {
-	Collection<File> res = new ArrayList<File>();
-	for (File file : files) {
-	    if (suffixFileFilter(suffix).accept(file)) {
-		res.add(file);
-	    }
-	}
-	return res;
     }
 
     // logFile may be .log or .blg or something 
