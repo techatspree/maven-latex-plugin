@@ -23,7 +23,7 @@ public enum Target {
 	private final String RTF_OUTPUT_FILES = "^T$T\\.rtf$";
 
 	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
+				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2rtf(texFile);
 	}
 
@@ -40,7 +40,7 @@ public enum Target {
 	    "^T$T\\.(pdf|dvi|ps)$";
 
 	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
+				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2pdf(texFile);
 	}
 
@@ -54,7 +54,7 @@ public enum Target {
      */
     html() {
 	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
+				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2html(texFile);
 	}
 
@@ -71,7 +71,7 @@ public enum Target {
 	    "^T$T\\.(odt|fodt|uot|uot)$";
 
 	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
+				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2odt(texFile);
 	}
 
@@ -88,7 +88,7 @@ public enum Target {
 	    "^T$T\\.(doc(|6|.95|.x|.x7)|rtf)$";
 
 	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
+				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2docx(texFile);
 	}
 
@@ -103,7 +103,7 @@ public enum Target {
 	private final String TXT_OUTPUT_FILES = "^T$T\\.txt$";
 
 	public void processSource(LatexProcessor latexProcessor, 
-				  File texFile) throws BuildExecutionException {
+				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2txt(texFile);
 	}
 
@@ -123,7 +123,7 @@ public enum Target {
      */
     public abstract void processSource(LatexProcessor latexProcessor, 
     				       File texFile) 
-    throws BuildExecutionException;
+    throws BuildFailureException;
 
     /**
      * Returns the pattern of the output files. 

@@ -22,8 +22,8 @@ import java.io.File;
 
 interface CommandExecutor {
 
-    String execute( File workingDir, File pathToExecutable, 
-		    String executable, String[] args )
-        throws BuildExecutionException;
+    String execute(File workingDir, File pathToExecutable, 
+		   String executable, String[] args)
+        throws BuildFailureException;
 
 }

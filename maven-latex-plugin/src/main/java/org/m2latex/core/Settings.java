@@ -1054,23 +1054,41 @@ public class Settings {
     // getter methods partially implementing default values. 
 
 
-    private File getBaseDirectory() {
-        return this.baseDirectory;
-    }
+    // private File getBaseDirectory() throws BuildFailureException {
+    // 	if (!(this.baseDirectory.exists() && 
+    // 	      this.baseDirectory.isDirectory())) {
+    // 	    throw new BuildFailureException
+    // 		("The base directory '" + this.baseDirectory + 
+    // 		 "' should be an existing directory, but is not. ");
+    // 	}
+    // 	return this.baseDirectory;
+    // }
 
-    private File getTargetDirectory() {
-        return this.targetDirectory;
-    }
+    // private File getTargetDirectory() {
+    //     return this.targetDirectory;
+    // }
 
-    private File getTargetSiteDirectory() {
-        return this.targetSiteDirectory;
-    }
+    // private File getTargetSiteDirectory() {
+    //     return this.targetSiteDirectory;
+    // }
 
-    public File  getTexSrcDirectoryFile() {
+    public File getTexSrcDirectoryFile() throws BuildFailureException {
+	if (!(this.texSrcDirectoryFile.exists() && 
+	      this.texSrcDirectoryFile.isDirectory())) {
+	    throw new BuildFailureException
+		("The tex source directory '" + this.texSrcDirectoryFile + 
+		 "' should be an existing directory, but is not. ");
+	}
 	return this.texSrcDirectoryFile;
     }
 
-    public File getOutputDirectoryFile() {
+    public File   getOutputDirectoryFile() throws BuildFailureException {
+	if (/**/this.outputDirectoryFile.exists() && 
+	    !   this.outputDirectoryFile.isDirectory()) {
+	    throw new BuildFailureException
+		("The output directory '" + this.outputDirectoryFile + 
+		 "' should be a directory if it exists, but is not. ");
+	}
        return this.outputDirectoryFile;
     }
 
@@ -1098,7 +1116,6 @@ public class Settings {
     public boolean isCleanUp() {
         return  this.cleanUp;
     }
-
 
     public String getPatternClearFromLatexMain() {
 	return  this.patternClearFromLatexMain;

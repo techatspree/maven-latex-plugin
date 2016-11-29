@@ -28,6 +28,7 @@ import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
 /**
  * Execution of an executable with given arguments 
  * in a given working directory logging on {@link #log}. 
+ * Sole interface to <code>org.codehaus.plexus.util.cli</code>. 
  */
 class CommandExecutorImpl implements CommandExecutor {
 
@@ -60,7 +61,7 @@ class CommandExecutorImpl implements CommandExecutor {
      * @param args
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
-     * @throws BuildExecutionException
+     * @throws BuildFailureException
      *    if invocation of <code>executable</code> fails very basically: 
      *    <ul>
      *    <li><!-- see Commandline.execute() -->
@@ -80,7 +81,7 @@ class CommandExecutorImpl implements CommandExecutor {
     public final String execute(File workingDir, 
 				File pathToExecutable, 
 				String executable, 
-				String[] args) throws BuildExecutionException {
+				String[] args) throws BuildFailureException {
 	String command = new File(pathToExecutable, executable).getPath();
 	Commandline cl = new Commandline(command);
 	cl.getShell().setQuotedArgumentsEnabled(false);
@@ -98,7 +99,7 @@ class CommandExecutorImpl implements CommandExecutor {
 			 "' returned with code " + returnValue + ". ");
 	    }
 	} catch (CommandLineException e) {
-	    throw new BuildExecutionException
+	    throw new BuildFailureException
 		("Error executing command '" + executable +  "'. ", e);
         }
 

@@ -29,19 +29,19 @@ import java.io.FileFilter;
 
 interface TexFileUtils {
 
-    Collection<File> getFilesRec(File dir) throws BuildExecutionException;
+    Collection<File> getFilesRec(File dir) throws BuildFailureException;
 
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
 			    File targetBaseDir)
-	throws BuildExecutionException, BuildFailureException;
+	throws BuildFailureException;
 
     FileFilter getFileFilter(File texFile, String pattern);
 
     void copyOutputToTargetFolder(File texFile, 
 				  FileFilter fileFilter, 
 				  File targetDir)
-        throws BuildExecutionException, BuildFailureException;
+        throws BuildFailureException;
 
     String getFileNameWithoutSuffix(File file);
 
@@ -52,12 +52,12 @@ interface TexFileUtils {
     Collection<File> getFilesWithSuffix(Collection<File> files, String suffix);
 
     boolean matchInFile(File file, String pattern) 
-	throws BuildExecutionException;
+	throws BuildFailureException;
 
     void deleteX(File texFile, FileFilter filter) 
-	throws BuildExecutionException;
+	throws BuildFailureException;
 
     void cleanUp(Collection<File> sourceFiles, File texDir)
-	throws BuildExecutionException;
+	throws BuildFailureException;
 
 }

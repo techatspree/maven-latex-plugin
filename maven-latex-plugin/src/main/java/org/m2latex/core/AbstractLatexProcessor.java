@@ -57,15 +57,15 @@ abstract class AbstractLatexProcessor {
      * or by detecting the error pattern <code>pattern</code> 
      * in <code>logFile</code>. 
      *
-     * @throws BuildExecutionException
+     * @throws BuildFailureException
      *    if <code>logFile</code> does not exist or is not readable. 
      * @see #logWarns(File, String, String) 
      */
      protected void logErrs(File logFile, String command, String pattern) 
-    	throws BuildExecutionException {
+    	throws BuildFailureException {
 
     	if (logFile.exists()) {
-    	    // matchInFile may throw BuildExecutionException
+    	    // matchInFile may throw BuildFailureException
     	    if (this.fileUtils.matchInFile(logFile, pattern)) {
     		log.warn("Running " + command + " failed. For details see " + 
     			 logFile.getName() + ". ");
@@ -87,7 +87,7 @@ abstract class AbstractLatexProcessor {
      */
     // for both LatexProcessor and LatexPreProcessor 
     protected void logWarns(File logFile, String command, String pattern) 
-    	throws BuildExecutionException {
+    	throws BuildFailureException {
     	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
     	    log.warn("Running " + command + 
     		     " emitted warnings. For details see " + 
