@@ -1740,7 +1740,10 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 1.1
      */
-    public static int copy(InputStream input, OutputStream output) throws IOException {
+    // used by FileUtils.doCopyFile
+    public static int copy(InputStream input, 
+			   OutputStream output) throws IOException {
+	// may throw IOException 
         long count = copyLarge(input, output);
         if (count > Integer.MAX_VALUE) {
             return -1;
@@ -1764,8 +1767,10 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 1.3
      */
+    // used 
     public static long copyLarge(InputStream input, OutputStream output)
             throws IOException {
+	// may throw IOException 
         return copyLarge(input, output, new byte[DEFAULT_BUFFER_SIZE]);
     }
 
@@ -1785,11 +1790,15 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.2
      */
-    public static long copyLarge(InputStream input, OutputStream output, byte[] buffer)
-            throws IOException {
+    // used 
+    public static long copyLarge(InputStream input, 
+				 OutputStream output, 
+				 byte[] buffer) throws IOException {
         long count = 0;
         int n = 0;
+	// may throw IOException 
         while (EOF != (n = input.read(buffer))) {
+	    // may throw IOException 
             output.write(buffer, 0, n);
             count += n;
         }
@@ -1797,8 +1806,8 @@ public class IOUtils {
     }
 
     /**
-     * Copy some or all bytes from a large (over 2GB) <code>InputStream</code> to an
-     * <code>OutputStream</code>, optionally skipping input bytes.
+     * Copy some or all bytes from a large (over 2GB) <code>InputStream</code> 
+     * to an <code>OutputStream</code>, optionally skipping input bytes.
      * <p>
      * This method buffers the input internally, so there is no need to use a
      * <code>BufferedInputStream</code>.
@@ -1815,14 +1824,17 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.2
      */
-    public static long copyLarge(InputStream input, OutputStream output, long inputOffset, long length)
-            throws IOException {
-        return copyLarge(input, output, inputOffset, length, new byte[DEFAULT_BUFFER_SIZE]);
+    public static long copyLarge(InputStream input, 
+				 OutputStream output, 
+				 long inputOffset, 
+				 long length) throws IOException {
+        return copyLarge(input, output, inputOffset, length, 
+			 new byte[DEFAULT_BUFFER_SIZE]);
     }
 
     /**
-     * Copy some or all bytes from a large (over 2GB) <code>InputStream</code> to an
-     * <code>OutputStream</code>, optionally skipping input bytes.
+     * Copy some or all bytes from a large (over 2GB) <code>InputStream</code> 
+     * to an <code>OutputStream</code>, optionally skipping input bytes.
      * <p>
      * This method uses the provided buffer, so there is no need to use a
      * <code>BufferedInputStream</code>.
@@ -1840,8 +1852,11 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.2
      */
-    public static long copyLarge(InputStream input, OutputStream output, 
-            final long inputOffset, final long length, byte[] buffer)  throws IOException {
+    public static long copyLarge(InputStream input, 
+				 OutputStream output, 
+				 final long inputOffset, 
+				 final long length, 
+				 byte[] buffer)  throws IOException {
         if (inputOffset > 0) {
             skipFully(input, inputOffset);
         }
@@ -1855,7 +1870,8 @@ public class IOUtils {
         }
         int read;
         long totalRead = 0;
-        while (bytesToRead > 0 && EOF != (read = input.read(buffer, 0, bytesToRead))) {
+        while (bytesToRead > 0 && 
+	       EOF != (read = input.read(buffer, 0, bytesToRead))) {
             output.write(buffer, 0, read);
             totalRead += read;
             if (length > 0) { // only adjust length if not reading to the end
@@ -1902,8 +1918,11 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.3
      */
-    public static void copy(InputStream input, Writer output, Charset encoding) throws IOException {
-        InputStreamReader in = new InputStreamReader(input, Charsets.toCharset(encoding));
+    public static void copy(InputStream input, 
+			    Writer output, 
+			    Charset encoding) throws IOException {
+        InputStreamReader in = new InputStreamReader
+	    (input, Charsets.toCharset(encoding));
         copy(in, output);
     }
 
@@ -1925,11 +1944,13 @@ public class IOUtils {
      * @throws NullPointerException if the input or output is null
      * @throws IOException if an I/O error occurs
      * @throws UnsupportedCharsetException
-     *             thrown instead of {@link UnsupportedEncodingException} in version 2.2 if the encoding is not
-     *             supported.
+     *    thrown instead of {@link UnsupportedEncodingException} 
+     *    in version 2.2 if the encoding is not supported.
      * @since 1.1
      */
-    public static void copy(InputStream input, Writer output, String encoding) throws IOException {
+    public static void copy(InputStream input, 
+			    Writer output, 
+			    String encoding) throws IOException {
         copy(input, output, Charsets.toCharset(encoding));
     }
 
@@ -1976,12 +1997,14 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 1.3
      */
-    public static long copyLarge(Reader input, Writer output) throws IOException {
+    public static long copyLarge(Reader input, 
+				 Writer output) throws IOException {
         return copyLarge(input, output, new char[DEFAULT_BUFFER_SIZE]);
     }
 
     /**
-     * Copy chars from a large (over 2GB) <code>Reader</code> to a <code>Writer</code>.
+     * Copy chars from a large (over 2GB) <code>Reader</code> 
+     * to a <code>Writer</code>.
      * <p>
      * This method uses the provided buffer, so there is no need to use a
      * <code>BufferedReader</code>.
@@ -1995,7 +2018,9 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.2
      */
-    public static long copyLarge(Reader input, Writer output, char [] buffer) throws IOException {
+    public static long copyLarge(Reader input, 
+				 Writer output, 
+				 char [] buffer) throws IOException {
         long count = 0;
         int n = 0;
         while (EOF != (n = input.read(buffer))) {
@@ -2006,8 +2031,8 @@ public class IOUtils {
     }
 
     /**
-     * Copy some or all chars from a large (over 2GB) <code>InputStream</code> to an
-     * <code>OutputStream</code>, optionally skipping input chars.
+     * Copy some or all chars from a large (over 2GB) <code>InputStream</code> 
+     * to an <code>OutputStream</code>, optionally skipping input chars.
      * <p>
      * This method buffers the input internally, so there is no need to use a
      * <code>BufferedReader</code>.
@@ -2024,14 +2049,18 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.2
      */
-    public static long copyLarge(Reader input, Writer output, final long inputOffset, final long length)
+    public static long copyLarge(Reader input, 
+				 Writer output, 
+				 final long inputOffset, 
+				 final long length)
             throws IOException {
-        return  copyLarge(input, output, inputOffset, length, new char[DEFAULT_BUFFER_SIZE]);
+        return  copyLarge(input, output, inputOffset, length, 
+			  new char[DEFAULT_BUFFER_SIZE]);
     }
 
     /**
-     * Copy some or all chars from a large (over 2GB) <code>InputStream</code> to an
-     * <code>OutputStream</code>, optionally skipping input chars.
+     * Copy some or all chars from a large (over 2GB) <code>InputStream</code> 
+     * to an <code>OutputStream</code>, optionally skipping input chars.
      * <p>
      * This method uses the provided buffer, so there is no need to use a
      * <code>BufferedReader</code>.
@@ -2048,7 +2077,11 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.2
      */
-    public static long copyLarge(Reader input, Writer output, final long inputOffset, final long length, char [] buffer)
+    public static long copyLarge(Reader input, 
+				 Writer output, 
+				 final long inputOffset, 
+				 final long length, 
+				 char [] buffer)
             throws IOException {
         if (inputOffset > 0) {
             skipFully(input, inputOffset);
@@ -2062,7 +2095,8 @@ public class IOUtils {
         }
         int read;
         long totalRead = 0;
-        while (bytesToRead > 0 && EOF != (read = input.read(buffer, 0, bytesToRead))) {
+        while (bytesToRead > 0 && 
+	       EOF != (read = input.read(buffer, 0, bytesToRead))) {
             output.write(buffer, 0, read);
             totalRead += read;
             if (length > 0) { // only adjust length if not reading to the end
@@ -2120,8 +2154,11 @@ public class IOUtils {
      * @throws IOException if an I/O error occurs
      * @since 2.3
      */
-    public static void copy(Reader input, OutputStream output, Charset encoding) throws IOException {
-        OutputStreamWriter out = new OutputStreamWriter(output, Charsets.toCharset(encoding));
+    public static void copy(Reader input, 
+			    OutputStream output, 
+			    Charset encoding) throws IOException {
+        OutputStreamWriter out = new OutputStreamWriter
+	    (output, Charsets.toCharset(encoding));
         copy(input, out);
         // XXX Unless anyone is planning on rewriting OutputStreamWriter,
         // we have to flush here.
@@ -2150,11 +2187,13 @@ public class IOUtils {
      * @throws NullPointerException if the input or output is null
      * @throws IOException if an I/O error occurs
      * @throws UnsupportedCharsetException
-     *             thrown instead of {@link UnsupportedEncodingException} in version 2.2 if the encoding is not
-     *             supported.
+     *    thrown instead of {@link UnsupportedEncodingException} in version 2.2 
+     *    if the encoding is not supported.
      * @since 1.1
      */
-    public static void copy(Reader input, OutputStream output, String encoding) throws IOException {
+    public static void copy(Reader input, 
+			    OutputStream output, 
+			    String encoding) throws IOException {
         copy(input, output, Charsets.toCharset(encoding));
     }
 
@@ -2239,7 +2278,9 @@ public class IOUtils {
      *
      * @param input1  the first reader
      * @param input2  the second reader
-     * @return true if the content of the readers are equal (ignoring EOL differences),  false otherwise
+     * @return 
+     *    whether the content of the readers are equal 
+     *    (ignoring EOL differences) 
      * @throws NullPointerException if either input is null
      * @throws IOException if an I/O error occurs
      * @since 2.2
@@ -2255,7 +2296,7 @@ public class IOUtils {
             line1 = br1.readLine();
             line2 = br2.readLine();
         }
-        return line1 == null ? line2 == null ? true : false : line1.equals(line2);
+        return line1 == null ? line2 == null : line1.equals(line2);
     }
 
     /**
@@ -2276,7 +2317,8 @@ public class IOUtils {
      */
     public static long skip(InputStream input, long toSkip) throws IOException {
         if (toSkip < 0) {
-            throw new IllegalArgumentException("Skip count must be non-negative, actual: " + toSkip);
+            throw new IllegalArgumentException
+		("Skip count must be non-negative, actual: " + toSkip);
         }
         /*
          * N.B. no need to synchronize this because: - we don't care if the buffer is created multiple times (the data
