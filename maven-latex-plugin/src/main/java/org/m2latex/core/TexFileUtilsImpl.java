@@ -31,9 +31,9 @@ import java.util.TreeSet;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+import static org.apache.commons.io.FileUtils.listFiles;
+import static org.apache.commons.io.FileUtils.copyFileToDirectory;
+import        org.apache.commons.io.filefilter.TrueFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.suffixFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.prefixFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.notFileFilter;
@@ -52,25 +52,27 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     /**
      * Returns the ordered collection of files 
-     * in folder <code>dir</code> and subfolder. 
+     * in folder <code>texDir</code> and subfolder. 
      *
-     * @param dir
-     *    a directory. 
+     * @param texDir
+     *    the tex-source directory. 
      * @return
      *    the ordered collection of files without directories 
-     *    in folder <code>dir</code> and subfolder. 
+     *    in folder <code>texDir</code> and subfolder. 
      * @throws BuildExecutionException
-     *    if <code>dir</code> is not a folder or not readable. 
+     *    if <code>texDir</code> is not a folder or not readable. 
      */
-    public Collection<File> getFilesRec(File dir) 
+    public Collection<File> getFilesRec(File texDir) 
 	throws BuildExecutionException {
 
-        Collection<File> res1 = FileUtils.listFiles(dir,
-						   TrueFileFilter.INSTANCE,
-						   TrueFileFilter.INSTANCE);
+	// FIXME: FileUtils.listFiles must not be used, 
+	// because in case of IO-problems silently skips directories 
+        Collection<File> res1 = listFiles(texDir,
+					  TrueFileFilter.INSTANCE,
+					  TrueFileFilter.INSTANCE);
 	if (res1 == null) {
 	    throw new BuildExecutionException
-		("File " + dir + " is not readable or no directory. ");
+		("File " + texDir + " is not readable or no directory. ");
 	}
 	Collection<File> res = new TreeSet<File>();
 	res.addAll(res1);
@@ -205,7 +207,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 		log.info("Copying '" + file.getName() + 
 			 "' to '" + targetDir + "'. ");
 		try {
-		    FileUtils.copyFileToDirectory(file, targetDir);
+		    // FileUtils.
+		    copyFileToDirectory(file, targetDir);
 		} catch (IOException e) {
 		    throw new BuildExecutionException
 			("Error copying '" + file.getName() + 
