@@ -54,7 +54,8 @@ public class AndFileFilter
      * Constructs a new instance of <code>AndFileFilter</code>
      * with the specified list of filters.
      *
-     * @param fileFilters  a List of IOFileFilter instances, copied, null ignored
+     * @param fileFilters 
+     *    a List of IOFileFilter instances, copied, null ignored
      * @since 1.1
      */
     public AndFileFilter(final List<IOFileFilter> fileFilters) {
@@ -155,7 +156,7 @@ public class AndFileFilter
         if (fileFilters != null) {
             for (int i = 0; i < fileFilters.size(); i++) {
                 if (i > 0) {
-                    buffer.append(",");
+                    buffer.append(',');
                 }
                 Object filter = fileFilters.get(i);
                 buffer.append(filter == null ? "null" : filter.toString());
