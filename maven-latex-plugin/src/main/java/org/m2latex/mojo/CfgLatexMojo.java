@@ -19,12 +19,10 @@
 package org.m2latex.mojo;
 
 import org.m2latex.core.BuildFailureException;
-import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.ParameterAdapter;
 import org.m2latex.core.Target;
 
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.MojoExecutionException;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -46,12 +44,10 @@ public class CfgLatexMojo extends AbstractLatexMojo {
     /**
      * Invoked by maven executing the plugin. 
      */
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoFailureException {
 	initialize();
 	try {
 	    this.latexProcessor.create();
-	} catch (BuildExecutionException e) {
-	    throw new MojoExecutionException(e.getMessage(), e.getCause());
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());
 	}

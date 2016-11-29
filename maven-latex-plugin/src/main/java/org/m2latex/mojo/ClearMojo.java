@@ -19,12 +19,12 @@
 package org.m2latex.mojo;
 
 import org.m2latex.core.Target;
-import org.m2latex.core.BuildExecutionException;
+import org.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 
-import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 import java.util.SortedSet;
 //import java.util.EnumSet;
@@ -36,7 +36,7 @@ import java.util.SortedSet;
 public class ClearMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 
-    // FIXME: not required by ClearMojo 
+    // FIXME: not required by ClearMojo, GraphicsMojo  
      public SortedSet<Target> getTargetSet() {
     	throw new IllegalStateException();
     }
@@ -44,12 +44,12 @@ public class ClearMojo extends AbstractLatexMojo {
     /**
      * Invoked by maven executing the plugin. 
      */
-    public void execute() throws MojoExecutionException {
+    public void execute() throws MojoFailureException {
 	initialize();
 	try {
 	    this.latexProcessor.clearAll();
-	} catch (BuildExecutionException e) {
-	    throw new MojoExecutionException(e.getMessage(), e.getCause());
+	} catch (BuildFailureException e) {
+	    throw new MojoFailureException(e.getMessage(), e.getCause());
 	}
     }
 
