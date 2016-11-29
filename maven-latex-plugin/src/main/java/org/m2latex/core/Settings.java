@@ -1427,7 +1427,8 @@ public class Settings {
     }
 
     public void setGnuplotOptions(String gnuplotOptions) {
-        this.gnuplotOptions = gnuplotOptions;
+        this.gnuplotOptions = gnuplotOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
     public void setMetapostCommand(String metapostCommand) {
@@ -1436,7 +1437,8 @@ public class Settings {
 
     // setter method for metapostOptions in maven 
     public void setMetapostOptions(String metapostOptions) {
-        this.metapostOptions = metapostOptions;
+        this.metapostOptions = metapostOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
     // method introduces metapostOptions in ant 
@@ -1740,15 +1742,18 @@ public class Settings {
     }
 
     public void setTex4htStyOptions(String tex4htStyOptions) {
-	this.tex4htStyOptions = tex4htStyOptions;
+	this.tex4htStyOptions = tex4htStyOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
    }
 
     public void setTex4htOptions(String tex4htOptions) {
-	this.tex4htOptions = tex4htOptions;
+	this.tex4htOptions = tex4htOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
      public void setT4htOptions(String t4htOptions) {
-	this.t4htOptions = t4htOptions;
+	this.t4htOptions = t4htOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
     // setter method for patternT4htOutputFiles in maven 
