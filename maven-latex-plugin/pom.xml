@@ -293,7 +293,7 @@ T$T             (\.([^.]*|synctex\.gz|out\.ps)|
    (ch|se|su|ap|li)?\d+\.x?html?|
              \d+x\.png|
              -\d+\.svg)|
-zzT$T\.eps|
+zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
 	    </patternClearFromLatexMain>
