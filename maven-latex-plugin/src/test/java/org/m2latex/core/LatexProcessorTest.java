@@ -82,7 +82,7 @@ public class LatexProcessorTest {
 
     //@Ignore 
     @Test public void testProcessLatexSimple()
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
 	mockConstrLatexMainDesc();
 
@@ -127,7 +127,7 @@ public class LatexProcessorTest {
 
     //@Ignore 
     @Test public void testProcessLatexWithBibtex() 
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
 	mockConstrLatexMainDesc();
 
@@ -170,7 +170,7 @@ public class LatexProcessorTest {
     }
 
     //@Ignore 
-    @Test public void testProcessLatex2html() throws BuildExecutionException {
+    @Test public void testProcessLatex2html() throws BuildFailureException {
 
 	mockConstrLatexMainDesc();
 
@@ -229,7 +229,7 @@ public class LatexProcessorTest {
     }
 
     private void mockNeedAnotherLatexRun(boolean retVal)
-        throws BuildExecutionException {
+        throws BuildFailureException {
 
         fileUtils.matchInFile(logFile, 
 			      this.settings.getPatternReRunLatex());
@@ -237,7 +237,7 @@ public class LatexProcessorTest {
     }
 
     private void mockNeedAnotherMakeIndexRun(boolean retVal)
-        throws BuildExecutionException {
+        throws BuildFailureException {
 
         fileUtils.matchInFile(logFile, 
 			      this.settings.getPatternReRunMakeIndex());
@@ -245,14 +245,14 @@ public class LatexProcessorTest {
     }
 
     // private void mockNeedBibtexRun(boolean retVal) 
-    // 	throws BuildExecutionException
+    // 	throws BuildFailureException
     // {
     //     fileUtils.matchInFile(auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
     //     fileUtilsCtrl.setReturnValue( retVal );
     // }
 
     private void mockRunBibtexByNeed(boolean runBibtex) 
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_AUX);
         fileUtilsCtrl.setReturnValue(auxFile);
@@ -282,7 +282,7 @@ public class LatexProcessorTest {
     }
 
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
 	if (!runMakeIndex) {
 	    return;
@@ -301,7 +301,7 @@ public class LatexProcessorTest {
     }
 
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossary) 
-	throws BuildExecutionException {
+	throws BuildFailureException {
  
 	if (!runMakeGlossary) {
 	    return;
@@ -316,7 +316,7 @@ public class LatexProcessorTest {
     }
 
 
-    private void mockRunLatex() throws BuildExecutionException {
+    private void mockRunLatex() throws BuildFailureException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getLatex2pdfCommand(),
@@ -327,7 +327,7 @@ public class LatexProcessorTest {
         executorCtrl.setReturnValue(null);
     }
 
-    private void mockRunLatex2html() throws BuildExecutionException {
+    private void mockRunLatex2html() throws BuildFailureException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
