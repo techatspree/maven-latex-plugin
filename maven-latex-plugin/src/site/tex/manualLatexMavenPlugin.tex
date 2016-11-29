@@ -554,7 +554,12 @@ just type {\tt mvn latex:clr}.
 By default, the goal {\tt clr} 
 is also executed in maven's {\tt clear} lifecycle. 
 
-FIXME: ant latex:clr 
+There is an according ant-task {\tt latex:cfg} 
+which can be invoked via {\tt ant -d latex:cfg}. 
+FIXME: ant latex:clr has duplicate parameters. 
+This can be fixed only by properties. 
+Another problem is, to provide a complete subset of parameters 
+which apply to {\tt latex:cfg} and to {\tt latex:cfg}, respectively. 
 
 If this ant-task is used in an ant project 
 with folder structure conforming with a maven project 
