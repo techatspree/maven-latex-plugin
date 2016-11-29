@@ -168,16 +168,19 @@ public class FileUtils {
 	throws IOException {
         if (file.exists()) {
             if (file.isDirectory()) {
-                throw new IOException("File '" + file + "' exists but is a directory");
+                throw new IOException
+		    ("File '" + file + "' exists but is a director. ");
             }
             if (!file.canWrite()) {
-                throw new IOException("File '" + file + "' cannot be written to");
+                throw new IOException
+		    ("File '" + file + "' cannot be written to. ");
             }
         } else {
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) {
                 if (!parent.mkdirs()) {
-                    throw new IOException("File '" + file + "' could not be created");
+                    throw new IOException
+			("File '" + file + "' could not be created. ");
                 }
             }
         }
@@ -311,7 +314,7 @@ public class FileUtils {
 					     IOFileFilter dirFilter) {
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(
-                    "Parameter 'directory' is not a directory");
+                    "Parameter 'directory' is not a directory. ");
         }
         // if (fileFilter == null) {
         //     throw new NullPointerException("Parameter 'fileFilter' is null");
@@ -450,7 +453,7 @@ public class FileUtils {
 
         if (file1.isDirectory() || file2.isDirectory()) {
             // don't want to compare directory contents
-            throw new IOException("Can't compare directories, only files");
+            throw new IOException("Can't compare directories, only files. ");
         }
 
         if (file1.length() != file2.length()) {
@@ -533,7 +536,7 @@ public class FileUtils {
         for (int i = 0; i < urls.length; i++) {
             URL url = urls[i];
             if (url != null) {
-                if (url.getProtocol().equals("file") == false) {
+                if (!url.getProtocol().equals("file")) {
                     throw new IllegalArgumentException(
                             "URL could not be converted to a File: " + url);
                 }
@@ -579,13 +582,21 @@ public class FileUtils {
      * @throws NullPointerException 
      *    if source or destination is null
      * @throws IOException 
-     *    if source or destination is invalid
+     *    if source is invalid: not existing or is a directory 
+     * @throws IOException 
+     *    if destination is invalid: same as source, 
+     *    parent if needed and non-existent cannot be created, 
+     *    exists and cannot be written to (not: or is a directory) 
      * @throws IOException 
      *    if an IO error occurs during copying
      * @see #copyFile(File, File, boolean)
      */
+    // used in TexFileUtilsImpl 
     public static void copyFileToDirectory(File srcFile, File destDir) 
 	throws IOException {
+	// may throw IOException 
+	// may throw IllegalArgumentException destination exists and is no dir 
+	// true: preserve file date 
         copyFileToDirectory(srcFile, destDir, true);
     }
 
@@ -607,12 +618,20 @@ public class FileUtils {
      * @throws NullPointerException 
      *    if source or destination is <code>null</code>
      * @throws IOException 
-     *    if source or destination is invalid
+     *    if source is invalid: not existing or is a directory 
+     * @throws IOException 
+     *    if destination is invalid: same as source, 
+     *    parent if needed and non-existent cannot be created, 
+     *    exists and cannot be written to (not: or is a directory) 
      * @throws IOException 
      *    if an IO error occurs during copying
+     * @throws IllegalArgumentException
+     *    if destination exists but is not a directory 
+
      * @see #copyFile(File, File, boolean)
      * @since Commons IO 1.3
      */
+    // used 
     public static void copyFileToDirectory(File srcFile, 
 					   File destDir, 
 					   boolean preserveFileDate) 
@@ -624,6 +643,15 @@ public class FileUtils {
             throw new IllegalArgumentException
 		("Destination '" + destDir + "' is not a directory. ");
         }
+
+	// may throw NullPointerException: 
+	// - srcFile is null 
+	// may throw FileNotFoundException
+	// - srcFile does not exist 
+	// may throw IOException 
+	// - srcFile is a directory or srcFile and destDir are the same. 
+	// - destination cannot be created or is not writable. 
+	// - IO-error opening streams, read or write 
         copyFile(srcFile, 
 		 new File(destDir, srcFile.getName()), 
 		 preserveFileDate);
@@ -675,26 +703,32 @@ public class FileUtils {
      * @throws NullPointerException  
      *    if source or destination is <code>null</code>
      * @throws IOException  
-     *    if source or destination is invalid
+     *    if source is invalid: not existing or is a directory 
+     * @throws IOException  
+     *    if destination is invalid: same as source, 
+     *    parent if needed and non-existent cannot be created, 
+     *    exists and cannot be written to or is a directory 
      * @throws IOException  
      *    if an IO error occurs during copying
      * @see #copyFileToDirectory(File, File, boolean)
      */
-    public static void copyFile(File srcFile, File destFile,
-            boolean preserveFileDate) throws IOException {
+    // used 
+    public static void copyFile(File srcFile, 
+				File destFile,
+				boolean preserveFileDate) throws IOException {
         if (srcFile == null) {
-            throw new NullPointerException("Source must not be null");
+            throw new NullPointerException("Source must not be null. ");
         }
         if (destFile == null) {
-            throw new NullPointerException("Destination must not be null");
+            throw new NullPointerException("Destination must not be null. ");
         }
-        if (srcFile.exists() == false) {
+        if (!srcFile.exists()) {
             throw new FileNotFoundException
-		("Source '" + srcFile + "' does not exist");
+		("Source '" + srcFile + "' does not exist. ");
         }
         if (srcFile.isDirectory()) {
             throw new IOException
-		("Source '" + srcFile + "' exists but is a directory");
+		("Source '" + srcFile + "' exists but is a directory. ");
         }
         if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
             throw new IOException("Source '" + srcFile + 
@@ -703,15 +737,17 @@ public class FileUtils {
         }
         if (destFile.getParentFile() != null && 
 	    !destFile.getParentFile().exists()) {
-            if (destFile.getParentFile().mkdirs() == false) {
+            if (!destFile.getParentFile().mkdirs()) {
                 throw new IOException("Destination '" + destFile + 
 				      "' directory cannot be created. ");
             }
         }
-        if (destFile.exists() && destFile.canWrite() == false) {
+        if (destFile.exists() && !destFile.canWrite()) {
             throw new IOException("Destination '" + destFile + 
-				  "' exists but is read-only");
+				  "' exists but is read-only. ");
         }
+	// may throw IOException: destFile exists and is a directory, 
+	// or IO-error occurs opening streams, reading or writing 
         doCopyFile(srcFile, destFile, preserveFileDate);
     }
 
@@ -725,33 +761,44 @@ public class FileUtils {
      * @param preserveFileDate   
      *    whether to preserve the file date
      * @throws IOException  
-     *    if an error occurs
+     *    if an error occurs: opening input/output streams, 
+     *    reading from file/writing to file, 
+     *    or if the destination file exists and is a directory. 
      */
+    // used 
     private static void doCopyFile(File srcFile, 
 				   File destFile, 
 				   boolean preserveFileDate) 
-	throws IOException {
+    throws IOException {
         if (destFile.exists() && destFile.isDirectory()) {
             throw new IOException("Destination '" + destFile + 
 				  "' exists but is a directory. ");
         }
 
+	// may throw FileNotFoundException <= IOException 
+	// if cannot be opened for reading: e.g. not exists, is a directory,...
         FileInputStream input = new FileInputStream(srcFile);
         try {
+	    // may throw FileNotFoundException <= IOException 
             FileOutputStream output = new FileOutputStream(destFile);
-            try {
+	    // if cannot be opened for writing: 
+	    // e.g. not exists, is a directory,...
+             try {
+		 // may throw IOException if an I/O-error occurs 
+		 // when reading or writing 
                 IOUtils.copy(input, output);
             } finally {
                 IOUtils.closeQuietly(output);
             }
-        } finally {
-            IOUtils.closeQuietly(input);
-        }
+	} finally {
+	    IOUtils.closeQuietly(input);
+	}
 
         if (srcFile.length() != destFile.length()) {
             throw new IOException("Failed to copy full contents from '" +
-                    srcFile + "' to '" + destFile + "'");
+				  srcFile + "' to '" + destFile + "'. ");
         }
+	// FIXME: what about SecurityExceptions? 
         if (preserveFileDate) {
             destFile.setLastModified(srcFile.lastModified());
         }
@@ -783,14 +830,14 @@ public class FileUtils {
 	throws IOException {
 
         if (srcDir == null) {
-            throw new NullPointerException("Source must not be null");
+            throw new NullPointerException("Source must not be null. ");
         }
         if (srcDir.exists() && !srcDir.isDirectory() ) {
             throw new IllegalArgumentException("Source '" + destDir + 
 					       "' is not a directory. ");
         }
         if (destDir == null) {
-            throw new NullPointerException("Destination must not be null");
+            throw new NullPointerException("Destination must not be null. ");
         }
         if (destDir.exists() && !destDir.isDirectory()) {
             throw new IllegalArgumentException("Destination '" + destDir + 
@@ -1019,7 +1066,7 @@ public class FileUtils {
         } else {
             if (destDir.mkdirs() == false) {
                 throw new IOException("Destination '" + destDir + 
-				      "' directory cannot be created");
+				      "' directory cannot be created. ");
             }
             if (preserveFileDate) {
                 destDir.setLastModified(srcDir.lastModified());
@@ -1027,7 +1074,7 @@ public class FileUtils {
         }
         if (destDir.canWrite() == false) {
             throw new IOException("Destination '" + destDir + 
-				  "' cannot be written to");
+				  "' cannot be written to. ");
         }
         // recurse
         File[] files = filter == null 
@@ -1774,11 +1821,11 @@ public class FileUtils {
      */
      public static boolean isFileNewer(File file, File reference) {
         if (reference == null) {
-            throw new IllegalArgumentException("No specified reference file");
+            throw new IllegalArgumentException("No specified reference file. ");
         }
         if (!reference.exists()) {
             throw new IllegalArgumentException("The reference file '"
-                    + file + "' doesn't exist");
+                    + file + "' doesn't exist. ");
         }
         return isFileNewer(file, reference.lastModified());
     }
@@ -1797,7 +1844,7 @@ public class FileUtils {
      */
     public static boolean isFileNewer(File file, Date date) {
         if (date == null) {
-            throw new IllegalArgumentException("No specified date");
+            throw new IllegalArgumentException("No specified date. ");
         }
         return isFileNewer(file, date.getTime());
     }
@@ -1816,7 +1863,7 @@ public class FileUtils {
      */
      public static boolean isFileNewer(File file, long timeMillis) {
         if (file == null) {
-            throw new IllegalArgumentException("No specified file");
+            throw new IllegalArgumentException("No specified file. ");
         }
         if (!file.exists()) {
             return false;
@@ -1841,11 +1888,11 @@ public class FileUtils {
      */
      public static boolean isFileOlder(File file, File reference) {
         if (reference == null) {
-            throw new IllegalArgumentException("No specified reference file");
+            throw new IllegalArgumentException("No specified reference file. ");
         }
         if (!reference.exists()) {
             throw new IllegalArgumentException("The reference file '"
-                    + file + "' doesn't exist");
+                    + file + "' doesn't exist. ");
         }
         return isFileOlder(file, reference.lastModified());
     }
@@ -1864,7 +1911,7 @@ public class FileUtils {
      */
     public static boolean isFileOlder(File file, Date date) {
         if (date == null) {
-            throw new IllegalArgumentException("No specified date");
+            throw new IllegalArgumentException("No specified date. ");
         }
         return isFileOlder(file, date.getTime());
     }
@@ -1883,7 +1930,7 @@ public class FileUtils {
      */
      public static boolean isFileOlder(File file, long timeMillis) {
         if (file == null) {
-            throw new IllegalArgumentException("No specified file");
+            throw new IllegalArgumentException("No specified file. ");
         }
         if (!file.exists()) {
             return false;
@@ -1935,7 +1982,7 @@ public class FileUtils {
 				    Checksum checksum) throws IOException {
         if (file.isDirectory()) {
             throw new IllegalArgumentException
-		("Checksums can't be computed on directories");
+		("Checksums can't be computed on directories. ");
         }
         InputStream in = null;
         try {
@@ -1975,7 +2022,7 @@ public class FileUtils {
         }
         if (!srcDir.exists()) {
             throw new FileNotFoundException("Source '" + srcDir + 
-					    "' does not exist.");
+					    "' does not exist. ");
         }
         if (!srcDir.isDirectory()) {
             throw new IOException("Source '" + srcDir + 
@@ -1992,7 +2039,7 @@ public class FileUtils {
             if (srcDir.exists()) {
                 throw new IOException("Failed to delete original directory '" + 
 				      srcDir +
-				      "' after copy to '" + destDir + "'");
+				      "' after copy to '" + destDir + "'. ");
             }
         }
     }
@@ -2019,7 +2066,7 @@ public class FileUtils {
             throw new NullPointerException("Source must not be null. ");
         }
         if (destDir == null) {
-            throw new NullPointerException\
+            throw new NullPointerException
 		("Destination directory must not be null. ");
         }
         if (!destDir.exists() && createDestDir) {
@@ -2028,7 +2075,7 @@ public class FileUtils {
         if (!destDir.exists()) {
             throw new FileNotFoundException
 		("Destination directory '" + destDir +
-		 "' does not exist [createDestDir=" + createDestDir +"]");
+		 "' does not exist [createDestDir=" + createDestDir +"]. ");
         }
         if (!destDir.isDirectory()) {
             throw new IOException("Destination '" + destDir + 
@@ -2055,26 +2102,26 @@ public class FileUtils {
     public static void moveFile(File srcFile, 
 				File destFile) throws IOException {
         if (srcFile == null) {
-            throw new NullPointerException("Source must not be null");
+            throw new NullPointerException("Source must not be null. ");
         }
         if (destFile == null) {
-            throw new NullPointerException("Destination must not be null");
+            throw new NullPointerException("Destination must not be null. ");
         }
         if (!srcFile.exists()) {
             throw new FileNotFoundException("Source '" + srcFile + 
-					    "' does not exist");
+					    "' does not exist. ");
         }
         if (srcFile.isDirectory()) {
             throw new IOException("Source '" + srcFile + 
-				  "' is a directory");
+				  "' is a directory. ");
         }
         if (destFile.exists()) {
             throw new IOException("Destination '" + destFile + 
-				  "' already exists");
+				  "' already exists. ");
         }
         if (destFile.isDirectory()) {
             throw new IOException("Destination '" + destFile + 
-				  "' is a directory");
+				  "' is a directory. ");
         }
         boolean rename = srcFile.renameTo(destFile);
         if (!rename) {
@@ -2107,11 +2154,11 @@ public class FileUtils {
 					   boolean createDestDir) 
 	throws IOException {
         if (srcFile == null) {
-            throw new NullPointerException("Source must not be null");
+            throw new NullPointerException("Source must not be null. ");
         }
         if (destDir == null) {
             throw new NullPointerException
-		("Destination directory must not be null");
+		("Destination directory must not be null. ");
         }
         if (!destDir.exists() && createDestDir) {
             destDir.mkdirs();
@@ -2120,11 +2167,11 @@ public class FileUtils {
             throw new FileNotFoundException
 		("Destination directory '" + 
 		 destDir +
-		 "' does not exist [createDestDir=" + createDestDir +"]");
+		 "' does not exist [createDestDir=" + createDestDir +"]. ");
         }
         if (!destDir.isDirectory()) {
             throw new IOException("Destination '" + destDir + 
-				  "' is not a directory");
+				  "' is not a directory. ");
         }
         moveFile(srcFile, new File(destDir, srcFile.getName()));
     }
@@ -2150,14 +2197,14 @@ public class FileUtils {
 				       boolean createDestDir) 
 	throws IOException {
         if (src == null) {
-            throw new NullPointerException("Source must not be null");
+            throw new NullPointerException("Source must not be null. ");
         }
         if (destDir == null) {
-            throw new NullPointerException("Destination must not be null");
+            throw new NullPointerException("Destination must not be null. ");
         }
         if (!src.exists()) {
             throw new FileNotFoundException("Source '" + src + 
-					    "' does not exist");
+					    "' does not exist. ");
         }
         if (src.isDirectory()) {
             moveDirectoryToDirectory(src, destDir, createDestDir);
