@@ -25,11 +25,12 @@ package org.m2latex.core;
  */
 public class BuildExecutionException extends MyBuildException {
 
-
     public BuildExecutionException(String message) {
 	super(message);
+	assert false;
     }
     public BuildExecutionException(String message, Throwable cause) {
 	super(message, cause);
+	assert false;
     }
 }
