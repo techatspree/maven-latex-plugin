@@ -77,14 +77,14 @@
     </fileset>
   </path>
 
-  <taskdef name="latex"
+  <taskdef name="latexCfg"
 	   classname="org.m2latex.antTask.LatexCfgTask"
 	   classpathref="latex.classpath"/>
 
   <target name="latex:cfg"
 	  description="Create pdf, html and other formats 
 		       from latex. ">
-    <latex>
+    <latexCfg>
 	<!--patternErrXindy="(^ERROR: )" -->
 
       <settings texSrcDirectory="src/site/tex"
@@ -130,7 +130,7 @@ T$T             (\.([^.]*|synctex\.gz|out\.ps)|
    (ch|se|su|ap|li)?\d+\.x?html?|
              \d+x\.png|
              -\d+\.svg)|
-zzT$T\.eps|
+zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
 	</patternClearFromLatexMain>
@@ -185,6 +185,39 @@ zzT$T\.eps|
 	  (cmsy)\d+(-c)?-\d+c?\.png)$
 	</patternT4htOutputFiles>
       </settings>
-    </latex>
+    </latexCfg>
   </target>
+
+  <taskdef name="latexClr"
+	   classname="org.m2latex.antTask.LatexClrTask"
+	   classpathref="latex.classpath"/>
+
+  <!-- very bad: copied parameters -->
+  <target name="latex:clr"
+	  description="Delete files created in latex source directory. ">
+    <latexClr>
+
+	<!--patternErrXindy="(^ERROR: )" -->
+
+      <settings texSrcDirectory="src/site/tex"
+>
+	<patternLatexMainFile>
+	  \s*\\(documentstyle|documentclass).*
+	</patternLatexMainFile>
+
+	<patternClearFromLatexMain>
+^(
+T$T             (\.([^.]*|synctex\.gz|out\.ps)|
+   (ch|se|su|ap|li)?\d+\.x?html?|
+             \d+x\.png|
+             -\d+\.svg)|
+zzT$T\.e?ps|
+(cmsy)\d+(-c)?-\d+c?\.png|
+(pdf)?latex\d+\.fls)$
+	</patternClearFromLatexMain>
+
+      </settings>
+    </latexClr>
+  </target>
+
 </project>
