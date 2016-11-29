@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public class SettingsTest {
 
-    @Test public void testSettings() {
+    @Test public void testSettings() throws BuildFailureException {
         Settings settings = new Settings();
 
 	// invoked from within maven in base directory with pom.xml 
@@ -40,10 +40,14 @@ public class SettingsTest {
 	settings.setTargetSiteDirectory(targetSiteDirectory);
 
 	// test getTexSrcDirectoryFile() and setTexSrcDirectory(...) 
+	new File(baseDirectory, Settings.SST).mkdir();
 	assertEquals(new File(baseDirectory, Settings.SST),
+		     // may throw BuildFailureException
 		     settings.getTexSrcDirectoryFile());
 	settings.setTexSrcDirectory("site");
 	settings.setBaseDirectory(targetDirectory);
+	// may throw BuildFailureException 
+	targetSiteDirectory.mkdir();
 	assertEquals(targetSiteDirectory,
 		     settings.getTexSrcDirectoryFile());
 
