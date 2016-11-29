@@ -203,7 +203,7 @@ public class Settings {
 	"\\d+x\\.png|" + 
 	"-\\d+\\.svg)|" + 
 	// ... and xxT$T.eps... 
-	"zzT$T\\.eps|" + 
+	"zzT$T\\.e?ps|" + 
 	// ... and scripts cmsy....png 
 	"(cmsy)\\d+(-c)?-\\d+c?\\.png|" + 
 	// The following occurs sporadic 
