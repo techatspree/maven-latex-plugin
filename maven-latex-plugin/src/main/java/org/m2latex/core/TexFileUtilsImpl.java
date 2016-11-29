@@ -25,6 +25,8 @@ import java.io.FileReader;
 import java.io.FileFilter;
 import java.io.IOException;
 
+import java.nio.file.Path;
+
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -33,11 +35,13 @@ import java.util.regex.Pattern;
 
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.copyFileToDirectory;
-import        org.apache.commons.io.filefilter.TrueFileFilter;
+import        org.apache.commons.io.filefilter.TrueFileFilter;// with listFiles only
 import static org.apache.commons.io.filefilter.FileFilterUtils.suffixFileFilter;
-import static org.apache.commons.io.filefilter.FileFilterUtils.prefixFileFilter;
-import static org.apache.commons.io.filefilter.FileFilterUtils.notFileFilter;
+// FIXME: jdee bug: delete static imports: does not find superfluous 
 
+/**
+ * Sole interface to <code>org.apache.commons.io.</code>. 
+ */
 class TexFileUtilsImpl implements TexFileUtils {
 
     private final static String PREFIX_HIDDEN = ".";
@@ -59,11 +63,16 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @return
      *    the ordered collection of files without directories 
      *    in folder <code>texDir</code> and subfolder. 
-     * @throws BuildExecutionException
+     * @throws BuildFailureException
      *    if <code>texDir</code> is not a folder or not readable. 
      */
+    // used in 
+    // - cleanUp 
+    // - LatexPreProcessor.clearCreated 2x: delete and check 
+    // - LatexProcessor.create()
+    // - LatexProcessor.processGraphics()
     public Collection<File> getFilesRec(File texDir) 
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
 	// FIXME: FileUtils.listFiles must not be used, 
 	// because in case of IO-problems silently skips directories 
@@ -71,8 +80,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 					  TrueFileFilter.INSTANCE,
 					  TrueFileFilter.INSTANCE);
 	if (res1 == null) {
-	    throw new BuildExecutionException
-		("File " + texDir + " is not readable or no directory. ");
+	    throw new BuildFailureException
+		("File '" + texDir + "' is not readable or no directory. ");
 	}
 	Collection<File> res = new TreeSet<File>();
 	res.addAll(res1);
@@ -100,53 +109,55 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    the directory below <code>targetBaseDir</code>
      *    which corresponds to the parent directory of <code>sourceFile</code> 
      *    which is below <code>sourceBaseDir</code>. 
-     * @throws BuildExecutionException
-     *    If the canonical path of <code>sourceFile</code> 
-     *    or of <code>sourceBaseDir</code> cannot be determined. 
      * @throws BuildFailureException
      *    if <code>sourceFile</code> is not below <code>sourceBaseDir</code>. 
      */
+    // used by LatexProcessor.create() only 
     public File getTargetDirectory(File srcFile,
 				   File srcBaseDir,
-				   File targetBaseDir)
-	throws BuildExecutionException, BuildFailureException {
+				   File targetBaseDir) 
+	throws BuildFailureException {
 
-	try {
-	    // getCanonicalPath may throw IOException 
-	    String srcParentPath = srcFile.getParentFile().getCanonicalPath();
-	    // getCanonicalPath may throw IOException 
-            String srcBasePath = srcBaseDir.getCanonicalPath();
+	// getCanonicalPath may throw IOException 
+	Path srcParentPath = srcFile.getParentFile().toPath();
+	// getCanonicalPath may throw IOException 
+	Path srcBasePath = srcBaseDir.toPath();
 
-	    if (!srcParentPath.startsWith(srcBasePath)) {
-		throw new BuildFailureException
-		    ( "File " + srcFile + 
-		      " is expected to be somewhere under directory "
-		      + srcBasePath + ". ");
-	    }
+	// FIXME: really ok? what if strings but not paths are prefixes? 
+	// I think should be via Path: toPath. 
+	assert srcParentPath.startsWith(srcBasePath);
+	srcParentPath = srcBasePath.relativize(srcParentPath);
 
-	    return new File(targetBaseDir, 
-			    srcParentPath.substring(srcBasePath.length()));
-	} catch (IOException e) {
-            throw new BuildExecutionException
-		("Error getting canonical path. ", e);
-        }
+	// FIXME: CAUTION: this may exist and be no directory!
+	File res = new File(targetBaseDir, srcParentPath.toString());
+	if (res.exists() && !res.isDirectory()) {
+	    throw new BuildFailureException
+		("Require target directory '" + res + 
+		 "' which exists already as regular file. ");
+	}
+	return res;
     }
 
     /**
-     * Returns a file filter containing all files 
-     * replacing the suffix of <code>file</code> 
-     * with the pattern given by <code>filesPatterns</code>. 
+     * Returns a file filter matching neither directories 
+     * nor <code>texFile</code> 
+     * but else all files with names matching <code>pattern</code>, 
+     * where the special sequence {@link #PATTERN_INS_LATEX_MAIN} 
+     * is replaced by the prefix of <code>texFile</code>. 
      *
      * @param texFile
-     *    a latex main file for which the result must be copied **** 
-     *    Typically, this is used for tex-files but also for mp-files. 
-     * @param filesPatterns
-     *    patterns of the form <code>.&lt;suffix&gt;</code> 
-     *    or <code>*.&lt;suffix&gt;</code> 
+     *    a latex main file for which a file filter has to be created. 
+     * @param pattern
+     *    a pattern 
+     *    for which the special sequence {@link #PATTERN_INS_LATEX_MAIN} 
+     *    is replaced by the prefix of <code>texFile</code> 
+     *    before a file filter is created from it. 
      * @return
-     *    A file filter given by the wildcard 
-     *    replacing the suffix of <code>file</code> 
-     *    with the pattern given by <code>filesPatterns</code>. 
+     *    a non-null file filter matching neither directories 
+     *    nor <code>texFile</code> 
+     *    but else all files with names matching <code>pattern</code>, 
+     *    where the special sequence {@link #PATTERN_INS_LATEX_MAIN} 
+     *    is replaced by the prefix of <code>texFile</code>. 
      */
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
@@ -174,22 +185,24 @@ class TexFileUtilsImpl implements TexFileUtils {
      * are copied to <code>targetDir</code>. 
      * This is invoked by {@link #LatexProcessor#execute()} only. 
      *
-     * @BuildExecutionException
-     *    wraps IOException when reading <code>texFile</code>'s folder 
+     * @throws BuildFailureException
+     *    either target directory is not readable 
+     *    or wraps IOException when reading <code>texFile</code>'s folder 
      *    or when copying. 
      */
+    // used in LatexProcessor.create() only 
     public void copyOutputToTargetFolder(File texFile, 
 					 FileFilter fileFilter, 
 					 File targetDir)
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
 	File texFileDir = texFile.getParentFile();
         File[] outputFiles = texFileDir.listFiles();
 
         if (outputFiles == null) {
-	    // since outputFiles is a directory 
-	    throw new BuildExecutionException
-		("Error reading directory " + texFileDir + "! " );
+	    // since texFileDir is a directory 
+	    throw new BuildFailureException
+		("Error reading directory '" + texFileDir + "'! " );
 	}
 	assert outputFiles != null;
 
@@ -206,11 +219,23 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    if (fileFilter.accept(file)) {
 		log.info("Copying '" + file.getName() + 
 			 "' to '" + targetDir + "'. ");
+		// FIXME: fileFilter shall not accept directories 
+		// and shall not accept texFile 
 		try {
+		    // may throw IOException: 
+		    // - if source is invalid: not existing or is a directory 
+		    // - if destination is invalid: 
+		    //   same as source (cannot occur)
+		    //    parent if needed and non-existent cannot be created, 
+		    //    exists and cannot be written to 
+		    //    (not: or is a directory) 
+		    // - error opening streams, read/write 
 		    // FileUtils.
 		    copyFileToDirectory(file, targetDir);
+		    // FIXME: catch IllegalArgumentException 
+		    // destination exists and is no dir 
 		} catch (IOException e) {
-		    throw new BuildExecutionException
+		    throw new BuildFailureException
 			("Error copying '" + file.getName() + 
 			 "' to '" + targetDir + "'. ",
 			 e);
@@ -284,7 +309,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    an existing proper file, not a folder. 
      * @param pattern
      *    the pattern (regular expression) to look for in <code>file</code>. 
-     * @throws BuildExecutionException
+     * @throws BuildFailureException
      *    if the file <code>file</code> does not exist or cannot be read. 
      */
     // used in LatexProcessor only: 
@@ -292,16 +317,16 @@ class TexFileUtilsImpl implements TexFileUtils {
     // needAnotherLatexRun, needBibtexRun, 
     // runMakeindex, runBibtex, runLatex
     public boolean matchInFile(File file, String pattern)
-        throws BuildExecutionException {
+        throws BuildFailureException {
 
 	try {
 	    return fileContainsPattern(file, pattern);
 	} catch (FileNotFoundException e) {
-	    throw new BuildExecutionException
-		("File " + file.getPath() + " not found. ", e);
+	    throw new BuildFailureException
+		("File '" + file.getPath() + "' not found. ", e);
 	} catch (IOException e) {
-	    throw new BuildExecutionException
-		("Error reading file " + file.getPath() + ". ", e);
+	    throw new BuildFailureException
+		("Error reading file '" + file.getPath() + "'. ", e);
 	}
     }
 
@@ -351,15 +376,15 @@ class TexFileUtilsImpl implements TexFileUtils {
      * i.e. not in subfolders, which are accepted by <code>filter</code>. 
      */
     public void deleteX(File pFile, FileFilter filter) 
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
 	File dir = pFile.getParentFile();
 	assert dir.isDirectory();
 	File[] files = dir.listFiles();
 	if (files == null) {
 	    // Here, dir is not readable because a directory 
-	    throw new BuildExecutionException
-		("Directory " + dir + " is not readable. ");
+	    throw new BuildFailureException
+		("Directory '" + dir + "' is not readable. ");
 	}
 	for (File delFile : files) {
 	    if (filter.accept(delFile)) {
@@ -374,14 +399,14 @@ class TexFileUtilsImpl implements TexFileUtils {
      * The background is, that <code>orFiles</code> are the files 
      * originally in <code>texDir</code>. 
      *
-     * @throws BuildExecutionException
+     * @throws BuildFailureException
      *    if <code>texDir</code> is no directory or not readable. 
      */
     public void cleanUp(Collection<File> orgFiles, File texDir) 
-	throws BuildExecutionException {
+	throws BuildFailureException {
 
 	log.debug("Clearing set of sources. ");
-	// may throw BuildExecutionException 
+	// may throw BuildFailureException 
 	Collection<File> currFiles = getFilesRec(texDir);
 	currFiles.removeAll(orgFiles);
 	for (File file : currFiles) {
