@@ -233,6 +233,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * in {@link ClearMojo}. 
      * Consists in clearing created graphic files 
      * and created files derived from latex main file. 
+     * <p>
+     * The parameters this method depends on are (currently): 
+     * <ul>
+     * <li>
+     * {@link Settings#getTexSrcDirectoryFile()}
+     * <li>
+     * {@link Settings#getPatternLatexMainFile()}
+     * <li>
+     * {@link Settings#getPatternClearFromLatexMain()}
+     * </ul>
      *
      * @throws BuildFailureException 
      */
