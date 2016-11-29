@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.Checksum;
@@ -249,9 +250,13 @@ public class FileUtils {
      * @param directory the directory to search in.
      * @param filter the filter to apply to files and directories.
      */
-    private static void innerListFiles(Collection<File> files, File directory,
-            IOFileFilter filter) {
+    private static void innerListFiles(Collection<File> files, 
+				       File directory,
+				       IOFileFilter filter) {
         File[] found = directory.listFiles((FileFilter) filter);
+	// found is null if directory is not a directory (which is exlcuded) 
+	// or if an io-error occurs. 
+	// Thus in these cases, the failure is ignored silently 
         if (found != null) {
             for (int i = 0; i < found.length; i++) {
                 if (found[i].isDirectory()) {
@@ -279,42 +284,58 @@ public class FileUtils {
      * tree but ignoring the directories generated CVS. You can simply pass
      * in <code>FileFilterUtils.makeCVSAware(null)</code>.
      *
-     * @param directory  the directory to search in
-     * @param fileFilter  filter to apply when finding files.
-     * @param dirFilter  optional filter to apply when finding subdirectories.
-     * If this parameter is <code>null</code>, subdirectories will not be included in the
-     * search. Use TrueFileFilter.INSTANCE to match all directories.
-     * @return an collection of java.io.File with the matching files
+     * @param directory 
+     *    the directory to search in
+     * @param fileFilter
+     *    filter to apply when finding files.
+     * @param dirFilter 
+     *    optional filter to apply when finding subdirectories.
+     *    If this parameter is <code>null</code>, 
+     *    subdirectories will not be included in the search. 
+     *    Use TrueFileFilter.INSTANCE to match all directories.
+     * @return 
+     *    a collection of java.io.File with the matching files
+     * @throws IllegalArgumentException
+     *    if <code>directory</code> is no directory 
+     *    or if <code>fileFilter</code> is <code>null</code>. 
      * @see org.apache.commons.io.filefilter.FileFilterUtils
      * @see org.apache.commons.io.filefilter.NameFileFilter
      */
-    public static Collection<File> listFiles(
-            File directory, IOFileFilter fileFilter, IOFileFilter dirFilter) {
+    public static Collection<File> listFiles(File directory, 
+					     IOFileFilter fileFilter, 
+					     IOFileFilter dirFilter) {
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(
                     "Parameter 'directory' is not a directory");
         }
-        if (fileFilter == null) {
-            throw new NullPointerException("Parameter 'fileFilter' is null");
-        }
+        // if (fileFilter == null) {
+        //     throw new NullPointerException("Parameter 'fileFilter' is null");
+        // }
 
-        //Setup effective file filter
+        // Setup effective file filter
+	// throws IllegalArgumentException if fileFilter is null 
         IOFileFilter effFileFilter = FileFilterUtils.andFileFilter(fileFilter,
             FileFilterUtils.notFileFilter(DirectoryFileFilter.INSTANCE));
 
-        //Setup effective directory filter
+        // Setup effective directory filter
         IOFileFilter effDirFilter;
-        if (dirFilter == null) {
-            effDirFilter = FalseFileFilter.INSTANCE;
-        } else {
-            effDirFilter = FileFilterUtils.andFileFilter(dirFilter,
-                DirectoryFileFilter.INSTANCE);
-        }
+	effDirFilter = dirFilter == null
+	    ? FalseFileFilter.INSTANCE
+	    : FileFilterUtils.andFileFilter(dirFilter, 
+					    DirectoryFileFilter.INSTANCE);
+        // if (dirFilter == null) {
+        //     effDirFilter = FalseFileFilter.INSTANCE;
+        // } else {
+        //     effDirFilter = FileFilterUtils.andFileFilter(dirFilter,
+        //         DirectoryFileFilter.INSTANCE);
+        // }
 
         //Find files
-        Collection<File> files = new java.util.LinkedList<File>();
-        innerListFiles(files, directory,
-            FileFilterUtils.orFileFilter(effFileFilter, effDirFilter));
+        Collection<File> files = new LinkedList<File>();
+        innerListFiles(files, 
+		       directory,
+		       FileFilterUtils.orFileFilter(effFileFilter, 
+						    effDirFilter));
         return files;
     }
 
@@ -325,11 +346,15 @@ public class FileUtils {
      * All files found are filtered by an IOFileFilter. This method is
      * based on {@link #listFiles(File, IOFileFilter, IOFileFilter)}.
      *
-     * @param directory  the directory to search in
-     * @param fileFilter  filter to apply when finding files.
-     * @param dirFilter  optional filter to apply when finding subdirectories.
-     * If this parameter is <code>null</code>, subdirectories will not be included in the
-     * search. Use TrueFileFilter.INSTANCE to match all directories.
+     * @param directory 
+     *    the directory to search in
+     * @param fileFilter
+     *    filter to apply when finding files.
+     * @param dirFilter 
+     *    optional filter to apply when finding subdirectories.
+     *    If this parameter is <code>null</code>, 
+     *    subdirectories will not be included in the search. 
+     *    Use TrueFileFilter.INSTANCE to match all directories.
      * @return an iterator of java.io.File for the matching files
      * @see org.apache.commons.io.filefilter.FileFilterUtils
      * @see org.apache.commons.io.filefilter.NameFileFilter
@@ -373,8 +398,7 @@ public class FileUtils {
         if (extensions == null) {
             filter = TrueFileFilter.INSTANCE;
         } else {
-            String[] suffixes = toSuffixes(extensions);
-            filter = new SuffixFileFilter(suffixes);
+	    filter = new SuffixFileFilter(toSuffixes(extensions));
         }
         return listFiles(directory, filter,
             (recursive ? TrueFileFilter.INSTANCE : FalseFileFilter.INSTANCE));
@@ -413,7 +437,8 @@ public class FileUtils {
      * exist, false otherwise
      * @throws IOException in case of an I/O error
      */
-    public static boolean contentEquals(File file1, File file2) throws IOException {
+    public static boolean contentEquals(File file1, 
+					File file2) throws IOException {
         boolean file1Exists = file1.exists();
         if (file1Exists != file2.exists()) {
             return false;
