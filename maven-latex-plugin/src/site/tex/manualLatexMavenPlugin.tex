@@ -2505,15 +2505,65 @@ The options of the command \$pdf2txtCommand.
 \caption{\label{tab:paramExt} The parameters of further converters }
 \end{longtable}
 
-\section{Messages}
-FIXME: to be added. 
-\subsection{Warnings}
-\subsection{Errors}
+\section{Exceptions and logging}\label{subsec:exceptionLogging}
+
+A maven plugin may throw a import a 
+{\tt org.apache.maven.plugin.MojoFailureException} 
+if a recoverable error occurs and a 
+{\tt org.apache.maven.plugin.MojoExecutionException} 
+if a non-recoverable error occurs. 
+Whereas the former aborts the run of the plugin, 
+the latter aborts the whole build. 
+This maven plugin does not throw any {\tt MojoExecutionException}. 
+
+An ant-task may throw a {\tt org.apache.tools.ant.BuildException} 
+to abort the ant-build altogether. 
+
+If this software throws an exception, 
+as a maven plugin it throws a {\tt MojoFailureException} 
+and as an ant task a {\tt BuildException}. 
+
+Section~\ref{subsec:exception} indicates 
+under what circumstances an exception is thrown 
+and Section~\ref{subsec:logWarn} describes the warnings. 
+
+
+\subsection{Exceptions}\label{subsec:exception}
+
+Exceptions are thrown only if no substantial part of 
+this maven-goal or this ant-task may be completed 
+as if the tex source directory does not exist or is no directory 
+or if a failure orrurs which indicates 
+that the underlying system does not work properly, 
+as if the tex source directory or a subdirectory is not readable 
+or if execution of an external program fails. 
+The latter does not mean that the program returns with an error code, 
+but it means that execution from within java fails. 
+
+
 
 %\begin{longtable}
 
 %\end{longtable}
 
+FIXME: to be added. 
+\subsection{Warnings}\label{subsec:logWarn}
+
+A warning must be logged, if no exception is thrown 
+but if there is an indication that the ant-task or the maven goal 
+did not fully succeed. 
+To avoid aborting the task or the goal, 
+no errors are issued, warnings only. 
+
+FIXME: this is not completely implemented. 
+
+
+
+%\begin{longtable}
+
+%\end{longtable}
+
+FIXME: to be added. 
 
 \section{Listings}\label{subsec:listings}
 
