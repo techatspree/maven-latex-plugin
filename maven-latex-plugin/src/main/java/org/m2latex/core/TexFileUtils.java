@@ -29,7 +29,7 @@ import java.io.FileFilter;
 
 interface TexFileUtils {
 
-    Collection<File> getFilesRec(File dir) throws BuildFailureException;
+    Collection<File> getFilesRec(File dir);
 
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
@@ -52,10 +52,7 @@ interface TexFileUtils {
     boolean matchInFile(File file, String pattern) 
 	throws BuildFailureException;
 
-    void deleteX(File texFile, FileFilter filter) 
-	throws BuildFailureException;
+    void deleteX(File texFile, FileFilter filter);
 
-    void cleanUp(Collection<File> sourceFiles, File texDir)
-	throws BuildFailureException;
-
+    void cleanUp(Collection<File> sourceFiles, File texDir);
 }

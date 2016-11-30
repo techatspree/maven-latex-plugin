@@ -174,7 +174,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
         File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
-	// may throw BuildFailureException 
 	// should fail without finally cleanup 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 
@@ -208,8 +207,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    } // texFile 
 	} finally {
 	    if (this.settings.isCleanUp()) {
-		// may throw BuildFailureException
-                this.fileUtils.cleanUp(orgFiles, texDir);
+               this.fileUtils.cleanUp(orgFiles, texDir);
             }
         }
     }
@@ -223,7 +221,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
-	// may throw BuildFailureException 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 	this.preProc.processGraphicsSelectMain(orgFiles);
     }
@@ -254,7 +251,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
         File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
- 	// may throw BuildFailureException 
 	this.preProc.clearCreated(texDir);
    }
 

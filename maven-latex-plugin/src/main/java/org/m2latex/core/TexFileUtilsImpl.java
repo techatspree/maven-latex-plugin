@@ -63,17 +63,13 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @return
      *    the ordered collection of files without directories 
      *    in folder <code>texDir</code> and subfolder. 
-     * @throws BuildFailureException
-     *    if <code>texDir</code> is not a folder or not readable. 
-     */
+      */
     // used in 
     // - cleanUp 
     // - LatexPreProcessor.clearCreated 2x: delete and check 
     // - LatexProcessor.create()
     // - LatexProcessor.processGraphics()
-    public Collection<File> getFilesRec(File texDir) 
-	throws BuildFailureException {
-
+    public Collection<File> getFilesRec(File texDir) {
 	assert texDir.exists() && texDir.isDirectory();
 
 	// FIXME: FileUtils.listFiles must not be used, 
@@ -81,12 +77,12 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// FIXME: skip hidden files 
 	// because they make problems with getSuffix(File)
 	Collection<File> res = new TreeSet<File>();
-	try {
+	//try {
 	    innerListFiles(res, texDir);
-	} catch (IOException e) {
-	    throw new BuildFailureException
-		("File '" + texDir + "' is not completely readable. ");
-	}
+	// } catch (IOException e) {
+	//     throw new BuildFailureException
+	// 	("File '" + texDir + "' is not completely readable. ");
+	// }
 
 	return res;
     }
@@ -101,8 +97,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @param dir
      *    the directory to search in.
      */
-    private static void innerListFiles(Collection<File> files, 
-				       File dir) throws IOException {
+    private void innerListFiles(Collection<File> files, File dir) {
 	assert dir.isDirectory();
         File[] found = dir.listFiles();
 	// found is null if directory is not a directory (which is exlcuded) 
@@ -110,7 +105,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// Thus in these cases, the failure is ignored silently 
         if (found == null) {
 	    // FIXME: better with logging 
-	    throw new IOException("Cannot read directory '" + dir + "'. ");
+	    this.log.warn("Cannot read directory '" + dir + "'. ");
 	}
 	File file;
 	for (int i = 0; i < found.length; i++) {
@@ -528,16 +523,15 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used in LatexPreProcessor.clearTargetMp
     // used in LatexPreProcessor.clearTargetTex only 
-    public void deleteX(File pFile, FileFilter filter) 
-	throws BuildFailureException {
+    public void deleteX(File pFile, FileFilter filter) {
 
 	File dir = pFile.getParentFile();
 	assert dir.isDirectory();
 	File[] files = dir.listFiles();
 	if (files == null) {
 	    // Here, dir is not readable because a directory 
-	    throw new BuildFailureException
-		("Directory '" + dir + "' is not readable. ");
+	    this.log.warn("Cannot delete from directory '" + dir + 
+			  "': is not readable. ");
 	}
 	for (File delFile : files) {
 	    if (filter.accept(delFile)) {
@@ -551,17 +545,12 @@ class TexFileUtilsImpl implements TexFileUtils {
      * which are not in <code>orgFiles</code>. 
      * The background is, that <code>orFiles</code> are the files 
      * originally in <code>texDir</code>. 
-     *
-     * @throws BuildFailureException
-     *    if <code>texDir</code> is no directory or not readable. 
      */
     // used in LatexProcessor.create() only 
     // FIXME: warn if deletion failed. 
-    public void cleanUp(Collection<File> orgFiles, File texDir) 
-	throws BuildFailureException {
+    public void cleanUp(Collection<File> orgFiles, File texDir) {
 
 	log.debug("Clearing set of sources. ");
-	// may throw BuildFailureException 
 	Collection<File> currFiles = getFilesRec(texDir);
 	currFiles.removeAll(orgFiles);
 	for (File file : currFiles) {
