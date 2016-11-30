@@ -106,8 +106,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		throws BuildFailureException {
 		proc.runFig2Dev(file, LatexDev.pdf);
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 		proc.clearTargetFig(file);
 	    }
 	    String getSuffix() {
@@ -121,8 +120,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		throws BuildFailureException {
 		proc.runGnuplot2Dev(file, LatexDev.pdf);
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 		proc.clearTargetGp(file);
 	    }
 	    String getSuffix() {
@@ -136,8 +134,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		throws BuildFailureException {
 		proc.runMetapost2mps(file);
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 		proc.clearTargetMp(file);
 	    }
 	    String getSuffix() {
@@ -145,13 +142,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	svg {
-	    void transformSrc(File file, LatexPreProcessor proc) 
-		throws BuildFailureException {
+	    void transformSrc(File file, LatexPreProcessor proc) {
 		proc.log.info("Processing svg-file '" + file + 
 		 	      "' done implicitly in latex run. ");
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 		proc.clearTargetSvg(file);
 	    }
 	    String getSuffix() {
@@ -159,38 +154,32 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	jpg {
-	    void transformSrc(File file, LatexPreProcessor proc) 
-		throws BuildFailureException {
+	    void transformSrc(File file, LatexPreProcessor proc) {
 		proc.log.info("No processing for jpg-file '" + file + 
 			      "' needed. ");
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_JPG;
 	    }
 	},
 	png {
-	    void transformSrc(File file, LatexPreProcessor proc) 
-		throws BuildFailureException {
+	    void transformSrc(File file, LatexPreProcessor proc) {
 		proc.log.info("No processing for png-file '" + file + 
 			      "' needed. ");
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_PNG;
 	    }
 	},
 	tex {
-	    void transformSrc(File file, LatexPreProcessor proc) 
-		throws BuildFailureException {
+	    void transformSrc(File file, LatexPreProcessor proc) {
 		proc.addMainFile(file);
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 		proc.clearTargetTex(file);
 	    }
 	    String getSuffix() {
@@ -198,11 +187,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	bib {
-	    void transformSrc(File file, LatexPreProcessor proc) 
-		throws BuildFailureException {
+	    void transformSrc(File file, LatexPreProcessor proc) {
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc)
-	    	throws BuildFailureException {
+	    void clearTarget(File file, LatexPreProcessor proc) {
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_BIB;
@@ -215,6 +202,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 *
 	 * @param file
 	 *    a file with ending given by {@link #getSuffix()}. 
+	 * @param proc
+	 *    a latex pre-processor.
+	 * @throws BuildFailureException
+	 *    only for {@link #fig}, {@link #gp} and {@link #mp} 
+	 *    because these invoke external programs. 
 	 */
 	abstract void transformSrc(File file, LatexPreProcessor proc)
 	throws BuildFailureException;
@@ -226,13 +218,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 *
 	 * @param file
 	 *    a file with ending given by {@link #getSuffix()}. 
+	 * @param proc
+	 *    a latex pre-processor.
 	 */
-	abstract void clearTarget(File file, LatexPreProcessor proc)
-	throws BuildFailureException;
+	abstract void clearTarget(File file, LatexPreProcessor proc);
 
 	/**
 	 * Returns the suffix of the file type 
-	 * this is the handler for. 
+	 * of the file type, this is the handler for. 
 	 */
 	abstract String getSuffix();
     } // enum SuffixHandler 
@@ -362,8 +355,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param figFile
      *    a fig file. 
      */
-    private void clearTargetFig(File figFile) 
-	throws BuildFailureException {
+    private void clearTargetFig(File figFile) {
 
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
 	// FIXME: add check whether deleted: may throw BuildFailureException 
@@ -428,8 +420,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Deletes the graphic files 
      * created from the gnuplot-file <code>gpFile</code>. 
      */
-    private void clearTargetGp(File gpFile) 
-	throws BuildFailureException {
+    private void clearTargetGp(File gpFile) {
 
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
 	// FIXME: add check whether deleted: may throw BuildFailureException 
@@ -472,8 +463,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Deletes the graphic files 
      * created from the metapost-file <code>mpFile</code>. 
      */
-    private void clearTargetMp(File mpFile) 
-	throws BuildFailureException {
+    private void clearTargetMp(File mpFile) {
 
 	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
 	// FIXME: add check whether deleted: may throw BuildFailureException 
@@ -490,7 +480,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		}
 	    };
 
-	// may throw BuildFailureException 
 	this.fileUtils.deleteX(mpFile, filter);
     }
 
@@ -498,8 +487,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Deletes the graphic files 
      * created from the svg-file <code>svgFile</code>. 
      */
-    private void clearTargetSvg(File svgFile) 
-	throws BuildFailureException {
+    private void clearTargetSvg(File svgFile) {
 
        this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
        // FIXME: add check whether deleted: may throw BuildFailureException 
@@ -509,6 +497,28 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
    }
 
     /**
+     * Returns whether <code>texFile</code> is a latex main file, 
+     * provided it is readable. 
+     * Otherwise logs a warning and returns <code>false</code>. 
+     *
+     * @return
+     *    whether <code>texFile</code> is definitively a latex main file. 
+     *    If this is not readable, <code>false</code>. 
+     */
+    private boolean isLatexMainFile(File texFile) {
+	try {
+	    return this.fileUtils
+	    // may throw BuildFailureException
+		.matchInFile(texFile, 
+			     this.settings.getPatternLatexMainFile());
+	} catch (BuildFailureException e) {
+	    this.log.warn("Could not find out whether '" + texFile + 
+			  "' is a latex main file; assume no. ");
+	    return false;
+	}
+    }
+
+    /**
      * If the tex-file <code>texFile</code> is a latex main file, 
      * add it to {@link #latexMainFiles}. 
      *
@@ -516,10 +526,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the tex-file to be added to {@link #latexMainFiles} 
      *    if it is a latex main file. 
      */
-    private void addMainFile(File texFile) throws BuildFailureException {
-	if (this.fileUtils
-	    // may throw BuildFailureException
-	    .matchInFile(texFile, this.settings.getPatternLatexMainFile())) {
+    private void addMainFile(File texFile) {
+	if (isLatexMainFile(texFile)) {
 	    this.log.info("Detected latex-main-file '" + texFile + "'. ");
 	    this.latexMainFiles.add(texFile);
 	}
@@ -534,24 +542,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the tex-file of which the created files shall be deleted 
      *    if it is a latex main file. 
      */
-    private void clearTargetTex(File texFile) 
-	throws BuildFailureException {
+    private void clearTargetTex(File texFile) {
 
 	// exclude files which are no latex main files 
-	if (!this.fileUtils
-	    // may throw BuildFailureException
-	    .matchInFile(texFile, 
-			 this.settings.getPatternLatexMainFile())) {
+	if (!isLatexMainFile(texFile)) {
 	    return;
 	}
-	this.log.info("Deleting targets of latex main file '" + texFile + 
-		      "'. ");
-
-	FileFilter filter = this.fileUtils
-	    .getFileFilter(texFile, 
-			   this.settings.getPatternClearFromLatexMain());
-
-	// may throw BuildFailureException 
+	this.log.info("Deleting latex main file '" + texFile + "'s targets. ");
+	FileFilter filter = this.fileUtils.getFileFilter
+	    (texFile, this.settings.getPatternClearFromLatexMain());
 	this.fileUtils.deleteX(texFile, filter);
     }
 
@@ -597,11 +596,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the tex-source directory. 
      * @throws BuildFailureException 
      */
-    void clearCreated(File texDir) throws BuildFailureException {
+    void clearCreated(File texDir) {
 
 	// try to clear targets 
 
-	// may throw BuildFailureException 
 	Collection<File> files = this.fileUtils.getFilesRec(texDir);
 	String suffix;
 	SuffixHandler handler;
@@ -615,7 +613,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	// check whether clearing succeeded 
 	Collection<String> skipped = new TreeSet<String>();
-	// may throw BuildFailureException 
 	files = this.fileUtils.getFilesRec(texDir);
 	for (File file : files) {
 	    suffix = this.fileUtils.getSuffix(file);
