@@ -21,8 +21,8 @@ package org.m2latex.core;
 import java.io.File;
 
 import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.cli.Commandline;// constructor
+import static org.codehaus.plexus.util.cli.CommandLineUtils.executeCommandLine;
 import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
 
 /**
@@ -92,8 +92,7 @@ class CommandExecutorImpl implements CommandExecutor {
 
 	try {
 	    // may throw CommandLineException 
-	    int returnValue = CommandLineUtils
-		.executeCommandLine(cl, output, output);
+	    int returnValue = executeCommandLine(cl, output, output);
 	    if (returnValue != 0) {
 		log.warn("Executing '" + executable + 
 			 "' returned with code " + returnValue + ". ");
