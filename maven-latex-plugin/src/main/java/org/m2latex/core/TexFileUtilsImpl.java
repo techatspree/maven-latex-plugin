@@ -77,13 +77,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// FIXME: skip hidden files 
 	// because they make problems with getSuffix(File)
 	Collection<File> res = new TreeSet<File>();
-	//try {
-	    innerListFiles(res, texDir);
-	// } catch (IOException e) {
-	//     throw new BuildFailureException
-	// 	("File '" + texDir + "' is not completely readable. ");
-	// }
-
+	innerListFiles(res, texDir);
 	return res;
     }
 
@@ -141,7 +135,8 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    which corresponds to the parent directory of <code>sourceFile</code> 
      *    which is below <code>sourceBaseDir</code>. 
      * @throws BuildFailureException
-     *    if <code>sourceFile</code> is not below <code>sourceBaseDir</code>. 
+     *    if the target directory that would be returned 
+     *    exists already as a regular file. 
      */
     // used by LatexProcessor.create() only 
     public File getTargetDirectory(File srcFile,
@@ -163,8 +158,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 	File res = new File(targetBaseDir, srcParentPath.toString());
 	if (res.exists() && !res.isDirectory()) {
 	    throw new BuildFailureException
-		("Require target directory '" + res + 
-		 "' which exists already as regular file. ");
+		("Required target directory '" + res + 
+		 "' exists already as regular file. ");
 	}
 	return res;
     }
@@ -217,9 +212,19 @@ class TexFileUtilsImpl implements TexFileUtils {
      * This is invoked by {@link #LatexProcessor#execute()} only. 
      *
      * @throws BuildFailureException
-     *    either target directory is not readable 
-     *    or wraps IOException when reading <code>texFile</code>'s folder 
-     *    or when copying. 
+     *    if 
+     *    <ul>
+     *    <li>
+     *    the source directory (containing <code>texFile</code>) 
+     *    is not readable. 
+     *    <li>
+     *    the destination directory does not exist and cannot be created. 
+     *    <li>
+     *    the destination file exists 
+     *    and is either a directory or is not readable. 
+     *    <li>
+     *    IO-error when copying: opening streams, reading or writing. 
+     *    </ul>
      */
     // used in LatexProcessor.create() only 
     public void copyOutputToTargetFolder(File texFile, 
@@ -308,8 +313,8 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    if an error occurs: opening input/output streams, 
      *    reading from file/writing to file. 
      */
-     private static void doCopyFile(File srcFile, 
-				    File destFile) throws IOException {
+    private static void doCopyFile(File srcFile, 
+				   File destFile) throws IOException {
 	// may throw FileNotFoundException <= IOException 
 	// if cannot be opened for reading: e.g. not exists, is a directory,...
         FileInputStream input = new FileInputStream(srcFile);
@@ -318,9 +323,9 @@ class TexFileUtilsImpl implements TexFileUtils {
             FileOutputStream output = new FileOutputStream(destFile);
 	    // if cannot be opened for writing: 
 	    // e.g. not exists, is a directory,...
-             try {
-		 // may throw IOException if an I/O-error occurs 
-		 // when reading or writing 
+	    try {
+		// may throw IOException if an I/O-error occurs 
+		// when reading or writing 
                 copyLarge(input, output);
             } finally {
                 closeQuietly(output);
@@ -339,7 +344,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * and
      * {@link #copyLarge(Reader, Writer)}
      */
-     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     /**
      * Copy bytes from a large (over 2GB) <code>InputStream</code> to an
@@ -453,11 +458,10 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    if the file <code>file</code> does not exist or cannot be read. 
      */
     // used only in 
-    // LatexPreProcessor.addMainFile(File)
-    // LatexPreProcessor.clearTargetTex(File)
+    // LatexPreProcessor.isLatexMainFile(File)
     // LatexProcessor.needAnotherMakeIndexRun(File)
     // LatexProcessor.needAnotherLatexRun(File)
-    // LatexProcessor.logWarns(File, String) 
+    // LatexProcessor.logWarns(File, String) 2x 
     // LatexProcessor.runBibtexByNeed(File)
     // AbstractLatexProcessor.logErrs(File, String, String)
     // AbstractLatexProcessor.logWarns(File, String, String)
