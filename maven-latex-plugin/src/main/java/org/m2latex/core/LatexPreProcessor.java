@@ -534,7 +534,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the tex-file of which the created files shall be deleted 
      *    if it is a latex main file. 
      */
-    private void clearTargetTex(final File texFile) 
+    private void clearTargetTex(File texFile) 
 	throws BuildFailureException {
 
 	// exclude files which are no latex main files 
@@ -562,6 +562,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *
      * @throws BuildFailureException
      */
+    // used in LatexProcessor.create() only 
+    // where files is the set of all files found in the tex source directory 
+    // found with getFilesRec and thus without directories. 
     Collection<File> processGraphicsSelectMain(Collection<File> files) 
     	throws BuildFailureException {
 
