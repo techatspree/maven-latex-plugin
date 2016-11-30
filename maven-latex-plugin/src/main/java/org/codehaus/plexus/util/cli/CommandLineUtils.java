@@ -153,7 +153,7 @@ public abstract class CommandLineUtils
      *    thrown by {@link Process#waitFor()}. 
      *    If <code>timeoutInSeconds > 0</code> thrown 
      *    <ul>
-     *    <li>by {@link Thread#sleep(int)} 
+     *    <li>by {@link Thread#sleep(long)} 
      *    <li>if after sleep {@link #isAlive(Process)} holds. 
      *    <li>by 
      *    {@link #waitForAllPumpers(StreamFeeder, StreamPumper, StreamPumper)}
@@ -202,7 +202,7 @@ public abstract class CommandLineUtils
      *     if {@link CommandLineCallable#call()} is executed. 
      * @throws CommandLineException 
      *     or CommandLineTimeOutException: 
-     *     see {@link CommandLine#execute()}. 
+     *     see {@link Commandline#execute()}. 
      */
     // used but invoked only with sytemIn==null and timeoutInSeconds==0 
     public static CommandLineCallable 
