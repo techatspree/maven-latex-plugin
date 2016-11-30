@@ -23,19 +23,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileFilter;
+import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.IOException;
 
 import java.nio.file.Path;
 
 import java.util.Collection;
-import java.util.ArrayList;
 import java.util.TreeSet;
 
 import java.util.regex.Pattern;
 
-import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.io.FileUtils.copyFileToDirectory;
-import        org.apache.commons.io.filefilter.TrueFileFilter;// with listFiles only
 // FIXME: jdee bug: delete static imports: does not find superfluous 
 
 /**
@@ -73,18 +74,54 @@ class TexFileUtilsImpl implements TexFileUtils {
     public Collection<File> getFilesRec(File texDir) 
 	throws BuildFailureException {
 
+	assert texDir.exists() && texDir.isDirectory();
+
 	// FIXME: FileUtils.listFiles must not be used, 
 	// because in case of IO-problems silently skips directories 
-        Collection<File> res1 = listFiles(texDir,
-					  TrueFileFilter.INSTANCE,
-					  TrueFileFilter.INSTANCE);
-	if (res1 == null) {
-	    throw new BuildFailureException
-		("File '" + texDir + "' is not readable or no directory. ");
-	}
+	// FIXME: skip hidden files 
+	// because they make problems with getSuffix(File)
 	Collection<File> res = new TreeSet<File>();
-	res.addAll(res1);
+	try {
+	    innerListFiles(res, texDir);
+	} catch (IOException e) {
+	    throw new BuildFailureException
+		("File '" + texDir + "' is not completely readable. ");
+	}
+
 	return res;
+    }
+
+    // FIXME: copied from org.apache.commons.io.FileUtils 
+    /**
+     * Finds files within a given directory <code>dir</code> 
+     * and its subdirectories. 
+     *
+     * @param files
+     *    the collection of files found so far.
+     * @param dir
+     *    the directory to search in.
+     */
+    private static void innerListFiles(Collection<File> files, 
+				       File dir) throws IOException {
+	assert dir.isDirectory();
+        File[] found = dir.listFiles();
+	// found is null if directory is not a directory (which is exlcuded) 
+	// or if an io-error occurs. 
+	// Thus in these cases, the failure is ignored silently 
+        if (found == null) {
+	    // FIXME: better with logging 
+	    throw new IOException("Cannot read directory '" + dir + "'. ");
+	}
+	File file;
+	for (int i = 0; i < found.length; i++) {
+	    file = found[i];
+	    if (file.isDirectory()) {
+		innerListFiles(files, file);
+	    } else {
+		// FIXME: skip hidden files 
+		files.add(file);
+	    }
+	}
     }
 
     /**
@@ -195,6 +232,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 					 File targetDir)
 	throws BuildFailureException {
 
+	assert !targetDir.exists() || targetDir.isDirectory();
+
 	File texFileDir = texFile.getParentFile();
         File[] outputFiles = texFileDir.listFiles();
 
@@ -212,35 +251,158 @@ class TexFileUtilsImpl implements TexFileUtils {
 		     "' did not generate any output in '" + texFileDir + "'! ");
         }
 
-	File file;
+	File srcFile, destFile;
 	for (int idx = 0; idx < outputFiles.length; idx++) {
-	    file = outputFiles[idx];
-	    if (fileFilter.accept(file)) {
-		log.info("Copying '" + file.getName() + 
-			 "' to '" + targetDir + "'. ");
-		// FIXME: fileFilter shall not accept directories 
-		// and shall not accept texFile 
-		try {
-		    // may throw IOException: 
-		    // - if source is invalid: not existing or is a directory 
-		    // - if destination is invalid: 
-		    //   same as source (cannot occur)
-		    //    parent if needed and non-existent cannot be created, 
-		    //    exists and cannot be written to 
-		    //    (not: or is a directory) 
-		    // - error opening streams, read/write 
-		    // FileUtils.
-		    copyFileToDirectory(file, targetDir);
-		    // FIXME: catch IllegalArgumentException 
-		    // destination exists and is no dir 
-		} catch (IOException e) {
+	    srcFile = outputFiles[idx];
+	    assert srcFile.exists();
+	    if (!fileFilter.accept(srcFile)) {
+		continue;
+	    }
+	    assert srcFile.exists() && !srcFile.isDirectory();
+	    // since !targetDir.exists() || targetDir.isDirectory() 
+	    assert !srcFile.equals(targetDir);
+
+	    log.info("Copying '" + srcFile.getName() + 
+		     "' to '" + targetDir + "'. ");
+	    // FIXME: fileFilter shall not accept directories 
+	    // and shall not accept texFile 
+
+	    if (!targetDir.exists() && !targetDir.mkdirs()) {
+		throw new BuildFailureException
+		    ("Destination directory '" + targetDir + 
+		     "' cannot be created. ");
+	    }
+	    assert targetDir.isDirectory();
+
+	    destFile = new File(targetDir, srcFile.getName());
+
+	    if (destFile.exists()) {
+		if (destFile.isDirectory()) {
 		    throw new BuildFailureException
-			("Error copying '" + file.getName() + 
-			 "' to '" + targetDir + "'. ",
-			 e);
+			("Destination file '" + destFile + 
+			 "' exists but is a directory. ");
+		}
+		if (!destFile.canWrite()) {
+		    throw new BuildFailureException
+			("Destination file '" + destFile + 
+			 "' exists and is read-only. ");
 		}
 	    }
+
+	    try {
+		// may throw IOException: opening streams, read/write 
+		doCopyFile(srcFile, destFile);
+	    } catch (IOException e) {
+		throw new BuildFailureException
+		    ("Error copying '" + srcFile.getName() + 
+		     "' to '" + targetDir + "'. ",
+		     e);
+	    }
+	} // for 
+    }
+
+    // FIXME: copied from FileUtils 
+    /**
+     * Internal copy file method.
+     * 
+     * @param srcFile   
+     *    the source file. 
+     * @param destFile   
+     *    the destination file. 
+     * @throws IOException  
+     *    if an error occurs: opening input/output streams, 
+     *    reading from file/writing to file. 
+     */
+     private static void doCopyFile(File srcFile, 
+				    File destFile) throws IOException {
+	// may throw FileNotFoundException <= IOException 
+	// if cannot be opened for reading: e.g. not exists, is a directory,...
+        FileInputStream input = new FileInputStream(srcFile);
+        try {
+	    // may throw FileNotFoundException <= IOException 
+            FileOutputStream output = new FileOutputStream(destFile);
+	    // if cannot be opened for writing: 
+	    // e.g. not exists, is a directory,...
+             try {
+		 // may throw IOException if an I/O-error occurs 
+		 // when reading or writing 
+                copyLarge(input, output);
+            } finally {
+                closeQuietly(output);
+            }
+	} finally {
+	    closeQuietly(input);
 	}
+
+	// FIXME: what about SecurityExceptions? 
+	destFile.setLastModified(srcFile.lastModified());
+    }
+
+    /**
+     * The default buffer size ({@value}) to use for 
+     * {@link #copyLarge(InputStream, OutputStream)}
+     * and
+     * {@link #copyLarge(Reader, Writer)}
+     */
+     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
+    /**
+     * Copy bytes from a large (over 2GB) <code>InputStream</code> to an
+     * <code>OutputStream</code>.
+     * <p>
+     * This method uses the provided buffer, so there is no need to use a
+     * <code>BufferedInputStream</code>.
+     *
+     * @param input
+     *    the <code>InputStream</code> to read from
+     * @param output
+     *    the <code>OutputStream</code> to write to
+     * @throws IOException 
+     *    if an I/O error occurs while reading or writing 
+     */
+    public static void copyLarge(InputStream input, 
+				 OutputStream output) throws IOException {
+	byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int n = 0;
+	// may throw IOException 
+        while (-1 != (n = input.read(buffer))) {
+	    // may throw IOException 
+            output.write(buffer, 0, n);
+        }
+    }
+
+    // FIXME: almost copy from IOUtils 
+    /**
+     * Unconditionally close a <code>Closeable</code>.
+     * <p>
+     * Equivalent to {@link Closeable#close()}, 
+     * except any exceptions will be ignored. FIXME 
+     * This is typically used in finally blocks.
+     * <p>
+     * Example code:
+     * <pre>
+     *   Closeable closeable = null;
+     *   try {
+     *       closeable = new FileReader("foo.txt");
+     *       // process closeable
+     *       closeable.close();
+     *   } catch (Exception e) {
+     *       // error handling
+     *   } finally {
+     *       IOUtils.closeQuietly(closeable);
+     *   }
+     * </pre>
+     *
+     * @param closeable the object to close, may be null or already closed
+     * @since 2.0
+     */
+   public static void closeQuietly(Closeable closeable) {
+        try {
+	    closeable.close();
+	} catch (IOException ioe) {
+            // ignore 
+	    // FIXME: not appropriate 
+        }
     }
 
     /**
@@ -265,6 +427,14 @@ class TexFileUtilsImpl implements TexFileUtils {
      *
      * @see #getFileNameWithoutSuffix(File)
      */
+    // used only by 
+    // LatexPreProcessor.processGraphicsSelectMain(Collection) 
+    // LatexPreProcessor.clearCreated(File) 2x
+    // FIXME: problem if filename starts with . and has no further . 
+    // then we have a hidden file and the suffix is all but the . 
+    // This is not appropriate. 
+    // One may ensure that this does not happen via an assertion 
+    // and by modifying getFilesRec in a way that hidden files are skipped 
     public String getSuffix(File file) {
         String nameFile = file.getName();
 	int idxDot = nameFile.lastIndexOf(".");
@@ -287,10 +457,15 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @throws BuildFailureException
      *    if the file <code>file</code> does not exist or cannot be read. 
      */
-    // used in LatexProcessor only: 
-    // only in methods processLatex2pdf, runLatex2html, runLatex2odt, 
-    // needAnotherLatexRun, needBibtexRun, 
-    // runMakeindex, runBibtex, runLatex
+    // used only in 
+    // LatexPreProcessor.addMainFile(File)
+    // LatexPreProcessor.clearTargetTex(File)
+    // LatexProcessor.needAnotherMakeIndexRun(File)
+    // LatexProcessor.needAnotherLatexRun(File)
+    // LatexProcessor.logWarns(File, String) 
+    // LatexProcessor.runBibtexByNeed(File)
+    // AbstractLatexProcessor.logErrs(File, String, String)
+    // AbstractLatexProcessor.logWarns(File, String, String)
     public boolean matchInFile(File file, String pattern)
         throws BuildFailureException {
 
@@ -313,8 +488,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @throws IOException
      *    if <code>file</code> could not be read. 
      */
-    // used by isTexMainFile(File file) 
-    // and by matchInLogFile(File logFile, String pattern)
+    // used by matchInFile(File logFile, String pattern) only 
     private boolean fileContainsPattern(File file, String regex)
 	throws FileNotFoundException, IOException {
 
@@ -341,6 +515,8 @@ class TexFileUtilsImpl implements TexFileUtils {
         }
     }
 
+    // used in LatexPreProcessor and in LatexProcessor and in LatexDec
+    // at numerous places 
     public File replaceSuffix(File file, String suffix) {
         return new File(file.getParentFile(),
 			getFileNameWithoutSuffix(file) + suffix );
@@ -350,6 +526,8 @@ class TexFileUtilsImpl implements TexFileUtils {
      * Deletes all files in the same folder as <code>pFile</code> directly, 
      * i.e. not in subfolders, which are accepted by <code>filter</code>. 
      */
+    // used in LatexPreProcessor.clearTargetMp
+    // used in LatexPreProcessor.clearTargetTex only 
     public void deleteX(File pFile, FileFilter filter) 
 	throws BuildFailureException {
 
@@ -377,6 +555,8 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @throws BuildFailureException
      *    if <code>texDir</code> is no directory or not readable. 
      */
+    // used in LatexProcessor.create() only 
+    // FIXME: warn if deletion failed. 
     public void cleanUp(Collection<File> orgFiles, File texDir) 
 	throws BuildFailureException {
 
