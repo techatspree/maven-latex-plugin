@@ -18,6 +18,10 @@ package org.m2latex.core;
  * In this situation you would throw a MojoFailureException. 
  * Maven provides for different "resiliency" settings 
  * when it comes to project failure. 
+ * Throwing this exception causes a "BUILD FAILURE" message to be displayed. 
+ * <p>
+ * A MojoFailureException is thrown if an expected problem 
+ * (such as a compilation failure) occurs. 
  *
  * Created: Fri Sep 30 15:01:16 2016
  *

@@ -16,7 +16,10 @@ package org.m2latex.core;
  * but you can’t connect to it. 
  * Throw a MojoExecutionException if there is no chance of a build continuing; 
  * something terrible has happened 
- * and you want the build to stop and the user to see a "BUILD ERROR" message.
+ * and you want the build to stop and the user to see a "BUILD ERROR" message. 
+ * <p>
+ * A MojoExecutionException is thrown if an unexpected problem occurs 
+ * (seems contradictuous). 
  *
  * Created: Fri Sep 30 15:01:16 2016
  *
