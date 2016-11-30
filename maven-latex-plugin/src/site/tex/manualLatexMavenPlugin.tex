@@ -1851,8 +1851,8 @@ and notify the developer of this plugin.
 \begin{minipage}{0.95\linewidth}
 Path to the TeX scripts or null. 
 In the latter case, the scripts must be on the system path. 
-Note that in the pom, $<$texPath/$>$ 
-and even $<$texPath$>$\ \ \ \ $<$/texPath$>$ represent the null-File. 
+Note that in the pom, {\tt$<$texPath/$>$} 
+and even {\tt$<$texPath$>$\ \ \ \ $<$/texPath$>$} represent the null-File. 
 The default value is null.
 \end{minipage}
 } \\
@@ -1867,38 +1867,38 @@ May be used for debugging when setting {\tt false}.
 \tt patternClearFromLatexMain             & see below              \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-For goal 'clr', 
-the tex source directory \$texSrcDirectory is cleared, 
+For goal `{\tt clr}', 
+the tex source directory {\tt\$texSrcDirectory} is cleared, 
 i.e. all generated files should be removed, 
 e.g. those coming from graphic files. 
 This pattern defines the files to be removed 
-which were created from a latex main file 'xxx.tex'. 
+which were created from a latex main file `{\tt xxx.tex}'. 
 It is neither applied to directories 
-nor to 'xxx.tex' itself. 
+nor to `{\tt xxx.tex}' itself. 
 		 
-The sequence 'T\$T' 
-is replaced by the prefix 'xxx'. 
-The sequence 'T\$T' must always be replaced: 
-The symbol '\$' occurs as end-sign as ')\$' 
-or as literal symbol as '\$'. 
-Thus 'T\$T' is no regular occurrence 
-and must always be replaced with 'xxx'. 
+The sequence '{\tt T\$T}' 
+is replaced by the prefix '{\tt xxx}'. 
+The sequence '{\tt T\$T}' must always be replaced: 
+The symbol '{\tt\$}' occurs as end-sign as '{\tt)\$}' 
+or as literal symbol as '{\tt\$}'. 
+Thus '{\tt T\$T}' is no regular occurrence 
+and must always be replaced with '{\tt xxx}'. 
 		 
 Spaces and newlines are removed 
 from that pattern before processing. 
 		 
 The default value 
-'\textasciicircum T\$T\textbackslash.$[$\textasciicircum.$]*$' 
+'{\tt\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
 is appropriate for most parameters and packages. 
-Package 'srcltx' 
+Package '{\tt srcltx}' 
 requires in addition 
-'\textasciicircum T\$T\textbackslash.synctex\textbackslash.gz' 
-and package 'tex4ht' is for all the rest. 
+'{\tt\^{}T\$T\textbackslash.synctex\textbackslash.gz}' 
+and package '{\tt tex4ht}' is for all the rest. 
 The pattern is designed 
 to match quite exactly the created files, 
 not much more and at any case not less. 
 In particular it has to comprise the files matching pattern 
-\$patternT4htOutputFiles. 
+{\tt\$patternT4htOutputFiles}. 
 Nevertheless, since any new package may break the pattern, 
 and not every package is well documented, 
 this pattern cannot be guaranteed to be final. 
@@ -1936,11 +1936,11 @@ Currently only {\tt pdf} combined with {\tt ptx} is supported.
 \tt fig2devGenOptions   & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command \$fig2devCommand 
+The options for the command {\tt\$fig2devCommand} 
 common to both output languages. 
 For the options specific for the two output langugages 
-'pdftex' and 'pdftex\_t', 
-see \$fig2devPtxOptions and \$fig2devPdfOptions, 
+`{\tt pdftex}' and `{\tt pdftex\_t}', 
+see {\tt\$fig2devPtxOptions} and {\tt\$fig2devPdfOptions}, 
 respectively. 
 % The default value is the empty string. 
 \end{minipage}
@@ -1948,27 +1948,27 @@ respectively.
 \tt fig2devPtxOptions   & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command \$fig2devCommand 
-specific for the output language `pdftex\_t'. 
+The options for the command {\tt\$fig2devCommand} 
+specific for the output language `{\tt pdftex\_t}'. 
 Note that in addition to these options, 
-the option `-L pdftex\_t' specifies the language, 
-\$fig2devGenOptions specifies the options 
+the option `{\tt-L pdftex\_t}' specifies the language, 
+{\tt\$fig2devGenOptions} specifies the options 
 common for the two output langugages 
-`pdftex' and `pdftex\_t' 
-and `-p xxx.pdf' specifies the pdf-file to be included. 
+`{\tt pdftex}' and `{\tt pdftex\_t}' 
+and `{\tt-p xxx.pdf}' specifies the pdf-file to be included. 
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
 \tt fig2devPdfOptions   & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command \$fig2devCommand 
-specific for the output language `pdftex'. 
+The options for the command {\tt\$fig2devCommand} 
+specific for the output language `{\tt pdftex}'. 
 Note that in addition to these option1s, 
-the option `-L pdftex' specifies the language and 
-\$fig2devGenOptions specifies the options 
+the option `{\tt -L pdftex}' specifies the language and 
+{\tt\$fig2devGenOptions} specifies the options 
 common for the two output langugages 
-`pdftex' and `pdftex\_t'. 
+`{\tt pdftex}' and `{\tt pdftex\_t}'. 
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
@@ -1986,11 +1986,11 @@ combined with pdf\_t (latex-texts) is supported.
 \tt gnuplotOptions   & empty    \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options specific for \$gnuplotCommand's 
+The options specific for {\tt\$gnuplotCommand}'s 
 output terminal 'cairolatex', 
 used for mixed latex/pdf-creation. 
-Note that the option 'pdf|eps' 
-of the terminal 'cairolatex' is not available, 
+Note that the option `{\tt pdf|eps}' 
+of the terminal `{\tt cairolatex}' is not available, 
 because it is set internally. 
 % The default option string is empty. 
 \end{minipage}
@@ -2068,7 +2068,7 @@ and notify the developer of this plugin.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-indicating a warning when running \$latex2pdfCommand. 
+indicating a warning when running {\tt\$latex2pdfCommand}. 
 It is designed to be as complete as possible 
 while not indicating a warning where not appropriate. 
 If the current default value is not appropriate, 
@@ -2104,7 +2104,7 @@ This pattern may never be ensured to be complete,
 because any new package may break completeness. 
 Nevertheless, the default value aims completeness 
 while be restrictive enough not to trigger another \LaTeX{} run if not needed. 
-To ensure termination, let \$maxNumRerunsLatex 
+To ensure termination, let {\tt\$maxNumRerunsLatex} 
 specify the maximum number of \LaTeX{} runs. 
 If the user finds an extension, (s)he is asked to contribute 
 and to notify the developer of this plugin. 
@@ -2152,7 +2152,7 @@ from an aux-file and a bib-file (using a bst-style file).
 \tt bibtexOptions    & empty        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command \$bibtexCommand. 
+The options for the command {\tt\$bibtexCommand}. 
 % The default value is the empty string.
 \end{minipage}
 } \\
@@ -2160,18 +2160,18 @@ The options for the command \$bibtexCommand.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the blg-file 
-indicating that \$bibtexCommand failed. 
+indicating that {\tt\$bibtexCommand} failed. 
 The default value is chosen 
-according to the `bibtex' documentation. 
+according to the `{\tt bibtex}' documentation. 
 \end{minipage}
 } \\
 \tt patternWarnBibtex    & \tt Warning-{}-        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the blg-file 
-indicating a warning \$bibtexCommand emitted. 
+indicating a warning {\tt\$bibtexCommand} emitted. 
 The default value is chosen 
-according to the `bibtex' documentation. 
+according to the `{\tt bibtex}' documentation. 
 \end{minipage}
 } \\
 \hline
@@ -2213,18 +2213,18 @@ The options for the MakeIndex command.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
-indicating that \$makeIndexCommand failed. 
+indicating that {\tt\$makeIndexCommand} failed. 
 The default value is chosen 
-according to the `makeindex' documentation.
+according to the `{\tt makeindex}' documentation.
 \end{minipage}
 } \\
 \tt patternWarnMakeIndex & \tt (\#\# Warning )        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
-indicating a warning \$makeIndexCommand emitted. 
+indicating a warning {\tt\$makeIndexCommand} emitted. 
 The default value is chosen 
-according to the `makeindex' documentation.
+according to the `{\tt makeindex}' documentation.
 \end{minipage}
 } \\
 \tt patternReRunMakeIndex & see below         \\
@@ -2232,8 +2232,8 @@ according to the `makeindex' documentation.
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file which triggers 
 rerunning MakeIndex followed by \LaTeX{}. 
-This pattern only occurs, if package `rerunfilecheck' 
-is used with option `index'. 
+This pattern only occurs, if package `{\tt rerunfilecheck}' 
+is used with option `{\tt index}'. 
 The default value 
 is chosen according to the package documentation. 
 If the user finds that default value is not appropriate, 
@@ -2274,45 +2274,46 @@ into account logging on a glg-file.
 \tt makeGlossariesOptions & the empty string          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the \$makeGlossariesCommand. 
-These are the options for 'makeindex' (not for \$makeIndexCommand) 
-and for `xindy' (also hardcoded). 
+The options for the {\tt\$makeGlossariesCommand}. 
+These are the options for `{\tt makeindex}' (not for {\tt\$makeIndexCommand}) 
+and for `{\tt xindy}' (also hardcoded). 
 The aux-file decides on whether program is executed 
 and consequently which options are used. 
 		 
 The default value is the empty option string. 
-Nevertheless, `xindy' is invoked as `xindy -L english  -I xindy -M\ldots'. 
-With option `-L german', this is added. 
-Options `-M<' for `xindy' 
-`-s' for `makeindex</code> and `-t' and `-o' for both, `xindy' and `makeindex'. 
+Nevertheless, `{\tt xindy}' is invoked as `{\tt xindy -L english  -I xindy -M\ldots}'. 
+With option `{\tt-L german}', this is added. 
+Options `{\tt-M<}' for `{\tt xindy}' 
+`{\tt-s}' for `{\tt makeindex}' and `{\tt-t}' and `{\tt-o}' for both, 
+`{\tt xindy}' and `{\tt makeindex}'. 
 \end{minipage}
 } \\
 \tt patternErrMakeGlossaries & 
-\tt(\^\textbackslash*\textbackslash*\textbackslash* unable to execute:\ ) \\
+\tt(\^{}\textbackslash*\textbackslash*\textbackslash* unable to execute:\ ) \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the glg-file 
-indicating an error when running \$makeGlossariesCommand. 
+indicating an error when running {\tt\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternErrXindy & \tt (\^ERROR:\ )         \\
+\tt patternErrXindy & \tt (\^{}ERROR:\ )         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the `glg'-file 
-indicating an error when running `xindy' 
-via \$makeGlossariesCommand. 
+indicating an error when running `{\tt xindy}' 
+via {\tt\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternWarnXindy & \tt (\^WARNING:\ )         \\
+\tt patternWarnXindy & \tt (\^{}WARNING:\ )         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the `glg'-file 
-indicating a warning when running `xindy' 
-via \$makeGlossariesCommand. 
+indicating a warning when running `{\tt xindy}' 
+via {\tt\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
@@ -2322,8 +2323,8 @@ and notify the developer of this plugin.
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers 
 rerunning MakeGlossaries followed by \LaTeX{}. 
-This pattern only occurs, if package `rerunfilecheck' 
-is used with option `glossary'. 
+This pattern only occurs, if package `{\tt rerunfilecheck}' 
+is used with option `{\tt glossary}'. 
 The default value 
 is chosen according to the package documentation. 
 If the user finds that default value is not appropriate, 
@@ -2372,58 +2373,58 @@ Parameter        & Default  \\
 \tt t4htOptions         & the empty string              \\%-cvalidate
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for 't4ht' which converts idv-file and lg-file 
+The options for `{\tt t4ht}' which converts idv-file and lg-file 
 into css-files, tmp-file and, 
 by need and if configured accordingly into \gls{png}-files. 
-The value '-p' prevents creation of \gls{png}-pictures.
+The value `{\tt-p}' prevents creation of \gls{png}-pictures.
 %The default value is the empty string. 
 \end{minipage}
 } \\
 \tt patternT4htOutputFiles         & see below              \\%-cvalidate
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The pattern for the target files of goal 'html' 
-for a given latex main file 'xxx.tex'. 
+The pattern for the target files of goal `{\tt html}' 
+for a given latex main file `{\tt xxx.tex}'. 
 The patterns for the other targets 
 are hardcoded and take the form 
-'\textasciicircum T\$T\textbackslash.yyy\$', where 'yyy' 
+`{\tt\^{}T\$T\textbackslash.yyy\$}', where `{\tt yyy}' 
 may be an ending or an alternative of endings. 
 		 
-For an explanation of the pattern 'T\$T', 
-see \$patternClearFromLatexMain. 
+For an explanation of the pattern `{\tt T\$T}', 
+see {\tt\$patternClearFromLatexMain}. 
 Spaces and newlines are removed 
 from that pattern before processing. 
 		 
 The default value has the following components: 
-- '\textasciicircum T\$T\textbackslash.x?html?\$' is the main file. 
-- '\textasciicircum T\$Tli\d+\textbackslash.x?html?\$' are lists: 
+- `{\tt\^{}T\$T\textbackslash.x?html?\$}' is the main file. 
+- `{\tt\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
 toc, lof, lot, indices, glossaries, NOT the bibliography. 
-- '\textasciicircum T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$' 
+- `{\tt\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
 are chapters, sections and subsections or below 
 and appendices. 
-- '\textasciicircum T\$T\textbackslash d+\textbackslash.x?html?\$' are footnotes. 
-- '\textasciicircum T\$T\textbackslash.css\$' are cascaded stylesheets. 
-- '\textasciicircum T\$T-\textbackslash d+\textbackslash.svg\$' and 
-  '\textasciicircum T\$T\textbackslash d+x\textbackslash.png\$' 
+- `{\tt\^{}T\$T\textbackslash d+\textbackslash.x?html?\$}' are footnotes. 
+- `{\tt\^{}T\$T\textbackslash.css\$}' are cascaded stylesheets. 
+- `{\tt\^{}T\$T-\textbackslash d+\textbackslash.svg\$}' and 
+  `{\tt\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
 are svg/png-files representing figures. 
-- '\textasciicircum(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$' 
+- `{\tt\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
 represents special symbols. 
 		 
 Note that the patterns for the html-files 
-can be summarized as '\textasciicircum T\$T((ch|se|su|ap|li)?\d+)?\.x?html?\$'. 
+can be summarized as '{\tt\^{}T\$T((ch|se|su|ap|li)?\textbackslash d+)?\textbackslash.x?html?\$}'. 
 Adding the patterns for the css-file and the svg/png-files, 
 we obtain 
-'\textasciicircum T\$T
+'{\tt\^{}T\$T
 (((ch|se|su|ap|li)?\textbackslash d+)?\textbackslash.x?html?|
 \textbackslash.css|
 \textbackslash d+x\textbackslash.png|
--\textbackslash d+\textbackslash.svg)\$'. 
+-\textbackslash d+\textbackslash.svg)\$}'. 
 		 
 The pattern is designed to match quite exactly 
-the files to be copied to \$targetSiteDirectory, 
+the files to be copied to {\tt\$targetSiteDirectory}, 
 for the goal 'html', 
 not much more and at any case not less. 
-since \$tex2htCommand is not well documented, 
+since {\tt\$tex2htCommand} is not well documented, 
 and still subject to development, 
 this pattern cannot be guaranteed to be final. 
 If the user finds an extension, (s)he is asked to contribute 
@@ -2462,7 +2463,7 @@ The latex2rtf command to create rtf from latex directly.
 \tt latex2rtfOptions    & empty        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the command \$latex2rtfCommand. 
+The options of the command {\tt\$latex2rtfCommand}. 
 % The default value is the empty string. 
 \end{minipage}
 } \\
@@ -2476,18 +2477,18 @@ The odt2doc command to create MS word-formats from otd-files.
 \tt odt2docOptions      & \tt -fdocx          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the command \$odt2docCommand. 
+The options of the command {\tt\$odt2docCommand}. 
 Above all specification of output format 
 via the option '-f'. 
 Invocation is '{\tt odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
-All output formats are shown by '{\tt odt2doc --show}' 
+All output formats are shown by `{\tt odt2doc --show}' 
 but the formats interesting in this context 
 are the following: 
 {\tt doc}, {\tt doc6}, {\tt doc95}, {\tt docbook}, {\tt docx}, 
 {\tt docx7}, {\tt ooxml} and {\tt rtf}. 
 Interesting also the verbosity options 
-'{\tt -v}', '{\tt -vv}', '{\tt -vvv}' 
-the timeout '{\tt -T=secs}' and '{\tt --preserve}' 
+`{\tt-v}', `{\tt-vv}', `{\tt-vvv}' 
+the timeout `{\tt-T=secs}' and `{\tt--preserve}' 
 to keep permissions and timestamp of the original document. 
 %The default value is '{\tt -fdocx}'. 
 \end{minipage}
@@ -2502,7 +2503,7 @@ The pdf2txt command converting pdf into plain text.
 \tt pdf2txtOptions      & the empty string  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the command \$pdf2txtCommand. 
+The options of the command {\tt\$pdf2txtCommand}. 
 %The default value is the empty string. 
 \end{minipage}
 } \\
@@ -2513,9 +2514,17 @@ The options of the command \$pdf2txtCommand.
 \section{Exceptions and logging}\label{subsec:exceptionLogging}
 
 A maven plugin may throw a import a 
-{\tt org.apache.maven.plugin.MojoFailureException} 
+%
+\begin{verbatim}
+org.apache.maven.plugin.MojoFailureException
+\end{verbatim}
+%
 if a recoverable error occurs and a 
-{\tt org.apache.maven.plugin.MojoExecutionException} 
+%
+\begin{verbatim}
+org.apache.maven.plugin.MojoExecutionException 
+\end{verbatim}
+%
 if a non-recoverable error occurs. 
 Whereas the former aborts the run of the plugin, 
 the latter aborts the whole build. 
