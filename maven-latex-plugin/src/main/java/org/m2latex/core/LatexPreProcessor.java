@@ -356,7 +356,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    a fig file. 
      */
     private void clearTargetFig(File figFile) {
-
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
 	// FIXME: add check whether deleted: may throw BuildFailureException 
 	this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
@@ -379,7 +378,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	String command = this.settings.getGnuplotCommand();
-	// FIXME: check: may throw BuildFailureException 
 	File pdfFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF);
 	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
@@ -421,9 +419,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created from the gnuplot-file <code>gpFile</code>. 
      */
     private void clearTargetGp(File gpFile) {
-
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
-	// FIXME: add check whether deleted: may throw BuildFailureException 
 	this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX).delete();
 	this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF).delete();
     }
@@ -439,7 +435,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     // used in processGraphics(Collection) only 
     private void runMetapost2mps(File mpFile) throws BuildFailureException {
-
 	this.log.info("Processing metapost-file '" + mpFile + "'. ");
 	String command = this.settings.getMetapostCommand();
 	File workingDir = mpFile.getParentFile();
@@ -464,7 +459,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created from the metapost-file <code>mpFile</code>. 
      */
     private void clearTargetMp(File mpFile) {
-
 	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
 	// FIXME: add check whether deleted: may throw BuildFailureException 
 	this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG).delete();
@@ -488,7 +482,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created from the svg-file <code>svgFile</code>. 
      */
     private void clearTargetSvg(File svgFile) {
-
        this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
        // FIXME: add check whether deleted: may throw BuildFailureException 
        this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
@@ -507,13 +500,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private boolean isLatexMainFile(File texFile) {
 	try {
-	    return this.fileUtils
 	    // may throw BuildFailureException
-		.matchInFile(texFile, 
-			     this.settings.getPatternLatexMainFile());
+	    return this.fileUtils.matchInFile
+		(texFile, this.settings.getPatternLatexMainFile());
 	} catch (BuildFailureException e) {
-	    this.log.warn("Could not find out whether '" + texFile + 
-			  "' is a latex main file; assume no. ");
+	    this.log.warn("File '" + texFile + "' is not readable; " + 
+			  "assume that it is no latex main file. ");
 	    return false;
 	}
     }
@@ -543,7 +535,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    if it is a latex main file. 
      */
     private void clearTargetTex(File texFile) {
-
 	// exclude files which are no latex main files 
 	if (!isLatexMainFile(texFile)) {
 	    return;
