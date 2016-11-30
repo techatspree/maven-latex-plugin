@@ -357,9 +357,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearTargetFig(File figFile) {
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
-	// FIXME: add check whether deleted: may throw BuildFailureException 
-	this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX).delete();
-	this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF).delete();
+	deleteIfExists(this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX));
+	deleteIfExists(this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF));
     }
 
     /**
@@ -420,8 +419,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearTargetGp(File gpFile) {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
-	this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX).delete();
-	this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF).delete();
+	deleteIfExists(this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX));
+	deleteIfExists(this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF));
     }
 
     /**
@@ -460,10 +459,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearTargetMp(File mpFile) {
 	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
-	// FIXME: add check whether deleted: may throw BuildFailureException 
-	this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG).delete();
-	this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS).delete();
-	this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX).delete();
+	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG));
+	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS));
+	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX));
 	// delete files xxxNumber.mps 
 	String name1 = mpFile.getName();
 	final String root = name1.substring(0, name1.lastIndexOf("."));
@@ -483,11 +481,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearTargetSvg(File svgFile) {
        this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
-       // FIXME: add check whether deleted: may throw BuildFailureException 
-       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX).delete();
-//       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PSTEX ).delete();
-       this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ).delete();
+       deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX));
+//       deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PSTEX ));
+       deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ));
    }
+
+    private void deleteIfExists(File file) {
+	if (!file.exists()) {
+	    return;
+	}
+	if (!file.delete()) {
+	    this.log.warn("Failed to delete file '" + file + "'. ");
+	}
+    }
 
     /**
      * Returns whether <code>texFile</code> is a latex main file, 
@@ -587,33 +593,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the tex-source directory. 
      */
     void clearCreated(File texDir) {
-
 	// try to clear targets 
-
 	Collection<File> files = this.fileUtils.getFilesRec(texDir);
-	String suffix;
 	SuffixHandler handler;
 	for (File file : files) {
-	    suffix = this.fileUtils.getSuffix(file);
-	    handler = SUFFIX2HANDLER.get(suffix);
+	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
 	    if (handler != null) {
 		handler.clearTarget(file, this);
 	    }
-	}
-
-	// check whether clearing succeeded 
-	Collection<String> skipped = new TreeSet<String>();
-	files = this.fileUtils.getFilesRec(texDir);
-	for (File file : files) {
-	    suffix = this.fileUtils.getSuffix(file);
-	    handler = SUFFIX2HANDLER.get(suffix);
-	    if (handler == null) {
-		skipped.add(suffix);
-	    }
-	}
-	if (!skipped.isEmpty()) {
-	    this.log.warn("After deletion still files with suffixes " + 
-			  skipped + ". ");
 	}
    }
  

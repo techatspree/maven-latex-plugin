@@ -532,9 +532,15 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    this.log.warn("Cannot delete from directory '" + dir + 
 			  "': is not readable. ");
 	}
+	boolean isDeleted;
 	for (File delFile : files) {
+	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
-		delFile.delete();
+		assert delFile.exists() && !delFile.isDirectory();
+		isDeleted = delFile.delete();
+		if (!isDeleted) {
+		    this.log.warn("Failed to delete file '" + delFile + "'. ");
+		}
 	    }
 	}
     }
