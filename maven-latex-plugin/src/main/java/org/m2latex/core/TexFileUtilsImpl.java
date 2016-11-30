@@ -459,15 +459,10 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used only in 
     // LatexPreProcessor.isLatexMainFile(File)
-    // LatexProcessor.needAnotherMakeIndexRun(File)
-    // LatexProcessor.needAnotherLatexRun(File)
-    // LatexProcessor.logWarns(File, String) 2x 
-    // LatexProcessor.runBibtexByNeed(File)
-    // AbstractLatexProcessor.logErrs(File, String, String)
-    // AbstractLatexProcessor.logWarns(File, String, String)
-    public boolean matchInFile(File file, String pattern)
-        throws BuildFailureException {
-
+    // LatexProcessor.needRun(...)
+    // AbstractLatexProcessor.hasErrsWarns(File, String)
+    public boolean matchInFile(File file, 
+			       String pattern) throws BuildFailureException {
 	try {
 	    return fileContainsPattern(file, pattern);
 	} catch (FileNotFoundException e) {
