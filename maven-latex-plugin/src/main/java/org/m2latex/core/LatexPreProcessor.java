@@ -594,7 +594,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *
      * @param texDir
      *    the tex-source directory. 
-     * @throws BuildFailureException 
      */
     void clearCreated(File texDir) {
 
