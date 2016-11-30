@@ -88,7 +88,8 @@ abstract class AbstractLatexProcessor {
     // for both LatexProcessor and LatexPreProcessor 
     protected void logWarns(File logFile, String command, String pattern) 
     	throws BuildFailureException {
-    	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
+	// matchInFile may throw BuildFailureException
+     	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
     	    log.warn("Running " + command + 
     		     " emitted warnings. For details see " + 
     		     logFile.getName() + ". ");
