@@ -216,7 +216,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Used by {@link GraphicsMojo}. 
      */
     public void processGraphics() throws BuildFailureException {
-
 	// may throw BuildFailureException 
 	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
@@ -348,7 +347,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #processLatex2odt(File)
      * @see #processLatex2docx(File)
      */
-    private int preProcessLatex2pdf(final LatexMainDesc desc)
+    private int preProcessLatex2pdf(LatexMainDesc desc) 
 	throws BuildFailureException {
 
 	// initial latex run 
@@ -416,7 +415,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #processLatex2pdf(File)
      * @see #processLatex2txt(File)
      */
-    private void processLatex2pdfCore(final LatexMainDesc desc) 
+    private void processLatex2pdfCore(LatexMainDesc desc) 
 	throws BuildFailureException {
 
 	// may throw BuildFailureException 
@@ -437,11 +436,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// rerun latex by need patternRerunMakeIndex
 	boolean needMakeIndexReRun;
 	boolean needLatexReRun = (numLatexReRuns == 1)
-	    || needAnotherLatexRun(desc.logFile);
+	    || needRun(true, "LaTeX", desc.logFile, 
+		       this.settings.getPatternReRunLatex());
 
 	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
-	    needMakeIndexReRun = needAnotherMakeIndexRun(desc.logFile);
+	    needMakeIndexReRun = 
+		needRun(true, "MakeIndex", desc.logFile, 
+			this.settings.getPatternReRunMakeIndex());
 	    // FIXME: superfluous since pattern rerunfileckeck 
 	    // triggering makeindex also fits rerun of LaTeX 
 	    needLatexReRun |= needMakeIndexReRun;
@@ -455,40 +457,32 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    }
 
             runLatex2pdf(desc);
-
-	    needLatexReRun = needAnotherLatexRun(desc.logFile);
+	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
+				     this.settings.getPatternReRunLatex());
         }
 	log.warn("Max rerun reached although LaTeX demands another run. ");
     }
 
     /**
-     * Returns whether another LaTeX run is necessary 
+     * Returns whether another LaTeX/MakeIndex run is necessary 
      * based on a pattern matching in the log file. 
-     *
-     * @see Settings#getPatternReRunMakeIndex()
      */
-    // FIXME: unification with needAnotherLatexRun? 
-    private boolean needAnotherMakeIndexRun(File logFile)
-	throws BuildFailureException {
-        String reRunPattern = this.settings.getPatternReRunMakeIndex();
-	// may throw a BuildFailureException
-        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
-        log.debug("Another MakeIndex run? " + needRun);
-        return needRun;
-    }
-
-    /**
-     * Returns whether another LaTeX run is necessary 
-     * based on a pattern matching in the log file. 
-     *
-     * @see Settings#getPatternReRunLatex()
-     */
-    private boolean needAnotherLatexRun(File logFile)
-	throws BuildFailureException {
-        String reRunPattern = this.settings.getPatternReRunLatex();
-	// may throw a BuildFailureException
-        boolean needRun = this.fileUtils.matchInFile(logFile, reRunPattern);
-        log.debug("Another LaTeX run? " + needRun);
+    private boolean needRun(boolean another, 
+			    String kind, 
+			    File logFile, 
+			    String pattern) {
+	boolean needRun = false;
+	try {
+	    // may throw a BuildFailureException
+	    needRun = this.fileUtils.matchInFile(logFile, pattern);
+	} catch (BuildFailureException e) {
+	    assert !needRun;
+	    this.log.warn("Log file '" + logFile + "' is not readable: " +
+			  "Could not detect whether " + kind + 
+			  " requires rerun; assume no. ");
+	}
+        log.debug((another ? "Another " : "") + kind + 
+		  " run required? " + needRun);
         return needRun;
     }
 
@@ -497,7 +491,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * also several files creation of which shall be done once for ever. 
      */
     static class LatexMainDesc {
-
 	private final File texFile;
 	private final File logFile;
 	private final File idxFile;
@@ -543,7 +536,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	processLatex2pdfCore(desc);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
-	// may throw BuildFailureException 
 	logWarns(desc.logFile, this.settings.getLatex2pdfCommand());
     }
 
@@ -558,9 +550,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * In both cases, the message logged refers to the <code>command</code> 
      * which failed. 
      */
-    private void logErrs(File logFile, String command) 
-	throws BuildFailureException {
-	// may throw BuildFailureException 
+    private void logErrs(File logFile, String command) {
 	logErrs(logFile, command, this.settings.getPatternErrLatex());
     }
 
@@ -592,22 +582,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the command which created <code>logFile</code> 
      *    and which maybe created warnings. 
      */
-    private void logWarns(File logFile, String command) 
-    	throws BuildFailureException {
-
+    private void logWarns(File logFile, String command) {
 	if (!logFile.exists()) {
 	    return;
 	}
-
 	if (this.settings.getDebugBadBoxes() && 
-	    // may throw BuildFailureException: not really 
-	    this.fileUtils.matchInFile(logFile, PATTERN_OUFULL_HVBOX)) {
+	    hasErrsWarns(logFile, PATTERN_OUFULL_HVBOX)) {
 	    log.warn("Running " + command + " created bad boxes. ");
 	}
 	if (this.settings.getDebugWarnings() && 
-	    // may throw BuildFailureException: not really 
-	    this.fileUtils.matchInFile(logFile, 
-				       this.settings.getPatternWarnLatex())) {
+	    hasErrsWarns(logFile, this.settings.getPatternWarnLatex())) {
 	    log.warn("Running " + command + " emited warnings. ");
 	}
     }
@@ -727,15 +711,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    whether BibTeX has been run. 
      *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
      */
-    private boolean runBibtexByNeed(File texFile) 
-	throws BuildFailureException {
-
+    private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
 	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
-	// may throw BuildFailureException 
-        boolean needRun = this.fileUtils.matchInFile(auxFile, 
-						     PATTERN_NEED_BIBTEX_RUN);
-	log.debug("BibTeX run required? " + needRun);
-	if (!needRun) {
+	if (!needRun(false, "BibTeX", auxFile, PATTERN_NEED_BIBTEX_RUN)) {
 	    return false;
 	}
 
@@ -935,9 +913,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	logWarns(desc.logFile, command);
     }
 
-    private String[] buildHtlatexArguments(File texFile)
-	throws BuildFailureException {
-
+    private String[] buildHtlatexArguments(File texFile) {
         return new String[] {
 	    texFile.getName(),
 	    this.settings.getTex4htStyOptions(),
@@ -960,9 +936,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    if running the latex2rtf command 
      *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      */
-    private void runLatex2rtf(File texFile)
-            throws BuildFailureException {
-
+    private void runLatex2rtf(File texFile) throws BuildFailureException {
 	String command = this.settings.getLatex2rtfCommand();
         log.debug("Running " + command + " on '" + texFile.getName() + "'. ");
 
@@ -1000,9 +974,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
-    private void runLatex2odt(LatexMainDesc desc)
-	throws BuildFailureException {
-
+    private void runLatex2odt(LatexMainDesc desc) throws BuildFailureException {
 	File texFile = desc.texFile;
 	String command = this.settings.getTex4htCommand();
         log.debug("Running " + command + " on '" + texFile.getName() + "'. ");
@@ -1044,9 +1016,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    if running the odt2doc command 
      *    returned by {@link Settings#getOdt2docCommand()} failed. 
      */
-    private void runOdt2doc(File texFile)
-            throws BuildFailureException {
-
+    private void runOdt2doc(File texFile) throws BuildFailureException {
 	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
 	String command = this.settings.getOdt2docCommand();
 	log.debug("Running " + command + " on '" + odtFile.getName() + "'. ");
@@ -1077,7 +1047,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    returned by {@link Settings#getPdf2txtCommand()} failed. 
      */
     private void runPdf2txt(File texFile) throws BuildFailureException {
-
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
 	String command = this.settings.getPdf2txtCommand();
 	log.debug("Running " + command + " on '" + pdfFile.getName() + "'. ");

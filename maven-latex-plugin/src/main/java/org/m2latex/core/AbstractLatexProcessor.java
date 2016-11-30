@@ -61,12 +61,10 @@ abstract class AbstractLatexProcessor {
      *    if <code>logFile</code> does not exist or is not readable. 
      * @see #logWarns(File, String, String) 
      */
-     protected void logErrs(File logFile, String command, String pattern) 
-    	throws BuildFailureException {
+     protected void logErrs(File logFile, String command, String pattern) {
 
     	if (logFile.exists()) {
-    	    // matchInFile may throw BuildFailureException
-    	    if (this.fileUtils.matchInFile(logFile, pattern)) {
+    	    if (hasErrsWarns(logFile, pattern)) {
     		log.warn("Running " + command + " failed. For details see " + 
     			 logFile.getName() + ". ");
     	    }
@@ -86,14 +84,25 @@ abstract class AbstractLatexProcessor {
      * @see #logErrs(File, String, String) 
      */
     // for both LatexProcessor and LatexPreProcessor 
-    protected void logWarns(File logFile, String command, String pattern) 
-    	throws BuildFailureException {
-	// matchInFile may throw BuildFailureException
-     	if (logFile.exists() && this.fileUtils.matchInFile(logFile, pattern)) {
+    protected void logWarns(File logFile, String command, String pattern) {
+     	if (logFile.exists() && hasErrsWarns(logFile, pattern)) {
     	    log.warn("Running " + command + 
     		     " emitted warnings. For details see " + 
     		     logFile.getName() + ". ");
     	}
+    }
+
+    // FIXME: not clear whether error or warning 
+    // also command not clear. 
+    protected boolean hasErrsWarns(File logFile, String pattern) {
+	try {
+	    // may throw BuildFailureException
+	    return this.fileUtils.matchInFile(logFile, pattern);
+	} catch (BuildFailureException e) {
+	    this.log.warn("Log file '" + logFile + "' is not readable: " +
+			  "Could not detect warnings/failures. ");
+	    return false;
+	}
     }
 
     // for both LatexProcessor and LatexPreProcessor 
