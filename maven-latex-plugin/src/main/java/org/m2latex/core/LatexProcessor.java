@@ -153,16 +153,21 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * FIXME: exceptions not really clear. 
      * @throws BuildFailureException 
      *    <ul>
-     *    <li>
-     *    if copying the latex-directory to the temporary directory 
-     *    or copying the results from the temporary directory 
-     *    into the target directory fails. 
-     *    <li>
-     *    if processing xfig-files or gnuplot files or latex-files fail. 
-     *    <li>
-     *    if latex main documents could not be identified. 
-     *    <li>
-     *    if processing xfig-files or gnuplot files fail. 
+     *    <li> TSS01 if 
+     *    the tex source directory does either not exist 
+     *    or is not a directory. 
+     *    <li> TEX01 if 
+     *    invocation of applications for preprocessing graphic files 
+     *    or processing a latex main file fails 
+     *    <li> TFU01 if 
+     *    the target directory that would be returned 
+     *    exists already as a regular file. 
+     *    <li> TSS02 if 
+     *    the output directory exists and is no directory. 
+     *    <li> TFU02, TFU03, TFU04, TFU05, TFU06 if 
+     *    copy of output files to target folder fails. 
+     *    For details see 
+     * {@link TexFileUtilsImpl#copyOutputToTargetFolder(File, FileFilter, File)}
      *    </ul>
      */
     public void create() throws BuildFailureException {
@@ -170,7 +175,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString() );
 
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TSS01 
         File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
@@ -179,25 +184,27 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	try {
 	    // process graphics and determine latexMainFiles 
-	    // may throw BuildFailureException 
+	    // may throw BuildFailureException TEX01 
 	    Collection<File> latexMainFiles = this.preProc
 		.processGraphicsSelectMain(orgFiles);
 	    for (File texFile : latexMainFiles) {
-		// throws BuildFailureException 
+		// throws BuildFailureException TFU01 
 		// if targetDir would be an existing non-directory 
 		File targetDir = this.fileUtils.getTargetDirectory
 		    (texFile, 
 		     texDir,
-		     // throws BuildFailureException if exists and is no dir 
+		     // throws BuildFailureException TSS02 
+		     // if exists and is no dir 
 		     this.settings.getOutputDirectoryFile());
 		assert !targetDir.exists() || targetDir.isDirectory();
 
 		for (Target target : this.paramAdapt.getTargetSet()) {
-		    // may throw BuildFailureException 
+		    // may throw BuildFailureException TEX01 
 		    target.processSource(this, texFile);
 		    FileFilter fileFilter = this.fileUtils.getFileFilter
 			(texFile, target.getPatternOutputFiles(this.settings));
-		    // may throw BuildFailureException: 
+		    // may throw BuildFailureException 
+		    // TFU02, TFU03, TFU04, TFU05, TFU06 
 		    // FIXME: fileFilter shall not accept directories 
 		    // and shall not accept texFile 
 		    this.fileUtils.copyOutputToTargetFolder(texFile,
@@ -214,9 +221,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     /**
      * Used by {@link GraphicsMojo}. 
+     *
+     * @throws BuildFailureException
+     *    TSS01 if the tex source directory does either not exist 
+     *    or is not a directory. 
      */
     public void processGraphics() throws BuildFailureException {
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TSS01 
 	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
@@ -241,12 +252,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @throws BuildFailureException 
+     *    TSS01 if the tex source directory does either not exist 
+     *    or is not a directory. 
      */
     public void clearAll() throws BuildFailureException {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString());
 
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TSS01 
         File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
@@ -342,6 +355,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    <li>
      *    In all other cases, a single rerun suffices 
      *    </ul>
+     * @throws BuildFailureException
+     *    TEX01 if running one of the following commands fails: the 
+     *    <ul>
+     *    <li> latex2pdf command from {@link Settings#getLatexCommand()} 
+     *    <li> BibTeX    command from {@link Settings#getBibtexCommand()}
+     *    <li> makeindex command from {@link Settings#getMakeIndexCommand()} 
+     *    <li> makeglossaries command 
+     *         from {@link Settings#getMakeGlossariesCommand()} 
+     *    </ul>
      * @see #processLatex2pdfCore(File, File)
      * @see #processLatex2html(File)
      * @see #processLatex2odt(File)
@@ -351,14 +373,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	// initial latex run 
- 	// may throw BuildFailureException 
+ 	// may throw BuildFailureException TEX01 
 	runLatex2pdf(desc);
 	File texFile = desc.texFile;
 
 	// create bibliography, index and glossary by need 
-	// may throw BuildFailureException 
+	// may throw BuildFailureException  TEX01 
 	boolean hasBib    = runBibtexByNeed      (texFile);
-	// may both throw BuildFailureException 
+	// may both throw BuildFailureException, both TEX01 
 	boolean hasIdxGls = runMakeIndexByNeed   (desc)
 	    |               runMakeGlossaryByNeed(desc);
 
@@ -412,13 +434,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the latex-file to be processed. 
      * @param logFile
      *    the log-file after processing <code>texFile</code>. 
+     * @throws BuildFailureException
+     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    maybe caused by subsequent runs. 
      * @see #processLatex2pdf(File)
      * @see #processLatex2txt(File)
      */
     private void processLatex2pdfCore(LatexMainDesc desc) 
 	throws BuildFailureException {
 
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
  	int numLatexReRuns = preProcessLatex2pdf(desc);
 				      
 	assert numLatexReRuns == 0 
@@ -428,6 +453,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // rerun LaTeX without makeindex and makeglossaries 
 	    this.log.debug("Rerun LaTeX to update table of contents, ... " + 
 			   "bibliography, index, or that like. ");
+	    // may throw BuildFailureException TEX01 
 	    runLatex2pdf(desc);
 	    numLatexReRuns--;
 	}
@@ -453,10 +479,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
             this.log.debug("Latex must be rerun. ");
 	    if (needMakeIndexReRun) {
 		// FIXME: not by need 
+		// may throw BuildFailureException TEX01 
 		runMakeIndexByNeed(desc);
 	    }
 
-            runLatex2pdf(desc);
+	    // may throw BuildFailureException TEX01 
+	    runLatex2pdf(desc);
 	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
 				     this.settings.getPatternReRunLatex());
         }
@@ -474,7 +502,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			    String pattern) {
 	boolean needRun = false;
 	try {
-	    // may throw a BuildFailureException
+	    // may throw a BuildFailureException TFU07, TFU08 
 	    // exception EF07 may occur because logFile may not exist (rare) 
 	    needRun = this.fileUtils.matchInFile(logFile, pattern);
 	} catch (BuildFailureException e) {
@@ -528,13 +556,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
+     * @throws BuildFailureException
+     *    TEX01 as for {@link #processLatex2pdfCore(LatexMainDesc)}. 
      * @see #needAnotherLatexRun(File)
      * @see Target#pdf
      */
     void processLatex2pdf(File texFile) throws BuildFailureException {
         this.log.info("Converting into pdf: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	processLatex2pdfCore(desc);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
@@ -605,6 +635,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
+     * @throws BuildFailureException
+     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    but also as for {@link #runLatex2html(LatexMainDesc)}. 
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2html(File)
      * @see Target#html
@@ -612,9 +645,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2html(File texFile) throws BuildFailureException {
 	this.log.info("Converting into html: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	preProcessLatex2pdf(desc);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         runLatex2html      (desc);
     }
 
@@ -626,6 +659,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
+     * @throws BuildFailureException
+     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    but also as for {@link #runLatex2odt(LatexMainDesc)}. 
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2odt(File)
      * @see Target#odt
@@ -633,9 +669,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2odt(File texFile) throws BuildFailureException {
 	this.log.info("Converting into odt: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         preProcessLatex2pdf(desc);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         runLatex2odt       (desc);
     }
 
@@ -647,6 +683,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
+     * @throws BuildFailureException
+     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    but also as for {@link #runLatex2odt(LatexMainDesc)} 
+     *    and for {@link #runodt2doc(File)}. 
      * @see #preProcessLatex2pdf(File, File)
      * @see #runLatex2odt(File)
      * @see #runOdt2doc(File)
@@ -655,11 +695,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2docx(File texFile) throws BuildFailureException {
 	this.log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
  	preProcessLatex2pdf(desc);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         runLatex2odt       (desc);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         runOdt2doc         (texFile);
     }
 
@@ -672,12 +712,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
+     * @throws BuildFailureException
+     *    TEX01 if running the latex2rtf command 
+     *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      * @see #runLatex2rtf(File)
      * @see Target#rtf
      */
     void processLatex2rtf(File texFile) throws BuildFailureException {
 	this.log.info("Converting into rtf: LaTeX file '" + texFile + "'. ");
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	runLatex2rtf(texFile);
     }
 
@@ -686,6 +729,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @param texFile
      *    the tex file to be processed. 
+     * @throws BuildFailureException
+     *    TEX01 as for {@link #processLatex2pdfCore(LatexMainDesc)} 
+     *    and for {@link #runPdf2txt(File)}. 
      * @see #processLatex2pdfCore(File, File)
      * @see #runPdf2txt(File)
      * @see Target#rtf
@@ -693,10 +739,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2txt(File texFile) throws BuildFailureException {
 	this.log.info("Converting into txt: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
+	// may throw BuildFailureException TEX01 
 	processLatex2pdfCore(desc);
 	// warnings emitted by LaTex are ignored 
 	// (errors are emitted by runLatex2pdf and that like.)
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	runPdf2txt      (texFile);
     }
 
@@ -712,6 +759,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @return
      *    whether BibTeX has been run. 
      *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
+     * @throws BuildFailureException
+     *    TEX01 if running the BibTeX command 
+     *    returned by {@link Settings#getBibtexCommand()} failed. 
      */
     private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
 	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
@@ -725,7 +775,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	String[] args = buildArguments(this.settings.getBibtexOptions(), 
 				       auxFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -750,6 +800,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @return
      *    whether MakeIndex had been run. 
      *    Equivalently, whether LaTeX has to be rerun because of MakeIndex. 
+     * @throws BuildFailureException
+     *    TEX01 if running the makeindex command 
+     *    returned by {@link Settings#getMakeIndexCommand()} failed. 
      */
     // FIXME: bad name since now there are reruns. 
     // Suggestion: runMakeIndexInitByNeed 
@@ -762,7 +815,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	boolean needRun = desc.idxFile.exists();
 	this.log.debug("MakeIndex run required? " + needRun);
 	if (needRun) {
-	    // may throw BuildFailureException 
+	    // may throw BuildFailureException TEX01 
 	    runMakeIndex(desc);
 	}
 	return needRun;
@@ -774,6 +827,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *
      * @param idxFile
      *    the idx-file MakeIndex is to be run on. 
+     * @throws BuildFailureException
+     *    TEX01 if running the makeindex command 
+     *    returned by {@link Settings#getMakeIndexCommand()} failed. 
      */
     private void runMakeIndex(LatexMainDesc desc) 
 	throws BuildFailureException {
@@ -783,7 +839,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + idxFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
 				       idxFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	this.executor.execute(idxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -811,6 +867,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    whether MakeGlossaries had been run. 
      *    Equivalently, 
      *    whether LaTeX has to be rerun because of MakeGlossaries. 
+     * @throws BuildFailureException
+     *    TEX01 if running the makeglossaries command 
+     *    returned by {@link Settings#getMakeGlossariesCommand()} failed. 
      */
      private boolean runMakeGlossaryByNeed(LatexMainDesc desc)
 	throws BuildFailureException {
@@ -829,7 +888,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + xxxFile.getName()+ "'. ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
 				       xxxFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	this.executor.execute(xxxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -859,7 +918,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param logFile
      *    the log-file after processing <code>texFile</code>. 
      * @throws BuildFailureException
-     *    if running the latex command 
+     *    TEX01 if running the latex2pdf command 
      *    returned by {@link Settings#getLatexCommand()} failed. 
      */
     private void runLatex2pdf(LatexMainDesc desc)
@@ -871,7 +930,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + texFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getLatex2pdfOptions(), 
 				       texFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -889,7 +948,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the latex-file to be processed. 
      * @throws BuildFailureException
-     *    if running the tex4ht command 
+     *    TEX01 if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
     private void runLatex2html(LatexMainDesc desc)
@@ -900,7 +959,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
         String[] args = buildHtlatexArguments(texFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -930,7 +989,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    if running the latex2rtf command 
+     *    TEX01 if running the latex2rtf command 
      *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      */
     private void runLatex2rtf(File texFile) throws BuildFailureException {
@@ -939,7 +998,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + texFile.getName() + "'. ");
         String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
 				       texFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir
 			      this.settings.getTexPath(), 
 			      command, 
@@ -968,7 +1027,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    if running the tex4ht command 
+     *    TEX01 if running the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
     private void runLatex2odt(LatexMainDesc desc) throws BuildFailureException {
@@ -982,7 +1041,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
 	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
 	};
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
         this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1009,7 +1068,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    if running the odt2doc command 
+     *    TEX01 if running the odt2doc command 
      *    returned by {@link Settings#getOdt2docCommand()} failed. 
      */
     private void runOdt2doc(File texFile) throws BuildFailureException {
@@ -1019,7 +1078,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + odtFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getOdt2docOptions(),
 				       odtFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1038,7 +1097,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    if running the pdf2txt command 
+     *    TEX01 if running the pdf2txt command 
      *    returned by {@link Settings#getPdf2txtCommand()} failed. 
      */
     private void runPdf2txt(File texFile) throws BuildFailureException {
@@ -1048,7 +1107,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + pdfFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
 				       pdfFile);
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
