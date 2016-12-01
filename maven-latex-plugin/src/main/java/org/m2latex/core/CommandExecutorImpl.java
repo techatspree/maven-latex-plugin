@@ -39,30 +39,30 @@ class CommandExecutorImpl implements CommandExecutor {
     }
 
     /**
-     * Execute <code>executable</code> with arguments <code>args</code> 
+     * Execute <code>command</code> with arguments <code>args</code> 
      * in the working directory <code>workingDir</code>. 
      * Here, <code>pathToExecutable</code> is the path 
      * to the executable. May be null? 
      * <p>
-     * Logs a warning, if the <code>executable</code> returns 
+     * Logs a warning, if the <code>command</code> returns 
      * with return code other than <code>0</code>. 
      *
      * @param workingDir
      *    the working directory. 
      *    The shell changes to that directory 
-     *    before invoking <code>executable</code> 
+     *    before invoking <code>command</code> 
      *    with arguments <code>args</code>. 
      * @param pathToExecutable
-     *    the path to the executable <code>executable</code>. 
-     *    This may be <code>null</code> if <code>executable</code> 
+     *    the path to the executable <code>command</code>. 
+     *    This may be <code>null</code> if <code>command</code> 
      *    is on the execution path 
-     * @param executable
+     * @param command
      *    the name of the program to be executed 
      * @param args
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
      * @throws BuildFailureException
-     *    TEX01 if invocation of <code>executable</code> fails very basically: 
+     *    TEX01 if invocation of <code>command</code> fails very basically: 
      *    <ul>
      *    <li><!-- see Commandline.execute() -->
      *    the file expected to be the working directory 
@@ -80,10 +80,10 @@ class CommandExecutorImpl implements CommandExecutor {
      */
     public final String execute(File workingDir, 
 				File pathToExecutable, 
-				String executable, 
+				String command, 
 				String[] args) throws BuildFailureException {
-	String command = new File(pathToExecutable, executable).getPath();
-	Commandline cl = new Commandline(command);
+	String executable = new File(pathToExecutable, command).getPath();
+	Commandline cl = new Commandline(executable);
 	cl.getShell().setQuotedArgumentsEnabled(false);
 	cl.addArguments(args);
 	cl.setWorkingDirectory(workingDir.getPath());
@@ -92,14 +92,14 @@ class CommandExecutorImpl implements CommandExecutor {
 
 	try {
 	    // may throw CommandLineException 
-	    int returnValue = executeCommandLine(cl, output, output);
-	    if (returnValue != 0) {
-		this.log.warn("WEX01: Executing '" + executable + 
-			      "' returned with code " + returnValue + ". ");
+	    int returnCode = executeCommandLine(cl, output, output);
+	    if (returnCode != 0) {
+		this.log.warn("WEX01: Running " + command + 
+			      " failed with return code " + returnCode + ". ");
 	    }
 	} catch (CommandLineException e) {
 	    throw new BuildFailureException
-		("TEX01: Error executing command '" + executable +  "'. ", e);
+		("TEX01: Error running " + command +  ". ", e);
         }
 
 	log.debug("Output:\n" + output.getOutput() + "\n");
