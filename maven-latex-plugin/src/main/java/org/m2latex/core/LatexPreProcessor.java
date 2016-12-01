@@ -263,8 +263,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 this.settings.getFig2devGenOptions(), 
 					 this.settings.getFig2devPdfOptions(), 
 					 figFile);
-	    log.debug("Running " + command + 
-		      " -Lpdftex  ... on '" + figFile.getName() + "'. ");
+	    this.log.debug("Running " + command + 
+			   " -Lpdftex  ... on '" + figFile.getName() + "'. ");
 	    // may throw BuildFailureException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -280,8 +280,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 this.settings.getFig2devGenOptions(), 
 					 this.settings.getFig2devPtxOptions(), 
 					 figFile);
-	    log.debug("Running " + command + 
-		      " -Lpdftex_t... on '" + figFile.getName() + "'. ");
+	    this.log.debug("Running " + command + 
+			   " -Lpdftex_t... on '" + figFile.getName() + "'. ");
 	    // may throw BuildFailureException 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
@@ -402,8 +402,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 
 //	if (update(gpFile, ptxFile)) {
-	    log.debug("Running " + command + 
-		      " -e...  on '" + gpFile.getName() + "'. ");
+	    this.log.debug("Running " + command + 
+			   " -e...  on '" + gpFile.getName() + "'. ");
 	    // may throw BuildFailureException 
 	    this.executor.execute(gpFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
@@ -440,7 +440,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// for more information just type mpost --help 
 	String[] args = buildArguments(this.settings.getMetapostOptions(), 
 				       mpFile);
-	log.debug("Running " + command + " on '" + mpFile.getName() + "'. ");
+	this.log.debug("Running " + command + 
+		       " on '" + mpFile.getName() + "'. ");
 	// may throw BuildFailureException 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
@@ -491,7 +492,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    return;
 	}
 	if (!file.delete()) {
-	    this.log.warn("Failed to delete file '" + file + "'. ");
+	    this.log.warn("WPP01: Failed to delete file '" + file + "'. ");
 	}
     }
 
@@ -505,12 +506,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    If this is not readable, <code>false</code>. 
      */
     private boolean isLatexMainFile(File texFile) {
+	assert texFile.exists();
 	try {
 	    // may throw BuildFailureException
+	    // exception EF07 may not occur 
 	    return this.fileUtils.matchInFile
 		(texFile, this.settings.getPatternLatexMainFile());
 	} catch (BuildFailureException e) {
-	    this.log.warn("File '" + texFile + "' is not readable; " + 
+	    this.log.warn("WPP02: File '" + texFile + "' is not readable; " + 
 			  "assume that it is no latex main file. ");
 	    return false;
 	}
@@ -580,7 +583,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	}
 	if (!skipped.isEmpty()) {
-	    this.log.warn("Skipped processing of files with suffixes " + 
+	    this.log.warn("WPP03: Skipped processing of files with suffixes " + 
 			  skipped + ". ");
 	}
 	return this.latexMainFiles;

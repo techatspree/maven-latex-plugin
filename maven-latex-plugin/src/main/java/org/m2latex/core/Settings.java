@@ -1076,7 +1076,8 @@ public class Settings {
 	if (!(this.texSrcDirectoryFile.exists() && 
 	      this.texSrcDirectoryFile.isDirectory())) {
 	    throw new BuildFailureException
-		("The tex source directory '" + this.texSrcDirectoryFile + 
+		("TSS01: The tex source directory '" + 
+		 this.texSrcDirectoryFile + 
 		 "' should be an existing directory, but is not. ");
 	}
 	return this.texSrcDirectoryFile;
@@ -1086,7 +1087,7 @@ public class Settings {
 	if (/**/this.outputDirectoryFile.exists() && 
 	    !   this.outputDirectoryFile.isDirectory()) {
 	    throw new BuildFailureException
-		("The output directory '" + this.outputDirectoryFile + 
+		("TSS02: The output directory '" + this.outputDirectoryFile + 
 		 "' should be a directory if it exists, but is not. ");
 	}
        return this.outputDirectoryFile;

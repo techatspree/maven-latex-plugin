@@ -94,12 +94,12 @@ class CommandExecutorImpl implements CommandExecutor {
 	    // may throw CommandLineException 
 	    int returnValue = executeCommandLine(cl, output, output);
 	    if (returnValue != 0) {
-		log.warn("Executing '" + executable + 
-			 "' returned with code " + returnValue + ". ");
+		this.log.warn("WEX01: Executing '" + executable + 
+			      "' returned with code " + returnValue + ". ");
 	    }
 	} catch (CommandLineException e) {
 	    throw new BuildFailureException
-		("Error executing command '" + executable +  "'. ", e);
+		("TEX01: Error executing command '" + executable +  "'. ", e);
         }
 
 	log.debug("Output:\n" + output.getOutput() + "\n");

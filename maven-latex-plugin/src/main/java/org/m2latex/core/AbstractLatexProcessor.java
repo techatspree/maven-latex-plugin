@@ -62,14 +62,15 @@ abstract class AbstractLatexProcessor {
      * @see #logWarns(File, String, String) 
      */
      protected void logErrs(File logFile, String command, String pattern) {
-
     	if (logFile.exists()) {
     	    if (hasErrsWarns(logFile, pattern)) {
-    		log.warn("Running " + command + " failed. For details see " + 
+    		this.log.warn("WAP01: Running " + command + 
+			 " failed. For details see " + 
     			 logFile.getName() + ". ");
     	    }
     	} else {
-    	    this.log.error("Running " + command + " failed: no log file " + 
+    	    this.log.warn("WAP02: Running " + command + 
+			  " failed: No log file " + 
     			   logFile.getName() + " found. ");
     	}
     }
@@ -86,20 +87,22 @@ abstract class AbstractLatexProcessor {
     // for both LatexProcessor and LatexPreProcessor 
     protected void logWarns(File logFile, String command, String pattern) {
      	if (logFile.exists() && hasErrsWarns(logFile, pattern)) {
-    	    log.warn("Running " + command + 
-    		     " emitted warnings. For details see " + 
-    		     logFile.getName() + ". ");
+    	    this.log.warn("WAP03: Running " + command + 
+			  " emitted warnings. For details see " + 
+			  logFile.getName() + ". ");
     	}
     }
 
-    // FIXME: not clear whether error or warning 
-    // also command not clear. 
+    // FIXME: not clear whether error or warning; also command not clear. 
     protected boolean hasErrsWarns(File logFile, String pattern) {
+	assert logFile.exists();
 	try {
 	    // may throw BuildFailureException
+	    // exception EF07 may not occur 
 	    return this.fileUtils.matchInFile(logFile, pattern);
 	} catch (BuildFailureException e) {
-	    this.log.warn("Log file '" + logFile + "' is not readable: " +
+	    this.log.warn("WAP04: Log file '" + logFile + 
+			  "' is not readable: " +
 			  "Could not detect warnings/failures. ");
 	    return false;
 	}

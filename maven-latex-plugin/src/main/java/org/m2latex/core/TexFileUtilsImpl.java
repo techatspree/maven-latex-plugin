@@ -99,7 +99,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// Thus in these cases, the failure is ignored silently 
         if (found == null) {
 	    // FIXME: better with logging 
-	    this.log.warn("Cannot read directory '" + dir + "'. ");
+	    this.log.warn("WFU01: Cannot read directory '" + dir + "'. ");
 	}
 	File file;
 	for (int i = 0; i < found.length; i++) {
@@ -158,7 +158,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	File res = new File(targetBaseDir, srcParentPath.toString());
 	if (res.exists() && !res.isDirectory()) {
 	    throw new BuildFailureException
-		("Required target directory '" + res + 
+		("TFU01: Required target directory '" + res + 
 		 "' exists already as regular file. ");
 	}
 	return res;
@@ -240,15 +240,16 @@ class TexFileUtilsImpl implements TexFileUtils {
         if (outputFiles == null) {
 	    // since texFileDir is a directory 
 	    throw new BuildFailureException
-		("Error reading directory '" + texFileDir + "'! " );
+		("TFU02: Error reading directory '" + texFileDir + "'! " );
 	}
 	assert outputFiles != null;
 
 	// Hm,... this means even that there is no latex file. 
 	// Also, there may be no file created although outputFiles is not empty
         if (outputFiles.length == 0) {
-            log.warn("LaTeX file '" + texFile + 
-		     "' did not generate any output in '" + texFileDir + "'! ");
+            this.log.warn("WFU02: LaTeX file '" + texFile + 
+			  "' did not generate any output in '" + 
+			  texFileDir + "'! ");
         }
 
 	File srcFile, destFile;
@@ -262,14 +263,14 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    // since !targetDir.exists() || targetDir.isDirectory() 
 	    assert !srcFile.equals(targetDir);
 
-	    log.info("Copying '" + srcFile.getName() + 
-		     "' to '" + targetDir + "'. ");
+	    this.log.info("Copying '" + srcFile.getName() + 
+			  "' to '" + targetDir + "'. ");
 	    // FIXME: fileFilter shall not accept directories 
 	    // and shall not accept texFile 
 
 	    if (!targetDir.exists() && !targetDir.mkdirs()) {
 		throw new BuildFailureException
-		    ("Destination directory '" + targetDir + 
+		    ("TFU03: Destination directory '" + targetDir + 
 		     "' cannot be created. ");
 	    }
 	    assert targetDir.isDirectory();
@@ -279,12 +280,12 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    if (destFile.exists()) {
 		if (destFile.isDirectory()) {
 		    throw new BuildFailureException
-			("Destination file '" + destFile + 
+			("TFU04: Destination file '" + destFile + 
 			 "' exists but is a directory. ");
 		}
 		if (!destFile.canWrite()) {
 		    throw new BuildFailureException
-			("Destination file '" + destFile + 
+			("TFU05: Destination file '" + destFile + 
 			 "' exists and is read-only. ");
 		}
 	    }
@@ -294,7 +295,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 		doCopyFile(srcFile, destFile);
 	    } catch (IOException e) {
 		throw new BuildFailureException
-		    ("Error copying '" + srcFile.getName() + 
+		    ("TFU06: Error copying '" + srcFile.getName() + 
 		     "' to '" + targetDir + "'. ",
 		     e);
 	    }
@@ -313,8 +314,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    if an error occurs: opening input/output streams, 
      *    reading from file/writing to file. 
      */
-    private static void doCopyFile(File srcFile, 
-				   File destFile) throws IOException {
+    private void doCopyFile(File srcFile, File destFile) throws IOException {
 	// may throw FileNotFoundException <= IOException 
 	// if cannot be opened for reading: e.g. not exists, is a directory,...
         FileInputStream input = new FileInputStream(srcFile);
@@ -396,13 +396,12 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @param closeable the object to close, may be null or already closed
      * @since 2.0
      */
-   public static void closeQuietly(Closeable closeable) {
+   public void closeQuietly(Closeable closeable) {
         try {
 	    closeable.close();
 	} catch (IOException ioe) {
-            // ignore 
-	    // FIXME: not appropriate 
-        }
+	    this.log.warn("WFU03: Cannot close '" + closeable + "'. ", ioe);
+         }
     }
 
     /**
@@ -467,10 +466,10 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    return fileContainsPattern(file, pattern);
 	} catch (FileNotFoundException e) {
 	    throw new BuildFailureException
-		("File '" + file.getPath() + "' not found. ", e);
+		("TFU07: File '" + file.getPath() + "' not found. ", e);
 	} catch (IOException e) {
 	    throw new BuildFailureException
-		("Error reading file '" + file.getPath() + "'. ", e);
+		("TFU08: Error reading file '" + file.getPath() + "'. ", e);
 	}
     }
 
@@ -501,11 +500,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	   return false;
         } finally {
 	    // Here, an IOException may have occurred 
-	    try {
-		bufferedReader.close();
-	    } catch (IOException e) {
-		log.warn("Cannot close the file '" + file.getPath() + "'.", e);
-	    }
+	    closeQuietly(bufferedReader);
         }
     }
 
@@ -529,7 +524,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	File[] files = dir.listFiles();
 	if (files == null) {
 	    // Here, dir is not readable because a directory 
-	    this.log.warn("Cannot delete from directory '" + dir + 
+	    this.log.warn("WFU04: Cannot delete from directory '" + dir + 
 			  "': is not readable. ");
 	}
 	boolean isDeleted;
@@ -539,7 +534,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 		assert delFile.exists() && !delFile.isDirectory();
 		isDeleted = delFile.delete();
 		if (!isDeleted) {
-		    this.log.warn("Failed to delete file '" + delFile + "'. ");
+		    this.log.warn("WFU05: Failed to delete file '" + 
+				  delFile + "'. ");
 		}
 	    }
 	}
@@ -555,7 +551,7 @@ class TexFileUtilsImpl implements TexFileUtils {
     // FIXME: warn if deletion failed. 
     public void cleanUp(Collection<File> orgFiles, File texDir) {
 
-	log.debug("Clearing set of sources. ");
+	this.log.debug("Clearing set of sources. ");
 	Collection<File> currFiles = getFilesRec(texDir);
 	currFiles.removeAll(orgFiles);
 	for (File file : currFiles) {
