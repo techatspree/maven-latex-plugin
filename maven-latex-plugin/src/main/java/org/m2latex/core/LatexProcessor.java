@@ -144,8 +144,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li>WFU01 texDir not readable 
-
+     * <li> WFU01 texDir not readable 
+     * <li> WEX01 applications for preprocessing graphic files 
+     *      or processing a latex main file fails 
      * </ul>
      *
      * FIXME: exceptions not really clear. 
@@ -183,7 +184,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	try {
 	    // process graphics and determine latexMainFiles 
-	    // may throw BuildFailureException TEX01 
+	    // may throw BuildFailureException TEX01, log warning WEX01 
 	    Collection<File> latexMainFiles = this.preProc
 		.processGraphicsSelectMain(orgFiles);
 	    for (File texFile : latexMainFiles) {
@@ -198,7 +199,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		assert !targetDir.exists() || targetDir.isDirectory();
 
 		for (Target target : this.paramAdapt.getTargetSet()) {
-		    // may throw BuildFailureException TEX01 
+		    // may throw BuildFailureException TEX01, log warning WEX01 
 		    target.processSource(this, texFile);
 		    FileFilter fileFilter = this.fileUtils.getFileFilter
 			(texFile, target.getPatternOutputFiles(this.settings));
@@ -343,6 +344,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP02 Running <code>command</code> failed. No log file 
      * <li> WAP04 if <code>logFile</code> is not readable. 
      * <li> WFU03 cannot close log file 
+     * <li> TEX01 if one of the commands mentioned in the throws-tag fails 
+     * </ul>
      *
      * @param texFile
      *    the latex-file to be processed. 
@@ -366,7 +369,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    In all other cases, a single rerun suffices 
      *    </ul>
      * @throws BuildFailureException
-     *    TEX01 if running one of the following commands fails: the 
+     *    TEX01 if invocation one of the following commands fails: the 
      *    <ul>
      *    <li> latex2pdf command from {@link Settings#getLatexCommand()} 
      *    <li> BibTeX    command from {@link Settings#getBibtexCommand()}
@@ -384,16 +387,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// initial latex run 
  	// may throw BuildFailureException TEX01 
-	// may log warnings WAP01, WAP02, WAP04, WFU03
+	// may log warnings WEX01, WAP01, WAP02, WAP04, WFU03
 	runLatex2pdf(desc);
 	File texFile = desc.texFile;
 
 	// create bibliography, index and glossary by need 
 	// may throw BuildFailureException  TEX01 
-	// may log warnings WAP01, WAP02, WAP03, WAP04, WFU03
+	// may log warnings WEX01, WAP01, WAP02, WAP03, WAP04, WFU03
 	boolean hasBib    = runBibtexByNeed      (texFile);
 	// may both throw BuildFailureException, both TEX01 
-	// may both log warnings WAP01, WAP02, WAP03, WAP04, WFU03
+	// may both log warnings WEX01, WAP01, WAP02, WAP03, WAP04, WFU03
 	boolean hasIdxGls = runMakeIndexByNeed   (desc)
 	    |               runMakeGlossaryByNeed(desc);
 
@@ -449,6 +452,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP02 Running <code>command</code> failed. No log file 
      * <li> WAP04 if <code>logFile</code> is not readable. 
      * <li> WFU03 cannot close 
+     * <li> WEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    maybe caused by subsequent runs. 
      * </ul>
      *
      * @param texFile
@@ -464,7 +469,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void processLatex2pdfCore(LatexMainDesc desc) 
 	throws BuildFailureException {
 
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
  	int numLatexReRuns = preProcessLatex2pdf(desc);
 				      
 	assert numLatexReRuns == 0 
@@ -475,7 +480,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    this.log.debug("Rerun LaTeX to update table of contents, ... " + 
 			   "bibliography, index, or that like. ");
 	    // may throw BuildFailureException TEX01 
-	    // may log warnings WAP01, WAP02, WAP04, WFU03
+	    // may log warnings WEX01, WAP01, WAP02, WAP04, WFU03
 	    runLatex2pdf(desc);
 	    numLatexReRuns--;
 	}
@@ -502,12 +507,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    if (needMakeIndexReRun) {
 		// FIXME: not by need 
 		// may throw BuildFailureException TEX01 
-		// may log warnings WAP01, WAP02, WAP03, WAP04, WFU03
+		// may log warnings WEX01, WAP01, WAP02, WAP03, WAP04, WFU03
 		runMakeIndexByNeed(desc);
 	    }
 
 	    // may throw BuildFailureException TEX01 
-	    // may log warnings WAP01, WAP02, WAP04, WFU03
+	    // may log warnings WEX01, WAP01, WAP02, WAP04, WFU03
 	    runLatex2pdf(desc);
 	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
 				     this.settings.getPatternReRunLatex());
@@ -591,6 +596,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP04 if <code>logFile</code> is not readable. 
      * <li> WLP03 <code>command</code> created bad boxes 
      * <li> WLP04 <code>command</code> emitted warnings 
+     * <li> WEX01 as for {@link #processLatex2pdfCore(LatexMainDesc)}. 
      * </ul>
      *
      * @param texFile
@@ -603,7 +609,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2pdf(File texFile) throws BuildFailureException {
         this.log.info("Converting into pdf: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	processLatex2pdfCore(desc);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
@@ -703,9 +709,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2html(File texFile) throws BuildFailureException {
 	this.log.info("Converting into html: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	preProcessLatex2pdf(desc);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         runLatex2html      (desc);
     }
 
@@ -727,9 +733,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2odt(File texFile) throws BuildFailureException {
 	this.log.info("Converting into odt: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         preProcessLatex2pdf(desc);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         runLatex2odt       (desc);
     }
 
@@ -753,11 +759,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2docx(File texFile) throws BuildFailureException {
 	this.log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX0, log warning WEX011 
  	preProcessLatex2pdf(desc);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX0, log warning WEX011 
         runLatex2odt       (desc);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         runOdt2doc         (texFile);
     }
 
@@ -778,7 +784,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2rtf(File texFile) throws BuildFailureException {
 	this.log.info("Converting into rtf: LaTeX file '" + texFile + "'. ");
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	runLatex2rtf(texFile);
     }
 
@@ -797,11 +803,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
     void processLatex2txt(File texFile) throws BuildFailureException {
 	this.log.info("Converting into txt: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	processLatex2pdfCore(desc);
 	// warnings emitted by LaTex are ignored 
 	// (errors are emitted by runLatex2pdf and that like.)
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	runPdf2txt      (texFile);
     }
 
@@ -819,6 +825,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP03 Running <code>bibtex</code> emitted warnings. 
      * <li> WAP04 if <code>logFile</code> is not readable. 
      * <li> WFU03 cannot close 
+     * <li> WEX01 if running the BibTeX command 
+     *      {@link Settings#getBibtexCommand()} failed. 
      * </ul>
      *
      * @param texFile
@@ -827,7 +835,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    whether BibTeX has been run. 
      *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
      * @throws BuildFailureException
-     *    TEX01 if running the BibTeX command 
+     *    TEX01 if invocation of the BibTeX command 
      *    returned by {@link Settings#getBibtexCommand()} failed. 
      */
     private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
@@ -842,7 +850,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	String[] args = buildArguments(this.settings.getBibtexOptions(), 
 				       auxFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -871,6 +879,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP03 Running <code>makeindex</code> emitted warnings. 
      * <li> WAP04 .ilg-file is not readable. 
      * <li> WFU03 cannot close .ilg-file 
+     * <li> WEX01 if running the makeindex command failed. 
      * </ul>
      *
      * @param texFile
@@ -879,7 +888,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    whether MakeIndex had been run. 
      *    Equivalently, whether LaTeX has to be rerun because of MakeIndex. 
      * @throws BuildFailureException
-     *    TEX01 if running the makeindex command 
+     *    TEX01 if invocation of the makeindex command 
      *    returned by {@link Settings#getMakeIndexCommand()} failed. 
      */
     // FIXME: bad name since now there are reruns. 
@@ -894,7 +903,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.debug("MakeIndex run required? " + needRun);
 	if (needRun) {
 	    // may throw BuildFailureException TEX01 
-	    // may log warnings WAP01, WAP02, WAP03, WAP04, WFU03
+	    // may log warnings WEX01, WAP01, WAP02, WAP03, WAP04, WFU03
 	    runMakeIndex(desc);
 	}
 	return needRun;
@@ -911,12 +920,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP03 Running <code>makeindex</code> emitted warnings. 
      * <li> WAP04 .ilg-file is not readable. 
      * <li> WFU03 cannot close .ilg-file 
+     * <li> WEX01 if running the makeindex command failed. 
      * </ul>
      *
      * @param idxFile
      *    the idx-file MakeIndex is to be run on. 
      * @throws BuildFailureException
-     *    TEX01 if running the makeindex command 
+     *    TEX01 if invocation of the makeindex command 
      *    returned by {@link Settings#getMakeIndexCommand()} failed. 
      */
     private void runMakeIndex(LatexMainDesc desc) 
@@ -927,7 +937,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + idxFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getMakeIndexOptions(),
 				       idxFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	this.executor.execute(idxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -957,6 +967,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP03 Running <code>makeglossaries</code> emitted warnings. 
      * <li> WAP04 .glg-file is not readable. 
      * <li> WFU03 cannot close .glg-file 
+     * <li> WEX01 if running the makeglossaries command failed. 
      * </ul>
      *
      * @param texFile
@@ -966,7 +977,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    Equivalently, 
      *    whether LaTeX has to be rerun because of MakeGlossaries. 
      * @throws BuildFailureException
-     *    TEX01 if running the makeglossaries command 
+     *    TEX01 if invocation of the makeglossaries command 
      *    returned by {@link Settings#getMakeGlossariesCommand()} failed. 
      */
      private boolean runMakeGlossaryByNeed(LatexMainDesc desc)
@@ -986,7 +997,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + xxxFile.getName()+ "'. ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
 				       xxxFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	this.executor.execute(xxxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1019,6 +1030,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP02 Running <code>latex2pdf</code> failed. No log file 
      * <li> WAP04 .log-file is not readable. 
      * <li> WFU03 cannot close .log-file 
+     * <li> WEX01 if running the latex2pdf command failed. 
      * </ul>
      *
      * @param texFile
@@ -1026,7 +1038,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param logFile
      *    the log-file after processing <code>texFile</code>. 
      * @throws BuildFailureException
-     *    TEX01 if running the latex2pdf command 
+     *    TEX01 if invocation of the latex2pdf command 
      *    returned by {@link Settings#getLatexCommand()} failed. 
      */
     private void runLatex2pdf(LatexMainDesc desc)
@@ -1038,7 +1050,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + texFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getLatex2pdfOptions(), 
 				       texFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1062,12 +1074,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WLP04 <code>htlatex</code> emitted warnings 
      * <li> WAP04 log file is not readable. 
      * <li> WFU03 cannot close log file 
+     * <li> WEX01 if running the tex4ht command failed. 
      * </ul>
      *
      * @param texFile
      *    the latex-file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 if running the tex4ht command 
+     *    TEX01 if invocation of the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
     private void runLatex2html(LatexMainDesc desc)
@@ -1078,7 +1091,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
         String[] args = buildHtlatexArguments(texFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1106,11 +1119,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatex2rtfArguments(String, File)}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WEX01 if running the latex2rtf command failed. 
+     * </ul>
      *
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 if running the latex2rtf command 
+     *    TEX01 if invocation of the latex2rtf command 
      *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      */
     private void runLatex2rtf(File texFile) throws BuildFailureException {
@@ -1119,7 +1137,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + texFile.getName() + "'. ");
         String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
 				       texFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         this.executor.execute(texFile.getParentFile(), // workingDir
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1153,12 +1171,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WLP04 <code>htlatex</code> emitted warnings 
      * <li> WAP04 log file is not readable. 
      * <li> WFU03 cannot close log file 
+     * <li> WEX01 if running the tex4ht command failed. 
      * </ul>
      *
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 if running the tex4ht command 
+     *    TEX01 if invocation of the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
      */
     private void runLatex2odt(LatexMainDesc desc) throws BuildFailureException {
@@ -1172,7 +1191,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    "ooffice/! -cmozhtf",// ooffice/! represents a font direcory 
 	    "-coo -cvalidate"// -coo is mandatory, -cvalidate is not 
 	};
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
         this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1197,11 +1216,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * on an odt-file created from <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WEX01 if running the odt2doc command failed. 
+     * </ul>
      *
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 if running the odt2doc command 
+     *    TEX01 if invocation of the odt2doc command 
      *    returned by {@link Settings#getOdt2docCommand()} failed. 
      */
     private void runOdt2doc(File texFile) throws BuildFailureException {
@@ -1211,7 +1235,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + odtFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getOdt2docOptions(),
 				       odtFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 
@@ -1226,11 +1250,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * on a pdf-file created from <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WEX01 if running the pdf2txt command failed. 
+     * </ul>
      *
      * @param texFile
      *    the latex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 if running the pdf2txt command 
+     *    TEX01 if nvocation of the pdf2txt command 
      *    returned by {@link Settings#getPdf2txtCommand()} failed. 
      */
     private void runPdf2txt(File texFile) throws BuildFailureException {
@@ -1240,7 +1269,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		       " on '" + pdfFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
 				       pdfFile);
-	// may throw BuildFailureException TEX01 
+	// may throw BuildFailureException TEX01, log warning WEX01 
 	this.executor.execute(texFile.getParentFile(), 
 			      this.settings.getTexPath(), 
 			      command, 

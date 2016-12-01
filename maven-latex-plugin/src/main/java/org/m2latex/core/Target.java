@@ -115,14 +115,19 @@ public enum Target {
     /**
      * Processes the latex main file <code>texFile</code> 
      * delegating to <code>latexProcessor</code>. 
+     * Logging: 
+     * <ul>
+     * <li> WEX01 if running a command 
+     *      to transform <code>texFile</code> failed. 
+     * </ul>
      *
      * @param latexProcessor
      *    the processor to process <code>texFile</code> 
      * @param texFile
      *    the latex main file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 if running a command to transform <code>texFile</code> failed. 
-     *    FIXME: This is rather misleading 
+     *    TEX01 if invocation of a command 
+     *    to transform <code>texFile</code> failed. 
      */
     public abstract void processSource(LatexProcessor latexProcessor, 
     				       File texFile) 
