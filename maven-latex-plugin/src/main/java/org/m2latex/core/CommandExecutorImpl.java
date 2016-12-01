@@ -62,7 +62,7 @@ class CommandExecutorImpl implements CommandExecutor {
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
      * @throws BuildFailureException
-     *    if invocation of <code>executable</code> fails very basically: 
+     *    TEX01 if invocation of <code>executable</code> fails very basically: 
      *    <ul>
      *    <li><!-- see Commandline.execute() -->
      *    the file expected to be the working directory 
