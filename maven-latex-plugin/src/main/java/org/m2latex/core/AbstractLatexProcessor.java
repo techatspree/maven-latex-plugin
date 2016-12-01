@@ -97,8 +97,7 @@ abstract class AbstractLatexProcessor {
     protected boolean hasErrsWarns(File logFile, String pattern) {
 	assert logFile.exists();
 	try {
-	    // may throw BuildFailureException
-	    // exception EF07 may not occur 
+	    // may throw BuildFailureException TFU07, TFU08 
 	    return this.fileUtils.matchInFile(logFile, pattern);
 	} catch (BuildFailureException e) {
 	    this.log.warn("WAP04: Log file '" + logFile + 

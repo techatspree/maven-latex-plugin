@@ -135,7 +135,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    which corresponds to the parent directory of <code>sourceFile</code> 
      *    which is below <code>sourceBaseDir</code>. 
      * @throws BuildFailureException
-     *    if the target directory that would be returned 
+     *    TFU01 if the target directory that would be returned 
      *    exists already as a regular file. 
      */
     // used by LatexProcessor.create() only 
@@ -144,9 +144,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 				   File targetBaseDir) 
 	throws BuildFailureException {
 
-	// getCanonicalPath may throw IOException 
 	Path srcParentPath = srcFile.getParentFile().toPath();
-	// getCanonicalPath may throw IOException 
 	Path srcBasePath = srcBaseDir.toPath();
 
 	// FIXME: really ok? what if strings but not paths are prefixes? 
@@ -212,18 +210,17 @@ class TexFileUtilsImpl implements TexFileUtils {
      * This is invoked by {@link #LatexProcessor#execute()} only. 
      *
      * @throws BuildFailureException
-     *    if 
      *    <ul>
-     *    <li>
+     *    <li>TFU02 if 
      *    the source directory (containing <code>texFile</code>) 
      *    is not readable. 
-     *    <li>
+     *    <li>TFU03 if 
      *    the destination directory does not exist and cannot be created. 
-     *    <li>
+     *    <li>TFU04, TFU05 if 
      *    the destination file exists 
-     *    and is either a directory or is not readable. 
-     *    <li>
-     *    IO-error when copying: opening streams, reading or writing. 
+     *    and is either a directory (TFU04) or is not writable (TFU05). 
+     *    <li>TFU06 if 
+     *    an IO-error orrurs when copying: opening streams, reading or writing. 
      *    </ul>
      */
     // used in LatexProcessor.create() only 
@@ -454,12 +451,19 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @param pattern
      *    the pattern (regular expression) to look for in <code>file</code>. 
      * @throws BuildFailureException
-     *    if the file <code>file</code> does not exist or cannot be read. 
+     *    <ul>
+     *    <li> TFU07 if the file <code>file</code> does not exist 
+     *    <li> TFU08 if the file <code>file</code> cannot be read. 
+     *    </ul>
      */
     // used only in 
     // LatexPreProcessor.isLatexMainFile(File)
     // LatexProcessor.needRun(...)
     // AbstractLatexProcessor.hasErrsWarns(File, String)
+    //
+    // FIXME: the two exceptions are always caught. 
+    // An alternative: 3-valued logic: 
+    // true, false, unknown if file not found or not readable 
     public boolean matchInFile(File file, 
 			       String pattern) throws BuildFailureException {
 	try {

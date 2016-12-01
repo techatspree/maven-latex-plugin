@@ -102,6 +102,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	fig {
 	    // converts a fig-file into pdf 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
+	    // TEX01
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runFig2Dev(file, LatexDev.pdf);
@@ -116,6 +117,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	gp {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
+	    // TEX01
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runGnuplot2Dev(file, LatexDev.pdf);
@@ -130,6 +132,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	mp {
 	    // converts a metapost-file into mps-format 
 	    // invoking {@link #runMetapost2mps(File)} 
+	    // TEX01
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runMetapost2mps(file);
@@ -205,7 +208,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * @param proc
 	 *    a latex pre-processor.
 	 * @throws BuildFailureException
-	 *    only for {@link #fig}, {@link #gp} and {@link #mp} 
+	 *    TEX01 only for {@link #fig}, {@link #gp} and {@link #mp} 
 	 *    because these invoke external programs. 
 	 */
 	abstract void transformSrc(File file, LatexPreProcessor proc)
@@ -237,7 +240,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param figFile
      *    the fig file to be processed. 
      * @throws BuildFailureException
-     *    if running the fig2dev command 
+     *    TEX01 if running the fig2dev command 
      *    returned by {@link Settings#getFig2devCommand()} failed. 
      *    This is invoked twice: once for creating the pdf-file 
      *    and once for creating the pdf_t-file. 
@@ -265,7 +268,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 figFile);
 	    this.log.debug("Running " + command + 
 			   " -Lpdftex  ... on '" + figFile.getName() + "'. ");
-	    // may throw BuildFailureException 
+	    // may throw BuildFailureException TEX01 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
 				  command, 
@@ -282,7 +285,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 figFile);
 	    this.log.debug("Running " + command + 
 			   " -Lpdftex_t... on '" + figFile.getName() + "'. ");
-	    // may throw BuildFailureException 
+	    // may throw BuildFailureException TEX01 
 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
 				  command, 
@@ -368,7 +371,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param gpFile 
      *    the gp-file (gnuplot format) to be converted to pdf. 
      * @throws BuildFailureException
-     *    if running the ptx/pdf-conversion built in in gnuplot fails. 
+     *    TEX01 if running the ptx/pdf-conversion built in in gnuplot fails. 
      * @see #create()
      */
     // used in processGraphics(Collection) only 
@@ -404,7 +407,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 //	if (update(gpFile, ptxFile)) {
 	    this.log.debug("Running " + command + 
 			   " -e...  on '" + gpFile.getName() + "'. ");
-	    // may throw BuildFailureException 
+	    // may throw BuildFailureException TEX01 
 	    this.executor.execute(gpFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
 				  command, 
@@ -429,7 +432,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param mpFile
      *    the metapost file to be processed. 
      * @throws BuildFailureException
-     *    if running the mpost command failed. 
+     *    TEX01 if running the mpost command failed. 
      * @see #processGraphics(File)
      */
     // used in processGraphics(Collection) only 
@@ -442,7 +445,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				       mpFile);
 	this.log.debug("Running " + command + 
 		       " on '" + mpFile.getName() + "'. ");
-	// may throw BuildFailureException 
+	// may throw BuildFailureException TEX01 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -509,7 +512,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	assert texFile.exists();
 	try {
 	    // may throw BuildFailureException
-	    // exception EF07 may not occur 
+	    // TFU07 (FileNotFound may not occur), TFU08 
 	    return this.fileUtils.matchInFile
 		(texFile, this.settings.getPatternLatexMainFile());
 	} catch (BuildFailureException e) {
@@ -560,6 +563,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * into a latex file and returns the latex main files. 
      *
      * @throws BuildFailureException
+     *    TEX01 invoking 
+     * {@link LatexPreProcessor.SuffixHandler#transformSrc(File, LatexPreProcessor)}
+     *    only for {@link LatexPreProcessor.SuffixHandler#fig}, 
+     *    {@link LatexPreProcessor.SuffixHandler#gp} and 
+     *    {@link LatexPreProcessor.SuffixHandler#mp} 
+     *    because these invoke external programs. 
      */
     // used in LatexProcessor.create() only 
     // where files is the set of all files found in the tex source directory 
@@ -578,7 +587,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		this.log.debug("Skipping processing of file '" + file + "'. ");
 		skipped.add(suffix);
 	    } else {
-		// may throw BuildFailureException 
+		// may throw BuildFailureException TEX01 
 		handler.transformSrc(file, this);
 	    }
 	}

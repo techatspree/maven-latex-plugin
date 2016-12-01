@@ -1072,6 +1072,12 @@ public class Settings {
     //     return this.targetSiteDirectory;
     // }
 
+    /**
+     *
+     * @throws BuildFailureException 
+     *    TSS01 if the tex source directory does either not exist 
+     *    or is not a directory. 
+     */
     public File getTexSrcDirectoryFile() throws BuildFailureException {
 	if (!(this.texSrcDirectoryFile.exists() && 
 	      this.texSrcDirectoryFile.isDirectory())) {
@@ -1083,6 +1089,11 @@ public class Settings {
 	return this.texSrcDirectoryFile;
     }
 
+    /**
+     *
+     * @throws BuildFailureException 
+     *    TSS02 if the output directory exists and is no directory. 
+     */
     public File   getOutputDirectoryFile() throws BuildFailureException {
 	if (/**/this.outputDirectoryFile.exists() && 
 	    !   this.outputDirectoryFile.isDirectory()) {
