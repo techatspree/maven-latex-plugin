@@ -495,7 +495,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU04: Cannot delete from directory: is not readable. 
+     * <li> WFU01: Cannot read directory ...
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
@@ -517,7 +517,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			&&  file.getName().matches(root + "\\d+" + SUFFIX_MPS);
 		}
 	    };
-	// may log warning WFU04, WFU05 
+	// may log warning WFU01, WFU05 
 	this.fileUtils.deleteX(mpFile, filter);
     }
 
@@ -600,7 +600,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU04: Cannot delete from directory: is not readable. 
+     * <li> WFU01: Cannot read directory...
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
@@ -616,7 +616,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting latex main file '" + texFile + "'s targets. ");
 	FileFilter filter = this.fileUtils.getFileFilter
 	    (texFile, this.settings.getPatternClearFromLatexMain());
-	// may log warning WFU04, WFU05 
+	// may log warning WFU01, WFU05 
 	this.fileUtils.deleteX(texFile, filter);
     }
 

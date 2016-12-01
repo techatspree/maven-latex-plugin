@@ -595,7 +595,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU01: Cannot delete from directory: is not readable. 
+     * <li> WFU01: Cannot read directory...
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
