@@ -2682,13 +2682,13 @@ Identifier        & Message  \\
 \tt TFU07 & \tt\scriptsize File '\$filePath' not found.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+Does not occur, because exception is always caught. 
 \end{minipage}
 } \\
 \tt TFU08 & \tt\scriptsize Error reading file '\$filePath'.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+Does not occur, because exception is always caught. 
 \end{minipage}
 } \\
 \hline
@@ -2750,7 +2750,7 @@ For details see \$logFileName.   \\
 \end{minipage}
 } \\
 \tt WAP02 & \tt\scriptsize Running \$command failed: 
-No log file \$logFileName found.   \\
+No log file '\$logFileName' found.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
@@ -2802,7 +2802,7 @@ Identifier        & Message  \\
 \tt WPP01  & \tt\scriptsize Failed to delete file '\$file'. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME: THIS SHALL BE ELIMINATED: REPLACED BY WFU05
 \end{minipage}
 } \\
 \tt WPP02  & \tt\scriptsize File \$texFile' is not readable; 
@@ -2875,7 +2875,7 @@ Identifier        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\tt WFU01  & \tt\scriptsize Cannot read directory '\$di'.  \\
+\tt WFU01  & \tt\scriptsize Cannot read directory '\$dir'.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
@@ -2885,7 +2885,7 @@ Identifier        & Message  \\
           & \tt\scriptsize did not generate any output in '\$texFileDir'! \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME: THIS SHALL BE ELIMINATED
 \end{minipage}
 } \\
 \tt WFU03  & \tt\scriptsize Cannot close '"\$closeable'.  \\
