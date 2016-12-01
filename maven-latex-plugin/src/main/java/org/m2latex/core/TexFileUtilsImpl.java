@@ -100,13 +100,11 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    An assertion assures that this is indeed a directory. 
      */
     private void innerListFiles(Collection<File> files, File dir) {
-	assert dir.isDirectory();
-        File[] found = dir.listFiles();
-	// found is null if directory is not a directory (which is exlcuded) 
-	// or if an io-error occurs. 
-	// Thus in these cases, the failure is ignored silently 
-        if (found == null) {
-	    this.log.warn("WFU01: Cannot read directory '" + dir + "'. ");
+	// may log warning WFU01 
+	File[] found = listFilesOrWarn(dir);
+	if (found == null) {
+	    // Here, logging WFU01 already done 
+	    return;
 	}
 	File file;
 	for (int i = 0; i < found.length; i++) {
@@ -119,6 +117,30 @@ class TexFileUtilsImpl implements TexFileUtils {
 		files.add(file);
 	    }
 	}
+    }
+
+    /**
+     * Returns the listing of the directory <code>dir</code> 
+     * or <code>null</code> if it is not readable 
+     * and emit an according warning if so. 
+     * <p>
+     * Logging: 
+     * WFU01 if <code>dir</code> is not readable. 
+     *
+     * @param dir
+     *    an existing directory. 
+     * @return
+     *    the list of entries of <code>dir</code> 
+     *    or <code>null</code> if it is not readable. 
+     */
+    private File[] listFilesOrWarn(File dir) {
+	assert dir != null && dir.isDirectory();
+        File[] files = dir.listFiles();
+	if (files == null) {
+	    this.log.warn("WFU01: Cannot read directory '" + dir + 
+			  "'; build may be incomplete. ");
+	}
+	return files;
     }
 
     /**
@@ -573,7 +595,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU04: Cannot delete from directory: is not readable. 
+     * <li> WFU01: Cannot delete from directory: is not readable. 
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
@@ -586,16 +608,15 @@ class TexFileUtilsImpl implements TexFileUtils {
     // used in LatexPreProcessor.clearTargetMp
     // used in LatexPreProcessor.clearTargetTex only 
     public void deleteX(File pFile, FileFilter filter) {
+	assert pFile.exists() && !pFile.isDirectory();
 	File dir = pFile.getParentFile();
-	assert dir.isDirectory();
-	File[] files = dir.listFiles();
-	if (files == null) {
-	    // Here, dir is not readable because a directory 
-	    this.log.warn("WFU04: Cannot delete from directory '" + dir + 
-			  "': is not readable. ");
+	// may log warning WFU01 
+	File[] found = listFilesOrWarn(dir);
+	if (found == null) {
+	    // Here, logging WFU01 already done 
+	    return;
 	}
-	boolean isDeleted;
-	for (File delFile : files) {
+	for (File delFile : found) {
 	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
 		assert delFile.exists() && !delFile.isDirectory();
