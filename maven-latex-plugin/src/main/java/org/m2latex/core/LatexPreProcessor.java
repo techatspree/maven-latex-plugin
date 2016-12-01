@@ -364,8 +364,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetFig(File figFile) {
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
 	// may log warning WFU05 
-	deleteIfExists(this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX));
-	deleteIfExists(this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF));
+	deleteIfExists(figFile, SUFFIX_PTX);
+	deleteIfExists(figFile, SUFFIX_PDF);
     }
 
     /**
@@ -430,8 +430,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetGp(File gpFile) {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
 	// may log warning WFU05 
-	deleteIfExists(this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX));
-	deleteIfExists(this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF));
+	deleteIfExists(gpFile, SUFFIX_PTX);
+	deleteIfExists(gpFile, SUFFIX_PDF);
     }
 
     /**
@@ -490,9 +490,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetMp(File mpFile) {
 	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
 	// may log warning WFU05 
-	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG));
-	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS));
-	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX));
+	deleteIfExists(mpFile, SUFFIX_LOG);
+	deleteIfExists(mpFile, SUFFIX_FLS);
+	deleteIfExists(mpFile, SUFFIX_MPX);
 	// delete files xxxNumber.mps 
 	String name1 = mpFile.getName();
 	final String root = name1.substring(0, name1.lastIndexOf("."));
@@ -516,10 +516,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetSvg(File svgFile) {
        this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
        // may log warning WFU05 
-       deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX));
-//       deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PSTEX ));
-       deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ));
-   }
+       deleteIfExists(svgFile, SUFFIX_PDFTEX);
+//     deleteIfExists(svgFile, SUFFIX_PSTEX );
+       deleteIfExists(svgFile, SUFFIX_PDF   );
+    }
 
     /**
      *
@@ -527,12 +527,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * WFU05: Failed to delete file
      */
-    private void deleteIfExists(File file) {
-	if (!file.exists()) {
+    private void deleteIfExists(File file, String suffix) {
+	File delFile = this.fileUtils.replaceSuffix(file, suffix);
+	if (!delFile.exists()) {
 	    return;
 	}
 	// may log warning WFU05 
-	this.fileUtils.deleteOrWarn(file);
+	this.fileUtils.deleteOrWarn(delFile);
     }
 
     /**
