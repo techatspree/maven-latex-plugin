@@ -144,10 +144,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li>
-     * If the tex directory does not exist. 
-     * <li>
-     * FIXME: logging of invoked methods. 
+     * <li>WFU01 texDir not readable 
+
      * </ul>
      *
      * FIXME: exceptions not really clear. 
@@ -180,6 +178,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	assert texDir.exists() && texDir.isDirectory();
 
 	// should fail without finally cleanup 
+	// may log warning WFU01 texDir not readable 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 
 	try {
@@ -221,6 +220,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     /**
      * Used by {@link GraphicsMojo}. 
+     * <p>
+     * Logging: 
+     * WFU01 texDir not readable 
      *
      * @throws BuildFailureException
      *    TSS01 if the tex source directory does either not exist 
@@ -231,6 +233,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
+	// may log warning WFU01 texDir not readable 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 	this.preProc.processGraphicsSelectMain(orgFiles);
     }
@@ -333,6 +336,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * in the according methods {@link #runLatex2pdf(File, File)}, 
      * {@link #runBibtexByNeed(File)}, {@link #runMakeIndexByNeed(File)} and 
      * {@link #runMakeGlossaryByNeed(File)}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>command</code> failed. For details...
+     * <li> WAP02 Running <code>command</code> failed. No log file 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WFU03 cannot close log file 
      *
      * @param texFile
      *    the latex-file to be processed. 
@@ -374,13 +384,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// initial latex run 
  	// may throw BuildFailureException TEX01 
+	// may log warnings WAP01, WAP02, WAP04, WFU03
 	runLatex2pdf(desc);
 	File texFile = desc.texFile;
 
 	// create bibliography, index and glossary by need 
 	// may throw BuildFailureException  TEX01 
+	// may log warnings WAP01, WAP02, WAP03, WAP04, WFU03
 	boolean hasBib    = runBibtexByNeed      (texFile);
 	// may both throw BuildFailureException, both TEX01 
+	// may both log warnings WAP01, WAP02, WAP03, WAP04, WFU03
 	boolean hasIdxGls = runMakeIndexByNeed   (desc)
 	    |               runMakeGlossaryByNeed(desc);
 
@@ -429,6 +442,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * (no longer recommended but still working). 
      * <p>
      * Note that no warnings are issued by the latex run. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>command</code> failed. For details...
+     * <li> WAP02 Running <code>command</code> failed. No log file 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WFU03 cannot close 
+     * </ul>
      *
      * @param texFile
      *    the latex-file to be processed. 
@@ -454,6 +475,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    this.log.debug("Rerun LaTeX to update table of contents, ... " + 
 			   "bibliography, index, or that like. ");
 	    // may throw BuildFailureException TEX01 
+	    // may log warnings WAP01, WAP02, WAP04, WFU03
 	    runLatex2pdf(desc);
 	    numLatexReRuns--;
 	}
@@ -480,10 +502,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    if (needMakeIndexReRun) {
 		// FIXME: not by need 
 		// may throw BuildFailureException TEX01 
+		// may log warnings WAP01, WAP02, WAP03, WAP04, WFU03
 		runMakeIndexByNeed(desc);
 	    }
 
 	    // may throw BuildFailureException TEX01 
+	    // may log warnings WAP01, WAP02, WAP04, WFU03
 	    runLatex2pdf(desc);
 	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
 				     this.settings.getPatternReRunLatex());
@@ -495,6 +519,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     /**
      * Returns whether a(n other) LaTeX/MakeIndex run is necessary 
      * based on a pattern matching in the log file. 
+     * <p>
+     * Logging: 
+     * WFU03 cannot close 
      */
     private boolean needRun(boolean another, 
 			    String kind, 
@@ -504,6 +531,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	try {
 	    // may throw a BuildFailureException TFU07, TFU08 
 	    // exception EF07 may occur because logFile may not exist (rare) 
+	    // may log warning WFU03 cannot close 
 	    needRun = this.fileUtils.matchInFile(logFile, pattern);
 	} catch (BuildFailureException e) {
 	    assert !needRun;
@@ -523,7 +551,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     static class LatexMainDesc {
 	private final File texFile;
 	private final File logFile;
+
 	private final File idxFile;
+	private final File ilgFile;
 	private final File gloFile;
 	private final File xxxFile;
 	private final File glgFile;
@@ -534,6 +564,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
+	    this.ilgFile = fileUtils.replaceSuffix(texFile, SUFFIX_ILG);
 	    this.gloFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
 	    this.glgFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
 	}
@@ -553,6 +584,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * bad boxes or warnings occurred. 
      * For details see {@link #logWarns(File, String)}. 
      * </ul>
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU03 cannot close 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WLP03 <code>command</code> created bad boxes 
+     * <li> WLP04 <code>command</code> emitted warnings 
+     * </ul>
      *
      * @param texFile
      *    the tex file to be processed. 
@@ -568,6 +607,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	processLatex2pdfCore(desc);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
+	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, this.settings.getLatex2pdfCommand());
     }
 
@@ -581,8 +621,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * If the log file does not exist, an <em>error</em> is logged. 
      * In both cases, the message logged refers to the <code>command</code> 
      * which failed. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>command</code> failed. For details...
+     * <li> WAP02 Running <code>command</code> failed. No log file 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WFU03 cannot close 
+     * </ul>
      */
     private void logErrs(File logFile, String command) {
+	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs(logFile, command, this.settings.getPatternErrLatex());
     }
 
@@ -607,6 +656,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * {@link #PATTERN_OUFULL_HVBOX} for bad boxes is fixed, 
      * whereas {@link Settings#getPatternWarnLatex()} is configurable. 
      * The message logged refers to the <code>command</code> which failed. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU03 cannot close 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WLP03 <code>command</code> created bad boxes 
+     * <li> WLP04 <code>command</code> emitted warnings 
+     * </ul>
      *
      * @param logFile
      *    the log-file to detect warnings in. 
@@ -618,6 +675,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	if (!logFile.exists()) {
 	    return;
 	}
+	// hasErrsWarns may log warnings WFU03 cannot close, WAP04 not readable
 	if (this.settings.getDebugBadBoxes() && 
 	    hasErrsWarns(logFile, PATTERN_OUFULL_HVBOX)) {
 	    this.log.warn("WLP03: Running " + command + " created bad boxes. ");
@@ -753,6 +811,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * in the directory containing <code>texFile</code> 
      * provided an according pattern in the aux-file indicates 
      * that a bibliography shall be created. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>bibtex</code> failed. For details...
+     * <li> WAP02 Running <code>bibtex</code> failed. No log file 
+     * <li> WAP03 Running <code>bibtex</code> emitted warnings. 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WFU03 cannot close 
+     * </ul>
      *
      * @param texFile
      *    the latex-file BibTeX is to be processed for. 
@@ -782,7 +849,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
+	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs (logFile, command, this.settings.getPatternErrBibtex());
+	// may log warnings WFU03, WAP03, WAP04
 	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
 	return true;
     }
@@ -794,6 +863,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * in the directory containing <code>texFile</code> 
      * provided that the existence of an idx-file indicates 
      * that an index shall be created. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>makeindex</code> failed. For details...
+     * <li> WAP02 Running <code>makeindex</code> failed. No log file 
+     * <li> WAP03 Running <code>makeindex</code> emitted warnings. 
+     * <li> WAP04 .ilg-file is not readable. 
+     * <li> WFU03 cannot close .ilg-file 
+     * </ul>
      *
      * @param texFile
      *    the latex-file MakeIndex is to be processed for. 
@@ -816,6 +894,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.debug("MakeIndex run required? " + needRun);
 	if (needRun) {
 	    // may throw BuildFailureException TEX01 
+	    // may log warnings WAP01, WAP02, WAP03, WAP04, WFU03
 	    runMakeIndex(desc);
 	}
 	return needRun;
@@ -824,6 +903,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
     /**
      * Runs the MakeIndex command 
      * given by {@link Settings#getMakeIndexCommand()}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>makeindex</code> failed. For details...
+     * <li> WAP02 Running <code>makeindex</code> failed. No log file 
+     * <li> WAP03 Running <code>makeindex</code> emitted warnings. 
+     * <li> WAP04 .ilg-file is not readable. 
+     * <li> WFU03 cannot close .ilg-file 
+     * </ul>
      *
      * @param idxFile
      *    the idx-file MakeIndex is to be run on. 
@@ -846,9 +934,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 
 	// detect errors and warnings makeindex wrote into xxx.ilg 
- 	File logFile = this.fileUtils.replaceSuffix(idxFile, SUFFIX_ILG);
-	logErrs (logFile, command, this.settings.getPatternErrMakeIndex());
-	logWarns(logFile, command, this.settings.getPatternWarnMakeIndex());
+ 	// may log warnings WFU03, WAP01, WAP02, WAP04
+	logErrs (desc.ilgFile, command,this.settings.getPatternErrMakeIndex());
+	// may log warnings WFU03, WAP03, WAP04
+	logWarns(desc.ilgFile, command,this.settings.getPatternWarnMakeIndex());
     }
 
    /**
@@ -860,6 +949,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * that a glossary shall be created. 
      * The MakeGlossaries command is just a wrapper 
      * arround the programs <code>makeindex</code> and <code>xindy</code>. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>makeglossaries</code> failed. For details...
+     * <li> WAP02 Running <code>makeglossaries</code> failed. No log file 
+     * <li> WAP03 Running <code>makeglossaries</code> emitted warnings. 
+     * <li> WAP04 .glg-file is not readable. 
+     * <li> WFU03 cannot close .glg-file 
+     * </ul>
      *
      * @param texFile
      *    the latex-file MakeGlossaries is to be processed for. 
@@ -895,7 +993,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      args);
 	// detect errors and warnings makeglossaries wrote into xxx.glg 
 	File glgFile = desc.glgFile;
+	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
+	// may log warnings WFU03, WAP03, WAP04
 	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
 		 +           "|" + this.settings.getPatternWarnXindy());
 	return true;
@@ -912,6 +1012,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * but not if bad boxes occurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>latex2pdf</code> failed. For details...
+     * <li> WAP02 Running <code>latex2pdf</code> failed. No log file 
+     * <li> WAP04 .log-file is not readable. 
+     * <li> WFU03 cannot close .log-file 
+     * </ul>
      *
      * @param texFile
      *    the latex-file to be processed. 
@@ -936,6 +1044,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      command, 
 			      args);
 	// logging errors (warnings are done in processLatex2pdf)
+	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs(desc.logFile, command);
     }
 
@@ -944,6 +1053,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildHtlatexArguments(String, File)}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>htlatex</code> failed. For details...
+     * <li> WAP02 Running <code>htlatex</code> failed. No log file 
+     * <li> WLP03 <code>htlatex</code> created bad boxes 
+     * <li> WLP04 <code>htlatex</code> emitted warnings 
+     * <li> WAP04 log file is not readable. 
+     * <li> WFU03 cannot close log file 
+     * </ul>
      *
      * @param texFile
      *    the latex-file to be processed. 
@@ -965,7 +1084,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      command, 
 			      args);
 	// logging errors and warnings 
+	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs (desc.logFile, command);
+	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, command);
     }
 
@@ -1023,6 +1144,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * but not if bad boxes ocurred or if warnings occurred. 
      * This is done in {@link #processLatex2pdf(File)} 
      * after the last LaTeX run only. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>htlatex</code> failed. For details...
+     * <li> WAP02 Running <code>htlatex</code> failed. No log file 
+     * <li> WLP03 <code>htlatex</code> created bad boxes 
+     * <li> WLP04 <code>htlatex</code> emitted warnings 
+     * <li> WAP04 log file is not readable. 
+     * <li> WFU03 cannot close log file 
+     * </ul>
      *
      * @param texFile
      *    the latex file to be processed. 
@@ -1047,7 +1178,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      command, 
 			      args);
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
+	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs (desc.logFile, command);
+	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, command);
     }
 
