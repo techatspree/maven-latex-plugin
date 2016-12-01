@@ -2623,7 +2623,26 @@ Identifier        & Message  \\
 \tt TEX01 & \tt\scriptsize Error executing command '\$executable'.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+Compare with WEX01 in Table~\ref{tab:WarnCEI}: 
+Error execution means 
+%
+\begin{itemize}
+\item
+the file expected to be the working directory 
+does not exist or is not a directory. 
+\item
+{\tt Runtime.exec(String, String[], File)} fails 
+throwing an {\tt IOException}. 
+\item
+an error inside systemOut parser occurs 
+\item
+an error inside systemErr parser occurs 
+\item
+Wrapping an {\tt InterruptedException} 
+on the process to be executed thrown by {\tt Proces.waitFor()}. 
+\end{itemize}
+%
+whereas for WEX01 just a failure code is returned. 
 \end{minipage}
 } \\
 \hline
@@ -2785,11 +2804,12 @@ Identifier        & Message  \\
 			      returned with code \$returnValue. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+Compare with TEX01 in Table~\ref{tab:TEX}: 
+Error execution means that there is even no valid return code. 
 \end{minipage}
 } \\
 \hline
-\caption{\label{tab:WarnCEI} The Warnings of CommandLineExecutorImpl ****  }
+\caption{\label{tab:WarnCEI} The Warnings of CommandLineExecutorImpl  }
 \end{longtable}
 
 
@@ -2875,7 +2895,8 @@ Identifier        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\tt WFU01  & \tt\scriptsize Cannot read directory '\$dir'.  \\
+\tt WFU01  & \tt\scriptsize Cannot read directory '\$dir'; 
+build may be incomplete.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
@@ -2898,7 +2919,7 @@ FIXME: THIS SHALL BE ELIMINATED
            & \tt\scriptsize is not readable.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME: THIS SHALL BE ELIMINATED: replaced by new WFU01. 
 \end{minipage}
 } \\
 \tt WFU05  & \tt\scriptsize Failed to delete file '\$delFile'.  \\
