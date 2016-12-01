@@ -354,6 +354,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     /**
      * Deletes the graphic files 
      * created from the fig-file <code>figFile</code>. 
+     * <p>
+     * Logging: 
+     * WPP01: Failed to delete file
      *
      * @param figFile
      *    a fig file. 
@@ -419,6 +422,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     /**
      * Deletes the graphic files 
      * created from the gnuplot-file <code>gpFile</code>. 
+     * <p>
+     * Logging: 
+     * WPP01: Failed to delete file
      */
     private void clearTargetGp(File gpFile) {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
@@ -428,7 +434,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Runs mpost on mp-files to generate mps-files. 
-     *
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU03 cannot close log file 
+     * <li> WAP01 Running <code>command</code> failed. For details...
+     * <li> WAP02 Running <code>command</code> failed. No log file 
+     * <li> WAP04 if log file is not readable. 
+     * </ul>
+    *
      * @param mpFile
      *    the metapost file to be processed. 
      * @throws BuildFailureException
@@ -453,6 +467,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
 	// FIXME: what is xxx.mpx for? 
 	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
+	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
     }
@@ -460,6 +475,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     /**
      * Deletes the graphic files 
      * created from the metapost-file <code>mpFile</code>. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU04: Cannot delete from directory: is not readable. 
+     * WPP01: Failed to delete file 
+     * FIXME: very bad. 
+     * <li> WFU05: Failed to delete file 
+     * </ul>
+     *
+     * @param mpFile
+     *    a metapost file. 
      */
     private void clearTargetMp(File mpFile) {
 	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
@@ -475,13 +501,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			&&  file.getName().matches(root + "\\d+" + SUFFIX_MPS);
 		}
 	    };
-
+	// may log warning WFU04, WFU05 
 	this.fileUtils.deleteX(mpFile, filter);
     }
 
     /**
      * Deletes the graphic files 
      * created from the svg-file <code>svgFile</code>. 
+     * <p>
+     * Logging: 
+     * WPP01: Failed to delete file
      */
     private void clearTargetSvg(File svgFile) {
        this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
@@ -490,6 +519,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
        deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ));
    }
 
+    /**
+     *
+     * <p>
+     * Logging: 
+     * WPP01: Failed to delete file
+     */
+    // FIXME: to be moved to TexFileUtilsImpl, 
+    // to be added to TexFileUtils 
+    // TexFileUtils.deleteX must use deleteIfExists 
+    // and WPP01 is replaced by WFU05 Failed to delete file... 
     private void deleteIfExists(File file) {
 	if (!file.exists()) {
 	    return;
@@ -503,6 +542,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Returns whether <code>texFile</code> is a latex main file, 
      * provided it is readable. 
      * Otherwise logs a warning and returns <code>false</code>. 
+     * <p>
+     * Logging: 
+     * WFU03 cannot close 
      *
      * @return
      *    whether <code>texFile</code> is definitively a latex main file. 
@@ -513,6 +555,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	try {
 	    // may throw BuildFailureException
 	    // TFU07 (FileNotFound may not occur), TFU08 
+	    // may log warning WFU03 cannot close 
 	    return this.fileUtils.matchInFile
 		(texFile, this.settings.getPatternLatexMainFile());
 	} catch (BuildFailureException e) {
@@ -541,6 +584,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Deletes the files 
      * created from the tex-file <code>texFile</code>, 
      * if that is a latex main file. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU04: Cannot delete from directory: is not readable. 
+     * <li> WFU05: Failed to delete file 
+     * </ul>
      *
      * @param texFile
      *    the tex-file of which the created files shall be deleted 
@@ -554,6 +603,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting latex main file '" + texFile + "'s targets. ");
 	FileFilter filter = this.fileUtils.getFileFilter
 	    (texFile, this.settings.getPatternClearFromLatexMain());
+	// may log warning WFU04, WFU05 
 	this.fileUtils.deleteX(texFile, filter);
     }
 
@@ -561,6 +611,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Converts files in various graphic formats incompatible with LaTeX 
      * into formats which can be inputted or included directly 
      * into a latex file and returns the latex main files. 
+     * <p>
+     * Logging: 
+     * WPP03: Skipped processing of files with suffixes ... 
      *
      * @throws BuildFailureException
      *    TEX01 invoking 
@@ -600,12 +653,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Deletes all created files in <code>texDirectory</code>. 
+     * <p>
+     * Logging: 
+     * WFU01 texDir not readable 
      *
      * @param texDir
      *    the tex-source directory. 
      */
     void clearCreated(File texDir) {
 	// try to clear targets 
+	// may log warning WFU01 texDir not readable 
 	Collection<File> files = this.fileUtils.getFilesRec(texDir);
 	SuffixHandler handler;
 	for (File file : files) {

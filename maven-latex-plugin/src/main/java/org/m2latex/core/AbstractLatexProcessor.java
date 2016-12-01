@@ -56,6 +56,14 @@ abstract class AbstractLatexProcessor {
      * by detecting that the log file <code>logFile</code> has not been created 
      * or by detecting the error pattern <code>pattern</code> 
      * in <code>logFile</code>. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01 Running <code>command</code> failed. For details...
+     * <li> WAP02 Running <code>command</code> failed. No log file 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WFU03 cannot close 
+     * </ul>
      *
      * @throws BuildFailureException
      *    if <code>logFile</code> does not exist or is not readable. 
@@ -63,6 +71,7 @@ abstract class AbstractLatexProcessor {
      */
      protected void logErrs(File logFile, String command, String pattern) {
     	if (logFile.exists()) {
+	    // hasErrsWarns may log warnings WFU03, WAP04 
     	    if (hasErrsWarns(logFile, pattern)) {
     		this.log.warn("WAP01: Running " + command + 
 			 " failed. For details see " + 
@@ -70,8 +79,8 @@ abstract class AbstractLatexProcessor {
     	    }
     	} else {
     	    this.log.warn("WAP02: Running " + command + 
-			  " failed: No log file " + 
-    			   logFile.getName() + " found. ");
+			  " failed: No log file '" + 
+    			   logFile.getName() + "' found. ");
     	}
     }
 
@@ -81,23 +90,41 @@ abstract class AbstractLatexProcessor {
      * in <code>logFile</code>. 
      * If <code>logFile</code> then an error occurred 
      * making detection of warnings obsolete. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP03 Running <code>command</code> emitted warnings. 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * <li> WFU03 cannot close 
+     * </ul>
      *
      * @see #logErrs(File, String, String) 
      */
     // for both LatexProcessor and LatexPreProcessor 
+    // FIXME: for LatexPreProcessor never needed. 
     protected void logWarns(File logFile, String command, String pattern) {
-     	if (logFile.exists() && hasErrsWarns(logFile, pattern)) {
+	// hasErrsWarns may log warnings WFU03, WAP04 
+    	if (logFile.exists() && hasErrsWarns(logFile, pattern)) {
     	    this.log.warn("WAP03: Running " + command + 
 			  " emitted warnings. For details see " + 
 			  logFile.getName() + ". ");
     	}
     }
 
+    /**
+     *
+     * Logging: 
+     * <ul>
+     * <li> WFU03 cannot close 
+     * <li> WAP04 if <code>logFile</code> is not readable. 
+     * </ul>
+     */
     // FIXME: not clear whether error or warning; also command not clear. 
     protected boolean hasErrsWarns(File logFile, String pattern) {
 	assert logFile.exists();
 	try {
 	    // may throw BuildFailureException TFU07, TFU08 
+	    // may log warning WFU03 cannot close 
 	    return this.fileUtils.matchInFile(logFile, pattern);
 	} catch (BuildFailureException e) {
 	    this.log.warn("WAP04: Log file '" + logFile + 

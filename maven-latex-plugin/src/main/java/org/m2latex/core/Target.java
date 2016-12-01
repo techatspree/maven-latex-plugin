@@ -122,7 +122,7 @@ public enum Target {
      *    the latex main file to be processed. 
      * @throws BuildFailureException
      *    TEX01 if running a command to transform <code>texFile</code> failed. 
-     *    FIXME: This is rather misl
+     *    FIXME: This is rather misleading 
      */
     public abstract void processSource(LatexProcessor latexProcessor, 
     				       File texFile) 
