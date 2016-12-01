@@ -59,7 +59,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * in folder <code>texDir</code> and subfolder. 
      * <p>
      * Logging: 
-     * WFU01 texDir not readable 
+     * WFU01 Cannot read directory 
      *
      * @param texDir
      *    the tex-source directory. 
@@ -80,7 +80,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// FIXME: skip hidden files 
 	// because they make problems with getSuffix(File)
 	Collection<File> res = new TreeSet<File>();
-	// may log warning WFU01 texDir not readable 
+	// may log warning WFU01 
 	innerListFiles(res, texDir);
 	return res;
     }
@@ -91,7 +91,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * and its subdirectories and adds them to <code>files</code>. 
      * <p>
      * Logging: 
-     * WFU01 if <code>dir</code> is not readable. 
+     * WFU01 Cannot read directory 
      *
      * @param files
      *    the collection of files found so far.
@@ -110,7 +110,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	for (int i = 0; i < found.length; i++) {
 	    file = found[i];
 	    if (file.isDirectory()) {
-		// may log warning WFU01 file not readable 
+		// may log warning WFU01 
 		innerListFiles(files, file);
 	    } else {
 		// FIXME: skip hidden files 
@@ -125,7 +125,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * and emit an according warning if so. 
      * <p>
      * Logging: 
-     * WFU01 if <code>dir</code> is not readable. 
+     * WFU01 Cannot read directory 
      *
      * @param dir
      *    an existing directory. 
@@ -242,6 +242,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * <p>
      * Logging: 
      * <ul>
+     * <li> WFU01: Cannot read directory... 
      * <li> WFU02: LaTeX file did not generate any output. (DEPRECATED)
      * <li> WFU03: Cannot close 
      * </ul>
@@ -263,9 +264,6 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    If it does not exist, it must be creatable. 
      * @throws BuildFailureException
      *    <ul>
-     *    <li>TFU02 if 
-     *    the source directory (containing <code>texFile</code>) 
-     *    is not readable. 
      *    <li>TFU03 if 
      *    the destination directory does not exist and cannot be created. 
      *    <li>TFU04, TFU05 if 
@@ -281,15 +279,17 @@ class TexFileUtilsImpl implements TexFileUtils {
 					 File targetDir)
 	throws BuildFailureException {
 
+	assert    texFile.exists() && ! texFile.isDirectory();
 	assert !targetDir.exists() || targetDir.isDirectory();
 
 	File texFileDir = texFile.getParentFile();
-        File[] outputFiles = texFileDir.listFiles();
+	// may log warning WFU01 
+        File[] outputFiles = listFilesOrWarn(texFileDir);
+	    //texFileDir.listFiles();
 
         if (outputFiles == null) {
-	    // since texFileDir is a directory 
-	    throw new BuildFailureException
-		("TFU02: Error reading directory '" + texFileDir + "'! " );
+	    // Here, logging WFU01 already done 
+	    return;
 	}
 	assert outputFiles != null;
 
