@@ -53,6 +53,6 @@ interface TexFileUtils {
 	throws BuildFailureException;
 
     void deleteX(File texFile, FileFilter filter);
-
+    void deleteOrWarn(File delFile);
     void cleanUp(Collection<File> sourceFiles, File texDir);
 }
