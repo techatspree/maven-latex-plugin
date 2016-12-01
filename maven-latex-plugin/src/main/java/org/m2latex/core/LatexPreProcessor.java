@@ -356,13 +356,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created from the fig-file <code>figFile</code>. 
      * <p>
      * Logging: 
-     * WPP01: Failed to delete file
+     * WFU05: Failed to delete file
      *
      * @param figFile
      *    a fig file. 
      */
     private void clearTargetFig(File figFile) {
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
+	// may log warning WFU05 
 	deleteIfExists(this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX));
 	deleteIfExists(this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF));
     }
@@ -424,10 +425,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created from the gnuplot-file <code>gpFile</code>. 
      * <p>
      * Logging: 
-     * WPP01: Failed to delete file
+     * WFU05: Failed to delete file
      */
     private void clearTargetGp(File gpFile) {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
+	// may log warning WFU05 
 	deleteIfExists(this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX));
 	deleteIfExists(this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF));
     }
@@ -479,8 +481,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * <ul>
      * <li> WFU04: Cannot delete from directory: is not readable. 
-     * WPP01: Failed to delete file 
-     * FIXME: very bad. 
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
@@ -489,6 +489,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearTargetMp(File mpFile) {
 	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
+	// may log warning WFU05 
 	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG));
 	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_FLS));
 	deleteIfExists(this.fileUtils.replaceSuffix(mpFile, SUFFIX_MPX));
@@ -510,10 +511,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created from the svg-file <code>svgFile</code>. 
      * <p>
      * Logging: 
-     * WPP01: Failed to delete file
+     * WFU05: Failed to delete file
      */
     private void clearTargetSvg(File svgFile) {
        this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
+       // may log warning WFU05 
        deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX));
 //       deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PSTEX ));
        deleteIfExists(this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF   ));
@@ -523,19 +525,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *
      * <p>
      * Logging: 
-     * WPP01: Failed to delete file
+     * WFU05: Failed to delete file
      */
-    // FIXME: to be moved to TexFileUtilsImpl, 
-    // to be added to TexFileUtils 
-    // TexFileUtils.deleteX must use deleteIfExists 
-    // and WPP01 is replaced by WFU05 Failed to delete file... 
     private void deleteIfExists(File file) {
 	if (!file.exists()) {
 	    return;
 	}
-	if (!file.delete()) {
-	    this.log.warn("WPP01: Failed to delete file '" + file + "'. ");
-	}
+	// may log warning WFU05 
+	this.fileUtils.deleteOrWarn(file);
     }
 
     /**
