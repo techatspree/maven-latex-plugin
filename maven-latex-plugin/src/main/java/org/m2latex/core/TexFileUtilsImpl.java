@@ -599,12 +599,22 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
 		assert delFile.exists() && !delFile.isDirectory();
-		isDeleted = delFile.delete();
-		if (!isDeleted) {
-		    this.log.warn("WFU05: Failed to delete file '" + 
-				  delFile + "'. ");
-		}
+		// may log warning WFU05: failed to delete 
+		deleteOrWarn(delFile);
 	    }
+	}
+    }
+
+    /**
+     * <p>
+     * Logging: 
+     * WFU05 failed to delete 
+     */
+    public void deleteOrWarn(File delFile) {
+	assert delFile.exists();
+	if (!delFile.delete()) {
+	    this.log.warn("WFU05: Failed to delete file '" + 
+			  delFile + "'. ");
 	}
     }
 
