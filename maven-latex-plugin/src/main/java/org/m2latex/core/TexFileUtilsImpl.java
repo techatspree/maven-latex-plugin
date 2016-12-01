@@ -57,16 +57,19 @@ class TexFileUtilsImpl implements TexFileUtils {
     /**
      * Returns the ordered collection of files 
      * in folder <code>texDir</code> and subfolder. 
+     * <p>
+     * Logging: 
+     * WFU01 texDir not readable 
      *
      * @param texDir
      *    the tex-source directory. 
      * @return
      *    the ordered collection of files without directories 
      *    in folder <code>texDir</code> and subfolder. 
-      */
+     */
     // used in 
     // - cleanUp 
-    // - LatexPreProcessor.clearCreated 2x: delete and check 
+    // - LatexPreProcessor.clearCreated 
     // - LatexProcessor.create()
     // - LatexProcessor.processGraphics()
     public Collection<File> getFilesRec(File texDir) {
@@ -77,6 +80,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// FIXME: skip hidden files 
 	// because they make problems with getSuffix(File)
 	Collection<File> res = new TreeSet<File>();
+	// may log warning WFU01 texDir not readable 
 	innerListFiles(res, texDir);
 	return res;
     }
@@ -84,12 +88,16 @@ class TexFileUtilsImpl implements TexFileUtils {
     // FIXME: copied from org.apache.commons.io.FileUtils 
     /**
      * Finds files within a given directory <code>dir</code> 
-     * and its subdirectories. 
+     * and its subdirectories and adds them to <code>files</code>. 
+     * <p>
+     * Logging: 
+     * WFU01 if <code>dir</code> is not readable. 
      *
      * @param files
      *    the collection of files found so far.
      * @param dir
-     *    the directory to search in.
+     *    the directory to search in. 
+     *    An assertion assures that this is indeed a directory. 
      */
     private void innerListFiles(Collection<File> files, File dir) {
 	assert dir.isDirectory();
@@ -98,13 +106,13 @@ class TexFileUtilsImpl implements TexFileUtils {
 	// or if an io-error occurs. 
 	// Thus in these cases, the failure is ignored silently 
         if (found == null) {
-	    // FIXME: better with logging 
 	    this.log.warn("WFU01: Cannot read directory '" + dir + "'. ");
 	}
 	File file;
 	for (int i = 0; i < found.length; i++) {
 	    file = found[i];
 	    if (file.isDirectory()) {
+		// may log warning WFU01 file not readable 
 		innerListFiles(files, file);
 	    } else {
 		// FIXME: skip hidden files 
@@ -203,12 +211,34 @@ class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
-     * Copies output to target folder. 
+     * Copies output of the current goal to target folder. 
      * The source is the parent folder of <code>texFile</code>, 
      * all its files passing <code>fileFilter</code> 
+     * are considered as output files and 
      * are copied to <code>targetDir</code>. 
      * This is invoked by {@link #LatexProcessor#execute()} only. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU02: LaTeX file did not generate any output. (DEPRECATED)
+     * <li> WFU03: Cannot close 
+     * </ul>
      *
+     * @param texFile
+     *    the latex main file which was processed. 
+     *    Its parent directory 
+     *    is the working directory of the compilation process 
+     *    in which the output files are created. 
+     *    Thus it must be readable (in fact it must also be writable; 
+     *    otherwise the output files could not have been created). 
+     * @param fileFilter
+     *    the filter accepting the files (and best only the files) 
+     *    which are the result of the processing. 
+     * @param targetDir
+     *    the target directory the output files have to be copied to. 
+     *    If this exists already, it must be a directory 
+     *    and it must be writable. 
+     *    If it does not exist, it must be creatable. 
      * @throws BuildFailureException
      *    <ul>
      *    <li>TFU02 if 
@@ -243,11 +273,15 @@ class TexFileUtilsImpl implements TexFileUtils {
 
 	// Hm,... this means even that there is no latex file. 
 	// Also, there may be no file created although outputFiles is not empty
-        if (outputFiles.length == 0) {
-            this.log.warn("WFU02: LaTeX file '" + texFile + 
-			  "' did not generate any output in '" + 
-			  texFileDir + "'! ");
-        }
+	// FIXME: I think this is superfluous: 
+	// The software indicates when a latex main file is found 
+	// when it is processed and also, later, 
+	// if it produces not the expected output. 
+        // if (outputFiles.length == 0) {
+        //     this.log.warn("WFU02: LaTeX file '" + texFile + 
+	// 		  "' did not generate any output in '" + 
+	// 		  texFileDir + "'! ");
+        // }
 
 	File srcFile, destFile;
 	for (int idx = 0; idx < outputFiles.length; idx++) {
@@ -265,6 +299,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    // FIXME: fileFilter shall not accept directories 
 	    // and shall not accept texFile 
 
+	    // FIXME: what if a parent is a regular file? 
 	    if (!targetDir.exists() && !targetDir.mkdirs()) {
 		throw new BuildFailureException
 		    ("TFU03: Destination directory '" + targetDir + 
@@ -289,6 +324,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 
 	    try {
 		// may throw IOException: opening streams, read/write 
+		// may log warning WFU03: Cannot close 
 		doCopyFile(srcFile, destFile);
 	    } catch (IOException e) {
 		throw new BuildFailureException
@@ -301,7 +337,10 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     // FIXME: copied from FileUtils 
     /**
-     * Internal copy file method.
+     * Internal copy file method. 
+     * <p>
+     * Logging: 
+     * WFU03: Cannot close 
      * 
      * @param srcFile   
      *    the source file. 
@@ -325,10 +364,12 @@ class TexFileUtilsImpl implements TexFileUtils {
 		// when reading or writing 
                 copyLarge(input, output);
             } finally {
+		// may log warning WFU03
                 closeQuietly(output);
             }
 	} finally {
-	    closeQuietly(input);
+	    // may log warning WFU03
+ 	    closeQuietly(input);
 	}
 
 	// FIXME: what about SecurityExceptions? 
@@ -389,11 +430,14 @@ class TexFileUtilsImpl implements TexFileUtils {
      *       IOUtils.closeQuietly(closeable);
      *   }
      * </pre>
+     * <p>
+     * Logging: 
+     * WFU03: Cannot close 
      *
-     * @param closeable the object to close, may be null or already closed
-     * @since 2.0
+     * @param closeable 
+     * the object to close, may be null or already closed
      */
-   public void closeQuietly(Closeable closeable) {
+   private void closeQuietly(Closeable closeable) {
         try {
 	    closeable.close();
 	} catch (IOException ioe) {
@@ -445,6 +489,9 @@ class TexFileUtilsImpl implements TexFileUtils {
      * contains the given pattern <code>pattern</code>. 
      * This is typically applied to log files, 
      * but also to latex-files to find the latex main files. 
+     * <p>
+     * Logging: 
+     * WFU03 cannot close 
      *
      * @param file
      *    an existing proper file, not a folder. 
@@ -467,6 +514,7 @@ class TexFileUtilsImpl implements TexFileUtils {
     public boolean matchInFile(File file, 
 			       String pattern) throws BuildFailureException {
 	try {
+	    // may log warning WFU03 
 	    return fileContainsPattern(file, pattern);
 	} catch (FileNotFoundException e) {
 	    throw new BuildFailureException
@@ -479,6 +527,9 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     /**
      * Return whether <code>file</code> contains <code>regex</code>. 
+     * <p>
+     * Logging: 
+     * WFU03 cannot close 
      *
      * @throws FileNotFoundException
      *    if <code>file</code> does not exist. 
@@ -504,7 +555,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 	   return false;
         } finally {
 	    // Here, an IOException may have occurred 
-	    closeQuietly(bufferedReader);
+	    // may log warning WFU03
+ 	    closeQuietly(bufferedReader);
         }
     }
 
@@ -518,11 +570,22 @@ class TexFileUtilsImpl implements TexFileUtils {
     /**
      * Deletes all files in the same folder as <code>pFile</code> directly, 
      * i.e. not in subfolders, which are accepted by <code>filter</code>. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU04: Cannot delete from directory: is not readable. 
+     * <li> WFU05: Failed to delete file 
+     * </ul>
+     *
+     * @param pFile
+     *    a file in a folder to be deleted from. 
+     * @param filter
+     *    a filter which decides which files 
+     *    from the parent directory of <code>pFile</code> to delete. 
      */
     // used in LatexPreProcessor.clearTargetMp
     // used in LatexPreProcessor.clearTargetTex only 
     public void deleteX(File pFile, FileFilter filter) {
-
 	File dir = pFile.getParentFile();
 	assert dir.isDirectory();
 	File[] files = dir.listFiles();
