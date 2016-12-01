@@ -222,6 +222,8 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(logFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
 	fileUtilsCtrl.setReturnValue(idxFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG);
+	fileUtilsCtrl.setReturnValue(ilgFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
 	fileUtilsCtrl.setReturnValue(gloFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLG);
@@ -294,10 +296,6 @@ public class LatexProcessorTest {
 			 new String[] {idxFile.getPath()});
 	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
-
-	fileUtils.replaceSuffix(idxFile, LatexProcessor.SUFFIX_ILG);
-	fileUtilsCtrl.setReturnValue(ilgFile);
-
     }
 
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossary) 
