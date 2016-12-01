@@ -144,7 +144,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU01 texDir not readable 
+     * <li> WFU01 Cannot read directory... 
      * <li> WEX01 applications for preprocessing graphic files 
      *      or processing a latex main file fails 
      * </ul>
@@ -163,7 +163,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    exists already as a regular file. 
      *    <li> TSS02 if 
      *    the output directory exists and is no directory. 
-     *    <li> TFU02, TFU03, TFU04, TFU05, TFU06 if 
+     *    <li> TFU03, TFU04, TFU05, TFU06 if 
      *    copy of output files to target folder fails. 
      *    For details see 
      * {@link TexFileUtilsImpl#copyOutputToTargetFolder(File, FileFilter, File)}
@@ -179,7 +179,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	assert texDir.exists() && texDir.isDirectory();
 
 	// should fail without finally cleanup 
-	// may log warning WFU01 texDir not readable 
+	// may log warning WFU01 Cannot read directory 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 
 	try {
@@ -204,7 +204,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		    FileFilter fileFilter = this.fileUtils.getFileFilter
 			(texFile, target.getPatternOutputFiles(this.settings));
 		    // may throw BuildFailureException 
-		    // TFU02, TFU03, TFU04, TFU05, TFU06 
+		    // TFU03, TFU04, TFU05, TFU06 
+		    // may log warning WFU01 Cannot read directory 
 		    // FIXME: fileFilter shall not accept directories 
 		    // and shall not accept texFile 
 		    this.fileUtils.copyOutputToTargetFolder(texFile,
@@ -223,7 +224,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Used by {@link GraphicsMojo}. 
      * <p>
      * Logging: 
-     * WFU01 texDir not readable 
+     * WFU01 Cannot read directory 
      *
      * @throws BuildFailureException
      *    TSS01 if the tex source directory does either not exist 
@@ -234,7 +235,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
-	// may log warning WFU01 texDir not readable 
+	// may log warning WFU01 Cannot read directory 
 	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
 	this.preProc.processGraphicsSelectMain(orgFiles);
     }

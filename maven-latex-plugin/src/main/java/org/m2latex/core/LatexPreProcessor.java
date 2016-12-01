@@ -671,14 +671,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Deletes all created files in <code>texDirectory</code>. 
      * <p>
      * Logging: 
-     * WFU01 texDir not readable 
+     * WFU01 Cannot read directory 
      *
      * @param texDir
      *    the tex-source directory. 
      */
     void clearCreated(File texDir) {
 	// try to clear targets 
-	// may log warning WFU01 texDir not readable 
+	// may log warning WFU01 
 	Collection<File> files = this.fileUtils.getFilesRec(texDir);
 	SuffixHandler handler;
 	for (File file : files) {
