@@ -565,17 +565,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private boolean isLatexMainFile(File texFile) {
 	assert texFile.exists();
-	try {
-	    // may throw BuildFailureException
-	    // TFU07 (FileNotFound may not occur), TFU08 
-	    // may log warning WFU03 cannot close 
-	    return this.fileUtils.matchInFile
-		(texFile, this.settings.getPatternLatexMainFile());
-	} catch (BuildFailureException e) {
-	    this.log.warn("WPP02: File '" + texFile + "' is not readable; " + 
-			  "assume that it is no latex main file. ");
+	// may log warning WFU03 cannot close 
+	Boolean res = this.fileUtils.matchInFile
+	    (texFile, this.settings.getPatternLatexMainFile());
+	if (res == null) {
+	    this.log.warn("WPP02: Cannot read tex file '" + texFile + 
+			  "'; may bear latex main file. ");
 	    return false;
 	}
+	return res;
     }
 
     /**

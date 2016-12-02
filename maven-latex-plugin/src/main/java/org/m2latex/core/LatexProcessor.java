@@ -518,8 +518,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
 				     this.settings.getPatternReRunLatex());
         }
-	this.log.warn("WLP01: Maximum number " + maxNumReruns + 
-		      " of LaTeX runs reached while another run is required. ");
+	this.log.warn("WLP01: LaTeX requires rerun but maximum number " + 
+		      maxNumReruns + " reached. ");
     }
 
     /**
@@ -533,21 +533,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			    String kind, 
 			    File logFile, 
 			    String pattern) {
-	boolean needRun = false;
-	try {
-	    // may throw a BuildFailureException TFU07, TFU08 
-	    // exception EF07 may occur because logFile may not exist (rare) 
-	    // may log warning WFU03 cannot close 
-	    needRun = this.fileUtils.matchInFile(logFile, pattern);
-	} catch (BuildFailureException e) {
-	    assert !needRun;
-	    this.log.warn("WLP02: Log file '" + logFile + "' is unreadable: " +
-			  "Could not detect whether " + kind + 
-			  " requires rerun; assume no. ");
+
+	// may log warning WFU03 cannot close 
+	Boolean needRun = this.fileUtils.matchInFile(logFile, pattern);
+	if (needRun == null) {
+	    this.log.warn("WLP02: Cannot read log file '" + logFile.getName() + 
+			  "'; " + kind + " may require rerun. ");
+	    return false;
 	}
-        this.log.debug((another ? "Another " : "") + kind + 
-		       " run required? " + needRun);
-        return needRun;
+	return needRun;
     }
 
     /**
@@ -685,12 +679,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// hasErrsWarns may log warnings WFU03 cannot close, WAP04 not readable
 	if (this.settings.getDebugBadBoxes() && 
 	    hasErrsWarns(logFile, PATTERN_OUFULL_HVBOX)) {
-	    this.log.warn("WLP03: Running " + command + " created bad boxes. ");
+	    this.log.warn("WLP03: Running " + command + 
+			  " created bad boxes logged in '" + 
+			  logFile.getName() + "'. ");
 	}
 	if (this.settings.getDebugWarnings() && 
 	    hasErrsWarns(logFile, this.settings.getPatternWarnLatex())) {
-	    this.log.warn("WLP04: Running " + command + " emited warnings. ");
-	}
+	    // logs warning WAP03: emitted warnings 
+	    logWarn(logFile, command);
+ 	}
     }
 
     /**
