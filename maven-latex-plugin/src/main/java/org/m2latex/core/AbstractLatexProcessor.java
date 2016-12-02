@@ -74,8 +74,8 @@ abstract class AbstractLatexProcessor {
 	    // hasErrsWarns may log warnings WFU03, WAP04 
     	    if (hasErrsWarns(logFile, pattern)) {
     		this.log.warn("WAP01: Running " + command + 
-			 " failed. For details see " + 
-    			 logFile.getName() + ". ");
+			      " failed. Errors logged in '" + 
+			      logFile.getName() + "'. ");
     	    }
     	} else {
     	    this.log.warn("WAP02: Running " + command + 
@@ -105,10 +105,20 @@ abstract class AbstractLatexProcessor {
     protected void logWarns(File logFile, String command, String pattern) {
 	// hasErrsWarns may log warnings WFU03, WAP04 
     	if (logFile.exists() && hasErrsWarns(logFile, pattern)) {
-    	    this.log.warn("WAP03: Running " + command + 
-			  " emitted warnings. For details see " + 
-			  logFile.getName() + ". ");
+	    // logs warning WAP03: emitted warnings 
+	    logWarn(logFile, command);
     	}
+    }
+
+    /**
+     * <p>
+     * Logging: 
+     * WAP03 Running <code>command</code> emitted warnings. 
+     */
+    protected void logWarn(File logFile, String command) {
+	this.log.warn("WAP03: Running " + command + 
+		      " emitted warnings logged in '" + 
+		      logFile.getName() + "'. ");
     }
 
     /**
@@ -120,18 +130,19 @@ abstract class AbstractLatexProcessor {
      * </ul>
      */
     // FIXME: not clear whether error or warning; also command not clear. 
+    // used in 
+    // logErrs (File, String, String)
+    // logWarns(File, String, String)
     protected boolean hasErrsWarns(File logFile, String pattern) {
 	assert logFile.exists();
-	try {
-	    // may throw BuildFailureException TFU07, TFU08 
-	    // may log warning WFU03 cannot close 
-	    return this.fileUtils.matchInFile(logFile, pattern);
-	} catch (BuildFailureException e) {
-	    this.log.warn("WAP04: Log file '" + logFile + 
-			  "' is not readable: " +
-			  "Could not detect warnings/failures. ");
+	// may log warning WFU03 cannot close 
+	Boolean res = this.fileUtils.matchInFile(logFile, pattern);
+	if (res == null) {
+	    this.log.warn("WAP04: Cannot read log file '" + logFile.getName() + 
+			  "'; may hide warnings/errors. ");
 	    return false;
 	}
+	return res;
     }
 
     // for both LatexProcessor and LatexPreProcessor 
