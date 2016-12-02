@@ -2624,14 +2624,22 @@ Identifier        & Message  \\
 	   & \tt\footnotesize should be an existing directory, but is not.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+The tex source directory is given in the pom/build-file 
+with default value {\tt./src/site/tex}. 
+It contains all files to be processed. 
+Thus is must be a directory. 
 \end{minipage}
 } \\
 \tt\footnotesize TSS02  & \tt\footnotesize The output directory '\$outputDirectory' \\
            & \tt\footnotesize should be a directory if it exists, but is not.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+The output directory is given in the pom/build-file 
+with default value {\tt./target/site/.}. 
+The output directory is where the result of the goal/task 
+are copied to. 
+If it does not yet exist, it is created 
+but if it exists and is a regular file, it cannot be created any more. 
 \end{minipage}
 } \\
 \hline
@@ -2683,39 +2691,25 @@ Id.        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\tt\footnotesize TFU01 & \tt\footnotesize Destination directory '\$targetDir' 
-		exists already as regular file.   \\
+\tt\footnotesize TFU01 & \tt\footnotesize Cannot create destination directory '\$targetDir'.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+This is mainly because of writing permissions. 
 \end{minipage}
 } \\
-\tt\footnotesize TFU03 & \tt\footnotesize Destination directory '\$targetDir'
-		     cannot be created.   \\
+\tt\footnotesize TFU04 & \tt\footnotesize Cannot overwrite directory '\$destFile'.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+Because this plugin shall not turn directories into regular files 
+and vice versa. 
+This failure indicates that another plugin/task disturbs this one. 
 \end{minipage}
 } \\
-\tt\footnotesize TFU04 & \tt\footnotesize Destination file '\$destFile' 
-			 exists but is a directory.   \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\tt\footnotesize TFU05  & \tt\footnotesize Destination file '\$destFile'
-			 exists and is read-only.   \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\tt\footnotesize TFU06 & \tt\footnotesize Error copying file '\$srcFileName'
+\tt\footnotesize TFU06 & \tt\footnotesize Cannot copy file '\$srcFileName'
 		     to directory '\$targetDir'.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+This is mainly because of writing permissions. 
 \end{minipage}
 } \\
 \hline
