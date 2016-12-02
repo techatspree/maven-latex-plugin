@@ -37,11 +37,11 @@ public class TexFileUtilsImplTest {
     @Test public void testGetTargetDir() 
 	throws BuildExecutionException, BuildFailureException {
 
-        File expected = new File("/dir2/subdir");
+        File expected = new File("/tmp/dir2/subdir");
 	// may throw BuildExecutionException 
-        File actual = utils.getTargetDirectory(new File("/dir1/subdir/file"),
-					       new File("/dir1"),
-					       new File("/dir2"));
+        File actual = utils.getTargetDirectory(new File("/tmp/dir1/subdir/file"),
+					       new File("/tmp/dir1"),
+					       new File("/tmp/dir2"));
         assertEquals(expected, actual);
     }
 }
