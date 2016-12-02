@@ -183,13 +183,13 @@ class TexFileUtilsImpl implements TexFileUtils {
 	srcParentPath = srcBasePath.relativize(srcParentPath);
 
 	// FIXME: CAUTION: this may exist and be no directory!
-	File res = new File(targetBaseDir, srcParentPath.toString());
-	if (res.exists() && !res.isDirectory()) {
+	File targetDir = new File(targetBaseDir, srcParentPath.toString());
+	if (targetDir.exists() && !targetDir.isDirectory()) {
 	    throw new BuildFailureException
-		("TFU01: Required target directory '" + res + 
+		("TFU01: Destination directory '" + targetDir + 
 		 "' exists already as regular file. ");
 	}
-	return res;
+	return targetDir;
     }
 
     /**
@@ -285,25 +285,11 @@ class TexFileUtilsImpl implements TexFileUtils {
 	File texFileDir = texFile.getParentFile();
 	// may log warning WFU01 
         File[] outputFiles = listFilesOrWarn(texFileDir);
-	    //texFileDir.listFiles();
-
         if (outputFiles == null) {
 	    // Here, logging WFU01 already done 
 	    return;
 	}
 	assert outputFiles != null;
-
-	// Hm,... this means even that there is no latex file. 
-	// Also, there may be no file created although outputFiles is not empty
-	// FIXME: I think this is superfluous: 
-	// The software indicates when a latex main file is found 
-	// when it is processed and also, later, 
-	// if it produces not the expected output. 
-        // if (outputFiles.length == 0) {
-        //     this.log.warn("WFU02: LaTeX file '" + texFile + 
-	// 		  "' did not generate any output in '" + 
-	// 		  texFileDir + "'! ");
-        // }
 
 	File srcFile, destFile;
 	for (int idx = 0; idx < outputFiles.length; idx++) {
@@ -315,11 +301,10 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    assert srcFile.exists() && !srcFile.isDirectory();
 	    // since !targetDir.exists() || targetDir.isDirectory() 
 	    assert !srcFile.equals(targetDir);
+	    assert !srcFile.equals(texFile);
 
 	    this.log.info("Copying '" + srcFile.getName() + 
 			  "' to '" + targetDir + "'. ");
-	    // FIXME: fileFilter shall not accept directories 
-	    // and shall not accept texFile 
 
 	    // FIXME: what if a parent is a regular file? 
 	    if (!targetDir.exists() && !targetDir.mkdirs()) {
@@ -508,7 +493,8 @@ class TexFileUtilsImpl implements TexFileUtils {
     // logFile may be .log or .blg or something 
     /**
      * Returns whether the given file <code>file</code> (which shall exist) 
-     * contains the given pattern <code>pattern</code>. 
+     * contains the given pattern <code>pattern</code> 
+     * and <code>null</code> in case of problems reading <code>file</code> 
      * This is typically applied to log files, 
      * but also to latex-files to find the latex main files. 
      * <p>
@@ -517,69 +503,45 @@ class TexFileUtilsImpl implements TexFileUtils {
      *
      * @param file
      *    an existing proper file, not a folder. 
-     * @param pattern
+     * @param regex
      *    the pattern (regular expression) to look for in <code>file</code>. 
-     * @throws BuildFailureException
-     *    <ul>
-     *    <li> TFU07 if the file <code>file</code> does not exist 
-     *    <li> TFU08 if the file <code>file</code> cannot be read. 
-     *    </ul>
+     * @return
+     *    whether the given file <code>file</code> (which shall exist) 
+     *    contains the given pattern <code>pattern</code>. 
+     *    If the file does not exist or an IOException occurs 
+     *    while reading, <code>null</code> is returned. 
      */
     // used only in 
     // LatexPreProcessor.isLatexMainFile(File)
     // LatexProcessor.needRun(...)
     // AbstractLatexProcessor.hasErrsWarns(File, String)
-    //
-    // FIXME: the two exceptions are always caught. 
-    // An alternative: 3-valued logic: 
-    // true, false, unknown if file not found or not readable 
-    public boolean matchInFile(File file, 
-			       String pattern) throws BuildFailureException {
+    public Boolean matchInFile(File file, String regex) {
 	try {
-	    // may log warning WFU03 
-	    return fileContainsPattern(file, pattern);
-	} catch (FileNotFoundException e) {
-	    throw new BuildFailureException
-		("TFU07: File '" + file.getPath() + "' not found. ", e);
-	} catch (IOException e) {
-	    throw new BuildFailureException
-		("TFU08: Error reading file '" + file.getPath() + "'. ", e);
+	    // may throw FileNotFoundException < IOExcption 
+	    FileReader fileReader = new FileReader(file);
+	    BufferedReader bufferedReader = new BufferedReader(fileReader);
+	    Pattern pattern = Pattern.compile(regex);
+	    try {
+		//      readLine may thr. IOException
+		for (String line = bufferedReader.readLine();
+		     line != null;
+		     // readLine may thr. IOException
+		     line = bufferedReader.readLine()) {
+		    if (pattern.matcher(line).find()) {
+			return true;
+		    }
+		}
+		return false;
+	    } catch (IOException ioe) {
+		return null;
+	    } finally {
+		// Here, an IOException may have occurred 
+		// may log warning WFU03
+		closeQuietly(bufferedReader);
+	    }
+	} catch (FileNotFoundException ffe) {
+	    return null;
 	}
-    }
-
-    /**
-     * Return whether <code>file</code> contains <code>regex</code>. 
-     * <p>
-     * Logging: 
-     * WFU03 cannot close 
-     *
-     * @throws FileNotFoundException
-     *    if <code>file</code> does not exist. 
-     * @throws IOException
-     *    if <code>file</code> could not be read. 
-     */
-    // used by matchInFile(File logFile, String pattern) only 
-    private boolean fileContainsPattern(File file, String regex)
-	throws FileNotFoundException, IOException {
-
-        Pattern pattern = Pattern.compile(regex);
-	// may throw FileNotFoundException
-	FileReader fileReader = new FileReader(file);
-	BufferedReader bufferedReader = new BufferedReader(fileReader);
-	try {
-	    for (String line = bufferedReader.readLine();// may thr. IOException
-		 line != null;
-		 line = bufferedReader.readLine()) {// may throw IOException
-                if (pattern.matcher(line).find()) {
-		    return true;
-                }
-            }
-	   return false;
-        } finally {
-	    // Here, an IOException may have occurred 
-	    // may log warning WFU03
- 	    closeQuietly(bufferedReader);
-        }
     }
 
     // used in LatexPreProcessor and in LatexProcessor and in LatexDec
@@ -634,7 +596,7 @@ class TexFileUtilsImpl implements TexFileUtils {
     public void deleteOrWarn(File delFile) {
 	assert delFile.exists();
 	if (!delFile.delete()) {
-	    this.log.warn("WFU05: Failed to delete file '" + 
+	    this.log.warn("WFU05: Cannot delete file '" + 
 			  delFile + "'. ");
 	}
     }

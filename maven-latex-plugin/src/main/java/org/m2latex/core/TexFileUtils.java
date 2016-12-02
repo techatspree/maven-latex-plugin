@@ -49,8 +49,7 @@ interface TexFileUtils {
 
     File replaceSuffix(File file, String suffix);
 
-    boolean matchInFile(File file, String pattern) 
-	throws BuildFailureException;
+    Boolean matchInFile(File file, String pattern);
 
     void deleteX(File texFile, FileFilter filter);
     void deleteOrWarn(File delFile);
