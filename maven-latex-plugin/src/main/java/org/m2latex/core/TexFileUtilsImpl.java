@@ -184,11 +184,15 @@ class TexFileUtilsImpl implements TexFileUtils {
 
 	// FIXME: CAUTION: this may exist and be no directory!
 	File targetDir = new File(targetBaseDir, srcParentPath.toString());
-	if (targetDir.exists() && !targetDir.isDirectory()) {
+
+	targetDir.mkdirs();
+
+	if (!targetDir.isDirectory()) {
 	    throw new BuildFailureException
-		("TFU01: Destination directory '" + targetDir + 
-		 "' exists already as regular file. ");
+		("TFU01: Cannot create destination directory '" + targetDir + 
+		 "'. ");
 	}
+	assert targetDir.isDirectory();
 	return targetDir;
     }
 
@@ -303,39 +307,31 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    assert !srcFile.equals(targetDir);
 	    assert !srcFile.equals(texFile);
 
-	    this.log.info("Copying '" + srcFile.getName() + 
-			  "' to '" + targetDir + "'. ");
-
-	    // FIXME: what if a parent is a regular file? 
-	    if (!targetDir.exists() && !targetDir.mkdirs()) {
-		throw new BuildFailureException
-		    ("TFU03: Destination directory '" + targetDir + 
-		     "' cannot be created. ");
-	    }
-	    assert targetDir.isDirectory();
 
 	    destFile = new File(targetDir, srcFile.getName());
 
-	    if (destFile.exists()) {
-		if (destFile.isDirectory()) {
-		    throw new BuildFailureException
-			("TFU04: Destination file '" + destFile + 
-			 "' exists but is a directory. ");
-		}
-		if (!destFile.canWrite()) {
-		    throw new BuildFailureException
-			("TFU05: Destination file '" + destFile + 
-			 "' exists and is read-only. ");
-		}
+	    if (destFile.isDirectory()) {
+		throw new BuildFailureException
+		    ("TFU04: Cannot overwrite directory '" + destFile + "'. ");
 	    }
+	    // superfluous because src is not empty and so TFU06 is thrown 
+	    // if (destFile.exists() && !destFile.canWrite()) {
+	    // 	throw new BuildFailureException
+	    // 	    ("TFU05: Cannot overwrite read-only file '" + 
+	    // 	     destFile + "'. ");
+	    // }
+	    // assert  !destFile.exists() 
+	    // 	|| (!destFile.isDirectory() && destFile.canWrite());
 
+	    this.log.info("Copying '" + srcFile.getName() + 
+			  "' to '" + targetDir + "'. ");
 	    try {
 		// may throw IOException: opening streams, read/write 
 		// may log warning WFU03: Cannot close 
 		doCopyFile(srcFile, destFile);
 	    } catch (IOException e) {
 		throw new BuildFailureException
-		    ("TFU06: Error copying '" + srcFile.getName() + 
+		    ("TFU06: Cannot copy '" + srcFile.getName() + 
 		     "' to '" + targetDir + "'. ",
 		     e);
 	    }
@@ -369,7 +365,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    try {
 		// may throw IOException if an I/O-error occurs 
 		// when reading or writing 
-                copyLarge(input, output);
+                copyStream(input, output);
             } finally {
 		// may log warning WFU03
                 closeQuietly(output);
@@ -379,15 +375,13 @@ class TexFileUtilsImpl implements TexFileUtils {
  	    closeQuietly(input);
 	}
 
-	// FIXME: what about SecurityExceptions? 
+	assert !destFile.isDirectory() && destFile.canWrite();
 	destFile.setLastModified(srcFile.lastModified());
     }
 
     /**
      * The default buffer size ({@value}) to use for 
-     * {@link #copyLarge(InputStream, OutputStream)}
-     * and
-     * {@link #copyLarge(Reader, Writer)}
+     * {@link #copyStream(InputStream, OutputStream)}
      */
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
@@ -405,10 +399,10 @@ class TexFileUtilsImpl implements TexFileUtils {
      * @throws IOException 
      *    if an I/O error occurs while reading or writing 
      */
-    public static void copyLarge(InputStream input, 
-				 OutputStream output) throws IOException {
+    private static void copyStream(InputStream input, 
+				   OutputStream output) throws IOException {
 	byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-        int n = 0;
+        int n;
 	// may throw IOException 
         while (-1 != (n = input.read(buffer))) {
 	    // may throw IOException 
