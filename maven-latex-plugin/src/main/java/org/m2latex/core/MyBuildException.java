@@ -15,14 +15,11 @@ package org.m2latex.core;
  */
 public class MyBuildException extends Exception {
 
-    private final String message;
-    private final Throwable cause;
-
    public MyBuildException(String message) {
-       this(message, null);
+       super(message);
     }
+
     public MyBuildException(String message, Throwable cause) {
-	this.message = message;
-	this.cause = cause;
+	super(message, cause);
     }
 }
