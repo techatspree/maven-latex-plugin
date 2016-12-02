@@ -230,7 +230,7 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(glgFile);
     }
 
-    private void mockNeedAnotherLatexRun(boolean retVal)
+    private void mockNeedAnotherLatexRun(Boolean retVal)
         throws BuildFailureException {
 
         fileUtils.matchInFile(logFile, 
@@ -238,7 +238,7 @@ public class LatexProcessorTest {
         fileUtilsCtrl.setReturnValue(retVal);
     }
 
-    private void mockNeedAnotherMakeIndexRun(boolean retVal)
+    private void mockNeedAnotherMakeIndexRun(Boolean retVal)
         throws BuildFailureException {
 
         fileUtils.matchInFile(logFile, 
@@ -253,7 +253,7 @@ public class LatexProcessorTest {
     //     fileUtilsCtrl.setReturnValue( retVal );
     // }
 
-    private void mockRunBibtexByNeed(boolean runBibtex) 
+    private void mockRunBibtexByNeed(Boolean runBibtex) 
 	throws BuildFailureException {
 
         fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_AUX);
