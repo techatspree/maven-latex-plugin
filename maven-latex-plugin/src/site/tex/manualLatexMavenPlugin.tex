@@ -2620,7 +2620,33 @@ Identifier        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\tt TEX01 & \tt\scriptsize Error executing command '\$executable'.   \\
+\tt\footnotesize TSS01  & \tt\footnotesize The tex source directory '\$texSrcDirectoryFile'\\
+	   & \tt\footnotesize should be an existing directory, but is not.  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\tt\footnotesize TSS02  & \tt\footnotesize The output directory '\$outputDirectory' \\
+           & \tt\footnotesize should be a directory if it exists, but is not.  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\hline
+\caption{\label{tab:WarnLP} The BuildFailureExceptions of Settings   }
+\end{longtable}
+
+
+
+\begin{longtable}{|ll|}
+\hline
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\tt\footnotesize TEX01 & \tt\footnotesize Error running \$command.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Compare with WEX01 in Table~\ref{tab:WarnCEI}: 
@@ -2646,68 +2672,50 @@ whereas for WEX01 just a failure code is returned.
 \end{minipage}
 } \\
 \hline
-\caption{\label{tab:TEX} The BuildFailureExceptions of CommandExecutorImpl  }
+\caption{\label{tab:TEX} The BuildFailureException of CommandExecutorImpl  }
 \end{longtable}
 
 
 
 \begin{longtable}{|ll|}
 \hline
-Identifier        & Message  \\
+Id.        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\tt TFU01 & \tt\scriptsize Required target directory '\$res' 
+\tt\footnotesize TFU01 & \tt\footnotesize Destination directory '\$targetDir' 
 		exists already as regular file.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt TFU02 & \tt\scriptsize Error reading directory '\$texFileDir'!   \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-FIXME: THIS SHALL BE ELIMINATED: REPLACED BY WFU01
-\end{minipage}
-} \\
-\tt TFU03 & \tt\scriptsize Destination directory '\$targetDir'
+\tt\footnotesize TFU03 & \tt\footnotesize Destination directory '\$targetDir'
 		     cannot be created.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt TFU04 & \tt\scriptsize Destination file '\$destFile' 
+\tt\footnotesize TFU04 & \tt\footnotesize Destination file '\$destFile' 
 			 exists but is a directory.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt TFU05  & \tt\scriptsize Destination file '\$destFile'
+\tt\footnotesize TFU05  & \tt\footnotesize Destination file '\$destFile'
 			 exists and is read-only.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt TFU06 & \tt\scriptsize Error copying '\$srcFileName'
-		     to '\$targetDir'.   \\
+\tt\footnotesize TFU06 & \tt\footnotesize Error copying file '\$srcFileName'
+		     to directory '\$targetDir'.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
-\end{minipage}
-} \\
-\tt TFU07 & \tt\scriptsize File '\$filePath' not found.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Does not occur, because exception is always caught. 
-\end{minipage}
-} \\
-\tt TFU08 & \tt\scriptsize Error reading file '\$filePath'.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Does not occur, because exception is always caught. 
 \end{minipage}
 } \\
 \hline
@@ -2715,30 +2723,6 @@ Does not occur, because exception is always caught.
 \end{longtable}
 
 
-
-\begin{longtable}{|ll|}
-\hline
-Identifier        & Message  \\
-\multicolumn2{|l|}{Explanation }  \\
-\hline
-\hline
-\tt TSS01  & \tt\scriptsize The tex source directory '\$texSrcDirectoryFile'\\
-	   & \tt\scriptsize should be an existing directory, but is not.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\tt TSS02  & \tt\scriptsize The output directory '\$outputDirectory' \\
-           & \tt\scriptsize should be a directory if it exists, but is not.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\hline
-\caption{\label{tab:WarnLP} The BuildFailureExceptions of Settings   }
-\end{longtable}
 
 
 
@@ -2757,180 +2741,136 @@ FIXME: this is not completely implemented.
 
 \begin{longtable}{|ll|}
 \hline
-Identifier        & Message  \\
-\multicolumn2{|l|}{Explanation }  \\
+\small Id.        & \small Message  \\
+\multicolumn2{|l|}{\small Explanation }  \\
 \hline
 \hline
-\tt WAP01  & \tt\scriptsize Running \$command failed. 
-For details see \$logFileName.   \\
+\tt\footnotesize WEX01  & \tt\footnotesize Running \$command 
+			    failed with return code \$returnCode. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+Compare with TEX01 in Table~\ref{tab:TEX}: 
+Error execution means that there is even no valid return code. 
+% Variables: 
+% %
+% \begin{itemize}
+% \item {\tt\$command}: The command executed. 
+% \item {\tt\$returnCode}: The failure code which is not $0$ in this case. 
+% \end{itemize}
 \end{minipage}
 } \\
-\tt WAP02 & \tt\scriptsize Running \$command failed: 
+\tt\footnotesize WAP02 & \tt\footnotesize Running \$command failed: 
 No log file '\$logFileName' found.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt WAP03 & \tt\scriptsize Running \$command emitted warnings. 
-For details see \$logFileName.   \\
+\tt\footnotesize WAP01  & \tt\footnotesize Running \$command failed. 
+Errors logged in '\$logFileName'. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt WAP04  & \tt\scriptsize Log file '\$logFile' is not readable: 
-			  Could not detect warnings/failures.   \\
+\tt\footnotesize WAP03 & \tt\footnotesize Running \$command emitted warnings 
+logged in '\$logFileName'.   \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\tt\footnotesize WLP03   & \tt\footnotesize Running \$command created bad boxes 
+                              logged in '\$logFileName'.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
 \hline
-\caption{\label{tab:WarnALP} The Warnings of AbstractLatexProcessor ****  }
+\caption{\label{tab:WarnALP} The Warnings on running a command  }
 \end{longtable}
 
 
 \begin{longtable}{|ll|}
 \hline
-Identifier        & Message  \\
+Id.        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
-\tt WEX01  & \tt\scriptsize Executing '\$executable' 
-			      returned with code \$returnValue. \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Compare with TEX01 in Table~\ref{tab:TEX}: 
-Error execution means that there is even no valid return code. 
-\end{minipage}
-} \\
-\hline
-\caption{\label{tab:WarnCEI} The Warnings of CommandLineExecutorImpl  }
-\end{longtable}
-
-
-\begin{longtable}{|ll|}
-\hline
-Identifier        & Message  \\
-\multicolumn2{|l|}{Explanation }  \\
-\hline
-\hline
-\tt WPP01  & \tt\scriptsize Failed to delete file '\$file'. \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-FIXME: THIS SHALL BE ELIMINATED: REPLACED BY WFU05
-\end{minipage}
-} \\
-\tt WPP02  & \tt\scriptsize File \$texFile' is not readable; 
-assume that it is no latex main file.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\tt WPP03  & \tt\scriptsize Skipped processing of files 
-with suffixes \$skipped. \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\hline
-\caption{\label{tab:WarnLPP} The Warnings of LatexPreProcessor ****  }
-\end{longtable}
-
-
-
-
-\begin{longtable}{|ll|}
-\hline
-Identifier        & Message  \\
-\multicolumn2{|l|}{Explanation }  \\
-\hline
-\hline
-\tt WLP01  & \tt\scriptsize Maximum number \$maxNumReruns 
-of LaTeX runs reached \\
- & \tt\scriptsize while another run is required.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\tt WLP02  & \tt\scriptsize Log file '\$logFile' is unreadable: \\
-	 & \tt\scriptsize Could not detect whether \$kind 
-                          requires rerun; assume no.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\tt WLP03   & \tt\scriptsize Running \$command created bad boxes.  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\tt WLP04  & \tt\scriptsize Running \$command emited warnings.   \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-
-\end{minipage}
-} \\
-\hline
-\caption{\label{tab:WarnLP} The Warnings of LatexProcessor ****  }
-\end{longtable}
-
-
-
-
-
-
-\begin{longtable}{|ll|}
-\hline
-Identifier        & Message  \\
-\multicolumn2{|l|}{Explanation }  \\
-\hline
-\hline
-\tt WFU01  & \tt\scriptsize Cannot read directory '\$dir'; 
+\tt\footnotesize WFU01  & \tt\footnotesize Cannot read directory '\$dir'; 
 build may be incomplete.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt WFU02 & \tt\scriptsize LaTeX file '\$texFile' \\
-          & \tt\scriptsize did not generate any output in '\$texFileDir'! \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-FIXME: THIS SHALL BE ELIMINATED
-\end{minipage}
-} \\
-\tt WFU03  & \tt\scriptsize Cannot close '"\$closeable'.  \\
+\tt\footnotesize WPP02  & \tt\footnotesize Cannot read tex file '\$texFile'; 
+may bear latex main file.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt WFU04  & \tt\scriptsize Cannot delete from directory '\$dir': \\
-           & \tt\scriptsize is not readable.   \\
+\tt\footnotesize WAP04  & \tt\footnotesize Cannot read log file '\$logFileName'; 
+			  may hide warnings/errors.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-FIXME: THIS SHALL BE ELIMINATED: replaced by new WFU01. 
+
 \end{minipage}
 } \\
-\tt WFU05  & \tt\scriptsize Failed to delete file '\$delFile'.  \\
+\tt\footnotesize WLP02  & \tt\footnotesize Cannot read log file 
+'\$logFileName'; 
+                            \$kind may require rerun.  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\tt\footnotesize WFU03  & \tt\footnotesize Cannot close '\$closeable'.  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\tt\footnotesize WFU05  & \tt\footnotesize Cannot delete file '\$delFile'.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
 \hline
-\caption{\label{tab:WarnLP} The Warnings of TexFileUtilsImpl ****  }
+\caption{\label{tab:WarnCEI} The Warnings on files/streams  }
 \end{longtable}
+
+
+\begin{longtable}{|ll|}
+\hline
+Id.        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\hline
+\hline
+\tt\footnotesize WPP03  & \tt\footnotesize Skipped processing of files 
+with suffixes \$skipped. \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\tt\footnotesize WLP01  & \tt\footnotesize LaTeX requires rerun but maximum number 
+\$maxNumReruns reached.  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\hline
+\caption{\label{tab:WarnLPP} Miscellaneous Warnings  }
+\end{longtable}
+
+
+
+
 
 
 
