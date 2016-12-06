@@ -1,4 +1,6 @@
 
+% blabla 
+\RequirePackage{lmodern}
 \documentclass[12pt]{article}
 
 \input{header.tex}
@@ -1838,12 +1840,26 @@ A comma separated list of targets to be stored in {\tt\$targetSet}.
 %The default value is '{\tt pdf, html}'. 
 \end{minipage}
 } \\
-\tt patternLatexMainFile          &  see below        \\
+\tt patternLatexMainFile   & see Section~\ref{subsubsec:patternLatexMainFile}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern which identifies a \LaTeX{} main file. 
-If the default value is not appropriate, please modify 
-and notify the developer of this plugin. 
+The default value is choosen to match quite exactly 
+the latex main files. 
+Here we assume that the latex main file should contain 
+the declaration `\textbackslash documentclass' 
+or the old fashioned 'documentstyle' 
+preceeded by a few constucts. 
+Strictly speaking, this is not necessary. 
+For a more thorough discussion, 
+and for an alternative approach, consult the manual. 
+
+Since the pattern is chosen 
+according to documentation collected from the internet, 
+one can never be sure whether the pattern is perfect. 
+If the user finds that default value is not appropriate, 
+(s)he is asked to contribute 
+and to notify the developer of this plugin. 
 \end{minipage}
 } \\
 \tt texPath          &  empty string        \\
@@ -1864,7 +1880,7 @@ May be used for debugging when setting {\tt false}.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
-\tt patternClearFromLatexMain             & see below              \\
+\tt patternClearFromLatexMain & see Section~\ref{subsubsec:patternClearFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 For goal `{\tt clr}', 
@@ -1910,6 +1926,82 @@ Then the default value will be extended.
 \hline
 \caption{\label{tab:paramGen} General parameters}
 \end{longtable}
+
+
+\subsubsection{The parameter {\tt patternLatexMainFile}}
+\label{subsubsec:patternLatexMainFile}
+The default pattern for identifying a \LaTeX{} main file is 
+%
+\begin{verbatim}
+(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*((\d|\.)+)?|
+%.*$|
+\\input\{[^{}]*\}|
+\s*)*
+\\(documentstyle|documentclass).*
+\end{verbatim}
+%
+This means that the latex main file is the one 
+containing {\tt\textbackslash documentclass} for modern classes 
+and {\tt\textbackslash documentstyle} for old fashioned ones. 
+This may be preceeded only by the command {\tt\textbackslash RequirePackage}, 
+by comment lines by {\tt\textbackslash input} and by space. 
+
+Strictly speaking, also {\tt\textbackslash(re)newcommands} 
+and other constructs are possible but not allowed here. 
+Strictly speaking also {\tt\textbackslash documentclass} is not required, 
+it could be hidden in some {\tt\textbackslash input}-file. 
+If we stick to the wise convention to open and close the same environment 
+in the same file and to have {\tt\textbackslash documentclass}, 
+{\tt\textbackslash begin\{document\}} and {\tt\textbackslash end\{document\}} 
+in the same file also, 
+then a latex main file without {\tt\textbackslash documentclass} 
+cannot contain very much material. 
+
+So we ask the user to have {\tt\textbackslash documentclass} 
+declared in the latex main file. 
+
+For users of emacs with package auctex, there is a valuable alternative: 
+
+Latex main files are marked with an end section as this file: 
+%
+\begin{verbatim}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-command-extra-options: "-src-specials -recorder -shell-escape" 
+%%% TeX-master: t
+%%% End: 
+\end{verbatim}
+% 
+The vital line in this context is {\tt \%\%\% TeX-master: t}. 
+In contrast to this, a non-master file 
+either has no end-section at all or has an end section 
+declaring the according master file (if it is unique) 
+explicitly as the following one from {\tt header.tex}: 
+%
+\begin{verbatim}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "manualLatexMavenPlugin"
+%%% End:
+\end{verbatim}
+
+So a pattern for latex main files could also be 
+%
+\begin{verbatim}
+^%%% Local Variables: $
+^%%% TeX-master: t$
+^%%% End: ^
+\s*
+\end{verbatim}
+%
+The problem is only in case of exchange of the source 
+with a developer which does not use emacs/auctex. 
+
+
+\subsubsection{The parameter {\tt patternClearFromLatexMain}}
+\label{subsubsec:patternClearFromLatexMain}
+TODO: add 
+
 
 \subsection{Parameters for graphical preprocessing}\label{subsec:settingsGraph}
 
@@ -1996,7 +2088,7 @@ because it is set internally.
 \end{minipage}
 } \\
 \hline
-\tt metapostCommand   & \tt mpost\index{metapost}\index{mpost}     \\
+\tt metapostCommand & \tt mpost\index{metapost}\index{mpost}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The command for conversion of gnuplot-files 
@@ -2004,7 +2096,7 @@ into metapost's postscript.
 % The default value is 'mpost'. 
 \end{minipage}
 } \\
-\tt metapostOptions   & see below  \\%\tt\small -interaction=nonstopmode -recorder -s prologues=2
+\tt metapostOptions & see Section~\ref{subsubsec:patternClearFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$metapostCommand}.
@@ -2018,6 +2110,10 @@ A sequence of at least one blank separate the proper options.
 \caption{\label{tab:paramGraphics} Parameters for graphics preprocessing}
 \end{longtable}
 
+\subsubsection{The parameter {\tt metapostOptions}}
+\label{subsubsec:metapostOptions}
+TODO: add 
+%%\tt\small -interaction=nonstopmode -recorder -s prologues=2
 
 
 \subsection{Parameters for the \LaTeX-to-pdf Conversion}
@@ -2043,7 +2139,7 @@ The \LaTeX{} command to create a pdf-file with.
 %The default value is '{\tt pdflatex}'. 
 \end{minipage}
 } \\
-\tt latex2pdfOptions   & see below  \\%\tt\small -interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
+\tt latex2pdfOptions   & see Section~\ref{subsubsec:latex2pdfOptions} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$latex2pdfCommand}.
@@ -2064,7 +2160,7 @@ If this is not complete, please extend
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternWarnLatex & see below \\
+\tt patternWarnLatex & see Section~\ref{subsubsec:patternWarnLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
@@ -2096,7 +2192,7 @@ rerun \LaTeX{} and have a look at the log-file.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
-\tt patternReRunLatex &  see below ****          \\
+\tt patternReRunLatex &  see Section~\ref{subsubsec:patternReRunLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers rerunning \LaTeX{}. 
@@ -2124,6 +2220,22 @@ or -1 which signifies that there is no threshold.
 \hline
 \caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
 \end{longtable}
+
+
+\subsubsection{The parameter {\tt latex2pdfOptions}}
+\label{subsubsec:latex2pdfOptions}
+TODO: add 
+%-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
+
+
+\subsubsection{The parameter {\tt patternWarnLatex}}
+\label{subsubsec:patternWarnLatex}
+TODO: add 
+
+\subsubsection{The parameter {\tt patternReRunLatex}}
+\label{subsubsec:patternReRunLatex}
+TODO: add 
+
 
 
 \subsection{Parameters for Creation of the Bibliography}
@@ -2227,7 +2339,7 @@ The default value is chosen
 according to the `{\tt makeindex}' documentation.
 \end{minipage}
 } \\
-\tt patternReRunMakeIndex & see below         \\
+\tt patternReRunMakeIndex & see Section~\ref{subsubsec:patternReRunMakeIndex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file which triggers 
@@ -2244,6 +2356,14 @@ and to notify the developer of this plugin.
 \hline
 \caption{\label{tab:paramMakeIndex} The MakeIndex-utility }
 \end{longtable}
+
+
+\subsubsection{The parameter {\tt patternReRunMakeIndex}}
+\label{subsubsec:patternReRunMakeIndex}
+TODO: add 
+
+
+
 
 \subsection{Parameters for Creation of the Glossary}
 \label{subsec:settingsMakeGlossaries}
@@ -2318,7 +2438,8 @@ If the default value is not appropriate, please modify
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternReRunMakeGlossaries  & see below         \\
+\tt patternReRunMakeGlossaries  
+& see Section~\ref{subsubsec:patternReRunMakeGlossaries}   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers 
@@ -2335,6 +2456,10 @@ and to notify the developer of this plugin.
 \hline
 \caption{\label{tab:paramMakeGlossaries} The MakeGlossaries-utility }
 \end{longtable}
+
+\subsubsection{The parameter {\tt patternReRunMakeGlossaries}}
+\label{subsubsec:patternReRunMakeGlossaries}
+TODO: add 
 
 
 
@@ -2380,7 +2505,7 @@ The value `{\tt-p}' prevents creation of \gls{png}-pictures.
 %The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternT4htOutputFiles         & see below              \\%-cvalidate
+\tt patternT4htOutputFiles & see Section~\ref{subsubsec:patternT4htOutputFiles}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern for the target files of goal `{\tt html}' 
@@ -2435,6 +2560,14 @@ Then the default value will be extended.
 \hline
 \caption{\label{tab:paramLatex2Html} The \LaTeX-to-html-converter }
 \end{longtable}
+
+
+\subsubsection{The parameter {\tt patternT4htOutputFiles}}
+\label{subsubsec:patternT4htOutputFiles}
+TODO: add 
+
+
+
 
 \subsection{Parameters for Conversion into further Formats}
 \label{subsec:settingsExt}
@@ -3023,6 +3156,20 @@ and seem to to play with package {\tt hyperref}.
 
 The current implementation is based on package {\tt rerunfilecheck} 
 which works for index but not for glossary. 
+
+Check whether {\tt glossaries} option {\tt autorun} makes sense. 
+Seems to run {\tt makeglossaries} after each latex run. 
+But how to find out whether to rerun latex??? 
+
+Pattern to identify latex main file: 
+Documentation: shall not include {\tt documentclass/documentstyle} 
+in an input. 
+Also check {\tt RequiresPackage} 
+and check whether {\tt (re)newcommand} is possible or makes sense. 
+
+Maybe there is a bug in the number of reruns: 
+I think, makeglossaries is like bibtex needing two latex reruns 
+and not like makeindex, which requires a single rerun. 
 
 Since this software heavily relies on {\tt rerunfilecheck}, 
 maybe a warning if not used is a good idea. 
