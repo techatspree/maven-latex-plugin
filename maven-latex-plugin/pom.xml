@@ -232,11 +232,28 @@
 	    <targets>pdf, html</targets>
 
 	    <!-- The pattern which identifies a latex main file. 
-		 The default value is '\s*\\(documentstyle|documentclass).*'. 
-		 If this is not appropriate, please modify 
-		 and notify the developer of this plugin. -->
+		 The default value is choosen to match quite exactly 
+		 the latex main files. 
+		 Here we assume that the latex main file should contain 
+		 the declaration '\documentclass' 
+		 or the old fashioned 'documentstyle' 
+		 preceeded by a few constucts. 
+		 Strictly speaking, this is not necessary. 
+		 For a more thorough discussion,  
+		 and for an alternative approach, consult the manual. 
+		 
+		 Since the pattern is chosen 
+		 according to documentation collected from the internet, 
+		 one can never be sure whether the pattern is perfect. 
+		 If the user finds that default value is not appropriate, 
+		 (s)he is asked to contribute 
+		 and to notify the developer of this plugin. -->
 	    <patternLatexMainFile>
-	      \s*\\(documentstyle|documentclass).*
+(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+%.*$|
+\\input\{[^{}]*\}|
+\s*)*
+\\(documentstyle|documentclass).*
 	    </patternLatexMainFile>
 
            <!-- Path to the TeX scripts or null. 
