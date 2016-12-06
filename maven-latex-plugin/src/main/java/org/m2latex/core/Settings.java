@@ -143,10 +143,12 @@ public class Settings {
      */
     @Parameter(name = "patternLatexMainFile")
     private String patternLatexMainFile = 
-	"(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*((\d|\.)+)?|" + 
-	"%.*$|" + 
-	"\\input\{[^{}]*\}|" + 
-	"\s*)*" + 
+	"(\\\\RequirePackage\\s*" +           // RequirePackage 
+	/**/"(\\[(\\s|\\w|,)*\\])?\\s*" +    // [options]
+	/**/"\\{\\w+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}version
+	"%.*$|" + // comments 
+	"\\\\input\\{[^{}]*\\}|" + // inputs 
+	"\\s*)*" + // spaces 
 	"\\\\(documentstyle|documentclass).*";
 
 
