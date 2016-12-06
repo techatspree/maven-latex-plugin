@@ -122,15 +122,32 @@ public class Settings {
 
     /**
      * The pattern which identifies a latex main file. 
-     * The default value is 
-     * <code>\s*\\(documentstyle|documentclass).*</code>. 
-     * If this is not appropriate, please modify 
-     * and notify the developer of this plugin. 
+
+     * The pattern which identifies a \LaTeX{} main file. 
+     * The default value is choosen to match quite exactly 
+     * the latex main files. 
+     * Here we assume that the latex main file should contain 
+     * the declaration `\textbackslash documentclass' 
+     * or the old fashioned 'documentstyle' 
+     * preceeded by a few constucts. 
+     * Strictly speaking, this is not necessary. 
+     * For a more thorough discussion, 
+     * and for an alternative approach, consult the manual. 
+     * <p>
+     * Since the pattern is chosen 
+     * according to documentation collected from the internet, 
+     * one can never be sure whether the pattern is perfect. 
+     * If the user finds that default value is not appropriate, 
+     * (s)he is asked to contribute 
+     * and to notify the developer of this plugin. 
      */
-    @Parameter(name = "patternLatexMainFile", 
-	       defaultValue = "\\s*\\\\(documentstyle|documentclass).*")
+    @Parameter(name = "patternLatexMainFile")
     private String patternLatexMainFile = 
-	"\\s*\\\\(documentstyle|documentclass).*";
+	"(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*((\d|\.)+)?|" + 
+	"%.*$|" + 
+	"\\input\{[^{}]*\}|" + 
+	"\s*)*" + 
+	"\\\\(documentstyle|documentclass).*";
 
 
     // texPath, commands and arguments 
@@ -1364,7 +1381,8 @@ public class Settings {
     // setter method for patternLatexMainFile in maven 
     // trims parameter before setting 
     public void setPatternLatexMainFile(String patternLatexMainFile) {
-	this.patternLatexMainFile = patternLatexMainFile.trim();
+	this.patternLatexMainFile = patternLatexMainFile
+	    .replaceAll("(\t|\n)+", "").trim();
     }
 
     // method introduces patternLatexMainFile in ant 
