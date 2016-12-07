@@ -102,7 +102,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	fig {
 	    // converts a fig-file into pdf 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
-	    // TEX01, WEX01
+	    // TEX01, WEX01, WEX02, WEX03, WEX04, WEX05 
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runFig2Dev(file, LatexDev.pdf);
@@ -117,7 +117,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	gp {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
-	    // TEX01, WEX01
+	    // TEX01, WEX01, WEX02, WEX03, WEX04, WEX05 
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runGnuplot2Dev(file, LatexDev.pdf);
@@ -132,7 +132,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	mp {
 	    // converts a metapost-file into mps-format 
 	    // invoking {@link #runMetapost2mps(File)} 
-	    // TEX01, WEX01
+	    // TEX01, WEX01, WEX02, WEX03, WEX04, WEX05 
 	    void transformSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runMetapost2mps(file);
@@ -191,6 +191,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	},
 	bib {
 	    void transformSrc(File file, LatexPreProcessor proc) {
+		proc.log.info("Bibliography file '" + file + "' found. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 	    }
@@ -204,7 +205,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * using <code>proc</code>. 
 	 * <p>
 	 * Logging: 
-	 * WEX01 applications for preprocessing graphic files failed. 
+	 * WEX01, WEX02, WEX03, WEX04, WEX05 
+	 * if applications for preprocessing graphic files failed. 
 	 *
 	 * @param file
 	 *    a file with ending given by {@link #getSuffix()}. 
@@ -242,7 +244,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WEX01 if running the fig2dev command failed. 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * if running the fig2dev command failed. 
      * </ul>
      *
      * @param figFile
@@ -254,7 +257,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    and once for creating the pdf_t-file. 
      * @see #create()
      */
-    // used in processGraphics(File) only 
+    // used in processGraphicsSelectMain(File) only 
     private void runFig2Dev(File figFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -262,9 +265,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	String command = this.settings.getFig2devCommand();
 	File workingDir = figFile.getParentFile();
 	String[] args;
-
-	//File pdfFile   = this.fileUtils.replaceSuffix(figFile, SUFFIX_PDF);
-
 
 	// create pdf-file (graphics without text) 
 	// embedded in some tex-file 
@@ -276,11 +276,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 figFile);
 	    this.log.debug("Running " + command + 
 			   " -Lpdftex  ... on '" + figFile.getName() + "'. ");
-	    // may throw BuildFailureException TEX01, log warning WEX01 
-	    this.executor.execute(workingDir, 
+	    // may throw BuildFailureException TEX01, 
+	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+  	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
 				  command, 
-				  args);
+				  args,
+				  this.fileUtils.replaceSuffix(figFile, 
+							       SUFFIX_PDF));
 	    //}
 
 	    // create tex-file (text without grapics) 
@@ -293,13 +296,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					 figFile);
 	    this.log.debug("Running " + command + 
 			   " -Lpdftex_t... on '" + figFile.getName() + "'. ");
-	    // may throw BuildFailureException TEX01, log warning WEX01 
-	    this.executor.execute(workingDir, 
+	    // may throw BuildFailureException TEX01, 
+	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+ 	    this.executor.execute(workingDir, 
 				  this.settings.getTexPath(), //**** 
 				  command, 
-				  args);
+				  args,
+				  this.fileUtils.replaceSuffix(figFile, 
+							       SUFFIX_PTX));
 	    //}
-	// no check: just warning that no output has been created. 
     }
 
     private String[] buildArgumentsFig2Pdf(LatexDev dev, 
@@ -382,9 +387,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WEX01 if running the ptx/pdf-conversion built-in in gnuplot fails. 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * if running the ptx/pdf-conversion built-in in gnuplot fails. 
      * </ul>
-      *
+     *
      * @param gpFile 
      *    the gp-file (gnuplot format) to be converted to pdf. 
      * @throws BuildFailureException
@@ -392,7 +398,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    in gnuplot fails. 
      * @see #create()
      */
-    // used in processGraphics(Collection) only 
+    // used in processGraphicsSelectMain(Collection) only 
     private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -425,11 +431,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 //	if (update(gpFile, ptxFile)) {
 	    this.log.debug("Running " + command + 
 			   " -e...  on '" + gpFile.getName() + "'. ");
-	    // may throw BuildFailureException TEX01, log warning WEX01 
+	    // may throw BuildFailureException TEX01, 
+	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 	    this.executor.execute(gpFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
 				  command, 
-				  args);
+				  args, 
+				  pdfFile, ptxFile);
 //	}
 	// no check: just warning that no output has been created. 
     }
@@ -457,7 +465,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WAP01 Running <code>command</code> failed. For details...
      * <li> WAP02 Running <code>command</code> failed. No log file 
      * <li> WAP04 if log file is not readable. 
-     * <li> WEX01 if running the mpost command failed. 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * if running the mpost command failed. 
      * </ul>
      *
      * @param mpFile
@@ -466,7 +475,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    TEX01 if invocation of the mpost command failed. 
      * @see #processGraphics(File)
      */
-    // used in processGraphics(Collection) only 
+    // used in processGraphicsSelectMain(Collection) only 
     private void runMetapost2mps(File mpFile) throws BuildFailureException {
 	this.log.info("Processing metapost-file '" + mpFile + "'. ");
 	String command = this.settings.getMetapostCommand();
@@ -476,18 +485,25 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				       mpFile);
 	this.log.debug("Running " + command + 
 		       " on '" + mpFile.getName() + "'. ");
-	// may throw BuildFailureException TEX01, log warning WEX01 
-	this.executor.execute(workingDir, 
+	// FIXME: not check on all created files, 
+	// but this is not worse than with latex 
+
+	// may throw BuildFailureException TEX01, 
+	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+  	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
 			      command, 
-			      args);
+			      args,
+			      this.fileUtils.replaceSuffix(mpFile, 
+							   "1"+SUFFIX_MPS));
+
 	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
 	// FIXME: what is xxx.mpx for? 
 	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
 	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
-    }
+   }
 
     /**
      * Deletes the graphic files 
@@ -563,7 +579,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    whether <code>texFile</code> is definitively a latex main file. 
      *    If this is not readable, <code>false</code>. 
      */
+    // used by addMainFile and by clearTargetTex 
     private boolean isLatexMainFile(File texFile) {
+System.out.println("isLatexMainFile(File texFile: "+texFile);
+	
 	assert texFile.exists();
 	// may log warning WFU03 cannot close 
 	Boolean res = this.fileUtils.matchInFile
@@ -626,7 +645,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * <ul>
      * <li> WPP03: Skipped processing of files with suffixes ... 
-     * <li> WEX01 if running graphic processors failed. 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * if running graphic processors failed. 
      * </ul>
      *
      * @throws BuildFailureException
@@ -637,7 +657,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    {@link LatexPreProcessor.SuffixHandler#mp} 
      *    because these invoke external programs. 
      */
-    // used in LatexProcessor.create() only 
+    // used in LatexProcessor.create() 
+    // and in LatexProcessor.processGraphics() only 
     // where files is the set of all files found in the tex source directory 
     // found with getFilesRec and thus without directories. 
     Collection<File> processGraphicsSelectMain(Collection<File> files) 
@@ -654,7 +675,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		this.log.debug("Skipping processing of file '" + file + "'. ");
 		skipped.add(suffix);
 	    } else {
-		// may throw BuildFailureException TEX01, log warning WEX01 
+		// may throw BuildFailureException TEX01, 
+		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 		handler.transformSrc(file, this);
 	    }
 	}
@@ -664,6 +686,44 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
 	return this.latexMainFiles;
     }
+
+    // Collection<File> processGraphicsSelectMain(DirNode node) 
+    // 	throws BuildFailureException {
+    // 	Collection<String> skipped = new TreeSet<String>();
+    // 	Collection<File> latexMainFiles = new TreeSet<File>();
+    // 	processGraphicsSelectMain(node, skipped, latexMainFiles);
+    // 	return latexMainFiles;
+    // }
+
+    // private void processGraphicsSelectMain(DirNode node, 
+    // 					   Collection<String> skipped, 
+    // 					   Collection<File> latexMainFiles) 
+    // 	throws BuildFailureException {
+
+    // 	assert node.isValid();
+    // 	// i.e. node.regularFile != null
+
+    // 	String suffix;
+    // 	SuffixHandler handler;
+    // 	for (File file : node.getRegularFiles()) {
+    // 	    suffix = this.fileUtils.getSuffix(file);
+    // 	    handler = SUFFIX2HANDLER.get(suffix);
+    // 	    if (handler == null) {
+    // 		this.log.debug("Skipping processing of file '" + file + "'. ");
+    // 		skipped.add(suffix);
+    // 	    } else {
+    // 		// may throw BuildFailureException TEX01, 
+    // 		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+    // 		handler.transformSrc(file, this);
+    // 	    }
+    // 	}
+
+    // 	DirNode subNode;
+    // 	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
+    // 	    subNode = entry.getValue();
+    // 	    processGraphicsSelectMain(subNode, skipped, latexMainFiles);
+    // 	}
+    // }
 
     /**
      * Deletes all created files in <code>texDirectory</code>. 
