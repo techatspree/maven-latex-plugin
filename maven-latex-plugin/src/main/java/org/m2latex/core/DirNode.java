@@ -21,15 +21,13 @@ public class DirNode {
 
     // null iff this DirNode is invalid according to isValid() 
     /**
-     * The set of regular files, i.e. files except directories 
+     * The set of names of regular files, i.e. files except directories 
      * in the directory described by this node. 
      * If the directory described by this node is not readable, 
      * this field is <code>null</code>. 
      *
      * @see #isValid()
      */
-    private final Set<File> regularFiles;
-
     private final Set<String> regularFileNames;
 
     /**
@@ -68,12 +66,10 @@ public class DirNode {
 	File[] files = fileUtils.listFilesOrWarn(dir);
 	if (files == null) {
 	    // Here, this node is irregular 
-	    this.regularFiles = null;
 	    this.regularFileNames = null;
 	    this.name2node = null;
 	    return;
 	}
-	this.regularFiles = new TreeSet<File>();
 	this.regularFileNames = new TreeSet<String>();
 	this.name2node = new TreeMap<String, DirNode>();
 	DirNode node;
@@ -87,7 +83,6 @@ public class DirNode {
 		}
 	    } else {
 		// FIXME: skip hidden files 
-		this.regularFiles.add(file);
 		this.regularFileNames.add(file.getName());
 	    }
 	}
@@ -99,10 +94,6 @@ public class DirNode {
     boolean isValid() {
 	assert (this.regularFileNames == null) == (this.name2node == null);
 	return this.regularFileNames != null;
-    }
-
-    Set<File> getRegularFiles() {
-	return this.regularFiles;
     }
 
     Set<String> getRegularFileNames() {

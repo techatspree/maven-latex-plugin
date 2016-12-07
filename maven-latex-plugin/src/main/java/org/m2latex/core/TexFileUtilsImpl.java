@@ -560,7 +560,7 @@ class TexFileUtilsImpl implements TexFileUtils {
     public void cleanUp(DirNode orgNode, File texDir) {
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	// cleanUpRec may log warning WFU05 Cannot delete... 
- 	cleanUpRec(orgNode, new DirNode(texDir, this));
+ 	cleanUpRec(texDir, orgNode, new DirNode(texDir, this));
     }
 
     /**
@@ -583,16 +583,23 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // FIXME: warn if deletion failed. 
     // used in cleanUp only 
-     private void cleanUpRec(DirNode orgNode, DirNode currNode) {
+    private void cleanUpRec(File dir, DirNode orgNode, DirNode currNode) {
    	assert       orgNode.getSubdirs().keySet()
 	    .equals(currNode.getSubdirs().keySet());
+	File file;
   	for (String key : orgNode.getSubdirs().keySet()) {
-	    cleanUpRec( orgNode.getSubdirs().get(key), 
+	    file = new File(dir, key);
+	    cleanUpRec(file,
+		        orgNode.getSubdirs().get(key), 
 		       currNode.getSubdirs().get(key));
     	}
-     	Collection<File> currFiles = currNode.getRegularFiles();
-    	currFiles.removeAll(orgNode.getRegularFiles());
-   	for (File file : currFiles) {
+     	// Collection<File> currFiles = currNode.getRegularFiles();
+    	// currFiles.removeAll(orgNode.getRegularFiles());
+     	Collection<String> currFileNames = currNode.getRegularFileNames();
+    	currFileNames.removeAll(orgNode.getRegularFileNames());
+
+   	for (String fileName : currFileNames) {
+ 	    file = new File(dir, fileName);
     	    // may log warning WFU05: Cannot delete file
     	    deleteOrWarn(file);
     	}
