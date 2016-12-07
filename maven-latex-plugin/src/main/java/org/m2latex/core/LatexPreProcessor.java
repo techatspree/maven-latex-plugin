@@ -703,13 +703,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // used in LatexProcessor.create() 
     // and in LatexProcessor.processGraphics() only 
     // where 'node' represents the tex source directory 
-    Collection<File> processGraphicsSelectMain(DirNode texNode) 
+    Collection<File> processGraphicsSelectMain(File dir, DirNode texNode) 
     	throws BuildFailureException {
     	Collection<String> skipped = new TreeSet<String>();
     	Collection<File> latexMainFiles = new TreeSet<File>();
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05, WFU03, WPP02 
-      	processGraphicsSelectMain(texNode, skipped, latexMainFiles);
+      	processGraphicsSelectMain(dir, texNode, skipped, latexMainFiles);
 
     	if (!skipped.isEmpty()) {
     	    this.log.warn("WPP03: Skipped processing of files with suffixes " + 
@@ -740,7 +740,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    {@link LatexPreProcessor.SuffixHandler#mp} 
      *    because these invoke external programs. 
      */
-    private void processGraphicsSelectMain(DirNode node, 
+    private void processGraphicsSelectMain(File dir, 
+					   DirNode node, 
     					   Collection<String> skipped, 
     					   Collection<File> latexMainFiles) 
     	throws BuildFailureException {
@@ -751,7 +752,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     	String suffix;
     	SuffixHandler handler;
-    	for (File file : node.getRegularFiles()) {
+	File file;
+   	for (String fileName : node.getRegularFileNames()) {
+	    file = new File(dir, fileName);
     	    suffix = this.fileUtils.getSuffix(file);
     	    handler = SUFFIX2HANDLER.get(suffix);
     	    if (handler == null) {
@@ -768,13 +771,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// of this directory 
 	latexMainFiles.addAll(this.latexMainFiles);
 
-    	DirNode subNode;
     	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
-    	    subNode = entry.getValue();
 	    // may throw BuildFailureException TEX01, 
 	    // log warning WEX01, WEX02, WEX03, WEX04, WEX05, WPP03 
 	    // WFU03, WPP02 
-     	    processGraphicsSelectMain(subNode, skipped, latexMainFiles);
+     	    processGraphicsSelectMain(new File(dir, entry.getKey()),
+				      entry.getValue(), 
+				      skipped, 
+				      latexMainFiles);
     	}
     }
 
@@ -791,11 +795,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texNode
-     *    a node representing the tex source directory. 
+     *    a node representing the tex source directory 
+     *    or a subdirectory. 
      */
-    void clearCreated(DirNode texNode) {
+    // invoked recursively; except that used only in 
+    // LatexProcessor.clearAll()
+    void clearCreated(File dir, DirNode node) {
+	assert dir.isDirectory();
 	SuffixHandler handler;
-   	for (File file : texNode.getRegularFiles()) {
+	File file;
+   	for (String fileName : node.getRegularFileNames()) {
+	    file = new File(dir, fileName);
 	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
 	    if (handler != null) {
 		// may log warning WPP02, WFU01, WFU03, WFU05 
@@ -803,12 +813,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	}
 
-   	DirNode subNode;
-    	for (Map.Entry<String,DirNode> entry 
-		 : texNode.getSubdirs().entrySet()) {
-    	    subNode = entry.getValue();
+    	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
 	    // may log warning WPP02, WFU01, WFU03, WFU05 
-    	    clearCreated(subNode);
+    	    clearCreated(new File(dir, entry.getKey()), entry.getValue());
     	}
     }
 

@@ -149,7 +149,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * This consists in reading the parameters 
      * via {@link ParameterAdapter#initialize()} 
      * processing graphic-files 
-     * via {@link LatexPreProcessor#processGraphicsSelectMain(DirNode)} 
+     * via {@link LatexPreProcessor#processGraphicsSelectMain(File, DirNode)} 
      * and processing the tex main files 
      * via {@link Target#processSource(LatexProcessor, File)}. 
      * The resulting files are identified by its suffixes 
@@ -196,11 +196,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.log.debug("Settings: " + this.settings.toString() );
 
 	// may throw BuildFailureException TSS01 
-        File texDir = this.settings.getTexSrcDirectoryFile();
+	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
- 	DirNode node = new DirNode(texDir, this.fileUtils);
+	DirNode node = new DirNode(texDir, this.fileUtils);
 
 	try {
 	    // process graphics and determine latexMainFiles 
@@ -208,7 +208,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // log warning WFU03, WPP02, WPP03, 
 	    // WEX01, WEX02, WEX03, WEX04, WEX05  
 	    Collection<File> latexMainFiles = this.preProc
-		.processGraphicsSelectMain(node);
+		.processGraphicsSelectMain(texDir, node);
 
 	    for (File texFile : latexMainFiles) {
 		// throws BuildFailureException TFU01 
@@ -277,7 +277,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// may throw BuildFailureException TEX01, 
 	// log warning WFU03, WPP02, WPP03, 
 	// WEX01, WEX02, WEX03, WEX04, WEX05  
-	this.preProc.processGraphicsSelectMain(node);
+	this.preProc.processGraphicsSelectMain(texDir, node);
     }
 
     /**
@@ -318,7 +318,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	// clearCreated may log warnings WPP02, WFU01, WFU03, WFU05 
-	this.preProc.clearCreated(new DirNode(texDir, this.fileUtils));
+	this.preProc.clearCreated(texDir, new DirNode(texDir, this.fileUtils));
    }
 
 

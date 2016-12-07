@@ -408,7 +408,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      */
     // used only by 
     // LatexPreProcessor.processGraphicsSelectMain(Collection) 
-    // LatexPreProcessor.clearCreated(File) 2x
+    // LatexPreProcessor.clearCreated(DirNode) 
     // FIXME: problem if filename starts with . and has no further . 
     // then we have a hidden file and the suffix is all but the . 
     // This is not appropriate. 
