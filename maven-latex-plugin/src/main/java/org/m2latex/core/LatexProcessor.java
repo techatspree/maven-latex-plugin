@@ -318,7 +318,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	// clearCreated may log warnings WPP02, WFU01, WFU03, WFU05 
-	this.preProc.clearCreated(texDir, new DirNode(texDir, this.fileUtils));
+	this.preProc.clearCreated(texDir);
    }
 
 
