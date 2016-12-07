@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 /**
  * Build HTML documents and XHTML documents from LaTeX sources.
+ * Defines the goal <code>html</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "html")
 public class HtmlMojo extends CfgLatexMojo {
