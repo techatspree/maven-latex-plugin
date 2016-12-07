@@ -263,7 +263,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the fig2dev command failed. 
      * </ul>
      *
@@ -406,7 +406,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the ptx/pdf-conversion built-in in gnuplot fails. 
      * </ul>
      *
@@ -480,11 +480,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU03 cannot close log file 
-     * <li> WAP01 Running <code>command</code> failed. For details...
-     * <li> WAP02 Running <code>command</code> failed. No log file 
-     * <li> WAP04 if log file is not readable. 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WFU03: cannot close log file 
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if log file is not readable. 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the mpost command failed. 
      * </ul>
      *
@@ -603,8 +603,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     // used by addMainFile and by clearTargetTex 
     private boolean isLatexMainFile(File texFile) {
-System.out.println("isLatexMainFile(File texFile: "+texFile);
-	
 	assert texFile.exists();
 	// may log warning WFU03 cannot close 
 	Boolean res = this.fileUtils.matchInFile
@@ -623,8 +621,8 @@ System.out.println("isLatexMainFile(File texFile: "+texFile);
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU03 cannot close 
-     * <li> WPP02 tex file may be latex main file 
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
      * <ul>
      *
      * @param texFile
