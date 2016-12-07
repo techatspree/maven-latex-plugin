@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import java.util.Collection;
-import java.util.TreeSet;
 
 import java.util.regex.Pattern;
 
@@ -55,71 +54,6 @@ class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
-     * Returns the ordered collection of files 
-     * in folder <code>texDir</code> and subfolder. 
-     * <p>
-     * Logging: 
-     * WFU01 Cannot read directory 
-     *
-     * @param texDir
-     *    the tex-source directory. 
-     * @return
-     *    the ordered collection of files without directories 
-     *    in folder <code>texDir</code> and subfolder. 
-     */
-    // used in 
-    // - cleanUp 
-    // - LatexPreProcessor.clearCreated 
-    // - LatexProcessor.create()
-    // - LatexProcessor.processGraphics()
-    public Collection<File> getFilesRec(File texDir) {
-	assert texDir.exists() && texDir.isDirectory();
-
-	// FIXME: FileUtils.listFiles must not be used, 
-	// because in case of IO-problems silently skips directories 
-	// FIXME: skip hidden files 
-	// because they make problems with getSuffix(File)
-	Collection<File> res = new TreeSet<File>();
-	// may log warning WFU01 
-	innerListFiles(res, texDir);
-	return res;
-    }
-
-    // FIXME: copied from org.apache.commons.io.FileUtils 
-    /**
-     * Finds files within a given directory <code>dir</code> 
-     * and its subdirectories and adds them to <code>files</code>. 
-     * <p>
-     * Logging: 
-     * WFU01 Cannot read directory 
-     *
-     * @param files
-     *    the collection of files found so far.
-     * @param dir
-     *    the directory to search in. 
-     *    An assertion assures that this is indeed a directory. 
-     */
-    private void innerListFiles(Collection<File> files, File dir) {
-	// may log warning WFU01 
-	File[] found = listFilesOrWarn(dir);
-	if (found == null) {
-	    // Here, logging WFU01 already done 
-	    return;
-	}
-	File file;
-	for (int i = 0; i < found.length; i++) {
-	    file = found[i];
-	    if (file.isDirectory()) {
-		// may log warning WFU01 
-		innerListFiles(files, file);
-	    } else {
-		// FIXME: skip hidden files 
-		files.add(file);
-	    }
-	}
-    }
-
-    /**
      * Returns the listing of the directory <code>dir</code> 
      * or <code>null</code> if it is not readable 
      * and emit an according warning if so. 
@@ -133,7 +67,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    the list of entries of <code>dir</code> 
      *    or <code>null</code> if it is not readable. 
      */
-    private File[] listFilesOrWarn(File dir) {
+    public File[] listFilesOrWarn(File dir) {
 	assert dir != null && dir.isDirectory();
         File[] files = dir.listFiles();
 	if (files == null) {
@@ -298,6 +232,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	File srcFile, destFile;
 	for (int idx = 0; idx < outputFiles.length; idx++) {
 	    srcFile = outputFiles[idx];
+// FIXME: not clear why this fails 
 	    assert srcFile.exists();
 	    if (!fileFilter.accept(srcFile)) {
 		continue;
@@ -564,7 +499,9 @@ class TexFileUtilsImpl implements TexFileUtils {
     // used in LatexPreProcessor.clearTargetMp
     // used in LatexPreProcessor.clearTargetTex only 
     public void deleteX(File pFile, FileFilter filter) {
-	assert pFile.exists() && !pFile.isDirectory();
+	// FIXME: not true for clear target. 
+	// Required: cleanup in order reverse to creation. 
+//	assert pFile.exists() && !pFile.isDirectory();
 	File dir = pFile.getParentFile();
 	// may log warning WFU01 
 	File[] found = listFilesOrWarn(dir);
@@ -573,7 +510,9 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    return;
 	}
 	for (File delFile : found) {
-	    assert delFile.exists();
+	// FIXME: not true for clear target. 
+	// Required: cleanup in order reverse to creation. 
+//	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
 		assert delFile.exists() && !delFile.isDirectory();
 		// may log warning WFU05: failed to delete 
@@ -597,26 +536,27 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     /**
      * Deletes all files in <code>texDir</code> including subdirectories 
-     * which are not in <code>orgFiles</code>. 
-     * The background is, that <code>orFiles</code> are the files 
+     * which are not in <code>orgNode</code>. 
+     * The background is, that <code>orgNode</code> represents the files 
      * originally in <code>texDir</code>. 
+     * <p>
+     * Logging: 
+     * WFU01 Cannot read directory 
+     *
+     * @param orgNode
+     *    
+     * @param texDir
+     *    
      */
     // used in LatexProcessor.create() only 
     // FIXME: warn if deletion failed. 
-    public void cleanUp(Collection<File> orgFiles, File texDir) {
-
-	this.log.debug("Clearing set of sources. ");
-	Collection<File> currFiles = getFilesRec(texDir);
-	currFiles.removeAll(orgFiles);
-	for (File file : currFiles) {
-	    file.delete();
-	}
+    public void cleanUp(DirNode orgNode, File texDir) {
+	// constructor DirNode may log warning WFU01 Cannot read directory 
+    	orgNode.cleanUpRec(new DirNode(texDir, this));
     }
 
     public static void main(String[] args) {
 	Pattern pattern = Pattern.compile("^! ");
 	System.out.println("res: "+pattern.matcher(args[0]).find());
-	
     }
-
  }

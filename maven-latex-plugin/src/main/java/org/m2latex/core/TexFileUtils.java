@@ -29,7 +29,7 @@ import java.io.FileFilter;
 
 interface TexFileUtils {
 
-    Collection<File> getFilesRec(File dir);
+    File[] listFilesOrWarn(File dir);
 
     File getTargetDirectory(File sourceFile,
 			    File sourceBaseDir,
@@ -53,5 +53,5 @@ interface TexFileUtils {
 
     void deleteX(File texFile, FileFilter filter);
     void deleteOrWarn(File delFile);
-    void cleanUp(Collection<File> sourceFiles, File texDir);
+    void cleanUp(DirNode orgNode, File texDir);
 }
