@@ -1,16 +1,10 @@
 package org.m2latex.antTask;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
-import org.m2latex.core.Settings;
-import org.m2latex.core.MyBuildException;
-import org.m2latex.core.LatexProcessor;
+import org.m2latex.core.BuildFailureException;
 import org.m2latex.core.ParameterAdapter;
 import org.m2latex.core.Target;
-
-import java.io.File;
 
 import java.util.SortedSet;
 
@@ -23,12 +17,28 @@ public class LatexCfgTask extends AbstractLatexTask {
 
     /**
      * Invoked by ant executing the task. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU01: Cannot read directory... 
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WPP03: Skipped processing of files with suffixes ... 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
+     *      applications for preprocessing graphic files 
+     *      or processing a latex main file fails. 
+     * </ul>
+     * @throws BuildException
+     *    FIXME 
      */
     public void execute() throws BuildException {
  	initialize();
 	try {
+	    // may throw BuildFailureException FIXME 
+	    // may log warning WFU01, WFU03, WPP02, WPP03, 
+	    // WEX01, WEX02, WEX03, WEX04, WEX05 
 	    this.latexProcessor.create();
-	} catch (MyBuildException e) {
+	} catch (BuildFailureException e) {
 	    throw new BuildException(e.getMessage(), e.getCause());
 	}
      }
