@@ -162,6 +162,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <ul>
      * <li> WFU01: Cannot read directory... 
      * <li> WFU03: cannot close 
+     * <li> WFU05: Cannot delete... 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
@@ -238,7 +239,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    } // texFile 
 	} finally {
 	    if (this.settings.isCleanUp()) {
-		// may log warning WFU01 Cannot read directory 
+		// may log warning WFU01, WFU05 
 		this.fileUtils.cleanUp(node, texDir);
             }
         }

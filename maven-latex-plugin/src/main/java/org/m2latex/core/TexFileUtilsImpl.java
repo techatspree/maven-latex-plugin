@@ -541,7 +541,10 @@ class TexFileUtilsImpl implements TexFileUtils {
      * originally in <code>texDir</code>. 
      * <p>
      * Logging: 
-     * WFU01 Cannot read directory 
+     * <ul>
+     * <li> WFU01: Cannot read directory 
+     * <li> WFU05: Cannot delete... 
+     * </ul>
      *
      * @param orgNode
      *    
@@ -552,6 +555,7 @@ class TexFileUtilsImpl implements TexFileUtils {
     // FIXME: warn if deletion failed. 
     public void cleanUp(DirNode orgNode, File texDir) {
 	// constructor DirNode may log warning WFU01 Cannot read directory 
+	// cleanUpRec may log warning WFU05 Cannot delete... 
  	cleanUpRec(orgNode, new DirNode(texDir, this));
     }
 
@@ -562,6 +566,9 @@ class TexFileUtilsImpl implements TexFileUtils {
      * The background is, that <code>orgNode</code> represents the files 
      * originally in the directory and <code>currNode</code> 
      * the current ones at the end of the creating goal. 
+     * <p>
+     * Logging: 
+     * WFU05: Cannot delete... 
      *
      * @param orgNode
      *    the node representing the original files. 
@@ -582,8 +589,8 @@ class TexFileUtilsImpl implements TexFileUtils {
      	Collection<File> currFiles = currNode.getRegularFiles();
     	currFiles.removeAll(orgNode.getRegularFiles());
    	for (File file : currFiles) {
-    	    // FIXME: should be: deleteOrWarn 
-    	    file.delete();
+    	    // may log warning WFU05: Cannot delete file
+    	    deleteOrWarn(file);
     	}
     }
 
