@@ -31,17 +31,18 @@ import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.BuildFailureException;
 
 public class TexFileUtilsImplTest {
+
     private TexFileUtilsImpl utils = 
 	new TexFileUtilsImpl(new MavenLogWrapper(new SystemStreamLog()));
 
-    @Test public void testGetTargetDir() 
-	throws BuildExecutionException, BuildFailureException {
+    @Test public void testGetTargetDir() throws BuildFailureException {
 
         File expected = new File("/tmp/dir2/subdir");
-	// may throw BuildExecutionException 
-        File actual = utils.getTargetDirectory(new File("/tmp/dir1/subdir/file"),
-					       new File("/tmp/dir1"),
-					       new File("/tmp/dir2"));
+	// may throw BuildFailureException 
+        File actual = utils
+	    .getTargetDirectory(new File("/tmp/dir1/subdir/file"),
+				new File("/tmp/dir1"),
+				new File("/tmp/dir2"));
         assertEquals(expected, actual);
     }
 }
