@@ -13,7 +13,7 @@ package org.m2latex.core;
  * @author <a href="mailto:rei3ner@arcor.de">Ernst Reissner</a>
  * @version 1.0
  */
-public class MyBuildException extends Exception {
+class MyBuildException extends Exception {
 
    public MyBuildException(String message) {
        super(message);
