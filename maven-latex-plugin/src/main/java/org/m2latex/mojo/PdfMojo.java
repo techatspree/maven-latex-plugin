@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 /**
  * Build PDF or DVI documents from LaTeX sources.
+ * Defines the goal <code>pdf</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "pdf")
 public class PdfMojo extends CfgLatexMojo {

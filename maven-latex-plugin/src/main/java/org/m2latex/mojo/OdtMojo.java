@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 /**
  * Build documents in open office formats from LaTeX sources.
+ * Defines the goal <code>odt</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "odt")
 public class OdtMojo extends CfgLatexMojo {

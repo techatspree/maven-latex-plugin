@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 /**
  * Build rtf documents from LaTeX sources.
+ * Defines the goal <code>rtf</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "rtf")
 public class RtfMojo extends CfgLatexMojo {
