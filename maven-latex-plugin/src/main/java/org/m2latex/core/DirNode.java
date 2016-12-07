@@ -30,6 +30,8 @@ public class DirNode {
      */
     private final Set<File> regularFiles;
 
+    private final Set<String> regularFileNames;
+
     /**
      * The set of subdirectories 
      * in the directory described by this node: 
@@ -46,7 +48,7 @@ public class DirNode {
      * Creates a new <code>DirNode</code> instance.
      * <p>
      * Logging: 
-     * WFU01 Cannot read directory 
+     * WFU01: Cannot read directory 
      *
      * @param dir
      *    The directory this node represents 
@@ -55,6 +57,11 @@ public class DirNode {
      * @param fileUtils
      *    
      */
+    // used recursively but in addition only in 
+    // TexFileUtilsImpl.cleanUpRec,
+    // LatexProcessor.create()
+    // LatexProcessor.processGraphics()
+    // LatexProcessor.clearAll()
     public DirNode(File dir, TexFileUtils fileUtils) {
 	assert dir.isDirectory();
 	// may log WFU01 Cannot read directory 
@@ -62,10 +69,12 @@ public class DirNode {
 	if (files == null) {
 	    // Here, this node is irregular 
 	    this.regularFiles = null;
+	    this.regularFileNames = null;
 	    this.name2node = null;
 	    return;
 	}
 	this.regularFiles = new TreeSet<File>();
+	this.regularFileNames = new TreeSet<String>();
 	this.name2node = new TreeMap<String, DirNode>();
 	DirNode node;
 	for (File file : files) {
@@ -79,6 +88,7 @@ public class DirNode {
 	    } else {
 		// FIXME: skip hidden files 
 		this.regularFiles.add(file);
+		this.regularFileNames.add(file.getName());
 	    }
 	}
     }
@@ -87,12 +97,16 @@ public class DirNode {
      * Whether the directory described by this node is readable. 
      */
     boolean isValid() {
-	assert (this.regularFiles == null) == (this.name2node == null);
-	return this.regularFiles != null;
+	assert (this.regularFileNames == null) == (this.name2node == null);
+	return this.regularFileNames != null;
     }
 
     Set<File> getRegularFiles() {
 	return this.regularFiles;
+    }
+
+    Set<String> getRegularFileNames() {
+	return this.regularFileNames;
     }
 
     Map<String, DirNode> getSubdirs() {
