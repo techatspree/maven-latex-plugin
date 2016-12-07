@@ -76,33 +76,4 @@ public class DirNode {
     Map<String, DirNode> getSubdirs() {
 	return this.name2node;
     }
-
-
-    /**
-     * Deletes all files in <code>currNode</code> 
-     * which are not in <code>this</code> recursively including subdirectories. 
-     * The background is, that <code>this</code> represents the files 
-     * originally in the directory and <code>currNode</code> 
-     * the current ones at the end of the creating goal. 
-     *
-     * @param currNode
-     *    the node representing the current files. 
-     *    This is the latex source directory or a subdirectory. 
-     */
-     // FIXME: warn if deletion failed. 
-    // used in TexFileUtilsImpl.cleanUp only 
-    void cleanUpRec(DirNode currNode) {
-    	assert this.name2node.keySet().equals(currNode.getSubdirs().keySet());
-    	for (String key : getSubdirs().keySet()) {
-    	    this.getSubdirs().get(key)
-    		.cleanUpRec(currNode.getSubdirs().get(key));
-    	}
-    	Collection<File> currFiles = currNode.getRegularFiles();
-    	currFiles.removeAll(this.getRegularFiles());
-    	for (File file : currFiles) {
-    	    // FIXME: should be: deleteOrWarn 
-    	    file.delete();
-    	}
-     }
-
 }

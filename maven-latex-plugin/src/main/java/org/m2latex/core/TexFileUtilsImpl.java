@@ -510,8 +510,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    return;
 	}
 	for (File delFile : found) {
-	// FIXME: not true for clear target. 
-	// Required: cleanup in order reverse to creation. 
+	    // FIXME: not true for clear target. 
+	    // Required: cleanup in order reverse to creation. 
 //	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
 		assert delFile.exists() && !delFile.isDirectory();
@@ -552,7 +552,39 @@ class TexFileUtilsImpl implements TexFileUtils {
     // FIXME: warn if deletion failed. 
     public void cleanUp(DirNode orgNode, File texDir) {
 	// constructor DirNode may log warning WFU01 Cannot read directory 
-    	orgNode.cleanUpRec(new DirNode(texDir, this));
+ 	cleanUpRec(orgNode, new DirNode(texDir, this));
+    }
+
+    /**
+     * Deletes all files in <code>currNode</code> 
+     * which are not in <code>orgNode</code> recursively 
+     * including subdirectories. 
+     * The background is, that <code>orgNode</code> represents the files 
+     * originally in the directory and <code>currNode</code> 
+     * the current ones at the end of the creating goal. 
+     *
+     * @param orgNode
+     *    the node representing the original files. 
+     *    This is the latex source directory or a subdirectory. 
+     * @param currNode
+     *    the node representing the current files. 
+     *    This is the latex source directory or a subdirectory. 
+     */
+    // FIXME: warn if deletion failed. 
+    // used in cleanUp only 
+     private void cleanUpRec(DirNode orgNode, DirNode currNode) {
+   	assert       orgNode.getSubdirs().keySet()
+	    .equals(currNode.getSubdirs().keySet());
+  	for (String key : orgNode.getSubdirs().keySet()) {
+	    cleanUpRec( orgNode.getSubdirs().get(key), 
+		       currNode.getSubdirs().get(key));
+    	}
+     	Collection<File> currFiles = currNode.getRegularFiles();
+    	currFiles.removeAll(orgNode.getRegularFiles());
+   	for (File file : currFiles) {
+    	    // FIXME: should be: deleteOrWarn 
+    	    file.delete();
+    	}
     }
 
     public static void main(String[] args) {
