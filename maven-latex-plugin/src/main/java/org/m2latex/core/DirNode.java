@@ -25,10 +25,20 @@ public class DirNode {
 
     /**
      * Creates a new <code>DirNode</code> instance.
+     * <p>
+     * Logging: 
+     * WFU01 Cannot read directory 
      *
+     * @param dir
+     *    The directory this node represents 
+     *    including subdirectories recursively. 
+     *    This is the latex source directory or a subdirectory recursively. 
+     * @param fileUtils
+     *    
      */
     public DirNode(File dir, TexFileUtils fileUtils) {
 	assert dir.isDirectory();
+	// may log WFU01 Cannot read directory 
 	File[] files = fileUtils.listFilesOrWarn(dir);
 	if (files == null) {
 	    // Here, this node is irregular 
@@ -39,9 +49,10 @@ public class DirNode {
 	this.regularFiles = new TreeSet<File>();
 	this.name2node = new TreeMap<String, DirNode>();
 	DirNode node;
-	for (File file : dir.listFiles()) {
+	for (File file : files) {
 	    assert file.exists();
 	    if (file.isDirectory()) {
+		// may log WFU01 Cannot read directory 
 		node = new DirNode(file, fileUtils);
 		if (node.isValid()) {
 		    this.name2node.put(file.getName(), node);
@@ -66,18 +77,32 @@ public class DirNode {
 	return this.name2node;
     }
 
-    // void cleanUpRec(DirNode newNode) {
-    // 	assert this.name2node.keySet().equals(newNode.getSubdirs().keySet());
-    // 	for (String key : getSubdirs().keySet()) {
-    // 	    this.getSubdirs().get(key)
-    // 		.cleanUpRec(newNode.getSubdirs().get(key));
-    // 	}
-    // 	Collection<File> currFiles = newNode.getRegularFiles();
-    // 	currFiles.removeAll(this.getRegularFiles());
-    // 	for (File file : currFiles) {
-    // 	    // FIXME: should be: deleteOrWarn 
-    // 	    file.delete();
-    // 	}
-    //  }
+
+    /**
+     * Deletes all files in <code>currNode</code> 
+     * which are not in <code>this</code> recursively including subdirectories. 
+     * The background is, that <code>this</code> represents the files 
+     * originally in the directory and <code>currNode</code> 
+     * the current ones at the end of the creating goal. 
+     *
+     * @param currNode
+     *    the node representing the current files. 
+     *    This is the latex source directory or a subdirectory. 
+     */
+     // FIXME: warn if deletion failed. 
+    // used in TexFileUtilsImpl.cleanUp only 
+    void cleanUpRec(DirNode currNode) {
+    	assert this.name2node.keySet().equals(currNode.getSubdirs().keySet());
+    	for (String key : getSubdirs().keySet()) {
+    	    this.getSubdirs().get(key)
+    		.cleanUpRec(currNode.getSubdirs().get(key));
+    	}
+    	Collection<File> currFiles = currNode.getRegularFiles();
+    	currFiles.removeAll(this.getRegularFiles());
+    	for (File file : currFiles) {
+    	    // FIXME: should be: deleteOrWarn 
+    	    file.delete();
+    	}
+     }
 
 }
