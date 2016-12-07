@@ -59,7 +59,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      * and emit an according warning if so. 
      * <p>
      * Logging: 
-     * WFU01 Cannot read directory 
+     * WFU01: Cannot read directory 
      *
      * @param dir
      *    an existing directory. 
@@ -67,6 +67,9 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    the list of entries of <code>dir</code> 
      *    or <code>null</code> if it is not readable. 
      */
+    // used only in 
+    // constructor of DirNode 
+    // copyOutputToTargetFolder, deleteX
     public File[] listFilesOrWarn(File dir) {
 	assert dir != null && dir.isDirectory();
         File[] files = dir.listFiles();
@@ -99,7 +102,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      *    which corresponds to the parent directory of <code>sourceFile</code> 
      *    which is below <code>sourceBaseDir</code>. 
      * @throws BuildFailureException
-     *    TFU01 if the target directory that would be returned 
+     *    TFU01: if the target directory that would be returned 
      *    exists already as a regular file. 
      */
     // used by LatexProcessor.create() only 
