@@ -121,7 +121,7 @@
 		pdf2txtCommand="pdftotext"
 		pdf2txtOptions="">
 	<patternLatexMainFile>
-(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 %.*$|
 \\input\{[^{}]*\}|
 \s*)*

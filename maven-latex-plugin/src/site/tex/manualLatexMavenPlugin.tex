@@ -2187,7 +2187,7 @@ Then the default value will be extended.
 The default pattern for identifying a \LaTeX{} main file is 
 %
 \begin{verbatim}
-(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 %.*$|
 \\input\{[^{}]*\}|
 \s*)*
@@ -2198,7 +2198,8 @@ This means that the latex main file is the one
 containing {\tt\textbackslash documentclass} for modern classes 
 and {\tt\textbackslash documentstyle} for old fashioned ones. 
 This may be preceeded only by the command {\tt\textbackslash RequirePackage}, 
-by comment lines by {\tt\textbackslash input} and by space. 
+by comment lines, by {\tt\textbackslash input}, and by space. 
+Note that {\tt\textbackslash A} represents the beginning of the stream. 
 
 Strictly speaking, also {\tt\textbackslash(re)newcommands} 
 and other constructs are possible but not allowed here. 

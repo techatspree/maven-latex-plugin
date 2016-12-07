@@ -249,7 +249,7 @@
 		 (s)he is asked to contribute 
 		 and to notify the developer of this plugin. -->
 	    <patternLatexMainFile>
-(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 %.*$|
 \\input\{[^{}]*\}|
 \s*)*
