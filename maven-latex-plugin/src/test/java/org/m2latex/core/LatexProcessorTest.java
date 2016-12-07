@@ -51,12 +51,18 @@ public class LatexProcessorTest {
 	(settings, executor, log, fileUtils, new PdfMojo());
 
     private File texFile = new File(System.getProperty("tmp.dir"), "test.tex");
+    private File pdfFile = new File(System.getProperty("tmp.dir"), "test.pdf");
+    private File htmlFile= new File(System.getProperty("tmp.dir"), "test.html");
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
     private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
 
+    private File bblFile = new File(System.getProperty("tmp.dir"), "test.bbl");
     private File blgFile = new File(System.getProperty("tmp.dir"), "test.blg");
+
     private File idxFile = new File(System.getProperty("tmp.dir"), "test.idx");
+    private File indFile = new File(System.getProperty("tmp.dir"), "test.ind");
     private File ilgFile = new File(System.getProperty("tmp.dir"), "test.ilg");
+
     private File gloFile = new File(System.getProperty("tmp.dir"), "test.glo");
     private File istFile = new File(System.getProperty("tmp.dir"), "test.ist");
     private File xdyFile = new File(System.getProperty("tmp.dir"), "test.xdy");
@@ -218,12 +224,20 @@ public class LatexProcessorTest {
     private void mockConstrLatexMainDesc() {
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
 	fileUtilsCtrl.setReturnValue(xxxFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_PDF);
+	fileUtilsCtrl.setReturnValue(pdfFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	fileUtilsCtrl.setReturnValue(logFile);
+
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX);
 	fileUtilsCtrl.setReturnValue(idxFile);
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IND);
+	fileUtilsCtrl.setReturnValue(indFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG);
 	fileUtilsCtrl.setReturnValue(ilgFile);
+
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS);
+	fileUtilsCtrl.setReturnValue(glsFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO);
 	fileUtilsCtrl.setReturnValue(gloFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLG);
@@ -265,10 +279,14 @@ public class LatexProcessorTest {
 	    return;
 	}
 
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_BBL);
+        fileUtilsCtrl.setReturnValue(bblFile);
+  
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getBibtexCommand(),
-			 new String[] {auxFile.getPath()});
+			 new String[] {auxFile.getPath()},
+			 bblFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
 
@@ -293,7 +311,8 @@ public class LatexProcessorTest {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getMakeIndexCommand(),
-			 new String[] {idxFile.getPath()});
+			 new String[] {idxFile.getPath()},
+			 indFile);
 	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
     }
@@ -308,7 +327,8 @@ public class LatexProcessorTest {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getMakeGlossariesCommand(),
-			 new String[] {xxxFile.getName()} );
+			 new String[] {xxxFile.getName()},
+			 glsFile);
 	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
     }
@@ -320,7 +340,8 @@ public class LatexProcessorTest {
 			 settings.getLatex2pdfCommand(),
 			 LatexProcessor
 			 .buildArguments(settings.getLatex2pdfOptions(), 
-					 texFile));
+					 texFile),
+			 pdfFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
     }
@@ -329,13 +350,14 @@ public class LatexProcessorTest {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
-			 tex2htmlArgsExpected);
+			 tex2htmlArgsExpected,
+			 htmlFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
 
-	// logErrs
-	// fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
-	// fileUtilsCtrl.setReturnValue(logFile);
+	// html
+	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_HTML);
+	fileUtilsCtrl.setReturnValue(htmlFile);
 
 	// since log file does not exist 
 	// fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
