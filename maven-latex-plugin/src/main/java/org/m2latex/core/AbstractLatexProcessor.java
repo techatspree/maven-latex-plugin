@@ -80,7 +80,7 @@ abstract class AbstractLatexProcessor {
     	} else {
     	    this.log.warn("WAP02: Running " + command + 
 			  " failed: No log file '" + 
-    			   logFile.getName() + "' found. ");
+    			   logFile.getName() + "' written. ");
     	}
     }
 
