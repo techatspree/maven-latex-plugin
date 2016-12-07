@@ -495,6 +495,7 @@ class TexFileUtilsImpl implements TexFileUtils {
      *
      * @param pFile
      *    a file in a folder to be deleted from. 
+     *    This is either a metapost file or a latex main file. 
      * @param filter
      *    a filter which decides which files 
      *    from the parent directory of <code>pFile</code> to delete. 
