@@ -43,6 +43,14 @@ public class CfgLatexMojo extends AbstractLatexMojo {
 
     /**
      * Invoked by maven executing the plugin. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU01 Cannot read directory... 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     *      applications for preprocessing graphic files 
+     *      or processing a latex main file fails. 
+     * </ul>
      */
     public void execute() throws MojoFailureException {
 	initialize();
