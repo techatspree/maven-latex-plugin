@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Describe class DirNode here.
+ * Represents the contents of a directory. 
  *
  *
  * Created: Tue Dec  6 03:05:24 2016
@@ -20,7 +20,26 @@ import java.util.TreeMap;
 public class DirNode {
 
     // null iff this DirNode is invalid according to isValid() 
+    /**
+     * The set of regular files, i.e. files except directories 
+     * in the directory described by this node. 
+     * If the directory described by this node is not readable, 
+     * this field is <code>null</code>. 
+     *
+     * @see #isValid()
+     */
     private final Set<File> regularFiles;
+
+    /**
+     * The set of subdirectories 
+     * in the directory described by this node: 
+     * The keys are the names and the according values 
+     * are the nodes describing the subdirectories. 
+     * If the directory described by this node is not readable, 
+     * this field is <code>null</code>. 
+     *
+     * @see #isValid()
+     */
     private final Map<String, DirNode> name2node;
 
     /**
@@ -64,6 +83,9 @@ public class DirNode {
 	}
     }
 
+    /**
+     * Whether the directory described by this node is readable. 
+     */
     boolean isValid() {
 	assert (this.regularFiles == null) == (this.name2node == null);
 	return this.regularFiles != null;
