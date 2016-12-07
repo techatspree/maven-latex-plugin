@@ -29,7 +29,9 @@ import java.util.SortedSet;
 //import java.util.EnumSet;
 
 /**
- * Clears all created files in the folders containing the LaTeX sources.
+ * Transforms all graphic files into formats 
+ * which can be included into LaTeX files.
+ * Defines the goal <code>grp</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "grp")
 public class GraphicsMojo extends AbstractLatexMojo {
@@ -42,10 +44,32 @@ public class GraphicsMojo extends AbstractLatexMojo {
 
     /**
      * Invoked by maven executing the plugin. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU01: Cannot read directory 
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WPP03: Skipped processing of files with suffixes ... 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
+     * if running graphic processors failed. 
+     * </ul>
+     *
+     * @throws MojoFailureException
+     *    <ul>
+     *    <li> 
+     *    TSS01 if the tex source directory does either not exist 
+     *    or is not a directory. 
+     *    <li> 
+     *    TEX01 invoking FIXME
+     *    </ul>
      */
     public void execute() throws MojoFailureException  {
 	initialize();
 	try {
+	    // may throw BuildFailureException TSS01, TEX01 
+	    // may log warnings WFU01, WFU03, WPP02, WPP03, 
+	    // WEX01, WEX02, WEX03, WEX04, WEX05: 
 	    this.latexProcessor.processGraphics();
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());

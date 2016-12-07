@@ -31,6 +31,8 @@ import java.util.SortedSet;
 
 /**
  * Clears all created files in the folders containing the LaTeX sources.
+ * Defines the goal <code>clr</code> 
+ * and adds it to the lifecycle phase <code>clean</code>. 
  */
 @Mojo(name = "clr", defaultPhase = LifecyclePhase.CLEAN)
 public class ClearMojo extends AbstractLatexMojo {
@@ -43,10 +45,24 @@ public class ClearMojo extends AbstractLatexMojo {
 
     /**
      * Invoked by maven executing the plugin. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WFU01: Cannot read directory...
+     * <li> WFU03: cannot close tex file 
+     * <li> WFU05: Failed to delete file 
+     * </ul>
+     *
+     * @throws BuildFailureException 
+     *    TSS01 if the tex source directory does either not exist 
+     *    or is not a directory. 
      */
     public void execute() throws MojoFailureException {
 	initialize();
 	try {
+	    // may throw BuildFailureException TSS01 
+	    // may log warnings WPP02, WFU01, WFU03, WFU05 
 	    this.latexProcessor.clearAll();
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());

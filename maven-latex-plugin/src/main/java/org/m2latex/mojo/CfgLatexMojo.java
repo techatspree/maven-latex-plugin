@@ -30,7 +30,9 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import java.util.SortedSet;
 
 /**
- * Builds documents in the formats configured in the pom. 
+ * Builds documents in the formats configured in the pom from LaTeX sources. 
+ * Defines the goal <code>cfg</code> 
+ * and adds it to the lifecycle phase <code>site</code>. 
  */
 @Mojo(name = "cfg", defaultPhase = LifecyclePhase.SITE)
 public class CfgLatexMojo extends AbstractLatexMojo {
@@ -46,15 +48,23 @@ public class CfgLatexMojo extends AbstractLatexMojo {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU01 Cannot read directory... 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WFU01: Cannot read directory... 
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WPP03: Skipped processing of files with suffixes ... 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      applications for preprocessing graphic files 
      *      or processing a latex main file fails. 
      * </ul>
+     * @throws MojoFailureException
+     *    FIXME 
      */
     public void execute() throws MojoFailureException {
 	initialize();
 	try {
+	    // may throw BuildFailureException FIXME 
+	    // may log warning WFU01, WFU03, WPP02, WPP03, 
+	    // WEX01, WEX02, WEX03, WEX04, WEX05 
 	    this.latexProcessor.create();
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());
