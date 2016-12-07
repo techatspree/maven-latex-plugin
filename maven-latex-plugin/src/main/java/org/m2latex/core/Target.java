@@ -21,7 +21,7 @@ public enum Target {
      */
     rtf() {
 	private final String RTF_OUTPUT_FILES = "^T$T\\.rtf$";
-	// TEX01 
+	// may throw BuildFailureException TEX01 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2rtf(texFile);
@@ -37,7 +37,7 @@ public enum Target {
      */
     pdf() {
 	private final String LATEX_OUTPUT_FILES = "^T$T\\.(pdf|dvi|ps)$";
-	// TEX01 
+	// may throw BuildFailureException TEX01 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2pdf(texFile);
@@ -52,7 +52,7 @@ public enum Target {
      *
      */
     html() {
-	// TEX01 
+	// may throw BuildFailureException TEX01 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2html(texFile);
@@ -69,7 +69,7 @@ public enum Target {
     odt() {
 	private final String OOFFICE_OUTPUT_FILES = 
 	    "^T$T\\.(odt|fodt|uot|uot)$";
-	// TEX01 
+	// may throw BuildFailureException TEX01 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2odt(texFile);
@@ -86,7 +86,7 @@ public enum Target {
     docx() {
 	private final String MSWORD_OUTPUT_FILES = 
 	    "^T$T\\.(doc(|6|.95|.x|.x7)|rtf)$";
-	// TEX01 
+	// may throw BuildFailureException TEX01 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2docx(texFile);
@@ -101,7 +101,7 @@ public enum Target {
      */
     txt() {
 	private final String TXT_OUTPUT_FILES = "^T$T\\.txt$";
-	// TEX01 
+	// may throw BuildFailureException TEX01 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildFailureException {
 	    latexProcessor.processLatex2txt(texFile);
@@ -115,9 +115,9 @@ public enum Target {
     /**
      * Processes the latex main file <code>texFile</code> 
      * delegating to <code>latexProcessor</code>. 
-     * Logging: 
+     * Logging: FIXME: may be incomplete 
      * <ul>
-     * <li> WEX01 if running a command 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 if running a command 
      *      to transform <code>texFile</code> failed. 
      * </ul>
      *
