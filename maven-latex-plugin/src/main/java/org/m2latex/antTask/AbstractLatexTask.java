@@ -2,17 +2,13 @@ package org.m2latex.antTask;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
 
 import org.m2latex.core.Settings;
-import org.m2latex.core.MyBuildException;
 import org.m2latex.core.LatexProcessor;
 import org.m2latex.core.ParameterAdapter;
-import org.m2latex.core.Target;
 
 import java.io.File;
 
-import java.util.SortedSet;
 
 abstract class AbstractLatexTask extends Task implements ParameterAdapter {
 
@@ -47,7 +43,9 @@ abstract class AbstractLatexTask extends Task implements ParameterAdapter {
         // where this task is used?
         //log("I am used in: " + getLocation() + "'. ");
 	if (this.settings == null) {
-            throw new BuildException("No settings found. ");
+	    // Here, no configuration is defined in build file, 
+	    // i.e. object is not created by ant
+	    this.settings = new Settings();
         }
 	this.settings.setBaseDirectory(getPropertyFile("basedir"));
 	this.settings.setTargetSiteDirectory(getPropertyFile("targetSiteDir"));
