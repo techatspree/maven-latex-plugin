@@ -155,7 +155,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) {
 		proc.log.info("Processing svg-file '" + file + 
-		 	      "' done implicitly in latex run. ");
+		 	      "' deferred to latex run. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
@@ -169,8 +169,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) {
-		proc.log.info("No processing for jpg-file '" + file + 
-			      "' needed. ");
+		proc.log.info("Jpg-file '" + file + "' needs no processing. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 	    }
@@ -182,8 +181,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) {
-		proc.log.info("No processing for png-file '" + file + 
-			      "' needed. ");
+		proc.log.info("Png-file '" + file + "' needs no processing. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 	    }
@@ -210,7 +208,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) {
-		proc.log.info("Bibliography file '" + file + "' found. ");
+		proc.log.info("Found bibliography file '" + file + "'. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 	    }
@@ -680,7 +678,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	if (!isLatexMainFile(texFile)) {
 	    return;
 	}
-	this.log.info("Deleting latex main file '" + texFile + "'s targets. ");
+	this.log.info("Deleting targets of latex main file '" + 
+		      texFile + "'. ");
 	FileFilter filter = this.fileUtils.getFileFilter
 	    (texFile, this.settings.getPatternClearFromLatexMain());
 	// may log warning WFU01, WFU05 
@@ -837,6 +836,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearCreated(File dir, DirNode node) {
 	assert dir.isDirectory();
+	// FIXME: tries to delete targets of created svg-files. 
 	File file;
 	SuffixHandler handler;
    	for (String fileName : node.getRegularFileNames()) {
