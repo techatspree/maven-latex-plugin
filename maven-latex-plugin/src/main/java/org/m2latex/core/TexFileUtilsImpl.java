@@ -235,7 +235,6 @@ class TexFileUtilsImpl implements TexFileUtils {
 	File srcFile, destFile;
 	for (int idx = 0; idx < outputFiles.length; idx++) {
 	    srcFile = outputFiles[idx];
-// FIXME: not clear why this fails 
 	    assert srcFile.exists();
 	    if (!fileFilter.accept(srcFile)) {
 		continue;
@@ -261,8 +260,8 @@ class TexFileUtilsImpl implements TexFileUtils {
 	    // assert  !destFile.exists() 
 	    // 	|| (!destFile.isDirectory() && destFile.canWrite());
 
-	    this.log.info("Copying '" + srcFile.getName() + 
-			  "' to '" + targetDir + "'. ");
+	    this.log.debug("Copying '" + srcFile.getName() + 
+			   "' to '" + targetDir + "'. ");
 	    try {
 		// may throw IOException: opening streams, read/write 
 		// may log warning WFU03: Cannot close 
@@ -505,7 +504,7 @@ class TexFileUtilsImpl implements TexFileUtils {
     public void deleteX(File pFile, FileFilter filter) {
 	// FIXME: not true for clear target. 
 	// Required: cleanup in order reverse to creation. 
-//	assert pFile.exists() && !pFile.isDirectory();
+	assert pFile.exists() && !pFile.isDirectory();
 	File dir = pFile.getParentFile();
 	// may log warning WFU01 
 	File[] found = listFilesOrWarn(dir);
@@ -516,7 +515,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 	for (File delFile : found) {
 	    // FIXME: not true for clear target. 
 	    // Required: cleanup in order reverse to creation. 
-//	    assert delFile.exists();
+	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
 		assert delFile.exists() && !delFile.isDirectory();
 		// may log warning WFU05: failed to delete 
@@ -526,12 +525,17 @@ class TexFileUtilsImpl implements TexFileUtils {
     }
 
     /**
+     * Deletes <code>delFile</code> or logs a warning. 
      * <p>
      * Logging: 
-     * WFU05 failed to delete 
+     * WFU05: failed to delete 
+     *
+     * @param delFile
+     *    the existing file to be deleted. 
+     *    This must not be a directory. 
      */
     public void deleteOrWarn(File delFile) {
-	assert delFile.exists();
+	assert delFile.exists() && !delFile.isDirectory();
 	if (!delFile.delete()) {
 	    this.log.warn("WFU05: Cannot delete file '" + 
 			  delFile + "'. ");
