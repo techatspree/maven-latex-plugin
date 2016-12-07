@@ -30,17 +30,16 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class CommandExecutorImplTest
-{
-    @Test public void testExecute()
-        throws Exception
-    {
+public class CommandExecutorImplTest {
+    @Test public void testExecute() throws BuildFailureException {
         CommandExecutorImpl executor = 
 	    new CommandExecutorImpl(new MavenLogWrapper(new SystemStreamLog()));
         String echoText = "LaTeX";
-        String output = executor.execute( new File( "." ), 
-					  null, 
-					  "echo", new String[] { echoText } );
+        String output = executor.execute(new File("."), 
+					 null, 
+					 "echo", 
+					 new String[] {echoText},
+					 new File("."));
         assertEquals( echoText, output.subSequence( 0, echoText.length() ) );
     }
 }
