@@ -38,14 +38,115 @@ class CommandExecutorImpl implements CommandExecutor {
         this.log = log;
     }
 
+
+   /**
+     * Logging: 
+     * <ul>
+     * <li> WEX01: return code other than 0. 
+     * <li> WEX02: no target file 
+     * <li> WEX03: target file not updated 
+     * <li> WEX04: cannot read target file 
+     * <li> WEX05: may emit false warnings
+     * </ul>
+     */
+    public final String execute(File workingDir, 
+				File pathToExecutable, 
+				String command, 
+				String[] args, 
+				File... resFile) throws BuildFailureException {
+	// analyze old result files 
+	assert resFile.length > 0;
+	boolean[] existsTarget = new boolean[resFile.length];
+	long[] lastModifiedTarget = new long[resFile.length];
+	long currentTime = System.currentTimeMillis();
+	long minTimePast = Long.MAX_VALUE;
+	for (int idx = 0; idx < resFile.length; idx++) {
+	    existsTarget      [idx] = resFile[idx].exists();
+	    lastModifiedTarget[idx] = resFile[idx].lastModified();
+	    assert lastModifiedTarget[idx] <= currentTime;
+	    // correct even if lastModifiedTarget[idx]==0 
+	    minTimePast = Math.min(minTimePast, 
+				   currentTime-lastModifiedTarget[idx]);
+	}
+
+	// FIXME: this is based on a file system 
+	// with modification time in steps of seconds, i.e. 1000ms 
+	if (minTimePast < 1001) {
+	    try {
+		// 1001 is the minimal span of time to change modification time 
+		Thread.sleep(1001-minTimePast);// for update control of target 
+	    } catch (InterruptedException ie) {
+		this.log.warn
+		    ("WEX05: Update control may emit false warnings. ");
+	    }
+	}
+
+	// Proper execution 
+	// may throw BuildFailureException TEX01, log warning WEX01 
+	String res = execute(workingDir, pathToExecutable, command, args);
+
+	// may log WEX02, WEX03, WEX04 
+	for (int idx = 0; idx < resFile.length; idx++) {
+	    isUpdatedOrWarn(command, resFile[idx], 
+			    existsTarget[idx], lastModifiedTarget[idx]);
+	}
+
+	return res;
+    }
+
+
+    // returns whether this method logged a warning 
+    // FIXME: return value nowhere used 
+    /**
+     * Logging: 
+     * <ul>
+     * <li> WEX02: no target file 
+     * <li> WEX03: target file not updated 
+     * <li> WEX04: cannot read target file 
+     * </ul>
+     */
+    private boolean isUpdatedOrWarn(String command, 
+				    File target, 
+				    boolean existedBefore,
+				    long lastModifiedBefore) {
+	if (!target.exists()) {
+	    this.log.warn("WEX02: Running " + command + 
+			  " failed: No target file '" + 
+			  target.getName() + "' written. ");
+	    return false;
+	}
+	assert target.exists();
+	if (!existedBefore) {
+	    return true;
+	}
+	assert existedBefore && target.exists();
+
+	long lastModifiedAfter = target.lastModified();
+	if (lastModifiedBefore == 0 || lastModifiedAfter == 0) {
+	    this.log.warn("WEX04: Cannot read target file '" + 
+			  target.getName() + "'; may be outdated. ");
+	    return false;
+	}
+	assert lastModifiedBefore > 0 && lastModifiedAfter > 0;
+
+	if (lastModifiedAfter <= lastModifiedBefore) {
+	    assert lastModifiedAfter == lastModifiedBefore;
+	    this.log.warn("WEX03: Running " + command + 
+			  " failed: Target file '" + 
+			  target.getName() + "' is not updated. ");
+	    return false;
+	}
+	return true;
+    }
+
     /**
      * Execute <code>command</code> with arguments <code>args</code> 
      * in the working directory <code>workingDir</code>. 
      * Here, <code>pathToExecutable</code> is the path 
      * to the executable. May be null? 
      * <p>
-     * Logs a warning, if the <code>command</code> returns 
-     * with return code other than <code>0</code>. 
+     * Logging: 
+     * WEX01 for return code other than 0. 
      *
      * @param workingDir
      *    the working directory. 
@@ -78,10 +179,12 @@ class CommandExecutorImpl implements CommandExecutor {
      *    on the process to be executed thrown by {@link Process#waitFor()}. 
      *    </ul>
      */
-    public final String execute(File workingDir, 
-				File pathToExecutable, 
-				String command, 
-				String[] args) throws BuildFailureException {
+    private final String execute(File workingDir, 
+				 File pathToExecutable, 
+				 String command, 
+				 String[] args) throws BuildFailureException {
+
+	// prepare execution 
 	String executable = new File(pathToExecutable, command).getPath();
 	Commandline cl = new Commandline(executable);
 	cl.getShell().setQuotedArgumentsEnabled(false);
@@ -90,6 +193,7 @@ class CommandExecutorImpl implements CommandExecutor {
 	StringStreamConsumer output = new StringStreamConsumer();
 	log.debug("Executing: " + cl + " in: " + workingDir + ". ");
 
+	// perform execution and collect results 
 	try {
 	    // may throw CommandLineException 
 	    int returnCode = executeCommandLine(cl, output, output);
