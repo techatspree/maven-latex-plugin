@@ -590,11 +590,9 @@ class TexFileUtilsImpl implements TexFileUtils {
   	for (String key : orgNode.getSubdirs().keySet()) {
 	    file = new File(dir, key);
 	    cleanUpRec(file,
-		        orgNode.getSubdirs().get(key), 
+		       orgNode .getSubdirs().get(key), 
 		       currNode.getSubdirs().get(key));
     	}
-     	// Collection<File> currFiles = currNode.getRegularFiles();
-    	// currFiles.removeAll(orgNode.getRegularFiles());
      	Collection<String> currFileNames = currNode.getRegularFileNames();
     	currFileNames.removeAll(orgNode.getRegularFileNames());
 
