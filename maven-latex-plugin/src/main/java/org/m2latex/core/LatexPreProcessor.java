@@ -30,9 +30,9 @@ import java.util.HashMap;
  * The latex pre-processor is for preprocessing graphic files 
  * in formats which cannot be included directly into a latex-file 
  * and in finding the latex main files 
- * which is done in {@link #processGraphicsSelectMain(Collection)} 
+ * which is done in {@link #processGraphicsSelectMain(DirNode)} 
  * and in clearing the created files from the latex source directory 
- * in {@link #clearCreated(File)}. 
+ * in {@link #clearCreated(DirNode)}. 
  */
 public class LatexPreProcessor extends AbstractLatexProcessor {
 
@@ -108,6 +108,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		proc.runFig2Dev(file, LatexDev.pdf);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		// may log warning WFU05 
 		proc.clearTargetFig(file);
 	    }
 	    String getSuffix() {
@@ -123,6 +124,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		proc.runGnuplot2Dev(file, LatexDev.pdf);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		// may log warning WFU05 
 		proc.clearTargetGp(file);
 	    }
 	    String getSuffix() {
@@ -138,6 +140,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		proc.runMetapost2mps(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		// may log warning WFU01, WFU05 
 		proc.clearTargetMp(file);
 	    }
 	    String getSuffix() {
@@ -150,6 +153,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		 	      "' done implicitly in latex run. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		// may log warning WFU05 
 		proc.clearTargetSvg(file);
 	    }
 	    String getSuffix() {
@@ -180,9 +184,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	},
 	tex {
 	    void transformSrc(File file, LatexPreProcessor proc) {
+		// may log warnings WFU03, WPP02 
 		proc.addMainFile(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		// may log warnings WPP02, WFU01, WFU03, WFU05 
 		proc.clearTargetTex(file);
 	    }
 	    String getSuffix() {
@@ -205,8 +211,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * using <code>proc</code>. 
 	 * <p>
 	 * Logging: 
-	 * WEX01, WEX02, WEX03, WEX04, WEX05 
+	 * <ul>
+	 * <li> WFU03: cannot close 
+	 * <li> WPP02: tex file may be latex main file 
+	 * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
 	 * if applications for preprocessing graphic files failed. 
+	 * </ul>
 	 *
 	 * @param file
 	 *    a file with ending given by {@link #getSuffix()}. 
@@ -223,12 +233,21 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * Deletes the files potentially 
 	 * created from the source file <code>file</code> 
 	 * using <code>proc</code>. 
+	 * <p>
+	 * Logging: 
+	 * <ul>
+	 * <li> WPP02: tex file may be latex main file 
+	 * <li> WFU01: Cannot read directory...
+	 * <li> WFU03: cannot close tex file 
+	 * <li> WFU05: Failed to delete file 
+	 * <ul>
 	 *
 	 * @param file
 	 *    a file with ending given by {@link #getSuffix()}. 
 	 * @param proc
 	 *    a latex pre-processor.
 	 */
+	// used in clearCreated only 
 	abstract void clearTarget(File file, LatexPreProcessor proc);
 
 	/**
@@ -257,7 +276,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    and once for creating the pdf_t-file. 
      * @see #create()
      */
-    // used in processGraphicsSelectMain(File) only 
+    // used in processGraphicsSelectMain(DirNode) only 
     private void runFig2Dev(File figFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -398,7 +417,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    in gnuplot fails. 
      * @see #create()
      */
-    // used in processGraphicsSelectMain(Collection) only 
+    // used in processGraphicsSelectMain(DirNode) only 
     private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -475,7 +494,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    TEX01 if invocation of the mpost command failed. 
      * @see #processGraphics(File)
      */
-    // used in processGraphicsSelectMain(Collection) only 
+    // used in processGraphicsSelectMain(DirNode) only 
     private void runMetapost2mps(File mpFile) throws BuildFailureException {
 	this.log.info("Processing metapost-file '" + mpFile + "'. ");
 	String command = this.settings.getMetapostCommand();
@@ -573,7 +592,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Otherwise logs a warning and returns <code>false</code>. 
      * <p>
      * Logging: 
-     * WFU03 cannot close 
+     * <ul>
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
+     * <ul>
      *
      * @return
      *    whether <code>texFile</code> is definitively a latex main file. 
@@ -598,12 +620,19 @@ System.out.println("isLatexMainFile(File texFile: "+texFile);
     /**
      * If the tex-file <code>texFile</code> is a latex main file, 
      * add it to {@link #latexMainFiles}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU03 cannot close 
+     * <li> WPP02 tex file may be latex main file 
+     * <ul>
      *
      * @param texFile
      *    the tex-file to be added to {@link #latexMainFiles} 
      *    if it is a latex main file. 
      */
     private void addMainFile(File texFile) {
+	// may log warnings WFU03, WPP02 
 	if (isLatexMainFile(texFile)) {
 	    this.log.info("Detected latex-main-file '" + texFile + "'. ");
 	    this.latexMainFiles.add(texFile);
@@ -617,7 +646,9 @@ System.out.println("isLatexMainFile(File texFile: "+texFile);
      * <p>
      * Logging: 
      * <ul>
+     * <li> WPP02: tex file may be latex main file 
      * <li> WFU01: Cannot read directory...
+     * <li> WFU03: cannot close tex file 
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
@@ -627,6 +658,7 @@ System.out.println("isLatexMainFile(File texFile: "+texFile);
      */
     private void clearTargetTex(File texFile) {
 	// exclude files which are no latex main files 
+	// may log warnings WFU03, WPP02 
 	if (!isLatexMainFile(texFile)) {
 	    return;
 	}
@@ -638,17 +670,30 @@ System.out.println("isLatexMainFile(File texFile: "+texFile);
     }
 
     /**
-     * Converts files in various graphic formats incompatible with LaTeX 
-     * into formats which can be inputted or included directly 
-     * into a latex file and returns the latex main files. 
+     * Detects files in the directory represented by <code>texNode</code> 
+     * and in subdirectories recursively: 
+     * <ul>
+     * <li>
+     * those which are in various graphic formats incompatible with LaTeX 
+     * are converted into formats which can be inputted or included directly 
+     * into a latex file. 
+     * <li>
+     * returns the set of latex main files. 
+     * </ul>
      * <p>
      * Logging: 
      * <ul>
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
-     * if running graphic processors failed. 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
+     *      if running graphic processors failed. 
      * </ul>
      *
+     * @param texNode
+     *    a node representing the tex source directory. 
+     * @return
+     *    the collection of latex main files. 
      * @throws BuildFailureException
      *    TEX01 invoking 
      * {@link LatexPreProcessor.SuffixHandler#transformSrc(File, LatexPreProcessor)}
@@ -659,93 +704,115 @@ System.out.println("isLatexMainFile(File texFile: "+texFile);
      */
     // used in LatexProcessor.create() 
     // and in LatexProcessor.processGraphics() only 
-    // where files is the set of all files found in the tex source directory 
-    // found with getFilesRec and thus without directories. 
-    Collection<File> processGraphicsSelectMain(Collection<File> files) 
+    // where 'node' represents the tex source directory 
+    Collection<File> processGraphicsSelectMain(DirNode texNode) 
+    	throws BuildFailureException {
+    	Collection<String> skipped = new TreeSet<String>();
+    	Collection<File> latexMainFiles = new TreeSet<File>();
+	// may throw BuildFailureException TEX01, 
+	// log warning WEX01, WEX02, WEX03, WEX04, WEX05, WFU03, WPP02 
+      	processGraphicsSelectMain(texNode, skipped, latexMainFiles);
+
+    	if (!skipped.isEmpty()) {
+    	    this.log.warn("WPP03: Skipped processing of files with suffixes " + 
+    			  skipped + ". ");
+    	}
+
+    	return latexMainFiles;
+    }
+
+    /**
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
+     * if applications for preprocessing graphic files failed. 
+     * </ul>
+     *
+     * @param node
+     *    a node representing the tex source directory 
+     *    or a subdirectory recursively. 
+     * @throws BuildFailureException
+     *    TEX01 invoking 
+     * {@link LatexPreProcessor.SuffixHandler#transformSrc(File, LatexPreProcessor)}
+     *    only for {@link LatexPreProcessor.SuffixHandler#fig}, 
+     *    {@link LatexPreProcessor.SuffixHandler#gp} and 
+     *    {@link LatexPreProcessor.SuffixHandler#mp} 
+     *    because these invoke external programs. 
+     */
+    private void processGraphicsSelectMain(DirNode node, 
+    					   Collection<String> skipped, 
+    					   Collection<File> latexMainFiles) 
     	throws BuildFailureException {
 
 	this.latexMainFiles.clear();
-	String suffix;
-	SuffixHandler handler;
-	Collection<String> skipped = new TreeSet<String>();
-	for (File file : files) {
-	    suffix = this.fileUtils.getSuffix(file);
-	    handler = SUFFIX2HANDLER.get(suffix);
-	    if (handler == null) {
-		this.log.debug("Skipping processing of file '" + file + "'. ");
-		skipped.add(suffix);
-	    } else {
-		// may throw BuildFailureException TEX01, 
-		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-		handler.transformSrc(file, this);
-	    }
-	}
-	if (!skipped.isEmpty()) {
-	    this.log.warn("WPP03: Skipped processing of files with suffixes " + 
-			  skipped + ". ");
-	}
-	return this.latexMainFiles;
+    	assert node.isValid();
+    	// i.e. node.regularFile != null
+
+    	String suffix;
+    	SuffixHandler handler;
+    	for (File file : node.getRegularFiles()) {
+    	    suffix = this.fileUtils.getSuffix(file);
+    	    handler = SUFFIX2HANDLER.get(suffix);
+    	    if (handler == null) {
+    		this.log.debug("Skipping processing of file '" + file + "'. ");
+    		skipped.add(suffix);
+    	    } else {
+    		// may throw BuildFailureException TEX01, 
+    		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+		// WFU03, WPP02 
+    		handler.transformSrc(file, this);
+    	    }
+    	}
+	// Here, latexMainFiles contains the latex main files 
+	// of this directory 
+	latexMainFiles.addAll(this.latexMainFiles);
+
+    	DirNode subNode;
+    	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
+    	    subNode = entry.getValue();
+	    // may throw BuildFailureException TEX01, 
+	    // log warning WEX01, WEX02, WEX03, WEX04, WEX05, WPP03 
+	    // WFU03, WPP02 
+     	    processGraphicsSelectMain(subNode, skipped, latexMainFiles);
+    	}
     }
 
-    // Collection<File> processGraphicsSelectMain(DirNode node) 
-    // 	throws BuildFailureException {
-    // 	Collection<String> skipped = new TreeSet<String>();
-    // 	Collection<File> latexMainFiles = new TreeSet<File>();
-    // 	processGraphicsSelectMain(node, skipped, latexMainFiles);
-    // 	return latexMainFiles;
-    // }
-
-    // private void processGraphicsSelectMain(DirNode node, 
-    // 					   Collection<String> skipped, 
-    // 					   Collection<File> latexMainFiles) 
-    // 	throws BuildFailureException {
-
-    // 	assert node.isValid();
-    // 	// i.e. node.regularFile != null
-
-    // 	String suffix;
-    // 	SuffixHandler handler;
-    // 	for (File file : node.getRegularFiles()) {
-    // 	    suffix = this.fileUtils.getSuffix(file);
-    // 	    handler = SUFFIX2HANDLER.get(suffix);
-    // 	    if (handler == null) {
-    // 		this.log.debug("Skipping processing of file '" + file + "'. ");
-    // 		skipped.add(suffix);
-    // 	    } else {
-    // 		// may throw BuildFailureException TEX01, 
-    // 		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-    // 		handler.transformSrc(file, this);
-    // 	    }
-    // 	}
-
-    // 	DirNode subNode;
-    // 	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
-    // 	    subNode = entry.getValue();
-    // 	    processGraphicsSelectMain(subNode, skipped, latexMainFiles);
-    // 	}
-    // }
-
     /**
-     * Deletes all created files in <code>texDirectory</code>. 
+     * Deletes all created files 
+     * in the directory represented by <code>node</code>, recursively. 
      * <p>
      * Logging: 
-     * WFU01 Cannot read directory 
+     * <ul>
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WFU01: Cannot read directory...
+     * <li> WFU03: cannot close tex file 
+     * <li> WFU05: Failed to delete file 
+     * </ul>
      *
-     * @param texDir
-     *    the tex-source directory. 
+     * @param texNode
+     *    a node representing the tex source directory. 
      */
-    void clearCreated(File texDir) {
-	// try to clear targets 
-	// may log warning WFU01 
-	Collection<File> files = this.fileUtils.getFilesRec(texDir);
+    void clearCreated(DirNode texNode) {
 	SuffixHandler handler;
-	for (File file : files) {
+   	for (File file : texNode.getRegularFiles()) {
 	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
 	    if (handler != null) {
+		// may log warning WPP02, WFU01, WFU03, WFU05 
 		handler.clearTarget(file, this);
 	    }
 	}
-   }
- 
+
+   	DirNode subNode;
+    	for (Map.Entry<String,DirNode> entry 
+		 : texNode.getSubdirs().entrySet()) {
+    	    subNode = entry.getValue();
+	    // may log warning WPP02, WFU01, WFU03, WFU05 
+    	    clearCreated(subNode);
+    	}
+    }
+
     // FIXME: suffix for tex files containing text and including pdf 
  }
