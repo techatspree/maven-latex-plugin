@@ -22,6 +22,9 @@ import org.m2latex.mojo.CfgLatexMojo;
 import org.m2latex.mojo.GraphicsMojo;
 import org.m2latex.mojo.ClearMojo;
 
+import org.m2latex.antTask.LatexCfgTask;
+import org.m2latex.antTask.LatexClrTask;
+
 import java.io.File;
 import java.io.FileFilter;
 
@@ -139,25 +142,29 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Defines creational ant-task and the maven plugin 
-     * in {@link CfgLatexMojo} and subclasses. 
+     * Defines creational ant-task defined in {@link LatexCfgTask} 
+     * and the according goals in {@link CfgLatexMojo} 
+     * and subclasses of the maven plugin. 
+     * <p>
      * This consists in reading the parameters 
      * via {@link ParameterAdapter#initialize()} 
      * processing graphic-files 
-     * via {@link LatexPreProcessor#processGraphicsSelectMain(Collection)} 
+     * via {@link LatexPreProcessor#processGraphicsSelectMain(DirNode)} 
      * and processing the tex main files 
      * via {@link Target#processSource(LatexProcessor, File)}. 
      * The resulting files are identified by its suffixes 
      * via  {@link Target#getPatternOutputFiles(Settings)} 
      * and copied to the target folder. 
      * Finally, by default a cleanup is performed 
-     * invoking {@link TexFileUtils#cleanUp(Collection, File)}. 
+     * invoking {@link TexFileUtils#cleanUp(DirNode, File)}. 
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU01 Cannot read directory... 
+     * <li> WFU01: Cannot read directory... 
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      applications for preprocessing graphic files 
      *      or processing a latex main file fails. 
      * </ul>
@@ -191,15 +198,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
         File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
-	// may log warning WFU01 Cannot read directory 
-	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
+	// constructor DirNode may log warning WFU01 Cannot read directory 
+ 	DirNode node = new DirNode(texDir, this.fileUtils);
 
 	try {
 	    // process graphics and determine latexMainFiles 
 	    // may throw BuildFailureException TEX01, 
-	    // log warning WPP03, WEX01, WEX02, WEX03, WEX04, WEX05  
+	    // log warning WFU03, WPP02, WPP03, 
+	    // WEX01, WEX02, WEX03, WEX04, WEX05  
 	    Collection<File> latexMainFiles = this.preProc
-		.processGraphicsSelectMain(orgFiles);
+		.processGraphicsSelectMain(node);
+
 	    for (File texFile : latexMainFiles) {
 		// throws BuildFailureException TFU01 
 		// if targetDir would be an existing non-directory 
@@ -229,19 +238,22 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    } // texFile 
 	} finally {
 	    if (this.settings.isCleanUp()) {
-               this.fileUtils.cleanUp(orgFiles, texDir);
+		// may log warning WFU01 Cannot read directory 
+		this.fileUtils.cleanUp(node, texDir);
             }
         }
     }
 
     /**
-     * Used by {@link GraphicsMojo}. 
+     * Defines graphics goal of the maven plugin in {@link GraphicsMojo}. 
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU01 Cannot read directory FIXME: verify 
+     * <li> WFU01: Cannot read directory 
+     * <li> WFU03: cannot close 
+     * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running graphic processors failed. 
      * </ul>
      *
@@ -259,16 +271,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
-	// may log warning WFU01 Cannot read directory 
-	Collection<File> orgFiles = this.fileUtils.getFilesRec(texDir);
+	// constructor DirNode may log warning WFU01 Cannot read directory 
+ 	DirNode node = new DirNode(texDir, this.fileUtils);
 	// may throw BuildFailureException TEX01, 
-	// log warning WPP03, WEX01, WEX02, WEX03, WEX04, WEX05  
-	this.preProc.processGraphicsSelectMain(orgFiles);
+	// log warning WFU03, WPP02, WPP03, 
+	// WEX01, WEX02, WEX03, WEX04, WEX05  
+	this.preProc.processGraphicsSelectMain(node);
     }
 
     /**
-     * Defines clearing ant-task and the maven plugin 
-     * in {@link ClearMojo}. 
+     * Defines clearing ant-task defined in {@link LatexClrTask} 
+     * and the according goal in {@link ClearMojo} of the maven plugin. 
      * Consists in clearing created graphic files 
      * and created files derived from latex main file. 
      * <p>
@@ -280,6 +293,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * {@link Settings#getPatternLatexMainFile()}
      * <li>
      * {@link Settings#getPatternClearFromLatexMain()}
+     * </ul>
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WFU01: Cannot read directory...
+     * <li> WFU03: cannot close tex file 
+     * <li> WFU05: Failed to delete file 
      * </ul>
      *
      * @throws BuildFailureException 
@@ -294,7 +315,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
-	this.preProc.clearCreated(texDir);
+	// constructor DirNode may log warning WFU01 Cannot read directory 
+	// clearCreated may log warnings WPP02, WFU01, WFU03, WFU05 
+	this.preProc.clearCreated(new DirNode(texDir, this.fileUtils));
    }
 
 
