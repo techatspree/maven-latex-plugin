@@ -80,14 +80,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // for latex main file creating html 
     private final static String SUFFIX_EPS = ".eps";
 
-    private final Collection<File> latexMainFiles;
-
     LatexPreProcessor(Settings settings, 
 		      CommandExecutor executor, 
 		      LogWrapper log, 
 		      TexFileUtils fileUtils) {
 	super(settings, executor, log, fileUtils);
-	this.latexMainFiles = new TreeSet<File>();
      }
 
     /**
@@ -103,7 +100,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts a fig-file into pdf 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
 	    // TEX01, WEX01, WEX02, WEX03, WEX04, WEX05 
-	    void transformSrc(File file, LatexPreProcessor proc) 
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) 
 		throws BuildFailureException {
 		proc.runFig2Dev(file, LatexDev.pdf);
 	    }
@@ -119,7 +118,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
 	    // TEX01, WEX01, WEX02, WEX03, WEX04, WEX05 
-	    void transformSrc(File file, LatexPreProcessor proc) 
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) 
 		throws BuildFailureException {
 		proc.runGnuplot2Dev(file, LatexDev.pdf);
 	    }
@@ -135,7 +136,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts a metapost-file into mps-format 
 	    // invoking {@link #runMetapost2mps(File)} 
 	    // TEX01, WEX01, WEX02, WEX03, WEX04, WEX05 
-	    void transformSrc(File file, LatexPreProcessor proc) 
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) 
 		throws BuildFailureException {
 		proc.runMetapost2mps(file);
 	    }
@@ -148,7 +151,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	svg {
-	    void transformSrc(File file, LatexPreProcessor proc) {
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) {
 		proc.log.info("Processing svg-file '" + file + 
 		 	      "' done implicitly in latex run. ");
 	    }
@@ -161,7 +166,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	jpg {
-	    void transformSrc(File file, LatexPreProcessor proc) {
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) {
 		proc.log.info("No processing for jpg-file '" + file + 
 			      "' needed. ");
 	    }
@@ -172,7 +179,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	png {
-	    void transformSrc(File file, LatexPreProcessor proc) {
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) {
 		proc.log.info("No processing for png-file '" + file + 
 			      "' needed. ");
 	    }
@@ -183,9 +192,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	tex {
-	    void transformSrc(File file, LatexPreProcessor proc) {
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) {
 		// may log warnings WFU03, WPP02 
-		proc.addMainFile(file);
+		proc.addMainFile(file, lmFiles);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warnings WPP02, WFU01, WFU03, WFU05 
@@ -196,7 +207,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	},
 	bib {
-	    void transformSrc(File file, LatexPreProcessor proc) {
+	    void transformSrc(File file, 
+			      LatexPreProcessor proc, 
+			      Collection<File> lmFiles) {
 		proc.log.info("Bibliography file '" + file + "' found. ");
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
@@ -208,7 +221,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	/**
 	 * Does the transformation of the file <code>file</code> 
-	 * using <code>proc</code>. 
+	 * using <code>proc</code>, except for latex main files: 
+	 * These are just added to <code>latexMainFiles</code>. 
 	 * <p>
 	 * Logging: 
 	 * <ul>
@@ -221,12 +235,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * @param file
 	 *    a file with ending given by {@link #getSuffix()}. 
 	 * @param proc
-	 *    a latex pre-processor.
+	 *    a latex pre-processor. 
+	 * @param latexMainFiles
+	 *    the collection of latex main files found so far. 
 	 * @throws BuildFailureException
 	 *    TEX01 only for {@link #fig}, {@link #gp} and {@link #mp} 
 	 *    because these invoke external programs. 
 	 */
-	abstract void transformSrc(File file, LatexPreProcessor proc)
+	abstract void transformSrc(File file, 
+				   LatexPreProcessor proc, 
+				   Collection<File> latexMainFiles)
 	throws BuildFailureException;
 
 	/**
@@ -628,12 +646,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex-file to be added to {@link #latexMainFiles} 
      *    if it is a latex main file. 
+     * @param latexMainFiles
+     *    the collection of latex main files found so far. 
      */
-    private void addMainFile(File texFile) {
+    private void addMainFile(File texFile, Collection<File> latexMainFiles) {
 	// may log warnings WFU03, WPP02 
 	if (isLatexMainFile(texFile)) {
 	    this.log.info("Detected latex-main-file '" + texFile + "'. ");
-	    this.latexMainFiles.add(texFile);
+	    latexMainFiles.add(texFile);
 	}
     }
 
@@ -746,13 +766,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     					   Collection<File> latexMainFiles) 
     	throws BuildFailureException {
 
-	this.latexMainFiles.clear();
-    	assert node.isValid();
+   	assert node.isValid();
     	// i.e. node.regularFile != null
 
+	File file;
     	String suffix;
     	SuffixHandler handler;
-	File file;
    	for (String fileName : node.getRegularFileNames()) {
 	    file = new File(dir, fileName);
     	    suffix = this.fileUtils.getSuffix(file);
@@ -764,12 +783,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     		// may throw BuildFailureException TEX01, 
     		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 		// WFU03, WPP02 
-    		handler.transformSrc(file, this);
+    		handler.transformSrc(file, this, latexMainFiles);
     	    }
     	}
-	// Here, latexMainFiles contains the latex main files 
-	// of this directory 
-	latexMainFiles.addAll(this.latexMainFiles);
 
     	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
 	    // may throw BuildFailureException TEX01, 
@@ -800,10 +816,29 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     // invoked recursively; except that used only in 
     // LatexProcessor.clearAll()
-    void clearCreated(File dir, DirNode node) {
+    void clearCreated(File texDir) {
+	clearCreated(texDir, new DirNode(texDir, this.fileUtils));
+    }
+
+    /**
+     * Deletes all created files 
+     * in the directory represented by <code>node</code>, recursively. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WPP02: tex file may be latex main file 
+     * <li> WFU01: Cannot read directory...
+     * <li> WFU03: cannot close tex file 
+     * <li> WFU05: Failed to delete file 
+     * </ul>
+     *
+     * @param node
+     *    a node associated with <code>dir</code>. 
+     */
+    private void clearCreated(File dir, DirNode node) {
 	assert dir.isDirectory();
-	SuffixHandler handler;
 	File file;
+	SuffixHandler handler;
    	for (String fileName : node.getRegularFileNames()) {
 	    file = new File(dir, fileName);
 	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
