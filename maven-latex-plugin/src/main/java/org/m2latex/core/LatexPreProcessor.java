@@ -24,7 +24,7 @@ import java.io.FileFilter;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * The latex pre-processor is for preprocessing graphic files 
@@ -41,7 +41,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * If the handler is <code>null</code>, there is no handler. 
      */
     private final static Map<String, SuffixHandler> SUFFIX2HANDLER = 
-	new HashMap<String, SuffixHandler>();
+	new TreeMap<String, SuffixHandler>();
 
     static {
 	for (SuffixHandler handler : SuffixHandler.values()) {
@@ -171,7 +171,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      Collection<File> lmFiles) {
 		proc.log.info("Jpg-file '" + file + "' needs no processing. ");
 	    }
+	    void clearTarget(File file, 
+			     LatexPreProcessor proc, 
+			     Map<File, SuffixHandler> file2handler) {
+		// do not add to file2handler 
+	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		throw new IllegalStateException
+		    ("File '" + file + "' has no targets to be cleared. ");
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_JPG;
@@ -183,7 +190,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      Collection<File> lmFiles) {
 		proc.log.info("Png-file '" + file + "' needs no processing. ");
 	    }
+	    void clearTarget(File file, 
+			     LatexPreProcessor proc, 
+			     Map<File, SuffixHandler> file2handler) {
+		// do not add to file2handler 
+	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		throw new IllegalStateException
+		    ("File '" + file + "' has no targets to be cleared. ");
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_PNG;
@@ -196,10 +210,18 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// may log warnings WFU03, WPP02 
 		proc.addMainFile(file, lmFiles);
 	    }
-	    void clearTarget(File file, LatexPreProcessor proc) {
+	    void clearTarget(File file, 
+			     LatexPreProcessor proc, 
+			     Map<File, SuffixHandler> file2handler) {
 		// may log warnings WPP02, WFU01, WFU03, WFU05 
 		proc.clearTargetTex(file);
 	    }
+	    void clearTarget(File file, LatexPreProcessor proc) {
+		throw new IllegalStateException
+		    ("Clearing targets of '" + file + 
+		     "' should have been done already. ");
+	    }
+
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_TEX;
 	    }
@@ -210,7 +232,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      Collection<File> lmFiles) {
 		proc.log.info("Found bibliography file '" + file + "'. ");
 	    }
+	    void clearTarget(File file, 
+			     LatexPreProcessor proc, 
+			     Map<File, SuffixHandler> file2handler) {
+		// do not add to file2handler 
+	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
+		throw new IllegalStateException
+		    ("File '" + file + "' has no targets to be cleared. ");
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_BIB;
@@ -246,9 +275,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException;
 
 	/**
-	 * Deletes the files potentially 
-	 * created from the source file <code>file</code> 
-	 * using <code>proc</code>. 
+	 * Typically just associates <code>file</code> 
+	 * with this hanlder in <code>file2handler</code> except for 
+	 * <ul>
+	 * <li>
+	 * jpg-files, png-files and bib-files 
+	 * for which there are no targets 
+	 * and so the association is not added.  
+	 * <li>
+	 * tex-files for which the target is cleared immediately. 
+	 * </ul>
 	 * <p>
 	 * Logging: 
 	 * <ul>
@@ -257,11 +293,41 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <li> WFU03: cannot close tex file 
 	 * <li> WFU05: Failed to delete file 
 	 * <ul>
+	 */
+	// overwritten for tex, jpg, png and for bib 
+	// appropriate for svg although file may be removed from map later 
+	// used in clearCreated only 
+	void clearTarget(File file, 
+			 LatexPreProcessor proc, 
+			 Map<File, SuffixHandler> file2handler) {
+	    file2handler.put(file, this);
+	}
+
+	/**
+	 * Deletes the files potentially 
+	 * created from the source file <code>file</code> 
+	 * using <code>proc</code>. 
+	 * <p>
+	 * Logging: 
+	 * <ul>
+	 * <li> WFU01: Cannot read directory...
+	 * <li> WFU05: Failed to delete file 
+	 * <ul>
 	 *
 	 * @param file
 	 *    a file with ending given by {@link #getSuffix()}. 
 	 * @param proc
-	 *    a latex pre-processor.
+	 *    a latex pre-processor. 
+	 * @throws IllegalStateException
+	 *    <ul>
+	 *    <li>
+	 *    if <code>file</code> has no targets to be deleted 
+	 *    as for jpg-files, png-files and bib-files. 
+	 *    <li>
+	 *    if targets of <code>file</code> should have been cleared already 
+	 *    by {@link #clearTarget(File, LatexPreProcessor, Map)} 
+	 *    as for tex-files. 
+	 *    </ul>
 	 */
 	// used in clearCreated only 
 	abstract void clearTarget(File file, LatexPreProcessor proc);
@@ -771,6 +837,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	File file;
     	String suffix;
     	SuffixHandler handler;
+	Collection<File> latexMainFilesLocal = new TreeSet<File>();
    	for (String fileName : node.getRegularFileNames()) {
 	    file = new File(dir, fileName);
     	    suffix = this.fileUtils.getSuffix(file);
@@ -782,9 +849,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     		// may throw BuildFailureException TEX01, 
     		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 		// WFU03, WPP02 
-    		handler.transformSrc(file, this, latexMainFiles);
+    		handler.transformSrc(file, this, latexMainFilesLocal);
     	    }
     	}
+	latexMainFiles.addAll(latexMainFilesLocal);
 
     	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
 	    // may throw BuildFailureException TEX01, 
@@ -836,15 +904,22 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearCreated(File dir, DirNode node) {
 	assert dir.isDirectory();
-	// FIXME: tries to delete targets of created svg-files. 
 	File file;
 	SuffixHandler handler;
+	Map<File, SuffixHandler> file2handler = 
+	    new TreeMap<File, SuffixHandler>();
    	for (String fileName : node.getRegularFileNames()) {
 	    file = new File(dir, fileName);
 	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
 	    if (handler != null) {
 		// may log warning WPP02, WFU01, WFU03, WFU05 
-		handler.clearTarget(file, this);
+		handler.clearTarget(file, this, file2handler);
+	    }
+	}
+  	for (Map.Entry<File,SuffixHandler> entry : file2handler.entrySet()) {
+	    file = entry.getKey();
+	    if (file.exists()) {
+		entry.getValue().clearTarget(file, this);
 	    }
 	}
 
