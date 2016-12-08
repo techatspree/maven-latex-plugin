@@ -370,11 +370,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// create pdf-file (graphics without text) 
 	// embedded in some tex-file 
 
+	// this could be pstex or pdf 
+	File figInTexFile = dev.getXFigInTexFile(this.fileUtils, figFile);
+
 	//if (update(figFile, pdfFile)) {
- 	    args = buildArgumentsFig2Pdf(dev, 
+	    args = buildArgumentsFig2Pdf(dev.getXFigInTexLanguage(),
 					 this.settings.getFig2devGenOptions(), 
 					 this.settings.getFig2devPdfOptions(), 
-					 figFile);
+					 figFile,
+					 figInTexFile);
 	    this.log.debug("Running " + command + 
 			   " -Lpdftex  ... on '" + figFile.getName() + "'. ");
 	    // may throw BuildFailureException TEX01, 
@@ -383,18 +387,20 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				  this.settings.getTexPath(), //**** 
 				  command, 
 				  args,
-				  this.fileUtils.replaceSuffix(figFile, 
-							       SUFFIX_PDF));
+				  figInTexFile);
 	    //}
 
 	    // create tex-file (text without grapics) 
 	    // enclosing the pdf-file above 
 
+	    File ptxFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
   	    //if (update(figFile, pdf_tFile)) {
- 	    args = buildArgumentsFig2Ptx(dev, 
+ 	    args = buildArgumentsFig2Ptx(dev.getXFigTexLanguage(), 
 					 this.settings.getFig2devGenOptions(), 
 					 this.settings.getFig2devPtxOptions(), 
-					 figFile);
+					 figFile, 
+					 ptxFile,
+					 figInTexFile);
 	    this.log.debug("Running " + command + 
 			   " -Lpdftex_t... on '" + figFile.getName() + "'. ");
 	    // may throw BuildFailureException TEX01, 
@@ -403,15 +409,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				  this.settings.getTexPath(), //**** 
 				  command, 
 				  args,
-				  this.fileUtils.replaceSuffix(figFile, 
-							       SUFFIX_PTX));
+				  ptxFile);
 	    //}
     }
 
-    private String[] buildArgumentsFig2Pdf(LatexDev dev, 
+    private String[] buildArgumentsFig2Pdf(String language,
 					   String optionsGen, 
 					   String optionsPdf, 
-					   File figFile) {
+					   File figFile, 
+					   File figInTexFile) {
 	String[] optionsGenArr = optionsGen.isEmpty() 
 	    ? new String[0] : optionsGen.split(" ");
 	String[] optionsPdfArr = optionsPdf.isEmpty() 
@@ -421,7 +427,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	String[] args = new String[lenSum + 4];
 	// language 
 	args[0] = "-L";
-	args[1] = dev.getXFigInTexLanguage();
+	args[1] = language;
 	// general options 
 	System.arraycopy(optionsGenArr, 0, args, 2, optionsGenArr.length);
 	// language specific options 
@@ -430,14 +436,16 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// input: fig-file 
         args[2+lenSum] = figFile.getName();
 	// output: pdf-file 
-	args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
+	args[3+lenSum] = figInTexFile.getName();
 	return args;
     }
 
-    private String[] buildArgumentsFig2Ptx(LatexDev dev, 
+    private String[] buildArgumentsFig2Ptx(String language, 
 					   String optionsGen,
 					   String optionsPtx,
-					   File figFile) {
+					   File figFile, 
+					   File ptxFile, 
+					   File figInTexFile) {
 	String[] optionsGenArr = optionsGen.isEmpty() 
 	    ? new String[0] : optionsGen.split(" ");
 	String[] optionsPtxArr = optionsPtx.isEmpty() 
@@ -447,7 +455,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	String[] args = new String[lenSum + 6];
 	// language 
 	args[0] = "-L";
-	args[1] = dev.getXFigTexLanguage();
+	args[1] = language;
 	// general options 
 	System.arraycopy(optionsGenArr, 0, 
 			 args, 2, optionsGenArr.length);
@@ -456,12 +464,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			 args, 2+optionsGenArr.length, optionsPtxArr.length);
 	// -p pdf-file in ptx-file 
 	args[2+lenSum] = "-p";
-        args[3+lenSum] = dev.getXFigInTexFile(this.fileUtils, figFile);
+        args[3+lenSum] = figInTexFile.getName();
 	// input: fig-file 
         args[4+lenSum] = figFile.getName();
 	// output: ptx-file 
-	args[5+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX)
-	    .getName();
+	args[5+lenSum] = ptxFile.getName();
 	return args;
     }
 
