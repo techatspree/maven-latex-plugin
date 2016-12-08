@@ -541,6 +541,20 @@ not allowed:
 		 The default value is 'false'. -->
 	    <pdfViaDvi>true</pdfViaDvi>
 
+	    <!-- The driver to convert dvi into pdf-files. 
+		 Note that this must fit the options 
+		 of the packages 'xcolor' and 'graphicx'. 
+		 Sensible values are 
+		 'dvipdf', 'dvipdfm', 'dvipdfmx', 
+		 and 'dvipdft' 
+		 (which is 'dvipdfm' with option '-t').  
+		 The default value is 'dvipdfmx'. -->
+	    <dvi2pdfCommand>dvipdfmx</dvi2pdfCommand>
+
+	    <!-- The options for the command $dvi2pdfCommand. 
+		 The default value is the empty string. -->
+ 	    <dvi2pdfOptions></dvi2pdfOptions>
+
 	    <!-- The pattern in the log-file 
 		 which triggers rerunning $latex2pdfCommand 
 		 taking $maxNumReRunsLatex into account. 

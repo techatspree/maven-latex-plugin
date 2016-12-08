@@ -102,6 +102,8 @@
 		debugBadBoxes='true'
 		debugWarnings='true'
 		pdfViaDvi='false'
+		dvi2pdfCommand='dvipdfmx'
+		dvi2pdfOptions=''
 		maxNumReRunsLatex='-1'
 		bibtexCommand="bibtex"
 		bibtexOptions=""
