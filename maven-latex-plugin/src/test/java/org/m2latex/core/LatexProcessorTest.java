@@ -54,7 +54,7 @@ public class LatexProcessorTest {
     private File pdfFile = new File(System.getProperty("tmp.dir"), "test.pdf");
     private File dviPdfFile = new File
 	(System.getProperty("tmp.dir"), 
-	 "test."+LatexProcessor.DEV.getLatexLanguage());
+	 "test."+settings.getPdfViaDvi().getLatexLanguage());
     private File htmlFile= new File(System.getProperty("tmp.dir"), "test.html");
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
     private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
@@ -221,7 +221,7 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(pdfFile);
 	// FIXME 
 	fileUtils.replaceSuffix(texFile, 
-				"."+LatexProcessor.DEV.getLatexLanguage());
+				"."+settings.getPdfViaDvi().getLatexLanguage());
 	fileUtilsCtrl.setReturnValue(dviPdfFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	fileUtilsCtrl.setReturnValue(logFile);
@@ -335,13 +335,12 @@ public class LatexProcessorTest {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getLatex2pdfCommand(),
-			 LatexProcessor.buildLatexArguments
-			 (settings.getLatex2pdfOptions(), texFile),
+			 LatexProcessor.buildLatexArguments(settings, texFile),
 			 dviPdfFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
 
-	if (LatexProcessor.DEV.isViaDvi()) {
+	if (settings.getPdfViaDvi().isViaDvi()) {
 	    //	fileUtils.getSuffix(texFile);
 	    //	fileUtilsCtrl.setReturnValue(LatexProcessor.SUFFIX_DVI);
 	    executor.execute(texFile.getParentFile(),
