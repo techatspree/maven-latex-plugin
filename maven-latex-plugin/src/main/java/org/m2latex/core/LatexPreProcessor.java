@@ -831,8 +831,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     					   Collection<File> latexMainFiles) 
     	throws BuildFailureException {
 
-   	assert node.isValid();
-    	// i.e. node.regularFile != null
+   	assert node.isValid();// i.e. node.regularFile != null
+	// FIXME: processing of the various graphic files 
+	// may lead to overwrite 
+	// FIXME: processing of the latex main files 
+	// may lead to overwrite of graphic files or their targets 
 
 	File file;
     	String suffix;
@@ -846,12 +849,18 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     		this.log.debug("Skipping processing of file '" + file + "'. ");
     		skipped.add(suffix);
     	    } else {
+		// Either performs transformation now 
+		// or schedule for later (latex main files) 
+		// or do nothing if no targets like bib-files 
+		// or tex-files to be inputted. 
+
     		// may throw BuildFailureException TEX01, 
     		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 		// WFU03, WPP02 
     		handler.transformSrc(file, this, latexMainFilesLocal);
     	    }
     	}
+
 	latexMainFiles.addAll(latexMainFilesLocal);
 
     	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
@@ -912,10 +921,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    file = new File(dir, fileName);
 	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
 	    if (handler != null) {
+		// either clear targets now or schedule for clearing 
+		// (in particular do nothing if no target)
 		// may log warning WPP02, WFU01, WFU03, WFU05 
 		handler.clearTarget(file, this, file2handler);
 	    }
 	}
+	// clear targets of all still existing files 
+	// which just scheduled for clearing 
   	for (Map.Entry<File,SuffixHandler> entry : file2handler.entrySet()) {
 	    file = entry.getKey();
 	    if (file.exists()) {
