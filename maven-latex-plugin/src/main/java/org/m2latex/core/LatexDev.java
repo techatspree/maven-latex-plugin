@@ -30,6 +30,9 @@ public enum LatexDev {
 	String getXFigInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_PDF;
 	}
+	boolean isViaDvi() {
+	    return true;
+	}
     },
     // latex creates dvi but not with the given drivers. 
     dvips {
@@ -47,6 +50,9 @@ public enum LatexDev {
 	}
 	String getXFigInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_PSTEX;
+	}
+	boolean isViaDvi() {
+	    return true;
 	}
     };
 
@@ -94,4 +100,6 @@ public enum LatexDev {
      * representing text. 
      */
     abstract String getXFigInTexSuffix();
+
+    abstract boolean isViaDvi();
 }

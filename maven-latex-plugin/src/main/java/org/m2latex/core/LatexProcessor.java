@@ -71,6 +71,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     final static String SUFFIX_LOF = ".lof";
     final static String SUFFIX_LOT = ".lot";
     final static String SUFFIX_AUX = ".aux";
+    final static String SUFFIX_DVI = ".dvi";
 
     // bibtex 
     final static String SUFFIX_BLG = ".blg";
@@ -1189,6 +1190,22 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// logging errors (warnings are done in processLatex2pdf)
 	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs(desc.logFile, command);
+
+	// FIXME: documentation that in the dvi file, 
+	// png, jpg and svg are not visible, but present. 
+
+
+	// FIXME: add parameters, also in tests, and document it. 
+	if (DEV.isViaDvi()) {
+	    args = new String[] {desc.pdfDviFile.getName()};
+//	    assert this.fileUtils.getSuffix(desc.pdfDviFile).equals(SUFFIX_DVI);
+	    this.executor.execute(texFile.getParentFile(), // workingDir 
+				  this.settings.getTexPath(), 
+				  "dvipdfmx", 
+				  args,
+				  desc.pdfFile);
+	}
+
     }
 
     // also for tests 
