@@ -1,5 +1,7 @@
 
 % blabla 
+%\PassOptionsToPackage{dvipdfmx}{xcolor} %or dvipdfm 
+%\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
 \RequirePackage{lmodern}
 \documentclass[12pt]{article}
 
@@ -1074,10 +1076,6 @@ and for {\tt htlatex} in conjunction with {\tt dvipdfmx}
 files in the format pdf, \gls{png}, \gls{jpg} are supported. 
  **** what about \gls{gif}? 
 This list may be incomplete. 
-As an example, Figure~\ref{fig:asIsPng} shows the same picture 
-as png-file. 
-
-FIXME: at the moment, htlatex does not work with pictures at all. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -1085,6 +1083,11 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 \end{center}
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
 \end{figure}
+
+As an example, Figure~\ref{fig:asIsPng} shows the same picture 
+as png-file. 
+
+FIXME: at the moment, htlatex does not work with pictures at all. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -2191,6 +2194,7 @@ Then the default value will be extended.
 
 \subsubsection{The parameter {\tt patternLatexMainFile}}
 \label{subsubsec:patternLatexMainFile}
+
 The default pattern for identifying a \LaTeX{} main file is 
 %
 \begin{verbatim}
@@ -2264,8 +2268,22 @@ with a developer which does not use emacs/auctex.
 
 \subsubsection{The parameter {\tt patternClearFromLatexMain}}
 \label{subsubsec:patternClearFromLatexMain}
-TODO: add 
 
+The default value for this pattern is as follows: 
+%
+\begin{verbatim}
+^(
+T$T             (\.([^.]*|synctex\.gz|out\.ps)|
+   (ch|se|su|ap|li)?\d+\.x?html?|
+             \d+x\.x?bb|
+             \d+x\.png|
+             -\d+\.svg)|
+zzT$T\.e?ps|
+(cmsy)\d+(-c)?-\d+c?\.png|
+(pdf)?latex\d+\.fls)$
+\end{verbatim}
+
+TODO: add 
 
 \subsection{Parameters for graphical preprocessing}\label{subsec:settingsGraph}
 
@@ -2830,6 +2848,19 @@ Then the default value will be extended.
 
 \subsubsection{The parameter {\tt patternT4htOutputFiles}}
 \label{subsubsec:patternT4htOutputFiles}
+
+The default value for this pattern is as follows: 
+%
+\begin{verbatim}
+^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
+\.css|
+\d+x\.x?bb|
+\d+x\.png|
+-\d+\.svg)|
+(cmsy)\d+(-c)?-\d+c?\.png)$
+\end{verbatim}
+
+
 TODO: add 
 
 
@@ -3546,6 +3577,6 @@ support for dvi-creation should be provided separately.
 
 %%% Local Variables: 
 %%% mode: latex
-%%% TeX-command-extra-options: "-src-specials -recorder -shell-escape" 
+%%% TeX-command-extra-options: "-src-specials -recorder -shell-escape -output-format=pdf"  
 %%% TeX-master: t
 %%% End: 
