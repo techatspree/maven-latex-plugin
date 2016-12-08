@@ -79,6 +79,13 @@ glossary file containing sorted, unified and formatted glossary entries}
 
 \section{Introduction}
 
+Mode is 
+\ifpdf
+pdf
+\else
+dvi
+\fi
+
 \LaTeX{} is a beautyful way to create printable documents, 
 today in preferrably as \gls{pdf}-files, 
 with a particular strength in typesetting formulae like 
@@ -1074,14 +1081,14 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{06someJpgOboeBaroqueDennerMIR370.jpg}%
+\includegraphics[width=0.9\textwidth]{06someJpgOboeBaroqueDennerMIR370}%.jpg
 \end{center}
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
 \end{figure}
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{07somePngOboeBaroqueDennerMIR370.png}%
+\includegraphics[width=0.9\textwidth]{07somePngOboeBaroqueDennerMIR370}%.png
 \end{center}
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
@@ -2188,16 +2195,18 @@ The default pattern for identifying a \LaTeX{} main file is
 %
 \begin{verbatim}
 \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
 %.*$|
 \\input\{[^{}]*\}|
 \s*)*
-\\(documentstyle|documentclass).*
+\\(documentstyle|documentclass)
 \end{verbatim}
 %
 This means that the latex main file is the one 
 containing {\tt\textbackslash documentclass} for modern classes 
 and {\tt\textbackslash documentstyle} for old fashioned ones. 
 This may be preceeded only by the command {\tt\textbackslash RequirePackage}, 
+the command {\tt\textbackslash PassOptionsToPackage}, 
 by comment lines, by {\tt\textbackslash input}, and by space. 
 Note that {\tt\textbackslash A} represents the beginning of the stream. 
 
@@ -2400,6 +2409,8 @@ The \LaTeX{} command to create a pdf-file with.
 The options for the command {\tt\$latex2pdfCommand}.
 Leading and trailing blanks are ignored. 
 A sequence of at least one blank separate the proper options. 
+
+FIXME:  -output-format is not allowed because set automatically. 
 %The default value is 
 %'{\tt-interaction=nonstopmode -src-specials}'. 
 \end{minipage}
@@ -3269,7 +3280,7 @@ with suffixes \$skipped. \\
 \end{minipage}
 } \\
 \tt\footnotesize WLP01  & \tt\footnotesize LaTeX requires rerun but maximum number 
-\$maxNumReruns reached.  \\
+\$maxNumRerunsLatex reached.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
