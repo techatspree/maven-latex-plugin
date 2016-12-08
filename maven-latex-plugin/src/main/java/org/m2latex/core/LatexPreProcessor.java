@@ -80,6 +80,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // for latex main file creating html 
     private final static String SUFFIX_EPS = ".eps";
 
+    private final static String SUFFIX_XBB = ".xbb";
+    private final static String SUFFIX_BB = ".bb";
+
+
     LatexPreProcessor(Settings settings, 
 		      CommandExecutor executor, 
 		      LogWrapper log, 
@@ -104,11 +108,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runFig2Dev(file, LatexDev.pdf);
+		proc.runFig2Dev(file, LatexProcessor.DEV);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
-		proc.clearTargetFig(file, LatexDev.pdf);
+		proc.clearTargetFig(file, LatexProcessor.DEV);
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_FIG;
@@ -122,7 +126,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runGnuplot2Dev(file, LatexDev.pdf);//dvips pdf
+		proc.runGnuplot2Dev(file, LatexProcessor.DEV);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
@@ -156,6 +160,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      Collection<File> lmFiles) {
 		proc.log.info("Processing svg-file '" + file + 
 		 	      "' deferred to latex run. ");
+		// FIXME: this works for pdf but not for dvi: 
+		// even in the latter case, .pdf and .pdf_tex are created 
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
@@ -168,17 +174,24 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	jpg {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) {
+			      Collection<File> lmFiles) 
+		throws BuildFailureException {
 		proc.log.info("Jpg-file '" + file + "' needs no processing. ");
+		// FIXME: this works for pdf but not for dvi: 
+		// in the latter case: 
+		// ! LaTeX Error: Cannot determine size of graphic ...
+		// FIXME: only for dvi 
+		proc.runEbb(file);
 	    }
-	    void clearTarget(File file, 
-			     LatexPreProcessor proc, 
-			     Map<File, SuffixHandler> file2handler) {
-		// do not add to file2handler 
-	    }
+	    // void clearTarget(File file, 
+	    // 		     LatexPreProcessor proc, 
+	    // 		     Map<File, SuffixHandler> file2handler) {
+	    // 	// do not add to file2handler 
+	    // }
 	    void clearTarget(File file, LatexPreProcessor proc) {
-		throw new IllegalStateException
-		    ("File '" + file + "' has no targets to be cleared. ");
+		// throw new IllegalStateException
+		//     ("File '" + file + "' has no targets to be cleared. ");
+		proc.clearTargetJpgPng(file);
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_JPG;
@@ -187,17 +200,24 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	png {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) {
+			      Collection<File> lmFiles) 
+		throws BuildFailureException {
 		proc.log.info("Png-file '" + file + "' needs no processing. ");
+		// FIXME: this works for pdf but not for dvi: 
+		// in the latter case: 
+		// ! LaTeX Error: Cannot determine size of graphic ...
+		// FIXME: only for dvi 
+		proc.runEbb(file);
 	    }
-	    void clearTarget(File file, 
-			     LatexPreProcessor proc, 
-			     Map<File, SuffixHandler> file2handler) {
-		// do not add to file2handler 
-	    }
+	    // void clearTarget(File file, 
+	    // 		     LatexPreProcessor proc, 
+	    // 		     Map<File, SuffixHandler> file2handler) {
+	    // 	// do not add to file2handler 
+	    // }
 	    void clearTarget(File file, LatexPreProcessor proc) {
-		throw new IllegalStateException
-		    ("File '" + file + "' has no targets to be cleared. ");
+		// throw new IllegalStateException
+		//     ("File '" + file + "' has no targets to be cleared. ");
+		proc.clearTargetJpgPng(file);
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_PNG;
@@ -517,7 +537,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	String command = this.settings.getGnuplotCommand();
-	File pdfFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PDF);
+	// FIXME: eliminate literal 
+	// FIXME: wrong name 
+	File pdfFile = this.fileUtils.replaceSuffix
+	    (gpFile, "."+dev.getGnuplotInTexLanguage());
 	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
 	String[] args = new String[] {
@@ -570,6 +593,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	deleteIfExists(gpFile, SUFFIX_EPS);
 	// CAUTION: this is created 
 	// in the course of latex2pdf processing from .eps 
+	// if target format is pdf 
 	// FIXME: eliminate literal 
 	deleteIfExists(gpFile, "-eps-converted-to"+SUFFIX_PDF);
 	// created by runGnuplot2Dev(..., LatexDev.pdf) 
@@ -657,6 +681,58 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.fileUtils.deleteX(mpFile, filter);
     }
 
+    private void runEbb(File file) throws BuildFailureException {
+	// FIXME: add parameters 
+	this.log.info("Processing fig-file '" + file + "'. ");
+	this.log.info("Bounding box for file '" + file + "'. ");
+	String command = "ebb";
+	File workingDir = file.getParentFile();
+	String[] args = new String[] {
+	    "-v", "-x", file.getName()
+	};
+	// FIXME: maybe this depends on the option -x
+	File resFile = this.fileUtils.replaceSuffix(file, SUFFIX_XBB);
+
+	this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), //**** 
+			      command, 
+			      args,
+			      resFile);
+
+	args = new String[] {
+	    // -m is the default creating .bb-files 
+	    "-v", "-m", file.getName()
+	};
+	// FIXME: maybe this depends on the option -x
+	resFile = this.fileUtils.replaceSuffix(file, SUFFIX_BB);
+
+	this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), //**** 
+			      command, 
+			      args,
+			      resFile);
+    }
+
+
+    /**
+     * Deletes the graphic files 
+     * created from the svg-file <code>svgFile</code>. 
+     * <p>
+     * Logging: 
+     * WFU05: Failed to delete file
+     */
+    private void clearTargetJpgPng(File file) {
+       this.log.info("Deleting targets of jpg/png-file '" + file + "'. ");
+       // may log warning WFU05 
+       deleteIfExists(file, SUFFIX_XBB);
+       deleteIfExists(file, SUFFIX_BB);
+//     deleteIfExists(svgFile, SUFFIX_PSTEX );
+//       deleteIfExists(file, SUFFIX_PDF   );
+       // FIXME: this works for pdf but not for dvi: 
+       // even in the latter case, .pdf and .pdf_tex are created 
+    }
+
+
     /**
      * Deletes the graphic files 
      * created from the svg-file <code>svgFile</code>. 
@@ -670,6 +746,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
        deleteIfExists(svgFile, SUFFIX_PDFTEX);
 //     deleteIfExists(svgFile, SUFFIX_PSTEX );
        deleteIfExists(svgFile, SUFFIX_PDF   );
+       // FIXME: this works for pdf but not for dvi: 
+       // even in the latter case, .pdf and .pdf_tex are created 
     }
 
     /**
