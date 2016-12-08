@@ -309,6 +309,7 @@
 ^(
 T$T             (\.([^.]*|synctex\.gz|out\.ps)|
    (ch|se|su|ap|li)?\d+\.x?html?|
+             \d+x\.x?bb|
              \d+x\.png|
              -\d+\.svg)|
 zzT$T\.e?ps|
@@ -778,6 +779,7 @@ not allowed:
 	    <patternT4htOutputFiles>
 	      ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
 	      \.css|
+              \d+x\.x?bb|
 	      \d+x\.png|
 	      -\d+\.svg)|
 	      (cmsy)\d+(-c)?-\d+c?\.png)$
