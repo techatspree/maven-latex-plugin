@@ -61,7 +61,7 @@ public class DirNode {
     // LatexProcessor.processGraphics()
     // LatexProcessor.clearAll()
     public DirNode(File dir, TexFileUtils fileUtils) {
-	assert dir.isDirectory();
+	assert dir.isDirectory() : "The file '" + file + "' is no directory";
 	// may log WFU01 Cannot read directory 
 	File[] files = fileUtils.listFilesOrWarn(dir);
 	if (files == null) {
@@ -74,7 +74,7 @@ public class DirNode {
 	this.name2node = new TreeMap<String, DirNode>();
 	DirNode node;
 	for (File file : files) {
-	    assert file.exists();
+	    assert file.exists() : "The file '" + file + "' does not exist. ";
 	    if (file.isDirectory()) {
 		// may log WFU01 Cannot read directory 
 		node = new DirNode(file, fileUtils);
