@@ -5,18 +5,36 @@
 % to avoid clash because of loading with different options: 
 % declare first 
 \usepackage[aux]{rerunfilecheck}
+%\usepackage{ifpdf}
 
 % graphics 
 \makeatletter
-\@ifpackageloaded{tex4ht}{%
-\usepackage[dvipdfmx]{xcolor}
-\usepackage[dvipdfmx]{graphicx}
-\usepackage[tex4ht]{hyperref}
-}{%
+
+\ifpdf
 \usepackage{xcolor}  % [pdftex]  
 \usepackage{graphicx}% [pdftex] 
 \usepackage{hyperref}% driver [hpdftex] is autodetected 
+\else
+\usepackage[dvipdfmx]{xcolor}
+\usepackage[dvipdfmx]{graphicx}
+\@ifpackageloaded{tex4ht}{%
+\usepackage[tex4ht]{hyperref}
+}{%
+\usepackage{hyperref}% driver? 
 }
+\usepackage{bmpsize}
+\fi
+
+% \@ifpackageloaded{tex4ht}{%
+% \usepackage[dvipdfmx]{xcolor}
+% \usepackage[dvipdfmx]{graphicx}
+% \usepackage[tex4ht]{hyperref}
+% \usepackage{bmpsize}
+% }{%
+% \usepackage{xcolor}  % [pdftex]  
+% \usepackage{graphicx}% [pdftex] 
+% \usepackage{hyperref}% driver [hpdftex] is autodetected 
+% }
 
 \usepackage{svg}
 
