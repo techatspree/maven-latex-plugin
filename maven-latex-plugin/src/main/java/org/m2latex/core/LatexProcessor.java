@@ -611,6 +611,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     static class LatexMainDesc {
 	private final File texFile;
 	private final File pdfFile;
+	private final File pdfDviFile;
+
 	private final File logFile;
 
 	private final File idxFile;
@@ -627,6 +629,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // FIXME: easier to create xxxFile first 
 	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	    this.pdfFile = fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
+	    this.pdfDviFile = fileUtils.replaceSuffix
+		(texFile, "."+DEV.getLatexLanguage());
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 
 	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
@@ -1133,7 +1137,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
 
-    final static LatexDev DEV = LatexDev.pdf;
+    final static LatexDev DEV = LatexDev.dvips;//pdf;//dvips;
 
     /**
      * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
@@ -1180,7 +1184,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      desc.pdfFile);
+			      desc.pdfDviFile);
 
 	// logging errors (warnings are done in processLatex2pdf)
 	// may log warnings WFU03, WAP01, WAP02, WAP04
@@ -1191,7 +1195,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     protected static String[] buildLatexArguments(String options, 
 						  File texFile) {
 	// FIXME: hack with literal 
-	return buildArguments(options + " -output-format="+DEV, 
+	return buildArguments(options + 
+			      " -output-format="+DEV.getLatexLanguage(), 
 			      texFile);
     }
 
