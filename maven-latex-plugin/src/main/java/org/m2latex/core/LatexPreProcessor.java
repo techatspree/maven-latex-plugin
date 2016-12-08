@@ -108,11 +108,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runFig2Dev(file, LatexProcessor.DEV);
+		proc.runFig2Dev    (file, proc.settings.getPdfViaDvi());
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
-		proc.clearTargetFig(file, LatexProcessor.DEV);
+		proc.clearTargetFig(file, proc.settings.getPdfViaDvi());
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_FIG;
@@ -126,7 +126,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runGnuplot2Dev(file, LatexProcessor.DEV);
+		proc.runGnuplot2Dev(file, proc.settings.getPdfViaDvi());
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
