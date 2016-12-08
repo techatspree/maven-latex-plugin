@@ -572,6 +572,10 @@ public class Settings {
     @Parameter(name = "debugWarnings", defaultValue = "true")
     private boolean debugWarnings = true;
 
+    // if false: directly 
+    @Parameter(name = "pdfViaDvi", defaultValue = "false")
+    private boolean pdfViaDvi = false;
+
     /**
      * The pattern in the log-file 
      * which triggers rerunning {@link #latex2pdfCommand} 
@@ -986,7 +990,13 @@ public class Settings {
      * Note that the patterns for the html-files 
      * can be summarized as <code>^T$T((ch|se|su|ap|li)?\d+)?\.x?html?$</code>. 
      * Adding the patterns for the css-file and the svg-files, we obtain 
-     * <code>^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|\.css|\d+x\.png|-\d+\.svg)$</code>. 
+     * <pre>
+     * ^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
+     * \.css|
+     * \d+x\.x?bb|
+     * \d+x\.png|
+     * -\d+\.svg)$
+     * </pre>. 
      * <p>
      * The pattern is designed to match quite exactly 
      * the files to be copied to {@link #targetSiteDirectory}, 
@@ -1002,10 +1012,10 @@ public class Settings {
     @Parameter(name = "patternT4htOutputFiles", defaultValue = "")
     private String patternT4htOutputFiles = 
 	"^(T$T(((ch|se|su|ap|li)?\\d+)?\\.x?html?|" + 
-	"\\.css|" + 
-	"\\d+x\\.x?bb|" + 
-	"\\d+x\\.png|" +
-	"-\\d+\\.svg)|" + 
+	/*   */"\\.css|" + 
+	/*   */"\\d+x\\.x?bb|" + 
+	/*   */"\\d+x\\.png|" +
+	/*   */"-\\d+\\.svg)|" + 
 	"(cmsy)\\d+(-c)?-\\d+c?\\.png)$";
 
 
@@ -1220,6 +1230,10 @@ public class Settings {
 
     public boolean getDebugWarnings() {
 	return   this.debugWarnings;
+    }
+
+    public     LatexDev getPdfViaDvi() {
+	return LatexDev.   devViaDvi(this.pdfViaDvi);
     }
 
     public String getPatternReRunLatex() {
@@ -1583,6 +1597,9 @@ public class Settings {
 	this.debugWarnings = debugWarnings;
     }
 
+    public void setPdfViaDvi(boolean pdfViaDvi) {
+	this.pdfViaDvi = pdfViaDvi;
+    }
 
     // setter method for patternReRunLatex in maven 
     public void setPatternReRunLatex(String pattern) {
@@ -1876,6 +1893,8 @@ public class Settings {
 	sb.append(", patternWarnLatex=")    .append(this.patternWarnLatex);
  	sb.append(", debugBadBoxes=")       .append(this.debugBadBoxes);
  	sb.append(", debugWarnings=")       .append(this.debugWarnings);
+ 	sb.append(", pdfViaDvi=")           .append(this.pdfViaDvi);
+
 	sb.append(", patternReRunLatex=")   .append(this.patternReRunLatex);
 	sb.append(", maxNumReRunsLatex=")   .append(this.maxNumReRunsLatex);
 	// parameters for BibTeX
