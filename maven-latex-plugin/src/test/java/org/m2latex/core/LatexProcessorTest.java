@@ -341,9 +341,9 @@ public class LatexProcessorTest {
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
 
-//	fileUtils.getSuffix(texFile);
-//	fileUtilsCtrl.setReturnValue(LatexProcessor.SUFFIX_DVI);
 	if (LatexProcessor.DEV.isViaDvi()) {
+	    //	fileUtils.getSuffix(texFile);
+	    //	fileUtilsCtrl.setReturnValue(LatexProcessor.SUFFIX_DVI);
 	    executor.execute(texFile.getParentFile(),
 			     settings.getTexPath(),
 			     "dvipdfmx",
