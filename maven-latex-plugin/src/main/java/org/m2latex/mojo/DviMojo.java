@@ -30,13 +30,13 @@ import java.util.TreeSet;
  * Build PDF or DVI documents from LaTeX sources.
  * Defines the goal <code>pdf</code> which is not tied to a lifecycle phase. 
  */
-@Mojo(name = "pdf")
-public class PdfMojo extends CfgLatexMojo {
+@Mojo(name = "dvi")
+public class DviMojo extends CfgLatexMojo {
 
    public SortedSet<Target> getTargetSet() {
        SortedSet<Target> res = new TreeSet<Target>();
-       res.add(Target.pdf);
+       res.add(Target.dvi);
        return res;
-       //return EnumSet.of(Target.pdf);
+       //return EnumSet.of(Target.dvi);
    }
 }
