@@ -30,9 +30,9 @@ import java.util.TreeMap;
  * The latex pre-processor is for preprocessing graphic files 
  * in formats which cannot be included directly into a latex-file 
  * and in finding the latex main files 
- * which is done in {@link #processGraphicsSelectMain(DirNode)} 
+ * which is done in {@link #processGraphicsSelectMain(File, DirNode)} 
  * and in clearing the created files from the latex source directory 
- * in {@link #clearCreated(DirNode)}. 
+ * in {@link #clearCreated(File)}. 
  */
 public class LatexPreProcessor extends AbstractLatexProcessor {
 
