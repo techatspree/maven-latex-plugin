@@ -589,6 +589,26 @@ public class Settings {
     private boolean pdfViaDvi = false;
 
     /**
+     * The driver to convert dvi into pdf-files. 
+     * Note that this must fit the options 
+     * of the packages <code>xcolor</code> and <code>graphicx</code>. 
+     * Sensible values are 
+     * <code>dvipdf</code>, <code>dvipdfm</code>, <code>dvipdfmx</code>, 
+     * and <code>dvipdft</code> 
+     * (which is <code>dvipdfm</code> with option <code>-t</code>). 
+     * The default value is <code>dvipdfmx</code>. 
+     */
+    @Parameter(name = "dvi2pdfCommand", defaultValue = "dvipdfmx")
+    private String dvi2pdfCommand = "dvipdfmx";
+
+    /**
+     * The options for the command {@link #dvi2pdfCommand}. 
+     * The default value is the empty string. 
+     */
+    @Parameter(name = "dvi2pdfOptions", defaultValue = "")
+    private String dvi2pdfOptions = "";
+
+    /**
      * The pattern in the log-file 
      * which triggers rerunning {@link #latex2pdfCommand} 
      * taking {@link #maxNumReRunsLatex} into account. 
@@ -1248,6 +1268,14 @@ public class Settings {
 	return LatexDev.   devViaDvi(this.pdfViaDvi);
     }
 
+    public String getDvi2pdfCommand() {
+	return  this.dvi2pdfCommand;
+    }
+
+    public String getDvi2pdfOptions() {
+	return  this.dvi2pdfOptions;
+    }
+
     public String getPatternReRunLatex() {
 	return  this.patternReRunLatex;
     }
@@ -1613,6 +1641,15 @@ public class Settings {
 	this.pdfViaDvi = pdfViaDvi;
     }
 
+    public void setDvi2pdfCommand(String dvi2pdfCommand) {
+	this.dvi2pdfCommand = dvi2pdfCommand;
+    }
+
+    public void setDvi2pdfOptions(String dvi2pdfOptions) {
+	this.dvi2pdfOptions = dvi2pdfOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
+    }
+
     // setter method for patternReRunLatex in maven 
     public void setPatternReRunLatex(String pattern) {
 	this.patternReRunLatex = pattern
@@ -1906,6 +1943,8 @@ public class Settings {
  	sb.append(", debugBadBoxes=")       .append(this.debugBadBoxes);
  	sb.append(", debugWarnings=")       .append(this.debugWarnings);
  	sb.append(", pdfViaDvi=")           .append(this.pdfViaDvi);
+ 	sb.append(", dvi2pdfCommand=")      .append(this.dvi2pdfCommand);
+ 	sb.append(", dvi2pdfOptions=")      .append(this.dvi2pdfOptions);
 
 	sb.append(", patternReRunLatex=")   .append(this.patternReRunLatex);
 	sb.append(", maxNumReRunsLatex=")   .append(this.maxNumReRunsLatex);

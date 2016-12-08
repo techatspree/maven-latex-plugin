@@ -1174,10 +1174,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    TEX01 if invocation of the latex2pdf command 
      *    returned by {@link Settings#getLatexCommand()} failed. 
      */
-    private void runLatex2pdf(LatexMainDesc desc)
+    private void runLatex2dev(LatexMainDesc desc)
 	throws BuildFailureException {
 
 	File texFile = desc.texFile;
+	// FIXME: wrong name is latex2dev
 	String command = this.settings.getLatex2pdfCommand();
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
@@ -1196,19 +1197,91 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// FIXME: documentation that in the dvi file, 
 	// png, jpg and svg are not visible, but present. 
+    }
 
+    /**
+     * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
+     * on <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * with arguments given by {@link #buildLatexArguments(File)}. 
+     * <p>
+     * Logs a warning or an error if the latex run failed 
+     * invoking {@link #logErrs(File, String)}
+     * but not if bad boxes occurred or if warnings occurred. 
+     * This is done in {@link #processLatex2pdf(File)} 
+     * after the last LaTeX run only. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WAP01: Running <code>latex2pdf</code> failed. For details...
+     * <li> WAP02: Running <code>latex2pdf</code> failed. No log file 
+     * <li> WAP04: .log-file is not readable. 
+     * <li> WFU03: cannot close .log-file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
+     * if running the latex2pdf command failed. 
+     * </ul>
+     *
+     * @param texFile
+     *    the latex-file to be processed. 
+     * @param logFile
+     *    the log-file after processing <code>texFile</code>. 
+     * @throws BuildFailureException
+     *    TEX01 if invocation of the latex2pdf command 
+     *    returned by {@link Settings#getLatexCommand()} failed. 
+     */
+    private void runLatex2pdf(LatexMainDesc desc)
+	throws BuildFailureException {
 
-	// FIXME: add parameters, also in tests, and document it. 
+	// may throw BuildFailureException TEX01, 
+	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	runLatex2dev(desc);
+
+	// FIXME: certain figures are invisible in the intermediate dvi file, 
+	// but converstion to pdf shows that the figures are present. 
+
 	if (this.settings.getPdfViaDvi().isViaDvi()) {
-	    args = new String[] {desc.pdfDviFile.getName()};
-//	    assert this.fileUtils.getSuffix(desc.pdfDviFile).equals(SUFFIX_DVI);
-	    this.executor.execute(texFile.getParentFile(), // workingDir 
-				  this.settings.getTexPath(), 
-				  "dvipdfmx", 
-				  args,
-				  desc.pdfFile);
+	    // may throw BuildFailureException TEX01, 
+	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+ 	    runDvi2pdf(desc);
 	}
+    }
+    /**
+     * Runs conversion from dvi to pdf-file  
+     * executing {@link Settings#getDvi2pdfCommand()} 
+     * on a dvi-file covered by <code>desc</code>
+     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
+     * if running the dvi2pdf command failed. 
+     * </ul>
+     * @param dviFile
+     *    the dvi-file to be processed. 
+     * @throws BuildFailureException
+     *    TEX01 if invocation of the dvi2pdf command 
+     *    returned by {@link Settings#getDvi2pdfCommand()} failed. 
+     */
+    // used in runLatex2pdf(LatexMainDesc) only 
+    private void runDvi2pdf(LatexMainDesc desc) throws BuildFailureException {
+	assert this.settings.getPdfViaDvi().isViaDvi();
+	File dviFile = desc.pdfDviFile;
+	assert this.fileUtils.getSuffix(dviFile).equals(SUFFIX_DVI);
 
+	String command = this.settings.getDvi2pdfCommand();
+	this.log.debug("Running " + command + 
+		       " on '" + dviFile.getName() + "'. ");
+	String[] args = buildArguments(this.settings.getDvi2pdfOptions(), 
+				       dviFile);
+	// may throw BuildFailureException TEX01, 
+	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+ 	this.executor.execute(desc.texFile.getParentFile(), // workingDir 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args,
+			      desc.pdfFile);
+	// FIXME: what about error logging? 
+	// Seems not to create a log-file. 
     }
 
     // also for tests 
@@ -1445,7 +1518,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *    the latex file to be processed. 
+     *    the latex-file to be processed. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the pdf2txt command 
      *    returned by {@link Settings#getPdf2txtCommand()} failed. 
