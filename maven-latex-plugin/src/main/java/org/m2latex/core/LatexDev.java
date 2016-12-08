@@ -24,9 +24,8 @@ public enum LatexDev {
 	String getGnuplotInTexLanguage() {
 	    return "pdf";
 	}
-	File getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
-	    return fileUtils.replaceSuffix(srcFile, 
-					   LatexPreProcessor.SUFFIX_PDF);
+	String getXFigInTexSuffix() {
+	    return LatexPreProcessor.SUFFIX_PDF;
 	}
     },
     // latex creates dvi but not with the given drivers. 
@@ -40,9 +39,8 @@ public enum LatexDev {
 	String getGnuplotInTexLanguage() {
 	    return "eps";
 	}
-	File getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
-	    return fileUtils.replaceSuffix(srcFile, 
-					   LatexPreProcessor.SUFFIX_PSTEX);
+	String getXFigInTexSuffix() {
+	    return LatexPreProcessor.SUFFIX_PSTEX;
 	}
     };
 
@@ -78,9 +76,9 @@ public enum LatexDev {
     abstract String getGnuplotInTexLanguage();
 
     /**
-     * Returns the file to be 
+     * Returns the suffix of the file to be 
      * embedded with <code>\includegraphics</code> in latex-code 
      * representing text. 
      */
-    abstract File getXFigInTexFile(TexFileUtils fileUtils, File srcFile);
+    abstract String getXFigInTexSuffix();
 }

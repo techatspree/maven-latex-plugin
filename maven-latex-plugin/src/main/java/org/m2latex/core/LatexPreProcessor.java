@@ -108,7 +108,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
-		proc.clearTargetFig(file);
+		proc.clearTargetFig(file, LatexDev.pdf);
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_FIG;
@@ -351,6 +351,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *
      * @param figFile
      *    the fig file to be processed. 
+     * @param dev
+     *    the 'device' which determines whether to create pdf or pstex. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the fig2dev command 
      *    returned by {@link Settings#getFig2devCommand()} failed. 
@@ -371,7 +373,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// embedded in some tex-file 
 
 	// this could be pstex or pdf 
-	File figInTexFile = dev.getXFigInTexFile(this.fileUtils, figFile);
+	File figInTexFile = this.fileUtils
+	    .replaceSuffix(figFile, dev.getXFigInTexSuffix());
 
 	//if (update(figFile, pdfFile)) {
 	    args = buildArgumentsFig2Pdf(dev.getXFigInTexLanguage(),
@@ -481,12 +484,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *
      * @param figFile
      *    a fig file. 
+     * @param dev
+     *    the 'device' which determines whether to create pdf or pstex. 
      */
-    private void clearTargetFig(File figFile) {
+    private void clearTargetFig(File figFile, LatexDev dev) {
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(figFile, SUFFIX_PTX);
-	deleteIfExists(figFile, SUFFIX_PDF);
+	deleteIfExists(figFile, dev.getXFigInTexSuffix());
     }
 
     /**
