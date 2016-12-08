@@ -529,6 +529,18 @@ not allowed:
 		 The default value is 'true'. -->
 	    <debugWarnings>true</debugWarnings>
 
+	    <!-- Whether creation of pdf-files from latex-files 
+		 goes via dvi-files. 
+		 If not, it goes directly. 
+		 Currently, not only conversion of latex-files is affected, 
+		 but also conversion of graphic files 
+		 into graphic formats which allow inclusion in the tex-file. 
+		 If it goes via latex, 
+		 then the formats are more based on (encapsulated) postscript; 
+		 else on pdf. 
+		 The default value is 'false'. -->
+	    <pdfViaDvi>true</pdfViaDvi>
+
 	    <!-- The pattern in the log-file 
 		 which triggers rerunning $latex2pdfCommand 
 		 taking $maxNumReRunsLatex into account. 

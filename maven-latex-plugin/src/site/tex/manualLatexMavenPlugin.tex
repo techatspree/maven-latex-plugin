@@ -2476,6 +2476,21 @@ rerun \LaTeX{} and have a look at the log-file.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
+\tt pdfViaDvi    & \tt false          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Whether creation of pdf-files from latex-files 
+goes via dvi-files. 
+If not, it goes directly. 
+Currently, not only conversion of latex-files is affected, 
+but also conversion of graphic files 
+into graphic formats which allow inclusion in the tex-file. 
+If it goes via latex, 
+then the formats are more based on (encapsulated) postscript; 
+else on pdf. 
+%The default value is '{\tt false}'. 
+\end{minipage}
+} \\
 \tt patternReRunLatex &  see Section~\ref{subsubsec:patternReRunLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}

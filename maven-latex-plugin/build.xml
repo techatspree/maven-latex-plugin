@@ -101,6 +101,7 @@
 		latex2pdfCommand="pdflatex"
 		debugBadBoxes='true'
 		debugWarnings='true'
+		pdfViaDvi='false'
 		maxNumReRunsLatex='-1'
 		bibtexCommand="bibtex"
 		bibtexOptions=""

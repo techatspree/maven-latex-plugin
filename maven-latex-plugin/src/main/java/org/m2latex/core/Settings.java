@@ -572,6 +572,18 @@ public class Settings {
     @Parameter(name = "debugWarnings", defaultValue = "true")
     private boolean debugWarnings = true;
 
+    /**
+     * Whether creation of pdf-files from latex-files 
+     * goes via dvi-files. 
+     * If not, it goes directly. 
+     * Currently, not only conversion of latex-files is affected, 
+     * but also conversion of graphic files 
+     * into graphic formats which allow inclusion in the tex-file. 
+     * If it goes via latex, 
+     * then the formats are more based on (encapsulated) postscript; 
+     * else on pdf. 
+     * The default value is <code>false</code>. 
+     */
     // if false: directly 
     @Parameter(name = "pdfViaDvi", defaultValue = "false")
     private boolean pdfViaDvi = false;
