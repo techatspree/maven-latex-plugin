@@ -392,11 +392,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>command</code> failed. For details...
-     * <li> WAP02 Running <code>command</code> failed. No log file 
-     * <li> WAP04 if <code>logFile</code> is not readable. 
-     * <li> WFU03 cannot close log file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WFU03: cannot close log file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05:
      *      if one of the commands mentioned in the throws-tag fails 
      * </ul>
      *
@@ -504,11 +504,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>command</code> failed. For details...
-     * <li> WAP02 Running <code>command</code> failed. No log file 
-     * <li> WAP04 if <code>logFile</code> is not readable. 
-     * <li> WFU03 cannot close 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WFU03: cannot close 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
      *      maybe caused by subsequent runs. 
      * </ul>
@@ -587,7 +587,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * based on a pattern matching in the log file. 
      * <p>
      * Logging: 
-     * WFU03 cannot close 
+     * WFU03: cannot close 
      */
     private boolean needRun(boolean another, 
 			    String kind, 
@@ -656,11 +656,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU03 cannot close 
-     * <li> WAP04 if <code>logFile</code> is not readable. 
-     * <li> WLP03 <code>command</code> created bad boxes 
-     * <li> WLP04 <code>command</code> emitted warnings 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WFU03: cannot close 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP03: <code>command</code> created bad boxes 
+     * <li> WLP04: <code>command</code> emitted warnings 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      as for {@link #processLatex2pdfCore(LatexMainDesc)} 
      *      if running an exernal command fails. 
      * </ul>
@@ -673,7 +673,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#pdf
      */
     void processLatex2pdf(File texFile) throws BuildFailureException {
-        this.log.info("Converting into pdf: LaTeX file '" + texFile + "'. ");
+        this.log.info("Converting into pdf:  LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
@@ -697,10 +697,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>command</code> failed. For details...
-     * <li> WAP02 Running <code>command</code> failed. No log file 
-     * <li> WAP04 if <code>logFile</code> is not readable. 
-     * <li> WFU03 cannot close 
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WFU03: cannot close 
      * </ul>
      */
     private void logErrs(File logFile, String command) {
@@ -732,10 +732,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU03 cannot close 
-     * <li> WAP04 if <code>logFile</code> is not readable. 
-     * <li> WLP03 <code>command</code> created bad boxes 
-     * <li> WLP04 <code>command</code> emitted warnings 
+     * <li> WFU03: cannot close 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP03: <code>command</code> created bad boxes 
+     * <li> WLP04: <code>command</code> emitted warnings 
      * </ul>
      *
      * @param logFile
@@ -769,7 +769,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
      *
@@ -801,7 +801,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
      *
@@ -815,7 +815,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#odt
      */
     void processLatex2odt(File texFile) throws BuildFailureException {
-	this.log.info("Converting into odt: LaTeX file '" + texFile + "'. ");
+	this.log.info("Converting into odt:  LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
@@ -833,7 +833,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
      *
@@ -871,7 +871,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
      *
@@ -884,7 +884,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#rtf
      */
     void processLatex2rtf(File texFile) throws BuildFailureException {
-	this.log.info("Converting into rtf: LaTeX file '" + texFile + "'. ");
+	this.log.info("Converting into rtf:  LaTeX file '" + texFile + "'. ");
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 	runLatex2rtf(texFile);
@@ -895,7 +895,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
      *
@@ -909,7 +909,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see Target#rtf
      */
     void processLatex2txt(File texFile) throws BuildFailureException {
-	this.log.info("Converting into txt: LaTeX file '" + texFile + "'. ");
+	this.log.info("Converting into txt:  LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
@@ -930,12 +930,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>bibtex</code> failed. For details...
-     * <li> WAP02 Running <code>bibtex</code> failed. No log file 
-     * <li> WAP03 Running <code>bibtex</code> emitted warnings. 
-     * <li> WAP04 if <code>logFile</code> is not readable. 
-     * <li> WFU03 cannot close 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WAP01: Running <code>bibtex</code> failed. For details...
+     * <li> WAP02: Running <code>bibtex</code> failed. No log file 
+     * <li> WAP03: Running <code>bibtex</code> emitted warnings. 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WFU03: cannot close 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the BibTeX command failed. 
      * </ul>
      *
@@ -985,12 +985,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>makeindex</code> failed. For details...
-     * <li> WAP02 Running <code>makeindex</code> failed. No log file 
-     * <li> WAP03 Running <code>makeindex</code> emitted warnings. 
-     * <li> WAP04 .ilg-file is not readable. 
-     * <li> WFU03 cannot close .ilg-file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WAP01: Running <code>makeindex</code> failed. For details...
+     * <li> WAP02: Running <code>makeindex</code> failed. No log file 
+     * <li> WAP03: Running <code>makeindex</code> emitted warnings. 
+     * <li> WAP04: .ilg-file is not readable. 
+     * <li> WFU03: cannot close .ilg-file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the makeindex command failed. 
      * </ul>
      *
@@ -1028,12 +1028,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>makeindex</code> failed. For details...
-     * <li> WAP02 Running <code>makeindex</code> failed. No log file 
-     * <li> WAP03 Running <code>makeindex</code> emitted warnings. 
+     * <li> WAP01: Running <code>makeindex</code> failed. For details...
+     * <li> WAP02: Running <code>makeindex</code> failed. No log file 
+     * <li> WAP03: Running <code>makeindex</code> emitted warnings. 
      * <li> WAP04 .ilg-file is not readable. 
-     * <li> WFU03 cannot close .ilg-file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WFU03: cannot close .ilg-file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the makeindex command failed. 
      * </ul>
      *
@@ -1078,12 +1078,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>makeglossaries</code> failed. For details...
+     * <li> WAP01: Running <code>makeglossaries</code> failed. For details...
      * <li> WAP02 Running <code>makeglossaries</code> failed. No log file 
-     * <li> WAP03 Running <code>makeglossaries</code> emitted warnings. 
-     * <li> WAP04 .glg-file is not readable. 
-     * <li> WFU03 cannot close .glg-file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WAP03: Running <code>makeglossaries</code> emitted warnings. 
+     * <li> WAP04: .glg-file is not readable. 
+     * <li> WFU03: cannot close .glg-file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the makeglossaries command failed. 
      * </ul>
      *
@@ -1146,11 +1146,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>latex2pdf</code> failed. For details...
-     * <li> WAP02 Running <code>latex2pdf</code> failed. No log file 
-     * <li> WAP04 .log-file is not readable. 
-     * <li> WFU03 cannot close .log-file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WAP01: Running <code>latex2pdf</code> failed. For details...
+     * <li> WAP02: Running <code>latex2pdf</code> failed. No log file 
+     * <li> WAP04: .log-file is not readable. 
+     * <li> WFU03: cannot close .log-file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the latex2pdf command failed. 
      * </ul>
      *
@@ -1192,13 +1192,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>htlatex</code> failed. For details...
-     * <li> WAP02 Running <code>htlatex</code> failed. No log file 
-     * <li> WLP03 <code>htlatex</code> created bad boxes 
-     * <li> WLP04 <code>htlatex</code> emitted warnings 
-     * <li> WAP04 log file is not readable. 
-     * <li> WFU03 cannot close log file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WAP01: Running <code>htlatex</code> failed. For details...
+     * <li> WAP02: Running <code>htlatex</code> failed. No log file 
+     * <li> WLP03: <code>htlatex</code> created bad boxes 
+     * <li> WLP04: <code>htlatex</code> emitted warnings 
+     * <li> WAP04: log file is not readable. 
+     * <li> WFU03: cannot close log file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the tex4ht command failed. 
      * </ul>
      *
@@ -1251,7 +1251,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the latex2rtf command failed. 
      * </ul>
      *
@@ -1297,13 +1297,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>htlatex</code> failed. For details...
-     * <li> WAP02 Running <code>htlatex</code> failed. No log file 
-     * <li> WLP03 <code>htlatex</code> created bad boxes 
-     * <li> WLP04 <code>htlatex</code> emitted warnings 
-     * <li> WAP04 log file is not readable. 
-     * <li> WFU03 cannot close log file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WAP01: Running <code>htlatex</code> failed. For details...
+     * <li> WAP02: Running <code>htlatex</code> failed. No log file 
+     * <li> WLP03: <code>htlatex</code> created bad boxes 
+     * <li> WLP04: <code>htlatex</code> emitted warnings 
+     * <li> WAP04: log file is not readable. 
+     * <li> WFU03: cannot close log file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the tex4ht command failed. 
      * </ul>
      *
@@ -1355,7 +1355,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the odt2doc command failed. 
      * </ul>
      *
@@ -1402,7 +1402,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the pdf2txt command failed. 
      * </ul>
      *
