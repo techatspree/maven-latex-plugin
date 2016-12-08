@@ -122,7 +122,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runGnuplot2Dev(file, LatexDev.pdf);
+		proc.runGnuplot2Dev(file, LatexDev.pdf);//dvips
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
@@ -375,6 +375,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// this could be pstex or pdf 
 	File figInTexFile = this.fileUtils
 	    .replaceSuffix(figFile, dev.getXFigInTexSuffix());
+	File ptxFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
 
 	//if (update(figFile, pdfFile)) {
 	    args = buildArgumentsFig2Pdf(dev.getXFigInTexLanguage(),
@@ -396,7 +397,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // create tex-file (text without grapics) 
 	    // enclosing the pdf-file above 
 
-	    File ptxFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
   	    //if (update(figFile, pdf_tFile)) {
  	    args = buildArgumentsFig2Ptx(dev.getXFigTexLanguage(), 
 					 this.settings.getFig2devGenOptions(), 
@@ -566,6 +566,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(gpFile, SUFFIX_PTX);
+	deleteIfExists(gpFile, SUFFIX_EPS);
+	// FIXME: eliminate literal 
+	deleteIfExists(gpFile, "-eps-converted-to"+SUFFIX_PDF);
 	deleteIfExists(gpFile, SUFFIX_PDF);
     }
 
