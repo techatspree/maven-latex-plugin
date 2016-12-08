@@ -52,6 +52,9 @@ public class LatexProcessorTest {
 
     private File texFile = new File(System.getProperty("tmp.dir"), "test.tex");
     private File pdfFile = new File(System.getProperty("tmp.dir"), "test.pdf");
+    private File dviPdfFile = new File
+	(System.getProperty("tmp.dir"), 
+	 "test."+LatexProcessor.DEV.getLatexLanguage());
     private File htmlFile= new File(System.getProperty("tmp.dir"), "test.html");
     private File auxFile = new File(System.getProperty("tmp.dir"), "test.aux");
     private File logFile = new File(System.getProperty("tmp.dir"), "test.log");
@@ -74,16 +77,6 @@ public class LatexProcessorTest {
     private File tocFile = new File(System.getProperty("tmp.dir"), "test.toc");
     private File lofFile = new File(System.getProperty("tmp.dir"), "test.lof");
     private File lotFile = new File(System.getProperty("tmp.dir"), "test.lot");
-
-
-    private String[] tex2htmlArgsExpected = new String[] {
-        this.texFile.getName(),
-        "html,2",
-        "",
-        "",
-        settings.getLatex2pdfOptions()
-    };
-
 
 
     //@Ignore 
@@ -226,6 +219,10 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(xxxFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_PDF);
 	fileUtilsCtrl.setReturnValue(pdfFile);
+	// FIXME 
+	fileUtils.replaceSuffix(texFile, 
+				"."+LatexProcessor.DEV.getLatexLanguage());
+	fileUtilsCtrl.setReturnValue(dviPdfFile);
 	fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG);
 	fileUtilsCtrl.setReturnValue(logFile);
 
@@ -338,10 +335,9 @@ public class LatexProcessorTest {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getLatex2pdfCommand(),
-			 LatexProcessor
-			 .buildArguments(settings.getLatex2pdfOptions(), 
-					 texFile),
-			 pdfFile);
+			 LatexProcessor.buildLatexArguments
+			 (settings.getLatex2pdfOptions(), texFile),
+			 dviPdfFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
     }
@@ -350,7 +346,8 @@ public class LatexProcessorTest {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getTex4htCommand(),
-			 tex2htmlArgsExpected,
+			 LatexProcessor.buildHtlatexArguments(settings, 
+							      texFile),
 			 htmlFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
