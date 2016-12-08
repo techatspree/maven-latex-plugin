@@ -31,7 +31,7 @@ public enum LatexDev {
 	    return LatexPreProcessor.SUFFIX_PDF;
 	}
 	boolean isViaDvi() {
-	    return true;
+	    return false;
 	}
     },
     // latex creates dvi but not with the given drivers. 
@@ -102,4 +102,10 @@ public enum LatexDev {
     abstract String getXFigInTexSuffix();
 
     abstract boolean isViaDvi();
+
+    static LatexDev devViaDvi(boolean pdfViaDvi) {
+	LatexDev res = pdfViaDvi ? LatexDev.dvips : LatexDev.pdf;
+	assert res.isViaDvi() == pdfViaDvi;
+	return res;
+    }
 }
