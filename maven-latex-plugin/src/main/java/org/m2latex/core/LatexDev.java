@@ -24,10 +24,9 @@ public enum LatexDev {
 	String getGnuplotInTexLanguage() {
 	    return "pdf";
 	}
-	String getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
+	File getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
 	    return fileUtils.replaceSuffix(srcFile, 
-					   LatexPreProcessor.SUFFIX_PDF)
-		.getName();
+					   LatexPreProcessor.SUFFIX_PDF);
 	}
     },
     // latex creates dvi but not with the given drivers. 
@@ -41,10 +40,9 @@ public enum LatexDev {
 	String getGnuplotInTexLanguage() {
 	    return "eps";
 	}
-	String getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
+	File getXFigInTexFile(TexFileUtils fileUtils, File srcFile) {
 	    return fileUtils.replaceSuffix(srcFile, 
-					   LatexPreProcessor.SUFFIX_PSTEX)
-		.getName();
+					   LatexPreProcessor.SUFFIX_PSTEX);
 	}
     };
 
@@ -80,11 +78,9 @@ public enum LatexDev {
     abstract String getGnuplotInTexLanguage();
 
     /**
-     * Returns the name of the language <code>gnuplot</code> uses 
-     * to convert the graphic without text of a gnuplot-picture into. 
-     * In fact, there is a file of that format 
+     * Returns the file to be 
      * embedded with <code>\includegraphics</code> in latex-code 
      * representing text. 
      */
-    abstract String getXFigInTexFile(TexFileUtils fileUtils, File srcFile);
+    abstract File getXFigInTexFile(TexFileUtils fileUtils, File srcFile);
 }
