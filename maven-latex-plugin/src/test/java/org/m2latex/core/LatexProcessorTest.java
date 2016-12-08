@@ -340,6 +340,19 @@ public class LatexProcessorTest {
 			 dviPdfFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
+
+//	fileUtils.getSuffix(texFile);
+//	fileUtilsCtrl.setReturnValue(LatexProcessor.SUFFIX_DVI);
+	if (LatexProcessor.DEV.isViaDvi()) {
+	    executor.execute(texFile.getParentFile(),
+			     settings.getTexPath(),
+			     "dvipdfmx",
+			     new String[] {dviPdfFile.getName()},
+			     pdfFile);
+	    executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+	    executorCtrl.setReturnValue(null);
+	}
+
     }
 
     private void mockRunLatex2html() throws BuildFailureException {
