@@ -2491,6 +2491,26 @@ else on pdf.
 %The default value is '{\tt false}'. 
 \end{minipage}
 } \\
+\tt dvi2pdfCommand   & \tt dvipdfmx         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The driver to convert dvi into pdf-files. 
+Note that this must fit the options 
+of the packages `{\tt xcolor}' and `{\tt graphicx}'. 
+Sensible values are 
+`{\tt dvipdf'}, `{\tt dvipdfm'}, `{\tt dvipdfmx}', 
+and `{\tt dvipdft}' 
+(which is `{\tt dvipdfm}' with option `{\tt -t}').  
+%The default value is `dvipdfmx'. 
+\end{minipage}
+} \\
+\tt dvi2pdfOptions   & the empty string          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command {\tt\$dvi2pdfCommand}. 
+%The default value is the empty string.
+\end{minipage}
+} \\
 \tt patternReRunLatex &  see Section~\ref{subsubsec:patternReRunLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
