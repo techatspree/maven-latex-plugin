@@ -122,7 +122,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runGnuplot2Dev(file, LatexDev.pdf);//dvips
+		proc.runGnuplot2Dev(file, LatexDev.pdf);//dvips pdf
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
@@ -566,9 +566,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(gpFile, SUFFIX_PTX);
+	// created by runGnuplot2Dev(..., LatexDev.pstex) 
 	deleteIfExists(gpFile, SUFFIX_EPS);
+	// CAUTION: this is created 
+	// in the course of latex2pdf processing from .eps 
 	// FIXME: eliminate literal 
 	deleteIfExists(gpFile, "-eps-converted-to"+SUFFIX_PDF);
+	// created by runGnuplot2Dev(..., LatexDev.pdf) 
 	deleteIfExists(gpFile, SUFFIX_PDF);
     }
 
