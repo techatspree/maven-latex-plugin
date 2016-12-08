@@ -122,10 +122,11 @@
 		pdf2txtOptions="">
 	<patternLatexMainFile>
 \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
 %.*$|
 \\input\{[^{}]*\}|
 \s*)*
-\\(documentstyle|documentclass).*
+\\(documentstyle|documentclass)
 	</patternLatexMainFile>
 
 	<patternClearFromLatexMain>

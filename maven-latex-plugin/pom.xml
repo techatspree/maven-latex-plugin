@@ -250,10 +250,11 @@
 		 and to notify the developer of this plugin. -->
 	    <patternLatexMainFile>
 \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
 %.*$|
 \\input\{[^{}]*\}|
 \s*)*
-\\(documentstyle|documentclass).*
+\\(documentstyle|documentclass)
 	    </patternLatexMainFile>
 
            <!-- Path to the TeX scripts or null. 
@@ -529,7 +530,7 @@ not allowed:
 
 	    <!-- The pattern in the log-file 
 		 which triggers rerunning $latex2pdfCommand 
-		 taking $maxNumReRuns into account. 
+		 taking $maxNumReRunsLatex into account. 
 		 This pattern may never be ensured to be complete, 
 		 because any new package may break completeness. 
 		 Nevertheless, the default value aims completeness 
@@ -541,7 +542,7 @@ not allowed:
 		 to avoid false rerun warning 
 		 e.g. caused by occurrence of the word 'rerun'. 
 		 
-		 To ensure termination, let $maxNumReruns 
+		 To ensure termination, let $maxNumRerunsLatex 
 		 specify the maximum number of latex runs. 
 		 If the user finds an extension, 
 		 (s)he is asked to contribute 
