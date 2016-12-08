@@ -172,6 +172,7 @@ abstract class AbstractLatexProcessor {
      *    are the options in <code>options</code>. 
      */
     // for both LatexProcessor and LatexPreProcessor 
+    // and in tests 
     protected static String[] buildArguments(String options, File file) {
     	if (options.isEmpty()) {
     	    return new String[] {file.getName()};
