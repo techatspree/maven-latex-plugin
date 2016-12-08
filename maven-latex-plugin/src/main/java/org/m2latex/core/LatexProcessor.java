@@ -609,7 +609,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Container which comprises, besides the latex main file 
      * also several files creation of which shall be done once for ever. 
      */
-    static class LatexMainDesc {
+    private static class LatexMainDesc {
 	private final File texFile;
 	private final File pdfFile;
 	private final File pdfDviFile;
@@ -625,13 +625,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	private final File xxxFile;
 	private final File glgFile;
 
-	LatexMainDesc(File texFile, TexFileUtils fileUtils) {
+	LatexMainDesc(File texFile, TexFileUtils fileUtils, LatexDev dev) {
 	    this.texFile = texFile;
 	    // FIXME: easier to create xxxFile first 
 	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	    this.pdfFile = fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
+
+	    // FIXME: literal, suffix 
 	    this.pdfDviFile = fileUtils.replaceSuffix
-		(texFile, "."+DEV.getLatexLanguage());
+		(texFile, "."+dev.getLatexLanguage());
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 
 	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
@@ -643,6 +645,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    this.glgFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
 	}
     } // class LatexMainDesc 
+
+    private LatexMainDesc getLatexMainDesc(File texFile) {
+	return new LatexMainDesc
+	    (texFile, this.fileUtils, this.settings.getPdfViaDvi());
+    }
 
     /**
      * Runs LaTeX on <code>texFile</code> 
@@ -679,7 +686,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2pdf(File texFile) throws BuildFailureException {
         this.log.info("Converting into pdf:  LaTeX file '" + texFile + "'. ");
-	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
+	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 	processLatex2pdfCore(desc);
@@ -789,7 +796,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2html(File texFile) throws BuildFailureException {
 	this.log.info("Converting into html: LaTeX file '" + texFile + "'. ");
-	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
+	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 	preProcessLatex2pdf(desc);
@@ -821,7 +828,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2odt(File texFile) throws BuildFailureException {
 	this.log.info("Converting into odt:  LaTeX file '" + texFile + "'. ");
-	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
+	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         preProcessLatex2pdf(desc);
@@ -855,7 +862,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2docx(File texFile) throws BuildFailureException {
 	this.log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
-	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
+	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX0, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
  	preProcessLatex2pdf(desc);
@@ -915,7 +922,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     void processLatex2txt(File texFile) throws BuildFailureException {
 	this.log.info("Converting into txt:  LaTeX file '" + texFile + "'. ");
-	LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
+	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 	processLatex2pdfCore(desc);
@@ -1137,9 +1144,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	return true;
     }
 
-
-    final static LatexDev DEV = LatexDev.dvips;//pdf;//dvips;
-
     /**
      * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
      * on <code>texFile</code> 
@@ -1177,8 +1181,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	String command = this.settings.getLatex2pdfCommand();
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
-	String[] args = buildLatexArguments(this.settings.getLatex2pdfOptions(),
-					    texFile);
+	String[] args = buildLatexArguments(this.settings, texFile);
 	// may throw BuildFailureException TEX01, 
 	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         this.executor.execute(texFile.getParentFile(), // workingDir 
@@ -1196,7 +1199,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 
 	// FIXME: add parameters, also in tests, and document it. 
-	if (DEV.isViaDvi()) {
+	if (this.settings.getPdfViaDvi().isViaDvi()) {
 	    args = new String[] {desc.pdfDviFile.getName()};
 //	    assert this.fileUtils.getSuffix(desc.pdfDviFile).equals(SUFFIX_DVI);
 	    this.executor.execute(texFile.getParentFile(), // workingDir 
@@ -1209,11 +1212,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
     // also for tests 
-    protected static String[] buildLatexArguments(String options, 
+    protected static String[] buildLatexArguments(Settings settings,
 						  File texFile) {
 	// FIXME: hack with literal 
-	return buildArguments(options + 
-			      " -output-format="+DEV.getLatexLanguage(), 
+	return buildArguments(settings.getLatex2pdfOptions() + 
+			      " -output-format=" + 
+			      settings.getPdfViaDvi().getLatexLanguage(), 
 			      texFile);
     }
 
