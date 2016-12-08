@@ -24,6 +24,9 @@ public enum LatexDev {
 	String getGnuplotInTexLanguage() {
 	    return "pdf";
 	}
+	String getLatexLanguage() {
+	    return "pdf";
+	}
 	String getXFigInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_PDF;
 	}
@@ -38,6 +41,9 @@ public enum LatexDev {
 	}
 	String getGnuplotInTexLanguage() {
 	    return "eps";
+	}
+	String getLatexLanguage() {
+	    return "dvi";
 	}
 	String getXFigInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_PSTEX;
@@ -74,6 +80,13 @@ public enum LatexDev {
      * representing text. 
      */
     abstract String getGnuplotInTexLanguage();
+
+    /**
+     * Returns the name of the target language <code>latex2dev</code> uses 
+     * to convert the latex files into. 
+     * This is set via option <code>-output-format=</code>. 
+     */
+    abstract String getLatexLanguage();
 
     /**
      * Returns the suffix of the file to be 
