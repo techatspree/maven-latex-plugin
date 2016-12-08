@@ -147,9 +147,13 @@ public class Settings {
 	/**/"(\\[(\\s|\\w|,)*\\])?\\s*" +    // [options]
 	/**/"\\{\\w+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}version
 	"%.*$|" + // comments 
+	"\\\\PassOptionsToPackage\\s*" +     // PassOptionsToPackage
+	/**/"\\{\\w+\\}\\s*" +    // {options}
+	/**/"\\{\\w+\\}|" +       // {packagename}
+	"%.*$|" + // comments 
 	"\\\\input\\{[^{}]*\\}|" + // inputs 
 	"\\s*)*" + // spaces 
-	"\\\\(documentstyle|documentclass).*";
+	"\\\\(documentstyle|documentclass)";
 
 
     // texPath, commands and arguments 
