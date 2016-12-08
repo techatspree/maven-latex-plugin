@@ -222,7 +222,8 @@ public class Settings {
 	"^(T$T(\\.([^.]*|synctex\\.gz|out\\.ps)|" + 
 	// tex4ht creates files T$Tyy.(x)htm(l)... 
 	"(ch|se|su|ap|li)?\\d+\\.x?html?|" + 
-	// ... and T$Tddx.png and T$T-dd.svg... 
+	// ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 
+	"\\d+x\\.x?bb|" + 
 	"\\d+x\\.png|" + 
 	"-\\d+\\.svg)|" + 
 	// ... and xxT$T.eps... 
@@ -1002,6 +1003,7 @@ public class Settings {
     private String patternT4htOutputFiles = 
 	"^(T$T(((ch|se|su|ap|li)?\\d+)?\\.x?html?|" + 
 	"\\.css|" + 
+	"\\d+x\\.x?bb|" + 
 	"\\d+x\\.png|" +
 	"-\\d+\\.svg)|" + 
 	"(cmsy)\\d+(-c)?-\\d+c?\\.png)$";
