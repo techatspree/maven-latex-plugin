@@ -1132,6 +1132,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	return true;
     }
 
+
+    final static LatexDev DEV = LatexDev.pdf;
+
     /**
      * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
      * on <code>texFile</code> 
@@ -1169,8 +1172,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	String command = this.settings.getLatex2pdfCommand();
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
-	String[] args = buildArguments(this.settings.getLatex2pdfOptions(), 
-				       texFile);
+	String[] args = buildLatexArguments(this.settings.getLatex2pdfOptions(),
+					    texFile);
 	// may throw BuildFailureException TEX01, 
 	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         this.executor.execute(texFile.getParentFile(), // workingDir 
@@ -1182,6 +1185,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// logging errors (warnings are done in processLatex2pdf)
 	// may log warnings WFU03, WAP01, WAP02, WAP04
 	logErrs(desc.logFile, command);
+    }
+
+    // also for tests 
+    protected static String[] buildLatexArguments(String options, 
+						  File texFile) {
+	// FIXME: hack with literal 
+	return buildArguments(options + " -output-format="+DEV, 
+			      texFile);
     }
 
     /**
@@ -1215,7 +1226,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	String command = this.settings.getTex4htCommand();
         this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
-        String[] args = buildHtlatexArguments(texFile);
+        String[] args = buildHtlatexArguments(this.settings, texFile);
 	// may throw BuildFailureException TEX01, 
 	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         this.executor.execute(texFile.getParentFile(), // workingDir 
@@ -1232,13 +1243,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	logWarns(desc.logFile, command);
     }
 
-    private String[] buildHtlatexArguments(File texFile) {
+    protected static String[] buildHtlatexArguments(Settings settings, 
+						    File texFile) {
         return new String[] {
 	    texFile.getName(),
-	    this.settings.getTex4htStyOptions(),
-	    this.settings.getTex4htOptions(),
-	    this.settings.getT4htOptions(),
-	    this.settings.getLatex2pdfOptions()
+	    settings.getTex4htStyOptions(),
+	    settings.getTex4htOptions(),
+	    settings.getT4htOptions(),
+	    settings.getLatex2pdfOptions()
 	};
     }
 
