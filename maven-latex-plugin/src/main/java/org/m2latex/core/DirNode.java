@@ -61,7 +61,7 @@ public class DirNode {
     // LatexProcessor.processGraphics()
     // LatexProcessor.clearAll()
     public DirNode(File dir, TexFileUtils fileUtils) {
-	assert dir.isDirectory() : "The file '" + file + "' is no directory";
+	assert dir.isDirectory() : "The file '" + dir + "' is no directory. ";
 	// may log WFU01 Cannot read directory 
 	File[] files = fileUtils.listFilesOrWarn(dir);
 	if (files == null) {
