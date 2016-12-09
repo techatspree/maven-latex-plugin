@@ -511,7 +511,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(figFile, SUFFIX_PTX);
-	deleteIfExists(figFile, dev.getXFigInTexSuffix());
+	deleteIfExists(figFile, LatexDev.pdf  .getXFigInTexSuffix());
+ 	deleteIfExists(figFile, LatexDev.dvips.getXFigInTexSuffix());
     }
 
     /**
@@ -683,12 +684,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     private void runEbb(File file) throws BuildFailureException {
 	// FIXME: add parameters 
-	String command = "ebb";
+	String command = this.settings.getEbbCommand();
 	File workingDir = file.getParentFile();
-	String[] args = new String[] {
-	    "-v", "-x", file.getName()
-	};
-	// FIXME: maybe this depends on the option -x
+	String[] args = buildEbbArguments(this.settings.getEbbOptions(), file);
+
+	// Creation of .xbb files for driver dvipdfmx
+	// FIXME: literal 
+	args[0] ="-x";
 	File resFile = this.fileUtils.replaceSuffix(file, SUFFIX_XBB);
 
 	this.executor.execute(workingDir, 
@@ -697,11 +699,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      args,
 			      resFile);
 
-	args = new String[] {
-	    // -m is the default creating .bb-files 
-	    "-v", "-m", file.getName()
-	};
-	// FIXME: maybe this depends on the option -m
+	// Creation of .bb files for driver dvipdfm
+	// FIXME: literal 
+	args[0] ="-m";
 	resFile = this.fileUtils.replaceSuffix(file, SUFFIX_BB);
 
 	this.executor.execute(workingDir, 
@@ -711,6 +711,25 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      resFile);
     }
 
+    /**
+     * Returns an array of strings, 
+     * where the 0th entry is <code>null</code> 
+     * and a placeholder for option <code>-x</code> or <code>-m</code> 
+     * then follow the options from <code>options</code> 
+     * and finally comes the name of <code>file</code>. 
+     */
+    protected static String[] buildEbbArguments(String options, File file) {
+    	if (options.isEmpty()) {
+    	    return new String[] {null, file.getName()};
+    	}
+        String[] optionsArr = options.split(" ");
+	String[] args = new String[optionsArr.length+2];
+        System.arraycopy(optionsArr, 0, args, 1, optionsArr.length);
+        args[args.length-1] = file.getName();
+	
+ 	assert args[0] == null;
+   	return args;
+     }
 
     /**
      * Deletes the graphic files 
