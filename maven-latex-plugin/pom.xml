@@ -383,7 +383,22 @@ zzT$T\.e?ps|
 	    -interaction=nonstopmode -recorder -s prologues=2
 	    </metapostOptions>
 
-  
+	    <!-- The command to create bounding box information 
+		 from jpg-files and from png-files. 
+		 This is run twice: 
+		 once with parameter '-m' 
+		 to create '.bb'-files for driver 'dvipdfm' and 
+		 once with parameter '-x' 
+		 to create '.xbb'-files for driver 'dvipdfmx'. 
+		 The default value is 'ebb'. -->
+	    <ebbCommand>ebb</ebbCommand>
+
+	    <!-- The options for the command $ebbCommand 
+		 except '-m' and '-x' 
+		 which are added automatically. 
+		 The default value is '-v'. -->
+	    <ebbOptions>-v</ebbOptions>
+
             <!-- The LaTeX command to create a pdf-file. 
 		 Possible values are e.g. 
 		 'pdflatex', 'lualatex' and 'xelatex'. 

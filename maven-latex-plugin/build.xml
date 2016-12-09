@@ -98,6 +98,8 @@
 		gnuplotCommand="gnuplot"
 		gnuplotOptions=""
 		metapostCommand="mpost"
+		ebbCommand='ebb'
+		ebbOptions='-v'
 		latex2pdfCommand="pdflatex"
 		debugBadBoxes='true'
 		debugWarnings='true'
