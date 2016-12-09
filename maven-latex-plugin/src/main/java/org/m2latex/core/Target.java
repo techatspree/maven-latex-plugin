@@ -35,8 +35,25 @@ public enum Target {
     /**
      * standalone. 
      */
+    dvi() {
+	// FIXME: how does this fit with preprocessing?? 
+	private final String LATEX_OUTPUT_FILES = 
+	    "^(T$T\\.dvi|.+(\\.(pstex|eps|jpg|png)|\\d+\\.mps))$";
+	// may throw BuildFailureException TEX01 
+	public void processSource(LatexProcessor latexProcessor, 
+				  File texFile) throws BuildFailureException {
+	    latexProcessor.processLatex2dvi(texFile);
+	}
+
+	public String getPatternOutputFiles(Settings settings) {
+	    return LATEX_OUTPUT_FILES;
+	}
+    },
+    /**
+     * standalone. 
+     */
     pdf() {
-	private final String LATEX_OUTPUT_FILES = "^T$T\\.(pdf|dvi|ps)$";
+	private final String LATEX_OUTPUT_FILES = "^T$T\\.pdf$";
 	// may throw BuildFailureException TEX01 
 	public void processSource(LatexProcessor latexProcessor, 
 				  File texFile) throws BuildFailureException {
