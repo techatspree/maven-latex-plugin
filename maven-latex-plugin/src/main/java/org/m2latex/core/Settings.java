@@ -452,7 +452,8 @@ public class Settings {
     // parameters for latex2pdf-conversion 
 
     /**
-     * The LaTeX command to create a pdf-file. 
+     * The LaTeX command to create a pdf-file or a dvi-file. 
+     * FIXME: documentation must be updated. 
      * Possible values are e.g. 
      * <code>pdflatex</code>, <code>lualatex</code> and <code>xelatex</code>. 
      * The default value (for which this software is also tested) 
@@ -466,6 +467,7 @@ public class Settings {
      * Leading and trailing blanks are ignored. 
      * The setter method {@link #setLatex2pdfOptions(String)} ensures, 
      * that exactly one blank separate the proper options. 
+     * <p>
      * The default value comprises the following options: 
      * <ul>
      * <li><code>-interaction=nonstopmode</code> 
@@ -573,15 +575,30 @@ public class Settings {
     private boolean debugWarnings = true;
 
     /**
-     * Whether creation of pdf-files from latex-files 
-     * goes via dvi-files. 
-     * If not, it goes directly. 
+     * Whether creation of pdf-files from latex-files goes via dvi-files. 
+     * <p>
+     * If <code>pdfViaDvi</code> is set 
+     * and the latex processor needs repetitions, 
+     * these are all done creating dvi 
+     * and then pdf is created in a final step. 
+     * If <code>pdfViaDvi</code> is not set, 
+     * latex is directly converted into pdf. 
+     * <p>
      * Currently, not only conversion of latex-files is affected, 
      * but also conversion of graphic files 
      * into graphic formats which allow inclusion in the tex-file. 
      * If it goes via latex, 
      * then the formats are more based on (encapsulated) postscript; 
      * else on pdf. 
+     * <p>
+     * Of course, the target dvi is not affected: 
+     * This uses always the dvi-format. 
+     * What is also affected are the tasks 
+     * creating html, odt or docs: 
+     * Although these are based on htlatex which is always dvi-based, 
+     * the preprocessing is done in dvi or in pdf. 
+     * Also the task txt is affected. 
+     * <p>
      * The default value is <code>false</code>. 
      */
     // if false: directly 
