@@ -683,8 +683,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     private void runEbb(File file) throws BuildFailureException {
 	// FIXME: add parameters 
-	this.log.info("Processing fig-file '" + file + "'. ");
-	this.log.info("Bounding box for file '" + file + "'. ");
 	String command = "ebb";
 	File workingDir = file.getParentFile();
 	String[] args = new String[] {
@@ -703,7 +701,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // -m is the default creating .bb-files 
 	    "-v", "-m", file.getName()
 	};
-	// FIXME: maybe this depends on the option -x
+	// FIXME: maybe this depends on the option -m
 	resFile = this.fileUtils.replaceSuffix(file, SUFFIX_BB);
 
 	this.executor.execute(workingDir, 
