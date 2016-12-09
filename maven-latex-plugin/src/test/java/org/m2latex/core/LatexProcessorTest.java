@@ -330,12 +330,12 @@ public class LatexProcessorTest {
         executorCtrl.setReturnValue(null);
     }
 
-
     private void mockRunLatex() throws BuildFailureException {
         executor.execute(texFile.getParentFile(),
 			 settings.getTexPath(),
 			 settings.getLatex2pdfCommand(),
-			 LatexProcessor.buildLatexArguments(settings, texFile),
+			 LatexProcessor.buildLatexArguments
+			 (settings, settings.getPdfViaDvi(), texFile),
 			 dviPdfFile);
         executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
         executorCtrl.setReturnValue(null);
@@ -345,8 +345,9 @@ public class LatexProcessorTest {
 	    //	fileUtilsCtrl.setReturnValue(LatexProcessor.SUFFIX_DVI);
 	    executor.execute(texFile.getParentFile(),
 			     settings.getTexPath(),
-			     "dvipdfmx",
-			     new String[] {dviPdfFile.getName()},
+			     settings.getDvi2pdfCommand(),
+			     LatexProcessor.buildArguments
+			     (settings.getDvi2pdfOptions(), dviPdfFile),
 			     pdfFile);
 	    executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
 	    executorCtrl.setReturnValue(null);
