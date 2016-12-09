@@ -4,7 +4,13 @@ import java.io.File;
 
 /**
  * Enumeration of the backends of latex. 
- *
+ * Currently, there are two, <code>pdf</code> and <code>dvips</code> 
+ * the latter representing <code>dvi</code> 
+ * but <code>html</code> and <code>odt</code> are also desirable. 
+ * The backend also affects the natural graphic formats: 
+ * Whereas for the backend <code>pdf</code>, 
+ * also <code>pdf</code> is used, 
+ * <code>dvips</code> uses postscript-based formats. 
  *
  * Created: Tue Oct 18 10:06:30 2016
  *
@@ -92,6 +98,7 @@ public enum LatexDev {
      * to convert the latex files into. 
      * This is set via option <code>-output-format=</code>. 
      */
+    // FIXME: very bad name: should be LatexOutputFormat. 
     abstract String getLatexLanguage();
 
     /**
