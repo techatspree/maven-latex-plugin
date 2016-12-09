@@ -51,7 +51,7 @@ import java.util.Collection;
  * Processing of the latex main files is done in {@link #create()} 
  * according to the target(s) given by the parameters. 
  * The elements of the enumeration {@link Target} use methods 
- * {@link #processLatex2rtf(File)}, {@link #processLatex2pdf(File)}, 
+ * {@link #processLatex2rtf(File)}, {@link #processLatex2dev(File, LatexDev)}, 
  * {@link #processLatex2html(File)}, {@link #processLatex2odt(File)}, 
  * {@link #processLatex2docx(File)} and {@link #processLatex2txt(File)}. 
  */
@@ -376,234 +376,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     // FIXME: determine whether to use latexmk makes sense 
 
-    /**
-     * Runs LaTeX on <code>texFile</code> at once, 
-     * runs BibTeX, MakeIndex and MakeGlossaries by need 
-     * and returns whether a second LaTeX run is required. 
-     * The latter also holds, if a table of contents, a list of figures 
-     * or a list of tables is specified. 
-     * <p>
-     * A warning is logged if the LaTeX, a BibTeX run a MakeIndex 
-     * or a MakeGlossaries run fails 
-     * or if a BibTeX run or a MakeIndex or a MakeGlossary run issues a warning
-     * in the according methods {@link #runLatex2pdf(LatexMainDesc)}, 
-     * {@link #runBibtexByNeed(File)}, 
-     * {@link #runMakeIndexByNeed(LatexMainDesc)} and 
-     * {@link #runMakeGlossaryByNeed(LatexMainDesc)}. 
-     * <p>
-     * Logging: 
-     * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
-     * <li> WAP02: Running <code>command</code> failed. No log file 
-     * <li> WAP04: if <code>logFile</code> is not readable. 
-     * <li> WFU03: cannot close log file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05:
-     *      if one of the commands mentioned in the throws-tag fails 
-     * </ul>
-     *
-     * @param texFile
-     *    the latex-file to be processed. 
-     * @param logFile
-     *    the log-file after processing <code>texFile</code>. 
-     * @return
-     *    the number of LaTeX runs required 
-     *    because bibtex, makeindex or makeglossaries had been run 
-     *    or to update a table of contents or a list figures or tables. 
-     *    <ul>
-     *    <li>
-     *    If neither of these are present, no rerun is required. 
-     *    <li>
-     *    If a bibliography, an index and a glossary is included 
-     *    and a table of contents, 
-     *    we assume that these are in the table of contents. 
-     *    Thus two reruns are required: 
-     *    one to include the bibliography or that like 
-     *    and the second one to make it appear in the table of contents. 
-     *    <li>
-     *    In all other cases, a single rerun suffices 
-     *    </ul>
-     * @throws BuildFailureException
-     *    TEX01 if invocation one of the following commands fails: the 
-     *    <ul>
-     *    <li> latex2pdf command from {@link Settings#getLatexCommand()} 
-     *    <li> BibTeX    command from {@link Settings#getBibtexCommand()}
-     *    <li> makeindex command from {@link Settings#getMakeIndexCommand()} 
-     *    <li> makeglossaries command 
-     *         from {@link Settings#getMakeGlossariesCommand()} 
-     *    </ul>
-     * @see #processLatex2pdfCore(LatexMainDesc)
-     * @see #processLatex2html(File)
-     * @see #processLatex2odt(File)
-     * @see #processLatex2docx(File)
-     */
-    private int preProcessLatex2pdf(LatexMainDesc desc) 
-	throws BuildFailureException {
-
-	// initial latex run 
- 	// may throw BuildFailureException TEX01 
-	// may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
-	// WAP01, WAP02, WAP04, WFU03
-	runLatex2pdf(desc);
-	File texFile = desc.texFile;
-
-	// create bibliography, index and glossary by need 
-	// may throw BuildFailureException  TEX01 
-	// may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
-	// WAP01, WAP02, WAP03, WAP04, WFU03
-	boolean hasBib    = runBibtexByNeed      (texFile);
-	// may both throw BuildFailureException, both TEX01 
-	// may both log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
-	// WAP01, WAP02, WAP03, WAP04, WFU03
-	boolean hasIdxGls = runMakeIndexByNeed   (desc)
-	    |               runMakeGlossaryByNeed(desc);
-
-	// rerun LaTeX at least once if bibtex or makeindex had been run 
-	// or if a toc, a lof or a lot exists. 
-	if (hasBib) {
-	    // on run to include the bibliography from xxx.bbl into the pdf 
-	    // and the lables into the aux file 
-	    // and another run to put the labels from the aux file 
-	    // to the locations of the \cite commands. 
-
-	    // This suffices also to include a bib in a toc 
-	    return 2;
-	}
-
-	boolean hasToc = 
-	    this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
-	if (hasIdxGls) {
-	    // Here, an index or a glossary exists 
-	    // This requires at least one LaTeX run. 
-
-	    // if one of these has to be included in a toc, 
-	    // a second run is needed. 
-	    return hasToc ? 2 : 1;
-	}
-	// Here, no bib, index or glossary exists. 
-	// The result is either 0 or 1, 
-	// depending on whether a toc, lof or lot exists 
-
-	boolean needLatexReRun = hasToc 
-	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
-	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
-
-	return needLatexReRun ? 1 : 0;
-    }
-
-    /**
-     * Runs LaTeX on <code>texFile</code> at once, 
-     * runs BibTeX, MakeIndex and MakeGlossaries by need 
-     * according to {@link #preProcessLatex2pdf(LatexMainDesc)} 
-     * and reruns latex as long as needed to get all links 
-     * or as threshold {@link Settings#maxNumReRunsLatex} specifies. 
-     * <p>
-     * The result of the LaTeX run is typically some pdf-file, 
-     * but it is also possible to specify the dvi-format 
-     * (no longer recommended but still working). 
-     * <p>
-     * Note that no warnings are issued by the latex run. 
-     * <p>
-     * Logging: 
-     * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
-     * <li> WAP02: Running <code>command</code> failed. No log file 
-     * <li> WAP04: if <code>logFile</code> is not readable. 
-     * <li> WFU03: cannot close 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
-     *      as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
-     *      maybe caused by subsequent runs. 
-     * </ul>
-     *
-     * @param texFile
-     *    the latex-file to be processed. 
-     * @param logFile
-     *    the log-file after processing <code>texFile</code>. 
-     * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
-     *    maybe caused by subsequent runs. 
-     * @see #processLatex2pdf(File)
-     * @see #processLatex2txt(File)
-     */
-    private void processLatex2pdfCore(LatexMainDesc desc) 
-	throws BuildFailureException {
-
-	// may throw BuildFailureException TEX01, 
-	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
- 	int numLatexReRuns = preProcessLatex2pdf(desc);
-				      
-	assert numLatexReRuns == 0 
-	    || numLatexReRuns == 1 
-	    || numLatexReRuns == 2;
-	if (numLatexReRuns > 0) {
-	    // rerun LaTeX without makeindex and makeglossaries 
-	    this.log.debug("Rerun LaTeX to update table of contents, ... " + 
-			   "bibliography, index, or that like. ");
-	    // may throw BuildFailureException TEX01 
-	    // may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
-	    // WAP01, WAP02, WAP04, WFU03
-	    runLatex2pdf(desc);
-	    numLatexReRuns--;
-	}
-	assert numLatexReRuns == 0 || numLatexReRuns == 1;
-
-	// rerun latex by need patternRerunMakeIndex
-	boolean needMakeIndexReRun;
-	boolean needLatexReRun = (numLatexReRuns == 1)
-	    || needRun(true, "LaTeX", desc.logFile, 
-		       this.settings.getPatternReRunLatex());
-
-	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
-	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
-	    needMakeIndexReRun = 
-		needRun(true, "MakeIndex", desc.logFile, 
-			this.settings.getPatternReRunMakeIndex());
-	    // FIXME: superfluous since pattern rerunfileckeck 
-	    // triggering makeindex also fits rerun of LaTeX 
-	    needLatexReRun |= needMakeIndexReRun;
-	    if (!needLatexReRun) {
-		return;
-	    }
-            this.log.debug("Latex must be rerun. ");
-	    if (needMakeIndexReRun) {
-		// FIXME: not by need 
-		// may throw BuildFailureException TEX01 
-		// may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
-		// WAP01, WAP02, WAP03, WAP04, WFU03
-		runMakeIndexByNeed(desc);
-	    }
-
-	    // may throw BuildFailureException TEX01 
-	    // may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
-	    // WAP01, WAP02, WAP04, WFU03
-	    runLatex2pdf(desc);
-	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
-				     this.settings.getPatternReRunLatex());
-        }
-	this.log.warn("WLP01: LaTeX requires rerun but maximum number " + 
-		      maxNumReruns + " reached. ");
-    }
-
-    /**
-     * Returns whether a(n other) LaTeX/MakeIndex run is necessary 
-     * based on a pattern matching in the log file. 
-     * <p>
-     * Logging: 
-     * WFU03: cannot close 
-     */
-    private boolean needRun(boolean another, 
-			    String kind, 
-			    File logFile, 
-			    String pattern) {
-
-	// may log warning WFU03 cannot close 
-	Boolean needRun = this.fileUtils.matchInFile(logFile, pattern);
-	if (needRun == null) {
-	    this.log.warn("WLP02: Cannot read log file '" + logFile.getName() + 
-			  "'; " + kind + " may require rerun. ");
-	    return false;
-	}
-	return needRun;
-    }
 
     /**
      * Container which comprises, besides the latex main file 
@@ -651,52 +423,327 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    (texFile, this.fileUtils, this.settings.getPdfViaDvi());
     }
 
+
+
+
+
     /**
-     * Runs LaTeX on <code>texFile</code> 
-     * BibTeX, MakeIndex and MakeGlossaries 
-     * and again LaTeX creating a pdf-file 
-     * as specified by {@link #preProcessLatex2pdf(LatexMainDesc)} 
-     * and issues a warning if 
+     * Runs LaTeX on on the latex main file <code>texFile</code> 
+     * described by <code>desc</code> once, 
+     * runs BibTeX, MakeIndex and MakeGlossaries by need 
+     * and returns whether a second LaTeX run is required. 
+     * The latter also holds, if a table of contents, a list of figures 
+     * or a list of tables is specified. 
+     * The output format of the LaTeX run is given by <code>dev</code>, 
+     * to be more precise by {@link LatexDev#getLatexLanguage()}. 
+     * <p>
+     * A warning is logged if the LaTeX, a BibTeX run a MakeIndex 
+     * or a MakeGlossaries run fails 
+     * or if a BibTeX run or a MakeIndex or a MakeGlossary run issues a warning
+     * in the according methods {@link #runLatex2pdf(LatexMainDesc)}, 
+     * {@link #runBibtexByNeed(File)}, 
+     * {@link #runMakeIndexByNeed(LatexMainDesc)} and 
+     * {@link #runMakeGlossaryByNeed(LatexMainDesc)}. 
+     * <p>
+     * Logging: 
      * <ul>
-     * <li>
-     * another LaTeX rerun is required 
-     * beyond {@link Settings#maxNumReRunsLatex}, 
-     * <li>
-     * bad boxes or warnings occurred. 
-     * For details see {@link #logWarns(File, String)}. 
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WFU03: cannot close log file 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05:
+     *      if one of the commands mentioned in the throws-tag fails 
+     * </ul>
+     *
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    to be processed. 
+     * @param dev
+     *    the device describing the output format which is either pdf or dvi. 
+     *    See {@link LatexDev#getLatexLanguage()}. 
+     * @return
+     *    the number of LaTeX runs required 
+     *    because bibtex, makeindex or makeglossaries had been run 
+     *    or to update a table of contents or a list figures or tables. 
+     *    <ul>
+     *    <li>
+     *    If neither of these are present, no rerun is required. 
+     *    <li>
+     *    If a bibliography, an index and a glossary is included 
+     *    and a table of contents, 
+     *    we assume that these are in the table of contents. 
+     *    Thus two reruns are required: 
+     *    one to include the bibliography or that like 
+     *    and the second one to make it appear in the table of contents. 
+     *    <li>
+     *    In all other cases, a single rerun suffices 
+     *    </ul>
+     * @throws BuildFailureException
+     *    TEX01 if invocation one of the following commands fails: the 
+     *    <ul>
+     *    <li> latex2pdf command from {@link Settings#getLatexCommand()} 
+     *    <li> BibTeX    command from {@link Settings#getBibtexCommand()}
+     *    <li> makeindex command from {@link Settings#getMakeIndexCommand()} 
+     *    <li> makeglossaries command 
+     *         from {@link Settings#getMakeGlossariesCommand()} 
+     *    </ul>
+     * @see #processLatex2devCore(LatexMainDesc, LatexDev)
+     * @see #processLatex2html(File)
+     * @see #processLatex2odt(File)
+     * @see #processLatex2docx(File)
+     */
+    private int preProcessLatex2dev(LatexMainDesc desc, LatexDev dev) 
+	throws BuildFailureException {
+
+	// initial latex run 
+ 	// may throw BuildFailureException TEX01 
+	// may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
+	// WAP01, WAP02, WAP04, WFU03
+	runLatex2dev(desc, dev);
+	File texFile = desc.texFile;
+
+	// create bibliography, index and glossary by need 
+	// may throw BuildFailureException  TEX01 
+	// may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
+	// WAP01, WAP02, WAP03, WAP04, WFU03
+	boolean hasBib    = runBibtexByNeed      (texFile);
+	// may both throw BuildFailureException, both TEX01 
+	// may both log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
+	// WAP01, WAP02, WAP03, WAP04, WFU03
+	boolean hasIdxGls = runMakeIndexByNeed   (desc)
+	    |               runMakeGlossaryByNeed(desc);
+
+	// rerun LaTeX at least once if bibtex or makeindex had been run 
+	// or if a toc, a lof or a lot exists. 
+	if (hasBib) {
+	    // on run to include the bibliography from xxx.bbl into the pdf 
+	    // and the lables into the aux file 
+	    // and another run to put the labels from the aux file 
+	    // to the locations of the \cite commands. 
+
+	    // This suffices also to include a bib in a toc 
+	    return 2;
+	}
+
+	boolean hasToc = 
+	    this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
+	if (hasIdxGls) {
+	    // Here, an index or a glossary exists 
+	    // This requires at least one LaTeX run. 
+
+	    // if one of these has to be included in a toc, 
+	    // a second run is needed. 
+	    return hasToc ? 2 : 1;
+	}
+	// Here, no bib, index or glossary exists. 
+	// The result is either 0 or 1, 
+	// depending on whether a toc, lof or lot exists 
+
+	boolean needLatexReRun = hasToc 
+	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
+	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
+
+	return needLatexReRun ? 1 : 0;
+    }
+
+    /**
+     * Runs LaTeX on the latex main file <code>texFile</code> 
+     * described by <code>desc</code> once, 
+     * runs BibTeX, MakeIndex and MakeGlossaries by need 
+     * according to {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
+     * and reruns MakeIndex, MakeGlossaries and LaTeX 
+     * as often as needed to get all links satisfied 
+     * or as threshold {@link Settings#maxNumReRunsLatex} specifies. 
+     * <p>
+     * Note that still no logging of warnings from a latex run is done. 
+     * This is done in {@link #processLatex2dev(File, LatexDev)}. 
+     * The exclusion of logging of warnings is indicated by the name part 
+     * 'Core'. 
+     * Processing without logging of warnings 
+     * is required by {@link #processLatex2txt(File)}. 
+     * <p>
+     * The output format of the LaTeX run is given by <code>dev</code>, 
+     * to be more precise by {@link LatexDev#getLatexLanguage()}. 
+     * <p>
+     * Logging: 
+     * WLP01: if another rerun is required but the maximum number of runs 
+     * {@link Settings#getMaxNumReRunsLatex()} is reached. 
+     * Further logging is inherited by invoked methods: 
+     * <ul>
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WFU03: cannot close 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
+     *      as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
+     *      maybe caused by subsequent runs. 
+     * </ul>
+     *
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    to be processed. 
+     * @param dev
+     *    the device describing the output format which is either pdf or dvi. 
+     *    See {@link LatexDev#getLatexLanguage()}. 
+     * @throws BuildFailureException
+     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
+     *    maybe caused by subsequent runs. 
+     * @see #processLatex2dvi(File)
+     * @see #processLatex2txt(File)
+     */
+    private void processLatex2devCore(LatexMainDesc desc, LatexDev dev) 
+	throws BuildFailureException {
+
+	// may throw BuildFailureException TEX01, 
+	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+ 	int numLatexReRuns = preProcessLatex2dev(desc, dev);
+				      
+	assert numLatexReRuns == 0 
+	    || numLatexReRuns == 1 
+	    || numLatexReRuns == 2;
+	if (numLatexReRuns > 0) {
+	    // rerun LaTeX without makeindex and makeglossaries 
+	    this.log.debug("Rerun LaTeX to update table of contents, ... " + 
+			   "bibliography, index, or that like. ");
+	    // may throw BuildFailureException TEX01 
+	    // may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
+	    // WAP01, WAP02, WAP04, WFU03
+	    runLatex2dev(desc, dev);
+	    numLatexReRuns--;
+	}
+	assert numLatexReRuns == 0 || numLatexReRuns == 1;
+
+	// rerun latex by need patternRerunMakeIndex
+	boolean needMakeIndexReRun;
+	boolean needLatexReRun = (numLatexReRuns == 1)
+	    || needRun(true, "LaTeX", desc.logFile, 
+		       this.settings.getPatternReRunLatex());
+
+	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
+	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
+	    needMakeIndexReRun = 
+		needRun(true, "MakeIndex", desc.logFile, 
+			this.settings.getPatternReRunMakeIndex());
+	    // FIXME: superfluous since pattern rerunfileckeck 
+	    // triggering makeindex also fits rerun of LaTeX 
+	    needLatexReRun |= needMakeIndexReRun;
+	    if (!needLatexReRun) {
+		return;
+	    }
+            this.log.debug("Latex must be rerun. ");
+	    if (needMakeIndexReRun) {
+		// FIXME: not by need 
+		// may throw BuildFailureException TEX01 
+		// may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
+		// WAP01, WAP02, WAP03, WAP04, WFU03
+		runMakeIndexByNeed(desc);
+	    }
+
+	    // may throw BuildFailureException TEX01 
+	    // may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
+	    // WAP01, WAP02, WAP04, WFU03
+	    runLatex2dev(desc, dev);
+	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
+				     this.settings.getPatternReRunLatex());
+        }
+	this.log.warn("WLP01: LaTeX requires rerun but maximum number " + 
+		      maxNumReruns + " reached. ");
+    }
+
+    /**
+     * Returns whether a(n other) LaTeX/MakeIndex run is necessary 
+     * based on a pattern matching in the log file. 
+     * <p>
+     * Logging: 
+     * WFU03: cannot close 
+     */
+    private boolean needRun(boolean another, 
+			    String kind, 
+			    File logFile, 
+			    String pattern) {
+
+	// may log warning WFU03 cannot close 
+	Boolean needRun = this.fileUtils.matchInFile(logFile, pattern);
+	if (needRun == null) {
+	    this.log.warn("WLP02: Cannot read log file '" + logFile.getName() + 
+			  "'; " + kind + " may require rerun. ");
+	    return false;
+	}
+	return needRun;
+    }
+
+    /**
+     * Runs LaTeX, BibTeX, MakeIndex and MakeGlossaries 
+     * on the latex main file <code>texFile</code> 
+     * described by <code>desc</code> 
+     * repeatedly as described for 
+     * {@link #processLatex2devCore(LatexMainDesc, LatexDev)} 
+     * and issue a warning if the last LaTeX run issued a warning. 
      * </ul>
      * <p>
      * Logging: 
      * <ul>
      * <li> WFU03: cannot close 
      * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP01: if another rerun is required 
+     *             but the maximum number of runs is reached. 
      * <li> WLP03: <code>command</code> created bad boxes 
      * <li> WLP04: <code>command</code> emitted warnings 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
-     *      as for {@link #processLatex2pdfCore(LatexMainDesc)} 
+     *      as for {@link #processLatex2devCore(LatexMainDesc, LatexDev)} 
      *      if running an exernal command fails. 
      * </ul>
      *
-     * @param texFile
-     *    the tex file to be processed. 
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    to be processed. 
+     * @param dev
+     *    the device describing the output format which is either pdf or dvi. 
+     *    See {@link LatexDev#getLatexLanguage()}. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #processLatex2pdfCore(LatexMainDesc)}. 
+     *    TEX01 as for {@link #processLatex2devCore(LatexMainDesc, LatexDev)}. 
      * @see #needAnotherLatexRun(File)
      * @see Target#pdf
      */
-    void processLatex2pdf(File texFile) throws BuildFailureException {
-        this.log.info("Converting into pdf:  LaTeX file '" + texFile + "'. ");
-	LatexMainDesc desc = getLatexMainDesc(texFile);
+    private void processLatex2dev(LatexMainDesc desc, LatexDev dev) 
+	throws BuildFailureException {
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-	processLatex2pdfCore(desc);
+	processLatex2devCore(desc, dev);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
 	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, this.settings.getLatex2pdfCommand());
     }
 
-   /**
+    void processLatex2dvi(File texFile) throws BuildFailureException {
+        this.log.info("Converting into dvi:  LaTeX file '" + texFile + "'. ");
+	LatexMainDesc desc = getLatexMainDesc(texFile);
+	// may throw BuildFailureException TEX01, 
+	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	// WFU03, WAP04, WLP03, WLP04 
+	processLatex2dev(desc, LatexDev.dvips);
+    }
+
+    void processLatex2pdf(File texFile) throws BuildFailureException {
+        this.log.info("Converting into pdf:  LaTeX file '" + texFile + "'. ");
+	LatexMainDesc desc = getLatexMainDesc(texFile);
+	LatexDev dev = this.settings.getPdfViaDvi();
+
+	// may throw BuildFailureException TEX01, 
+	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	processLatex2dev(desc, dev);
+	// FIXME: certain figures are invisible in the intermediate dvi file, 
+	// but converstion to pdf shows that the figures are present. 
+
+	if (dev.isViaDvi()) {
+	    // may throw BuildFailureException TEX01, 
+	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+ 	    runDvi2pdf(desc);
+	}
+    }
+
+    /**
      * Logs errors detected in the according log file: 
      * The log file is by replacing the ending of <code>texFile</code> 
      * by <code>log</code>. 
@@ -788,9 +835,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
      *    but also as for {@link #runLatex2html(LatexMainDesc)}. 
-     * @see #preProcessLatex2pdf(File, File)
+     * @see #preProcessLatex2dev(File, LatexDev)
      * @see #runLatex2html(File)
      * @see Target#html
      */
@@ -799,7 +846,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-	preProcessLatex2pdf(desc);
+	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         runLatex2html      (desc);
@@ -820,9 +867,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
      *    but also as for {@link #runLatex2odt(LatexMainDesc)}. 
-     * @see #preProcessLatex2pdf(File, File)
+     * @see #preProcessLatex2dev(File, LatexDev)
      * @see #runLatex2odt(File)
      * @see Target#odt
      */
@@ -831,7 +878,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-        preProcessLatex2pdf(desc);
+        preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         runLatex2odt       (desc);
@@ -852,10 +899,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2pdf(LatexMainDesc)} 
+     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
      *    but also as for {@link #runLatex2odt(LatexMainDesc)} 
      *    and for {@link #runodt2doc(File)}. 
-     * @see #preProcessLatex2pdf(LatexMainDesc)
+     * @see #preProcessLatex2dev(LatexMainDesc, LatexDev)
      * @see #runLatex2odt(File)
      * @see #runOdt2doc(File)
      * @see Target#docx
@@ -865,7 +912,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX0, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
- 	preProcessLatex2pdf(desc);
+ 	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX0, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         runLatex2odt       (desc);
@@ -914,20 +961,28 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #processLatex2pdfCore(LatexMainDesc)} 
+     *    TEX01 as for {@link #processLatex2devCore(LatexMainDesc, LatexDev)} 
      *    and for {@link #runPdf2txt(File)}. 
-     * @see #processLatex2pdfCore(LatexMainDesc)
+     * @see #processLatex2devCore(LatexMainDesc, LatexDev)
      * @see #runPdf2txt(File)
-     * @see Target#rtf
+     * @see Target#txt
      */
     void processLatex2txt(File texFile) throws BuildFailureException {
 	this.log.info("Converting into txt:  LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
+	LatexDev dev = this.settings.getPdfViaDvi();
+
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-	processLatex2pdfCore(desc);
+	processLatex2devCore(desc, dev);
+	if (dev.isViaDvi()) {
+	    // may throw BuildFailureException TEX01, 
+	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+ 	    runDvi2pdf(desc);
+	}
+
 	// warnings emitted by LaTex are ignored 
-	// (errors are emitted by runLatex2pdf and that like.)
+	// (errors are emitted by runLatex2dev and that like.)
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 	runPdf2txt      (texFile);
@@ -1146,14 +1201,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     /**
      * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
-     * on <code>texFile</code> 
+     * on the latex main file <code>texFile</code> 
+     * described by <code>desc</code> 
      * in the directory containing <code>texFile</code> 
      * with arguments given by {@link #buildLatexArguments(File)}. 
+     * The output format of the LaTeX run is given by <code>dev</code>, 
+     * to be more precise by {@link LatexDev#getLatexLanguage()}. 
      * <p>
      * Logs a warning or an error if the latex run failed 
      * invoking {@link #logErrs(File, String)}
      * but not if bad boxes occurred or if warnings occurred. 
-     * This is done in {@link #processLatex2pdf(File)} 
+     * This is done in {@link #processLatex2dev(File, LatexDev)} 
      * after the last LaTeX run only. 
      * <p>
      * Logging: 
@@ -1166,23 +1224,25 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the latex2pdf command failed. 
      * </ul>
      *
-     * @param texFile
-     *    the latex-file to be processed. 
-     * @param logFile
-     *    the log-file after processing <code>texFile</code>. 
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    to be processed. 
+     * @param dev
+     *    the device describing the output format which is either pdf or dvi. 
+     *    See {@link LatexDev#getLatexLanguage()}. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the latex2pdf command 
      *    returned by {@link Settings#getLatexCommand()} failed. 
      */
-    private void runLatex2dev(LatexMainDesc desc)
+    private void runLatex2dev(LatexMainDesc desc, LatexDev dev)
 	throws BuildFailureException {
 
 	File texFile = desc.texFile;
-	// FIXME: wrong name is latex2dev
+	// FIXME: wrong name; better is latex2dev
 	String command = this.settings.getLatex2pdfCommand();
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
-	String[] args = buildLatexArguments(this.settings, texFile);
+	String[] args = buildLatexArguments(this.settings, dev, texFile);
 	// may throw BuildFailureException TEX01, 
 	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
         this.executor.execute(texFile.getParentFile(), // workingDir 
@@ -1199,52 +1259,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// png, jpg and svg are not visible, but present. 
     }
 
-    /**
-     * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
-     * on <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(File)}. 
-     * <p>
-     * Logs a warning or an error if the latex run failed 
-     * invoking {@link #logErrs(File, String)}
-     * but not if bad boxes occurred or if warnings occurred. 
-     * This is done in {@link #processLatex2pdf(File)} 
-     * after the last LaTeX run only. 
-     * <p>
-     * Logging: 
-     * <ul>
-     * <li> WAP01: Running <code>latex2pdf</code> failed. For details...
-     * <li> WAP02: Running <code>latex2pdf</code> failed. No log file 
-     * <li> WAP04: .log-file is not readable. 
-     * <li> WFU03: cannot close .log-file 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
-     * if running the latex2pdf command failed. 
-     * </ul>
-     *
-     * @param texFile
-     *    the latex-file to be processed. 
-     * @param logFile
-     *    the log-file after processing <code>texFile</code>. 
-     * @throws BuildFailureException
-     *    TEX01 if invocation of the latex2pdf command 
-     *    returned by {@link Settings#getLatexCommand()} failed. 
-     */
-    private void runLatex2pdf(LatexMainDesc desc)
-	throws BuildFailureException {
-
-	// may throw BuildFailureException TEX01, 
-	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-	runLatex2dev(desc);
-
-	// FIXME: certain figures are invisible in the intermediate dvi file, 
-	// but converstion to pdf shows that the figures are present. 
-
-	if (this.settings.getPdfViaDvi().isViaDvi()) {
-	    // may throw BuildFailureException TEX01, 
-	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
- 	    runDvi2pdf(desc);
-	}
+    // also for tests 
+    protected static String[] buildLatexArguments(Settings settings,
+						  LatexDev dev,
+						  File texFile) {
+	// FIXME: hack with literal 
+	return buildArguments(settings.getLatex2pdfOptions() + 
+			      " -output-format=" + dev.getLatexLanguage(), 
+			      texFile);
     }
+
     /**
      * Runs conversion from dvi to pdf-file  
      * executing {@link Settings#getDvi2pdfCommand()} 
@@ -1256,13 +1280,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the dvi2pdf command failed. 
      * </ul>
+     *
      * @param dviFile
      *    the dvi-file to be processed. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the dvi2pdf command 
      *    returned by {@link Settings#getDvi2pdfCommand()} failed. 
      */
-    // used in runLatex2pdf(LatexMainDesc) only 
+    // used in processLatex2pdf(File) and processLatex2txt(File) only 
     private void runDvi2pdf(LatexMainDesc desc) throws BuildFailureException {
 	assert this.settings.getPdfViaDvi().isViaDvi();
 	File dviFile = desc.pdfDviFile;
@@ -1282,16 +1307,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      desc.pdfFile);
 	// FIXME: what about error logging? 
 	// Seems not to create a log-file. 
-    }
-
-    // also for tests 
-    protected static String[] buildLatexArguments(Settings settings,
-						  File texFile) {
-	// FIXME: hack with literal 
-	return buildArguments(settings.getLatex2pdfOptions() + 
-			      " -output-format=" + 
-			      settings.getPdfViaDvi().getLatexLanguage(), 
-			      texFile);
     }
 
     /**
@@ -1403,7 +1418,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Logs a warning or an error if the latex run failed 
      * invoking {@link #logErrs(File, String)}
      * but not if bad boxes ocurred or if warnings occurred. 
-     * This is done in {@link #processLatex2pdf(File)} 
+     * This is done in {@link #processLatex2dev(File, LatexDev))} 
      * after the last LaTeX run only. 
      * <p>
      * Logging: 
