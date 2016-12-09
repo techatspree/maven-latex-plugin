@@ -400,6 +400,7 @@ zzT$T\.e?ps|
 		  Leading and trailing blanks are ignored. 
 		  A sequence of at least one blank 
 		  separates the proper options. 
+		  
 		  The default value  comprises the following options: 
 		  -interaction=nonstopmode 
 		  prevents latex from stopping at the first error. 
@@ -531,13 +532,29 @@ not allowed:
 
 	    <!-- Whether creation of pdf-files from latex-files 
 		 goes via dvi-files. 
-		 If not, it goes directly. 
+		 
+		 If 'pdfViaDvi' is set 
+		 and the latex processor needs repetitions, 
+		 these are all done creating dvi 
+		 and then pdf is created in a final step. 
+		 If 'pdfViaDvi' is not set, 
+		 latex is directly converted into pdf. 
+		 
 		 Currently, not only conversion of latex-files is affected, 
 		 but also conversion of graphic files 
 		 into graphic formats which allow inclusion in the tex-file. 
 		 If it goes via latex, 
 		 then the formats are more based on (encapsulated) postscript; 
 		 else on pdf. 
+		 
+		 Of course, the target dvi is not affected: 
+		 This uses always the dvi-format. 
+		 What is also affected are the tasks 
+		 creating html, odt or docs: 
+		 Although these are based on htlatex which is always dvi-based, 
+		 the preprocessing is done in dvi or in pdf. 
+		 Also the task txt is affected. 
+
 		 The default value is 'false'. -->
 	    <pdfViaDvi>true</pdfViaDvi>
 
@@ -859,6 +876,7 @@ not allowed:
               <goal>cfg</goal>
               <!--goal>clr</goal-->
               <!--goal>grp</goal-->
+              <!--goal>dvi</goal-->
               <!--goal>pdf</goal-->
               <!--goal>html</goal-->
               <!--goal>rtf</goal-->
