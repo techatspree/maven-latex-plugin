@@ -448,6 +448,28 @@ public class Settings {
     private String metapostOptions = 
 	"-interaction=nonstopmode -recorder -s prologues=2";
 
+    /**
+     * The command to create bounding box information 
+     * from jpg-files and from png-files. 
+     * This is run twice: 
+     * once with parameter <code>-m</code> 
+     * to create <code>.bb</code>-files for driver <code>dvipdfm</code> and 
+     * once with parameter <code>-x</code> 
+     * to create <code>.xbb</code>-files for driver <code>dvipdfmx</code>. 
+     * The default value is <code>ebb</code>. 
+     */
+    @Parameter(name = "ebbCommand", defaultValue = "ebb")
+    private String ebbCommand = "ebb";
+
+    /**
+     * The options for the command {@link #ebbCommand} 
+     * except <code>-m</code> and <code>-x</code> 
+     * which are added automatically. 
+     * The default value is <code>-v</code>. 
+     */
+    // without -x and -m 
+    @Parameter(name = "ebbOptions", defaultValue = "-v")
+    private String ebbOptions  = "-v";
 
     // parameters for latex2pdf-conversion 
 
@@ -1249,6 +1271,13 @@ public class Settings {
         return  this.metapostOptions;
     }
 
+    public String getEbbCommand() {
+        return  this.ebbCommand;
+    }
+    public String getEbbOptions() {
+        return  this.ebbOptions;
+    }
+
 
 // FIXME: to be renamed: latex2pdf-command 
     public String getLatex2pdfCommand() {
@@ -1565,6 +1594,14 @@ public class Settings {
    	}
     }
 
+    public void setEbbCommand(String ebbCommand) {
+        this.ebbCommand = ebbCommand;
+    }
+
+    public void setEbbOptions(String ebbOptions) {
+        this.ebbOptions = ebbOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
+    }
 
     public void setLatex2pdfCommand(String latex2pdfCommand) {
         this.latex2pdfCommand = latex2pdfCommand;
@@ -1952,6 +1989,9 @@ public class Settings {
         sb.append(", gnuplotOptions=")      .append(this.gnuplotOptions);
         sb.append(", metapostCommand=")     .append(this.metapostCommand);
         sb.append(", metapostOptions=")     .append(this.metapostOptions);
+	sb.append(", ebbCommand=")          .append(this.ebbCommand);
+        sb.append(", ebbOptions=")          .append(this.ebbOptions);
+
 	// parameters for latex2pdf
         sb.append(", latex2pdfCommand=")    .append(this.latex2pdfCommand);
 	sb.append(", latex2pdfOptions=")    .append(this.latex2pdfOptions);
