@@ -2481,13 +2481,29 @@ rerun \LaTeX{} and have a look at the log-file.
 \begin{minipage}{0.95\linewidth}
 Whether creation of pdf-files from latex-files 
 goes via dvi-files. 
-If not, it goes directly. 
+
+If `pdfViaDvi' is set 
+and the latex processor needs repetitions, 
+these are all done creating dvi 
+and then pdf is created in a final step. 
+If `pdfViaDvi' is not set, 
+latex is directly converted into pdf. 
+
 Currently, not only conversion of latex-files is affected, 
 but also conversion of graphic files 
 into graphic formats which allow inclusion in the tex-file. 
 If it goes via latex, 
 then the formats are more based on (encapsulated) postscript; 
 else on pdf. 
+
+Of course, the target dvi is not affected: 
+This uses always the dvi-format. 
+What is also affected are the tasks 
+creating html, odt or docs: 
+Although these are based on htlatex which is always dvi-based, 
+the preprocessing is done in dvi or in pdf. 
+Also the task txt is affected. 
+
 %The default value is '{\tt false}'. 
 \end{minipage}
 } \\
@@ -3599,6 +3615,19 @@ always prior to pdflatex.
 
 Maybe this is more a gap than a bug: 
 support for dvi-creation should be provided separately. 
+
+For target dvi, 
+neither png nor jpg-pictures are included. 
+The other formats work with {\tt\$pdfViaDvi} set. 
+Note that the postscript-files must be in the same directory 
+as the dvi, probably because it includes them 
+only by link. 
+
+For the other case, {\tt\$pdfViaDvi} unset, this requires some research. 
+
+Also for creation of the txt-format, 
+{\tt\$pdfViaDvi} must be set. 
+
 
 
 
