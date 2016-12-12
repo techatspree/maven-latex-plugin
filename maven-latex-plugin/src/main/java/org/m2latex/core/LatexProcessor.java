@@ -450,6 +450,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP02: Cannot read blg file: BibTeX run required? 
      * <li> WFU03: cannot close log file 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05:
      *      if one of the commands mentioned in the throws-tag fails 
@@ -505,7 +506,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// create bibliography, index and glossary by need 
 	// may throw BuildFailureException  TEX01 
 	// may log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
-	// WAP01, WAP02, WAP03, WAP04, WFU03
+	// WAP01, WAP02, WAP03, WAP04, WLP02, WFU03
 	boolean hasBib    = runBibtexByNeed      (texFile);
 	// may both throw BuildFailureException, both TEX01 
 	// may both log warnings WEX01, WEX02, WEX03, WEX04, WEX05, 
@@ -516,7 +517,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// rerun LaTeX at least once if bibtex or makeindex had been run 
 	// or if a toc, a lof or a lot exists. 
 	if (hasBib) {
-	    // on run to include the bibliography from xxx.bbl into the pdf 
+	    // one run to include the bibliography from xxx.bbl into the pdf 
 	    // and the lables into the aux file 
 	    // and another run to put the labels from the aux file 
 	    // to the locations of the \cite commands. 
@@ -573,6 +574,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP02: Cannot read log file:     run BibTeX/
+     *                                   (re)run MakeIndex/LaTeX required? 
      * <li> WFU03: cannot close 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
@@ -595,7 +598,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	// may throw BuildFailureException TEX01, 
-	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// WEX01, WEX02, WEX03, WEX04, WEX05 
  	int numLatexReRuns = preProcessLatex2dev(desc, dev);
 				      
 	assert numLatexReRuns == 0 
@@ -651,22 +655,50 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Returns whether a(n other) LaTeX/MakeIndex run is necessary 
-     * based on a pattern matching in the log file. 
+     * Returns whether a(n other) run (see <code>another</code>)
+     * of the application <code>application</code> is necessary 
+     * based on a pattern <code>pattern</code> 
+     * matching in the log file <code>logFile</code>. 
+     * Note that only <code>logFile</code> and <code>pattern</code> 
+     * are required unless a warning needs to be issued. 
      * <p>
      * Logging: 
-     * WFU03: cannot close 
+     * <ul>
+     * <li> WLP02: Cannot read log file: (re)run required? 
+     * <li> WFU03: cannot close log file 
+     * </ul>
+     *
+     * @param another
+     *    whether it is requested whether another run (a 'rerun') is required. 
+     *    If false, just a run is required
+     * @param application
+     *    Determines the application to be rerun. 
+     *    This may be <code>LaTeX</code>, <code>MakeIndex</code> 
+     *    but also <code>BibTeX</code>. 
+     * @param logFile
+     *    the log file which determines 
+     *    whether to rerun <code>application</code>. 
+     * @param pattern
+     *    the pattern in the <code>logFile</code> 
+     *    which determines whether to rerun . 
+     * @return
+     *    whether <code>application</code> needs to be rerun 
+     *    based on a pattern <code>pattern</code> 
+     *    matching in the log file <code>logFile</code>. 
+     * @see TexFileUtils#matchInFile(File, String)
      */
+    // used in processLatex2devCore and in runBibtexByNeed only 
     private boolean needRun(boolean another, 
-			    String kind, 
+			    String application, 
 			    File logFile, 
 			    String pattern) {
-
-	// may log warning WFU03 cannot close 
+	// may log warning WFU03: cannot close 
 	Boolean needRun = this.fileUtils.matchInFile(logFile, pattern);
 	if (needRun == null) {
-	    this.log.warn("WLP02: Cannot read log file '" + logFile.getName() + 
-			  "'; " + kind + " may require rerun. ");
+	    this.log.warn("WLP02: Cannot read log file '" + 
+			  logFile.getName() + "'; " + 
+			  application + " may require " + 
+			  (another ? "re" : "") + "run. ");
 	    return false;
 	}
 	return needRun;
@@ -708,7 +740,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void processLatex2dev(LatexMainDesc desc, LatexDev dev) 
 	throws BuildFailureException {
 	// may throw BuildFailureException TEX01, 
-	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// WEX01, WEX02, WEX03, WEX04, WEX05 
 	processLatex2devCore(desc, dev);
 
 	// emit warnings (errors are emitted by runLatex2pdf and that like.)
@@ -828,6 +861,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP02: Cannot read blg file: BibTeX run required? 
+     * <li> WFU03: cannot close log file 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
@@ -845,7 +883,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into html: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
-	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// WEX01, WEX02, WEX03, WEX04, WEX05 
 	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
@@ -860,6 +899,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP02: Cannot read blg file: BibTeX run required? 
+     * <li> WFU03: cannot close log file 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
@@ -877,7 +921,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into odt:  LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
-	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// WEX01, WEX02, WEX03, WEX04, WEX05 
         preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
@@ -892,6 +937,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
+     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> WAP02: Running <code>command</code> failed. No log file 
+     * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP02: Cannot read blg file: BibTeX run required? 
+     * <li> WFU03: cannot close log file 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
@@ -911,7 +961,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX0, 
-	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// WEX01, WEX02, WEX03, WEX04, WEX05 
  	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX0, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
@@ -973,7 +1024,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexDev dev = this.settings.getPdfViaDvi();
 
 	// may throw BuildFailureException TEX01, 
-	// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// WEX01, WEX02, WEX03, WEX04, WEX05 
 	processLatex2devCore(desc, dev);
 	if (dev.isViaDvi()) {
 	    // may throw BuildFailureException TEX01, 
@@ -1001,6 +1053,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP02: Running <code>bibtex</code> failed. No log file 
      * <li> WAP03: Running <code>bibtex</code> emitted warnings. 
      * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP02: Cannot read log file: run required? 
      * <li> WFU03: cannot close 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
      * if running the BibTeX command failed. 
