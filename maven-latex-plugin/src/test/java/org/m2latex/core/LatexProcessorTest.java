@@ -28,6 +28,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
 import org.easymock.MockControl;
+import org.mockito.Mockito;
 
 import org.junit.Test;
 import org.junit.Ignore;
@@ -41,16 +42,21 @@ public class LatexProcessorTest {
 
     private final static String WORKING_DIR = 
 	System.getProperty("testResourcesDir");
- 
+
+    // FIXME: removed with Mockito? 
     private MockControl executorCtrl = MockControl
 	.createStrictControl(CommandExecutor.class);
 
     private CommandExecutor executor = (CommandExecutor) executorCtrl.getMock();
+    private CommandExecutor executor2 = Mockito.mock(CommandExecutor.class);
+
 
     private MockControl fileUtilsCtrl = MockControl
 	.createStrictControl(TexFileUtils.class);
 
     private TexFileUtils fileUtils = (TexFileUtils) fileUtilsCtrl.getMock();
+    private TexFileUtils fileUtils2 = Mockito.mock(TexFileUtils.class);
+
 
     private Settings settings = new Settings();
 
@@ -114,9 +120,11 @@ public class LatexProcessorTest {
 	
 	mockProcessLatex2pdf(false, false, false);
 
-        replay();
+        this. executorCtrl.replay();
+        this.fileUtilsCtrl.replay();
         processor.processLatex2pdf(this.texFile);
-        verify();
+        this. executorCtrl.verify();
+        this.fileUtilsCtrl.verify();
     }
 
     //@Ignore 
@@ -125,9 +133,11 @@ public class LatexProcessorTest {
 
 	mockProcessLatex2pdf(true, false, false);
 
-        replay();
+	this. executorCtrl.replay();
+        this.fileUtilsCtrl.replay();
         processor.processLatex2pdf(this.texFile);
-        verify();
+	this. executorCtrl.verify();
+        this.fileUtilsCtrl.verify();
     }
 
     //@Ignore 
@@ -135,9 +145,11 @@ public class LatexProcessorTest {
 
 	mockProcessLatex2html(false, false, false);
 
-        replay();
+        this. executorCtrl.replay();
+        this.fileUtilsCtrl.replay();
         processor.processLatex2html(this. texFile);
-        verify();
+	this. executorCtrl.verify();
+        this.fileUtilsCtrl.verify();
     }
 
     private void mockProcessLatex2pdf(boolean needBibtex,
@@ -405,15 +417,5 @@ public class LatexProcessorTest {
 	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
 	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
 	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-    }
-
-    private void replay() {
-        this.executorCtrl.replay();
-        fileUtilsCtrl.replay();
-    }
-
-    private void verify() {
-        this.executorCtrl.verify();
-        fileUtilsCtrl.verify();
     }
 }
