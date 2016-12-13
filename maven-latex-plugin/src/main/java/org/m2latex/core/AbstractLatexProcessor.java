@@ -64,9 +64,6 @@ abstract class AbstractLatexProcessor {
      * <li> WAP04 if <code>logFile</code> is not readable. 
      * <li> WFU03 cannot close 
      * </ul>
-     *
-     * @throws BuildFailureException
-     *    if <code>logFile</code> does not exist or is not readable. 
      * @see #logWarns(File, String, String) 
      */
      protected void logErrs(File logFile, String command, String pattern) {
