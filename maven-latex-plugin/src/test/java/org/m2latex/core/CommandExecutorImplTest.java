@@ -45,13 +45,17 @@ public class CommandExecutorImplTest {
 
     private CommandExecutor executor = (CommandExecutor) executorCtrl.getMock();
 
+    // FIXME: occurs also in other testclasses: 
+    // to be unified. 
     private static void cleanWorkingDir() {
 	File wDir = new File(WORKING_DIR);
 	assert wDir.isDirectory() : "Expected directory. ";
 	File[] files = wDir.listFiles();
 	assert files != null : "Working directory is not readable. ";
 	for (File file : files) {
-	    file.delete();
+	    if (!file.isHidden()) {
+		file.delete();
+	    }
 	}
     }
 
