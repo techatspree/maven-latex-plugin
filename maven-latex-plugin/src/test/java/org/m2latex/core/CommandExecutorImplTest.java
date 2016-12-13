@@ -34,6 +34,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.Ignore;
 import org.junit.Before;
+import org.junit.After;
 
 public class CommandExecutorImplTest {
     private final static String WORKING_DIR = 
@@ -55,6 +56,10 @@ public class CommandExecutorImplTest {
     }
 
     @Before public void setUp() throws IOException {
+	cleanWorkingDir();
+    }
+
+    @After public void tearDown() throws IOException {
 	cleanWorkingDir();
     }
 
