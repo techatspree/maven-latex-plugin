@@ -112,15 +112,7 @@ public class LatexProcessorTest {
     @Test public void testProcessLatexSimple()
 	throws BuildFailureException {
 	
-	mockConstrLatexMainDesc();
-	assert !this.settings.getPdfViaDvi().isViaDvi();
-	// FIXME: here should be mockProcessLatex2dev
-	mockProcessLatex2devCore(false, false, false);
-
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	mockProcessLatex2pdf(false, false, false);
 
         replay();
         processor.processLatex2pdf(this.texFile);
@@ -131,15 +123,7 @@ public class LatexProcessorTest {
     @Test public void testProcessLatexWithBibtex() 
 	throws BuildFailureException {
 
-	mockConstrLatexMainDesc();
-	assert !this.settings.getPdfViaDvi().isViaDvi();
-	// FIXME: here should be mockProcessLatex2dev
-	mockProcessLatex2devCore(true, false, false);
-
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	mockProcessLatex2pdf(true, false, false);
 
         replay();
         processor.processLatex2pdf(this.texFile);
@@ -148,15 +132,38 @@ public class LatexProcessorTest {
 
     //@Ignore 
     @Test public void testProcessLatex2html() throws BuildFailureException {
-	mockConstrLatexMainDesc();
-	mockPreProcessLatex2dev(false, false, false);
-        mockRunLatex2html();
+
+	mockProcessLatex2html(false, false, false);
 
         replay();
         processor.processLatex2html(this. texFile);
         verify();
     }
 
+    private void mockProcessLatex2pdf(boolean needBibtex,
+				      boolean needMakeIndex,
+				      boolean needMakeGlossaries) 
+	throws BuildFailureException {
+	mockConstrLatexMainDesc();
+	assert !this.settings.getPdfViaDvi().isViaDvi();
+	// FIXME: here should be mockProcessLatex2dev
+	mockProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossaries);
+
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+    }
+
+    private void mockProcessLatex2html(boolean needBibtex,
+				       boolean needMakeIndex,
+				       boolean needMakeGlossaries) 
+	throws BuildFailureException {
+
+	mockConstrLatexMainDesc();
+	mockPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossaries);
+        mockRunLatex2html();
+    }
 
     private void mockConstrLatexMainDesc() {
    	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_VOID);
