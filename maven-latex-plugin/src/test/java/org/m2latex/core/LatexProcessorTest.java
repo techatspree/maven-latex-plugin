@@ -22,6 +22,7 @@ import org.m2latex.mojo.MavenLogWrapper;
 import org.m2latex.mojo.PdfMojo;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
@@ -30,11 +31,16 @@ import org.easymock.MockControl;
 
 import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Before;
+import org.junit.After;
+//import org.junit.BeforeClass;
+//import org.junit.AfterClass;
 
 // FIXME: missing: test of logging 
 public class LatexProcessorTest {
 
-    private final static String WORKING_DIR = System.getProperty("tmp.dir");
+    private final static String WORKING_DIR = 
+	System.getProperty("testResourcesDir");
  
     private MockControl executorCtrl = MockControl
 	.createStrictControl(CommandExecutor.class);
@@ -51,7 +57,8 @@ public class LatexProcessorTest {
     private LogWrapper log = new MavenLogWrapper(new SystemStreamLog());
 
     private LatexProcessor processor = new LatexProcessor
-	(settings, executor, log, fileUtils, new PdfMojo());
+	(settings, this.executor, log, fileUtils, new PdfMojo());
+
 
     private File texFile = new File(WORKING_DIR, "test.tex");
     private File pdfFile = new File(WORKING_DIR, "test.pdf");
@@ -80,18 +87,40 @@ public class LatexProcessorTest {
     private File lofFile = new File(WORKING_DIR, "test.lof");
     private File lotFile = new File(WORKING_DIR, "test.lot");
 
-    public LatexProcessorTest() {
+    private static void cleanWorkingDir() {
+	File wDir = new File(WORKING_DIR);
+	assert wDir.isDirectory() : "Expected directory. ";
+	File[] files = wDir.listFiles();
+	assert files != null : "Working directory is not readable. ";
+	for (File file : files) {
+	    file.delete();
+	}
+    }
+
+    @Before public void setUp() throws IOException {
+	cleanWorkingDir();
+	this.logFile.createNewFile();
+	this.blgFile.createNewFile();
+    }
+
+    @After public void tearDown() throws IOException {
+	cleanWorkingDir();
     }
 
     //@Ignore 
     // FIXME: does not take pdfViaDvi into account 
     @Test public void testProcessLatexSimple()
 	throws BuildFailureException {
-
+	
 	mockConstrLatexMainDesc();
 	assert !this.settings.getPdfViaDvi().isViaDvi();
 	// FIXME: here should be mockProcessLatex2dev
 	mockProcessLatex2devCore(false, false, false);
+
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
 
         replay();
         processor.processLatex2pdf(this.texFile);
@@ -106,6 +135,11 @@ public class LatexProcessorTest {
 	assert !this.settings.getPdfViaDvi().isViaDvi();
 	// FIXME: here should be mockProcessLatex2dev
 	mockProcessLatex2devCore(true, false, false);
+
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
 
         replay();
         processor.processLatex2pdf(this.texFile);
@@ -125,32 +159,32 @@ public class LatexProcessorTest {
 
 
     private void mockConstrLatexMainDesc() {
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_VOID);
-	fileUtilsCtrl.setReturnValue(this.xxxFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_PDF);
-	fileUtilsCtrl.setReturnValue(this.pdfFile);
-	// FIXME 
-	fileUtils.replaceSuffix(this.texFile, 
-				"."+this.settings.getPdfViaDvi()
-				.getLatexLanguage());
-	fileUtilsCtrl.setReturnValue(this.dviPdfFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_LOG);
-	fileUtilsCtrl.setReturnValue(this.logFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_VOID);
+   	fileUtilsCtrl.setReturnValue(this.xxxFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_PDF);
+   	fileUtilsCtrl.setReturnValue(this.pdfFile);
+   	// FIXME 
+   	fileUtils.replaceSuffix(this.texFile, 
+   				"."+this.settings.getPdfViaDvi()
+   				.getLatexLanguage());
+   	fileUtilsCtrl.setReturnValue(this.dviPdfFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_LOG);
+   	fileUtilsCtrl.setReturnValue(this.logFile);
 
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_IDX);
-	fileUtilsCtrl.setReturnValue(this.idxFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_IND);
-	fileUtilsCtrl.setReturnValue(this.indFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_ILG);
-	fileUtilsCtrl.setReturnValue(this.ilgFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_IDX);
+   	fileUtilsCtrl.setReturnValue(this.idxFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_IND);
+   	fileUtilsCtrl.setReturnValue(this.indFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_ILG);
+   	fileUtilsCtrl.setReturnValue(this.ilgFile);
 
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLS);
-	fileUtilsCtrl.setReturnValue(this.glsFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLO);
-	fileUtilsCtrl.setReturnValue(this.gloFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLG);
-	fileUtilsCtrl.setReturnValue(this.glgFile);
-   }
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLS);
+   	fileUtilsCtrl.setReturnValue(this.glsFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLO);
+   	fileUtilsCtrl.setReturnValue(this.gloFile);
+   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLG);
+   	fileUtilsCtrl.setReturnValue(this.glgFile);
+    }
 
     // FIXME: pdf never via dvi 
     // FIXME: parametrization of needMakeIndex, needMakeGlossaries 
@@ -240,7 +274,7 @@ public class LatexProcessorTest {
 	throws BuildFailureException {
 
         fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_AUX);
-        fileUtilsCtrl.setReturnValue(auxFile);
+        fileUtilsCtrl.setReturnValue(this.auxFile);
         fileUtils.matchInFile(this.auxFile, 
 			      LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
         fileUtilsCtrl.setReturnValue(runBibtex);
@@ -252,21 +286,25 @@ public class LatexProcessorTest {
 	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL);
         fileUtilsCtrl.setReturnValue(this.bblFile);
   
-        executor.execute(texFile.getParentFile(),
-			 this.settings.getTexPath(),
-			 this.settings.getBibtexCommand(),
-			 new String[] {auxFile.getPath()},
-			 this.bblFile);
-        executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        executorCtrl.setReturnValue(null);
+        this.executor.execute(texFile.getParentFile(),
+			      this.settings.getTexPath(),
+			      this.settings.getBibtexCommand(),
+			      LatexProcessor.buildArguments
+			      (this.settings.getBibtexOptions(), this.auxFile),
+			      this.bblFile);
+        this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        this.executorCtrl.setReturnValue(null);
 
 	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG);
 	fileUtilsCtrl.setReturnValue(this.blgFile);
 
-	// since blg file does not exist 
-	// fileUtils.matchInFile(blgFile, 
-	//                       this.settings.getPatternErrBibtex());
-	// fileUtilsCtrl.setReturnValue(false);
+	// logging 
+	fileUtils.matchInFile(blgFile, 
+	                      this.settings.getPatternErrBibtex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	fileUtils.matchInFile(blgFile, 
+	                      this.settings.getPatternWarnBibtex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
     }
 
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
@@ -281,82 +319,94 @@ public class LatexProcessorTest {
     }
 
     private void mockRunMakeIndex() throws BuildFailureException {
-        executor.execute(this.texFile.getParentFile(),
-			 this.settings.getTexPath(),
-			 this.settings.getMakeIndexCommand(),
-			 new String[] {this.idxFile.getPath()},
-			 this.indFile);
-	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        executorCtrl.setReturnValue(null);
+	assert false;
+        this.executor.execute(this.texFile.getParentFile(),
+			      this.settings.getTexPath(),
+			      this.settings.getMakeIndexCommand(),
+			      LatexProcessor.buildArguments
+			      (this.settings.getMakeIndexOptions(), 
+			       this.idxFile),
+			      this.indFile);
+	this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        this.executorCtrl.setReturnValue(null);
 
 	// since ilg file does not exist 
 	// fileUtils.matchInFile(ilgFile, 
 	//                       this.settings.getPatternErrMakeIndex());
-	// fileUtilsCtrl.setReturnValue(false);
+	// fileUtilsCtrl.setReturnValue(Boolean.FALSE);
       }
 
-    private void mockRunMakeGlossaryByNeed(boolean runMakeGlossary) 
+    private void mockRunMakeGlossaryByNeed(boolean runMakeGlossaries) 
 	throws BuildFailureException {
  
-	if (!runMakeGlossary) {
+	assert !runMakeGlossaries;
+	if (!runMakeGlossaries) {
 	    return;
 	}
+	assert false;
 
-        executor.execute(this.texFile.getParentFile(),
-			 this.settings.getTexPath(),
-			 this.settings.getMakeGlossariesCommand(),
-			 new String[] {xxxFile.getName()},
-			 glsFile);
-	executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        executorCtrl.setReturnValue(null);
+        this.executor.execute(this.texFile.getParentFile(),
+			      this.settings.getTexPath(),
+			      this.settings.getMakeGlossariesCommand(),
+			      LatexProcessor.buildArguments
+			      (this.settings.getMakeGlossariesOptions(), 
+			       xxxFile),
+			      glsFile);
+	this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        this.executorCtrl.setReturnValue(null);
 
 	// since glg file does not exist 
 	// fileUtils.matchInFile(glgFile, 
 	//                       this.settings.getPatternErrMakeGlossaries());
-	// fileUtilsCtrl.setReturnValue(false);
+	// fileUtilsCtrl.setReturnValue(Boolean.FALSE);
     }
 
     private void mockRunLatex() throws BuildFailureException {
-        executor.execute(this.texFile.getParentFile(),
-			 this.settings.getTexPath(),
-			 this.settings.getLatex2pdfCommand(),
-			 LatexProcessor.buildLatexArguments
-			 (this.settings, settings.getPdfViaDvi(), texFile),
-			 dviPdfFile);
-        executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        executorCtrl.setReturnValue(null);
 
-	// since log file does not exist 
-	// fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
-	// fileUtilsCtrl.setReturnValue(false);
+        this.executor.execute(this.texFile.getParentFile(),
+			      this.settings.getTexPath(),
+			      this.settings.getLatex2pdfCommand(),
+			      LatexProcessor.buildLatexArguments
+			      (this.settings, settings.getPdfViaDvi(), texFile),
+			      dviPdfFile);
+        this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        this.executorCtrl.setReturnValue(null);
+
+	// FIXME: since log file does not exist 
+	fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
     }
 
     private void mockRunLatex2html() throws BuildFailureException {
-        executor.execute(texFile.getParentFile(),
-			 this.settings.getTexPath(),
-			 this.settings.getTex4htCommand(),
-			 LatexProcessor.buildHtlatexArguments(this.settings, 
-							      texFile),
-			 htmlFile);
-        executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        executorCtrl.setReturnValue(null);
+        this.executor.execute(texFile.getParentFile(),
+			      this.settings.getTexPath(),
+			      this.settings.getTex4htCommand(),
+			      LatexProcessor.buildHtlatexArguments
+			      (this.settings, texFile),
+			      htmlFile);
+        this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
+        this.executorCtrl.setReturnValue(null);
 
 	// html
 	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_HTML);
 	fileUtilsCtrl.setReturnValue(this.htmlFile);
 
-	// since log file does not exist 
-	// fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
-	// fileUtilsCtrl.setReturnValue(false);
+	// logging 
+	fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
+	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
     }
 
     private void replay() {
-        executorCtrl.replay();
+        this.executorCtrl.replay();
         fileUtilsCtrl.replay();
     }
 
     private void verify() {
-        executorCtrl.verify();
+        this.executorCtrl.verify();
         fileUtilsCtrl.verify();
     }
 }
