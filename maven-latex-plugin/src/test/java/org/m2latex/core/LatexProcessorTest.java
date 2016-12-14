@@ -532,13 +532,12 @@ public class LatexProcessorTest {
 
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_BBL);
-
-	// FIXME: still more specific 
 	verify(this.executor, atLeastOnce())
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getBibtexCommand()),
-		     any(String[].class),
+		     eq(LatexProcessor.buildArguments
+			(this.settings.getBibtexOptions(), this.auxFile)),
 		     eq(this.bblFile));
 
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
@@ -595,12 +594,13 @@ public class LatexProcessorTest {
     private void verifyRunMakeIndex() throws BuildFailureException {
 	assert false;
 
-	// FIXME: still more specific 
-	verify(this.executor).execute(eq(WORKING_DIR),
-				      isNull(),
-				      eq(this.settings.getMakeIndexCommand()),
-				      any(String[].class),
-				      eq(this.indFile));
+	verify(this.executor)
+	    .execute(eq(WORKING_DIR),
+		     isNull(),
+		     eq(this.settings.getMakeIndexCommand()),
+		     eq(LatexProcessor.buildArguments
+			(this.settings.getMakeIndexOptions(), this.idxFile)),
+		     eq(this.indFile));
 	verify(this.fileUtils).matchInFile
 	    (this.ilgFile, this.settings.getPatternErrMakeIndex());
     }
@@ -638,12 +638,13 @@ public class LatexProcessorTest {
 	}
 	assert false;
 
-	// FIXME: still more specific 
 	verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeGlossariesCommand()),
-		     any(String[].class),
+		     eq(LatexProcessor.buildArguments
+			(this.settings.getMakeGlossariesOptions(), 
+			 this.xxxFile)),
 		     eq(this.glsFile));
 	verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, 
@@ -671,12 +672,14 @@ public class LatexProcessorTest {
     }
 
     private void verifyRunLatex() throws BuildFailureException {
-	// FIXME: still more specific 
 	verify(this.executor, atLeastOnce())
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getLatex2pdfCommand()),
-		     any(String[].class),
+		     eq(LatexProcessor.buildLatexArguments
+			(this.settings, 
+			 this.settings.getPdfViaDvi(), 
+			 this.texFile)),
 		     eq(this.dviPdfFile));
 
 	verify(this.fileUtils, atLeastOnce()).matchInFile
@@ -713,12 +716,12 @@ public class LatexProcessorTest {
     private void verifyRunLatex2html() throws BuildFailureException {
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_HTML);
-	// FIXME: in general: should be more specific 
 	verify(this.executor, atLeastOnce())
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getTex4htCommand()),
-		     any(String[].class),
+		     eq(LatexProcessor.buildHtlatexArguments
+			 (this.settings, this.texFile)),
 		     eq(this.htmlFile));
 	String[] patterns = new String[] {
 	    this.settings.getPatternErrLatex(),
