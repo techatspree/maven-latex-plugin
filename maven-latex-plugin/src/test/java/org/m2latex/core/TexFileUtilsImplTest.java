@@ -32,8 +32,8 @@ import org.m2latex.core.BuildFailureException;
 
 public class TexFileUtilsImplTest {
 
-    private TexFileUtilsImpl utils = 
-	new TexFileUtilsImpl(new MavenLogWrapper(new SystemStreamLog()));
+    private TexFileUtils utils = 
+	new TexFileUtils(new MavenLogWrapper(new SystemStreamLog()));
 
     @Test public void testGetTargetDir() throws BuildFailureException {
 

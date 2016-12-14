@@ -61,8 +61,8 @@ public class CommandExecutorImplTest {
     }
 
     @Test public void testExecute() throws BuildFailureException {
-        CommandExecutorImpl executor = 
-	    new CommandExecutorImpl(new MavenLogWrapper(new SystemStreamLog()));
+        CommandExecutor executor = 
+	    new CommandExecutor(new MavenLogWrapper(new SystemStreamLog()));
  	File workingDir = new File(WORKING_DIR);
         String touchFile = "cmdLineExe.touch";
 	String output = executor.execute(workingDir, 
