@@ -59,8 +59,8 @@ import org.junit.After;
 // FIXME: missing: test of warnings and errors 
 public class LatexProcessorTest {
 
-    private final static String WORKING_DIR = 
-	System.getProperty("testResourcesDir");
+    private final static File WORKING_DIR = 
+	new File(System.getProperty("testResourcesDir"));
 
     private CommandExecutor executor = mock(CommandExecutor.class,
 					    RETURNS_SMART_NULLS);
@@ -100,7 +100,6 @@ public class LatexProcessorTest {
 //     });
 //private LogWrapper log = mock(MavenLogWrapper.class, RETURNS_SMART_NULLS);
     private LogWrapper log = spy(new MavenLogWrapper(new SystemStreamLog()));
-//    private LogWrapper log = new MavenLogWrapper(new SystemStreamLog());
 
     private LatexProcessor processor = new LatexProcessor
 	(this.settings, this.executor, this.log,this.fileUtils,new PdfMojo());
@@ -144,9 +143,8 @@ public class LatexProcessorTest {
     // FIXME: occurs also in other testclasses: 
     // to be unified. 
     private static void cleanWorkingDir() {
-	File wDir = new File(WORKING_DIR);
-	assert wDir.isDirectory() : "Expected directory. ";
-	File[] files = wDir.listFiles();
+	assert WORKING_DIR.isDirectory() : "Expected directory. ";
+	File[] files = WORKING_DIR.listFiles();
 	assert files != null : "Working directory is not readable. ";
 	for (File file : files) {
 	    if (!file.isHidden()) {
@@ -537,11 +535,11 @@ public class LatexProcessorTest {
 
 	// FIXME: still more specific 
 	verify(this.executor, atLeastOnce())
-	    .execute(any(File.class),
+	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getBibtexCommand()),
 		     any(String[].class),
-		     any());
+		     eq(this.bblFile));
 
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_BLG);
@@ -598,11 +596,11 @@ public class LatexProcessorTest {
 	assert false;
 
 	// FIXME: still more specific 
-	verify(this.executor).execute(any(File.class),
+	verify(this.executor).execute(eq(WORKING_DIR),
 				      isNull(),
 				      eq(this.settings.getMakeIndexCommand()),
 				      any(String[].class),
-				      any());
+				      eq(this.indFile));
 	verify(this.fileUtils).matchInFile
 	    (this.ilgFile, this.settings.getPatternErrMakeIndex());
     }
@@ -642,11 +640,11 @@ public class LatexProcessorTest {
 
 	// FIXME: still more specific 
 	verify(this.executor)
-	    .execute(any(File.class),
+	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeGlossariesCommand()),
 		     any(String[].class),
-		     any());
+		     eq(this.glsFile));
 	verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, 
 			 this.settings.getPatternErrMakeGlossaries());
@@ -675,11 +673,11 @@ public class LatexProcessorTest {
     private void verifyRunLatex() throws BuildFailureException {
 	// FIXME: still more specific 
 	verify(this.executor, atLeastOnce())
-	    .execute(any(File.class),
+	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getLatex2pdfCommand()),
 		     any(String[].class),
-		     any());
+		     eq(this.dviPdfFile));
 
 	verify(this.fileUtils, atLeastOnce()).matchInFile
 	    (this.logFile, this.settings.getPatternErrLatex());
@@ -717,11 +715,11 @@ public class LatexProcessorTest {
 					     LatexProcessor.SUFFIX_HTML);
 	// FIXME: in general: should be more specific 
 	verify(this.executor, atLeastOnce())
-	    .execute(any(File.class),
+	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getTex4htCommand()),
 		     any(String[].class),
-		     any());
+		     eq(this.htmlFile));
 	String[] patterns = new String[] {
 	    this.settings.getPatternErrLatex(),
 	    LatexProcessor.PATTERN_OUFULL_HVBOX,
