@@ -170,7 +170,7 @@ class CommandExecutor {
      *    does not exist or is not a directory. 
      *    <li><!-- see Commandline.execute() -->
      *    {@link Runtime#exec(String, String[], File)} fails 
-     *    throwing an {@link IOException}. 
+     *    throwing an {@link java.io.IOException}. 
      *    <li> <!-- see CommandLineCallable.call() -->
      *    an error inside systemOut parser occurs 
      *    <li> <!-- see CommandLineCallable.call() -->
