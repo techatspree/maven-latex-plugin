@@ -390,9 +390,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    returned by {@link Settings#getFig2devCommand()} failed. 
      *    This is invoked twice: once for creating the pdf-file 
      *    and once for creating the pdf_t-file. 
-     * @see #create()
-     */
-    // used in processGraphicsSelectMain(DirNode) only 
+     * @see #processGraphicsSelectMain(File, DirNode)
+      */
+    // used in fig.transformSrc(File, LatexPreProcessor, Collection) only 
     private void runFig2Dev(File figFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -542,9 +542,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @throws BuildFailureException
      *    TEX01 if invocation of the ptx/pdf-conversion built-in 
      *    in gnuplot fails. 
-     * @see #create()
+     * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in processGraphicsSelectMain(DirNode) only 
+    // used in gp.transformSrc(File, LatexPreProcessor, Collection) only 
     private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -630,9 +630,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the metapost file to be processed. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the mpost command failed. 
-     * @see #processGraphics(File)
+     * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in processGraphicsSelectMain(DirNode) only 
+    // used in mp.transformSrc(File, LatexPreProcessor, Collection) only 
     private void runMetapost2mps(File mpFile) throws BuildFailureException {
 	this.log.info("Processing metapost-file '" + mpFile + "'. ");
 	String command = this.settings.getMetapostCommand();
@@ -805,6 +805,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WPP02: tex file may be latex main file 
      * <ul>
      *
+     * @param texFile
+     *    the tex-file to decide on whether it is a latex main file. 
      * @return
      *    whether <code>texFile</code> is definitively a latex main file. 
      *    If this is not readable, <code>false</code>. 
@@ -825,7 +827,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * If the tex-file <code>texFile</code> is a latex main file, 
-     * add it to {@link #latexMainFiles}. 
+     * add it to <code>latexMainFiles</code>. 
      * <p>
      * Logging: 
      * <ul>
@@ -834,11 +836,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <ul>
      *
      * @param texFile
-     *    the tex-file to be added to {@link #latexMainFiles} 
+     *    the tex-file to be added to <code>latexMainFiles</code>
      *    if it is a latex main file. 
      * @param latexMainFiles
      *    the collection of latex main files found so far. 
      */
+    // invoked only by tex.transformSrc(File, LatexPreProcessor, Collection)
     private void addMainFile(File texFile, Collection<File> latexMainFiles) {
 	// may log warnings WFU03, WPP02 
 	if (isLatexMainFile(texFile)) {
@@ -899,28 +902,26 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *      if running graphic processors failed. 
      * </ul>
      *
-     * @param texNode
-     *    a node representing the tex source directory. 
+     * @param dir
+     *    represents the tex source directory or a subdirectory. 
+     * @param node
+     *    a node associated with <code>dir</code>. 
      * @return
      *    the collection of latex main files. 
      * @throws BuildFailureException
      *    TEX01 invoking 
-     * {@link LatexPreProcessor.SuffixHandler#transformSrc(File, LatexPreProcessor)}
-     *    only for {@link LatexPreProcessor.SuffixHandler#fig}, 
-     *    {@link LatexPreProcessor.SuffixHandler#gp} and 
-     *    {@link LatexPreProcessor.SuffixHandler#mp} 
-     *    because these invoke external programs. 
+     * {@link #processGraphicsSelectMain(File, DirNode, Collection, Collection)}
      */
     // used in LatexProcessor.create() 
     // and in LatexProcessor.processGraphics() only 
     // where 'node' represents the tex source directory 
-    Collection<File> processGraphicsSelectMain(File dir, DirNode texNode) 
+    Collection<File> processGraphicsSelectMain(File dir, DirNode node) 
     	throws BuildFailureException {
     	Collection<String> skipped = new TreeSet<String>();
     	Collection<File> latexMainFiles = new TreeSet<File>();
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05, WFU03, WPP02 
-      	processGraphicsSelectMain(dir, texNode, skipped, latexMainFiles);
+      	processGraphicsSelectMain(dir, node, skipped, latexMainFiles);
 
     	if (!skipped.isEmpty()) {
     	    this.log.warn("WPP03: Skipped processing of files with suffixes " + 
@@ -940,12 +941,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * if applications for preprocessing graphic files failed. 
      * </ul>
      *
+     * @param dir
+     *    represents the tex source directory or a subdirectory. 
      * @param node
-     *    a node representing the tex source directory 
-     *    or a subdirectory recursively. 
+     *    a node associated with <code>dir</code>. 
+     * @param skipped
+     *    the collection of suffixes of files with handling skipped so far 
+     *    because there is no handler. 
+     *    FIXME: interesting for files without suffix or for hidden files. 
+     * @param latexMainFiles
+     *    the collection of latex main files found so far. 
      * @throws BuildFailureException
      *    TEX01 invoking 
-     * {@link LatexPreProcessor.SuffixHandler#transformSrc(File, LatexPreProcessor)}
+     * {@link LatexPreProcessor.SuffixHandler#transformSrc(File, LatexPreProcessor, Collection)}
      *    only for {@link LatexPreProcessor.SuffixHandler#fig}, 
      *    {@link LatexPreProcessor.SuffixHandler#gp} and 
      *    {@link LatexPreProcessor.SuffixHandler#mp} 
@@ -1038,8 +1046,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * whereas the targets of the graphic (source) files 
      * are just scheduled for deletion. 
      * For details see 
-     * {@link SuffixHandler#clearTarget(File, LatexPreProcessor, Map)} 
-     * {@link SuffixHandler#tex#clearTarget(File, LatexPreProcessor, Map)} . 
+     * {@link LatexPreProcessor.SuffixHandler#clearTarget(File, LatexPreProcessor, Map)} 
+     * {@link LatexPreProcessor.SuffixHandler#tex#clearTarget(File, LatexPreProcessor, Map)} . 
      * FIXME: what about deletion of a graphic source file in this course? 
      * <li>
      * Then the graphic source files scheduled are un-scheduled 
@@ -1062,7 +1070,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
-     * @param texDir
+     * @param dir
      *    represents the tex source directory or a subdirectory. 
      * @param node
      *    a node associated with <code>dir</code>. 
