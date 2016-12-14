@@ -394,8 +394,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	private final File glsFile;
 	private final File gloFile;
-	private final File xxxFile;
 	private final File glgFile;
+	private final File xxxFile;
 
 	LatexMainDesc(File texFile, TexFileUtils fileUtils, LatexDev dev) {
 	    this.texFile = texFile;
