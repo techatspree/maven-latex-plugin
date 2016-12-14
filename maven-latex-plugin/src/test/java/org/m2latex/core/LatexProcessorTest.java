@@ -57,10 +57,10 @@ public class LatexProcessorTest {
     private final static String WORKING_DIR = 
 	System.getProperty("testResourcesDir");
 
-    private CommandExecutor executor = mock(CommandExecutor.class,
+    private CommandExecutor executor = mock(CommandExecutorImpl.class,
 					    RETURNS_SMART_NULLS);
 
-    private TexFileUtils fileUtils = mock(TexFileUtils.class,
+    private TexFileUtils fileUtils = mock(TexFileUtilsImpl.class,
 					  RETURNS_SMART_NULLS);
 
 
