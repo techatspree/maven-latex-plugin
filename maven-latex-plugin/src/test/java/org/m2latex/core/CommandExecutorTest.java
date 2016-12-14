@@ -34,7 +34,7 @@ import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.After;
 
-public class CommandExecutorImplTest {
+public class CommandExecutorTest {
     private final static String WORKING_DIR = 
 	System.getProperty("testResourcesDir");
 

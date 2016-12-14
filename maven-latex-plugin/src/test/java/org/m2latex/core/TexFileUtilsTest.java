@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.m2latex.core.BuildExecutionException;
 import org.m2latex.core.BuildFailureException;
 
-public class TexFileUtilsImplTest {
+public class TexFileUtilsTest {
 
     private TexFileUtils utils = 
 	new TexFileUtils(new MavenLogWrapper(new SystemStreamLog()));
