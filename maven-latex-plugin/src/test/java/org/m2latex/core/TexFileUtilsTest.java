@@ -42,15 +42,28 @@ public class TexFileUtilsTest {
     // FIXME: occurs also in other testclasses: 
     // to be unified. 
     private static void cleanWorkingDir() {
-	assert WORKING_DIR.isDirectory() : "Expected directory. ";
-	File[] files = WORKING_DIR.listFiles();
-	assert files != null : "Working directory is not readable. ";
+	cleanDirRec(WORKING_DIR);
+    }
+
+    // does not work for hidden directories 
+    private static void cleanDirRec(File dir) {
+	assert dir.isDirectory() : "Expected directory. ";
+	File[] files = dir.listFiles();
+	assert files != null : "Directory is not readable. ";
+	boolean proof;
 	for (File file : files) {
+	    assert file.exists();
+	    if (file.isDirectory()) {
+		assert !file.isHidden();
+		cleanDirRec(file);
+		assert file.listFiles().length == 0;
+	    }
 	    if (!file.isHidden()) {
-		file.delete();
+		proof = file.delete();
+		assert proof;
 	    }
 	}
-    }
+     }
 
     @Before public void setUp() throws IOException {
 	cleanWorkingDir();
