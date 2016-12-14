@@ -22,6 +22,8 @@ import org.m2latex.mojo.MavenLogWrapper;
 import org.m2latex.mojo.PdfMojo;
 
 import java.io.File;
+// import java.io.FileWriter;
+// import java.io.Writer;
 import java.io.IOException;
 
 import org.apache.maven.plugin.logging.Log;
@@ -37,11 +39,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.inOrder;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.eq;
+
+import org.mockito.InOrder;
 
 import org.mockito.stubbing.Answer;
 import org.mockito.invocation.InvocationOnMock;
@@ -64,6 +69,7 @@ public class LatexProcessorTest {
 
     private CommandExecutor executor = mock(CommandExecutor.class,
 					    RETURNS_SMART_NULLS);
+    private InOrder inOrderExec = inOrder(this.executor);
 
     private TexFileUtils fileUtils = mock(TexFileUtils.class,
 					  RETURNS_SMART_NULLS);
@@ -155,8 +161,11 @@ public class LatexProcessorTest {
 
     @Before public void setUp() throws IOException {
 	cleanWorkingDir();
+	//this.texFile.createNewFile();
+	//this.auxFile.createNewFile();
 	this.logFile.createNewFile();
 	this.blgFile.createNewFile();
+	//this.pdfFile.createNewFile();
     }
 
     @After public void tearDown() throws IOException {
@@ -165,13 +174,11 @@ public class LatexProcessorTest {
 
     //@Ignore 
     // FIXME: does not take pdfViaDvi into account 
-    @Test public void testProcessLatexSimple()
-	throws BuildFailureException {
+    @Test public void testProcessLatexSimple() throws BuildFailureException {
 	
 	mockProcessLatex2pdf(false, false, false);
 
 	this.processor.processLatex2pdf(this.texFile);
-	//InOrder inOrder = inOrder();
 	verifyProcessLatex2pdf(false, false, false);
 	verifyNoMoreInteractions(this.executor);
 	verifyNoMoreInteractions(this.fileUtils);
@@ -193,6 +200,7 @@ public class LatexProcessorTest {
 
    //@Ignore 
     @Test public void testProcessLatex2html() throws BuildFailureException {
+
 	mockProcessLatex2html(false, false, false);
 
 	this.processor.processLatex2html(this.texFile);
@@ -207,7 +215,7 @@ public class LatexProcessorTest {
 				      boolean needMakeIndex,
 				      boolean needMakeGlossaries) 
 	throws BuildFailureException {
-
+	
 	mockConstrLatexMainDesc();
 	assert !this.settings.getPdfViaDvi().isViaDvi();
 	// FIXME: here should be mockProcessLatex2dev
@@ -229,7 +237,7 @@ public class LatexProcessorTest {
 
 	verifyConstrLatexMainDesc();
 	assert !this.settings.getPdfViaDvi().isViaDvi();
-	// FIXME: here should be verifyProcessLatex2dev2
+	// FIXME: here should be verifyProcessLatex2dev
 	verifyProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossary);
 
 	verify(this.fileUtils).matchInFile
@@ -450,16 +458,21 @@ public class LatexProcessorTest {
 	    verifyRunLatex();
 	    // numLatexReRuns == 1 
 	    // enter for-loop... 
-	    verifyNeedRun(this.settings.getPatternReRunMakeIndex());
+	    verifyNeedRun(this.logFile, 
+			  this.settings.getPatternReRunMakeIndex());
 	    verifyRunLatex();
-	    verifyNeedRun(this.settings.getPatternReRunLatex());
+	    verifyNeedRun(this.logFile, 
+			  this.settings.getPatternReRunLatex());
 	    // second loop 
-	    verifyNeedRun(this.settings.getPatternReRunMakeIndex());
+	    verifyNeedRun(this.logFile, 
+			  this.settings.getPatternReRunMakeIndex());
 	    // exit for-loop 
 	} else {
-	    verifyNeedRun(this.settings.getPatternReRunLatex());
+	    verifyNeedRun(this.logFile, 
+			  this.settings.getPatternReRunLatex());
 	    // enter for-loop... 
-	    verifyNeedRun(this.settings.getPatternReRunMakeIndex());
+	    verifyNeedRun(this.logFile, 
+			  this.settings.getPatternReRunMakeIndex());
 	    // since both conditions are false 
 	    // exit for-loop 
 	}
@@ -472,15 +485,14 @@ public class LatexProcessorTest {
 	    .thenReturn(retVal);
     }
 
-    private void verifyNeedRun(String pattern)
+    private void verifyNeedRun(File file, String pattern)
         throws BuildFailureException {
-	verify(this.fileUtils, atLeastOnce())
-	    .matchInFile(this.logFile, pattern);
+	verify(this.fileUtils, atLeastOnce()).matchInFile(file, pattern);
     }
 
     private void mockRunBibtexByNeed(Boolean runBibtex) 
 	throws BuildFailureException {
-
+	
 	when(this.fileUtils.replaceSuffix
 	     (this.texFile, LatexProcessor.SUFFIX_AUX))
 	    .thenReturn(this.auxFile);
@@ -488,9 +500,15 @@ public class LatexProcessorTest {
 	     (this.auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN))
 	    .thenReturn(runBibtex);
 
+	// FIXME: really needed?? 
+//	Writer writer = new FileWriter(this.auxFile);
 	if (!runBibtex) {
+//	    writer.write("% no bibtex run");
+//	    writer.flush();
 	    return;
 	}
+//	writer.write("\\bibdata % bibtex run"); 
+//	writer.flush();
 
 	when(this.fileUtils.replaceSuffix(this.texFile, 
 					  LatexProcessor.SUFFIX_BBL))
@@ -505,11 +523,11 @@ public class LatexProcessorTest {
 	// 			   this.bblFile))
 	//     .thenReturn("");
 
+	// log file 
 	when(this.fileUtils.replaceSuffix(this.texFile, 
 					  LatexProcessor.SUFFIX_BLG))
 	    .thenReturn(this.blgFile);
-
-	// logging 
+	// logging errors and warnings 
 	when(this.fileUtils.matchInFile(this.blgFile, 
 					this.settings.getPatternErrBibtex()))
 	    .thenReturn(Boolean.FALSE);
@@ -522,9 +540,7 @@ public class LatexProcessorTest {
 	throws BuildFailureException {
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_AUX);
-	verify(this.fileUtils).matchInFile(this.auxFile, 
-					   LatexProcessor
-					   .PATTERN_NEED_BIBTEX_RUN);
+	verifyNeedRun(this.auxFile,  LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
 
 	if (!runBibtex) {
 	    return;
@@ -532,7 +548,7 @@ public class LatexProcessorTest {
 
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_BBL);
-	verify(this.executor, atLeastOnce())
+	this.inOrderExec.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getBibtexCommand()),
@@ -540,15 +556,14 @@ public class LatexProcessorTest {
 			(this.settings.getBibtexOptions(), this.auxFile)),
 		     eq(this.bblFile));
 
+	// log file 
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_BLG);
-
-	// logging 
+	// logging errors and warnings 
 	verify(this.fileUtils).matchInFile
 	    (this.blgFile, this.settings.getPatternErrBibtex());
 	verify(this.fileUtils).matchInFile
 	    (this.blgFile, this.settings.getPatternWarnBibtex());
-
     }
 
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
@@ -594,7 +609,7 @@ public class LatexProcessorTest {
     private void verifyRunMakeIndex() throws BuildFailureException {
 	assert false;
 
-	verify(this.executor)
+	this.inOrderExec.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeIndexCommand()),
@@ -638,7 +653,7 @@ public class LatexProcessorTest {
 	}
 	assert false;
 
-	verify(this.executor)
+	this.inOrderExec.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeGlossariesCommand()),
@@ -672,6 +687,9 @@ public class LatexProcessorTest {
     }
 
     private void verifyRunLatex() throws BuildFailureException {
+	
+	// FIXME: should work also in order. 
+	//this.inOrderExec.
 	verify(this.executor, atLeastOnce())
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
@@ -701,7 +719,7 @@ public class LatexProcessorTest {
 	//     .thenReturn("");
 
 
-	// logging 
+	// logging errors, bad boxes and other warnings 
 	when(this.fileUtils.matchInFile(this.logFile, 
 					this.settings.getPatternErrLatex()))
 	    .thenReturn(Boolean.FALSE);
@@ -716,7 +734,7 @@ public class LatexProcessorTest {
     private void verifyRunLatex2html() throws BuildFailureException {
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_HTML);
-	verify(this.executor, atLeastOnce())
+	this.inOrderExec.verify(this.executor, atLeastOnce())
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getTex4htCommand()),
