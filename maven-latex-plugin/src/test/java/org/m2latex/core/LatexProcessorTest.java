@@ -41,6 +41,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.eq;
 
 import org.mockito.stubbing.Answer;
 import org.mockito.invocation.InvocationOnMock;
@@ -172,6 +173,7 @@ public class LatexProcessorTest {
 	mockProcessLatex2pdf(false, false, false);
 
 	this.processor.processLatex2pdf(this.texFile);
+	//InOrder inOrder = inOrder();
 	verifyProcessLatex2pdf(false, false, false);
 	verifyNoMoreInteractions(this.executor);
 	verifyNoMoreInteractions(this.fileUtils);
@@ -533,12 +535,13 @@ public class LatexProcessorTest {
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_BBL);
 
-	// FIXME: doubling 
-	verify(this.executor, atLeastOnce()).execute(any(File.class),
-						     isNull(),
-						     anyString(),
-						     any(String[].class),
-						     any());
+	// FIXME: still more specific 
+	verify(this.executor, atLeastOnce())
+	    .execute(any(File.class),
+		     isNull(),
+		     eq(this.settings.getBibtexCommand()),
+		     any(String[].class),
+		     any());
 
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_BLG);
@@ -594,10 +597,10 @@ public class LatexProcessorTest {
     private void verifyRunMakeIndex() throws BuildFailureException {
 	assert false;
 
-	// FIXME: doubling 
+	// FIXME: still more specific 
 	verify(this.executor).execute(any(File.class),
 				      isNull(),
-				      anyString(),
+				      eq(this.settings.getMakeIndexCommand()),
 				      any(String[].class),
 				      any());
 	verify(this.fileUtils).matchInFile
@@ -637,12 +640,13 @@ public class LatexProcessorTest {
 	}
 	assert false;
 
-	// FIXME: doubling 
-	verify(this.executor).execute(any(File.class),
-				      isNull(),
-				      anyString(),
-				      any(String[].class),
-				      any());
+	// FIXME: still more specific 
+	verify(this.executor)
+	    .execute(any(File.class),
+		     isNull(),
+		     eq(this.settings.getMakeGlossariesCommand()),
+		     any(String[].class),
+		     any());
 	verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, 
 			 this.settings.getPatternErrMakeGlossaries());
@@ -669,12 +673,13 @@ public class LatexProcessorTest {
     }
 
     private void verifyRunLatex() throws BuildFailureException {
-	// FIXME: doubling 
-	verify(this.executor, atLeastOnce()).execute(any(File.class),
-						     isNull(),
-						     anyString(),
-						     any(String[].class),
-						     any());
+	// FIXME: still more specific 
+	verify(this.executor, atLeastOnce())
+	    .execute(any(File.class),
+		     isNull(),
+		     eq(this.settings.getLatex2pdfCommand()),
+		     any(String[].class),
+		     any());
 
 	verify(this.fileUtils, atLeastOnce()).matchInFile
 	    (this.logFile, this.settings.getPatternErrLatex());
@@ -711,11 +716,12 @@ public class LatexProcessorTest {
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_HTML);
 	// FIXME: in general: should be more specific 
-	verify(this.executor, atLeastOnce()).execute(any(File.class),
-						     isNull(),
-						     anyString(),
-						     any(String[].class),
-						     any());
+	verify(this.executor, atLeastOnce())
+	    .execute(any(File.class),
+		     isNull(),
+		     eq(this.settings.getTex4htCommand()),
+		     any(String[].class),
+		     any());
 	String[] patterns = new String[] {
 	    this.settings.getPatternErrLatex(),
 	    LatexProcessor.PATTERN_OUFULL_HVBOX,
