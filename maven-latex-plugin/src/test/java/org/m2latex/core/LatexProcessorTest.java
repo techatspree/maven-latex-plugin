@@ -69,13 +69,16 @@ public class LatexProcessorTest {
 
     private final CommandExecutor executor = mock(CommandExecutor.class,
 					    RETURNS_SMART_NULLS);
-    private final InOrder inOrderExec = inOrder(this.executor);
+    // pertained because of bugfixes 
+    //private final InOrder inOrderExec = inOrder(this.executor);
 
     private final TexFileUtils fileUtils = mock(TexFileUtils.class,
 					  RETURNS_SMART_NULLS);
 
-    private final InOrder inOrderFileUtils = inOrder(this.fileUtils);
+    // pertained because of bugfixes 
+    //private final InOrder inOrderFileUtils = inOrder(this.fileUtils);
 
+    private final InOrder inOrder = inOrder(this.executor, this.fileUtils);
 
     private final Settings settings = new Settings();
 
@@ -243,9 +246,9 @@ public class LatexProcessorTest {
 	// FIXME: here should be verifyProcessLatex2dev
 	verifyProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossary);
 
-	this.inOrderFileUtils.verify(this.fileUtils).matchInFile
+	this.inOrder.verify(this.fileUtils).matchInFile
 	    (this.logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	this.inOrderFileUtils.verify(this.fileUtils).matchInFile
+	this.inOrder.verify(this.fileUtils).matchInFile
 	    (this.logFile, this.settings.getPatternWarnLatex());
     }
 
@@ -315,6 +318,9 @@ public class LatexProcessorTest {
 	};
 	for (int idx = 0; idx < suffixes.length; idx++) {
 	    // FIXME: should work also in order. 
+	    // FIXME: observation: in order works iff no atLeastOnce is required
+	    // On the other hand, I am not sure 
+	    // why I need this in the individual cases. 
 	    //this.inOrderFileUtils.
 	    verify(this.fileUtils, atLeastOnce())
 		.replaceSuffix(this.texFile, suffixes[idx]);
@@ -394,7 +400,7 @@ public class LatexProcessorTest {
 	    LatexProcessor.SUFFIX_LOT
 	};
 	for (int idx = 0; idx < suffixes.length; idx++) {
-	    this.inOrderFileUtils.verify(this.fileUtils)
+	    this.inOrder.verify(this.fileUtils)
 		.replaceSuffix(this.texFile, suffixes[idx]);
 	}
     }
@@ -547,7 +553,7 @@ public class LatexProcessorTest {
     private void verifyRunBibtexByNeed(Boolean runBibtex) 
 	throws BuildFailureException {
 
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_AUX);
 	verifyNeedRun(this.auxFile,  LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
 
@@ -555,9 +561,9 @@ public class LatexProcessorTest {
 	    return;
 	}
 
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL);
-	this.inOrderExec.verify(this.executor)
+	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getBibtexCommand()),
@@ -566,12 +572,12 @@ public class LatexProcessorTest {
 		     eq(this.bblFile));
 
 	// log file 
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG);
 	// logging errors and warnings 
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .matchInFile(this.blgFile, this.settings.getPatternErrBibtex());
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .matchInFile(this.blgFile, this.settings.getPatternWarnBibtex());
     }
 
@@ -618,14 +624,14 @@ public class LatexProcessorTest {
     private void verifyRunMakeIndex() throws BuildFailureException {
 	assert false;
 
-	this.inOrderExec.verify(this.executor)
+	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeIndexCommand()),
 		     eq(LatexProcessor.buildArguments
 			(this.settings.getMakeIndexOptions(), this.idxFile)),
 		     eq(this.indFile));
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, this.settings.getPatternErrMakeIndex());
     }
 
@@ -662,7 +668,7 @@ public class LatexProcessorTest {
 	}
 	assert false;
 
-	this.inOrderExec.verify(this.executor)
+	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeGlossariesCommand()),
@@ -670,7 +676,7 @@ public class LatexProcessorTest {
 			(this.settings.getMakeGlossariesOptions(), 
 			 this.xxxFile)),
 		     eq(this.glsFile));
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, 
 			 this.settings.getPatternErrMakeGlossaries());
     }
@@ -743,9 +749,9 @@ public class LatexProcessorTest {
     }
 
     private void verifyRunLatex2html() throws BuildFailureException {
-	this.inOrderFileUtils.verify(this.fileUtils)
+	this.inOrder.verify(this.fileUtils)
 	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_HTML);
-	this.inOrderExec.verify(this.executor)
+	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getTex4htCommand()),
@@ -758,7 +764,7 @@ public class LatexProcessorTest {
 	    this.settings.getPatternWarnLatex()
 	};
 	for (int idx = 0; idx < patterns.length; idx++) {
-	    this.inOrderFileUtils.verify(this.fileUtils)
+	    this.inOrder.verify(this.fileUtils)
 		.matchInFile(this.logFile, patterns[idx]);
 	}
     }
