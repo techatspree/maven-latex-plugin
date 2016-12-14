@@ -47,9 +47,9 @@ interface TexFileUtils {
 
     String getSuffix(File file);
 
-    File replaceSuffix(File file, String suffix);
-
     Boolean matchInFile(File file, String pattern);
+
+    File replaceSuffix(File file, String suffix);
 
     void deleteX(File texFile, FileFilter filter);
     void deleteOrWarn(File delFile);
