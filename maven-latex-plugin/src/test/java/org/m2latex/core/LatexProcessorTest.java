@@ -179,13 +179,13 @@ public class LatexProcessorTest {
 
     private void verifyProcessLatex2pdf(boolean needBibtex,
 					boolean needMakeIndex,
-					boolean needMakeGlossaries) 
+					boolean needMakeGlossary) 
 	throws BuildFailureException {
 
 	verifyConstrLatexMainDesc();
 	assert !this.settings.getPdfViaDvi().isViaDvi();
 	// FIXME: here should be verifyProcessLatex2dev2
-	verifyProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossaries);
+	verifyProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossary);
 
 	verify(this.fileUtils).matchInFile
 	    (this.logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
@@ -205,11 +205,11 @@ public class LatexProcessorTest {
 
     private void verifyProcessLatex2html(boolean needBibtex,
 					 boolean needMakeIndex,
-					 boolean needMakeGlossaries) 
+					 boolean needMakeGlossary) 
 	throws BuildFailureException {
 
 	verifyConstrLatexMainDesc();
-	verifyPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossaries);
+	verifyPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossary);
         verifyRunLatex2html();
     }
 
@@ -381,17 +381,17 @@ public class LatexProcessorTest {
     // FIXME: currently, neither toc nor lof nor lot exist 
     private void verifyProcessLatex2devCore(boolean needBibtex,
 					    boolean needMakeIndex,
-					    boolean needMakeGlossaries) 
+					    boolean needMakeGlossary) 
 	throws BuildFailureException {
 
-	assert !needMakeIndex && !needMakeGlossaries;
+	assert !needMakeIndex && !needMakeGlossary;
 	assert !this.tocFile.exists() 
 	    && !this.lofFile.exists() 
 	    && !this.lotFile.exists();
 	// FIXME: would be safer to define = -1 
 	assert this.settings.getMaxNumReRunsLatex() == 5;
 
-	verifyPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossaries);
+	verifyPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossary);
 	// preProcessLatex2dev returns 
 	// 2 if needBibtex 
 	// since currently neither makeindex nor makeglossaries are supported 
@@ -449,14 +449,14 @@ public class LatexProcessorTest {
 					  LatexProcessor.SUFFIX_BBL))
 	    .thenReturn(this.bblFile);
 
-	when(this.executor.execute(texFile.getParentFile(),
-				   this.settings.getTexPath(),
-				   this.settings.getBibtexCommand(),
-				   LatexProcessor.buildArguments
-				   (this.settings.getBibtexOptions(), 
-				    this.auxFile),
-				   this.bblFile))
-	    .thenReturn("");
+	// when(this.executor.execute(texFile.getParentFile(),
+	// 			   this.settings.getTexPath(),
+	// 			   this.settings.getBibtexCommand(),
+	// 			   LatexProcessor.buildArguments
+	// 			   (this.settings.getBibtexOptions(), 
+	// 			    this.auxFile),
+	// 			   this.bblFile))
+	//     .thenReturn("");
 
 	when(this.fileUtils.replaceSuffix(this.texFile, 
 					  LatexProcessor.SUFFIX_BLG))
@@ -529,14 +529,14 @@ public class LatexProcessorTest {
     private void mockRunMakeIndex() throws BuildFailureException {
 	assert false;
 	
-	when(this.executor.execute(this.texFile.getParentFile(),
-				   this.settings.getTexPath(),
-				   this.settings.getMakeIndexCommand(),
-				   LatexProcessor.buildArguments
-				   (this.settings.getMakeIndexOptions(), 
-				    this.idxFile),
-				   this.indFile))
-	    .thenReturn("");
+	// when(this.executor.execute(this.texFile.getParentFile(),
+	// 			   this.settings.getTexPath(),
+	// 			   this.settings.getMakeIndexCommand(),
+	// 			   LatexProcessor.buildArguments
+	// 			   (this.settings.getMakeIndexOptions(), 
+	// 			    this.idxFile),
+	// 			   this.indFile))
+	//     .thenReturn("");
 
 	// since ilg file does not exist 
 	when(this.fileUtils.matchInFile(this.ilgFile, 
@@ -553,8 +553,8 @@ public class LatexProcessorTest {
 				      anyString(),
 				      any(String[].class),
 				      any());
-	verify(this.fileUtils).matchInFile(this.ilgFile, 
-					   this.settings.getPatternErrMakeIndex());
+	verify(this.fileUtils).matchInFile
+	    (this.ilgFile, this.settings.getPatternErrMakeIndex());
     }
 
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossaries) 
@@ -566,14 +566,14 @@ public class LatexProcessorTest {
 	}
 	assert false;
 
-	when(this.executor.execute(this.texFile.getParentFile(),
-				   this.settings.getTexPath(),
-				   this.settings.getMakeGlossariesCommand(),
-				   LatexProcessor.buildArguments
-				   (this.settings.getMakeGlossariesOptions(), 
-				    xxxFile),
-				   glsFile))
-	    .thenReturn("");
+	// when(this.executor.execute(this.texFile.getParentFile(),
+	// 			   this.settings.getTexPath(),
+	// 			   this.settings.getMakeGlossariesCommand(),
+	// 			   LatexProcessor.buildArguments
+	// 			   (this.settings.getMakeGlossariesOptions(), 
+	// 			    xxxFile),
+	// 			   glsFile))
+	//     .thenReturn("");
 
 	// since glg file does not exist 
 	when(this.fileUtils.matchInFile
@@ -602,13 +602,17 @@ public class LatexProcessorTest {
     }
 
     private void mockRunLatex() throws BuildFailureException {
-	when(this.executor.execute(this.texFile.getParentFile(),
-				   this.settings.getTexPath(),
-				   this.settings.getLatex2pdfCommand(),
-				   LatexProcessor.buildLatexArguments
-				   (this.settings,this.settings.getPdfViaDvi(), this.texFile),
-				   this.dviPdfFile))
-	    .thenReturn("");
+
+	// when(this.executor.execute(this.texFile.getParentFile(),
+	// 			   this.settings.getTexPath(),
+	// 			   this.settings.getLatex2pdfCommand(),
+	// 			   LatexProcessor
+	// 			   .buildLatexArguments(this.settings, 
+	// 						this.settings
+	// 						.getPdfViaDvi(), 
+	// 						this.texFile),
+	// 			   this.dviPdfFile))
+	//     .thenReturn("");
 
 	// Ensure that no failure occurred 
 	// FIXME: missing: testcases with error 
@@ -635,13 +639,13 @@ public class LatexProcessorTest {
 					  LatexProcessor.SUFFIX_HTML))
 	    .thenReturn(this.htmlFile);
 
-	when(this.executor.execute(this.texFile.getParentFile(),
-				   this.settings.getTexPath(),
-				   this.settings.getTex4htCommand(),
-				   LatexProcessor.buildHtlatexArguments
-				   (this.settings, this.texFile),
-				   this.htmlFile))
-	    .thenReturn("");
+	// when(this.executor.execute(this.texFile.getParentFile(),
+	// 			   this.settings.getTexPath(),
+	// 			   this.settings.getTex4htCommand(),
+	// 			   LatexProcessor.buildHtlatexArguments
+	// 			   (this.settings, this.texFile),
+	// 			   this.htmlFile))
+	//     .thenReturn("");
 
 
 	// logging 
@@ -659,6 +663,7 @@ public class LatexProcessorTest {
     private void verifyRunLatex2html() throws BuildFailureException {
 	verify(this.fileUtils).replaceSuffix(this.texFile, 
 					     LatexProcessor.SUFFIX_HTML);
+	// FIXME: in general: should be more specific 
 	verify(this.executor, atLeastOnce()).execute(any(File.class),
 						     isNull(),
 						     anyString(),
