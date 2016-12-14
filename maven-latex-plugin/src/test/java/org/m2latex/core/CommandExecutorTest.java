@@ -35,15 +35,14 @@ import org.junit.Before;
 import org.junit.After;
 
 public class CommandExecutorTest {
-    private final static String WORKING_DIR = 
-	System.getProperty("testResourcesDir");
+    private final static File WORKING_DIR = 
+	new File(System.getProperty("testResourcesDir"));
 
     // FIXME: occurs also in other testclasses: 
     // to be unified. 
     private static void cleanWorkingDir() {
-	File wDir = new File(WORKING_DIR);
-	assert wDir.isDirectory() : "Expected directory. ";
-	File[] files = wDir.listFiles();
+	assert WORKING_DIR.isDirectory() : "Expected directory. ";
+	File[] files = WORKING_DIR.listFiles();
 	assert files != null : "Working directory is not readable. ";
 	for (File file : files) {
 	    if (!file.isHidden()) {
@@ -63,13 +62,12 @@ public class CommandExecutorTest {
     @Test public void testExecute() throws BuildFailureException {
         CommandExecutor executor = 
 	    new CommandExecutor(new MavenLogWrapper(new SystemStreamLog()));
- 	File workingDir = new File(WORKING_DIR);
-        String touchFile = "cmdLineExe.touch";
-	String output = executor.execute(workingDir, 
+	String touchFile = "cmdLineExe.touch";
+	String output = executor.execute(WORKING_DIR, 
 					 null, 
 					 "touch", 
 					 new String[] {touchFile},
-					 new File(workingDir, touchFile));
+					 new File(WORKING_DIR, touchFile));
         //assertEquals(echoText, output.subSequence(0, echoText.length()));
     }
 
