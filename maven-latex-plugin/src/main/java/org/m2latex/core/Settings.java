@@ -17,8 +17,8 @@
  */
 
 package org.m2latex.core;
-
-import org.m2latex.mojo.AbstractLatexMojo;// for javadoc only 
+// is AbstractLatexMojo but not public 
+import org.m2latex.mojo.CfgLatexMojo;// for javadoc only 
 
 import java.io.File;
 
@@ -52,7 +52,7 @@ public class Settings {
     /**
      * The base directory of this maven project. 
      *
-     * @see AbstractLatexMojo#baseDirectory
+     * @see CfgLatexMojo#baseDirectory
      */
     private File baseDirectory;
 
@@ -61,7 +61,7 @@ public class Settings {
      * By default this is <code>{@link #baseDirectory}/target</code> 
      * on Unix systems. 
      *
-     * @see AbstractLatexMojo#targetDirectory
+     * @see CfgLatexMojo#targetDirectory
      */
     private File targetDirectory;
 
@@ -70,7 +70,7 @@ public class Settings {
      * By default this is <code>{@link #targetDirectory}/site</code> 
      * on Unix systems. 
      *
-     * @see AbstractLatexMojo#targetSiteDirectory
+     * @see CfgLatexMojo#targetSiteDirectory
      */
     private File targetSiteDirectory;
 
