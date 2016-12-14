@@ -56,7 +56,7 @@ public class DirNode {
      *    
      */
     // used recursively but in addition only in 
-    // TexFileUtilsImpl.cleanUpRec,
+    // TexFileUtils.cleanUpRec,
     // LatexProcessor.create()
     // LatexProcessor.processGraphics()
     // LatexProcessor.clearAll()
