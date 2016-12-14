@@ -67,15 +67,17 @@ public class LatexProcessorTest {
     private final static File WORKING_DIR = 
 	new File(System.getProperty("testResourcesDir"));
 
-    private CommandExecutor executor = mock(CommandExecutor.class,
+    private final CommandExecutor executor = mock(CommandExecutor.class,
 					    RETURNS_SMART_NULLS);
-    private InOrder inOrderExec = inOrder(this.executor);
+    private final InOrder inOrderExec = inOrder(this.executor);
 
-    private TexFileUtils fileUtils = mock(TexFileUtils.class,
+    private final TexFileUtils fileUtils = mock(TexFileUtils.class,
 					  RETURNS_SMART_NULLS);
 
+    private final InOrder inOrderFileUtils = inOrder(this.fileUtils);
 
-    private Settings settings = new Settings();
+
+    private final Settings settings = new Settings();
 
     // mock 
     // - ignores debug and info 
@@ -105,9 +107,10 @@ public class LatexProcessorTest {
 // 	}
 //     });
 //private LogWrapper log = mock(MavenLogWrapper.class, RETURNS_SMART_NULLS);
-    private LogWrapper log = spy(new MavenLogWrapper(new SystemStreamLog()));
+    private final LogWrapper log = 
+	spy(new MavenLogWrapper(new SystemStreamLog()));
 
-    private LatexProcessor processor = new LatexProcessor
+    private final LatexProcessor processor = new LatexProcessor
 	(this.settings, this.executor, this.log,this.fileUtils,new PdfMojo());
 
     private File texFile = new File(WORKING_DIR, "test.tex");
@@ -240,9 +243,9 @@ public class LatexProcessorTest {
 	// FIXME: here should be verifyProcessLatex2dev
 	verifyProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossary);
 
-	verify(this.fileUtils).matchInFile
+	this.inOrderFileUtils.verify(this.fileUtils).matchInFile
 	    (this.logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	verify(this.fileUtils).matchInFile
+	this.inOrderFileUtils.verify(this.fileUtils).matchInFile
 	    (this.logFile, this.settings.getPatternWarnLatex());
     }
 
@@ -311,6 +314,8 @@ public class LatexProcessorTest {
 	    LatexProcessor.SUFFIX_GLG
 	};
 	for (int idx = 0; idx < suffixes.length; idx++) {
+	    // FIXME: should work also in order. 
+	    //this.inOrderFileUtils.
 	    verify(this.fileUtils, atLeastOnce())
 		.replaceSuffix(this.texFile, suffixes[idx]);
 	}
@@ -389,7 +394,8 @@ public class LatexProcessorTest {
 	    LatexProcessor.SUFFIX_LOT
 	};
 	for (int idx = 0; idx < suffixes.length; idx++) {
-	    verify(this.fileUtils).replaceSuffix(this.texFile, suffixes[idx]);
+	    this.inOrderFileUtils.verify(this.fileUtils)
+		.replaceSuffix(this.texFile, suffixes[idx]);
 	}
     }
 
@@ -487,6 +493,8 @@ public class LatexProcessorTest {
 
     private void verifyNeedRun(File file, String pattern)
         throws BuildFailureException {
+	// FIXME: should work also in order. 
+	//this.inOrderFileUtils.
 	verify(this.fileUtils, atLeastOnce()).matchInFile(file, pattern);
     }
 
@@ -538,16 +546,17 @@ public class LatexProcessorTest {
 
     private void verifyRunBibtexByNeed(Boolean runBibtex) 
 	throws BuildFailureException {
-	verify(this.fileUtils).replaceSuffix(this.texFile, 
-					     LatexProcessor.SUFFIX_AUX);
+
+	this.inOrderFileUtils.verify(this.fileUtils)
+	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_AUX);
 	verifyNeedRun(this.auxFile,  LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
 
 	if (!runBibtex) {
 	    return;
 	}
 
-	verify(this.fileUtils).replaceSuffix(this.texFile, 
-					     LatexProcessor.SUFFIX_BBL);
+	this.inOrderFileUtils.verify(this.fileUtils)
+	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL);
 	this.inOrderExec.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
@@ -557,13 +566,13 @@ public class LatexProcessorTest {
 		     eq(this.bblFile));
 
 	// log file 
-	verify(this.fileUtils).replaceSuffix(this.texFile, 
-					     LatexProcessor.SUFFIX_BLG);
+	this.inOrderFileUtils.verify(this.fileUtils)
+	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG);
 	// logging errors and warnings 
-	verify(this.fileUtils).matchInFile
-	    (this.blgFile, this.settings.getPatternErrBibtex());
-	verify(this.fileUtils).matchInFile
-	    (this.blgFile, this.settings.getPatternWarnBibtex());
+	this.inOrderFileUtils.verify(this.fileUtils)
+	    .matchInFile(this.blgFile, this.settings.getPatternErrBibtex());
+	this.inOrderFileUtils.verify(this.fileUtils)
+	    .matchInFile(this.blgFile, this.settings.getPatternWarnBibtex());
     }
 
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
@@ -616,8 +625,8 @@ public class LatexProcessorTest {
 		     eq(LatexProcessor.buildArguments
 			(this.settings.getMakeIndexOptions(), this.idxFile)),
 		     eq(this.indFile));
-	verify(this.fileUtils).matchInFile
-	    (this.ilgFile, this.settings.getPatternErrMakeIndex());
+	this.inOrderFileUtils.verify(this.fileUtils)
+	    .matchInFile(this.ilgFile, this.settings.getPatternErrMakeIndex());
     }
 
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossaries) 
@@ -661,7 +670,7 @@ public class LatexProcessorTest {
 			(this.settings.getMakeGlossariesOptions(), 
 			 this.xxxFile)),
 		     eq(this.glsFile));
-	verify(this.fileUtils)
+	this.inOrderFileUtils.verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, 
 			 this.settings.getPatternErrMakeGlossaries());
     }
@@ -700,8 +709,10 @@ public class LatexProcessorTest {
 			 this.texFile)),
 		     eq(this.dviPdfFile));
 
-	verify(this.fileUtils, atLeastOnce()).matchInFile
-	    (this.logFile, this.settings.getPatternErrLatex());
+	// FIXME: should work also in order. 
+	//this.inOrderFileUtils.
+	verify(this.fileUtils, atLeastOnce())
+	    .matchInFile(this.logFile, this.settings.getPatternErrLatex());
     }
 
     private void mockRunLatex2html() throws BuildFailureException {
@@ -732,9 +743,9 @@ public class LatexProcessorTest {
     }
 
     private void verifyRunLatex2html() throws BuildFailureException {
-	verify(this.fileUtils).replaceSuffix(this.texFile, 
-					     LatexProcessor.SUFFIX_HTML);
-	this.inOrderExec.verify(this.executor, atLeastOnce())
+	this.inOrderFileUtils.verify(this.fileUtils)
+	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_HTML);
+	this.inOrderExec.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getTex4htCommand()),
@@ -747,7 +758,7 @@ public class LatexProcessorTest {
 	    this.settings.getPatternWarnLatex()
 	};
 	for (int idx = 0; idx < patterns.length; idx++) {
-	    verify(this.fileUtils, atLeastOnce())
+	    this.inOrderFileUtils.verify(this.fileUtils)
 		.matchInFile(this.logFile, patterns[idx]);
 	}
     }
