@@ -81,7 +81,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private final static String SUFFIX_EPS = ".eps";
 
     private final static String SUFFIX_XBB = ".xbb";
-    private final static String SUFFIX_BB = ".bb";
+    private final static String SUFFIX_BB  = ".bb";
 
 
     LatexPreProcessor(Settings settings, 
@@ -296,7 +296,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	/**
 	 * Typically just associates <code>file</code> 
-	 * with this hanlder in <code>file2handler</code> except for 
+	 * with this handler in <code>file2handler</code> 
+	 * to schedule according targets for deletion except for 
 	 * <ul>
 	 * <li>
 	 * jpg-files, png-files and bib-files 
@@ -313,6 +314,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <li> WFU03: cannot close tex file 
 	 * <li> WFU05: Failed to delete file 
 	 * <ul>
+	 *
+	 * @param file
+	 *    a file with ending given by {@link #getSuffix()}, 
+	 *    i.e. a file which can be handled by this handler. 
+	 * @param proc
+	 *    a latex pre-processor. 
+	 * @param file2handler
+	 *    maps <code>file</code> to its handler. 
+	 *    In general, this method adds 
+	 *    <code>file</code> to <code>file2handler</code> 
+	 *    together with its handler which is just <code>this</code>. 
 	 */
 	// overwritten for tex, jpg, png and for bib 
 	// appropriate for svg although file may be removed from map later 
@@ -990,7 +1002,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Deletes all created files 
-     * in the directory represented by <code>node</code>, recursively. 
+     * in the directory represented by <code>texDir</code> 
+     * tracing subdirectories recursively. 
+     * For details of deletions within a single directory 
+     * see {@link #clearCreated(File, DirNode)}. 
      * <p>
      * Logging: 
      * <ul>
@@ -1000,9 +1015,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
-     * @param texNode
-     *    a node representing the tex source directory 
-     *    or a subdirectory. 
+     * @param texDir
+     *    represents the tex source directory or a subdirectory. 
      */
     // invoked recursively; except that used only in 
     // LatexProcessor.clearAll()
@@ -1013,6 +1027,32 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     /**
      * Deletes all created files 
      * in the directory represented by <code>node</code>, recursively. 
+     * In each directory, the sub-directories are not deleted themselves 
+     * but cleaned recursively. 
+     * The other files are cleaned, i.e. 
+     * their targets are deleted in an ordering reverse to creation 
+     * proceeding in the following steps: 
+     * <ul>
+     * <li>
+     * First the targets of the latex main files are deleted, 
+     * whereas the targets of the graphic (source) files 
+     * are just scheduled for deletion. 
+     * For details see 
+     * {@link SuffixHandler#clearTarget(File, LatexPreProcessor, Map)} 
+     * {@link SuffixHandler#tex#clearTarget(File, LatexPreProcessor, Map)} . 
+     * FIXME: what about deletion of a graphic source file in this course? 
+     * <li>
+     * Then the graphic source files scheduled are un-scheduled 
+     * if deleted by some latex main file. 
+     * <li>
+     * Finally, the targets of the graphic souce files are deleted. 
+     * FIXME: what if this results in deletion of a graphic source file? 
+     * </ul>
+     * Then the files with handler 
+     * If a file has a prefix without handler, 
+     * (see {@link SuffixHandler#getSuffix()}) it is ignored. 
+     * Else its target is cleared as described in 
+     * {@link SuffixHandler#clearTarget(File, LatexPreProcessor, Map)}. 
      * <p>
      * Logging: 
      * <ul>
@@ -1022,6 +1062,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WFU05: Failed to delete file 
      * </ul>
      *
+     * @param texDir
+     *    represents the tex source directory or a subdirectory. 
      * @param node
      *    a node associated with <code>dir</code>. 
      */
