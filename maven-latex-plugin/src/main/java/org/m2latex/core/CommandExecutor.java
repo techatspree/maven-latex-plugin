@@ -39,7 +39,7 @@ class CommandExecutor {
     }
 
 
-   /**
+    /**
      * Logging: 
      * <ul>
      * <li> WEX01: return code other than 0. 
@@ -48,6 +48,24 @@ class CommandExecutor {
      * <li> WEX04: cannot read target file 
      * <li> WEX05: may emit false warnings
      * </ul>
+     *
+     * @param workingDir
+     *    the working directory. 
+     *    The shell changes to that directory 
+     *    before invoking <code>command</code> 
+     *    with arguments <code>args</code>. 
+     * @param pathToExecutable
+     *    the path to the executable <code>command</code>. 
+     *    This may be <code>null</code> if <code>command</code> 
+     *    is on the execution path 
+     * @param command
+     *    the name of the program to be executed 
+     * @param args
+     *    the list of arguments, 
+     *    each containing a blank enclosed in double quotes. 
+     * @param resFile
+     *    result files, i.e. target files which shall be updated 
+     *    bu this command. 
      */
     String execute(File workingDir, 
 		   File pathToExecutable, 
@@ -98,6 +116,9 @@ class CommandExecutor {
     // returns whether this method logged a warning 
     // FIXME: return value nowhere used 
     /**
+     * @param command
+     *    the name of the program to be executed 
+     *
      * Logging: 
      * <ul>
      * <li> WEX02: no target file 
