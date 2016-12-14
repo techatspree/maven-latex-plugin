@@ -18,6 +18,8 @@
 
 package org.m2latex.core;
 
+import org.m2latex.mojo.AbstractLatexMojo;// for javadoc only 
+
 import java.io.File;
 
 import java.util.SortedSet;
@@ -113,7 +115,7 @@ public class Settings {
     /**
      * A comma separated list of targets 
      * returned as a set by {@link #getTargetSet()}. 
-     * For allowed values see {@link Targets}. 
+     * For allowed values see {@link Target}. 
      * The default value is <code>pdf, html</code>. 
      */
     @Parameter(name = "targets", defaultValue = "pdf, html")
@@ -1028,7 +1030,7 @@ public class Settings {
     private String t4htOptions = "";
 
     /**
-     * The pattern for the target files of goal {@link Target.html} 
+     * The pattern for the target files of goal {@link Target#html} 
      * for a given latex main file <code>xxx.tex</code>. 
      * The patterns for the other targets 
      * are hardcoded and take the form 
@@ -1071,9 +1073,9 @@ public class Settings {
      * <p>
      * The pattern is designed to match quite exactly 
      * the files to be copied to {@link #targetSiteDirectory}, 
-     * for the goal {@link Target.html}, 
+     * for the goal {@link Target#html}, 
      * not much more and at any case not less. 
-     * since {@link #tex2htCommand} is not well documented, 
+     * since {@link #tex4htCommand} is not well documented, 
      * and still subject to development, 
      * this pattern cannot be guaranteed to be final. 
      * If the user finds an extension, (s)he is asked to contribute 

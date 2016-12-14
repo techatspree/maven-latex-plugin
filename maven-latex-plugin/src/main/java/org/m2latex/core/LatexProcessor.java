@@ -51,7 +51,8 @@ import java.util.Collection;
  * Processing of the latex main files is done in {@link #create()} 
  * according to the target(s) given by the parameters. 
  * The elements of the enumeration {@link Target} use methods 
- * {@link #processLatex2rtf(File)}, {@link #processLatex2dev(File, LatexDev)}, 
+ * {@link #processLatex2rtf(File)}, {@link #processLatex2dvi(File)}, 
+ * {@link #processLatex2pdf(File)}, 
  * {@link #processLatex2html(File)}, {@link #processLatex2odt(File)}, 
  * {@link #processLatex2docx(File)} and {@link #processLatex2txt(File)}. 
  */
@@ -440,7 +441,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * A warning is logged if the LaTeX, a BibTeX run a MakeIndex 
      * or a MakeGlossaries run fails 
      * or if a BibTeX run or a MakeIndex or a MakeGlossary run issues a warning
-     * in the according methods {@link #runLatex2pdf(LatexMainDesc)}, 
+     * in the according methods 
+     * {@link #runLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}, 
      * {@link #runBibtexByNeed(File)}, 
      * {@link #runMakeIndexByNeed(LatexMainDesc)} and 
      * {@link #runMakeGlossaryByNeed(LatexMainDesc)}. 
@@ -482,13 +484,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @throws BuildFailureException
      *    TEX01 if invocation one of the following commands fails: the 
      *    <ul>
-     *    <li> latex2pdf command from {@link Settings#getLatexCommand()} 
+     *    <li> latex2pdf command from {@link Settings#getLatex2pdfCommand()} 
      *    <li> BibTeX    command from {@link Settings#getBibtexCommand()}
      *    <li> makeindex command from {@link Settings#getMakeIndexCommand()} 
      *    <li> makeglossaries command 
      *         from {@link Settings#getMakeGlossariesCommand()} 
      *    </ul>
-     * @see #processLatex2devCore(LatexMainDesc, LatexDev)
+     * @see #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)
      * @see #processLatex2html(File)
      * @see #processLatex2odt(File)
      * @see #processLatex2docx(File)
@@ -557,7 +559,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * or as threshold {@link Settings#maxNumReRunsLatex} specifies. 
      * <p>
      * Note that still no logging of warnings from a latex run is done. 
-     * This is done in {@link #processLatex2dev(File, LatexDev)}. 
+     * This is done 
+     * in {@link #processLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}. 
      * The exclusion of logging of warnings is indicated by the name part 
      * 'Core'. 
      * Processing without logging of warnings 
@@ -577,8 +580,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WLP02: Cannot read log file:     run BibTeX/
      *                                   (re)run MakeIndex/LaTeX required? 
      * <li> WFU03: cannot close 
-     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
-     *      as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
+     * <li> WEX01, WEX02, WEX03, WEX04, WEX05: as for 
+     *     {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
      *      maybe caused by subsequent runs. 
      * </ul>
      *
@@ -589,7 +592,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the device describing the output format which is either pdf or dvi. 
      *    See {@link LatexDev#getLatexLanguage()}. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
+     *    TEX01 as for 
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
      *    maybe caused by subsequent runs. 
      * @see #processLatex2dvi(File)
      * @see #processLatex2txt(File)
@@ -709,7 +713,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * on the latex main file <code>texFile</code> 
      * described by <code>desc</code> 
      * repeatedly as described for 
-     * {@link #processLatex2devCore(LatexMainDesc, LatexDev)} 
+     * {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)} 
      * and issue a warning if the last LaTeX run issued a warning. 
      * </ul>
      * <p>
@@ -722,7 +726,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WLP03: <code>command</code> created bad boxes 
      * <li> WLP04: <code>command</code> emitted warnings 
      * <li> WEX01, WEX02, WEX03, WEX04, WEX05: 
-     *      as for {@link #processLatex2devCore(LatexMainDesc, LatexDev)} 
+     * {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)} 
      *      if running an exernal command fails. 
      * </ul>
      *
@@ -733,8 +737,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the device describing the output format which is either pdf or dvi. 
      *    See {@link LatexDev#getLatexLanguage()}. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #processLatex2devCore(LatexMainDesc, LatexDev)}. 
-     * @see #needAnotherLatexRun(File)
+     *    TEX01 as for 
+     *    {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)}.
+     * @see #needRun(boolean, String, File, String)
      * @see Target#pdf
      */
     private void processLatex2dev(LatexMainDesc desc, LatexDev dev) 
@@ -744,7 +749,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// WEX01, WEX02, WEX03, WEX04, WEX05 
 	processLatex2devCore(desc, dev);
 
-	// emit warnings (errors are emitted by runLatex2pdf and that like.)
+	// emit warnings (errors are emitted by runLatex2dev and that like.)
 	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, this.settings.getLatex2pdfCommand());
     }
@@ -809,7 +814,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * If the log-file exists, a <em>warning</em> is logged if 
      * <ul>
      * <li>
-     * another LaTeX rerun is required beyond {@link Settings#maxNumReruns}, 
+     * another LaTeX rerun is required 
+     * beyond {@link Settings#maxNumRerunsLatex}, 
      * <li>
      * bad boxes occurred and shall be logged 
      * according to {@link Settings#getDebugBadBoxes()}. 
@@ -873,10 +879,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
-     *    but also as for {@link #runLatex2html(LatexMainDesc)}. 
-     * @see #preProcessLatex2dev(File, LatexDev)
-     * @see #runLatex2html(File)
+     *    TEX01 as for 
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
+     *    but also as for {@link #runLatex2html(LatexProcessor.LatexMainDesc)}. 
+     * @see #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)
+     * @see #runLatex2html(LatexProcessor.LatexMainDesc)
      * @see Target#html
      */
     void processLatex2html(File texFile) throws BuildFailureException {
@@ -911,10 +918,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
-     *    but also as for {@link #runLatex2odt(LatexMainDesc)}. 
-     * @see #preProcessLatex2dev(File, LatexDev)
-     * @see #runLatex2odt(File)
+     *    TEX01 as for 
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
+     *    but also as for {@link #runLatex2odt(LatexProcessor.LatexMainDesc)}. 
+     * @see #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)
+     * @see #runLatex2odt(LatexProcessor.LatexMainDesc)
      * @see Target#odt
      */
     void processLatex2odt(File texFile) throws BuildFailureException {
@@ -947,13 +955,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *    the tex file to be processed. 
+     *    the latex main file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)} 
-     *    but also as for {@link #runLatex2odt(LatexMainDesc)} 
-     *    and for {@link #runodt2doc(File)}. 
+     *    TEX01 as for 
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
+     *    but also as for {@link #runLatex2odt(LatexProcessor.LatexMainDesc)} 
+     *    and for {@link #runOdt2doc(File)}. 
      * @see #preProcessLatex2dev(LatexMainDesc, LatexDev)
-     * @see #runLatex2odt(File)
+     * @see #runLatex2odt(LatexProcessor.LatexMainDesc)
      * @see #runOdt2doc(File)
      * @see Target#docx
      */
@@ -1012,9 +1021,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param texFile
      *    the tex file to be processed. 
      * @throws BuildFailureException
-     *    TEX01 as for {@link #processLatex2devCore(LatexMainDesc, LatexDev)} 
+     *    TEX01 as for 
+     *    {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)} 
      *    and for {@link #runPdf2txt(File)}. 
-     * @see #processLatex2devCore(LatexMainDesc, LatexDev)
+     * @see #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)
      * @see #runPdf2txt(File)
      * @see Target#txt
      */
@@ -1114,8 +1124,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the makeindex command failed. 
      * </ul>
      *
-     * @param texFile
-     *    the latex-file MakeIndex is to be processed for. 
+     * @param desc
+     *    the description of a latex main file <code>dviFile</code> 
+     *    including the idx-file MakeIndex is to be run on. 
      * @return
      *    whether MakeIndex had been run. 
      *    Equivalently, whether LaTeX has to be rerun because of MakeIndex. 
@@ -1157,8 +1168,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the makeindex command failed. 
      * </ul>
      *
-     * @param idxFile
-     *    the idx-file MakeIndex is to be run on. 
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    including the idx-file MakeIndex is to be run on. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the makeindex command 
      *    returned by {@link Settings#getMakeIndexCommand()} failed. 
@@ -1207,8 +1219,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the makeglossaries command failed. 
      * </ul>
      *
-     * @param texFile
-     *    the latex-file MakeGlossaries is to be processed for. 
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    including the idx-file MakeGlossaries is to be run on. 
      * @return
      *    whether MakeGlossaries had been run. 
      *    Equivalently, 
@@ -1253,18 +1266,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Runs the LaTeX command given by {@link Settings#getLatexCommand()} 
+     * Runs the LaTeX command given by {@link Settings#getLatex2pdfCommand()} 
      * on the latex main file <code>texFile</code> 
      * described by <code>desc</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(File)}. 
+     * in the directory containing <code>texFile</code> with arguments 
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
      * The output format of the LaTeX run is given by <code>dev</code>, 
      * to be more precise by {@link LatexDev#getLatexLanguage()}. 
      * <p>
      * Logs a warning or an error if the latex run failed 
      * invoking {@link #logErrs(File, String)}
      * but not if bad boxes occurred or if warnings occurred. 
-     * This is done in {@link #processLatex2dev(File, LatexDev)} 
+     * This is done in 
+     * {@link #processLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
      * after the last LaTeX run only. 
      * <p>
      * Logging: 
@@ -1285,7 +1299,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    See {@link LatexDev#getLatexLanguage()}. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the latex2pdf command 
-     *    returned by {@link Settings#getLatexCommand()} failed. 
+     *    returned by {@link Settings#getLatex2pdfCommand()} failed. 
      */
     private void runLatex2dev(LatexMainDesc desc, LatexDev dev)
 	throws BuildFailureException {
@@ -1325,8 +1339,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     /**
      * Runs conversion from dvi to pdf-file  
      * executing {@link Settings#getDvi2pdfCommand()} 
-     * on a dvi-file covered by <code>desc</code>
-     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * on a dvi-file covered by <code>desc</code> with arguments 
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
      * <p>
      * Logging: 
      * <ul>
@@ -1334,8 +1348,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the dvi2pdf command failed. 
      * </ul>
      *
-     * @param dviFile
-     *    the dvi-file to be processed. 
+     * @param desc
+     *    the description of a latex main file <code>dviFile</code> 
+     *    including the dvi-file dvi2pdf is to be run on. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the dvi2pdf command 
      *    returned by {@link Settings#getDvi2pdfCommand()} failed. 
@@ -1364,9 +1379,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     /**
      * Runs the tex4ht command given by {@link Settings#getTex4htCommand()} 
-     * on <code>texFile</code> 
+     * on <code>texFile</code> described by <code>desc</code> 
      * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildHtlatexArguments(String, File)}. 
+     * with arguments given by {@link #buildHtlatexArguments(Settings, File)}. 
      * <p>
      * Logging: 
      * <ul>
@@ -1380,8 +1395,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the tex4ht command failed. 
      * </ul>
      *
-     * @param texFile
-     *    the latex-file to be processed. 
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    to be processed. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
@@ -1426,7 +1442,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * given by {@link Settings#getLatex2rtfCommand()} 
      * on <code>texFile</code> 
      * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatex2rtfArguments(String, File)}. 
+     * with arguments given by {@link #buildArguments(String, File)}. 
      * <p>
      * Logging: 
      * <ul>
@@ -1465,13 +1481,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Runs conversion from latex to odt 
      * executing {@link Settings#getTex4htCommand()} 
      * on <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * in the directory containing <code>texFile</code> with arguments 
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
      * <p>
      * Logs a warning or an error if the latex run failed 
      * invoking {@link #logErrs(File, String)}
      * but not if bad boxes ocurred or if warnings occurred. 
-     * This is done in {@link #processLatex2dev(File, LatexDev))} 
+     * This is done in 
+     * {@link #processLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
      * after the last LaTeX run only. 
      * <p>
      * Logging: 
@@ -1486,8 +1503,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the tex4ht command failed. 
      * </ul>
      *
-     * @param texFile
-     *    the latex file to be processed. 
+     * @param desc
+     *    the descriptor of the latex main file to be processed. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the tex4ht command 
      *    returned by {@link Settings#getTex4htCommand()} failed. 
@@ -1529,8 +1546,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Runs conversion from odt to doc or docx-file  
      * executing {@link Settings#getOdt2docCommand()} 
      * on an odt-file created from <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * in the directory containing <code>texFile</code> with arguments 
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
      * <p>
      * Logging: 
      * <ul>
@@ -1576,8 +1593,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Runs conversion from pdf to txt-file  
      * executing {@link Settings#getPdf2txtCommand()} 
      * on a pdf-file created from <code>texFile</code> 
-     * in the directory containing <code>texFile</code> 
-     * with arguments given by {@link #buildLatexArguments(String, File)}. 
+     * in the directory containing <code>texFile</code> with arguments 
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
      * <p>
      * Logging: 
      * <ul>
