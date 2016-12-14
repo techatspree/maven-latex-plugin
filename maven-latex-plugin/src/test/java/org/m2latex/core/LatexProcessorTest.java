@@ -32,6 +32,7 @@ import static org.mockito.Mockito.RETURNS_SMART_NULLS;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -40,6 +41,9 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
+
+import org.mockito.stubbing.Answer;
+import org.mockito.invocation.InvocationOnMock;
 
 import org.junit.Test;
 import org.junit.Ignore;
@@ -51,7 +55,7 @@ import org.junit.After;
 // FIXME: missing: test of logging 
 // FIXME: mocking and verification in parallel 
 // FIXME: rename: mock-->stub 
-// FIXME: distinction interface, interfaceImpl no longer needed. 
+// FIXME: missing: test of warnings and errors 
 public class LatexProcessorTest {
 
     private final static String WORKING_DIR = 
@@ -66,7 +70,36 @@ public class LatexProcessorTest {
 
     private Settings settings = new Settings();
 
-    private LogWrapper log = new MavenLogWrapper(new SystemStreamLog());
+    // mock 
+    // - ignores debug and info 
+    // - verifies error and warn
+//     private LogWrapper log = mock(MavenLogWrapper.class,
+// 				  new Answer<Void>() {
+// 	public Void answer(InvocationOnMock invocation) throws Throwable {
+// System.out.println("answer..");
+	    
+// 	    String methodName = invocation.getMethod().getName();
+// System.out.println("methodName: "+methodName);
+// 	    if (methodName.equals("debug") || methodName.equals("info")) {
+// //		invocation.callRealMethod();
+// 	    } else {
+// 		assert methodName.equals("error") || methodName.equals("warn");
+// 		LogWrapper lw = (LogWrapper)invocation.getMock();
+// 		if (methodName.equals("error")) {
+// 		    verify(lw).error(anyString());
+// 		} else {
+// 		    verify(lw).warn(anyString());
+// 		}
+// 		// Object[] args = invocation.getArguments();
+// 		// Object mock = invocation.getMock();
+// 	    }
+// System.out.println("..answer");
+// return null;
+// 	}
+//     });
+//private LogWrapper log = mock(MavenLogWrapper.class, RETURNS_SMART_NULLS);
+    private LogWrapper log = spy(new MavenLogWrapper(new SystemStreamLog()));
+//    private LogWrapper log = new MavenLogWrapper(new SystemStreamLog());
 
     private LatexProcessor processor = new LatexProcessor
 	(this.settings, this.executor, this.log,this.fileUtils,new PdfMojo());
@@ -97,6 +130,15 @@ public class LatexProcessorTest {
     private File tocFile = new File(WORKING_DIR, "test.toc");
     private File lofFile = new File(WORKING_DIR, "test.lof");
     private File lotFile = new File(WORKING_DIR, "test.lot");
+
+    public LatexProcessorTest() {
+	doThrow(new AssertionError("Found error. "))
+	    .when(this.log).error(anyString());
+	doThrow(new AssertionError("Found warning. "))
+	    .when(this.log).warn(anyString());
+	doCallRealMethod().when(this.log).info(anyString());
+	doNothing().when(this.log).debug(anyString());
+    }
 
     // FIXME: occurs also in other testclasses: 
     // to be unified. 
@@ -133,6 +175,7 @@ public class LatexProcessorTest {
 	verifyProcessLatex2pdf(false, false, false);
 	verifyNoMoreInteractions(this.executor);
 	verifyNoMoreInteractions(this.fileUtils);
+	//verifyNoMoreInteractions(this.log);
     }
 
     //@Ignore 
@@ -145,6 +188,7 @@ public class LatexProcessorTest {
 	verifyProcessLatex2pdf(true, false, false);
 	verifyNoMoreInteractions(this.executor);
 	verifyNoMoreInteractions(this.fileUtils);
+	//verifyNoMoreInteractions(this.log);
     }
 
    //@Ignore 
@@ -156,6 +200,7 @@ public class LatexProcessorTest {
 	verifyProcessLatex2html(false, false, false);
 	verifyNoMoreInteractions(this.executor);
 	verifyNoMoreInteractions(this.fileUtils);
+	//verifyNoMoreInteractions(this.log);
     }
 
     private void mockProcessLatex2pdf(boolean needBibtex,
@@ -274,6 +319,8 @@ public class LatexProcessorTest {
 
  	// run latex 
         mockRunLatex();
+	// FIXME: to indicate whether makeindex must be run: 
+	// method creates .idx or not: use Mockito.thenAnswer for that
 
 	// run bibtex, makeIndex and makeGlossary by need 
 	mockRunBibtexByNeed(needBibtex);
