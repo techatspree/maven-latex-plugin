@@ -815,7 +815,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <ul>
      * <li>
      * another LaTeX rerun is required 
-     * beyond {@link Settings#maxNumRerunsLatex}, 
+     * beyond {@link Settings#maxNumReRnsLatex}, 
      * <li>
      * bad boxes occurred and shall be logged 
      * according to {@link Settings#getDebugBadBoxes()}. 
