@@ -27,8 +27,19 @@ import java.io.IOException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
-import org.easymock.MockControl;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.RETURNS_SMART_NULLS;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.atLeastOnce;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 
 import org.junit.Test;
 import org.junit.Ignore;
@@ -38,24 +49,19 @@ import org.junit.After;
 //import org.junit.AfterClass;
 
 // FIXME: missing: test of logging 
+// FIXME: mocking and verification in parallel 
+// FIXME: rename: mock-->stub 
+// FIXME: distinction interface, interfaceImpl no longer needed. 
 public class LatexProcessorTest {
 
     private final static String WORKING_DIR = 
 	System.getProperty("testResourcesDir");
 
-    // FIXME: removed with Mockito? 
-    private MockControl executorCtrl = MockControl
-	.createStrictControl(CommandExecutor.class);
+    private CommandExecutor executor = mock(CommandExecutor.class,
+					    RETURNS_SMART_NULLS);
 
-    private CommandExecutor executor = (CommandExecutor) executorCtrl.getMock();
-    private CommandExecutor executor2 = Mockito.mock(CommandExecutor.class);
-
-
-    private MockControl fileUtilsCtrl = MockControl
-	.createStrictControl(TexFileUtils.class);
-
-    private TexFileUtils fileUtils = (TexFileUtils) fileUtilsCtrl.getMock();
-    private TexFileUtils fileUtils2 = Mockito.mock(TexFileUtils.class);
+    private TexFileUtils fileUtils = mock(TexFileUtils.class,
+					  RETURNS_SMART_NULLS);
 
 
     private Settings settings = new Settings();
@@ -63,8 +69,7 @@ public class LatexProcessorTest {
     private LogWrapper log = new MavenLogWrapper(new SystemStreamLog());
 
     private LatexProcessor processor = new LatexProcessor
-	(settings, this.executor, log, fileUtils, new PdfMojo());
-
+	(this.settings, this.executor, this.log,this.fileUtils,new PdfMojo());
 
     private File texFile = new File(WORKING_DIR, "test.tex");
     private File pdfFile = new File(WORKING_DIR, "test.pdf");
@@ -93,13 +98,17 @@ public class LatexProcessorTest {
     private File lofFile = new File(WORKING_DIR, "test.lof");
     private File lotFile = new File(WORKING_DIR, "test.lot");
 
+    // FIXME: occurs also in other testclasses: 
+    // to be unified. 
     private static void cleanWorkingDir() {
 	File wDir = new File(WORKING_DIR);
 	assert wDir.isDirectory() : "Expected directory. ";
 	File[] files = wDir.listFiles();
 	assert files != null : "Working directory is not readable. ";
 	for (File file : files) {
-	    file.delete();
+	    if (!file.isHidden()) {
+		file.delete();
+	    }
 	}
     }
 
@@ -120,11 +129,10 @@ public class LatexProcessorTest {
 	
 	mockProcessLatex2pdf(false, false, false);
 
-        this. executorCtrl.replay();
-        this.fileUtilsCtrl.replay();
-        processor.processLatex2pdf(this.texFile);
-        this. executorCtrl.verify();
-        this.fileUtilsCtrl.verify();
+	this.processor.processLatex2pdf(this.texFile);
+	verifyProcessLatex2pdf(false, false, false);
+	verifyNoMoreInteractions(this.executor);
+	verifyNoMoreInteractions(this.fileUtils);
     }
 
     //@Ignore 
@@ -133,38 +141,56 @@ public class LatexProcessorTest {
 
 	mockProcessLatex2pdf(true, false, false);
 
-	this. executorCtrl.replay();
-        this.fileUtilsCtrl.replay();
-        processor.processLatex2pdf(this.texFile);
-	this. executorCtrl.verify();
-        this.fileUtilsCtrl.verify();
+        this.processor.processLatex2pdf(this.texFile);
+	verifyProcessLatex2pdf(true, false, false);
+	verifyNoMoreInteractions(this.executor);
+	verifyNoMoreInteractions(this.fileUtils);
     }
 
-    //@Ignore 
+   //@Ignore 
     @Test public void testProcessLatex2html() throws BuildFailureException {
-
 	mockProcessLatex2html(false, false, false);
 
-        this. executorCtrl.replay();
-        this.fileUtilsCtrl.replay();
-        processor.processLatex2html(this. texFile);
-	this. executorCtrl.verify();
-        this.fileUtilsCtrl.verify();
+	this.processor.processLatex2html(this.texFile);
+
+	verifyProcessLatex2html(false, false, false);
+	verifyNoMoreInteractions(this.executor);
+	verifyNoMoreInteractions(this.fileUtils);
     }
 
     private void mockProcessLatex2pdf(boolean needBibtex,
 				      boolean needMakeIndex,
 				      boolean needMakeGlossaries) 
 	throws BuildFailureException {
+
 	mockConstrLatexMainDesc();
 	assert !this.settings.getPdfViaDvi().isViaDvi();
 	// FIXME: here should be mockProcessLatex2dev
 	mockProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossaries);
 
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	when(this.fileUtils.matchInFile(this.logFile, 
+					LatexProcessor.PATTERN_OUFULL_HVBOX))
+	    .thenReturn(Boolean.FALSE);
+
+	when(this.fileUtils.matchInFile(this.logFile, 
+					this.settings.getPatternWarnLatex()))
+	    .thenReturn(Boolean.FALSE);
+    }
+
+    private void verifyProcessLatex2pdf(boolean needBibtex,
+					boolean needMakeIndex,
+					boolean needMakeGlossaries) 
+	throws BuildFailureException {
+
+	verifyConstrLatexMainDesc();
+	assert !this.settings.getPdfViaDvi().isViaDvi();
+	// FIXME: here should be verifyProcessLatex2dev2
+	verifyProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossaries);
+
+	verify(this.fileUtils).matchInFile
+	    (this.logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
+	verify(this.fileUtils).matchInFile
+	    (this.logFile, this.settings.getPatternWarnLatex());
     }
 
     private void mockProcessLatex2html(boolean needBibtex,
@@ -177,32 +203,64 @@ public class LatexProcessorTest {
         mockRunLatex2html();
     }
 
+    private void verifyProcessLatex2html(boolean needBibtex,
+					 boolean needMakeIndex,
+					 boolean needMakeGlossaries) 
+	throws BuildFailureException {
+
+	verifyConstrLatexMainDesc();
+	verifyPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossaries);
+        verifyRunLatex2html();
+    }
+
     private void mockConstrLatexMainDesc() {
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_VOID);
-   	fileUtilsCtrl.setReturnValue(this.xxxFile);
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_PDF);
-   	fileUtilsCtrl.setReturnValue(this.pdfFile);
-   	// FIXME 
-   	fileUtils.replaceSuffix(this.texFile, 
-   				"."+this.settings.getPdfViaDvi()
-   				.getLatexLanguage());
-   	fileUtilsCtrl.setReturnValue(this.dviPdfFile);
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_LOG);
-   	fileUtilsCtrl.setReturnValue(this.logFile);
+	//this.desc = this.processor.getLatexMainDesc(this.texFile);
 
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_IDX);
-   	fileUtilsCtrl.setReturnValue(this.idxFile);
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_IND);
-   	fileUtilsCtrl.setReturnValue(this.indFile);
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_ILG);
-   	fileUtilsCtrl.setReturnValue(this.ilgFile);
+	File texFile = this.texFile;
+  	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID))
+	    .thenReturn(this.xxxFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_PDF))
+	    .thenReturn(this.pdfFile);
+	when(this.fileUtils.replaceSuffix(texFile, 
+					  "."+this.settings.getPdfViaDvi()
+					  .getLatexLanguage()))
+	    .thenReturn(this.dviPdfFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG))
+	    .thenReturn(this.logFile);
 
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLS);
-   	fileUtilsCtrl.setReturnValue(this.glsFile);
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLO);
-   	fileUtilsCtrl.setReturnValue(this.gloFile);
-   	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_GLG);
-   	fileUtilsCtrl.setReturnValue(this.glgFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX))
+	    .thenReturn(this.idxFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IND))
+	    .thenReturn(this.indFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG))
+	    .thenReturn(this.ilgFile);
+
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS))
+	    .thenReturn(this.glsFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO))
+	    .thenReturn(this.gloFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLG))
+	    .thenReturn(this.glgFile);
+    }
+
+    private void verifyConstrLatexMainDesc() {
+	// FIXME: doubling from mockConstrLatexMainDesc()
+	String[] suffixes = new String[] {
+	    LatexProcessor.SUFFIX_VOID,
+	    LatexProcessor.SUFFIX_PDF,
+	    "."+this.settings.getPdfViaDvi().getLatexLanguage(),
+	    LatexProcessor.SUFFIX_LOG,
+	    LatexProcessor.SUFFIX_IDX,
+	    LatexProcessor.SUFFIX_IND,
+	    LatexProcessor.SUFFIX_ILG,
+	    LatexProcessor.SUFFIX_GLS,
+	    LatexProcessor.SUFFIX_GLO,
+	    LatexProcessor.SUFFIX_GLG
+	};
+	for (int idx = 0; idx < suffixes.length; idx++) {
+	    verify(this.fileUtils, atLeastOnce())
+		.replaceSuffix(this.texFile, suffixes[idx]);
+	}
     }
 
     // FIXME: pdf never via dvi 
@@ -233,12 +291,51 @@ public class LatexProcessorTest {
 	    && !this.lotFile.exists();
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_TOC);
-	fileUtilsCtrl.setReturnValue(this.tocFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_LOF);
-	fileUtilsCtrl.setReturnValue(this.lofFile);
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_LOT);
-	fileUtilsCtrl.setReturnValue(this.lotFile);
+	File texFile = this.texFile;
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC))
+	    .thenReturn(this.tocFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOF))
+	    .thenReturn(this.lofFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT))
+	    .thenReturn(this.lotFile);
+    }
+
+    private void verifyPreProcessLatex2dev(boolean needBibtex,
+					   boolean needMakeIndex,
+					   boolean needMakeGlossaries) 
+	throws BuildFailureException {
+	assert !needMakeIndex && !needMakeGlossaries;
+
+	// run latex 
+        verifyRunLatex();
+
+	// run bibtex, makeIndex and makeGlossary by need 
+	verifyRunBibtexByNeed(needBibtex);
+	verifyRunMakeIndexByNeed(needMakeIndex);
+	verifyRunMakeGlossaryByNeed(needMakeGlossaries);
+
+	if (needBibtex) {
+	    return;
+	}
+	// FIXME: not the truth if makeindex and makeglossaries are included 
+	// and also not if TOC exists. 
+
+	assert !this.tocFile.exists() 
+	    && !this.lofFile.exists() 
+	    && !this.lotFile.exists();
+	// determine from presence of toc, lof, lot (and idx and other criteria)
+	// whether to rerun latex: no 
+
+
+	// FIXME: duplicate 
+	String[] suffixes = new String[] {
+	    LatexProcessor.SUFFIX_TOC,
+	    LatexProcessor.SUFFIX_LOF,
+	    LatexProcessor.SUFFIX_LOT
+	};
+	for (int idx = 0; idx < suffixes.length; idx++) {
+	    verify(this.fileUtils).replaceSuffix(this.texFile, suffixes[idx]);
+	}
     }
 
     // FIXME: currently, neither toc nor lof nor lot exist 
@@ -246,6 +343,7 @@ public class LatexProcessorTest {
 					  boolean needMakeIndex,
 					  boolean needMakeGlossaries) 
 	throws BuildFailureException {
+
 	assert !needMakeIndex && !needMakeGlossaries;
 	assert !this.tocFile.exists() 
 	    && !this.lofFile.exists() 
@@ -271,59 +369,139 @@ public class LatexProcessorTest {
 	    // second loop 
 	    mockNeedRun(false, this.settings.getPatternReRunMakeIndex());
 	    // exit for-loop 
-	    return;
 	} else {
 	    mockNeedRun(false, this.settings.getPatternReRunLatex());
 	    // enter for-loop... 
 	    mockNeedRun(false, this.settings.getPatternReRunMakeIndex());
 	    // since both conditions are false 
 	    // exit for-loop 
-	    return;
  	}
+    }
+
+    // FIXME: currently, neither toc nor lof nor lot exist 
+    private void verifyProcessLatex2devCore(boolean needBibtex,
+					    boolean needMakeIndex,
+					    boolean needMakeGlossaries) 
+	throws BuildFailureException {
+
+	assert !needMakeIndex && !needMakeGlossaries;
+	assert !this.tocFile.exists() 
+	    && !this.lofFile.exists() 
+	    && !this.lotFile.exists();
+	// FIXME: would be safer to define = -1 
+	assert this.settings.getMaxNumReRunsLatex() == 5;
+
+	verifyPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossaries);
+	// preProcessLatex2dev returns 
+	// 2 if needBibtex 
+	// since currently neither makeindex nor makeglossaries are supported 
+	// and neither toc, lof or lot exist: 
+	// 0 else 
+
+	if (needBibtex) {
+	    // numLatexReRuns == 2 
+	    verifyRunLatex();
+	    // numLatexReRuns == 1 
+	    // enter for-loop... 
+	    verifyNeedRun(this.settings.getPatternReRunMakeIndex());
+	    verifyRunLatex();
+	    verifyNeedRun(this.settings.getPatternReRunLatex());
+	    // second loop 
+	    verifyNeedRun(this.settings.getPatternReRunMakeIndex());
+	    // exit for-loop 
+	} else {
+	    verifyNeedRun(this.settings.getPatternReRunLatex());
+	    // enter for-loop... 
+	    verifyNeedRun(this.settings.getPatternReRunMakeIndex());
+	    // since both conditions are false 
+	    // exit for-loop 
+	}
     }
 
     private void mockNeedRun(Boolean retVal, String pattern)
         throws BuildFailureException {
 
-        fileUtils.matchInFile(this.logFile, pattern);
-        fileUtilsCtrl.setReturnValue(retVal);
+	when(this.fileUtils.matchInFile(this.logFile, pattern))
+	    .thenReturn(retVal);
+    }
+
+    private void verifyNeedRun(String pattern)
+        throws BuildFailureException {
+	verify(this.fileUtils, atLeastOnce())
+	    .matchInFile(this.logFile, pattern);
     }
 
     private void mockRunBibtexByNeed(Boolean runBibtex) 
 	throws BuildFailureException {
 
-        fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_AUX);
-        fileUtilsCtrl.setReturnValue(this.auxFile);
-        fileUtils.matchInFile(this.auxFile, 
-			      LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
-        fileUtilsCtrl.setReturnValue(runBibtex);
+	when(this.fileUtils.replaceSuffix
+	     (this.texFile, LatexProcessor.SUFFIX_AUX))
+	    .thenReturn(this.auxFile);
+	when(this.fileUtils.matchInFile
+	     (this.auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN))
+	    .thenReturn(runBibtex);
 
 	if (!runBibtex) {
 	    return;
 	}
 
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL);
-        fileUtilsCtrl.setReturnValue(this.bblFile);
-  
-        this.executor.execute(texFile.getParentFile(),
-			      this.settings.getTexPath(),
-			      this.settings.getBibtexCommand(),
-			      LatexProcessor.buildArguments
-			      (this.settings.getBibtexOptions(), this.auxFile),
-			      this.bblFile);
-        this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        this.executorCtrl.setReturnValue(null);
+	when(this.fileUtils.replaceSuffix(this.texFile, 
+					  LatexProcessor.SUFFIX_BBL))
+	    .thenReturn(this.bblFile);
 
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG);
-	fileUtilsCtrl.setReturnValue(this.blgFile);
+	when(this.executor.execute(texFile.getParentFile(),
+				   this.settings.getTexPath(),
+				   this.settings.getBibtexCommand(),
+				   LatexProcessor.buildArguments
+				   (this.settings.getBibtexOptions(), 
+				    this.auxFile),
+				   this.bblFile))
+	    .thenReturn("");
+
+	when(this.fileUtils.replaceSuffix(this.texFile, 
+					  LatexProcessor.SUFFIX_BLG))
+	    .thenReturn(this.blgFile);
 
 	// logging 
-	fileUtils.matchInFile(blgFile, 
-	                      this.settings.getPatternErrBibtex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-	fileUtils.matchInFile(blgFile, 
-	                      this.settings.getPatternWarnBibtex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	when(this.fileUtils.matchInFile(this.blgFile, 
+					this.settings.getPatternErrBibtex()))
+	    .thenReturn(Boolean.FALSE);
+	when(this.fileUtils.matchInFile(this.blgFile, 
+					this.settings.getPatternWarnBibtex()))
+	    .thenReturn(Boolean.FALSE);
+    }
+
+    private void verifyRunBibtexByNeed(Boolean runBibtex) 
+	throws BuildFailureException {
+	verify(this.fileUtils).replaceSuffix(this.texFile, 
+					     LatexProcessor.SUFFIX_AUX);
+	verify(this.fileUtils).matchInFile(this.auxFile, 
+					   LatexProcessor
+					   .PATTERN_NEED_BIBTEX_RUN);
+
+	if (!runBibtex) {
+	    return;
+	}
+
+	verify(this.fileUtils).replaceSuffix(this.texFile, 
+					     LatexProcessor.SUFFIX_BBL);
+
+	// FIXME: doubling 
+	verify(this.executor, atLeastOnce()).execute(any(File.class),
+						     isNull(),
+						     anyString(),
+						     any(String[].class),
+						     any());
+
+	verify(this.fileUtils).replaceSuffix(this.texFile, 
+					     LatexProcessor.SUFFIX_BLG);
+
+	// logging 
+	verify(this.fileUtils).matchInFile
+	    (this.blgFile, this.settings.getPatternErrBibtex());
+	verify(this.fileUtils).matchInFile
+	    (this.blgFile, this.settings.getPatternWarnBibtex());
+
     }
 
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
@@ -337,23 +515,47 @@ public class LatexProcessorTest {
 	mockRunMakeIndex();
     }
 
+    private void verifyRunMakeIndexByNeed(boolean runMakeIndex) 
+	throws BuildFailureException {
+
+	assert !runMakeIndex;
+
+	if (!runMakeIndex) {
+	    return;
+	}
+	verifyRunMakeIndex();
+    }
+
     private void mockRunMakeIndex() throws BuildFailureException {
 	assert false;
-        this.executor.execute(this.texFile.getParentFile(),
-			      this.settings.getTexPath(),
-			      this.settings.getMakeIndexCommand(),
-			      LatexProcessor.buildArguments
-			      (this.settings.getMakeIndexOptions(), 
-			       this.idxFile),
-			      this.indFile);
-	this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        this.executorCtrl.setReturnValue(null);
+	
+	when(this.executor.execute(this.texFile.getParentFile(),
+				   this.settings.getTexPath(),
+				   this.settings.getMakeIndexCommand(),
+				   LatexProcessor.buildArguments
+				   (this.settings.getMakeIndexOptions(), 
+				    this.idxFile),
+				   this.indFile))
+	    .thenReturn("");
 
 	// since ilg file does not exist 
-	// fileUtils.matchInFile(ilgFile, 
-	//                       this.settings.getPatternErrMakeIndex());
-	// fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-      }
+	when(this.fileUtils.matchInFile(this.ilgFile, 
+					this.settings.getPatternErrMakeIndex()))
+	    .thenReturn(Boolean.FALSE);
+    }
+
+    private void verifyRunMakeIndex() throws BuildFailureException {
+	assert false;
+
+	// FIXME: doubling 
+	verify(this.executor).execute(any(File.class),
+				      isNull(),
+				      anyString(),
+				      any(String[].class),
+				      any());
+	verify(this.fileUtils).matchInFile(this.ilgFile, 
+					   this.settings.getPatternErrMakeIndex());
+    }
 
     private void mockRunMakeGlossaryByNeed(boolean runMakeGlossaries) 
 	throws BuildFailureException {
@@ -364,58 +566,112 @@ public class LatexProcessorTest {
 	}
 	assert false;
 
-        this.executor.execute(this.texFile.getParentFile(),
-			      this.settings.getTexPath(),
-			      this.settings.getMakeGlossariesCommand(),
-			      LatexProcessor.buildArguments
-			      (this.settings.getMakeGlossariesOptions(), 
-			       xxxFile),
-			      glsFile);
-	this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        this.executorCtrl.setReturnValue(null);
+	when(this.executor.execute(this.texFile.getParentFile(),
+				   this.settings.getTexPath(),
+				   this.settings.getMakeGlossariesCommand(),
+				   LatexProcessor.buildArguments
+				   (this.settings.getMakeGlossariesOptions(), 
+				    xxxFile),
+				   glsFile))
+	    .thenReturn("");
 
 	// since glg file does not exist 
-	// fileUtils.matchInFile(glgFile, 
-	//                       this.settings.getPatternErrMakeGlossaries());
-	// fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	when(this.fileUtils.matchInFile
+	     (this.glgFile, this.settings.getPatternErrMakeGlossaries()))
+	    .thenReturn(Boolean.FALSE);
+    }
+
+    private void verifyRunMakeGlossaryByNeed(boolean runMakeGlossaries) 
+	throws BuildFailureException {
+ 
+	assert !runMakeGlossaries;
+	if (!runMakeGlossaries) {
+	    return;
+	}
+	assert false;
+
+	// FIXME: doubling 
+	verify(this.executor).execute(any(File.class),
+				      isNull(),
+				      anyString(),
+				      any(String[].class),
+				      any());
+	verify(this.fileUtils)
+	    .matchInFile(this.ilgFile, 
+			 this.settings.getPatternErrMakeGlossaries());
     }
 
     private void mockRunLatex() throws BuildFailureException {
+	when(this.executor.execute(this.texFile.getParentFile(),
+				   this.settings.getTexPath(),
+				   this.settings.getLatex2pdfCommand(),
+				   LatexProcessor.buildLatexArguments
+				   (this.settings,this.settings.getPdfViaDvi(), this.texFile),
+				   this.dviPdfFile))
+	    .thenReturn("");
 
-        this.executor.execute(this.texFile.getParentFile(),
-			      this.settings.getTexPath(),
-			      this.settings.getLatex2pdfCommand(),
-			      LatexProcessor.buildLatexArguments
-			      (this.settings, settings.getPdfViaDvi(), texFile),
-			      dviPdfFile);
-        this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        this.executorCtrl.setReturnValue(null);
+	// Ensure that no failure occurred 
+	// FIXME: missing: testcases with error 
+	when(this.fileUtils.matchInFile(this.logFile, 
+					this.settings.getPatternErrLatex()))
+	    .thenReturn(Boolean.FALSE);
+    }
 
-	// FIXME: since log file does not exist 
-	fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+    private void verifyRunLatex() throws BuildFailureException {
+	// FIXME: doubling 
+	verify(this.executor, atLeastOnce()).execute(any(File.class),
+						     isNull(),
+						     anyString(),
+						     any(String[].class),
+						     any());
+
+	verify(this.fileUtils, atLeastOnce()).matchInFile
+	    (this.logFile, this.settings.getPatternErrLatex());
     }
 
     private void mockRunLatex2html() throws BuildFailureException {
-        this.executor.execute(texFile.getParentFile(),
-			      this.settings.getTexPath(),
-			      this.settings.getTex4htCommand(),
-			      LatexProcessor.buildHtlatexArguments
-			      (this.settings, texFile),
-			      htmlFile);
-        this.executorCtrl.setMatcher(MockControl.ARRAY_MATCHER);
-        this.executorCtrl.setReturnValue(null);
+	// html to verify whether execution created the expected html file 
+	when(this.fileUtils.replaceSuffix(this.texFile, 
+					  LatexProcessor.SUFFIX_HTML))
+	    .thenReturn(this.htmlFile);
 
-	// html
-	fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_HTML);
-	fileUtilsCtrl.setReturnValue(this.htmlFile);
+	when(this.executor.execute(this.texFile.getParentFile(),
+				   this.settings.getTexPath(),
+				   this.settings.getTex4htCommand(),
+				   LatexProcessor.buildHtlatexArguments
+				   (this.settings, this.texFile),
+				   this.htmlFile))
+	    .thenReturn("");
+
 
 	// logging 
-	fileUtils.matchInFile(logFile, this.settings.getPatternErrLatex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-	fileUtils.matchInFile(logFile, LatexProcessor.PATTERN_OUFULL_HVBOX);
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
-	fileUtils.matchInFile(logFile, this.settings.getPatternWarnLatex());
-	fileUtilsCtrl.setReturnValue(Boolean.FALSE);
+	when(this.fileUtils.matchInFile(this.logFile, 
+					this.settings.getPatternErrLatex()))
+	    .thenReturn(Boolean.FALSE);
+	when(this.fileUtils.matchInFile(this.logFile, 
+					LatexProcessor.PATTERN_OUFULL_HVBOX))
+	    .thenReturn(Boolean.FALSE);
+	when(this.fileUtils.matchInFile(this.logFile, 
+					this.settings.getPatternWarnLatex()))
+	    .thenReturn(Boolean.FALSE);
+    }
+
+    private void verifyRunLatex2html() throws BuildFailureException {
+	verify(this.fileUtils).replaceSuffix(this.texFile, 
+					     LatexProcessor.SUFFIX_HTML);
+	verify(this.executor, atLeastOnce()).execute(any(File.class),
+						     isNull(),
+						     anyString(),
+						     any(String[].class),
+						     any());
+	String[] patterns = new String[] {
+	    this.settings.getPatternErrLatex(),
+	    LatexProcessor.PATTERN_OUFULL_HVBOX,
+	    this.settings.getPatternWarnLatex()
+	};
+	for (int idx = 0; idx < patterns.length; idx++) {
+	    verify(this.fileUtils, atLeastOnce())
+		.matchInFile(this.logFile, patterns[idx]);
+	}
     }
 }
