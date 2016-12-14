@@ -27,8 +27,6 @@ import junit.framework.TestCase;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
-import org.easymock.MockControl;
-
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -39,11 +37,6 @@ import org.junit.After;
 public class CommandExecutorImplTest {
     private final static String WORKING_DIR = 
 	System.getProperty("testResourcesDir");
-
-    private MockControl executorCtrl = MockControl
-	.createStrictControl(CommandExecutor.class);
-
-    private CommandExecutor executor = (CommandExecutor) executorCtrl.getMock();
 
     // FIXME: occurs also in other testclasses: 
     // to be unified. 
