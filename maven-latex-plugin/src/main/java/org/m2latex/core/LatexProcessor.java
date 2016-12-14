@@ -138,8 +138,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     public LatexProcessor(Settings settings, 
 			  LogWrapper log, 
 			  ParameterAdapter paramAdapt) {
-	this(settings, new CommandExecutorImpl(log), log, 
-	     new TexFileUtilsImpl(log), paramAdapt);
+	this(settings, new CommandExecutor(log), log, 
+	     new TexFileUtils(log), paramAdapt);
     }
 
     /**
@@ -188,7 +188,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    <li> TFU03, TFU04, TFU05, TFU06 if 
      *    copy of output files to target folder fails. 
      *    For details see 
-     * {@link TexFileUtilsImpl#copyOutputToTargetFolder(File, FileFilter, File)}
+     * {@link TexFileUtils#copyOutputToTargetFolder(File, FileFilter, File)}
      *    </ul>
      */
     public void create() throws BuildFailureException {
