@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 /**
  * Sole interface to <code>org.apache.commons.io.</code>. 
  */
-class TexFileUtilsImpl implements TexFileUtils {
+class TexFileUtils {
 
     private final static String PREFIX_HIDDEN = ".";
 
@@ -49,7 +49,7 @@ class TexFileUtilsImpl implements TexFileUtils {
 
     private final LogWrapper log;
 
-    TexFileUtilsImpl(LogWrapper log) {
+    TexFileUtils(LogWrapper log) {
         this.log = log;
     }
 

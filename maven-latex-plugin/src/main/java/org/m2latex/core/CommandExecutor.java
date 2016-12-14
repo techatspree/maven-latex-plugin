@@ -30,11 +30,11 @@ import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
  * in a given working directory logging on {@link #log}. 
  * Sole interface to <code>org.codehaus.plexus.util.cli</code>. 
  */
-class CommandExecutorImpl implements CommandExecutor {
+class CommandExecutor {
 
     private final LogWrapper log;
 
-    CommandExecutorImpl(LogWrapper log) {
+    CommandExecutor(LogWrapper log) {
         this.log = log;
     }
 
