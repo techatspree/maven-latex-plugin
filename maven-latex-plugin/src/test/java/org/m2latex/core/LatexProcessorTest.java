@@ -116,34 +116,40 @@ public class LatexProcessorTest {
     private final LatexProcessor processor = new LatexProcessor
 	(this.settings, this.executor, this.log,this.fileUtils,new PdfMojo());
 
-    private File texFile = new File(WORKING_DIR, "test.tex");
-    private File pdfFile = new File(WORKING_DIR, "test.pdf");
-    private File dviPdfFile = new File
+    // FIXME: eliminate all those files 
+    // present in LatexMainDesc 
+    // and even the others defining LatexMainDescExt including these also 
+    private File texFile = new File(WORKING_DIR, "test.tex");// LatexMainDesc 
+    private File pdfFile = new File(WORKING_DIR, "test.pdf");// LatexMainDesc 
+    private File dviPdfFile = new File// LatexMainDesc 
 	(WORKING_DIR, "test."+settings.getPdfViaDvi().getLatexLanguage());
     private File htmlFile= new File(WORKING_DIR, "test.html");
     private File auxFile = new File(WORKING_DIR, "test.aux");
-    private File logFile = new File(WORKING_DIR, "test.log");
+    private File logFile = new File(WORKING_DIR, "test.log");// LatexMainDesc 
 
     private File bblFile = new File(WORKING_DIR, "test.bbl");
     private File blgFile = new File(WORKING_DIR, "test.blg");
 
-    private File idxFile = new File(WORKING_DIR, "test.idx");
-    private File indFile = new File(WORKING_DIR, "test.ind");
-    private File ilgFile = new File(WORKING_DIR, "test.ilg");
+    private File idxFile = new File(WORKING_DIR, "test.idx");// LatexMainDesc 
+    private File indFile = new File(WORKING_DIR, "test.ind");// LatexMainDesc 
+    private File ilgFile = new File(WORKING_DIR, "test.ilg");// LatexMainDesc 
 
-    private File gloFile = new File(WORKING_DIR, "test.glo");
-    private File istFile = new File(WORKING_DIR, "test.ist");
-    private File xdyFile = new File(WORKING_DIR, "test.xdy");
-    private File glsFile = new File(WORKING_DIR, "test.gls");
-    private File glgFile = new File(WORKING_DIR, "test.glg");
+    // private File istFile = new File(WORKING_DIR, "test.ist");
+    // private File xdyFile = new File(WORKING_DIR, "test.xdy");
+    private File glsFile = new File(WORKING_DIR, "test.gls");// LatexMainDesc 
+    private File gloFile = new File(WORKING_DIR, "test.glo");// LatexMainDesc 
+    private File glgFile = new File(WORKING_DIR, "test.glg");// LatexMainDesc 
     // this one does never exist. 
-    private File xxxFile = new File(WORKING_DIR, "test");
+    private File xxxFile = new File(WORKING_DIR, "test");// LatexMainDesc 
 
+    // FIXME: needed for later use: test also if toc/lof/lot are not present 
     private File tocFile = new File(WORKING_DIR, "test.toc");
     private File lofFile = new File(WORKING_DIR, "test.lof");
     private File lotFile = new File(WORKING_DIR, "test.lot");
 
     public LatexProcessorTest() {
+	// ensures that neither an error nor a warning occurs 
+	// FIXME: add tests with errors and warnings. 
 	doThrow(new AssertionError("Found error. "))
 	    .when(this.log).error(anyString());
 	doThrow(new AssertionError("Found warning. "))
