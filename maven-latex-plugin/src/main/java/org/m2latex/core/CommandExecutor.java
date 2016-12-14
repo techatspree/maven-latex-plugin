@@ -49,11 +49,11 @@ class CommandExecutor {
      * <li> WEX05: may emit false warnings
      * </ul>
      */
-    public String execute(File workingDir, 
-			  File pathToExecutable, 
-			  String command, 
-			  String[] args, 
-			  File... resFile) throws BuildFailureException {
+    String execute(File workingDir, 
+		   File pathToExecutable, 
+		   String command, 
+		   String[] args, 
+		   File... resFile) throws BuildFailureException {
 	// analyze old result files 
 	assert resFile.length > 0;
 	boolean[] existsTarget = new boolean[resFile.length];

@@ -70,7 +70,7 @@ class TexFileUtils {
     // used only in 
     // constructor of DirNode 
     // copyOutputToTargetFolder, deleteX
-    public File[] listFilesOrWarn(File dir) {
+    File[] listFilesOrWarn(File dir) {
 	assert dir != null && dir.isDirectory();
         File[] files = dir.listFiles();
 	if (files == null) {
@@ -106,11 +106,9 @@ class TexFileUtils {
      *    exists already as a regular file. 
      */
     // used by LatexProcessor.create() only 
-    public File getTargetDirectory(File srcFile,
-				   File srcBaseDir,
-				   File targetBaseDir) 
-	throws BuildFailureException {
-
+    File getTargetDirectory(File srcFile,
+			    File srcBaseDir,
+			    File targetBaseDir) throws BuildFailureException {
 	Path srcParentPath = srcFile.getParentFile().toPath();
 	Path srcBasePath = srcBaseDir.toPath();
 
@@ -157,7 +155,7 @@ class TexFileUtils {
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
     // - LatexPreProcessor.clearTargetTex to clear also intermediate files. 
-    public FileFilter getFileFilter(File texFile, String pattern) {
+    FileFilter getFileFilter(File texFile, String pattern) {
 	final String patternAccept = pattern
 	    .replaceAll(PATTERN_INS_LATEX_MAIN, 
 			getFileNameWithoutSuffix(texFile));
@@ -215,11 +213,9 @@ class TexFileUtils {
      *    </ul>
      */
     // used in LatexProcessor.create() only 
-    public void copyOutputToTargetFolder(File texFile, 
-					 FileFilter fileFilter, 
-					 File targetDir)
-	throws BuildFailureException {
-
+    void copyOutputToTargetFolder(File texFile, 
+				  FileFilter fileFilter, 
+				  File targetDir) throws BuildFailureException {
 	assert    texFile.exists() && ! texFile.isDirectory();
 	assert !targetDir.exists() || targetDir.isDirectory();
 
@@ -389,7 +385,7 @@ class TexFileUtils {
      *
      * @see #getSuffix(File)
      */
-    public String getFileNameWithoutSuffix(File file) {
+    String getFileNameWithoutSuffix(File file) {
         String nameFile = file.getName();
 	int idxDot = nameFile.lastIndexOf(".");
 	return idxDot == -1
@@ -413,7 +409,7 @@ class TexFileUtils {
     // This is not appropriate. 
     // One may ensure that this does not happen via an assertion 
     // and by modifying getFilesRec in a way that hidden files are skipped 
-    public String getSuffix(File file) {
+    String getSuffix(File file) {
         String nameFile = file.getName();
 	int idxDot = nameFile.lastIndexOf(".");
 	return idxDot == -1 
@@ -446,7 +442,7 @@ class TexFileUtils {
     // LatexPreProcessor.isLatexMainFile(File)
     // LatexProcessor.needRun(...)
     // AbstractLatexProcessor.hasErrsWarns(File, String)
-    public Boolean matchInFile(File file, String regex) {
+    Boolean matchInFile(File file, String regex) {
 	try {
 	    // may throw FileNotFoundException < IOExcption 
 	    FileReader fileReader = new FileReader(file);
@@ -477,7 +473,7 @@ class TexFileUtils {
 
     // used in LatexPreProcessor and in LatexProcessor and in LatexDec
     // at numerous places 
-    public File replaceSuffix(File file, String suffix) {
+    File replaceSuffix(File file, String suffix) {
         return new File(file.getParentFile(),
 			getFileNameWithoutSuffix(file) + suffix );
     }
@@ -501,7 +497,7 @@ class TexFileUtils {
      */
     // used in LatexPreProcessor.clearTargetMp
     // used in LatexPreProcessor.clearTargetTex only 
-    public void deleteX(File pFile, FileFilter filter) {
+    void deleteX(File pFile, FileFilter filter) {
 	// FIXME: not true for clear target. 
 	// Required: cleanup in order reverse to creation. 
 	assert pFile.exists() && !pFile.isDirectory();
@@ -534,7 +530,7 @@ class TexFileUtils {
      *    the existing file to be deleted. 
      *    This must not be a directory. 
      */
-    public void deleteOrWarn(File delFile) {
+    void deleteOrWarn(File delFile) {
 	assert delFile.exists() && !delFile.isDirectory();
 	if (!delFile.delete()) {
 	    this.log.warn("WFU05: Cannot delete file '" + 
@@ -561,7 +557,7 @@ class TexFileUtils {
      */
     // used in LatexProcessor.create() only 
     // FIXME: warn if deletion failed. 
-    public void cleanUp(DirNode orgNode, File texDir) {
+    void cleanUp(DirNode orgNode, File texDir) {
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	// cleanUpRec may log warning WFU05 Cannot delete... 
  	cleanUpRec(texDir, orgNode, new DirNode(texDir, this));
