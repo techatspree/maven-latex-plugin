@@ -49,11 +49,11 @@ class CommandExecutorImpl implements CommandExecutor {
      * <li> WEX05: may emit false warnings
      * </ul>
      */
-    public final String execute(File workingDir, 
-				File pathToExecutable, 
-				String command, 
-				String[] args, 
-				File... resFile) throws BuildFailureException {
+    public String execute(File workingDir, 
+			  File pathToExecutable, 
+			  String command, 
+			  String[] args, 
+			  File... resFile) throws BuildFailureException {
 	// analyze old result files 
 	assert resFile.length > 0;
 	boolean[] existsTarget = new boolean[resFile.length];
@@ -179,10 +179,10 @@ class CommandExecutorImpl implements CommandExecutor {
      *    on the process to be executed thrown by {@link Process#waitFor()}. 
      *    </ul>
      */
-    private final String execute(File workingDir, 
-				 File pathToExecutable, 
-				 String command, 
-				 String[] args) throws BuildFailureException {
+    private String execute(File workingDir, 
+			   File pathToExecutable, 
+			   String command, 
+			   String[] args) throws BuildFailureException {
 
 	// prepare execution 
 	String executable = new File(pathToExecutable, command).getPath();
