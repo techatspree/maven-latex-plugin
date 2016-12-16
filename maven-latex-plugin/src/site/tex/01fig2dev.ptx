@@ -1,0 +1,33 @@
+\begin{picture}(0,0)%
+\includegraphics{01fig2dev}%
+\end{picture}%
+\setlength{\unitlength}{2072sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(8942,4797)(1114,-4621)
+\put(7426,-2311){\makebox(0,0)[lb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt xxx.ptx}%
+}}}}
+\put(7426,-4336){\makebox(0,0)[lb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt xxx.eps}%
+}}}}
+\put(7426,-286){\makebox(0,0)[lb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt xxx.pdf}%
+}}}}
+\put(8551,-1186){\makebox(0,0)[lb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt\textbackslash includegraphics}%
+}}}}
+\put(8551,-3211){\makebox(0,0)[lb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt\textbackslash includegraphics}%
+}}}}
+\put(1351,-2311){\makebox(0,0)[lb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt xxx.fig}%
+}}}}
+\put(4951,-1636){\makebox(0,0)[b]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt fig2dev -L pdftex\_t}%
+}}}}
+\put(4951,-2311){\makebox(0,0)[b]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt fig2dev -L pstex\_t}%
+}}}}
+\put(3826,-61){\makebox(0,0)[rb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt fig2dev -L pdftex}%
+}}}}
+\put(3826,-4561){\makebox(0,0)[rb]{\smash{{\SetFigFont{10}{12.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\tt fig2dev -L pstex}%
+}}}}
+\end{picture}%
