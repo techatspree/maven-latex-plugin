@@ -122,6 +122,7 @@ public class LatexProcessorTest {
     // and even the others defining LatexMainDescExt including these also 
     private File texFile = new File(WORKING_DIR, "test.tex");// LatexMainDesc 
     private File pdfFile = new File(WORKING_DIR, "test.pdf");// LatexMainDesc 
+    private File dviFile = new File(WORKING_DIR, "test.dvi");// LatexMainDesc 
     private File dviPdfFile = new File// LatexMainDesc 
 	(WORKING_DIR, "test."+settings.getPdfViaDvi().getLatexLanguage());
     private File htmlFile= new File(WORKING_DIR, "test.html");
@@ -289,6 +290,8 @@ public class LatexProcessorTest {
 	    .thenReturn(this.xxxFile);
 	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_PDF))
 	    .thenReturn(this.pdfFile);
+	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_DVI))
+	    .thenReturn(this.dviFile);
 	when(this.fileUtils.replaceSuffix(texFile, 
 					  "."+this.settings.getPdfViaDvi()
 					  .getLatexLanguage()))
@@ -316,6 +319,7 @@ public class LatexProcessorTest {
 	String[] suffixes = new String[] {
 	    LatexProcessor.SUFFIX_VOID,
 	    LatexProcessor.SUFFIX_PDF,
+	    LatexProcessor.SUFFIX_DVI,
 	    "."+this.settings.getPdfViaDvi().getLatexLanguage(),
 	    LatexProcessor.SUFFIX_LOG,
 	    LatexProcessor.SUFFIX_IDX,
