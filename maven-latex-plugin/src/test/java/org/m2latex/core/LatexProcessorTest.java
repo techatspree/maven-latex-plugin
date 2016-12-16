@@ -45,6 +45,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.AdditionalMatchers.aryEq;
 
 import org.mockito.InOrder;
 
@@ -68,12 +69,12 @@ public class LatexProcessorTest {
 	new File(System.getProperty("testResourcesDir"));
 
     private final CommandExecutor executor = mock(CommandExecutor.class,
-					    RETURNS_SMART_NULLS);
+						  RETURNS_SMART_NULLS);
     // pertained because of bugfixes 
     //private final InOrder inOrderExec = inOrder(this.executor);
 
     private final TexFileUtils fileUtils = mock(TexFileUtils.class,
-					  RETURNS_SMART_NULLS);
+						RETURNS_SMART_NULLS);
 
     // pertained because of bugfixes 
     //private final InOrder inOrderFileUtils = inOrder(this.fileUtils);
@@ -148,6 +149,8 @@ public class LatexProcessorTest {
     private File lotFile = new File(WORKING_DIR, "test.lot");
 
     public LatexProcessorTest() {
+	//this.settings.setPdfViaDvi(true);
+
 	// ensures that neither an error nor a warning occurs 
 	// FIXME: add tests with errors and warnings. 
 	doThrow(new AssertionError("Found error. "))
@@ -327,7 +330,8 @@ public class LatexProcessorTest {
 	    // FIXME: observation: in order works iff no atLeastOnce is required
 	    // On the other hand, I am not sure 
 	    // why I need this in the individual cases. 
-	    //this.inOrderFileUtils.
+	    //this.inOrder.
+	    //if (idx == 1 ||idx == 2) {continue;}
 	    verify(this.fileUtils, atLeastOnce())
 		.replaceSuffix(this.texFile, suffixes[idx]);
 	}
@@ -506,7 +510,7 @@ public class LatexProcessorTest {
     private void verifyNeedRun(File file, String pattern)
         throws BuildFailureException {
 	// FIXME: should work also in order. 
-	//this.inOrderFileUtils.
+	//this.inOrder.
 	verify(this.fileUtils, atLeastOnce()).matchInFile(file, pattern);
     }
 
@@ -573,8 +577,8 @@ public class LatexProcessorTest {
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getBibtexCommand()),
-		     eq(LatexProcessor.buildArguments
-			(this.settings.getBibtexOptions(), this.auxFile)),
+		     aryEq(LatexProcessor.buildArguments
+			   (this.settings.getBibtexOptions(), this.auxFile)),
 		     eq(this.bblFile));
 
 	// log file 
@@ -634,8 +638,8 @@ public class LatexProcessorTest {
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeIndexCommand()),
-		     eq(LatexProcessor.buildArguments
-			(this.settings.getMakeIndexOptions(), this.idxFile)),
+		     aryEq(LatexProcessor.buildArguments
+			   (this.settings.getMakeIndexOptions(), this.idxFile)),
 		     eq(this.indFile));
 	this.inOrder.verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, this.settings.getPatternErrMakeIndex());
@@ -678,9 +682,9 @@ public class LatexProcessorTest {
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getMakeGlossariesCommand()),
-		     eq(LatexProcessor.buildArguments
-			(this.settings.getMakeGlossariesOptions(), 
-			 this.xxxFile)),
+		     aryEq(LatexProcessor.buildArguments
+			   (this.settings.getMakeGlossariesOptions(), 
+			    this.xxxFile)),
 		     eq(this.glsFile));
 	this.inOrder.verify(this.fileUtils)
 	    .matchInFile(this.ilgFile, 
@@ -710,19 +714,19 @@ public class LatexProcessorTest {
     private void verifyRunLatex() throws BuildFailureException {
 	
 	// FIXME: should work also in order. 
-	//this.inOrderExec.
+	//this.inOrder.
 	verify(this.executor, atLeastOnce())
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getLatex2pdfCommand()),
-		     eq(LatexProcessor.buildLatexArguments
+		     aryEq(LatexProcessor.buildLatexArguments
 			(this.settings, 
 			 this.settings.getPdfViaDvi(), 
 			 this.texFile)),
 		     eq(this.dviPdfFile));
 
 	// FIXME: should work also in order. 
-	//this.inOrderFileUtils.
+	//this.inOrder.
 	verify(this.fileUtils, atLeastOnce())
 	    .matchInFile(this.logFile, this.settings.getPatternErrLatex());
     }
@@ -761,7 +765,7 @@ public class LatexProcessorTest {
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
 		     eq(this.settings.getTex4htCommand()),
-		     eq(LatexProcessor.buildHtlatexArguments
+		     aryEq(LatexProcessor.buildHtlatexArguments
 			 (this.settings, this.texFile)),
 		     eq(this.htmlFile));
 	String[] patterns = new String[] {
