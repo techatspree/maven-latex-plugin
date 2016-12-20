@@ -1,27 +1,67 @@
 
 \documentclass[10pt, a4paper]{article}
+
+\usepackage[aux]{rerunfilecheck}
+
+% graphics 
+\makeatletter
+
+\ifpdf
+\usepackage{xcolor}  % [pdftex]  
+\usepackage{graphicx}% [pdftex] 
+\usepackage{hyperref}% driver [hpdftex] is autodetected 
+\else
+\usepackage[dvipdfmx]{xcolor}
+\usepackage[dvipdfmx]{graphicx}
+%\@ifpackageloaded{tex4ht}{%
+%\usepackage[tex4ht]{hyperref}
+%}{%
+%\usepackage[dvipdfmx]{hyperref}
+%}
+\usepackage{bmpsize}
+\fi
+
+\usepackage[active]{srcltx}
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+
 %\usepackage{latex-bnf}
+\title{The xfig file format for xfig 3.2 }
+\author{Ernst Reissner (rei3ner@arcor.de)}
 \begin{document}
 
+\maketitle
 \tableofcontents
 
 \section{Introduction}
 
-This file describes the grammar of the native file format of the xfig graphic
-program version 3.2. 
-It is a copy of xfig.3.2/Doc/FORMAT3.2 in xfig 3.2 source distribution. 
+This documents describes the grammar 
+of the native file format of the xfig graphic program version 3.2. 
+It is based on xfig.3.2/Doc/FORMAT3.2 in xfig 3.2 source distribution. 
+The file extension is {\tt.fig} and the file-format is human-readable. 
+
+Lines starting with {\tt\#} are comment lines and are ignored. 
+%FIXME: what if a file is read and saved again? Comments are preserved?? 
+% what about empty lines? 
+Each xfig-file starts with a header as described in Section~\ref{sec:header} 
+followed by a (typically non-empty) sequence of object descriptions. 
+For each type of object, there is a separate grammar, 
+described in Section~\ref{sec:obj} and subsections. 
+There are elements occurring for more than one type of object. 
+To avoid repetition in the description, 
+these elements are described separately in Section~\ref{sec:param} 
+and referenced from within Section~\ref{sec:obj}. 
 
 
+\subsection{X-Splines and backwards-compatibility}
 
 Splines are always X-splines 
-X-splines which allows the user to mix interpolation and approximation
-points in a same curve. More precisely, it means that an X-spline curve
-is neither an interpolated spline nor an approximated one, it is BOTH
-(the behaviour of each point is controlled by one single parameter
-called "shape factor"). For additional information about X-splines, see:
-
-  "X-Splines: A Spline Model Designed for the End User"
-  by C. Blanc and C. Schlick, Proceedings of SIGGRAPH'95
+which allows the user to mix interpolation and approximation
+points in a same curve. 
+More precisely, it means that an X-spline curve 
+is neither an interpolated spline nor an approximated one, 
+it is BOTH (the behaviour of each point 
+is controlled by one single parameter called "shape factor"). 
+For additional information about X-splines, see \cite{XSpline}. 
 
 Caveat: Because spline models of previous versions (quadratic B-splines
 and Bezier with hidden points) are no longer supported, curves that are
@@ -29,40 +69,30 @@ present in version 3.1 and older files are automatically converted to
 X-splines. This translation is only an approximation process. It means
 that the converted curves are not exactly the same as the original ones.
 Though the translation usually provides almost identical curves, some
-hand-fitting may be needed in some pathological cases.
-
-Lines starting with \# are comment lines and are ignored. 
-
-Documentation
-
-data Fig
-Source
-
-Fig	 
-figHeader :: Header
-figColors :: [Commented Color]
-figObjects :: [Commented Object]
+hand-fitting may be needed in some pathological cases. 
 
 
-\section{Header}
+
+\section{Header}\label{sec:header}
 
 The very first line is comment line containing the name and version:
         \#FIG 3.2
 
 
-(2) The first non-comment line consists of the following:
+The subsequent non-comment lines of the header are the following 
+(in the order given):
 
 \begin{tabular}{|lll|}
 \hline
 type & name & Possible values or explanation \\
 \hline
 \hline
-string & orientation             & "Landscape" or "Portrait" \\
+string & Orientation             & 'Landscape'|'Portrait' \\
 string & justification           & "Center" or "Flush Left" \\
 string & units                   & "Metric" or "Inches" \\
-string & papersize               & "Letter", "Legal", "Ledger", "Tabloid",\\
-&&                                  "A", "B", "C", "D", "E",\\
-&&                                  "A4", "A3", "A2", "A1", "A0", "B5" \\
+string & PaperSize               & 'Letter'|'Legal'|'Ledger'|'Tabloid'|\\
+&&                                 'A'|'B'|'C'|'D'|'E'|\\
+&&                                 'A4'|'A3'|'A2'|'A1'|'A0'|'B5' \\
 float  & magnification           & export and print magnification, \% \\
 string & multiple-page           & "Single" or "Multiple" pages \\
 int    & transparent color       & color number for transparent color \\
@@ -152,11 +182,23 @@ Color:
 color\_number :: Integer
 color\_rgb\_values :: String
 
-\section{Objects}
+
+Documentation
+
+data Fig
+Source
+
+Fig	 
+figHeader :: Header
+figColors :: [Commented Color]
+figObjects :: [Commented Object]
+
+
+\section{Objects}\label{sec:obj}
 
 
 The rest of the file contains various objects.  
-An object can be one of six classes (or types).
+An object can be one of six classes (or types) with according {\tt ObjectCode}.
 %
 \begin{enumerate}
 \item[0]
@@ -232,14 +274,14 @@ Color Pseudo-objects (user-defined colors)
 type & name & Possible values or explanation \\
 \hline
 \hline
-int        & object-code    & always 0\\
-int        & color-number   & color number, from 32-543 (512 total)\\
-hex-string & rgb values     & red, green and blue values (e.g. \#330099) \\
+int        & ObjectCode    & always 0 (see Section~\ref{sec:obj}) \\
+int        & color-number  & color number, from 32-543 (512 total)\\
+hex-string & rgb values    & red, green and blue values (e.g. \#330099) \\
 \hline
 \end{tabular}
 
 
-\subsection{Ellipse}\label{subsec:ellipse}
+\subsection{Ellipse including Circle}\label{subsec:ellipse}
 
 
 \begin{tabular}{|lll|}
@@ -247,19 +289,19 @@ hex-string & rgb values     & red, green and blue values (e.g. \#330099) \\
 type & name & Possible values or explanation \\
 \hline
 \hline
-int   &  object-code             & always 1 \\
+int   &  ObjectCode             & always 1 (see Section~\ref{sec:obj}) \\
 int   &  sub-type                & 1: ellipse defined by radiuses \\
 &&                                 2: ellipse defined by diameters \\
 &&                                 3: circle defined by radius \\
 &&                                 4: circle defined by diameter \\
-int   &  line-style              & enumeration type \\
-int   &  thickness               & 1/80 inch \\
+int   &  LineStyle              & see Section~\ref{subsec:styDep} \\
+int   &  thickness               & multiples of 1/80 inch \\
 int   &  pen-color               & enumeration type, pen color \\
 int   &  fill-color              & enumeration type, fill color \\
-int   &  depth                   & enumeration type \\
+int   &  depth                   & see Section~\ref{subsec:styDep} \\
 int   &  pen-style               & pen style, not used \\
-int   &  area-fill               & enumeration type, -1 = no fill \\
-float &  style-val               & 1/80 inch \\
+int   &  area-fill               & enumeration type, -1 = no fill \\%FIXME
+float &  StyleVal               & multiples of 1/80 inch, see Section~\ref{subsec:styDep}  \\
 int   &  direction               & always 1 \\
 float &  angle                   & radians, the angle of the x-axis \\
 int   &  center-x, center-y      & Fig units \\
@@ -284,7 +326,8 @@ ellipse\_start\_y :: Integer
 ellipse\_end\_x :: Integer
 ellipse\_end\_y :: Integer
 
-\subsection{Polyline}\label{subsec:polyline}
+\subsection{Polyline ****  including polyline, box, polygin, arc-box and picture }
+\label{subsec:polyline}
 
     First line:
 
@@ -293,34 +336,46 @@ ellipse\_end\_y :: Integer
 type & name & Possible values or explanation \\
 \hline
 \hline
-int    & object-code    & always 2 \\
+int    & ObjectCode    & always 2 (see Section~\ref{sec:obj}) \\
 int    & sub-type       & 1: polyline \\
-&&                       2: box \\
-&&                       3: polygon \\
-&&                       4: arc-box \\
-&&                       5: imported-picture bounding-box \\
-int    & line-style     & enumeration type \\
-int    & thickness      & 1/80 inch \\
+&&                        2: box \\
+&&                        3: polygon (regular or not) \\
+&&                        4: arc-box \\
+&&                        5: imported-picture bounding-box \\
+int    & LineStyle     & see Section~\ref{subsec:styDep} \\
+int    & thickness      & multiples of 1/80 inch \\
 int    & pen-color      & enumeration type, pen color \\
 int    & fill-color     & enumeration type, fill color \\
-int    & depth          & enumeration type \\
+int    & depth          & see Section~\ref{subsec:styDep} \\
 int    & pen-style      & pen style, not used \\
-int    & area-fill      & enumeration type, -1 = no fill \\
-float  & style-val      & 1/80 inch \\
-int    & join-style     & enumeration type \\
-int    & cap-style      & enumeration type, only used for POLYLINE \\
-int    & radius         & 1/80 inch, radius of arc-boxes \\
-int    & forward-arrow  & 0: off, 1: on \\
-int    & backward-arrow & 0: off, 1: on \\
+int    & area-fill      & enumeration type, -1 = no fill \\%FIXME
+float  & StyleVal      & multiples of 1/80 inch, see Section~\ref{subsec:styDep} \\
+int    & JoinStyle     & see below \\
+int    & CapStyle      & see Section~\ref{subsec:styDep}, only used for subtype POLYLINE \\
+int    & radius         & multiples of 1/80 inch, radius of arc-boxes \\
+int    & ForwardArrow  & 0: off, 1: on \\
+int    & BackwardArrow & 0: off, 1: on \\
 int    & npoints        & number of points in line \\
 \hline
 \end{tabular}
 
-    Forward arrow line: same as ARC object
+After the first line follows the ForwardArrowLine 
+(Optional; absent if ForwardArrow is 0) and 
+the BackwardArrowLine (Optional; absent if backward-arrow is 0); 
+both described in Section~\ref{subsec:paramArrowLines}. 
 
-    Backward arrow line: same as ARC object
 
-    Points line:
+JoinStyle:(Miter|Round|Bevel)
+
+\begin{enumerate}
+\item[0] Miter (the default in xfig 2.1 and earlier)
+\item    Bevel
+\item    Round
+\end{enumerate}
+
+
+
+Points line:
 
 \begin{tabular}{|lll|}
 \hline
@@ -336,19 +391,24 @@ int & xnpoints ynpoints & this will be the same \\
 \hline
 \end{tabular}
 
-    PIC line:
+PIC line:
 
 \begin{tabular}{|lll|}
 \hline
 type & name & Possible values or explanation \\
 \hline
 \hline
-boolean & flipped & orientation = normal (0) or flipped (1)\\
-char    & file[]  & name of picture file to import\\
+boolean & Orientation & 0: normal \\
+&&                      1: flipped at diagonal\\
+string    & file      & name of picture file to import\\
 \hline
 \end{tabular}
 
-\subsection{Spline}\label{subsec:spline}
+Each picline follows a points line which may define the outline. 
+It also encodes rotation. 
+
+\subsection{Spline (open or closed, interpolated, approximated or x-spline)}
+\label{subsec:spline}
 
 First line:
 
@@ -357,31 +417,32 @@ First line:
 type & name & Possible values or explanation \\
 \hline
 \hline
-int   & object-code    & always 3 \\
+int   & ObjectCode    & always 3 (see Section~\ref{sec:obj}) \\
 int   & sub-type       & 0: opened approximated spline \\
 &&                       1: closed approximated spline \\
 &&                       2: opened interpolated spline \\
 &&                       3: closed interpolated spline \\
 &&                       4: opened x-spline \\
 &&                       5: closed x-spline \\
-int   & line-style     & See the end of this section \\
-int   & thickness      & 1/80 inch \\
+int   & LineStyle     & see Section~\ref{subsec:styDep} \\
+int   & thickness      & multiples of 1/80 inch \\
 int   & pen-color      & enumeration type, pen color \\
 int   & fill-color     & enumeration type, fill color \\
-int   & depth          & enumeration type \\
+int   & depth          & see Section~\ref{subsec:styDep} \\
 int   & pen-style      & pen style, not used \\
-int   & area-fill      & enumeration type, -1 = no fill \\
-float & style-val      & 1/80 inch \\
-int   & cap-style      & enumeration type, only used for open splines \\
-int   & forward-arrow  & 0: off, 1: on \\
-int   & backward-arrow & 0: off, 1: on \\
+int   & area-fill      & enumeration type, -1 = no fill \\%FIXME
+float & StyleVal      & multiples of 1/80 inch, see Section~\ref{subsec:styDep} \\
+int   & CapStyle      & Section~\ref{subsec:styDep}, only used for open splines \\
+int   & ForwardArrow  & 0: off, 1: on \\
+int   & BackwardArrow & 0: off, 1: on \\
 int   & npoints        & number of control points in spline \\
 \hline
 \end{tabular}
 
-    Forward arrow line: same as ARC object
-
-    Backward arrow line: same as ARC object
+After the first line follows the ForwardArrowLine 
+(Optional; absent if ForwardArrow is 0) and 
+the BackwardArrowLine (Optional; absent if backward-arrow is 0); 
+both described in Section~\ref{subsec:paramArrowLines}. 
 
     Points line: same as POLYLINE object
 
@@ -402,17 +463,17 @@ int   & npoints        & number of control points in spline \\
 type & name & Possible values or explanation \\
 \hline
 \hline
-int     & object     & always 4 \\
+int     & ObjectCode     & always 4 (see Section~\ref{sec:obj}) \\
 int     & sub-type   & 0: Left justified
-                                             1: Center justified
-                                             2: Right justified \\
+                       1: Center justified
+                       2: Right justified \\
 int     & color      & enumeration type \\
-int     & depth      & enumeration type \\
-int     & pen-style  & enumeration , not used \\
+int     & depth      & see Section~\ref{subsec:styDep} \\
+int     & pen-style  & enumeration, not used \\
 int     & font       & enumeration type \\
 float   & font-size  & font size in points \\
 float   & angle      & radians, the angle of the text \\
-int     & font-flags & bit vector \\
+int     & FontFlags & bit vector (see below) \\
 float   & height     & Fig units \\
 float   & length     & Fig units \\
 int     & x, y       & Fig units, coordinate of the origin of the string.  \\
@@ -421,7 +482,7 @@ int     & x, y       & Fig units, coordinate of the origin of the string.  \\
 &&                     If sub-type = 1, 
                        it is the lower center.  \\
 &&                     Otherwise it is the lower right corner of the string. \\
-char    & string[]   & ASCII characters; 
+string    & text     & ASCII characters; 
                        starts after a blank character \\
 &&                     following the last number and
                        ends before the sequence '\textbackslash 001'.  \\
@@ -436,7 +497,7 @@ char    & string[]   & ASCII characters;
 \hline
 \end{tabular}
 
-The bits of the font-flags field are defined as follows:
+The bits of the FontFlags field are defined as follows:
 
 \begin{enumerate}
 \item[0]
@@ -451,7 +512,7 @@ Hidden text
 
 The font field is defined as follows:
 
-For font-flags bit 2 = 0 (\LaTeX{} fonts):
+For FontFlags bit 2 = 0 (\LaTeX{} fonts):
 
 \begin{enumerate}
 \item[0] Default font
@@ -462,7 +523,7 @@ For font-flags bit 2 = 0 (\LaTeX{} fonts):
 \item    Typewriter
 \end{enumerate}
 
-For font-flags bit 2 = 1 (PostScript fonts):
+For FontFlags bit 2 = 1 (PostScript fonts):
 
 \begin{enumerate}
 \item[-1] Default font
@@ -521,7 +582,7 @@ text\_x :: Integer
 text\_y :: Integer
 text\_string :: String
 
-ColorSpec: see Section \ref{sec:param}
+ColorSpec: see Section \ref{subsec:paramColors}
 Font:
 Latex LatexFont	 
 Ps PsFont	 
@@ -593,21 +654,21 @@ First line:
 type & name & Possible values or explanation \\
 \hline
 \hline
-int    & object-code            & always 5 \\
+int    & ObjectCode            & always 5 (see Section~\ref{sec:obj}) \\
 int    & sub-type               & 0: pie-wedge (closed) \\
 &&                                1: open ended arc \\
-int    & line-style             & enumeration type \\
-int    & line-thickness         & 1/80 inch \\
+int    & LineStyle             & see Section~\ref{subsec:styDep} \\
+int    & line-thickness         & multiples of 1/80 inch \\
 int    & pen-color              & enumeration type, pen color \\
 int    & fill-color             & enumeration type, fill color \\
-int    & depth                  & enumeration type \\
+int    & depth                  & see Section~\ref{subsec:styDep} \\
 int    & pen-style              & pen style, not used \\
-int    & area-fill              & enumeration type, -1 = no fill \\
-float  & style-val              & 1/80 inch \\
-int    & cap-style              & enumeration type \\
+int    & area-fill              & enumeration type, -1 = no fill \\%FIXME
+float  & StyleVal              & multiples of 1/80 inch, see Section~\ref{subsec:styDep} \\
+int    & CapStyle              & see Section~\ref{subsec:styDep} \\
 int    & direction              & 0: clockwise, 1: counterclockwise \\
-int    & forward-arrow          & 0: no forward arrow, 1: on \\
-int    & backward-arrow         & 0: no forward arrow, 1: on \\
+int    & ForwardArrow          & 0: off, 1: on \\
+int    & BackwardArrow         & 0: off, 1: on \\
 float  & center-x, center-y     & center of the arc \\
 int    & x1, y1                 & Fig units, the 1st point the user entered \\
 int    & x2, y2                 & Fig units, the 2nd point) \\
@@ -615,35 +676,11 @@ int    & x3, y3                 & Fig units, the last point \\
 \hline
 \end{tabular}
 
-    Forward arrow line (Optional; absent if forward-arrow is 0):
+After the first line follows the ForwardArrowLine 
+(Optional; absent if ForwardArrow is 0) and 
+the BackwardArrowLine (Optional; absent if backward-arrow is 0); 
+both described in Section~\ref{subsec:paramArrowLines}. 
 
-\begin{tabular}{|lll|}
-\hline
-type & name & Possible values or explanation \\
-\hline
-\hline
-int    & arrow-type              & enumeration type \\
-int    & arrow-style             & enumeration type \\
-float  & arrow-thickness         & 1/80 inch \\
-float  & arrow-width             & Fig units \\
-float  & arrow-height            & Fig units \\
-\hline
-\end{tabular}
-
-    Backward arrow line (Optional; absent if backward-arrow is 0):
-
-\begin{tabular}{|lll|}
-\hline
-type & name & Possible values or explanation \\
-\hline
-\hline
-int    & arrow-type              & enumeration type \\
-int    & arrow-style             & enumeration type \\
-float  & arrow-thickness         & 1/80 inch \\
-float  & arrow-width             & Fig units \\
-float  & arrow-height            & Fig units \\
-\hline
-\end{tabular}
 
 
 Arc ArcLine (Maybe Arrow) (Maybe Arrow)	 
@@ -703,7 +740,7 @@ A line with object code 6 signifies the start of a compound.
 type & name & Possible values or explanation \\
 \hline
 \hline
-int & object-code             & always 6 \\
+int & ObjectCode             & always 6 (see Section~\ref{sec:obj}) \\
 int & upperright-corner-y     & Fig units \\
 int & lowerleft-corner-x      & Fig units \\
 int & lowerleft-corner-y      & Fig units \\
@@ -729,9 +766,8 @@ polyline\_join\_style :: JoinStyle
 polyline\_cap\_style :: CapStyle
 polyline\_radius :: Integer
 
-JoinStyle:(Miter|JoinRound|Bevel)
 
-CapStyle: see Section \ref{sec:param}
+CapStyle: see Section \ref{subsec:styDep}
 
 
 CompoundLine:
@@ -773,26 +809,124 @@ AreaFill:(NoFill|Filled Integer|Pattern Integer)
 
 
 
-
-\subsection{Picture}
-Pic	 
-pic\_flipped :: Flipped
-pic\_file :: String
-
-Flipped:(Normal|Flipped)
-
-
-
 \section{Parameters}\label{sec:param}
 
+\subsection{Style and depth}\label{subsec:styDep}
 
-
+The {\tt CapStyle} field is defined FOR LINES, OPEN SPLINES and ARCS only 
 used in ArcLine, SplineLine, PolylineLine
-CapStyle:
-Butt	 
-CapRound	 
-Projecting	 
+and is encoded as follows:
+%
+\begin{enumerate}
+\item[0] Butt (the default in xfig 2.1 and earlier)
+\item    Round
+\item    Projecting
+\end{enumerate}
 
+
+
+\noindent
+The {\tt LineStyle} field is encoded as follows:
+%
+\begin{enumerate}
+\item[-1] Default
+\item[0]  Solid
+\item     Dashed
+\item     Dotted
+\item     Dash-dotted
+\item     Dash-double-dotted
+\item     Dash-triple-dotted
+\end{enumerate}
+
+\noindent
+The {\tt StyleVal} field is defined as 
+%
+\begin{itemize}
+\item
+the length, in 1/80 inches, of the on/off dashes for dashed lines, and 
+\item
+the distance between the dots, in 1/80 inches, for dotted lines.
+\end{itemize}
+
+\noindent
+The {\tt depth} field is defined as follows:
+
+         0 ... 999 where larger value means object is deeper than (under)
+                   objects with smaller depth
+
+\subsection{Arrow lines}\label{subsec:paramArrowLines}
+
+Forward arrow line (Optional; absent if ForwardArrow is 0):
+
+\begin{tabular}{|lll|}
+\hline
+type & name & Possible values or explanation \\
+\hline
+\hline
+int    & ArrowType              & see below \\
+int    & ArrowStyle             & see below \\
+float  & arrow-thickness         & multiples of 1/80 inch \\
+float  & arrow-width             & Fig units \\
+float  & arrow-height            & Fig units \\
+\hline
+\end{tabular}
+
+Backward arrow line (Optional; absent if backward-arrow is 0):
+
+\begin{tabular}{|lll|}
+\hline
+type & name & Possible values or explanation \\
+\hline
+\hline
+int    & ArrowType              & see below \\
+int    & ArrowStyle             & see below \\
+float  & arrow-thickness         & multiples of 1/80 inch \\
+float  & arrow-width             & Fig units \\
+float  & arrow-height            & Fig units \\
+\hline
+\end{tabular}
+
+The ArrowType field is defined for LINES, ARCS and OPEN SPLINES only as follows:
+%
+\begin{enumerate}
+\item[0] Stick-type (the default in xfig 2.1 and earlier)
+\item    Closed triangle:
+                % |\
+                % |  \
+                % |    \
+                % |    /
+                % |  /
+                % |/
+ \item   Closed with "indented" butt:
+                % |\
+                % \  \
+                %  \   \
+                %   \    \
+                %   /    /
+                %  /   /
+                % /  /
+                % |/
+\item     Closed with "pointed" butt:
+                %    |\
+                %   /   \
+                %  /      \
+                % /         \
+                % \         /
+                %  \      /
+                %   \   /
+                %    |/
+\end{enumerate}
+
+
+The ArrowStyle field is defined for LINES, ARCS and OPEN SPLINES only as
+follows:
+
+\begin{enumerate}
+\item[0] Hollow (actually filled with white)
+\item    Filled with pen-color
+\end{enumerate}
+
+\subsection{Colors}\label{subsec:paramColors}
 
 used in Text and Common, 
 
@@ -831,6 +965,10 @@ Pink2
 Pink	 
 Gold	 
 UserDefined Integer	 
+
+\bibliographystyle{alpha}
+\bibliography{../lit}{}
+
 
 \end{document}
 
