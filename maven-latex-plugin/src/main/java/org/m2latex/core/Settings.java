@@ -143,6 +143,8 @@ public class Settings {
      * (s)he is asked to contribute 
      * and to notify the developer of this plugin. 
      */
+    // FIXME: not only on this pattern: 
+    // Matching is linewise which is inappropriate. 
     @Parameter(name = "patternLatexMainFile")
     private String patternLatexMainFile = 
 	"\\A(\\\\RequirePackage\\s*" +           // RequirePackage 
@@ -154,7 +156,7 @@ public class Settings {
 	/**/"\\{\\w+\\}|" +       // {packagename}
 	"%.*$|" + // comments 
 	"\\\\input\\{[^{}]*\\}|" + // inputs 
-	"\\s*)*" + // spaces 
+	"\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
 	"\\\\(documentstyle|documentclass)";
 
 
@@ -250,7 +252,7 @@ public class Settings {
      *
      * @see #fig2devGenOptions
      * @see #fig2devPtxOptions
-     * @see #fig2devPdfOptions
+     * @see #fig2devPdfEpsOptions
      */
     @Parameter(name = "fig2devCommand", defaultValue = "fig2dev")
     private String fig2devCommand = "fig2dev";
@@ -260,11 +262,11 @@ public class Settings {
      * common to both output languages. 
      * For the options specific for the two output langugages 
      * <code>pdftex</code> and <code>pdftex_t</code>, 
-     * see {@link #fig2devPtxOptions} and {@link #fig2devPdfOptions}, 
+     * see {@link #fig2devPtxOptions} and {@link #fig2devPdfEpsOptions}, 
      * respectively. 
      * The default value is the empty string. 
      * <p>
-     * Possible are the following: 
+     * Possible are the following options: 
      * <ul>
      * <li><code>-D +/-rangelist</code> 
      * Export layers selectively (<code>+</code>) 
@@ -282,37 +284,45 @@ public class Settings {
      * Set the default font size (in points) 
      * for text objects to <code>fsize</code>.
      * Refers to the latex-fonts only. 
+     * <li><code>-b width</code> 
+     * specify width of blank border around figure (1/72 inch). 
      * </ul>
      * Except for the option <code>-j</code>, 
      * all these options take parameters 
      * and it may make sense to use them with different parameters 
      * for the two output languages. 
      * In this case include them in 
-     * {@link #fig2devPtxOptions} and in {@link #fig2devPdfOptions}. 
+     * {@link #fig2devPtxOptions} and in {@link #fig2devPdfEpsOptions}. 
      */
     @Parameter(name = "fig2devGenOptions", defaultValue = "")
     private String fig2devGenOptions = "";
 
     /**
      * The options for the command {@link #fig2devCommand} 
-     * specific for the output language <code>pdftex_t</code>. 
+     * specific for the output languages <code>pdftex_t</code> 
+     * and <code>pstex_t</code> which are the same. 
      * Note that in addition to these options, 
      * the option <code>-L pdftex_t</code> specifies the language, 
      * {@link #fig2devGenOptions} specifies the options 
      * common for the two output langugages 
      * <code>pdftex</code> and <code>pdftex_t</code> 
-     * and <code>-p xxx.pdf</code> specifies the pdf-file to be included. 
+     * and <code>-p xxx</code> specifies the full path 
+     * of the pdf/eps-file to be included without extension. 
+     * <p>
      * The default value for this option is the empty string. 
      * <p>
      * Possible options are the following: 
-     * (These seem to work for tex only although according to documentation 
-     * for all languages. )
+     * (These seem to work for tex only 
+     * although according to documentation for all languages. )
      * <ul>
      * <li> options specified for {@link #fig2devGenOptions} 
      * <li> <code>-E num</code>
-     *  Set encoding for latex text translation 
-     *  (0 no translation, 1 ISO-8859-1, 2 ISO-8859-2), 
+     * Set encoding for latex text translation 
+     * (0 no translation, 1 ISO-8859-1, 2 ISO-8859-2), 
      * others allowed also, effect not clear. 
+     * <li> <code>-F</code>  
+     * don't set font family/series/shape, 
+     * so you can set it from latex. 
      * <li> <code>-v</code>
      * Verbose mode.
      * </ul>
@@ -353,18 +363,20 @@ public class Settings {
      * Add an ASCII (EPSI) preview.
      * <li> <code>-c</code>
      * centers the figure on the page.  (default)
+     * seems not to have an effect...
      * <li> <code>-e</code>
      * puts the  figure against the edge (not centered) of the page. 
      * seems not to have an effect...
      * <li> <code>-F</code>
      * Use correct font sizes (points) instead of the traditional  size
      * <li> <code>-g color</code>
-     * Use color for the background.
+     * Use color for the background. 
+     * FIXME: Not clear how to specify the color. 
      * <li> <code>-N</code>
      * Convert all colors to grayscale. (not available for latex fonts)
      * <li> <code>-n name</code>
-     * Set  the /Title(xxx) of the PostScript output to name. 
-     * without it is just the filename xxx.fig. 
+     * Set  the /Title(xxx) of the PostScript output to <code>name</code>. 
+     * without it is just the filename <code>xxx.fig</code>. 
      */
     // Note that several options do not make sense as global options, 
     // better as individual options. 
@@ -373,8 +385,8 @@ public class Settings {
     // instead of fig2dev itself, 
     // which invokes fig2dev with the according options. 
     // Problem is that xfig does not support this. 
-    @Parameter(name = "fig2devPdfOptions", defaultValue = "")
-    private String fig2devPdfOptions = "";
+    @Parameter(name = "fig2devPdfEpsOptions", defaultValue = "")
+    private String fig2devPdfEpsOptions = "";
 
     /**
      * The command for conversion of gnuplot-files 
@@ -604,7 +616,8 @@ public class Settings {
      * If <code>pdfViaDvi</code> is set 
      * and the latex processor needs repetitions, 
      * these are all done creating dvi 
-     * and then pdf is created in a final step. 
+     * and then pdf is created in a final step 
+     * invoking the command {@link #dvi2pdfCommand}. 
      * If <code>pdfViaDvi</code> is not set, 
      * latex is directly converted into pdf. 
      * <p>
@@ -1254,8 +1267,8 @@ public class Settings {
         return  this.fig2devPtxOptions;
     }
 
-    public String getFig2devPdfOptions() {
-        return  this.fig2devPdfOptions;
+    public String getFig2devPdfEpsOptions() {
+        return  this.fig2devPdfEpsOptions;
     }
 
     public String getGnuplotCommand() {
@@ -1557,8 +1570,8 @@ public class Settings {
 	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
-    public void setFig2devPdfOptions(String fig2devPdfOptions) {
-        this.fig2devPdfOptions = fig2devPdfOptions
+    public void setFig2devPdfEpsOptions(String fig2devPdfEpsOptions) {
+        this.fig2devPdfEpsOptions = fig2devPdfEpsOptions
 	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
@@ -1986,7 +1999,7 @@ public class Settings {
         sb.append(", fig2devCommand=")      .append(this.fig2devCommand);
         sb.append(", fig2devGenOptions")    .append(this.fig2devGenOptions);
         sb.append(", fig2devPtxOptions")    .append(this.fig2devPtxOptions);
-        sb.append(", fig2devPdfOptions")    .append(this.fig2devPdfOptions);
+        sb.append(", fig2devPdfEpsOptions") .append(this.fig2devPdfEpsOptions);
         sb.append(", gnuplotCommand=")      .append(this.gnuplotCommand);
         sb.append(", gnuplotOptions=")      .append(this.gnuplotOptions);
         sb.append(", metapostCommand=")     .append(this.metapostCommand);
