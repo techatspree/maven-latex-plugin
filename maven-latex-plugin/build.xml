@@ -94,7 +94,7 @@
 		fig2devCommand="fig2dev"
 		fig2devGenOptions=""
 		fig2devPtxOptions=""
-		fig2devPdfOptions=""
+		fig2devPdfEpsOptions=""
 		gnuplotCommand="gnuplot"
 		gnuplotOptions=""
 		metapostCommand="mpost"
