@@ -115,7 +115,7 @@ public class LatexProcessorTest {
 	spy(new MavenLogWrapper(new SystemStreamLog()));
 
     private final LatexProcessor processor = new LatexProcessor
-	(this.settings, this.executor, this.log,this.fileUtils,new PdfMojo());
+	(this.settings, this.executor, this.log, this.fileUtils,new PdfMojo());
 
     // FIXME: eliminate all those files 
     // present in LatexMainDesc 
@@ -123,8 +123,9 @@ public class LatexProcessorTest {
     private File texFile = new File(WORKING_DIR, "test.tex");// LatexMainDesc 
     private File pdfFile = new File(WORKING_DIR, "test.pdf");// LatexMainDesc 
     private File dviFile = new File(WORKING_DIR, "test.dvi");// LatexMainDesc 
-    private File dviPdfFile = new File// LatexMainDesc 
-	(WORKING_DIR, "test."+settings.getPdfViaDvi().getLatexLanguage());
+    // FIXME: used only once
+    private File dviPdfFile = new File
+     	(WORKING_DIR, "test."+settings.getPdfViaDvi().getLatexOutputFormat());
     private File htmlFile= new File(WORKING_DIR, "test.html");
     private File auxFile = new File(WORKING_DIR, "test.aux");
     private File logFile = new File(WORKING_DIR, "test.log");// LatexMainDesc 
@@ -292,10 +293,6 @@ public class LatexProcessorTest {
 	    .thenReturn(this.pdfFile);
 	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_DVI))
 	    .thenReturn(this.dviFile);
-	when(this.fileUtils.replaceSuffix(texFile, 
-					  "."+this.settings.getPdfViaDvi()
-					  .getLatexLanguage()))
-	    .thenReturn(this.dviPdfFile);
 	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG))
 	    .thenReturn(this.logFile);
 
@@ -320,7 +317,6 @@ public class LatexProcessorTest {
 	    LatexProcessor.SUFFIX_VOID,
 	    LatexProcessor.SUFFIX_PDF,
 	    LatexProcessor.SUFFIX_DVI,
-	    "."+this.settings.getPdfViaDvi().getLatexLanguage(),
 	    LatexProcessor.SUFFIX_LOG,
 	    LatexProcessor.SUFFIX_IDX,
 	    LatexProcessor.SUFFIX_IND,
