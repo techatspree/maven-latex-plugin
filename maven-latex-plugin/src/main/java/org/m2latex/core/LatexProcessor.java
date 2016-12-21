@@ -382,10 +382,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Container which comprises, besides the latex main file 
      * also several files creation of which shall be done once for ever. 
      */
-    private static class LatexMainDesc {
+    static class LatexMainDesc {
 	private final File texFile;
-	private final File pdfFile;
-	private final File pdfDviFile;
+	final File pdfFile;
+	final File dviFile;
 
 	private final File logFile;
 
@@ -403,10 +403,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // FIXME: easier to create xxxFile first 
 	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
 	    this.pdfFile = fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
-
-	    // FIXME: literal, suffix 
-	    this.pdfDviFile = fileUtils.replaceSuffix
-		(texFile, "."+dev.getLatexLanguage());
+	    this.dviFile = fileUtils.replaceSuffix(texFile, SUFFIX_DVI);
 	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 
 	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
@@ -1316,7 +1313,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      desc.pdfDviFile);
+			      dev.latexTargetFile(desc));
 
 	// logging errors (warnings are done in processLatex2pdf)
 	// may log warnings WFU03, WAP01, WAP02, WAP04
@@ -1332,7 +1329,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 						  File texFile) {
 	// FIXME: hack with literal 
 	return buildArguments(settings.getLatex2pdfOptions() + 
-			      " -output-format=" + dev.getLatexLanguage(), 
+			      " -output-format=" + dev.getLatexOutputFormat(), 
 			      texFile);
     }
 
@@ -1358,14 +1355,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // used in processLatex2pdf(File) and processLatex2txt(File) only 
     private void runDvi2pdf(LatexMainDesc desc) throws BuildFailureException {
 	assert this.settings.getPdfViaDvi().isViaDvi();
-	File dviFile = desc.pdfDviFile;
-	assert this.fileUtils.getSuffix(dviFile).equals(SUFFIX_DVI);
 
 	String command = this.settings.getDvi2pdfCommand();
 	this.log.debug("Running " + command + 
-		       " on '" + dviFile.getName() + "'. ");
+		       " on '" + desc.dviFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getDvi2pdfOptions(), 
-				       dviFile);
+				       desc.dviFile);
 	// may throw BuildFailureException TEX01, 
 	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
  	this.executor.execute(desc.texFile.getParentFile(), // workingDir 
