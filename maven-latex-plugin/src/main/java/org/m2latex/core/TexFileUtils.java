@@ -454,6 +454,11 @@ class TexFileUtils {
 		     line != null;
 		     // readLine may thr. IOException
 		     line = bufferedReader.readLine()) {
+// FIXME: linewise matching is not appropriate 
+// for parameter patternLatexMainFile 
+// but may be inappropriate also for further patterns line patternReRunLatex 
+// FIXME: seemingly, find may not terminate in case ^(\s*)* but with ^s* 
+// 
 		    if (pattern.matcher(line).find()) {
 			return true;
 		    }
