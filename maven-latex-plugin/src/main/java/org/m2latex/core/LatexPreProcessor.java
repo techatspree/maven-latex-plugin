@@ -56,7 +56,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // home-brewed ending to represent tex including postscript 
     private final static String SUFFIX_PTX = ".ptx";
     // the next two for preprocessing and in LatexDev only 
-    final static String SUFFIX_PSTEX = ".pstex";
     final static String SUFFIX_PDFTEX = ".pdf_tex";
 
     // suffix for xfig
@@ -77,8 +76,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private final static String SUFFIX_PNG = ".png";
     // just for silently skipping 
     private final static String SUFFIX_BIB = ".bib";
-    // for latex main file creating html 
-    private final static String SUFFIX_EPS = ".eps";
+    // for latex main file creating html and for graphics. 
+    final static String SUFFIX_EPS = ".eps";
 
     private final static String SUFFIX_XBB = ".xbb";
     private final static String SUFFIX_BB  = ".bb";
@@ -91,8 +90,35 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	super(settings, executor, log, fileUtils);
      }
 
+
+
+    // Formats that work with LaTeX (dvi mode, using dvips):
+    //     eps
+    // Formats that work with LaTeX (dvi mode, using dvipdfm(x)):
+    //     pdf, png, jpeg, eps (the latter not taken into account) 
+    //     eps-source files handled via package epstopdf: 
+    //     seemingly automatically converted eps-->pdf during latex run 
+    //     also there is a program epstopdf and epspdf 
+    //     There is a lot of experiments to do!! 
+    //     MISSING: pdf and eps 
+    //     NOTE: graphics is typically only included via dvipdfm(x)
+    // Formats that work with pdfLaTeX (pdf mode):
+    //     pdf, png, jpeg, jbig2 (the latter not taken into account)
+    // LuaTeX can also read
+    //     jpeg 2000 (not taken into account)
+    //
+    // Seemingly, it makes sense to distinguish from pdfViaDvi-parameter: 
+    // if set, seemingly, pdf, pgn and jpg is includable only 
+    // creating .bb or .xbb.  
+
+    // mp: besides mpost we also have mptopdf creating pdf: 
+    // mptopdf 05someMetapost.mp   creates 05someMetapost1.mps
+    // mptopdf 05someMetapost1.mps creates 05someMetapost1-mps.pdf 
+
+
+
     /**
-     * Handler for each suffix of a souce file. 
+     * Handler for each suffix of a source file. 
      * Mostly, these represent graphic formats 
      * but also {@link #SUFFIX_TEX} is required 
      * to detect the latex main files 
@@ -100,6 +126,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * are needed for proper cleaning of the tex souce directory. 
      */
     enum SuffixHandler {
+	/**
+	 * Handler for .fig-files representing the native xfig format. 
+	 */
 	fig {
 	    // converts a fig-file into pdf 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
@@ -108,7 +137,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runFig2Dev    (file, proc.settings.getPdfViaDvi());
+
+		// may throw BuildFailureException TEX01, 
+		// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+		proc.runFig2Dev(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
@@ -118,6 +150,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_FIG;
 	    }
 	},
+	/**
+	 * Handler for .gp-files representing the native gnuplot format. 
+	 */
 	gp {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
@@ -126,7 +161,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
-		proc.runGnuplot2Dev(file, proc.settings.getPdfViaDvi());
+		proc.runGnuplot2Dev(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
@@ -136,6 +171,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_GP;
 	    }
 	},
+	/**
+	 * Handler for .mp-files representing the metapost format. 
+	 */
 	mp {
 	    // converts a metapost-file into mps-format 
 	    // invoking {@link #runMetapost2mps(File)} 
@@ -154,12 +192,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_MP;
 	    }
 	},
+	/**
+	 * Handler for .svg-files representing scaleable vector graphics. 
+	 */
 	svg {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) {
 		proc.log.info("Processing svg-file '" + file + 
-		 	      "' deferred to latex run. ");
+		 	      "' deferred to LaTeX run by need. ");
 		// FIXME: this works for pdf but not for dvi: 
 		// even in the latter case, .pdf and .pdf_tex are created 
 	    }
@@ -171,6 +212,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_SVG;
 	    }
 	},
+	/**
+	 * Handler for .jpg-files representing a format 
+	 * definde by the Joint Photographic Experts Group (jp(e)g). 
+	 */
 	jpg {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
@@ -181,7 +226,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// in the latter case: 
 		// ! LaTeX Error: Cannot determine size of graphic ...
 		// FIXME: only for dvi 
-		proc.runEbb(file);
+//		proc.runEbb(file);
 	    }
 	    // void clearTarget(File file, 
 	    // 		     LatexPreProcessor proc, 
@@ -197,6 +242,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_JPG;
 	    }
 	},
+	/**
+	 * Handler for .png-files 
+	 * representing the Portable Network Graphics format. 
+	 */
 	png {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
@@ -207,7 +256,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// in the latter case: 
 		// ! LaTeX Error: Cannot determine size of graphic ...
 		// FIXME: only for dvi 
-		proc.runEbb(file);
+//		proc.runEbb(file);
 	    }
 	    // void clearTarget(File file, 
 	    // 		     LatexPreProcessor proc, 
@@ -223,18 +272,22 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_PNG;
 	    }
 	},
+	/**
+	 * Handler for .tex-files 
+	 * representing the TeX format, to be more precise the LaTeX format. 
+	 */
 	tex {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) {
 		// may log warnings WFU03, WPP02 
-		proc.addMainFile(file, lmFiles);
+		proc.addIfLatexMain(file, lmFiles);
 	    }
 	    void clearTarget(File file, 
 			     LatexPreProcessor proc, 
 			     Map<File, SuffixHandler> file2handler) {
 		// may log warnings WPP02, WFU01, WFU03, WFU05 
-		proc.clearTargetTex(file);
+		proc.clearTargetTexIfLatexMain(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		throw new IllegalStateException
@@ -246,6 +299,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		return LatexPreProcessor.SUFFIX_TEX;
 	    }
 	},
+	/**
+	 * Handler for .bib-files 
+	 * representing the BibTeX format for bibliographies. 
+	 */
 	bib {
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
@@ -266,10 +323,32 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	};
 
+
+
+
 	/**
+	 * Typically, .i.e. for {@link #fig}-,  {@link #gp}-,  {@link #mp}- 
+
+
+
+	 * and associates <code>file</code> 
 	 * Does the transformation of the file <code>file</code> 
-	 * using <code>proc</code>, except for latex main files: 
-	 * These are just added to <code>latexMainFiles</code>. 
+	 * using <code>proc</code> immediately, except for 
+	 * <ul>
+	 * <li>
+	 * {@link #svg}-files for which an info message is logged, 
+	 * that transformation is done by need in the course of a LaTeX run. 
+	 * What occurs are files .pdf and .pdf_tex 
+	 * even if {@link Settings#pdfViaDvi} indicates creation of dvi files. 
+	 * <li>
+	 * {@link #tex}-files which are only scheduled for later translation 
+	 * just by adding them to <code>latexMainFiles</code> 
+	 * if they are latex main files, and ignored otherwise 
+	 * (see {@link LatexPreProcessor#addIfLatexMain(File, Collection)}). 
+	 * <li>
+	 * {@link #bib}-files for which just an info message 
+	 * that a bib file was found is logged. 
+	 * </ul>
 	 * <p>
 	 * Logging: 
 	 * <ul>
@@ -295,16 +374,20 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException;
 
 	/**
-	 * Typically just associates <code>file</code> 
+	 * Typically, .i.e. for {@link #fig}-,  {@link #gp}-,  {@link #mp}- 
+	 * and {@link #svg}-files just associates <code>file</code> 
 	 * with this handler in <code>file2handler</code> 
 	 * to schedule according targets for deletion except for 
 	 * <ul>
 	 * <li>
-	 * jpg-files, png-files and bib-files 
-	 * for which there are no targets 
-	 * and so the association is not added.  
+	 * {@link #tex}-files for which the target is cleared immediately 
+	 * if it is a latex main file, otherwise ignoring 
+	 * by invoking {@link #clearTargetTexIfLatexMain(File)}. 
 	 * <li>
-	 * tex-files for which the target is cleared immediately. 
+	 * {@link #bib}-files 
+	 * (maybe appropriate also for jpg-files and for png-files) 
+	 * for which there are no targets 
+	 * and so the association is not added to <code>file2handler</code>.  
 	 * </ul>
 	 * <p>
 	 * Logging: 
@@ -325,10 +408,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 *    In general, this method adds 
 	 *    <code>file</code> to <code>file2handler</code> 
 	 *    together with its handler which is just <code>this</code>. 
+	 * @see #clearTarget(File, LatexPreProcessor)
 	 */
 	// overwritten for tex, jpg, png and for bib 
 	// appropriate for svg although file may be removed from map later 
-	// used in clearCreated only 
+	// used in clearCreated(File, DirNode) only 
 	void clearTarget(File file, 
 			 LatexPreProcessor proc, 
 			 Map<File, SuffixHandler> file2handler) {
@@ -360,8 +444,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 *    by {@link #clearTarget(File, LatexPreProcessor, Map)} 
 	 *    as for tex-files. 
 	 *    </ul>
+	 * @see #clearTarget(File, LatexPreProcessor, Map)
 	 */
-	// used in clearCreated only 
+	// used in clearCreated(File, DirNode) only 
 	abstract void clearTarget(File file, LatexPreProcessor proc);
 
 	/**
@@ -370,6 +455,47 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 */
 	abstract String getSuffix();
     } // enum SuffixHandler 
+
+    // FIXME: CAUTION with including pictures in xfig: 
+    // This is done as reference to included file. 
+    // Thus it breaks depencency chain. 
+
+
+
+    // The following shows the supported formats: 
+// l.10 \includegraphics{02gp2pdf000}
+//                                   %
+// I could not locate the file with any of these extensions:
+// .pdf,.PDF,.ai,.AI,.png,.PNG,.jpg,.JPG,.jpeg,.JPEG,.bmp,.BMP,.ps,.PS,.eps,.EPS,.
+// pz,.eps.Z,.ps.Z,.ps.gz,.eps.gz
+// Try typing  <return>  to proceed.
+// If that doesn't work, type  X <return>  to quit.
+
+// )
+// :<-
+// Package srcltx Info: Expanded filename `03someGnuplot.ptx' to `03someGnuplot.pt
+// x.tex' on input line 949.
+
+// FIXME: allow variants: 
+// - pdfhandler     on .pdf,.PDF,  (includable directly with pdflatex)
+// - png/jpghandler on .png,.PNG,.jpg,.JPG,.jpeg,.JPEG,
+// - maybe also for .fig 
+
+// FIXME: questions: 
+// - how to include .pdf into .dvi? 
+// - how to include .eps into .pdf? 
+// Question: how to transform ps into eps? 
+// Research on the following: 
+// .ai,.AI,.bmp,.BMP,
+// .ps,.PS,.eps,.EPS,.
+// pz,.eps.Z,.ps.Z,.ps.gz,.eps.gz
+
+    // FIXME: decide whether suffix .ptx is replaced by .tex: 
+    // Advantage: because this is what it is. 
+    // Disadvantage: Requires mechanism 
+    // to determine whether tex is created or original 
+    // but this works the same as for pdf and for svg. 
+
 
     /**
      * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
@@ -391,68 +517,142 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    This is invoked twice: once for creating the pdf-file 
      *    and once for creating the pdf_t-file. 
      * @see #processGraphicsSelectMain(File, DirNode)
-      */
+     */
     // used in fig.transformSrc(File, LatexPreProcessor, Collection) only 
-    private void runFig2Dev(File figFile, LatexDev dev) 
-	throws BuildFailureException {
-
+    private void runFig2Dev(File figFile) throws BuildFailureException {
 	this.log.info("Processing fig-file '" + figFile + "'. ");
-	String command = this.settings.getFig2devCommand();
-	File workingDir = figFile.getParentFile();
-	String[] args;
 
-	// create pdf-file (graphics without text) 
-	// embedded in some tex-file 
-
-	// this could be pstex or pdf 
-	File figInTexFile = this.fileUtils
-	    .replaceSuffix(figFile, dev.getXFigInTexSuffix());
-	File ptxFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
-
-	//if (update(figFile, pdfFile)) {
-	    args = buildArgumentsFig2Pdf(dev.getXFigInTexLanguage(),
-					 this.settings.getFig2devGenOptions(), 
-					 this.settings.getFig2devPdfOptions(), 
-					 figFile,
-					 figInTexFile);
-	    this.log.debug("Running " + command + 
-			   " -Lpdftex  ... on '" + figFile.getName() + "'. ");
-	    // may throw BuildFailureException TEX01, 
-	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
-  	    this.executor.execute(workingDir, 
-				  this.settings.getTexPath(), //**** 
-				  command, 
-				  args,
-				  figInTexFile);
-	    //}
-
-	    // create tex-file (text without grapics) 
-	    // enclosing the pdf-file above 
-
-  	    //if (update(figFile, pdf_tFile)) {
- 	    args = buildArgumentsFig2Ptx(dev.getXFigTexLanguage(), 
-					 this.settings.getFig2devGenOptions(), 
-					 this.settings.getFig2devPtxOptions(), 
-					 figFile, 
-					 ptxFile,
-					 figInTexFile);
-	    this.log.debug("Running " + command + 
-			   " -Lpdftex_t... on '" + figFile.getName() + "'. ");
-	    // may throw BuildFailureException TEX01, 
-	    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
- 	    this.executor.execute(workingDir, 
-				  this.settings.getTexPath(), //**** 
-				  command, 
-				  args,
-				  ptxFile);
-	    //}
+	// all three 
+	// may throw BuildFailureException TEX01, 
+	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	runFig2DevInTex(figFile, LatexDev.pdf);
+	runFig2DevInTex(figFile, LatexDev.dvips);
+	runFig2TexInclDev(figFile);
     }
 
-    private String[] buildArgumentsFig2Pdf(String language,
-					   String optionsGen, 
-					   String optionsPdf, 
-					   File figFile, 
-					   File figInTexFile) {
+    /**
+     * From <code>figFile</code> create pdf/eps-file 
+     * (graphics without text with special flag set) 
+     * depending on <code>dev</code> embedded in some tex-file 
+     * created by {@link #runFig2TexInclDev(File)}. 
+     * <p>
+     * Logging: FIXME: 
+     * warning WEX01, WEX02, WEX03, WEX04, WEX05 
+     *
+     * @param figFile
+     *    the fig-file to be processed 
+     * @param dev
+     *    represents the target: either a pdf-file or an eps-file. 
+     * @throws BuildFailureException 
+     *    FIXME: TEX01, 
+     */
+    private void runFig2DevInTex(File figFile, LatexDev dev) 
+	throws BuildFailureException {
+
+	// Result file: either .pdf or .eps 
+	File figInTexFile = this.fileUtils
+	    .replaceSuffix(figFile, dev.getXFigInTexSuffix());
+	String command = this.settings.getFig2devCommand();
+
+	//if (update(figFile, pdfFile)) {
+	String[] args = 
+	    buildArgumentsFig2PdfEps(dev.getXFigInTexLanguage(),
+				     this.settings.getFig2devGenOptions(), 
+				     this.settings.getFig2devPdfEpsOptions(), 
+				     figFile,
+				     figInTexFile);
+	this.log.debug("Running " + command + " -L pdftex/pstex  ... on '" + 
+		       figFile.getName() + "'. ");
+	// may throw BuildFailureException TEX01, 
+	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	this.executor.execute(figFile.getParentFile(), 
+			      this.settings.getTexPath(), //**** 
+			      command, 
+			      args,
+			      figInTexFile);
+	//}
+    }
+
+
+    // 
+    // PSTEX Options:
+    //   -b width      specify width of blank border around figure (1/72 inch)
+    //            Found: affects clipping path and bounding box only. 
+    //            Not usable if latex text is used because parts no longer fit. 
+    //   -F            use correct font sizes (points instead of 1/80inch)
+    //            Found: no effect 
+    //   -g color      background color
+    //            No idea in which format color is given. 
+    //   -n name       set title part of PostScript output to name
+    //            Found: works. Without it is just the name of xxx.fig 
+    // 
+    // the strange thing is that this is only a subset of the postscript options
+    // to be verified whether all options apply or not. 
+
+// The EPS driver has the following differences from PostScript:
+// o No showpage is generated 
+//   because the output is meant to be imported 
+//   into another program or document and not printed
+// o The landscape/portrait options are ignored
+// o The centering option is ignored
+// o The multiple-page option is ignored
+// o The paper size option is ignored
+// o The x/y offset options are ignored 
+
+
+// The EPS driver has the following two special options:
+//
+// -B 'Wx [Wy X0 Y0]'
+//     This specifies that the bounding box of the EPS file 
+//     should have the width Wx and the height Wy. 
+//     Note that it doesn't scale the figure to this size, 
+//     it merely sets the bounding box. 
+//     If a value less than or equal to 0 is specified for Wx or Wy, 
+//     these are set to the width/height respectively of the figure. 
+//     Origin is relative to screen (0,0) (upper-left).
+//      Wx, Wy, X0 and Y0 are interpreted 
+//     in centimeters or inches depending on the measure 
+//     given in the fig-file. 
+//     Remember to put either quotes (") or apostrophes (') 
+//     to group the arguments to -B. 
+// -R 'Wx [Wy X0 Y0]'
+//     Same as the -B option except that X0 and Y0 
+//     is relative to the lower left corner of the figure. 
+//     Remember to put either quotes (") or apostrophes (') 
+//     to group the arguments to -R. 
+
+// The PDF driver uses all the PostScript options.
+
+
+
+    // Explanation: many of these options do not make sense. 
+    // Tried: -x, -y to shift: does not work and does not make sense 
+    // What makes sense is 
+    // -a            don't output user's login name (anonymous)
+    //               Found: login name occurs nowhere with and without -a 
+    // -N            convert all colors to grayscale
+    //               Found: works 
+
+
+    // No information on PDFTEX options. 
+    // Instead: 
+    //
+    // PDF Options:
+    //   -a            don't output user's login name (anonymous)
+    //   -b width      specify width of blank border around figure (1/72 inch)
+    //   -F            use correct font sizes (points instead of 1/80inch)
+    //   -g color      background color
+    //
+    // seemingly not the same, so maybe separate options required. 
+    // -n is pstex but not in pdf, 
+    // -a is pdf but not pstex... strange: is postscript 
+
+    // -L pdftex/pstex <optionsGen> <optionsPdf> xxx.fig xxx.pdf/xxx.eps 
+    private String[] buildArgumentsFig2PdfEps(String language,
+					      String optionsGen, 
+					      String optionsPdf, 
+					      File figFile, 
+					      File figInTexFile) {
 	String[] optionsGenArr = optionsGen.isEmpty() 
 	    ? new String[0] : optionsGen.split(" ");
 	String[] optionsPdfArr = optionsPdf.isEmpty() 
@@ -470,17 +670,71 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			 args, 2+optionsGenArr.length, optionsPdfArr.length);
 	// input: fig-file 
         args[2+lenSum] = figFile.getName();
-	// output: pdf-file 
+	// output: pdf/eps-file 
 	args[3+lenSum] = figInTexFile.getName();
 	return args;
     }
 
-    private String[] buildArgumentsFig2Ptx(String language, 
-					   String optionsGen,
+    /**
+     * From <code>figFile</code> create tex-file 
+     * containing text with special flag set and 
+     * including the rest of <code>figFile</code>. 
+     * Inclusion is without file extension and so both possible results 
+     * of {@link #runFig2DevInTex(File, LatexDev)} can be included 
+     * at latex compile runtime. 
+     * <p>
+     * Logging: FIXME: 
+     * warning WEX01, WEX02, WEX03, WEX04, WEX05 
+     *
+     * @param figFile
+     *    the fig-file to be processed 
+     * @throws BuildFailureException 
+     *    FIXME: TEX01, 
+     */
+    private void runFig2TexInclDev(File figFile) 
+	throws BuildFailureException {
+
+	// result file: .ptx 
+	File ptxFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
+	String command = this.settings.getFig2devCommand();
+
+	//if (update(figFile, pdf_tFile)) {
+	String[] args = 
+	    buildArgumentsFig2Ptx(this.settings.getFig2devGenOptions(), 
+				  this.settings.getFig2devPtxOptions(), 
+				  figFile, 
+				  ptxFile);
+	this.log.debug("Running " + command + 
+		       " -L (pdf/ps)tex_t... on '" + figFile.getName() + "'. ");
+	// may throw BuildFailureException TEX01, 
+	// may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	this.executor.execute(figFile.getParentFile(), 
+			      this.settings.getTexPath(), //**** 
+			      command, 
+			      args,
+			      ptxFile);
+	//}
+    }
+
+    // could also be "pstex_t"
+    private final static String XFIG_TEX_LANGUAGE = "pdftex_t";
+
+    // Since pstex_t is equivalent with pdftex_t, 
+    // also the options are the same (hopefully) 
+    //
+    // PSTEX_T Options:
+    //   -b width      specify width of blank border around figure (1/72 inch)
+    //   -E num        set encoding for text translation (0 no translation,
+    //                   1 ISO-8859-1, 2 ISO-8859-2)
+    //   -F            don't set font family/series/shape, so you can
+    //                   set it from latex
+    //   -p name       name of the PostScript file to be overlaid
+
+    // -L (pdf/ps)tex_t <optionsGen> <optionsPdf> -p xxx xxx.fig xxx.ptx
+    private String[] buildArgumentsFig2Ptx(String optionsGen,
 					   String optionsPtx,
 					   File figFile, 
-					   File ptxFile, 
-					   File figInTexFile) {
+					   File ptxFile) {
 	String[] optionsGenArr = optionsGen.isEmpty() 
 	    ? new String[0] : optionsGen.split(" ");
 	String[] optionsPtxArr = optionsPtx.isEmpty() 
@@ -490,16 +744,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	String[] args = new String[lenSum + 6];
 	// language 
 	args[0] = "-L";
-	args[1] = language;
+	args[1] = XFIG_TEX_LANGUAGE;
 	// general options 
 	System.arraycopy(optionsGenArr, 0, 
 			 args, 2, optionsGenArr.length);
 	// language specific options 
 	System.arraycopy(optionsPtxArr, 0, 
 			 args, 2+optionsGenArr.length, optionsPtxArr.length);
-	// -p pdf-file in ptx-file 
+	// -p pdf/eps-file name in ptx-file without suffix 
 	args[2+lenSum] = "-p";
-        args[3+lenSum] = figInTexFile.getName();
+	// FIXME: 
+        args[3+lenSum] = figFile.getParentFile() 
+	    + System.getProperty("file.separator") // File.separator
+	    + this.fileUtils.getFileNameWithoutSuffix(figFile);
 	// input: fig-file 
         args[4+lenSum] = figFile.getName();
 	// output: ptx-file 
@@ -545,10 +802,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @see #processGraphicsSelectMain(File, DirNode)
      */
     // used in gp.transformSrc(File, LatexPreProcessor, Collection) only 
+    private void runGnuplot2Dev(File gpFile) throws BuildFailureException {
+	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
+	// both may throw BuildFailureException TEX01, 
+	// and  may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
+	runGnuplot2Dev(gpFile, LatexDev.dvips);
+	runGnuplot2Dev(gpFile, LatexDev.pdf);
+    }
+
+    // may throw BuildFailureException TEX01, 
+    // may log warning WEX01, WEX02, WEX03, WEX04, WEX05 
     private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildFailureException {
 
-	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	String command = this.settings.getGnuplotCommand();
 	// FIXME: eliminate literal 
 	// FIXME: wrong name 
@@ -561,7 +827,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // 
 	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
 	    " " + this.settings.getGnuplotOptions() + 
-	    ";set output \"" + ptxFile.getName() + 
+	    ";set output \"" + ptxFile + //.getName()
 	    "\";load \"" + gpFile.getName() + "\""
 	};
 	// FIXME: include options. 
@@ -598,20 +864,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * WFU05: Failed to delete file
      */
+    // FIXME: unification with clearTargetFig is possible 
     private void clearTargetGp(File gpFile) {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(gpFile, SUFFIX_PTX);
-	// created by runGnuplot2Dev(..., LatexDev.pstex) 
-	deleteIfExists(gpFile, SUFFIX_EPS);
-	// CAUTION: this is created 
+	deleteIfExists(gpFile, LatexDev.dvips.getXFigInTexSuffix());
+	deleteIfExists(gpFile, LatexDev.pdf  .getXFigInTexSuffix());
+  	// CAUTION: this is created 
 	// in the course of latex2pdf processing from .eps 
 	// if target format is pdf 
 	// FIXME: eliminate literal 
-	deleteIfExists(gpFile, "-eps-converted-to"+SUFFIX_PDF);
-	// created by runGnuplot2Dev(..., LatexDev.pdf) 
-	deleteIfExists(gpFile, SUFFIX_PDF);
-    }
+	//deleteIfExists(gpFile, "-eps-converted-to"+SUFFIX_PDF);
+ }
 
     /**
      * Runs mpost on mp-files to generate mps-files. 
@@ -693,6 +958,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// may log warning WFU01, WFU05 
 	this.fileUtils.deleteX(mpFile, filter);
     }
+
+    // Additional research: 
+    // Documentation says, that this is needed for interface eps, 
+    // but not for interface pdf. 
+    // Experiments show, that we can do without it in any case. 
 
     private void runEbb(File file) throws BuildFailureException {
 	// FIXME: add parameters 
@@ -811,7 +1081,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    whether <code>texFile</code> is definitively a latex main file. 
      *    If this is not readable, <code>false</code>. 
      */
-    // used by addMainFile and by clearTargetTex 
+    // used 
+    // by addIfLatexMain(File, Collection) and 
+    // by clearTargetTexIfLatexMain(File) 
     private boolean isLatexMainFile(File texFile) {
 	assert texFile.exists();
 	// may log warning WFU03 cannot close 
@@ -842,7 +1114,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the collection of latex main files found so far. 
      */
     // invoked only by tex.transformSrc(File, LatexPreProcessor, Collection)
-    private void addMainFile(File texFile, Collection<File> latexMainFiles) {
+    private void addIfLatexMain(File texFile, Collection<File> latexMainFiles) {
 	// may log warnings WFU03, WPP02 
 	if (isLatexMainFile(texFile)) {
 	    this.log.info("Detected latex-main-file '" + texFile + "'. ");
@@ -867,7 +1139,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the tex-file of which the created files shall be deleted 
      *    if it is a latex main file. 
      */
-    private void clearTargetTex(File texFile) {
+    private void clearTargetTexIfLatexMain(File texFile) {
 	// exclude files which are no latex main files 
 	// may log warnings WFU03, WPP02 
 	if (!isLatexMainFile(texFile)) {
@@ -917,8 +1189,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // where 'node' represents the tex source directory 
     Collection<File> processGraphicsSelectMain(File dir, DirNode node) 
     	throws BuildFailureException {
-    	Collection<String> skipped = new TreeSet<String>();
-    	Collection<File> latexMainFiles = new TreeSet<File>();
+    	Collection<String> skipped        = new TreeSet<String>();
+    	Collection<File>   latexMainFiles = new TreeSet<File>();
 	// may throw BuildFailureException TEX01, 
 	// log warning WEX01, WEX02, WEX03, WEX04, WEX05, WFU03, WPP02 
       	processGraphicsSelectMain(dir, node, skipped, latexMainFiles);
@@ -991,7 +1263,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     		// may throw BuildFailureException TEX01, 
     		// log warning WEX01, WEX02, WEX03, WEX04, WEX05 
 		// WFU03, WPP02 
-    		handler.transformSrc(file, this, latexMainFilesLocal);
+		if (!file.isHidden()) {
+		    handler.transformSrc(file, this, latexMainFilesLocal);
+		}
     	    }
     	}
 
@@ -1026,8 +1300,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param texDir
      *    represents the tex source directory or a subdirectory. 
      */
-    // invoked recursively; except that used only in 
-    // LatexProcessor.clearAll()
+    // invoked in LatexProcessor.clearAll() only 
     void clearCreated(File texDir) {
 	clearCreated(texDir, new DirNode(texDir, this.fileUtils));
     }
