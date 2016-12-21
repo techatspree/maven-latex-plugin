@@ -21,57 +21,46 @@ public enum LatexDev {
 
     // lualatex creates pdf 
     pdf {
-	String  getXFigTexLanguage() {
-	    return "pdftex_t";
-	}
 	String  getXFigInTexLanguage() {
 	    return "pdftex";
-	}
-	String getGnuplotInTexLanguage() {
-	    return "pdf";
-	}
-	String getLatexLanguage() {
-	    return "pdf";
 	}
 	String getXFigInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_PDF;
 	}
+	String getGnuplotInTexLanguage() {
+	    return "pdf";
+	}
+	String getLatexOutputFormat() {
+	    return "pdf";
+	}
 	boolean isViaDvi() {
 	    return false;
+	}
+	File latexTargetFile(LatexProcessor.LatexMainDesc desc) {
+	    return desc.pdfFile;
 	}
     },
     // latex creates dvi but not with the given drivers. 
     dvips {
-	String  getXFigTexLanguage() {
-	    return "pstex_t";
-	}
 	String  getXFigInTexLanguage() {
 	    return "pstex";
+	}
+	String getXFigInTexSuffix() {
+	    return LatexPreProcessor.SUFFIX_EPS;
 	}
 	String getGnuplotInTexLanguage() {
 	    return "eps";
 	}
-	String getLatexLanguage() {
+	String getLatexOutputFormat() {
 	    return "dvi";
-	}
-	String getXFigInTexSuffix() {
-	    return LatexPreProcessor.SUFFIX_PSTEX;
 	}
 	boolean isViaDvi() {
 	    return true;
 	}
+	File latexTargetFile(LatexProcessor.LatexMainDesc desc) {
+	    return desc.dviFile;
+	}
     };
-
-    /**
-     * Returns the name of the language <code>fig2dev</code> uses 
-     * to convert the text of an xfig-picture into. 
-     * In fact, this is latex-code with file in graphic format 
-     * embedded with <code>\includegraphics</code>. 
-     * The language code of the embedded graphic file 
-     * is given by {@link #getXFigInTexLanguage()}. 
-     */
-    abstract String getXFigTexLanguage();
-
 
     /**
      * Returns the name of the language <code>fig2dev</code> uses 
@@ -83,6 +72,13 @@ public enum LatexDev {
      * is given by {@link #getXFigTexLanguage()}. 
      */
     abstract String getXFigInTexLanguage();
+
+    /**
+     * Returns the suffix of the file to be 
+     * embedded with <code>\includegraphics</code> in latex-code 
+     * representing text. 
+     */
+    abstract String getXFigInTexSuffix();
 
     /**
      * Returns the name of the language <code>gnuplot</code> uses 
@@ -98,21 +94,21 @@ public enum LatexDev {
      * to convert the latex files into. 
      * This is set via option <code>-output-format=</code>. 
      */
-    // FIXME: very bad name: should be LatexOutputFormat. 
-    abstract String getLatexLanguage();
+     abstract String getLatexOutputFormat();
+
+     abstract boolean isViaDvi();
 
     /**
-     * Returns the suffix of the file to be 
-     * embedded with <code>\includegraphics</code> in latex-code 
-     * representing text. 
+     * Returns the target file of a LaTeX run. 
+     * This has the suffix given by {@link #getLatexOutputFormat()}. 
      */
-    abstract String getXFigInTexSuffix();
-
-    abstract boolean isViaDvi();
+    abstract File latexTargetFile(LatexProcessor.LatexMainDesc desc);
 
     static LatexDev devViaDvi(boolean pdfViaDvi) {
 	LatexDev res = pdfViaDvi ? LatexDev.dvips : LatexDev.pdf;
 	assert res.isViaDvi() == pdfViaDvi;
 	return res;
     }
+
+
 }
