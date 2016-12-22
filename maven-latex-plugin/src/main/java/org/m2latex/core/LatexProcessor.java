@@ -446,7 +446,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
@@ -498,18 +498,18 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// initial latex run 
  	// may throw BuildFailureException TEX01 
 	// may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	// WAP01, WAP02, WAP04, WFU03
+	// EAP01, WAP02, WAP04, WFU03
 	runLatex2dev(desc, dev);
 	File texFile = desc.texFile;
 
 	// create bibliography, index and glossary by need 
 	// may throw BuildFailureException  TEX01 
 	// may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	// WAP01, WAP02, WAP03, WAP04, WLP02, WFU03
+	// EAP01, WAP02, WAP03, WAP04, WLP02, WFU03
 	boolean hasBib    = runBibtexByNeed      (texFile);
 	// may both throw BuildFailureException, both TEX01 
 	// may both log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	// WAP01, WAP02, WAP03, WAP04, WFU03
+	// EAP01, WAP02, WAP03, WAP04, WFU03
 	boolean hasIdxGls = runMakeIndexByNeed   (desc)
 	    |               runMakeGlossaryByNeed(desc);
 
@@ -571,7 +571,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * {@link Settings#getMaxNumReRunsLatex()} is reached. 
      * Further logging is inherited by invoked methods: 
      * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read log file:     run BibTeX/
@@ -599,7 +599,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	// may throw BuildFailureException TEX01, 
-	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, WAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
  	int numLatexReRuns = preProcessLatex2dev(desc, dev);
 				      
@@ -612,7 +612,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			   "bibliography, index, or that like. ");
 	    // may throw BuildFailureException TEX01 
 	    // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	    // WAP01, WAP02, WAP04, WFU03
+	    // EAP01, WAP02, WAP04, WFU03
 	    runLatex2dev(desc, dev);
 	    numLatexReRuns--;
 	}
@@ -640,13 +640,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		// FIXME: not by need 
 		// may throw BuildFailureException TEX01 
 		// may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-		// WAP01, WAP02, WAP03, WAP04, WFU03
+		// EAP01, WAP02, WAP03, WAP04, WFU03
 		runMakeIndexByNeed(desc);
 	    }
 
 	    // may throw BuildFailureException TEX01 
 	    // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	    // WAP01, WAP02, WAP04, WFU03
+	    // EAP01, WAP02, WAP04, WFU03
 	    runLatex2dev(desc, dev);
 	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
 				     this.settings.getPatternReRunLatex());
@@ -742,7 +742,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void processLatex2dev(LatexMainDesc desc, LatexDev dev) 
 	throws BuildFailureException {
 	// may throw BuildFailureException TEX01, 
-	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, WAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
 	processLatex2devCore(desc, dev);
 
@@ -791,14 +791,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WFU03: cannot close 
      * </ul>
      */
     private void logErrs(File logFile, String command) {
-	// may log warnings WFU03, WAP01, WAP02, WAP04
+	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs(logFile, command, this.settings.getPatternErrLatex());
     }
 
@@ -864,7 +864,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
@@ -887,7 +887,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into html: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
-	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, WAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
 	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
@@ -903,7 +903,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
@@ -926,7 +926,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into odt:  LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
-	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, WAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
         preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
@@ -942,7 +942,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
@@ -967,7 +967,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX0, 
-	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, WAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
  	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX0, 
@@ -1031,7 +1031,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexDev dev = this.settings.getPdfViaDvi();
 
 	// may throw BuildFailureException TEX01, 
-	// log warning WAP01, WAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, WAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
 	processLatex2devCore(desc, dev);
 	if (dev.isViaDvi()) {
@@ -1056,7 +1056,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>bibtex</code> failed. For details...
+     * <li> EAP01: Running <code>bibtex</code> failed. For details...
      * <li> WAP02: Running <code>bibtex</code> failed. No log file 
      * <li> WAP03: Running <code>bibtex</code> emitted warnings. 
      * <li> WAP04: if <code>logFile</code> is not readable. 
@@ -1095,7 +1095,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.fileUtils.replaceSuffix(texFile,SUFFIX_BBL));
 
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
-	// may log warnings WFU03, WAP01, WAP02, WAP04
+	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs (logFile, command, this.settings.getPatternErrBibtex());
 	// may log warnings WFU03, WAP03, WAP04
 	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
@@ -1112,7 +1112,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>makeindex</code> failed. For details...
+     * <li> EAP01: Running <code>makeindex</code> failed. For details...
      * <li> WAP02: Running <code>makeindex</code> failed. No log file 
      * <li> WAP03: Running <code>makeindex</code> emitted warnings. 
      * <li> WAP04: .ilg-file is not readable. 
@@ -1144,7 +1144,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	if (needRun) {
 	    // may throw BuildFailureException TEX01 
 	    // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	    // WAP01, WAP02, WAP03, WAP04, WFU03
+	    // EAP01, WAP02, WAP03, WAP04, WFU03
 	    runMakeIndex(desc);
 	}
 	return needRun;
@@ -1156,7 +1156,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>makeindex</code> failed. For details...
+     * <li> EAP01: Running <code>makeindex</code> failed. For details...
      * <li> WAP02: Running <code>makeindex</code> failed. No log file 
      * <li> WAP03: Running <code>makeindex</code> emitted warnings. 
      * <li> WAP04 .ilg-file is not readable. 
@@ -1189,7 +1189,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      desc.indFile);
 
 	// detect errors and warnings makeindex wrote into xxx.ilg 
- 	// may log warnings WFU03, WAP01, WAP02, WAP04
+ 	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs (desc.ilgFile, command,this.settings.getPatternErrMakeIndex());
 	// may log warnings WFU03, WAP03, WAP04
 	logWarns(desc.ilgFile, command,this.settings.getPatternWarnMakeIndex());
@@ -1207,7 +1207,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>makeglossaries</code> failed. For details...
+     * <li> EAP01: Running <code>makeglossaries</code> failed. For details...
      * <li> WAP02 Running <code>makeglossaries</code> failed. No log file 
      * <li> WAP03: Running <code>makeglossaries</code> emitted warnings. 
      * <li> WAP04: .glg-file is not readable. 
@@ -1254,7 +1254,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// detect errors and warnings makeglossaries wrote into xxx.glg 
 	File glgFile = desc.glgFile;
-	// may log warnings WFU03, WAP01, WAP02, WAP04
+	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
 	// may log warnings WFU03, WAP03, WAP04
 	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
@@ -1280,7 +1280,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>latex2pdf</code> failed. For details...
+     * <li> EAP01: Running <code>latex2pdf</code> failed. For details...
      * <li> WAP02: Running <code>latex2pdf</code> failed. No log file 
      * <li> WAP04: .log-file is not readable. 
      * <li> WFU03: cannot close .log-file 
@@ -1316,7 +1316,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      dev.latexTargetFile(desc));
 
 	// logging errors (warnings are done in processLatex2pdf)
-	// may log warnings WFU03, WAP01, WAP02, WAP04
+	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs(desc.logFile, command);
 
 	// FIXME: documentation that in the dvi file, 
@@ -1380,7 +1380,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>htlatex</code> failed. For details...
+     * <li> EAP01: Running <code>htlatex</code> failed. For details...
      * <li> WAP02: Running <code>htlatex</code> failed. No log file 
      * <li> WLP03: <code>htlatex</code> created bad boxes 
      * <li> WLP04: <code>htlatex</code> emitted warnings 
@@ -1415,7 +1415,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 							   SUFFIX_HTML));
 
 	// logging errors and warnings 
-	// may log warnings WFU03, WAP01, WAP02, WAP04
+	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs (desc.logFile, command);
 	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, command);
@@ -1488,7 +1488,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01: Running <code>htlatex</code> failed. For details...
+     * <li> EAP01: Running <code>htlatex</code> failed. For details...
      * <li> WAP02: Running <code>htlatex</code> failed. No log file 
      * <li> WLP03: <code>htlatex</code> created bad boxes 
      * <li> WLP04: <code>htlatex</code> emitted warnings 
@@ -1524,7 +1524,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.fileUtils.replaceSuffix(texFile,SUFFIX_ODT));
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	// may log warnings WFU03, WAP01, WAP02, WAP04
+	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs (desc.logFile, command);
 	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, command);

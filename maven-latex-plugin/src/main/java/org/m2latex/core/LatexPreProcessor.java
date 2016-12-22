@@ -884,7 +884,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * <ul>
      * <li> WFU03: cannot close log file 
-     * <li> WAP01: Running <code>command</code> failed. For details...
+     * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if log file is not readable. 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -922,7 +922,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
 	// FIXME: what is xxx.mpx for? 
 	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
-	// may log warnings WFU03, WAP01, WAP02, WAP04
+	// may log warnings WFU03, EAP01, WAP02, WAP04
 	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
    }

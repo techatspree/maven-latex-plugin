@@ -59,7 +59,7 @@ abstract class AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WAP01 Running <code>command</code> failed. For details...
+     * <li> EAP01 Running <code>command</code> failed. For details...
      * <li> WAP02 Running <code>command</code> failed. No log file 
      * <li> WAP04 if <code>logFile</code> is not readable. 
      * <li> WFU03 cannot close 
@@ -70,9 +70,9 @@ abstract class AbstractLatexProcessor {
     	if (logFile.exists()) {
 	    // hasErrsWarns may log warnings WFU03, WAP04 
     	    if (hasErrsWarns(logFile, pattern)) {
-    		this.log.warn("WAP01: Running " + command + 
-			      " failed. Errors logged in '" + 
-			      logFile.getName() + "'. ");
+    		this.log.error("EAP01: Running " + command + 
+			       " failed. Errors logged in '" + 
+			       logFile.getName() + "'. ");
     	    }
     	} else {
     	    this.log.warn("WAP02: Running " + command + 
