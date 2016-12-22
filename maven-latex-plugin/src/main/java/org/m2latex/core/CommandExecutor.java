@@ -42,7 +42,7 @@ class CommandExecutor {
     /**
      * Logging: 
      * <ul>
-     * <li> WEX01: return code other than 0. 
+     * <li> EEX01: return code other than 0. 
      * <li> WEX02: no target file 
      * <li> WEX03: target file not updated 
      * <li> WEX04: cannot read target file 
@@ -100,7 +100,7 @@ class CommandExecutor {
 	}
 
 	// Proper execution 
-	// may throw BuildFailureException TEX01, log warning WEX01 
+	// may throw BuildFailureException TEX01, log warning EEX01 
 	String res = execute(workingDir, pathToExecutable, command, args);
 
 	// may log WEX02, WEX03, WEX04 
@@ -167,7 +167,7 @@ class CommandExecutor {
      * to the executable. May be null? 
      * <p>
      * Logging: 
-     * WEX01 for return code other than 0. 
+     * EEX01 for return code other than 0. 
      *
      * @param workingDir
      *    the working directory. 
@@ -219,8 +219,8 @@ class CommandExecutor {
 	    // may throw CommandLineException 
 	    int returnCode = executeCommandLine(cl, output, output);
 	    if (returnCode != 0) {
-		this.log.warn("WEX01: Running " + command + 
-			      " failed with return code " + returnCode + ". ");
+		this.log.error("EEX01: Running " + command + 
+			       " failed with return code " + returnCode + ". ");
 	    }
 	} catch (CommandLineException e) {
 	    throw new BuildFailureException

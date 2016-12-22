@@ -3095,30 +3095,36 @@ The options of the command {\tt\$pdf2txtCommand}.
 \caption{\label{tab:paramExt} The parameters of further converters }
 \end{longtable}
 
-\section{Exceptions and logging}\label{subsec:exceptionLogging}
+\section{Exceptions and Logging}\label{subsec:exceptionLogging}
 
-A maven plugin may throw a import a 
+If during execution of this software something goes wrong 
+and it is possible to detect that, the user shall be notified. 
+
+Maven forsees a mechanism to abort the whole build, i.e. lifecycle phase 
+or a single goal and accordingly ant allows to abort a task. 
+In both cases, abortion is implemented by throwing an exception. 
+
+
+A maven plugin aborts a goal throwing a 
 %
 \begin{verbatim}
 org.apache.maven.plugin.MojoFailureException
 \end{verbatim}
 %
-if a recoverable error occurs and a 
+and a 
 %
 \begin{verbatim}
 org.apache.maven.plugin.MojoExecutionException 
 \end{verbatim}
 %
-if a non-recoverable error occurs. 
-Whereas the former aborts the run of the plugin, 
-the latter aborts the whole build. 
-This maven plugin does not throw any {\tt MojoExecutionException} 
-but only {\tt MojoFailureException}s. 
-Thus not the whole build is aborted but only execution of the goal. 
-FIXME: to be verified. 
+to abort the lifecycle phase. 
+Since this plugin is just for documentation, 
+there is no need to abort site creation altogether, 
+so only the former exception occurs. 
 
-An ant-task may throw a {\tt org.apache.tools.ant.BuildException} 
-to abort the ant-build altogether. 
+An ant-task aborts an ant-build 
+throwing a {\tt org.apache.tools.ant.BuildException}. 
+
 This software provides both a maven plugin and an ant task 
 built on the same code base. 
 Thus the maven plugin thows a {\tt MojoFailureException} 
@@ -3131,26 +3137,27 @@ defines in detail under what circumstances which exception is thrown.
 
 Roughly speaking, an exception is thrown only if something is really wrong, 
 e.g. a non-recoverable error or an indication 
-that the build system is out of control. 
-Otherwise, a failure is indicated only by logging a warning, 
-to allow the build process to go on, 
+that the build system is out of control or if this plugin/task 
+is likely to destroy the work of another plugin/task. 
+
+If something went wrong, but no exception is thrown, 
+the user must be notified by logging 
+and the build process to go on, 
 skipping a section of a task as small as possible. 
+Both, maven and ant provide a logging mechanism 
+with the levels error, warning, info and debug. 
+Section~\ref{subsec:logWarnErr} describes the errors and warnings; 
+the lot of infos and debugging output are not described here. 
 
-
-FIXME: not clear whether logging warnings is appropriate: 
-Command line options: 
-{\tt-e} shows error messages, 
-{\tt-X} shows debug-messages, 
-{\tt-q} quiet hides the info-level and shows {\em only} errors. 
+Verbosity is choosen by the following command line options: 
+%
+\begin{itemize}
+\item[{\tt-e}] shows error messages, 
+\item[{\tt-X}] shows debug-messages, 
+\item[{\tt-q}] quiet hides the info-level and shows {\em only} errors. 
+\end{itemize}
+%
 There seems no way to get warnings only. 
-Well, nowhere is described whether the goal is aborted 
-when using an error. 
-
-
-Section~\ref{subsec:logWarn} describes the warnings. 
-There is also a lot of output for info and for debugging, 
-but this is not described in this manual. 
-
 
 Each exception offers a message and also each warning has a warning message. 
 The messages are endowed with a unique identifier of the form 
@@ -3161,11 +3168,10 @@ The messages are endowed with a unique identifier of the form
 i.e. {\tt MojoFailureException} for the maven- plugin 
 and {\tt BuildException} for the ant-task. 
 This is described in detail in Section~\ref{subsec:exception} 
-\item[E] logging as ERROR, which does not occur 
-\item[W] logging as WARNING described in detail in Section~\ref{subsec:logWarn} 
-\item[I] logging as INFO which occurs so frequently, 
-that we do not document it here 
-\item[D] logging as DEBUGGING output, also not described here. 
+\item[E] logging as ERROR, 
+\item[W] logging as WARNING 
+\item[I] logging as INFO which occurs frequently
+\item[D] logging as DEBUGGING output, which is lengthy 
 \end{itemize}
 
 The shortcut {\tt CC} describes the class where the exception is thrown 
@@ -3241,7 +3247,7 @@ Identifier        & Message  \\
 \tt\footnotesize TEX01 & \tt\footnotesize Error running \$command.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Compare with WEX01 in Table~\ref{tab:WarnCEI}: 
+Compare with EEX01 in Table~\ref{tab:WarnCEI}: 
 Error execution means 
 %
 \begin{itemize}
@@ -3260,7 +3266,7 @@ Wrapping an {\tt InterruptedException}
 on the process to be executed thrown by {\tt Proces.waitFor()}. 
 \end{itemize}
 %
-whereas for WEX01 just a failure code is returned. 
+whereas for EEX01 just a failure code is returned. 
 \end{minipage}
 } \\
 \hline
@@ -3307,15 +3313,53 @@ This is mainly because of writing permissions.
 FIXME: to be added. 
 
 
-\subsection{Warnings}\label{subsec:logWarn}
+\subsection{Logging of Warnings and Errors}\label{subsec:logWarnErr}
 
-A warning must be logged, if no exception is thrown 
-but if there is an indication that the ant-task or the maven goal 
-did not fully succeed. 
-To avoid aborting the task or the goal, 
-no errors are issued, warnings only. 
+The rules for logging warnings and errors is, 
+that the user must be notified, 
+if something went wrong but the run is not aborted, 
+by a warning or an error. 
+It is not required that for each detail going wrong, 
+there is a separete notification, 
+but the user must be sure, that all is ok, 
+if no warning and no error occurs. 
 
-FIXME: this is not completely implemented. 
+To decide whether it is an error or a warning to be logged, 
+one has to distinguish, 
+whether the problem occurs when running an external application 
+or within internal code. 
+In the first case, the decision whether it is an error or a warning 
+is left to that application: 
+%
+\begin{itemize}
+\item 
+If the application returns an error code other than 0, 
+it is an error. 
+\item
+If the application is expected to write a log file 
+but none is found, it is an error. 
+The applications used here, 
+return a nontrivial error code if no log file is written. 
+\item
+The applications used here, writing a log file 
+distinguish between error and warning. 
+If a log file is written both are logged in the log file 
+and can be distinguished by the form of the entry via pattern matching. 
+If no error occurs, the return code is 0, even if warnings occur. 
+\item
+If an application writes at least one error into the log file, 
+this software logs an error. 
+\item
+If an application writes no error into the log file 
+but at least one warning, this software logs a warning. 
+\end{itemize}
+
+If an application does not create the expected output file, 
+this software logs an error. 
+This may be because of an internal error as described above, 
+but also because of wrong parameters. 
+So, e.g. {\tt pdflatex -v xxx.tex} does not create a pdf-file as expected. 
+
 
 \begin{longtable}{|ll|}
 \hline
@@ -3323,7 +3367,7 @@ FIXME: this is not completely implemented.
 \multicolumn2{|l|}{\small Explanation }  \\
 \hline
 \hline
-\tt\footnotesize WEX01 & \tt\footnotesize Running \$command 
+\tt\footnotesize EEX01 & \tt\footnotesize Running \$command 
 			    failed with return code \$returnCode. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
