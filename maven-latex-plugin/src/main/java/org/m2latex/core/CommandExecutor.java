@@ -44,7 +44,7 @@ class CommandExecutor {
      * <ul>
      * <li> EEX01: return code other than 0. 
      * <li> EEX02: no target file 
-     * <li> WEX03: target file not updated 
+     * <li> EEX03: target file not updated 
      * <li> WEX04: cannot read target file 
      * <li> WEX05: may emit false warnings
      * </ul>
@@ -103,7 +103,7 @@ class CommandExecutor {
 	// may throw BuildFailureException TEX01, log warning EEX01 
 	String res = execute(workingDir, pathToExecutable, command, args);
 
-	// may log EEX02, WEX03, WEX04 
+	// may log EEX02, EEX03, WEX04 
 	for (int idx = 0; idx < resFile.length; idx++) {
 	    isUpdatedOrWarn(command, resFile[idx], 
 			    existsTarget[idx], lastModifiedTarget[idx]);
@@ -122,7 +122,7 @@ class CommandExecutor {
      * Logging: 
      * <ul>
      * <li> EEX02: no target file 
-     * <li> WEX03: target file not updated 
+     * <li> EEX03: target file not updated 
      * <li> WEX04: cannot read target file 
      * </ul>
      */
@@ -152,9 +152,9 @@ class CommandExecutor {
 
 	if (lastModifiedAfter <= lastModifiedBefore) {
 	    assert lastModifiedAfter == lastModifiedBefore;
-	    this.log.warn("WEX03: Running " + command + 
-			  " failed: Target file '" + 
-			  target.getName() + "' is not updated. ");
+	    this.log.error("EEX03: Running " + command + 
+			   " failed: Target file '" + 
+			   target.getName() + "' is not updated. ");
 	    return false;
 	}
 	return true;

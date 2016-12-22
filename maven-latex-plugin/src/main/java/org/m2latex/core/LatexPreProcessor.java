@@ -132,14 +132,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	fig {
 	    // converts a fig-file into pdf 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
-	    // TEX01, EEX01, EEX02, WEX03, WEX04, WEX05 
+	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
 		throws BuildFailureException {
 
 		// may throw BuildFailureException TEX01, 
-		// may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+		// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 		proc.runFig2Dev(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
@@ -156,7 +156,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	gp {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
-	    // TEX01, EEX01, EEX02, WEX03, WEX04, WEX05 
+	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
@@ -177,7 +177,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	mp {
 	    // converts a metapost-file into mps-format 
 	    // invoking {@link #runMetapost2mps(File)} 
-	    // TEX01, EEX01, EEX02, WEX03, WEX04, WEX05 
+	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
 	    void transformSrc(File file, 
 			      LatexPreProcessor proc, 
 			      Collection<File> lmFiles) 
@@ -354,7 +354,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <ul>
 	 * <li> WFU03: cannot close 
 	 * <li> WPP02: tex file may be latex main file 
-	 * <li> EEX01, EEX02, WEX03, WEX04, WEX05: 
+	 * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
 	 * if applications for preprocessing graphic files failed. 
 	 * </ul>
 	 *
@@ -503,7 +503,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> EEX01, EEX02, WEX03, WEX04, WEX05: 
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if running the fig2dev command failed. 
      * </ul>
      *
@@ -524,7 +524,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	// all three 
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	runFig2DevInTex(figFile, LatexDev.pdf);
 	runFig2DevInTex(figFile, LatexDev.dvips);
 	runFig2TexInclDev(figFile);
@@ -537,7 +537,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created by {@link #runFig2TexInclDev(File)}. 
      * <p>
      * Logging: FIXME: 
-     * warning EEX01, EEX02, WEX03, WEX04, WEX05 
+     * warning EEX01, EEX02, EEX03, WEX04, WEX05 
      *
      * @param figFile
      *    the fig-file to be processed 
@@ -564,7 +564,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.debug("Running " + command + " -L pdftex/pstex  ... on '" + 
 		       figFile.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(figFile.getParentFile(), 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -684,7 +684,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * at latex compile runtime. 
      * <p>
      * Logging: FIXME: 
-     * warning EEX01, EEX02, WEX03, WEX04, WEX05 
+     * warning EEX01, EEX02, EEX03, WEX04, WEX05 
      *
      * @param figFile
      *    the fig-file to be processed 
@@ -707,7 +707,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.debug("Running " + command + 
 		       " -L (pdf/ps)tex_t... on '" + figFile.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(figFile.getParentFile(), 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -790,7 +790,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> EEX01, EEX02, WEX03, WEX04, WEX05: 
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if running the ptx/pdf-conversion built-in in gnuplot fails. 
      * </ul>
      *
@@ -805,13 +805,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void runGnuplot2Dev(File gpFile) throws BuildFailureException {
 	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	// both may throw BuildFailureException TEX01, 
-	// and  may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+	// and  may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	runGnuplot2Dev(gpFile, LatexDev.dvips);
 	runGnuplot2Dev(gpFile, LatexDev.pdf);
     }
 
     // may throw BuildFailureException TEX01, 
-    // may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+    // may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
     private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -847,7 +847,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    this.log.debug("Running " + command + 
 			   " -e...  on '" + gpFile.getName() + "'. ");
 	    // may throw BuildFailureException TEX01, 
-	    // may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+	    // may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	    this.executor.execute(gpFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
 				  command, 
@@ -887,7 +887,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WAP01: Running <code>command</code> failed. For details...
      * <li> WAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if log file is not readable. 
-     * <li> EEX01, EEX02, WEX03, WEX04, WEX05: 
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if running the mpost command failed. 
      * </ul>
      *
@@ -911,7 +911,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// but this is not worse than with latex 
 
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
   	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -1170,7 +1170,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WFU03: cannot close 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
-     * <li> EEX01, EEX02, WEX03, WEX04, WEX05: 
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      if running graphic processors failed. 
      * </ul>
      *
@@ -1192,7 +1192,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     	Collection<String> skipped        = new TreeSet<String>();
     	Collection<File>   latexMainFiles = new TreeSet<File>();
 	// may throw BuildFailureException TEX01, 
-	// log warning EEX01, EEX02, WEX03, WEX04, WEX05, WFU03, WPP02 
+	// log warning EEX01, EEX02, EEX03, WEX04, WEX05, WFU03, WPP02 
       	processGraphicsSelectMain(dir, node, skipped, latexMainFiles);
 
     	if (!skipped.isEmpty()) {
@@ -1209,7 +1209,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <ul>
      * <li> WFU03: cannot close 
      * <li> WPP02: tex file may be latex main file 
-     * <li> EEX01, EEX02, WEX03, WEX04, WEX05: 
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if applications for preprocessing graphic files failed. 
      * </ul>
      *
@@ -1261,7 +1261,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// or tex-files to be inputted. 
 
     		// may throw BuildFailureException TEX01, 
-    		// log warning EEX01, EEX02, WEX03, WEX04, WEX05 
+    		// log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 		// WFU03, WPP02 
 		if (!file.isHidden()) {
 		    handler.transformSrc(file, this, latexMainFilesLocal);
@@ -1273,7 +1273,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
 	    // may throw BuildFailureException TEX01, 
-	    // log warning EEX01, EEX02, WEX03, WEX04, WEX05, WPP03 
+	    // log warning EEX01, EEX02, EEX03, WEX04, WEX05, WPP03 
 	    // WFU03, WPP02 
      	    processGraphicsSelectMain(new File(dir, entry.getKey()),
 				      entry.getValue(), 

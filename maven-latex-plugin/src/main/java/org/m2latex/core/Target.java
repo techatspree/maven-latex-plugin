@@ -134,7 +134,7 @@ public enum Target {
      * delegating to <code>latexProcessor</code>. 
      * Logging: FIXME: may be incomplete 
      * <ul>
-     * <li> EEX01, WEX02, WEX03, WEX04, WEX05 if running a command 
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05 if running a command 
      *      to transform <code>texFile</code> failed. 
      * </ul>
      *
