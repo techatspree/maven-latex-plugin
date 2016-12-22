@@ -360,7 +360,7 @@ zzT$T\.e?ps|
 		 This is not usable within latex; not even '1.0'. 
 		 o '-s fsize' 
 		 Set the default font size (in points) 
-		 for text objects to `fsize'.
+		 for text objects to 'fsize'.
 		 Refers to the latex-fonts only. 
 		 o '-b width' 
 		 specify width of blank border around figure (1/72 inch). -->
@@ -368,7 +368,7 @@ zzT$T\.e?ps|
 
 	    <!-- The options for the command $fig2devCommand 
 		 specific for the output languages 'pdftex_t' 
-		 and <code>pstex_t</code> which are the same. 
+		 and 'pstex_t' which are the same. 
 		 Note that in addition to these options, 
 		 the option '-L pdftex_t' specifies the language, 
 		 $fig2devGenOptions specifies the options 
@@ -387,7 +387,7 @@ zzT$T\.e?ps|
 		 set encoding for text translation 
 		 (0 no translation, 1 ISO-8859-1, 2 ISO-8859-2)
 		 o '-F'  
-		 don't set font family/series/shape, 
+		 do not set font family/series/shape, 
                  so you can set it from latex. 
 		 o '-v' 
 		 Verbose mode.
