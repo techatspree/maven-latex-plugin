@@ -342,19 +342,56 @@ zzT$T\.e?ps|
 		 common to both output languages. 
 		 For the options specific for the two output langugages 
 		 'pdftex' and 'pdftex_t', 
-		 see $fig2devPtxOptions and $fig2devPdfOptions, 
+		 see $fig2devPtxOptions and $fig2devPdfEpsOptions, 
 		 respectively. 
-		 The default value is the empty string. -->
+		 The default value is the empty string. 
+		 
+		 o '-D +/-rangelist' 
+		 Export layers selectively ('+') 
+		 or exclude layers from export ('-'). 
+		 E.g. -D +10,40,55:70,80  means  keep 
+		 only layers 10, 40, 55 through 70, and 80.
+		 o '-j' 
+		 i18n (internationalization feature)
+		 o '-m mag' 
+		 Set the magnification at which the figure is rendered 
+		 to 'mag'.
+		 The default is '1.0'. 
+		 This is not usable within latex; not even '1.0'. 
+		 o '-s fsize' 
+		 Set the default font size (in points) 
+		 for text objects to `fsize'.
+		 Refers to the latex-fonts only. 
+		 o '-b width' 
+		 specify width of blank border around figure (1/72 inch). -->
  	    <fig2devGenOptions></fig2devGenOptions>
 
 	    <!-- The options for the command $fig2devCommand 
-		 specific for the output language 'pdftex_t'. 
+		 specific for the output languages 'pdftex_t' 
+		 and <code>pstex_t</code> which are the same. 
 		 Note that in addition to these options, 
 		 the option '-L pdftex_t' specifies the language, 
 		 $fig2devGenOptions specifies the options 
 		 common for the two output langugages 
 		 'pdftex' and 'pdftex_t' 
-		 and '-p xxx.pdf' specifies the pdf-file to be included. 
+		 and '-p xxx' specifies the full path 
+		 of the pdf/eps-file to be included without extension. 
+		 
+		 Possible options are the following: 
+		 (These seem to work for tex only 
+		 although according to documentation for all languages. )
+ 		 Possible values are 
+		 
+		 o options specified for $fig2devGenOptions 
+		 o '-E num'  
+		 set encoding for text translation 
+		 (0 no translation, 1 ISO-8859-1, 2 ISO-8859-2)
+		 o '-F'  
+		 don't set font family/series/shape, 
+                 so you can set it from latex. 
+		 o '-v' 
+		 Verbose mode.
+  
 		 The default value for this option is the empty string. -->
 	    <fig2devPtxOptions></fig2devPtxOptions>
 
@@ -366,7 +403,7 @@ zzT$T\.e?ps|
 		 common for the two output langugages 
 		 'pdftex' and 'pdftex_t'. 
 		 The default value for this option is the empty string. -->
-	    <fig2devPdfOptions></fig2devPdfOptions>
+	    <fig2devPdfEpsOptions></fig2devPdfEpsOptions>
 
 	    <!-- The command for conversion of gnuplot-files 
 		 into various formats. 
@@ -393,9 +430,10 @@ zzT$T\.e?ps|
 		 Leading and trailing blanks are ignored. 
 		 A sequence of at least one blank separate the proper options. 
 		 The default value is 
-		 '-interaction=nonstopmode -recorder -s prologues=2'. -->
+		 '-interaction=nonstopmode -recorder -s prologues=2'. 
+		 FIXME: does not work:'outputtemplate="%j_%c.mps"' -->
 	    <metapostOptions>
-	    -interaction=nonstopmode -recorder -s prologues=2
+	      -interaction=nonstopmode -recorder -s prologues=2 
 	    </metapostOptions>
 
 	    <!-- The command to create bounding box information 
@@ -563,11 +601,12 @@ not allowed:
 	    <!-- Whether creation of pdf-files from latex-files 
 		 goes via dvi-files. 
 		 
-		 If 'pdfViaDvi' is set 
+		 If $pdfViaDvi is set 
 		 and the latex processor needs repetitions, 
 		 these are all done creating dvi 
-		 and then pdf is created in a final step. 
-		 If 'pdfViaDvi' is not set, 
+		 and then pdf is created in a final step 
+		 invoking the command $dvi2pdfCommand. 
+		 If $pdfViaDvi is not set, 
 		 latex is directly converted into pdf. 
 		 
 		 Currently, not only conversion of latex-files is affected, 
@@ -577,6 +616,13 @@ not allowed:
 		 then the formats are more based on (encapsulated) postscript; 
 		 else on pdf. 
 		 
+		 In the dvi-file for jpg, png and svg 
+		 only some space is visible and only in the final step 
+		 performed by $dvi2pdfCommand, 
+		 the pictures are included using the bounding boxes 
+		 given by the .bb or the .xbb-file. 
+		 These are both created by $ebbCommand
+		 
 		 Of course, the target dvi is not affected: 
 		 This uses always the dvi-format. 
 		 What is also affected are the tasks 
@@ -584,6 +630,10 @@ not allowed:
 		 Although these are based on htlatex which is always dvi-based, 
 		 the preprocessing is done in dvi or in pdf. 
 		 Also the task txt is affected. 
+		 
+		 Performance: 
+		 false: 17.692s-18.892s
+		 true:  22.449s-24.500s
 
 		 The default value is 'false'. -->
 	    <pdfViaDvi>true</pdfViaDvi>
