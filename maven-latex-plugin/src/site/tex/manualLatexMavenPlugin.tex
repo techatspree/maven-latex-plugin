@@ -700,22 +700,26 @@ rasterizer -m application/pdf file.svgz -d file.pdf
 cairosvg in.svg -o out.pdf
 yyy
 
-\section{Conversions done by this Plugin and Task}\label{sec:conversions}
+\section{Graphical Preprocessing}\label{sec:GraphConversions}
 
-This section describes the conversions of source files into target files 
+This section describes the conversions of 
+graphical source files into target files 
 in detail. 
 
-The most important target file formats is \gls{pdf}. 
 But pdf also occurs as an intermediate format for pictures. 
 For historical reasons, still \gls{eps} is used. 
 Section~\ref{subsec:figpdf} shows that it suffices to stick to pictures 
 in pdf-format. 
+% FIXME: REALLY? 
+%FIXME: missing pdf als basic input format. What about (e)ps? 
 Section~\ref{subsec:fig2dev} shows how {\tt fig2dev} converts fig-files 
 into \LaTeX-files containing text and including graphics in as pdf-files. 
 Likewise, Section~\ref{subsec:gnuplot2pdf} describes 
 how gnuplot converts gnuplot-files into pdf-files. 
-Currently, these are the only graphic formats which must be converted 
-before being able to be included into a \LaTeX-file. 
+An insteresting alternative to gnuplot for computing pictures 
+is metapost described in Section~\ref{subsec:metapost}. 
+Also several formats collected in Section~\ref{subsec:picasis} 
+may be included as is. 
 
 
 
@@ -756,70 +760,121 @@ via {\tt \textbackslash includegraphics}.
 
 \index{xfig}
 \index{fig2dev}
-Currently, only figures drawn with {\tt xfig}, or, to be more precise, 
-figures stored in the transfig image file format 
-with file extension {\tt .fig} are supported. 
-The file extension .fig is also used by matlab to store plots 
+A simple but still useful tool to draw figures is {\tt xfig} 
+which stores graphics in a native format 
+described in \cite{XFigF} with file extionsion {\tt .fig}. 
+The file extension {\tt .fig} is also used by matlab to store plots 
 but this is something different. 
+Graphics in xfig format cannot be directly included in latex files 
+but must be exported into a \LaTeX-readable format. 
+
 To export a file {\tt xxx.fig} into several external formats, 
 {\tt xfig} uses {\tt fig2dev}. 
-Among others, {\tt fig2dev} supports export to mixed pdf and \LaTeX{}: 
-graphics in pdf 
-and text typically in \LaTeX{} which yields the fonts 
-characteristic for \LaTeX{} or also in pdf, 
-which yields postscript fonts. 
-the alternative is controlled via the ``special''-flag in the fig-file: 
-if set, the text is typeset in \LaTeX- or in pdf-format, 
-depending on whether the special-flag is set for that text. 
+A look in \cite{XFigF}, Section 3.4 shows that texts with set ``special''-flag 
+are interpreted as (la)tex-code. 
+For these texts the appropriate export language would be {\tt latex}. 
+On the other hand, {\tt latex} is weak in graphics 
+and {\tt pdf} would be the ideal export format for all kinds of objects, 
+except for texts with set ``special''-flag. 
+In {\tt pdf} format, texts are interpreted litterally, 
+independent of the ``special''-flag. 
+Thus {\tt fig2dev} offers a mixed solution: 
+export format {\tt pdftex} which yields a pdf-file 
+containing all but text with set ``special''-flag 
+and complementary {\tt pdftex\_t} which yields a tex-file 
+including the pdf-file and the texts with set ``special''-flag. 
 \index{special-flag}%maybe glossary 
 
+For example, the fig-file defining Figure~\ref{fig:fig2dev}, 
+{\tt 01fig2dev.fig} is transformed into a file  {\tt 01fig2dev.ptx} 
+in format {\tt pdftex\_t} which starts like this: 
+%
+\lstset{language=tex, breaklines, basicstyle=\small}
+\lstinputlisting[lastline=25]{01fig2dev.ptx}
 
-Accordingly, the export requires two commands and yields two files: 
+The file {\tt xxx.ptx} is ``inputted'' to the tex-file of this manual 
+by {\tt\textbackslash input\{xxx.ptx\}} 
+automatically including {\tt xxx.pdf}. 
+Note that the full path {\tt pppxxx.pdf} to {\tt xxx.pdf} is required, 
+because relative paths are interpreted in terms of the file 
+containing {\tt\textbackslash input\{xxx.ptx\}}. 
+Observe also that we can drop the suffix which is expressed as ``{\tt pppxxx}'' 
+because \LaTeX{} chooses the right suffix: 
+for pdf-format this is {\tt.pdf}. 
+As we will see below, 
+leaving the suffix away is crucial to make {\tt xxx.ptx} work 
+both for pdf-format and for dvi-format required to create html- and odt-files. 
+As indicated in Section~\ref{subsec:figpdf}, 
+the commands in {\tt xxx.ptx} 
+require the packages {\tt graphicx} and {\tt xcolor}. 
+
+To export {\tt xxx.fig} into {\tt xxx.ptx} and {\tt xxx.pdf} 
+requires two commands: 
 %
 \begin{Verbatim}[fontsize=\scriptsize]
-fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfOptions>            xxx.fig xxx.pdf   
-fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions> -p xxx.pdf xxx.fig xxx.ptx
+fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig xxx.pdf   
+fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p pppxxx xxx.fig xxx.ptx
 \end{Verbatim}
 %
 Both commands specify the input file {\tt xxx.fig}, 
 both use the options given by the parameter {\tt fig2devGenOptions} 
 while each invocation allows to specify also specific options, 
-{\tt fig2devPdfOptions} and {\tt fig2devPtxOptions}, respectively, 
-and both use the option {\tt -L} to specify the output language. 
+{\tt fig2devPdfEpsOptions} and {\tt fig2devPtxOptions}, respectively, 
+and both use the option {\tt -L} to specify the output format (``language''). 
 
-Here, {\tt pdftex} means pdf-format but without text with special-flag set. 
-Accordingly, {\tt xxx.pdf} corresponds with {\tt xxx.fig} in pdf-format 
-without ``special texts''. 
-Correspongdingly, {\tt pdftex\_t} specifies 
-that the ouput file {\tt xxx.ptx} is in the \LaTeX-format 
-including only ``special texts'' in {\tt xxx.fig}. 
-Unlike one can read in the documentation of {\tt fig2dev}, 
-the option {\tt -p xxx.pdf} does not stand for ``portrait'' 
-as opposed to {\tt -l xxx.pdf} for ``landscape'' 
-with dummy argument {\tt xxx.pdf}. 
-The truth is that {\tt -p xxx.pdf} says, 
-that in {\tt xxx.ptx} the file {\tt xxx.pdf} must be included 
-using the command {\tt\textbackslash includegraphics}. 
+%FIXME: ptx-->tex and then: convention: intuitive suffixes 
 
-Thus the according \LaTeX{} main document 
-must use packages {\tt graphicx} and {\tt xcolor} 
-as indicated in Section~\ref{subsec:figpdf}. 
-The file {\tt xxx.ptx} is ``inputted'' into the tex-file 
-with the {\tt\textbackslash input}-command. 
-Note that this is appropriate for \LaTeX{} creating pdf-files, 
-not postscript or dvi. 
+The parameters specific for {\tt pdftex} are called {\tt fig2devPdfEpsOptions} 
+because the options available are the same 
+as for output format {\tt pstex} creating eps-files. 
+An example for a common option would be {\tt -b width} 
+which shall specify the same boundary for both formats; 
+otherwise they do not fit. 
 
-Note also that by convention, the ending for the included \LaTeX-file 
-is not {\tt ptx} but {\tt pdf\_t}. 
-In the long run, **** we shall support also creation of \LaTeX-files 
-including \gls{eps}-files. 
-By convention, the according ending is {\tt pstex\_t}. 
-To handle both cases in one enclosing \LaTeX-file, 
-a unified file ending is required. 
-We have chosen {\tt ptx} for ``picture-tex''. 
-Handling both \gls{pdf} and \gls{eps}-files, 
-may be necessary e.g. for the tex4ht-package. 
-An alternative is usage of a certain driver. 
+For the output format {\tt pdftex\_t}, 
+the option {\tt -p pppxxx} says, 
+that the string {\tt pppxxx} must be included in {\tt xxx.ptx} 
+as {\tt\textbackslash includegraphics\{pppxxx\}}. 
+Note that the option {\tt-p} shall not be specified 
+in {\tt fig2devPtxOptions}, because it is automatically added. 
+
+Equivalent to mixed export with formats {\tt pdftex} and {\tt pdftex\_t} 
+which is appropriate for \LaTeX-output format pdf, 
+is the mixed export with the according formats 
+{\tt pstex} and {\tt pstex\_t} appropriate for \LaTeX-output format dvi. 
+The difference is that {\tt pstex} creates an eps-file instead of a pdf-file 
+with the same content 
+and {\tt pstex\_t} creates a tex-file which looks like that 
+created by {\tt pdftex\_t} except including the eps-file 
+instead of the pdf-file. 
+If the suffix is not given, 
+{\tt pstex\_t} and {\tt pdftex\_t} create identical files. 
+Thus exporting {\tt xxx.fig} via 
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig xxx.eps   
+fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig xxx.pdf   
+fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p pppxxx xxx.fig xxx.ptx
+\end{Verbatim}
+%
+and ``inputting'' {\tt xxx.ptx} works for both \LaTeX{} output formats. 
+
+
+Note that {\tt xfig} chooses its file endings 
+according to Table~\ref {tab:xfigSuffixes} 
+which deviate from those used here. 
+
+\begin{longtable}{|l|lll|}
+\hline
+Output format (language) & xfig suffix & our suffix & format \\
+pstex                    & pstex       & eps        & eps \\
+pstex\_t                 & pstex\_t    & ptx        & tex \\
+pdftex                   & pdf         & pdf        & pdf \\
+pdftex\_t                & pdf\_t      & pdf        & pdf \\
+\hline
+\caption{\label{tab:xfigSuffixes} Suffixes used by xfig as opposed to suffixes
+  used here and actual file format }
+\end{longtable}
 
 
 Maybe xfig is intended to export from within the export dialog 
@@ -829,7 +884,8 @@ why the magnification must be set in the export dialog,
 but it is stored in the fig-file nevertheless. 
 
 Figure~\ref{fig:fig2dev} shows the transformation 
-of figures with {\tt fig2dev}. 
+of figures with {\tt fig2dev} 
+and the inclusion of the eps-file and of the pdf-file in the ptx-file. 
 Note that the {\tt fig2dev}-command is configurable 
 via the parameter {\tt fig2devCommand}, 
 but there will be hardly any command with the same command line interface 
@@ -840,17 +896,20 @@ At the same time, Figure~\ref{fig:fig2dev} is an example
 for a \LaTeX-file {\tt xxx.ptx} created from a fig-file 
 and embedded in this \LaTeX-file 
 with the {\tt\textbackslash input}-command. 
-Note that all text labels are created with the special-option, 
+More than that, 
+Figure~\ref{fig:fig2dev} describes the way it has been created. 
+Note that all text labels are specified with set ``special''-flag, 
 and are thus included as \LaTeX-text, 
 except the text {\bf\tiny postscript} 
-which is typeset with a postscipt font. 
+which is typeset with a postscipt font to make the difference visible. 
 
 
 \begin{figure}[htb]
 \begin{center}
 \input{01fig2dev.ptx}
 \end{center}
-\caption{\label{fig:fig2dev}Conversion of a fig-file into pdf and ptx-files}
+\caption{\label{fig:fig2dev}Conversion of a fig-file 
+into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
 
 
@@ -891,18 +950,36 @@ but unlike for fig-files these are created with a single command:
 %
 \begin{verbatim}
 gnuplot -e "set terminal cairolatex pdf <gnuplotOptions>;
-            set output 'gnuplot.ptx';
-            load 'gnuplot.gp'"
+            set output 'pppxxx';
+            load 'xxx.gp'"
 \end{verbatim}
 %
 exports {\tt xxx.gp} to {\tt xxx.ptx} and to {\tt xxx.pdf}, 
 the former containing \LaTeX{} and including the latter 
 using options given by the parameter {\tt gnuplotOptions}. 
-Note that this is appropriate for \LaTeX{} creating pdf-files, 
-not postscript or \gls{dvi}. 
-Strictly speaking, {\tt pdf} is another option, 
-but it is set internally and may thus not be specified 
-explicitly via the parameter {\tt gnuplotOptions}. 
+As described for exporting fig-files in Section~\ref{subsec:fig2dev}, 
+the output must be specified with the full path and without ending. 
+
+Accordingly, 
+%
+\begin{verbatim}
+gnuplot -e "set terminal cairolatex eps <gnuplotOptions>;
+            set output 'pppxxx';
+            load 'xxx.gp'"
+\end{verbatim}
+%
+exports {\tt xxx.gp} to {\tt xxx.ptx} and to {\tt xxx.eps}, 
+the former containing \LaTeX{} and including the latter 
+using options given by the parameter {\tt gnuplotOptions}. 
+Note that this writes another but identical file {\tt xxx.ptx}. 
+Thus performance is not optimal, but {\tt gnuplot} offers no way to avoid this. 
+If being strict, {\tt xxx.ptx} is perfectly correct only for output {\tt eps}, 
+if comments and error messages are taken into account 
+but as long as no error occurs, the result is perfectly ok also for {\tt pdf}. 
+
+As for inclusion of fig-files, 
+packages {\tt graphicx} and {\tt color} are needed. 
+
 
 %FIXME: 
 %Here further options are missing: 
@@ -915,7 +992,8 @@ explicitly via the parameter {\tt gnuplotOptions}.
 %    //                      {size <XX>{unit},<YY>{unit}}
 
 Figure~\ref{fig:gp2pdf} shows the transformation of the plots 
-and Figure~\ref{fig:gnuplot} shows an example of a \LaTeX-file 
+and the inclusion of graphic files. 
+In addition, Figure~\ref{fig:gnuplot} shows an example of a \LaTeX-file 
 created from a gnuplot file 
 and embedded in this \LaTeX-file with the {\tt\textbackslash input}-command. 
 %Note that the {\tt gnuplot}-command is configurable 
@@ -928,7 +1006,8 @@ and embedded in this \LaTeX-file with the {\tt\textbackslash input}-command.
 \begin{center}
 \input{02gp2pdf.ptx}
 \end{center}
-\caption{\label{fig:gp2pdf}Conversion of a gnuplot-file into a pdf-file}
+\caption{\label{fig:gp2pdf}Conversion of a gnuplot-file 
+into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
 
 \begin{figure}[htb]
@@ -944,7 +1023,7 @@ Converted sample gnuplot-file into ptx and pdf files }
 
 A graphic format, very native to TeX is {\tt metapost}, 
 a derivative of {\tt metafont} originally used to describe shape of fonts. 
-Although seemingly supported by TeX only, 
+Although seemingly supported by \TeX{} only, 
 {\tt metapost} is interesting at its own, 
 as it is a graphical programming language, 
 Turing complete, much like postscript. 
@@ -1064,7 +1143,8 @@ This would lead to invocation
 mpost -s 'outputformat="svg"' -s 'outputtemplate:="%j%c.svg"' -s prologues=3 file.mp
 \end{Verbatim}
 
-
+%FIXME: 
+Note that the output 
 
 \subsection{Pictures which are not created}\label{subsec:picasis}
 
@@ -1114,6 +1194,47 @@ Caution: {\tt inkscape} must be installed.
 \end{center}
 \caption{\label{fig:asIsSvg}Some svg-picture, directly included }
 \end{figure}
+
+
+\section{Processing of \LaTeX{} main files}\label{sec:latexMainConversions}
+
+Given graphics in formats includable in tex-files, 
+which may require preprocessing described in 
+Section~\ref{sec:GraphConversions}, 
+this section describes the conversions of latex main files 
+into target files in detail. 
+The most important target file formats is \gls{pdf}. 
+Conversion in this format is described in Section~\ref{subsec:tex2pdf}. 
+Note that \gls{pdf} also occurs as source format 
+for included pictures and as intermediate files. 
+Specific for \LaTeX{} is the \gls{dvi} format, 
+which is supported mainly for historical reasons. 
+% FIXME: nowhere described. 
+
+Almost independent of the format created, 
+Inclusion of bibliographies, indices and glossaries 
+requires additional conversions 
+done by several auxiliary programs. 
+Bibliographies are described in Section~\ref{subsec:bibtex}, 
+indices in Section~\ref{subsec:indices} 
+and glossaires in Section~\ref{subsec:glossaries}. 
+Sections~\ref{subsec:rerunMakeIndexGlossaries} 
+and~\ref{subsec:rerunLatex} 
+are special in that they describe rerunning several programs, 
+which may be necessary even if certain lists are present 
+like table of contents list of figures or list of tables. 
+
+
+Besides the output formats traditional for \LaTeX, 
+\gls{pdf} and \gls{dvi} describing e.g. books, 
+Section~\ref{subsec:tex2html} describes creation of 
+\gls{html}, Section~\ref{subsec:tex2odt} the creation of \gls{odt} and 
+Section~\ref{subsec:tex2doc} creation of MS word formats like \gls{docx}. 
+Finally, also pure text can be generated 
+as described in Section~\ref{subsec:tex2txt}. 
+
+
+
 
 \subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
 
@@ -1209,7 +1330,8 @@ and of the \LaTeX-processor {\tt latex2pdf} may be necessary.
 \begin{center}
 \input{09tex2pdf.ptx}
 \end{center}
-\caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file}
+\caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file 
+(accordingly into a dvi-file)}
 \end{figure}
 
 \subsection{Bibliographies}\label{subsec:bibtex}
@@ -1636,7 +1758,7 @@ and it contains the pictures needed in the html files.
 This is a log file listing the pictures of {\tt xxx.idv}, 
 the \gls{png} files that should be created, CSS information, 
 and user directives introduced 
-through the ‘{\tt\textbackslash Needs\{\ldots\}}’ command.
+through the ``{\tt\textbackslash Needs\{\ldots\}}'' command.
 
 
 {\tt t4ht}
@@ -1654,161 +1776,118 @@ for executing the requests made in the {\tt xxx.lg} script.
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/tex4ht.4ht
 version 2009-01-07-07:11
 --------------------------------------
---- Note --- for additional information, use the command line option `info'
+Note --- for additional information, use the command line option `info'
 --------------------------------------
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
---------------------------------------
---- Note --- to remove the <?xml version=...?> processing instruction use the c
-ommand line option `no-VERSION'
---------------------------------------
---------------------------------------
---- Note --- to remove the DOCTYPE declaration use the command line option `no-
-DOCTYPE'
---------------------------------------
+
+Note: to remove the <?xml version=...?> processing instruction 
+use the command line option `no-VERSION'
+
+Note: to remove the DOCTYPE declaration 
+use the command line option `no-DOCTYPE'
 )
 
-
 --------------------------------------
---- Note --- for marking of the base font, use the command line option `fonts+'
-
---------------------------------------
---------------------------------------
---- Note --- for non active _, use the command line option `no_'
---------------------------------------
---------------------------------------
---- Note --- for _ of catcode 13, use the command line option `_13'
---------------------------------------
---------------------------------------
---- Note --- for non active ^, use the command line option `no^'
---------------------------------------
---------------------------------------
---- Note --- for ^ of catcode 13, use the command line option `^13'
+Note: for marking of the base font, use the command line option `fonts+'
+Note: for non active _, use the command line option `no_'
+Note: for _ of catcode 13, use the command line option `_13'
+Note: for non active ^, use the command line option `no^'
+Note: for ^ of catcode 13, use the command line option `^13'
 --------------------------------------
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
 --------------------------------------
---- Note --- For section filenames that reflect on their titles use the command
- line option `sec-filename'
---------------------------------------
---------------------------------------
---- Note --- for alternative charset, use the command line option `charset=...'
+Note: For section filenames that reflect on their titles 
+use the command line option `sec-filename'
 
---------------------------------------
---------------------------------------
---- Note --- to ignore CSS font decoration, use the `NoFonts' command line opti
-on
---------------------------------------
---------------------------------------
---- Note --- for jpg bitmaps of pictures, use the `jpg' command line option. (C
-haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
-hes of tex4ht.c) 
---------------------------------------
---------------------------------------
---- Note --- for gif bitmaps of pictures, use the `gif' command line option. (C
-haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
-hes of tex4ht.c) 
---------------------------------------
---------------------------------------
---- Note --- for content and toc in 2 frames, use the command line option `fram
-es'
---------------------------------------
---------------------------------------
---- Note --- for content, toc, and footnotes in 3 frames, use the command line 
-option `frames-fn'
---------------------------------------
---------------------------------------
---- Note --- for file extension name xht, use the command line option `xht'
+Note: for alternative charset, use the command line option `charset=...'
+
+Note: to ignore CSS font decoration, use the `NoFonts' command line option
+
+Note: for jpg bitmaps of pictures, 
+use the `jpg' command line option. 
+(Character bitmaps are controled only by `g' 
+records of tex4ht.env and `-g' switches of tex4ht.c) 
+
+Note: for gif bitmaps of pictures, use the `gif' command line option. 
+(Character bitmaps are controled only by `g' 
+records of tex4ht.env and `-g' switches of tex4ht.c) 
+
+Note: for content and toc in 2 frames, 
+use the command line option `frames'
+
+Note: for content, toc, and footnotes in 3 frames, 
+use the command line option `frames-fn'
+
+Note --- for file extension name xht, use the command line option `xht'
 --------------------------------------
 TeX4ht package options: xhtml,uni-html4,2,pic-tabular,html
 --------------------------------------
---- Note --- to ignore CSS code, use the command line option `-css
---------------------------------------
---------------------------------------
---- Note --- for inline CSS code, use the command line option `css-in'
---------------------------------------
---------------------------------------
---- Note --- for pop ups on mouse over, use the command line option `mouseover'
+Note: to ignore CSS code, use the command line option `-css
 
---------------------------------------
---------------------------------------
---- Note --- for addressing images in a subdirectory, use the command line opti
-on `imgdir:.../'
---------------------------------------
+Note: for inline CSS code, use the command line option `css-in'
+
+Note: for pop ups on mouse over, use the command line option `mouseover'
+
+Note: for addressing images in a subdirectory, 
+use the command line option `imgdir:.../'
 )
 
---------------------------------------
---- Note --- for back links to toc, use the command line option `sections+'
---------------------------------------
---------------------------------------
---- Note --- for linear crosslinks of pages, use the command line option `next'
+Note --- for back links to toc, use the command line option `sections+'
 
---------------------------------------
-
+Note --- for linear crosslinks of pages, use the command line option `next'
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/latex.4ht
 version 2009-05-21-09:32
 --------------------------------------
---- Note --- for links into captions, instead of float heads, use the command l
+Note --- for links into captions, instead of float heads, use the command l
 ine option `refcaption'
 --------------------------------------
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
 --------------------------------------
---- Note --- For mini tocs immediately aftter the header use the command line o
-ption `minitoc<'
---------------------------------------
---------------------------------------
---- Note --- for enumerated list elements with valued data, use the command lin
-e option `enumerate+'
---------------------------------------
---------------------------------------
---- Note --- for enumerated list elements li's with value attributes, use the c
-ommand line option `enumerate-'
---------------------------------------
---------------------------------------
---- Note --- for CSS2 code, use the command line option `css2'
---------------------------------------
---------------------------------------
---- Note --- for bitmap fbox'es, use the command line option `pic-fbox'
---------------------------------------
---------------------------------------
---- Note --- for bitmap framebox'es, use the command line option `pic-framebox'
+Note --- For mini tocs immediately aftter the header 
+use the command line option `minitoc<'
 
+Note --- for enumerated list elements with valued data, 
+use the command line option `enumerate+'
+
+Note --- for enumerated list elements li's with value attributes, use the c
+ommand line option `enumerate-'
+
+Note --- for CSS2 code, use the command line option `css2'
+
+Note --- for bitmap fbox'es, use the command line option `pic-fbox'
+
+Note --- for bitmap framebox'es, use the command line option `pic-framebox'
+
+Note --- for inline footnotes use command line option `fn-in'
+
+Note --- for tracing of latex font commands, 
+use the command line option `fonts'
 --------------------------------------
 --------------------------------------
---- Note --- for inline footnotes use command line option `fn-in'
---------------------------------------
---------------------------------------
---- Note --- for tracing of latex font commands, use the command line option `f
-onts'
---------------------------------------
---------------------------------------
---- Note --- for width specifications of tabular p entries, use the `p-width' c
-ommand line option or a configuration similar to \Configure{HColWidth}{\HCode{ 
-style="width:\HColWidth"}}
+Note --- for width specifications of tabular p entries, 
+use the `p-width' command line option 
+or a configuration similar to 
+\Configure{HColWidth}{\HCode{style="width:\HColWidth"}}
 --------------------------------------
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4-math.4ht
 version 2009-05-18-23:01
 --------------------------------------
---- Note --- for pictorial eqnarray, use the command line option `pic-eqnarray'
+Note --- for pictorial eqnarray, use the command line option `pic-eqnarray'
 
---------------------------------------
---------------------------------------
---- Note --- for pictorial array, use the command line option `pic-array'
---------------------------------------
---------------------------------------
---- Note --- for pictorial $...$ environments, use the command line option `pic
--m' (not recommended!!)
---------------------------------------
---------------------------------------
---- Note --- for pictorial $...$ and $$...$$ environments with latex alt, use t
-he command line option `pic-m+' (not safe!!)
---------------------------------------
---------------------------------------
---- Note --- for pictorial array, use the command line option `pic-array'
---------------------------------------
+Note --- for pictorial array, use the command line option `pic-array'
+
+Note --- for pictorial $...$ environments, 
+use the command line option `pic-m' (not recommended!!)
+
+Note --- for pictorial $...$ and $$...$$ environments with latex alt, 
+use the command line option `pic-m+' (not safe!!)
+
+Note --- for pictorial array, use the command line option `pic-array'
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/unicode.4ht
 version 2010-12-18-17:40
@@ -1818,62 +1897,50 @@ version 2010-12-18-17:40
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
 --------------------------------------
---- Note --- for tocs without * entries, use command line option `notoc*'
---------------------------------------
---------------------------------------
---- Note --- for tocs without * entries, use command line option `notoc*'
---------------------------------------
---------------------------------------
---- Note --- to eliminate mini tables of contents, use the command line option 
-`nominitoc'
---------------------------------------
---------------------------------------
---- Note --- for frames-like object-based table of contents, use the command li
-ne option `obj-toc'
---------------------------------------
---------------------------------------
---- Note --- for files named derived from section titles, use the command line 
-option `sec-filename'
---------------------------------------
---------------------------------------
---- Note --- for i-columns index, use the command line option `index=i' (e.g., 
-index=2)
+Note --- for tocs without * entries, use command line option `notoc*'
+
+Note --- for tocs without * entries, use command line option `notoc*'
+
+Note --- to eliminate mini tables of contents, 
+use the command line option `nominitoc'
+
+Note --- for frames-like object-based table of contents, 
+use the command line option `obj-toc'
+
+Note --- for files named derived from section titles, 
+use the command line option `sec-filename'
+
+Note --- for i-columns index, 
+use the command line option `index=i' (e.g., index=2)
 --------------------------------------
 )
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
---------------------------------------
---- Note --- if included graphics are of degraded quality, try the command line
- options `graphics-num' or `graphics-'. The `num' should provide the density of
- pixels in the bitmaps (e.g., 110). 
---------------------------------------
---------------------------------------
---- Note --- for key dimensions try the option `Gin-dim'; for key dimensions wh
-en bounding box is unavailable try `Gin-dim+'; neither is recommended
---------------------------------------
+
+Note --- if included graphics are of degraded quality, 
+try the command line options `graphics-num' or `graphics-'. 
+The `num' should provide the density of pixels in the bitmaps (e.g., 110). 
+
+Note --- for key dimensions try the option `Gin-dim'; 
+for key dimensions when bounding box is unavailable 
+try `Gin-dim+'; neither is recommended
 )
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
---------------------------------------
---- Note --- for URL encoding within href use the command line option `url-enc'
-
---------------------------------------
+Note --- for URL encoding within href use the command line option `url-enc'
 )
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
---------------------------------------
---- Note --- for pictorial longtable, use the command line option `pic-longtabl
-e'
---------------------------------------
+
+Note --- for pictorial longtable, 
+use the command line option `pic-longtable'
 )
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/html4.4ht
---------------------------------------
---- Note --- to ensure proper alignments use fixed size fonts (see listings.dtx
-)
---------------------------------------
-)
 
+Note --- to ensure proper alignments use fixed size fonts (see listings.dtx
+)
+)
 \end{verbatim}
 
 {\tt tex4ht} yields 
@@ -1903,6 +1970,33 @@ tex4ht [-f<path-separator-ch>]in-file[.dvi]
    [-v<idv version>]    replacement for the given dvi version
    [-xs]           ms-dos file names for automatically generated gifs
 \end{verbatim}
+
+
+{\tt t4ht} yields 
+
+\begin{verbatim}
+--------------------------------------------------------------------
+t4ht [-f<dir char>]filename ...
+  -b     ignore -d -m -M for bitmaps
+  -c...  choose named segment in env file
+  -d...  directory for output files       (default:  current)
+  -e...  location of tex4ht.env
+  -i     debugging info
+  -g     ignore errors in system calls
+  -m...  chmod ... of new output files (reused bitmaps excluded)
+  -p     don't convert pictures           (default:  convert)
+  -r     replace bitmaps of all glyphs    (default:  reuse old ones)
+  -M...  chmod ... of all output files
+  -Q     quit, if tex4ht.c had problems
+  -S...  permission for system calls: *-always, filter
+  -X...  content for field %%3 in X scripts
+  -....  content for field %%2 in . scripts
+
+Example: 
+   t4ht name -d/WWW/temp/ -etex4ht-32.env -m644
+--------------------------------------------------------------------
+\end{verbatim}
+
 
 \subsection{Creating odt-files}\label{subsec:tex2odt}
 
@@ -1975,31 +2069,6 @@ What gets lost is the postscript/pdf-parts, i.e.~the plain graphics.
 
 
 
-\subsection{Miscellaneous}
-
-Warning of failures occurs each time pdflatex is run. 
-Restricting this to the first run is not appropriate, 
-because the aux-file is read and so the failures may depend on the run. 
-
-
-
-
-
-
-%\index{!!!!}
-%\index{bla|(}
-%\index{bla|)}
-
-
-
-
-
-How to work on: First step: %
-\begin{verbatim}
-<cleanUp>false</cleanUp>
-\end{verbatim}
-Then have a look at the logging file. 
-
 
 \section{Parameters resp. Settings}\label{sec:settings}
 
@@ -2064,6 +2133,17 @@ indicates that {\tt Xxx} had an error.
 \item[Warn]
 indicates that {\tt Xxx} had a warning. 
 \end{itemize}
+
+Essentially, there are two kinds of parameters: 
+Most are just passed to the converters invoked by this software. 
+The parameters of this software 
+are so that the choice of the converter, i.e. the name of the application 
+can be configured 
+and also each converter can be almost freely configured. 
+
+Parameters not passed to an application, 
+are either really crucial 
+or are included to allow also development of latex files. 
 
 
 \subsection{General Parameters}\label{subsec:settingsGen}
@@ -2314,7 +2394,7 @@ The options for the command {\tt\$fig2devCommand}
 common to both output languages. 
 For the options specific for the two output langugages 
 `{\tt pdftex}' and `{\tt pdftex\_t}', 
-see {\tt\$fig2devPtxOptions} and {\tt\$fig2devPdfOptions}, 
+see {\tt\$fig2devPtxOptions} and {\tt\$fig2devPdfEpsOptions}, 
 respectively. 
 % The default value is the empty string. 
 \end{minipage}
@@ -2333,7 +2413,7 @@ and `{\tt-p xxx.pdf}' specifies the pdf-file to be included.
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
-\tt fig2devPdfOptions   & empty     \\
+\tt fig2devPdfEpsOptions   & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$fig2devCommand} 
@@ -2504,11 +2584,12 @@ rerun \LaTeX{} and have a look at the log-file.
 Whether creation of pdf-files from latex-files 
 goes via dvi-files. 
 
-If `pdfViaDvi' is set 
+If {\tt\$pdfViaDvi} is set 
 and the latex processor needs repetitions, 
 these are all done creating dvi 
-and then pdf is created in a final step. 
-If `pdfViaDvi' is not set, 
+and then pdf is created in a final step 
+invoking the command {\tt\$dvi2pdfCommand} 
+If {\tt\$pdfViaDvi} is not set, 
 latex is directly converted into pdf. 
 
 Currently, not only conversion of latex-files is affected, 
@@ -3602,6 +3683,13 @@ I ask myself how to detect this error in file line error mode!
 
 %\bla
 
+Pattern matching is linewise. 
+This is inappropriate for patternLatexMainFile 
+but also for further patterns like multiline-warnings. 
+
+Also there seems to be a bug in java's regex package, 
+which leads to nontermination: 
+pattern {\tt\~(\textbackslash s*)*xx} seems not to terminate. 
 
 A problem is also that the ending .svg may occur as a source 
 and as a target file of htlatex. 
