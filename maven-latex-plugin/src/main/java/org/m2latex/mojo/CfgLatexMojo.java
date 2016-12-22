@@ -53,7 +53,7 @@ public class CfgLatexMojo extends AbstractLatexMojo {
      * <li> WFU05: Cannot delete... 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
-     * <li> EEX01, WEX02, WEX03, WEX04, WEX05: 
+     * <li> EEX01, EEX02, WEX03, WEX04, WEX05: 
      *      applications for preprocessing graphic files 
      *      or processing a latex main file fails. 
      * </ul>
@@ -65,7 +65,7 @@ public class CfgLatexMojo extends AbstractLatexMojo {
 	try {
 	    // may throw BuildFailureException FIXME 
 	    // may log warning WFU01, WFU03, WFU05, WPP02, WPP03, 
-	    // EEX01, WEX02, WEX03, WEX04, WEX05 
+	    // EEX01, EEX02, WEX03, WEX04, WEX05 
 	    this.latexProcessor.create();
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());

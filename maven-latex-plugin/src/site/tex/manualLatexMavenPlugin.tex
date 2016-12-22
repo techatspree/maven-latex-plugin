@@ -3351,7 +3351,11 @@ If an application writes at least one error into the log file,
 this software logs an error. 
 \item
 If an application writes no error into the log file 
-but at least one warning, this software logs a warning. 
+but at least one warning, principially this software logs a warning. 
+There may be parameters to switch off warnings partially 
+or all of them, 
+but there must be also a configuration of parameter values 
+that allow logging all warnings. 
 \end{itemize}
 
 If an application does not create the expected output file, 
@@ -3382,7 +3386,7 @@ Error execution means that there is even no valid return code.
 \end{minipage}
 } \\
 
-\tt\footnotesize WEX02 & \tt\footnotesize Running \$command failed: 
+\tt\footnotesize EEX02 & \tt\footnotesize Running \$command failed: 
 			  No target file '\$fileName' written. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
