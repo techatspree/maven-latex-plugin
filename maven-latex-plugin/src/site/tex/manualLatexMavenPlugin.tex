@@ -718,6 +718,8 @@ Likewise, Section~\ref{subsec:gnuplot2pdf} describes
 how gnuplot converts gnuplot-files into pdf-files. 
 An insteresting alternative to gnuplot for computing pictures 
 is metapost described in Section~\ref{subsec:metapost}. 
+A more elaborate alternative to fig-pictures are svg-pictures 
+described in Section~\ref{subsec:picSvg}
 Also several formats collected in Section~\ref{subsec:picasis} 
 may be included as is. 
 
@@ -1146,6 +1148,29 @@ mpost -s 'outputformat="svg"' -s 'outputtemplate:="%j%c.svg"' -s prologues=3 fil
 %FIXME: 
 Note that the output 
 
+\subsection{Inclusion of svg-files}\label{subsec:picSvg}
+
+Figure~\ref{fig:asIsSvg} is a picture in \gls{svg}-format 
+and included directly. 
+This time, we did not use the {\tt graphicx}-package directly 
+but the package {\tt svg}. 
+Inclusion is with the {\tt\textbackslash includesvg}-command. 
+Note that the suffix of the filename shall be omitted. 
+So the command is {\tt \textbackslash
+includesvg[width=0.9\textbackslash textwidth]\{some\}}. 
+For more information see~\cite{SvgP}. 
+Caution: {\tt inkscape} must be installed. 
+
+\begin{figure}[htb]
+\begin{center}
+%\input{08someSvg.pdf_tex}%
+\includesvg[width=0.5\textwidth]{08someSvg}%
+\end{center}
+\caption{\label{fig:asIsSvg}Some svg-picture, directly included }
+\end{figure}
+
+
+
 \subsection{Pictures which are not created}\label{subsec:picasis}
 
 Figure~\ref{fig:asIsJpg} shows some picture included as jpg. 
@@ -1159,7 +1184,7 @@ This list may be incomplete.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{06someJpgOboeBaroqueDennerMIR370}%.jpg
+\includegraphics[width=0.9\textwidth]{08someJpgOboeBaroqueDennerMIR370}%.jpg
 \end{center}
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
 \end{figure}
@@ -1176,24 +1201,6 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
 
-
-Figure~\ref{fig:asIsSvg} is a picture in \gls{svg}-format 
-and included directly. 
-This time, we did not use the {\tt graphicx}-package 
-but the package {\tt svg}. 
-Inclusion is with the {\tt\textbackslash includesvg}-command. 
-Note that the suffix of the filename shall be omitted. 
-So the command is {\tt \textbackslash
-includesvg[width=0.9\textbackslash textwidth]\{some\}}. 
-For more information see~\cite{SvgP}. 
-Caution: {\tt inkscape} must be installed. 
-
-\begin{figure}[htb]
-\begin{center}
-\includesvg[width=0.9\textwidth]{08someSvg}%
-\end{center}
-\caption{\label{fig:asIsSvg}Some svg-picture, directly included }
-\end{figure}
 
 
 \section{Processing of \LaTeX{} main files}\label{sec:latexMainConversions}
@@ -3507,6 +3514,13 @@ Id.        & Message  \\
 \hline
 \tt\footnotesize WPP03  & \tt\footnotesize Skipped processing of files 
 with suffixes \$skipped. \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\tt\footnotesize WPP04  & \tt\footnotesize Skip processing '\$srcFile': 
+                                  interpreted as target of '\$lmFile'. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
