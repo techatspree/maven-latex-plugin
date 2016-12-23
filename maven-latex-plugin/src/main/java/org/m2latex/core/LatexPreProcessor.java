@@ -21,6 +21,7 @@ package org.m2latex.core;
 import java.io.File;
 import java.io.FileFilter;
 
+import java.util.Iterator;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.Map;
@@ -133,9 +134,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts a fig-file into pdf 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
 	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) 
+	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 
 		// may throw BuildFailureException TEX01, 
@@ -157,9 +156,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts a gnuplot-file into pdf 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
 	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) 
+	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runGnuplot2Dev(file);
 	    }
@@ -178,9 +175,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts a metapost-file into mps-format 
 	    // invoking {@link #runMetapost2mps(File)} 
 	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) 
+	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runMetapost2mps(file);
 	    }
@@ -196,9 +191,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * Handler for .svg-files representing scaleable vector graphics. 
 	 */
 	svg {
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) {
+	    void procSrc(File file, LatexPreProcessor proc) {
 		proc.log.info("Processing svg-file '" + file + 
 		 	      "' deferred to LaTeX run by need. ");
 		// FIXME: this works for pdf but not for dvi: 
@@ -217,9 +210,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * definde by the Joint Photographic Experts Group (jp(e)g). 
 	 */
 	jpg {
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) 
+	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.log.info("Jpg-file '" + file + "' needs no processing. ");
 		// FIXME: this works for pdf but not for dvi: 
@@ -247,9 +238,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * representing the Portable Network Graphics format. 
 	 */
 	png {
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) 
+	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.log.info("Png-file '" + file + "' needs no processing. ");
 		// FIXME: this works for pdf but not for dvi: 
@@ -277,11 +266,18 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * representing the TeX format, to be more precise the LaTeX format. 
 	 */
 	tex {
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) {
+	    void scheduleProcSrc(File file, 
+				 Map<File, SuffixHandler> file2handler, 
+				 LatexPreProcessor proc, 
+				 Collection<File> latexMainFiles) {
+		file2handler.put(file, this);// super 
 		// may log warnings WFU03, WPP02 
-		proc.addIfLatexMain(file, lmFiles);
+		proc.addIfLatexMain(file, latexMainFiles);
+	    }
+
+
+	    void procSrc(File file, LatexPreProcessor proc) {
+		// do nothing: no source 
 	    }
 	    void clearTarget(File file, 
 			     LatexPreProcessor proc, 
@@ -304,9 +300,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * representing the BibTeX format for bibliographies. 
 	 */
 	bib {
-	    void transformSrc(File file, 
-			      LatexPreProcessor proc, 
-			      Collection<File> lmFiles) {
+	    void procSrc(File file, LatexPreProcessor proc) {
 		proc.log.info("Found bibliography file '" + file + "'. ");
 	    }
 	    void clearTarget(File file, 
@@ -323,9 +317,18 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	};
 
+	// essentially, maps file to its handler 
+	// overwritten for tex: in addition add to latexMainFiles 
+	void scheduleProcSrc(File file, 
+			     Map<File, SuffixHandler> file2handler, 
+			     LatexPreProcessor proc, 
+			     Collection<File> latexMainFiles) {
+	    file2handler.put(file, this);
+	}
 
-
-
+	// FIXME: to be updated 
+	// if a graphic format: process source. 
+	// For tex and for bib: do nothing. 
 	/**
 	 * Typically, .i.e. for {@link #fig}-,  {@link #gp}-,  {@link #mp}- 
 
@@ -362,15 +365,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 *    a file with ending given by {@link #getSuffix()}. 
 	 * @param proc
 	 *    a latex pre-processor. 
-	 * @param latexMainFiles
-	 *    the collection of latex main files found so far. 
 	 * @throws BuildFailureException
 	 *    TEX01 only for {@link #fig}, {@link #gp} and {@link #mp} 
 	 *    because these invoke external programs. 
 	 */
-	abstract void transformSrc(File file, 
-				   LatexPreProcessor proc, 
-				   Collection<File> latexMainFiles)
+	abstract void procSrc(File file, LatexPreProcessor proc)
 	throws BuildFailureException;
 
 	/**
@@ -518,7 +517,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    and once for creating the pdf_t-file. 
      * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in fig.transformSrc(File, LatexPreProcessor, Collection) only 
+    // used in fig.procSrc(File, LatexPreProcessor, Collection) only 
     private void runFig2Dev(File figFile) throws BuildFailureException {
 	this.log.info("Processing fig-file '" + figFile + "'. ");
 
@@ -801,7 +800,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    in gnuplot fails. 
      * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in gp.transformSrc(File, LatexPreProcessor, Collection) only 
+    // used in gp.procSrc(File, LatexPreProcessor, Collection) only 
     private void runGnuplot2Dev(File gpFile) throws BuildFailureException {
 	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	// both may throw BuildFailureException TEX01, 
@@ -897,7 +896,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    TEX01 if invocation of the mpost command failed. 
      * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in mp.transformSrc(File, LatexPreProcessor, Collection) only 
+    // used in mp.procSrc(File, LatexPreProcessor, Collection) only 
     private void runMetapost2mps(File mpFile) throws BuildFailureException {
 	this.log.info("Processing metapost-file '" + mpFile + "'. ");
 	String command = this.settings.getMetapostCommand();
@@ -1113,7 +1112,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param latexMainFiles
      *    the collection of latex main files found so far. 
      */
-    // invoked only by tex.transformSrc(File, LatexPreProcessor, Collection)
+    // invoked only by tex.procSrc(File, LatexPreProcessor, Collection)
     private void addIfLatexMain(File texFile, Collection<File> latexMainFiles) {
 	// may log warnings WFU03, WPP02 
 	if (isLatexMainFile(texFile)) {
@@ -1225,7 +1224,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the collection of latex main files found so far. 
      * @throws BuildFailureException
      *    TEX01 invoking 
-     * {@link LatexPreProcessor.SuffixHandler#transformSrc(File, LatexPreProcessor, Collection)}
+     * {@link LatexPreProcessor.SuffixHandler#procSrc(File, LatexPreProcessor, Collection)}
      *    only for {@link LatexPreProcessor.SuffixHandler#fig}, 
      *    {@link LatexPreProcessor.SuffixHandler#gp} and 
      *    {@link LatexPreProcessor.SuffixHandler#mp} 
@@ -1247,12 +1246,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     	String suffix;
     	SuffixHandler handler;
 	Collection<File> latexMainFilesLocal = new TreeSet<File>();
+	Map<File, SuffixHandler> file2handler = 
+	    new TreeMap<File, SuffixHandler>();
    	for (String fileName : node.getRegularFileNames()) {
 	    file = new File(dir, fileName);
     	    suffix = this.fileUtils.getSuffix(file);
     	    handler = SUFFIX2HANDLER.get(suffix);
     	    if (handler == null) {
     		this.log.debug("Skipping processing of file '" + file + "'. ");
+		// warning on skipped files even on hidden files. 
     		skipped.add(suffix);
     	    } else {
 		// Either performs transformation now 
@@ -1264,14 +1266,51 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     		// log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 		// WFU03, WPP02 
 		if (!file.isHidden()) {
-		    handler.transformSrc(file, this, latexMainFilesLocal);
+		    handler.scheduleProcSrc(file, file2handler, 
+					    this, latexMainFilesLocal);
 		}
     	    }
-    	}
+    	} // for 
 
 	latexMainFiles.addAll(latexMainFilesLocal);
 
-    	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
+	// remove sources from file2handler.keySet() 
+	// if created by local latex main files 
+	FileFilter filter;
+	for (File lmFile : latexMainFilesLocal) {
+	    filter = this.fileUtils.getFileFilter
+		(lmFile, this.settings.getPatternClearFromLatexMain());
+	    Iterator<File> iter = file2handler.keySet().iterator();
+	    File src;
+	    while (iter.hasNext()) {
+		src = iter.next();
+		if (filter.accept(src)) {
+		    // FIXME: maybe this is too much: 
+		    // better just one warning per latex main file 
+		    // or just suffixes, i.e. handlers 
+		    this.log.warn("WPP04: Skip processing '" + src + 
+				  "': interpreted as target of '" + 
+				  lmFile + "'. ");
+		    iter.remove();
+		    continue;
+		}
+		// Here, src is not overwritten processing lmFile 
+		// FIXME: to be checked, whether this is also true 
+		// for targets of src 
+	    }
+	}
+
+	// Here process file, except tex (bib at least info) 
+	// with associated handler 
+	// FIXME: How to ensure, that nothing is overwritten? 
+	// NO: if a file is overwritten, then it is no source 
+	// and needs no processing 
+	for (Map.Entry<File, SuffixHandler> entry : file2handler.entrySet()) {
+	    entry.getValue().procSrc(entry.getKey(), this);
+	}
+
+	// go on recursively with subdirectories 
+    	for (Map.Entry<String, DirNode> entry : node.getSubdirs().entrySet()) {
 	    // may throw BuildFailureException TEX01, 
 	    // log warning EEX01, EEX02, EEX03, WEX04, WEX05, WPP03 
 	    // WFU03, WPP02 
