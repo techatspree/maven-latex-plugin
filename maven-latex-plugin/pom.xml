@@ -284,14 +284,27 @@
 		 The default value is 'true'. -->
             <cleanUp>false</cleanUp>
 
-	    <!-- For goal 'clr', 
-		 the tex source directory $texSrcDirectory is cleared, 
-		 i.e. all generated files should be removed, 
-		 e.g. those coming from graphic files. 
-		 This pattern defines the files to be removed 
+	    <!-- This pattern shall accept all the files 
 		 which were created from a latex main file 'xxx.tex'. 
 		 It is neither applied to directories 
 		 nor to 'xxx.tex' itself. 
+		 It shall not comprise neither graphic files to be processed 
+		 nor files created from those graphic files. 
+		 
+		 This pattern is applied 
+		 in the course of processing graphic files 
+		 to decide which graphic files should be processed 
+		 (those rejected by this pattern) 
+		 and to log warnings if there is a risk, 
+		 that graphic files to be processed 
+		 are skipped or that processing a latex main file overwrites 
+		 the result of graphic preprocessing. 
+		 
+		 When clearing the tex source directory {$texSrcDirectory, 
+		 i.e. all generated files should be removed, 
+		 first those created from latex main files. 
+		 As an approximation, 
+		 those are removed which match this pattern. 
 		 
 		 The sequence 'T$T' 
 		 is replaced by the prefix 'xxx'. 
@@ -302,7 +315,7 @@
 		 and must always be replaced with 'xxx'. 
 		 
 		 Spaces and newlines are removed 
-		 from that pattern before processing. 
+		 from that pattern before matching. 
 		 
 		 The default value '^T$T\.[^.]*' 
 		 is appropriate for most parameters and packages. 
@@ -320,7 +333,7 @@
 		 If the user finds an extension, (s)he is asked to contribute 
 		 and to notify the developer of this plugin. 
 		 Then the default value will be extended.  -->
-	    <patternClearFromLatexMain>
+	    <patternCreatedFromLatexMain>
 ^(
 T$T             (\.([^.]*|synctex\.gz|out\.ps)|
    (ch|se|su|ap|li)?\d+\.x?html?|
@@ -330,7 +343,7 @@ T$T             (\.([^.]*|synctex\.gz|out\.ps)|
 zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
-	    </patternClearFromLatexMain>
+	    </patternCreatedFromLatexMain>
 
 	    <!-- The fig2dev command for conversion of fig-files 
 		 into various formats. 
@@ -865,7 +878,7 @@ not allowed:
 		 may be an ending or an alternative of endings. 
 		 
 		 For an explanation of the pattern 'T$T', 
-		 see $patternClearFromLatexMain. 
+		 see $patternCreatedFromLatexMain. 
 		 Spaces and newlines are removed 
 		 from that pattern before processing. 
 		 
