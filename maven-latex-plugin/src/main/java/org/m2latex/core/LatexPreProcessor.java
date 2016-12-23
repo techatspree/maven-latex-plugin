@@ -58,6 +58,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private final static String SUFFIX_PTX = ".ptx";
     // the next two for preprocessing and in LatexDev only 
     final static String SUFFIX_PDFTEX = ".pdf_tex";
+    final static String SUFFIX_EPSTEX = ".eps_tex";
 
     // suffix for xfig
     private final static String SUFFIX_FIG = ".fig";
@@ -191,9 +192,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * Handler for .svg-files representing scaleable vector graphics. 
 	 */
 	svg {
-	    void procSrc(File file, LatexPreProcessor proc) {
-		proc.log.info("Processing svg-file '" + file + 
-		 	      "' deferred to LaTeX run by need. ");
+	    void procSrc(File file, LatexPreProcessor proc) 
+		throws BuildFailureException {
+		proc.runSvg2Dev(file);
+		// proc.log.info("Processing svg-file '" + file + 
+		//  	      "' deferred to LaTeX run by need. ");
 		// FIXME: this works for pdf but not for dvi: 
 		// even in the latter case, .pdf and .pdf_tex are created 
 	    }
@@ -817,7 +820,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	String command = this.settings.getGnuplotCommand();
 	// FIXME: eliminate literal 
 	// FIXME: wrong name 
-	File pdfFile = this.fileUtils.replaceSuffix
+	File grpFile = this.fileUtils.replaceSuffix
 	    (gpFile, "."+dev.getGnuplotInTexLanguage());
 	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
@@ -851,7 +854,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				  this.settings.getTexPath(), //**** 
 				  command, 
 				  args, 
-				  pdfFile, ptxFile);
+				  grpFile, ptxFile);
 //	}
 	// no check: just warning that no output has been created. 
     }
@@ -958,6 +961,58 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.fileUtils.deleteX(mpFile, filter);
     }
 
+    private void runSvg2Dev(File svgFile) throws BuildFailureException {
+	this.log.info("Processing svg-file '" + svgFile + "'. ");
+	// FIXME: add parameters 
+	String command = "inkscape"; // this.settings.getSvg2devCommand();
+	File workingDir = svgFile.getParentFile();
+
+	File grpFile = this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF);
+	File texFile = this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX);
+
+	String[] args = new String[] {
+	    "-z", // --without-gui          process files from console 
+	    "-D", // --export-area-drawing  Export the drawing (not the page)
+	    //       --export-eps=FILENAME  Export document to an EPS file
+	    "-E="+grpFile.getName(), 
+	    //       --export-pdf=FILENAME  Export document to a PDF file
+	    "-A="+grpFile.getName(), 
+	    "--export-latex",           //  Export PDF/PS/EPS without text. 
+	    // Besides the PDF/PS/EPS, a LaTeX file is exported,
+	    // putting the text on top of the PDF/PS/EPS file. 
+	    // Include the result in LaTeX like:
+	    // \input{latexfile.tex}
+	    svgFile.getName()
+	};
+	    //buildArguments(this.settings.getSvg2devOptions(), svgFile);
+
+
+	this.executor.execute(workingDir, 
+			      this.settings.getTexPath(), //**** 
+			      command, 
+			      args,
+			      grpFile,
+			      texFile);
+    }
+
+
+    /**
+     * Deletes the graphic files 
+     * created from the svg-file <code>svgFile</code>. 
+     * <p>
+     * Logging: 
+     * WFU05: Failed to delete file
+     */
+    private void clearTargetSvg(File svgFile) {
+       this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
+       // may log warning WFU05 
+       deleteIfExists(svgFile, SUFFIX_PDFTEX);
+//     deleteIfExists(svgFile, SUFFIX_PSTEX );
+       deleteIfExists(svgFile, SUFFIX_PDF   );
+       // FIXME: this works for pdf but not for dvi: 
+       // even in the latter case, .pdf and .pdf_tex are created 
+    }
+
     // Additional research: 
     // Documentation says, that this is needed for interface eps, 
     // but not for interface pdf. 
@@ -974,6 +1029,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	args[0] ="-x";
 	File resFile = this.fileUtils.replaceSuffix(file, SUFFIX_XBB);
 
+	this.log.debug("Running " + command + 
+		       " on '" + file.getName() + "'. ");
+	// may throw BuildFailureException TEX01, 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -1030,23 +1089,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
        // even in the latter case, .pdf and .pdf_tex are created 
     }
 
-
-    /**
-     * Deletes the graphic files 
-     * created from the svg-file <code>svgFile</code>. 
-     * <p>
-     * Logging: 
-     * WFU05: Failed to delete file
-     */
-    private void clearTargetSvg(File svgFile) {
-       this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
-       // may log warning WFU05 
-       deleteIfExists(svgFile, SUFFIX_PDFTEX);
-//     deleteIfExists(svgFile, SUFFIX_PSTEX );
-       deleteIfExists(svgFile, SUFFIX_PDF   );
-       // FIXME: this works for pdf but not for dvi: 
-       // even in the latter case, .pdf and .pdf_tex are created 
-    }
 
     /**
      *

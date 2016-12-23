@@ -753,7 +753,7 @@ It applies when converting \LaTeX{} into html and that like
 with htlatex if invoking someting like {\tt htlatex xxx.tex myxhtml,...} 
 where {\tt myxhtml} is located in the same directory as the \LaTeX-file 
 to be processed. 
-The configuration file exxentially contains a graphics configuration, 
+The configuration file essentially contains a graphics configuration, 
 which applies conversion to pdf-files included in the \LaTeX-file {\tt xxx.tex}
 via {\tt \textbackslash includegraphics}. 
 
@@ -1150,23 +1150,100 @@ Note that the output
 
 \subsection{Inclusion of svg-files}\label{subsec:picSvg}
 
-Figure~\ref{fig:asIsSvg} is a picture in \gls{svg}-format 
-and included directly. 
-This time, we did not use the {\tt graphicx}-package directly 
-but the package {\tt svg}. 
-Inclusion is with the {\tt\textbackslash includesvg}-command. 
+Comparable with the xfig-format described in Section~\ref{subsec:fig2dev} 
+but much more elaborate and widely used is the \gls{svg}-format. 
+There is a huge up-to-date official SVG 1.1 specification, \cite{Svg11} 
+and a specification for SVG Tiny 1.2, 
+\cite{Svg12Tiny} which is itself quite short and more readable 
+and gives also a good overview for ``SVG Big''. 
+For a tutorial, see \cite{SvgTut}. 
+As stated in \cite{Svg12Tiny}, Section 1.1, 
+svg-files may contain vector graphics, raster images and text. 
+It may also contain video and audio elements 
+and may be interactive and dynamic, 
+which goes beyond what can be included in \LaTeX. 
+
+Figure~\ref{fig:svgWithText} shows a picture in \gls{svg}-format. 
+As pdf-files can be included directly 
+via the {\tt\textbackslash includegraphics}-command, 
+using the \LaTeX-packages {\tt xcolor} and {\tt graphicx} 
+virtually, 
+{\tt xxx.svg} can be included directly via 
+% FIXME: done differently 
+\begin{verbatim}
+%\includesvg[width=0.5\textwidth]{xxx}%
+\end{verbatim}
+%
+using the \LaTeX-packages {\tt svg} described in~\cite{SvgP}. 
 Note that the suffix of the filename shall be omitted. 
-So the command is {\tt \textbackslash
-includesvg[width=0.9\textbackslash textwidth]\{some\}}. 
-For more information see~\cite{SvgP}. 
-Caution: {\tt inkscape} must be installed. 
+
+A closer look shows, that graphic preprocessing is done behind the scenes 
+in the course of a \LaTeX-run 
+creating files {\tt xxx.pdf} and {\tt xxx.pdf\_tex}. 
+As described for fig-files in Section~\ref{subsec:fig2dev} 
+and for gnuplot-files in Section~\ref{subsec:gnuplot2pdf}: 
+The latter is a latex-file containing text 
+and including the former. 
+To include {\tt xxx.pdf} 
+of course the \LaTeX-packages {\tt xcolor} and {\tt graphicx} 
+are required. 
+Moreover, it may happen that the \LaTeX-package {\tt transparent} 
+is required also, depending on the features used in{\tt xxx.svg}. 
+
+As indicated in \cite{SvgP}, Section 1, 
+the {\tt svg}-package delegates the transformation 
+of {\tt xxx.svg} {\tt xxx.pdf} and {\tt xxx.pdf\_tex} 
+to {\tt inkscape}. 
+This is a graphical editor with export functions 
+which can be invoked in batchmode also. 
+Of course using the {\tt svg}-package has the advantage 
+that no explicit preprocessing is required, 
+the created files updated by need. 
+It is worth thinking about whether it is worthwile 
+writing according packages {\tt fig} and {\tt gnuplot}. 
+
+On the other hand, 
+this breaks the workflow this software normally applies to graphic files. 
+In particular, the package creates latex main files 
+which are not removed after the latex run 
+if parametrized accordingly or if something goes wrong. 
+Also, the {\tt svg}-package does not provide the full flexibility 
+of a standard solution. 
+Since this software is still under construction 
+and more than that, is in an experimental phase, 
+we provide explicit preprocessing of svg-files using {\tt inkscape}. 
+Another problem with the {\tt svg}-package is, 
+that according to cite{SvgP}, Section 1, 
+it does not work on windows platforms. 
+
+
+According to \cite{SvgIncl}, Section~2.4.1, 
+incscape exports mixed pdf and latex if invoked approximately as 
+%
+\begin{Verbatim}[fontsize=\normalsize]
+inkscape -D -z --export-pdf=xxx.pdf --export-latex xxx.svg 
+\end{Verbatim} 
+%
+Also \cite{SvgIncl}, Section~3 indicates how to input the created file 
+{\tt xxx.pdf\_tex} into the latex document: 
+%
+\begin{verbatim}
+\def\svgwidth{0.5\textwidth}
+\input{xxx.pdf\_tex}%
+\end{verbatim}
+
+pdftops or something? 
+
+FIXME: picture illustrating the conversion is missing 
+
 
 \begin{figure}[htb]
 \begin{center}
-%\input{06someSvg.pdf_tex}%
-\includesvg[width=0.5\textwidth]{06someSvg}%
+\def\svgwidth{0.5\textwidth}
+\input{06someSvg.pdf_tex}%
+%\includesvg[eps,width=0.5\textwidth]{06someSvg}%
 \end{center}
-\caption{\label{fig:asIsSvg}Some svg-picture, directly included }
+\caption{\label{fig:svgWithText}Some svg-picture with text FIXME: uniformity  }
 \end{figure}
 
 
