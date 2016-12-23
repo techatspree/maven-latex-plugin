@@ -134,7 +134,7 @@
 \\(documentstyle|documentclass)
 	</patternLatexMainFile>
 
-	<patternClearFromLatexMain>
+	<patternCreatedFromLatexMain>
 ^(
 T$T             (\.([^.]*|synctex\.gz|out\.ps)|
    (ch|se|su|ap|li)?\d+\.x?html?|
@@ -144,7 +144,7 @@ T$T             (\.([^.]*|synctex\.gz|out\.ps)|
 zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
-	</patternClearFromLatexMain>
+	</patternCreatedFromLatexMain>
 
 	<metapostOptions>
 	  -interaction=nonstopmode -recorder -s prologues=2
@@ -217,7 +217,7 @@ zzT$T\.e?ps|
 	  \s*\\(documentstyle|documentclass).*
 	</patternLatexMainFile>
 
-	<patternClearFromLatexMain>
+	<patternCreatedFromLatexMain>
 ^(
 T$T             (\.([^.]*|synctex\.gz|out\.ps)|
    (ch|se|su|ap|li)?\d+\.x?html?|
@@ -226,7 +226,7 @@ T$T             (\.([^.]*|synctex\.gz|out\.ps)|
 zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
-	</patternClearFromLatexMain>
+	</patternCreatedFromLatexMain>
 
       </settings>
     </latexClr>

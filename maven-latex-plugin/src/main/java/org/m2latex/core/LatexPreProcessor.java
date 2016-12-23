@@ -1147,7 +1147,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of latex main file '" + 
 		      texFile + "'. ");
 	FileFilter filter = this.fileUtils.getFileFilter
-	    (texFile, this.settings.getPatternClearFromLatexMain());
+	    (texFile, this.settings.getPatternCreatedFromLatexMain());
 	// may log warning WFU01, WFU05 
 	this.fileUtils.deleteX(texFile, filter);
     }
@@ -1279,7 +1279,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	FileFilter filter;
 	for (File lmFile : latexMainFilesLocal) {
 	    filter = this.fileUtils.getFileFilter
-		(lmFile, this.settings.getPatternClearFromLatexMain());
+		(lmFile, this.settings.getPatternCreatedFromLatexMain());
 	    Iterator<File> iter = file2handler.keySet().iterator();
 	    File src;
 	    while (iter.hasNext()) {

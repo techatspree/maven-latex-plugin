@@ -182,14 +182,27 @@ public class Settings {
     private boolean cleanUp;
 
     /**
-     * For goal <code>clr</code>, 
-     * the tex source directory {@link #texSrcDirectory} is cleared, 
-     * i.e. all generated files should be removed, 
-     * e.g. those coming from graphic files. 
-     * This pattern defines the files to be removed 
+     * This pattern shall accept all the files 
      * which were created from a latex main file <code>xxx.tex</code>. 
      * It is neither applied to directories 
      * nor to <code>xxx.tex</code> itself. 
+     * It shall not comprise neither graphic files to be processed 
+     * nor files created from those graphic files. 
+     * <p>
+     * This pattern is applied 
+     * in the course of processing graphic files 
+     * to decide which graphic files should be processed 
+     * (those rejected by this pattern) 
+     * and to log warnings if there is a risk, 
+     * that graphic files to be processed 
+     * are skipped or that processing a latex main file overwrites 
+     * the result of graphic preprocessing. 
+     * <p>
+     * When clearing the tex source directory {@link #texSrcDirectory}, 
+     * i.e. all generated files should be removed, 
+     * first those created from latex main files. 
+     * As an approximation, 
+     * those are removed which match this pattern. 
      * <p>
      * The sequence <code>T$T</code> 
      * is replaced by the prefix <code>xxx</code>. 
@@ -200,7 +213,7 @@ public class Settings {
      * and must always be replaced with <code>xxx</code>. 
      * <p>
      * Spaces and newlines are removed 
-     * from that pattern before processing. 
+     * from that pattern before matching. 
      * <p>
      * The default value <code>^T$T\.[^.]*</code> 
      * is appropriate for most parameters and packages. 
@@ -219,8 +232,8 @@ public class Settings {
      * and to notify the developer of this plugin. 
      * Then the default value will be extended. 
      */
-    @Parameter(name = "patternClearFromLatexMain")
-    private String patternClearFromLatexMain = 
+    @Parameter(name = "patternCreatedFromLatexMain")
+    private String patternCreatedFromLatexMain = 
 	// besides T$T.xxx, with xxx not containing ., 
 	// we allow T$T.synctex.gz and T$T.out.ps 
 	"^(T$T(\\.([^.]*|synctex\\.gz|out\\.ps)|" + 
@@ -1051,7 +1064,7 @@ public class Settings {
      * may be an ending or an alternative of endings. 
      * <p>
      * For an explanation of the pattern <code>T$T</code>, 
-     * see {@link #patternClearFromLatexMain}. 
+     * see {@link #patternCreatedFromLatexMain}. 
      * Spaces and newlines are removed 
      * from that pattern before processing. 
      * <p>
@@ -1250,8 +1263,8 @@ public class Settings {
         return  this.cleanUp;
     }
 
-    public String getPatternClearFromLatexMain() {
-	return  this.patternClearFromLatexMain;
+    public String getPatternCreatedFromLatexMain() {
+	return  this.patternCreatedFromLatexMain;
     }
 
 
@@ -1531,28 +1544,28 @@ public class Settings {
         this.cleanUp = cleanUp;
     }
 
-    // FIXME: as patternClearFromLatexMain 
+    // FIXME: as patternCreatedFromLatexMain 
     // replace "\n" (canonical newline in xml) also for other patterns by ""
 
-    // setter method for patternClearFromLatexMain in maven 
+    // setter method for patternCreatedFromLatexMain in maven 
     // eliminates tab, newline and blanks and trims parameter before setting 
-    public void setPatternClearFromLatexMain(String patternClearFromLatexMain) {
-	this.patternClearFromLatexMain = patternClearFromLatexMain
+    public void setPatternCreatedFromLatexMain(String pattern) {
+	this.patternCreatedFromLatexMain = pattern
 	    .replaceAll("(\t|\n| )+", "").trim();
     }
 
-    // method introduces patternClearFromLatexMain in ant 
-    public PatternClearFromLatexMain createPatternClearFromLatexMain() {
-   	return new PatternClearFromLatexMain();
+    // method introduces patternCreatedFromLatexMain in ant 
+    public PatternCreatedFromLatexMain createPatternCreatedFromLatexMain() {
+   	return new PatternCreatedFromLatexMain();
     }
 
-    // defines patternClearFromLatexMain element with text in ant 
-    public class PatternClearFromLatexMain {
+    // defines patternCreatedFromLatexMain element with text in ant 
+    public class PatternCreatedFromLatexMain {
 	// FIXME: this is without property resolution. 
 	// to add this need  pattern = getProject().replaceProperties(pattern)
 	// with Task.getProject() 
    	public void addText(String pattern) {
-   	    Settings.this.setPatternClearFromLatexMain(pattern);
+   	    Settings.this.setPatternCreatedFromLatexMain(pattern);
    	}
     }
 
@@ -1992,8 +2005,8 @@ public class Settings {
  	sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
         sb.append(", texPath=")             .append(this.texPath);
 	sb.append(", cleanUp=")             .append(this.cleanUp);
-	sb.append(", patternClearFromLatexMain=")
-	    .append(this.patternClearFromLatexMain);
+	sb.append(", patternCreatedFromLatexMain=")
+	    .append(this.patternCreatedFromLatexMain);
 
 	// parameters for graphical preprocessors 
         sb.append(", fig2devCommand=")      .append(this.fig2devCommand);

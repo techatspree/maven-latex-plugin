@@ -295,7 +295,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li>
      * {@link Settings#getPatternLatexMainFile()}
      * <li>
-     * {@link Settings#getPatternClearFromLatexMain()}
+     * {@link Settings#getPatternCreatedFromLatexMain()}
      * </ul>
      * <p>
      * Logging: 

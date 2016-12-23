@@ -2231,18 +2231,31 @@ May be used for debugging when setting {\tt false}.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
-\tt patternClearFromLatexMain & see Section~\ref{subsubsec:patternClearFromLatexMain} \\
+\tt patternCreatedFromLatexMain & see Section~\ref{subsubsec:patternCreatedFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-For goal `{\tt clr}', 
-the tex source directory {\tt\$texSrcDirectory} is cleared, 
-i.e. all generated files should be removed, 
-e.g. those coming from graphic files. 
-This pattern defines the files to be removed 
+This pattern shall accept all the files 
 which were created from a latex main file `{\tt xxx.tex}'. 
 It is neither applied to directories 
 nor to `{\tt xxx.tex}' itself. 
-		 
+It shall not comprise neither graphic files to be processed 
+nor files created from those graphic files. 
+
+This pattern is applied 
+in the course of processing graphic files 
+to decide which graphic files should be processed 
+(those rejected by this pattern) 
+and to log warnings if there is a risk, 
+that graphic files to be processed 
+are skipped or that processing a latex main file overwrites 
+the result of graphic preprocessing. 
+
+When clearing the tex source directory {\tt\$texSrcDirectory}, 
+i.e. all generated files should be removed, 
+first those created from latex main files. 
+As an approximation, 
+those are removed which match this pattern. 
+
 The sequence '{\tt T\$T}' 
 is replaced by the prefix '{\tt xxx}'. 
 The sequence '{\tt T\$T}' must always be replaced: 
@@ -2252,7 +2265,7 @@ Thus '{\tt T\$T}' is no regular occurrence
 and must always be replaced with '{\tt xxx}'. 
 		 
 Spaces and newlines are removed 
-from that pattern before processing. 
+from that pattern before matching. 
 		 
 The default value 
 '{\tt\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
@@ -2353,8 +2366,8 @@ The problem is only in case of exchange of the source
 with a developer which does not use emacs/auctex. 
 
 
-\subsubsection{The parameter {\tt patternClearFromLatexMain}}
-\label{subsubsec:patternClearFromLatexMain}
+\subsubsection{The parameter {\tt patternCreatedFromLatexMain}}
+\label{subsubsec:patternCreatedFromLatexMain}
 
 The default value for this pattern is as follows: 
 %
@@ -2465,7 +2478,7 @@ into metapost's postscript.
 % The default value is 'mpost'. 
 \end{minipage}
 } \\
-\tt metapostOptions & see Section~\ref{subsubsec:patternClearFromLatexMain} \\
+\tt metapostOptions & see Section~\ref{subsubsec:patternCreatedFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$metapostCommand}.
@@ -2961,7 +2974,7 @@ are hardcoded and take the form
 may be an ending or an alternative of endings. 
 		 
 For an explanation of the pattern `{\tt T\$T}', 
-see {\tt\$patternClearFromLatexMain}. 
+see {\tt\$patternCreatedFromLatexMain}. 
 Spaces and newlines are removed 
 from that pattern before processing. 
 		 
