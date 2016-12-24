@@ -300,7 +300,7 @@
 		 are skipped or that processing a latex main file overwrites 
 		 the result of graphic preprocessing. 
 		 
-		 When clearing the tex source directory {$texSrcDirectory, 
+		 When clearing the tex source directory $texSrcDirectory, 
 		 i.e. all generated files should be removed, 
 		 first those created from latex main files. 
 		 As an approximation, 
@@ -448,6 +448,39 @@ zzT$T\.e?ps|
 	    <metapostOptions>
 	      -interaction=nonstopmode -recorder -s prologues=2 
 	    </metapostOptions>
+
+	    <!-- The command for conversion of svg-files 
+		 into a mixed format. 
+		 The default value is 'inkscape'. -->
+	    <svg2devCommand>inkscape</svg2devCommand>
+
+	    <!-- The options for the command $svg2devCommand 
+		 for exporting svg-figures into latex compatible files. 
+		 
+		 The following options are mandatory: 
+		 o '-z' or '- -without-gui' 
+		 process files from console. 
+		 o '-D' or '- -export-area-drawing' 
+		 Export the drawing (not the page)
+		 o '- -export-latex' 
+		 Export PDF/PS/EPS without text. 
+		 Besides the PDF/PS/EPS, a LaTeX file is exported,
+		 putting the text on top of the PDF/PS/EPS file. 
+		 Include the result in LaTeX like: \input{latexfile.tex}. 
+		 Note that the latter option is necessary, 
+		 to create the expected files. 
+		 It is also conceivable to export text as pdf/eps 
+		 
+		 The following options are prohibited, 
+		 because they are automatically added by the software: 
+		 o '-A=FILENAME' or '- -export-pdf=FILENAME' 
+		 Export document to a  PDF file. 
+		 o '-E=FILENAME' or '- -export-eps=FILENAME' 
+		 Export document to an EPS file. 
+		 
+		 The default value is the minimal value, 
+		 '-z -D - -export-latex'. -->
+	    <svg2devOptions>-z -D --export-latex</svg2devOptions>
 
 	    <!-- The command to create bounding box information 
 		 from jpg-files and from png-files. 

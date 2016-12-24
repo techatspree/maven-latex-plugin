@@ -2565,6 +2565,53 @@ A sequence of at least one blank separate the proper options.
 %'{\tt-interaction=nonstopmode -recorder -s prologues=2}'. 
 \end{minipage}
 } \\
+
+
+\tt svg2devCommand & \tt inkscape \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command for conversion of svg-files into a mixed format. 
+%The default value is 'inkscape'. 
+\end{minipage}
+} \\
+
+\tt svg2devOptions & \tt -z -D --export-latex \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command {\tt\$svg2devCommand} 
+for exporting svg-figures into latex compatible files. 
+
+The following options are mandatory: 
+%
+\begin{itemize}
+\item `-z' or `--without-gui' 
+process files from console. 
+\item `-D' or `--export-area-drawing' 
+Export the drawing (not the page)
+\item `--export-latex' 
+Export PDF/PS/EPS without text. 
+Besides the PDF/PS/EPS, a LaTeX file is exported,
+putting the text on top of the PDF/PS/EPS file. 
+Include the result in LaTeX like: {\tt\textbackslash input\{latexfile.tex\}}. 
+Note that the latter option is necessary, 
+to create the expected files. 
+It is also conceivable to export text as pdf/eps 
+\end{itemize}
+
+The following options are prohibited, 
+because they are automatically added by the software: 
+\begin{itemize}
+\item `-A=FILENAME' or `--export-pdf=FILENAME' 
+Export document to a  PDF file. 
+\item `-E=FILENAME' or `--export-eps=FILENAME' 
+Export document to an EPS file. 		 
+\end{itemize}
+% The default value is the minimal value, `-z -D - -export-latex'. 
+\end{minipage}
+} \\
+
+
+
 \tt ebbCommand & \tt ebb \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}

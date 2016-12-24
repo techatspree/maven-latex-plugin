@@ -98,6 +98,8 @@
 		gnuplotCommand="gnuplot"
 		gnuplotOptions=""
 		metapostCommand="mpost"
+		svg2devCommand='inkscape'
+		svg2devOptions='-z -D --export-latex'
 		ebbCommand='ebb'
 		ebbOptions='-v'
 		latex2pdfCommand="pdflatex"

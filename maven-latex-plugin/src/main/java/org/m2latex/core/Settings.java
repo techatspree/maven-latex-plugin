@@ -469,11 +469,54 @@ public class Settings {
      * -debug creates intermediate files mp3mnuvD.dvi and mp3mnuvD.tex 
      * No info available about the details. 
      */
-    @Parameter(name = "metapostOption", 
+    @Parameter(name = "metapostOptions", 
 	       defaultValue = "-interaction=nonstopmode -recorder " + 
 	       "-s prologues=2")
     private String metapostOptions = 
 	"-interaction=nonstopmode -recorder -s prologues=2";
+
+    /**
+     * The command for conversion of svg-files 
+     * into a mixed format FIXME, synchronize with fig2devCommand. 
+     * The default value is <code>inkscape</code>. 
+     */
+    @Parameter(name = "svg2devCommand", defaultValue = "inkscape")
+    private String svg2devCommand = "inkscape";
+
+    /**
+     * The options for the command {@link #svg2devCommand} 
+     * for exporting svg-figures into latex compatible files. 
+     * <p>
+     * The following options are mandatory: 
+     * <ul>
+     * <li><code>-z</code> or <code>--without-gui</code> 
+     * process files from console. 
+     * <li><code>-D</code> or <code>--export-area-drawing</code> 
+     * Export the drawing (not the page)
+     * <li><code>--export-latex</code> 
+     * Export PDF/PS/EPS without text. 
+     * Besides the PDF/PS/EPS, a LaTeX file is exported,
+     * putting the text on top of the PDF/PS/EPS file. 
+     * Include the result in LaTeX like: \input{latexfile.tex}. 
+     * Note that the latter option is necessary, 
+     * to create the expected files. 
+     * It is also conceivable to export text as pdf/eps 
+     * </ul>
+     * <p>
+     * The following options are prohibited, 
+     * because they are automatically added by the software: 
+     * <ul>
+     * <li><code>-A=FILENAME</code> or <code>--export-pdf=FILENAME</code> 
+     * Export document to a  PDF file. 
+     * <li><code>-E=FILENAME</code> or <code>--export-eps=FILENAME</code> 
+     * Export document to an EPS file. 
+     * <ul>
+     *
+     * The default value is the minimal value, 
+     * <code>-z -D --export-latex</code>. 
+     */
+   @Parameter(name = "svg2devOptions", defaultValue = "-z -D --export-latex")
+   private String svg2devOptions = "-z -D --export-latex";
 
     /**
      * The command to create bounding box information 
@@ -1295,8 +1338,17 @@ public class Settings {
     public String getMetapostCommand() {
         return  this.metapostCommand;
     }
+
     public String getMetapostOptions() {
         return  this.metapostOptions;
+    }
+
+    public String getSvg2devCommand() {
+	return  this.svg2devCommand;
+    }
+
+    public String getSvg2devOptions() {
+	return  this.svg2devOptions;
     }
 
     public String getEbbCommand() {
@@ -1620,6 +1672,15 @@ public class Settings {
    	public void addText(String args) {
    	    Settings.this.setMetapostOptions(args);
    	}
+    }
+
+    public void setSvg2devCommand(String svg2devCommand) {
+	this.svg2devCommand = svg2devCommand;
+    }
+
+    public void setSvg2devOptions(String svg2dev) {
+	this.svg2devOptions = svg2devOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
     public void setEbbCommand(String ebbCommand) {
@@ -2017,6 +2078,9 @@ public class Settings {
         sb.append(", gnuplotOptions=")      .append(this.gnuplotOptions);
         sb.append(", metapostCommand=")     .append(this.metapostCommand);
         sb.append(", metapostOptions=")     .append(this.metapostOptions);
+	sb.append(", svg2devCommand=")      .append(this.svg2devCommand);
+	sb.append(", svg2devOptions=")      .append(this.svg2devOptions);
+  
 	sb.append(", ebbCommand=")          .append(this.ebbCommand);
         sb.append(", ebbOptions=")          .append(this.ebbOptions);
 

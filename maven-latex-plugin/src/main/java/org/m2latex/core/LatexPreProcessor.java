@@ -132,7 +132,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * Handler for .fig-files representing the native xfig format. 
 	 */
 	fig {
-	    // converts a fig-file into pdf 
+	    // converts a fig-file into pdf and ptx 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
 	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
 	    void procSrc(File file, LatexPreProcessor proc) 
@@ -154,7 +154,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * Handler for .gp-files representing the native gnuplot format. 
 	 */
 	gp {
-	    // converts a gnuplot-file into pdf 
+	    // converts a gnuplot-file into pdf and ptx 
 	    // invoking {@link #runGnuplot2Dev(File, LatexDev)} 
 	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
 	    void procSrc(File file, LatexPreProcessor proc) 
@@ -192,6 +192,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * Handler for .svg-files representing scaleable vector graphics. 
 	 */
 	svg {
+	    // converts an svg-file into pdf and ptx 
+	    // invoking {@link #runFig2Dev(File, LatexDev)}
+	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
 	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runSvg2Dev(file);
@@ -520,7 +523,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    and once for creating the pdf_t-file. 
      * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in fig.procSrc(File, LatexPreProcessor, Collection) only 
+    // used in fig.procSrc(File, LatexPreProcessor) only 
     private void runFig2Dev(File figFile) throws BuildFailureException {
 	this.log.info("Processing fig-file '" + figFile + "'. ");
 
@@ -787,7 +790,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Converts a gnuplot file into a tex-file with ending ptx 
+     * Converts a gnuplot-file into a tex-file with ending ptx 
      * including a pdf-file. 
      * <p>
      * Logging: 
@@ -797,13 +800,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param gpFile 
-     *    the gp-file (gnuplot format) to be converted to pdf. 
+     *    the gp-file (gnuplot format) to be converted to pdf and ptx. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the ptx/pdf-conversion built-in 
      *    in gnuplot fails. 
      * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in gp.procSrc(File, LatexPreProcessor, Collection) only 
+    // used in gp.procSrc(File, LatexPreProcessor) only 
     private void runGnuplot2Dev(File gpFile) throws BuildFailureException {
 	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	// both may throw BuildFailureException TEX01, 
@@ -899,7 +902,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    TEX01 if invocation of the mpost command failed. 
      * @see #processGraphicsSelectMain(File, DirNode)
      */
-    // used in mp.procSrc(File, LatexPreProcessor, Collection) only 
+    // used in mp.procSrc(File, LatexPreProcessor) only 
     private void runMetapost2mps(File mpFile) throws BuildFailureException {
 	this.log.info("Processing metapost-file '" + mpFile + "'. ");
 	String command = this.settings.getMetapostCommand();
@@ -961,40 +964,62 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.fileUtils.deleteX(mpFile, filter);
     }
 
+     /**
+     * Converts an svg-file into a tex-file with ending ptx 
+     * including a pdf-file. FIXME: not yet
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
+     * if running the ptx/pdf-conversion built-in in svg2dev fails. 
+     * </ul>
+     *
+     * @param svgFile 
+     *    the svg-file to be converted to a pdf-file and a ptx-file. 
+     * @throws BuildFailureException
+     *    TEX01 if invocation of the ptx/pdf-conversion built-in 
+     *    in svg2dev fails. 
+     * @see #processGraphicsSelectMain(File, DirNode)
+     */
+    // used in svg.procSrc(File, LatexPreProcessor) only 
     private void runSvg2Dev(File svgFile) throws BuildFailureException {
 	this.log.info("Processing svg-file '" + svgFile + "'. ");
+	// both may throw BuildFailureException TEX01, 
+	// and  may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	runSvg2Dev(svgFile, LatexDev.pdf);
+ 	runSvg2Dev(svgFile, LatexDev.dvips);
+    }
+
+    // may throw BuildFailureException TEX01, 
+    // may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+    private void runSvg2Dev(File svgFile, 
+			    LatexDev dev) throws BuildFailureException {
+	this.log.info("Processing svg-file '" + svgFile + "'. ");
 	// FIXME: add parameters 
-	String command = "inkscape"; // this.settings.getSvg2devCommand();
+	String command = this.settings.getSvg2devCommand();
 	File workingDir = svgFile.getParentFile();
 
-	File grpFile = this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDF);
-	File texFile = this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX);
+	// also used for svg2dev
+	File grpFile = this.fileUtils
+	    .replaceSuffix(svgFile, dev.getXFigInTexSuffix());
+	File texFileP = this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX);
+	File texFileE = this.fileUtils.replaceSuffix(svgFile, SUFFIX_EPSTEX);
 
-	String[] args = new String[] {
-	    "-z", // --without-gui          process files from console 
-	    "-D", // --export-area-drawing  Export the drawing (not the page)
-	    //       --export-eps=FILENAME  Export document to an EPS file
-	    "-E="+grpFile.getName(), 
-	    //       --export-pdf=FILENAME  Export document to a PDF file
-	    "-A="+grpFile.getName(), 
-	    "--export-latex",           //  Export PDF/PS/EPS without text. 
-	    // Besides the PDF/PS/EPS, a LaTeX file is exported,
-	    // putting the text on top of the PDF/PS/EPS file. 
-	    // Include the result in LaTeX like:
-	    // \input{latexfile.tex}
-	    svgFile.getName()
-	};
-	    //buildArguments(this.settings.getSvg2devOptions(), svgFile);
+	String[] args = buildNullArguments(this.settings.getSvg2devOptions(), svgFile);
 
+	args[0] = dev == LatexDev.pdf
+	//       --export-pdf=FILENAME  Export document to a PDF file
+	    ? "-A="+grpFile.getName()
+	//       --export-eps=FILENAME  Export document to an EPS file
+	    : "-E="+grpFile.getName();
 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
 			      command, 
 			      args,
 			      grpFile,
-			      texFile);
+			      dev == LatexDev.pdf ? texFileP : texFileE);
     }
-
 
     /**
      * Deletes the graphic files 
@@ -1006,9 +1031,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void clearTargetSvg(File svgFile) {
        this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
        // may log warning WFU05 
+       deleteIfExists(svgFile, SUFFIX_EPSTEX);
        deleteIfExists(svgFile, SUFFIX_PDFTEX);
 //     deleteIfExists(svgFile, SUFFIX_PSTEX );
        deleteIfExists(svgFile, SUFFIX_PDF   );
+       deleteIfExists(svgFile, SUFFIX_EPS   );
        // FIXME: this works for pdf but not for dvi: 
        // even in the latter case, .pdf and .pdf_tex are created 
     }
@@ -1022,7 +1049,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// FIXME: add parameters 
 	String command = this.settings.getEbbCommand();
 	File workingDir = file.getParentFile();
-	String[] args = buildEbbArguments(this.settings.getEbbOptions(), file);
+	String[] args = buildNullArguments(this.settings.getEbbOptions(), file);
 
 	// Creation of .xbb files for driver dvipdfmx
 	// FIXME: literal 
@@ -1058,7 +1085,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * then follow the options from <code>options</code> 
      * and finally comes the name of <code>file</code>. 
      */
-    protected static String[] buildEbbArguments(String options, File file) {
+    protected static String[] buildNullArguments(String options, File file) {
     	if (options.isEmpty()) {
     	    return new String[] {null, file.getName()};
     	}
@@ -1154,7 +1181,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param latexMainFiles
      *    the collection of latex main files found so far. 
      */
-    // invoked only by tex.procSrc(File, LatexPreProcessor, Collection)
+    // invoked only by tex.procSrc(File, LatexPreProcessor)
     private void addIfLatexMain(File texFile, Collection<File> latexMainFiles) {
 	// may log warnings WFU03, WPP02 
 	if (isLatexMainFile(texFile)) {
@@ -1266,7 +1293,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the collection of latex main files found so far. 
      * @throws BuildFailureException
      *    TEX01 invoking 
-     * {@link LatexPreProcessor.SuffixHandler#procSrc(File, LatexPreProcessor, Collection)}
+     * {@link LatexPreProcessor.SuffixHandler#procSrc(File, LatexPreProcessor)}
      *    only for {@link LatexPreProcessor.SuffixHandler#fig}, 
      *    {@link LatexPreProcessor.SuffixHandler#gp} and 
      *    {@link LatexPreProcessor.SuffixHandler#mp} 
