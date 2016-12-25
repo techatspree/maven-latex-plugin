@@ -1232,10 +1232,22 @@ Also \cite{SvgIncl}, Section~3 indicates how to input the created file
 \input{xxx.pdf\_tex}%
 \end{verbatim}
 
-pdftops or something? 
+To obtain a unified conversion as defined in Sections~\ref{subsec:fig2dev} 
+and \ref{subsec:gnuplot2pdf}, 
+inkscape is invoked in a way to have the included pdf/eps-files 
+without suffix as follows: 
+%
+\begin{Verbatim}[fontsize=\normalsize]
+inkscape -D -z --export-pdf=xxx --export-latex xxx.svg 
+inkscape -D -z --export-eps=xxx --export-latex xxx.svg 
+\end{Verbatim} 
 
-FIXME: picture illustrating the conversion is missing 
-
+Since both the pdf-file and the eps-file are given without suffix, 
+the resulting tex file is not {\tt xxx.pdf\_tex} and {\tt xxx.eps\_tex} 
+but in both cases just {\tt xxx_tex} 
+as illustrated in Figure~\ref{fig:svg2pdf}. 
+To obtain the correct suffixes, 
+after conversion the target files must be moved accordingly. 
 
 \begin{figure}[htb]
 \begin{center}
