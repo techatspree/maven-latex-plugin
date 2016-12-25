@@ -21,17 +21,17 @@ public enum LatexDev {
 
     // lualatex creates pdf 
     pdf {
-	String  getXFigInTexLanguage() {
+	String getXFigInTexLanguage() {
 	    return "pdftex";
-	}
-	String getGraphicsInTexSuffix() {
-	    return LatexPreProcessor.SUFFIX_PDF;
 	}
 	String getGnuplotInTexLanguage() {
 	    return "pdf";
 	}
 	String getSvgExportOption() {
 	    return "-A="; // --export-pdf=FILENAME
+	}
+	String getGraphicsInTexSuffix() {
+	    return LatexPreProcessor.SUFFIX_PDF;
 	}
 	String getLatexOutputFormat() {
 	    return "pdf";
@@ -45,17 +45,17 @@ public enum LatexDev {
     },
     // latex creates dvi but not with the given drivers. 
     dvips {
-	String  getXFigInTexLanguage() {
+	String getXFigInTexLanguage() {
 	    return "pstex";
-	}
-	String getGraphicsInTexSuffix() {
-	    return LatexPreProcessor.SUFFIX_EPS;
 	}
 	String getGnuplotInTexLanguage() {
 	    return "eps";
 	}
 	String getSvgExportOption() {
 	    return "-E="; // --export-eps=FILENAME
+	}
+	String getGraphicsInTexSuffix() {
+	    return LatexPreProcessor.SUFFIX_EPS;
 	}
 	String getLatexOutputFormat() {
 	    return "dvi";
@@ -70,8 +70,10 @@ public enum LatexDev {
 
     /**
      * Returns the name of the language 
-     * {@link Settings#getFig2devCommand()} uses 
-     * to convert the graphic without text of an xfig-picture into. 
+     * used by the {@link Settings#getFig2devCommand()} 
+     * to specify graphic without ``special'' text of an xfig-picture. 
+     * The converse is specified 
+     * by {@link LatexPreProcessor#XFIG_TEX_LANGUAGE}.
      * In fact, a file of that format is created which is 
      * embedded with <code>\includegraphics</code> in latex-code 
      * representing text. 
@@ -79,16 +81,9 @@ public enum LatexDev {
     abstract String getXFigInTexLanguage();
 
     /**
-     * Returns the suffix of the file to be 
-     * embedded with <code>\includegraphics</code> in latex-code 
-     * representing all but text. 
-     * This is used for processing fig-files and for processing svg-files. 
-     */
-    abstract String getGraphicsInTexSuffix();
-
-    /**
-     * Returns the name of the language <code>gnuplot</code> uses 
-     * to convert the graphic without text of a gnuplot-picture into. 
+     * Returns the name of the language 
+     * used by the {@link Settings#getGnuplotCommand()} 
+     * to specify graphic without text of a gnuplot-picture. 
      * In fact, there is a file of that format 
      * embedded with <code>\includegraphics</code> in latex-code 
      * representing text. 
@@ -102,6 +97,20 @@ public enum LatexDev {
      * to be embedded with <code>\includegraphics</code> in latex-code. 
      */
     abstract String getSvgExportOption();
+
+    /**
+     * Returns the suffix of the file to be 
+     * embedded with <code>\includegraphics</code> in latex-code 
+     * representing all but text. 
+     * This is used for processing fig-files and for processing svg-files 
+     * in {@link LatexPreProcessor#runFig2DevInTex(File, LatexDev)} and 
+     * in {@link LatexPreProcessor#runSvg2DevInTex(File, LatexDev, boolean)}, 
+     * whereas for conversion of gnuplot-files, 
+     * this suffix is set automatically. 
+     * Note also that this is used to clear the created files 
+     * in all three cases. 
+     */
+    abstract String getGraphicsInTexSuffix();
 
     /**
      * Returns the name of the target language <code>latex2dev</code> uses 
