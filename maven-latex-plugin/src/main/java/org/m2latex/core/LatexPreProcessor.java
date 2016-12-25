@@ -556,7 +556,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	// Result file: either .pdf or .eps 
 	File figInTexFile = this.fileUtils
-	    .replaceSuffix(figFile, dev.getXFigInTexSuffix());
+	    .replaceSuffix(figFile, dev.getGraphicsInTexSuffix());
 	String command = this.settings.getFig2devCommand();
 
 	//if (update(figFile, pdfFile)) {
@@ -758,10 +758,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			 args, 2+optionsGenArr.length, optionsPtxArr.length);
 	// -p pdf/eps-file name in ptx-file without suffix 
 	args[2+lenSum] = "-p";
-	// FIXME: 
-        args[3+lenSum] = figFile.getParentFile() 
-	    + System.getProperty("file.separator") // File.separator
-	    + this.fileUtils.getFileNameWithoutSuffix(figFile);
+	// full path without suffix 
+	args[3+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_VOID)
+	    .toString();
 	// input: fig-file 
         args[4+lenSum] = figFile.getName();
 	// output: ptx-file 
@@ -785,8 +784,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(figFile, SUFFIX_PTX);
-	deleteIfExists(figFile, LatexDev.pdf  .getXFigInTexSuffix());
- 	deleteIfExists(figFile, LatexDev.dvips.getXFigInTexSuffix());
+	deleteIfExists(figFile, LatexDev.pdf  .getGraphicsInTexSuffix());
+ 	deleteIfExists(figFile, LatexDev.dvips.getGraphicsInTexSuffix());
     }
 
     /**
@@ -874,14 +873,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(gpFile, SUFFIX_PTX);
-	deleteIfExists(gpFile, LatexDev.dvips.getXFigInTexSuffix());
-	deleteIfExists(gpFile, LatexDev.pdf  .getXFigInTexSuffix());
-  	// CAUTION: this is created 
-	// in the course of latex2pdf processing from .eps 
-	// if target format is pdf 
-	// FIXME: eliminate literal 
-	//deleteIfExists(gpFile, "-eps-converted-to"+SUFFIX_PDF);
- }
+	deleteIfExists(gpFile, LatexDev.dvips.getGraphicsInTexSuffix());
+	deleteIfExists(gpFile, LatexDev.pdf  .getGraphicsInTexSuffix());
+  }
 
     /**
      * Runs mpost on mp-files to generate mps-files. 
@@ -986,40 +980,53 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.info("Processing svg-file '" + svgFile + "'. ");
 	// both may throw BuildFailureException TEX01, 
 	// and  may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
-	runSvg2Dev(svgFile, LatexDev.pdf);
- 	runSvg2Dev(svgFile, LatexDev.dvips);
+	runSvg2Dev(svgFile, LatexDev.pdf,   false);
+	// FIXME: avoiding may be wrong 
+ 	runSvg2Dev(svgFile, LatexDev.dvips, true);// that way page=1 is avoided
     }
 
+    // FIXME: still the included pdf/eps-file does not occur 
+    // with full path in ptx-file 
     // may throw BuildFailureException TEX01, 
     // may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
     private void runSvg2Dev(File svgFile, 
-			    LatexDev dev) throws BuildFailureException {
-	this.log.info("Processing svg-file '" + svgFile + "'. ");
-	// FIXME: add parameters 
+			    LatexDev dev, 
+			    boolean renameTex) throws BuildFailureException {
 	String command = this.settings.getSvg2devCommand();
-	File workingDir = svgFile.getParentFile();
 
-	// also used for svg2dev
-	File grpFile = this.fileUtils
-	    .replaceSuffix(svgFile, dev.getXFigInTexSuffix());
-	File texFileP = this.fileUtils.replaceSuffix(svgFile, SUFFIX_PDFTEX);
-	File texFileE = this.fileUtils.replaceSuffix(svgFile, SUFFIX_EPSTEX);
+	// full path without suffix 
+	// FIXME: although this is full path, the result is not 
+	File grpFile = this.fileUtils.replaceSuffix(svgFile, SUFFIX_VOID);
+	
+	// FIXME: eliminate literal: comes from .pdf_tex and .eps_tex 
+	// dropping .pdf and .eps, respectively 
+	File texFile = this.fileUtils.replaceSuffix(svgFile, "_tex");
 
-	String[] args = buildNullArguments(this.settings.getSvg2devOptions(), svgFile);
+	String[] args = buildNullArguments(this.settings.getSvg2devOptions(), 
+					   svgFile);
+	args[0] = dev.getSvgExportOption() + grpFile;
 
-	args[0] = dev == LatexDev.pdf
-	//       --export-pdf=FILENAME  Export document to a PDF file
-	    ? "-A="+grpFile.getName()
-	//       --export-eps=FILENAME  Export document to an EPS file
-	    : "-E="+grpFile.getName();
-
-	this.executor.execute(workingDir, 
+	this.log.debug("Running " + command + 
+		       " on '" + svgFile.getName() + "'. ");
+	// may throw BuildFailureException TEX01, 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	this.executor.execute(svgFile.getParentFile(), 
 			      this.settings.getTexPath(), //**** 
 			      command, 
 			      args,
 			      grpFile,
-			      dev == LatexDev.pdf ? texFileP : texFileE);
-    }
+			      texFile);
+
+	// rename grpFile and texFile 
+	this.fileUtils.moveOrWarn(grpFile, 
+				  this.fileUtils.replaceSuffix
+				  (svgFile, dev.getGraphicsInTexSuffix()));
+	if (renameTex) {
+	    this.fileUtils.moveOrWarn(texFile, 
+				      this.fileUtils.replaceSuffix
+				      (svgFile, SUFFIX_PTX));
+	}
+  }
 
     /**
      * Deletes the graphic files 
@@ -1028,16 +1035,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * WFU05: Failed to delete file
      */
+    // FIXME: to be unified: fig, gp and svg 
     private void clearTargetSvg(File svgFile) {
-       this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
-       // may log warning WFU05 
-       deleteIfExists(svgFile, SUFFIX_EPSTEX);
-       deleteIfExists(svgFile, SUFFIX_PDFTEX);
-//     deleteIfExists(svgFile, SUFFIX_PSTEX );
-       deleteIfExists(svgFile, SUFFIX_PDF   );
-       deleteIfExists(svgFile, SUFFIX_EPS   );
-       // FIXME: this works for pdf but not for dvi: 
-       // even in the latter case, .pdf and .pdf_tex are created 
+	this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
+ 	// may log warning WFU05 
+	deleteIfExists(svgFile, SUFFIX_PTX);
+	deleteIfExists(svgFile, LatexDev.pdf  .getGraphicsInTexSuffix());
+ 	deleteIfExists(svgFile, LatexDev.dvips.getGraphicsInTexSuffix());
     }
 
     // Additional research: 
@@ -1046,7 +1050,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // Experiments show, that we can do without it in any case. 
 
     private void runEbb(File file) throws BuildFailureException {
-	// FIXME: add parameters 
 	String command = this.settings.getEbbCommand();
 	File workingDir = file.getParentFile();
 	String[] args = buildNullArguments(this.settings.getEbbOptions(), file);
@@ -1057,7 +1060,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	File resFile = this.fileUtils.replaceSuffix(file, SUFFIX_XBB);
 
 	this.log.debug("Running " + command + 
-		       " on '" + file.getName() + "'. ");
+		       " twice on '" + file.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
 	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(workingDir, 
