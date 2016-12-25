@@ -24,11 +24,14 @@ public enum LatexDev {
 	String  getXFigInTexLanguage() {
 	    return "pdftex";
 	}
-	String getXFigInTexSuffix() {
+	String getGraphicsInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_PDF;
 	}
 	String getGnuplotInTexLanguage() {
 	    return "pdf";
+	}
+	String getSvgExportOption() {
+	    return "-A="; // --export-pdf=FILENAME
 	}
 	String getLatexOutputFormat() {
 	    return "pdf";
@@ -45,11 +48,14 @@ public enum LatexDev {
 	String  getXFigInTexLanguage() {
 	    return "pstex";
 	}
-	String getXFigInTexSuffix() {
+	String getGraphicsInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_EPS;
 	}
 	String getGnuplotInTexLanguage() {
 	    return "eps";
+	}
+	String getSvgExportOption() {
+	    return "-E="; // --export-eps=FILENAME
 	}
 	String getLatexOutputFormat() {
 	    return "dvi";
@@ -63,22 +69,22 @@ public enum LatexDev {
     };
 
     /**
-     * Returns the name of the language <code>fig2dev</code> uses 
+     * Returns the name of the language 
+     * {@link Settings#getFig2devCommand()} uses 
      * to convert the graphic without text of an xfig-picture into. 
-     * In fact, there is a file of that format 
+     * In fact, a file of that format is created which is 
      * embedded with <code>\includegraphics</code> in latex-code 
      * representing text. 
-     * The language code of the text file enclosing the graphic 
-     * is given by {@link #getXFigTexLanguage()}. 
      */
     abstract String getXFigInTexLanguage();
 
     /**
      * Returns the suffix of the file to be 
      * embedded with <code>\includegraphics</code> in latex-code 
-     * representing text. 
+     * representing all but text. 
+     * This is used for processing fig-files and for processing svg-files. 
      */
-    abstract String getXFigInTexSuffix();
+    abstract String getGraphicsInTexSuffix();
 
     /**
      * Returns the name of the language <code>gnuplot</code> uses 
@@ -88,6 +94,14 @@ public enum LatexDev {
      * representing text. 
      */
     abstract String getGnuplotInTexLanguage();
+
+    /**
+     * Returns the export option used by the {@link #getSvg2devCommand()} 
+     * which determines the export format. 
+     * In fact, there is a file of that format 
+     * to be embedded with <code>\includegraphics</code> in latex-code. 
+     */
+    abstract String getSvgExportOption();
 
     /**
      * Returns the name of the target language <code>latex2dev</code> uses 
