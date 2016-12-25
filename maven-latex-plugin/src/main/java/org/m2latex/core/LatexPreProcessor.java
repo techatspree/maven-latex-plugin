@@ -144,7 +144,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
-		proc.clearTargetFig(file, proc.settings.getPdfViaDvi());
+		proc.clearTargetPtxPdfEps(file);
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_FIG;
@@ -163,7 +163,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
-		proc.clearTargetGp(file);
+		proc.clearTargetPtxPdfEps(file);
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_GP;
@@ -205,7 +205,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
 		// may log warning WFU05 
-		proc.clearTargetSvg(file);
+		proc.clearTargetPtxPdfEps(file);
 	    }
 	    String getSuffix() {
 		return LatexPreProcessor.SUFFIX_SVG;
@@ -721,7 +721,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	//}
     }
 
-    // could also be "pstex_t"
+    /**
+     * The name of the language 
+     * used by the {@link Settings#getFig2devCommand()} 
+     * to specify ``special'' text without graphic of an xfig-picture. 
+     * Note that the languages <code>pdftex_t</code> and <code>pstex_t</code> 
+     * are equivalent. 
+     */
     private final static String XFIG_TEX_LANGUAGE = "pdftex_t";
 
     // Since pstex_t is equivalent with pdftex_t, 
@@ -769,23 +775,23 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Deletes the graphic files 
-     * created from the fig-file <code>figFile</code>. 
+     * Deletes the files <code>xxx.ptx</code>, <code>xxx.pdf</code> and 
+     * <code>xxx.eps</code>
+     * created from the graphic file <code>grpFile</code> 
+     * of the form <code>xxx.y</code>. 
      * <p>
      * Logging: 
      * WFU05: Failed to delete file
      *
-     * @param figFile
-     *    a fig file. 
-     * @param dev
-     *    the 'device' which determines whether to create pdf or pstex. 
+     * @param grpFile
+     *    a graphic file. 
      */
-    private void clearTargetFig(File figFile, LatexDev dev) {
-	this.log.info("Deleting targets of fig-file '" + figFile + "'. ");
+    private void clearTargetPtxPdfEps(File grpFile) {
+	this.log.info("Deleting targets of file '" + grpFile + "'. ");
 	// may log warning WFU05 
-	deleteIfExists(figFile, SUFFIX_PTX);
-	deleteIfExists(figFile, LatexDev.pdf  .getGraphicsInTexSuffix());
- 	deleteIfExists(figFile, LatexDev.dvips.getGraphicsInTexSuffix());
+	deleteIfExists(grpFile, SUFFIX_PTX);
+	deleteIfExists(grpFile, LatexDev.pdf  .getGraphicsInTexSuffix());
+ 	deleteIfExists(grpFile, LatexDev.dvips.getGraphicsInTexSuffix());
     }
 
     /**
@@ -862,22 +868,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Deletes the graphic files 
-     * created from the gnuplot-file <code>gpFile</code>. 
-     * <p>
-     * Logging: 
-     * WFU05: Failed to delete file
-     */
-    // FIXME: unification with clearTargetFig is possible 
-    private void clearTargetGp(File gpFile) {
-	this.log.info("Deleting targets of gnuplot-file '" + gpFile + "'. ");
-	// may log warning WFU05 
-	deleteIfExists(gpFile, SUFFIX_PTX);
-	deleteIfExists(gpFile, LatexDev.dvips.getGraphicsInTexSuffix());
-	deleteIfExists(gpFile, LatexDev.pdf  .getGraphicsInTexSuffix());
-  }
-
-    /**
      * Runs mpost on mp-files to generate mps-files. 
      * <p>
      * Logging: 
@@ -940,7 +930,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    a metapost file. 
      */
     private void clearTargetMp(File mpFile) {
-	this.log.info("Deleting targets of metapost-file '" + mpFile + "'. ");
+	this.log.info("Deleting targets of graphic-file '" + mpFile + "'. ");
 	// may log warning WFU05 
 	deleteIfExists(mpFile, SUFFIX_LOG);
 	deleteIfExists(mpFile, SUFFIX_FLS);
@@ -1026,22 +1016,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				      this.fileUtils.replaceSuffix
 				      (svgFile, SUFFIX_PTX));
 	}
-  }
-
-    /**
-     * Deletes the graphic files 
-     * created from the svg-file <code>svgFile</code>. 
-     * <p>
-     * Logging: 
-     * WFU05: Failed to delete file
-     */
-    // FIXME: to be unified: fig, gp and svg 
-    private void clearTargetSvg(File svgFile) {
-	this.log.info("Deleting targets of svg-file '" + svgFile + "'. ");
- 	// may log warning WFU05 
-	deleteIfExists(svgFile, SUFFIX_PTX);
-	deleteIfExists(svgFile, LatexDev.pdf  .getGraphicsInTexSuffix());
- 	deleteIfExists(svgFile, LatexDev.dvips.getGraphicsInTexSuffix());
     }
 
     // Additional research: 
