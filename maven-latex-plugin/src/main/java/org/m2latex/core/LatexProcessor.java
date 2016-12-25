@@ -86,9 +86,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // log file created by makeindex 
     final static String SUFFIX_ILG = ".ilg";
 
-    // makeindex for glossary 
-    // needed by makeglossaries 
-    final static String SUFFIX_VOID = "";
     // unsorted and not unified glossary created by latex 
     final static String SUFFIX_GLO = ".glo";
     // sorted and unified glossary created by makeindex 

@@ -24,7 +24,10 @@ abstract class AbstractLatexProcessor {
     // both LatexProcessor and LatexPreProcessor 
     final static String SUFFIX_PDF = ".pdf";
 
-
+    // makeindex for glossary 
+    // needed by makeglossaries and for svg-conversion (hack) 
+    final static String SUFFIX_VOID = "";
+ 
     // both LatexProcessor and LatexPreProcessor 
     protected final Settings settings;
 
