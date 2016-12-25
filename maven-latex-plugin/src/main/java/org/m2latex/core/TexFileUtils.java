@@ -182,7 +182,6 @@ class TexFileUtils {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory... 
-     * <li> WFU02: LaTeX file did not generate any output. (DEPRECATED)
      * <li> WFU03: Cannot close 
      * </ul>
      *
@@ -203,8 +202,6 @@ class TexFileUtils {
      *    If it does not exist, it must be creatable. 
      * @throws BuildFailureException
      *    <ul>
-     *    <li>TFU03 if 
-     *    the destination directory does not exist and cannot be created. 
      *    <li>TFU04, TFU05 if 
      *    the destination file exists 
      *    and is either a directory (TFU04) or is not writable (TFU05). 
@@ -247,14 +244,6 @@ class TexFileUtils {
 		throw new BuildFailureException
 		    ("TFU04: Cannot overwrite directory '" + destFile + "'. ");
 	    }
-	    // superfluous because src is not empty and so TFU06 is thrown 
-	    // if (destFile.exists() && !destFile.canWrite()) {
-	    // 	throw new BuildFailureException
-	    // 	    ("TFU05: Cannot overwrite read-only file '" + 
-	    // 	     destFile + "'. ");
-	    // }
-	    // assert  !destFile.exists() 
-	    // 	|| (!destFile.isDirectory() && destFile.canWrite());
 
 	    this.log.debug("Copying '" + srcFile.getName() + 
 			   "' to '" + targetDir + "'. ");
@@ -540,6 +529,30 @@ class TexFileUtils {
 	if (!delFile.delete()) {
 	    this.log.warn("WFU05: Cannot delete file '" + 
 			  delFile + "'. ");
+	}
+    }
+
+    /**
+     * Moves file <code>fromFile</code> to <code>toFile</code> 
+     * or logs a warning. 
+     * <p>
+     * Logging: 
+     * WFU06: failed to move. 
+     *
+     * @param fromFile
+     *    the existing file to be moved. 
+     *    This must not be a directory. 
+     * @param toFile
+     *    the file to be moved to 
+     *    This must not be a directory. 
+     */
+    void moveOrWarn(File fromFile, File toFile) {
+	assert fromFile.exists() && !fromFile.isDirectory();
+	assert                      !  toFile.isDirectory();
+	boolean success = fromFile.renameTo(toFile);
+	if (!success) {
+	    this.log.warn("WFU06: Cannot move file '" + 
+			  fromFile + "' to '" + toFile + ". ");
 	}
     }
 
