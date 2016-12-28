@@ -139,11 +139,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		throws BuildFailureException {
 
 		// may throw BuildFailureException TEX01, 
-		// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+		// may log EEX01, EEX02, EEX03, WEX04, WEX05 
 		proc.runFig2Dev(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
-		// may log warning WFU05 
+		// may log EFU05 
 		proc.clearTargetPtxPdfEps(file);
 	    }
 	    String getSuffix() {
@@ -162,7 +162,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		proc.runGnuplot2Dev(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
-		// may log warning WFU05 
+		// may log EFU05 
 		proc.clearTargetPtxPdfEps(file);
 	    }
 	    String getSuffix() {
@@ -181,7 +181,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		proc.runMetapost2mps(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
-		// may log warning WFU01, WFU05 
+		// may log WFU01, EFU05 
 		proc.clearTargetMp(file);
 	    }
 	    String getSuffix() {
@@ -195,6 +195,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts an svg-file into pdf and ptx 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
 	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
+	    // EFU06 if moving a file fails. 
 	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runSvg2Dev(file);
@@ -204,7 +205,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// even in the latter case, .pdf and .pdf_tex are created 
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
-		// may log warning WFU05 
+		// may log EFU05 
 		proc.clearTargetPtxPdfEps(file);
 	    }
 	    String getSuffix() {
@@ -277,7 +278,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				 LatexPreProcessor proc, 
 				 Collection<File> latexMainFiles) {
 		file2handler.put(file, this);// super 
-		// may log warnings WFU03, WPP02 
+		// may log WFU03, WPP02 
 		proc.addIfLatexMain(file, latexMainFiles);
 	    }
 
@@ -288,7 +289,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    void clearTarget(File file, 
 			     LatexPreProcessor proc, 
 			     Map<File, SuffixHandler> file2handler) {
-		// may log warnings WPP02, WFU01, WFU03, WFU05 
+		// may log WPP02, WFU01, WFU03, EFU05 
 		proc.clearTargetTexIfLatexMain(file);
 	    }
 	    void clearTarget(File file, LatexPreProcessor proc) {
@@ -365,6 +366,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <li> WPP02: tex file may be latex main file 
 	 * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
 	 * if applications for preprocessing graphic files failed. 
+	 * <li> EFU06: if moving a file fails. 
 	 * </ul>
 	 *
 	 * @param file
@@ -400,7 +402,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <li> WPP02: tex file may be latex main file 
 	 * <li> WFU01: Cannot read directory...
 	 * <li> WFU03: cannot close tex file 
-	 * <li> WFU05: Failed to delete file 
+	 * <li> EFU05: Failed to delete file 
 	 * <ul>
 	 *
 	 * @param file
@@ -432,7 +434,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * Logging: 
 	 * <ul>
 	 * <li> WFU01: Cannot read directory...
-	 * <li> WFU05: Failed to delete file 
+	 * <li> EFU05: Failed to delete file 
 	 * <ul>
 	 *
 	 * @param file
@@ -529,7 +531,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	// all three 
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	runFig2DevInTex(figFile, LatexDev.pdf);
 	runFig2DevInTex(figFile, LatexDev.dvips);
 	runFig2TexInclDev(figFile);
@@ -569,7 +571,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.debug("Running " + command + " -L pdftex/pstex  ... on '" + 
 		       figFile.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(figFile.getParentFile(), 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -712,7 +714,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.debug("Running " + command + 
 		       " -L (pdf/ps)tex_t... on '" + figFile.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(figFile.getParentFile(), 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -781,14 +783,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * of the form <code>xxx.y</code>. 
      * <p>
      * Logging: 
-     * WFU05: Failed to delete file
+     * EFU05: Failed to delete file
      *
      * @param grpFile
      *    a graphic file. 
      */
     private void clearTargetPtxPdfEps(File grpFile) {
 	this.log.info("Deleting targets of file '" + grpFile + "'. ");
-	// may log warning WFU05 
+	// may log EFU05 
 	deleteIfExists(grpFile, SUFFIX_PTX);
 	deleteIfExists(grpFile, LatexDev.pdf  .getGraphicsInTexSuffix());
  	deleteIfExists(grpFile, LatexDev.dvips.getGraphicsInTexSuffix());
@@ -815,13 +817,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void runGnuplot2Dev(File gpFile) throws BuildFailureException {
 	this.log.info("Processing gnuplot-file '" + gpFile + "'. ");
 	// both may throw BuildFailureException TEX01, 
-	// and  may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// and  may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	runGnuplot2Dev(gpFile, LatexDev.dvips);
 	runGnuplot2Dev(gpFile, LatexDev.pdf);
     }
 
     // may throw BuildFailureException TEX01, 
-    // may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+    // may log EEX01, EEX02, EEX03, WEX04, WEX05 
     private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildFailureException {
 
@@ -857,7 +859,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    this.log.debug("Running " + command + 
 			   " -e...  on '" + gpFile.getName() + "'. ");
 	    // may throw BuildFailureException TEX01, 
-	    // may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	    // may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	    this.executor.execute(gpFile.getParentFile(), //workingDir 
 				  this.settings.getTexPath(), //**** 
 				  command, 
@@ -900,7 +902,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// but this is not worse than with latex 
 
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// may log EEX01, EEX02, EEX03, WEX04, WEX05 
   	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -911,7 +913,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
 	// FIXME: what is xxx.mpx for? 
 	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
-	// may log warnings WFU03, EAP01, EAP02, WAP04
+	// may log WFU03, EAP01, EAP02, WAP04
 	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
    }
@@ -923,7 +925,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory ...
-     * <li> WFU05: Failed to delete file 
+     * <li> EFU05: Failed to delete file 
      * </ul>
      *
      * @param mpFile
@@ -931,7 +933,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearTargetMp(File mpFile) {
 	this.log.info("Deleting targets of graphic-file '" + mpFile + "'. ");
-	// may log warning WFU05 
+	// may log EFU05 
 	deleteIfExists(mpFile, SUFFIX_LOG);
 	deleteIfExists(mpFile, SUFFIX_FLS);
 	deleteIfExists(mpFile, SUFFIX_MPX);
@@ -944,7 +946,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			&&  file.getName().matches(root + "\\d+" + SUFFIX_MPS);
 		}
 	    };
-	// may log warning WFU01, WFU05 
+	// may log WFU01, EFU05 
 	this.fileUtils.deleteX(mpFile, filter);
     }
 
@@ -956,6 +958,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <ul>
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if running the ptx/pdf-conversion built-in in svg2dev fails. 
+     * <li> EFU06 if moving a file fails. 
      * </ul>
      *
      * @param svgFile 
@@ -969,7 +972,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void runSvg2Dev(File svgFile) throws BuildFailureException {
 	this.log.info("Processing svg-file '" + svgFile + "'. ");
 	// both may throw BuildFailureException TEX01, 
-	// and  may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// and  may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	runSvg2Dev(svgFile, LatexDev.pdf,   false);
 	// FIXME: avoiding may be wrong 
  	runSvg2Dev(svgFile, LatexDev.dvips, true);// that way page=1 is avoided
@@ -978,7 +981,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // FIXME: still the included pdf/eps-file does not occur 
     // with full path in ptx-file 
     // may throw BuildFailureException TEX01, 
-    // may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+    // may log EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
+
     private void runSvg2Dev(File svgFile, 
 			    LatexDev dev, 
 			    boolean renameTex) throws BuildFailureException {
@@ -999,7 +1003,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.debug("Running " + command + 
 		       " on '" + svgFile.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(svgFile.getParentFile(), 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -1008,13 +1012,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      texFile);
 
 	// rename grpFile and texFile 
-	this.fileUtils.moveOrWarn(grpFile, 
-				  this.fileUtils.replaceSuffix
-				  (svgFile, dev.getGraphicsInTexSuffix()));
+	// may log EFU06: cannot move file 
+	this.fileUtils.moveOrError(grpFile, 
+				   this.fileUtils.replaceSuffix
+				   (svgFile, dev.getGraphicsInTexSuffix()));
 	if (renameTex) {
-	    this.fileUtils.moveOrWarn(texFile, 
-				      this.fileUtils.replaceSuffix
-				      (svgFile, SUFFIX_PTX));
+	    // may log EFU06: cannot move file 
+	    this.fileUtils.moveOrError(texFile, 
+				       this.fileUtils.replaceSuffix
+				       (svgFile, SUFFIX_PTX));
 	}
     }
 
@@ -1036,7 +1042,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	this.log.debug("Running " + command + 
 		       " twice on '" + file.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
-	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// may log EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
 			      command, 
@@ -1080,11 +1086,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * created from the svg-file <code>svgFile</code>. 
      * <p>
      * Logging: 
-     * WFU05: Failed to delete file
+     * EFU05: Failed to delete file
      */
     private void clearTargetJpgPng(File file) {
        this.log.info("Deleting targets of jpg/png-file '" + file + "'. ");
-       // may log warning WFU05 
+       // may log EFU05 
        deleteIfExists(file, SUFFIX_XBB);
        deleteIfExists(file, SUFFIX_BB);
 //     deleteIfExists(svgFile, SUFFIX_PSTEX );
@@ -1098,15 +1104,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *
      * <p>
      * Logging: 
-     * WFU05: Failed to delete file
+     * EFU05: Failed to delete file
      */
     private void deleteIfExists(File file, String suffix) {
 	File delFile = this.fileUtils.replaceSuffix(file, suffix);
 	if (!delFile.exists()) {
 	    return;
 	}
-	// may log warning WFU05 
-	this.fileUtils.deleteOrWarn(delFile);
+	// may log EFU05 
+	this.fileUtils.deleteOrError(delFile);
     }
 
     /**
@@ -1131,7 +1137,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // by clearTargetTexIfLatexMain(File) 
     private boolean isLatexMainFile(File texFile) {
 	assert texFile.exists();
-	// may log warning WFU03 cannot close 
+	// may log WFU03 cannot close 
 	Boolean res = this.fileUtils.matchInFile
 	    (texFile, this.settings.getPatternLatexMainFile());
 	if (res == null) {
@@ -1160,7 +1166,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     // invoked only by tex.procSrc(File, LatexPreProcessor)
     private void addIfLatexMain(File texFile, Collection<File> latexMainFiles) {
-	// may log warnings WFU03, WPP02 
+	// may log WFU03, WPP02 
 	if (isLatexMainFile(texFile)) {
 	    this.log.info("Detected latex-main-file '" + texFile + "'. ");
 	    latexMainFiles.add(texFile);
@@ -1177,7 +1183,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WPP02: tex file may be latex main file 
      * <li> WFU01: Cannot read directory...
      * <li> WFU03: cannot close tex file 
-     * <li> WFU05: Failed to delete file 
+     * <li> EFU05: Failed to delete file 
      * </ul>
      *
      * @param texFile
@@ -1186,7 +1192,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     private void clearTargetTexIfLatexMain(File texFile) {
 	// exclude files which are no latex main files 
-	// may log warnings WFU03, WPP02 
+	// may log WFU03, WPP02 
 	if (!isLatexMainFile(texFile)) {
 	    return;
 	}
@@ -1194,7 +1200,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		      texFile + "'. ");
 	FileFilter filter = this.fileUtils.getFileFilter
 	    (texFile, this.settings.getPatternCreatedFromLatexMain());
-	// may log warning WFU01, WFU05 
+	// may log WFU01, EFU05 
 	this.fileUtils.deleteX(texFile, filter);
     }
 
@@ -1217,6 +1223,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      if running graphic processors failed. 
+     * <li> EFU06: if moving a file fails. 
      * </ul>
      *
      * @param dir
@@ -1237,7 +1244,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     	Collection<String> skipped        = new TreeSet<String>();
     	Collection<File>   latexMainFiles = new TreeSet<File>();
 	// may throw BuildFailureException TEX01, 
-	// log warning EEX01, EEX02, EEX03, WEX04, WEX05, WFU03, WPP02 
+	// may log EEX01, EEX02, EEX03, 
+	// WEX04, WEX05, WFU03, WPP02, EFU06 
       	processGraphicsSelectMain(dir, node, skipped, latexMainFiles);
 
     	if (!skipped.isEmpty()) {
@@ -1252,7 +1260,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WFU03: cannot close 
+     * <li> WFU03: cannot close file 
+     * <li> EFU06: Cannot move file 
      * <li> WPP02: tex file may be latex main file 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if applications for preprocessing graphic files failed. 
@@ -1309,7 +1318,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// or tex-files to be inputted. 
 
     		// may throw BuildFailureException TEX01, 
-    		// log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+    		// may log EEX01, EEX02, EEX03, WEX04, WEX05 
 		// WFU03, WPP02 
 		if (!file.isHidden()) {
 		    handler.scheduleProcSrc(file, file2handler, 
@@ -1352,14 +1361,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// NO: if a file is overwritten, then it is no source 
 	// and needs no processing 
 	for (Map.Entry<File, SuffixHandler> entry : file2handler.entrySet()) {
+	    // procSrc may throw BuildFailureException TEX01
+	    // and may log WFU03, WPP02, 
+	    // EEX01, EEX02, EEX03, WEX04, WEX05 and EFU06 
 	    entry.getValue().procSrc(entry.getKey(), this);
 	}
 
 	// go on recursively with subdirectories 
     	for (Map.Entry<String, DirNode> entry : node.getSubdirs().entrySet()) {
 	    // may throw BuildFailureException TEX01, 
-	    // log warning EEX01, EEX02, EEX03, WEX04, WEX05, WPP03 
-	    // WFU03, WPP02 
+	    // may log EEX01, EEX02, EEX03, WEX04, WEX05, WPP03 
+	    // WFU03, WPP02, EFU06 
      	    processGraphicsSelectMain(new File(dir, entry.getKey()),
 				      entry.getValue(), 
 				      skipped, 
@@ -1379,7 +1391,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WPP02: tex file may be latex main file 
      * <li> WFU01: Cannot read directory...
      * <li> WFU03: cannot close tex file 
-     * <li> WFU05: Failed to delete file 
+     * <li> EFU05: Failed to delete file 
      * </ul>
      *
      * @param texDir
@@ -1425,7 +1437,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WPP02: tex file may be latex main file 
      * <li> WFU01: Cannot read directory...
      * <li> WFU03: cannot close tex file 
-     * <li> WFU05: Failed to delete file 
+     * <li> EFU05: Failed to delete file 
      * </ul>
      *
      * @param dir
@@ -1445,7 +1457,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    if (handler != null) {
 		// either clear targets now or schedule for clearing 
 		// (in particular do nothing if no target)
-		// may log warning WPP02, WFU01, WFU03, WFU05 
+		// may log WPP02, WFU01, WFU03, EFU05 
 		handler.clearTarget(file, this, file2handler);
 	    }
 	}
@@ -1459,7 +1471,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
 
     	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
-	    // may log warning WPP02, WFU01, WFU03, WFU05 
+	    // may log WPP02, WFU01, WFU03, EFU05 
     	    clearCreated(new File(dir, entry.getKey()), entry.getValue());
     	}
     }

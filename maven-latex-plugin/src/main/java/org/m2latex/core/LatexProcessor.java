@@ -160,8 +160,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory... 
-     * <li> WFU03: cannot close 
-     * <li> WFU05: Cannot delete... 
+     * <li> WFU03: cannot close file 
+     * <li> EFU05: Cannot delete file 
+     * <li> EFU06: Cannot move file 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -205,7 +206,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // process graphics and determine latexMainFiles 
 	    // may throw BuildFailureException TEX01, 
 	    // log warning WFU03, WPP02, WPP03, 
-	    // EEX01, EEX02, EEX03, WEX04, WEX05  
+	    // EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
 	    Collection<File> latexMainFiles = this.preProc
 		.processGraphicsSelectMain(texDir, node);
 
@@ -238,7 +239,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    } // texFile 
 	} finally {
 	    if (this.settings.isCleanUp()) {
-		// may log warning WFU01, WFU05 
+		// may log warning WFU01, EFU05 
 		this.fileUtils.cleanUp(node, texDir);
             }
         }
@@ -250,7 +251,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory 
-     * <li> WFU03: cannot close 
+     * <li> WFU03: cannot close file 
+     * <li> EFU06: Cannot move file 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -266,6 +268,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    TEX01 invoking FIXME
      *    </ul>
      */
+    // used in GraphicsMojo.execute() only 
     public void processGraphics() throws BuildFailureException {
 	// may throw BuildFailureException TSS01 
 	File texDir = this.settings.getTexSrcDirectoryFile();
@@ -275,7 +278,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
  	DirNode node = new DirNode(texDir, this.fileUtils);
 	// may throw BuildFailureException TEX01, 
 	// log warning WFU03, WPP02, WPP03, 
-	// EEX01, EEX02, EEX03, WEX04, WEX05  
+	// EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
 	this.preProc.processGraphicsSelectMain(texDir, node);
     }
 
@@ -300,7 +303,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WPP02: tex file may be latex main file 
      * <li> WFU01: Cannot read directory...
      * <li> WFU03: cannot close tex file 
-     * <li> WFU05: Failed to delete file 
+     * <li> EFU05: Failed to delete file 
      * </ul>
      *
      * @throws BuildFailureException 
@@ -316,7 +319,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	assert texDir.exists() && texDir.isDirectory();
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
-	// clearCreated may log warnings WPP02, WFU01, WFU03, WFU05 
+	// clearCreated may log warnings WPP02, WFU01, WFU03, EFU05 
 	this.preProc.clearCreated(texDir);
    }
 

@@ -479,7 +479,7 @@ class TexFileUtils {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory...
-     * <li> WFU05: Failed to delete file 
+     * <li> EFU05: Failed to delete file 
      * </ul>
      *
      * @param pFile
@@ -508,8 +508,8 @@ class TexFileUtils {
 	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
 		assert delFile.exists() && !delFile.isDirectory();
-		// may log warning WFU05: failed to delete 
-		deleteOrWarn(delFile);
+		// may log EFU05: failed to delete 
+		deleteOrError(delFile);
 	    }
 	}
     }
@@ -518,17 +518,17 @@ class TexFileUtils {
      * Deletes <code>delFile</code> or logs a warning. 
      * <p>
      * Logging: 
-     * WFU05: failed to delete 
+     * EFU05: failed to delete 
      *
      * @param delFile
      *    the existing file to be deleted. 
      *    This must not be a directory. 
      */
-    void deleteOrWarn(File delFile) {
+    void deleteOrError(File delFile) {
 	assert delFile.exists() && !delFile.isDirectory();
 	if (!delFile.delete()) {
-	    this.log.warn("WFU05: Cannot delete file '" + 
-			  delFile + "'. ");
+	    this.log.error("EFU05: Cannot delete file '" + 
+			   delFile + "'. ");
 	}
     }
 
@@ -537,7 +537,7 @@ class TexFileUtils {
      * or logs a warning. 
      * <p>
      * Logging: 
-     * WFU06: failed to move. 
+     * EFU06: failed to move. 
      *
      * @param fromFile
      *    the existing file to be moved. 
@@ -546,13 +546,13 @@ class TexFileUtils {
      *    the file to be moved to 
      *    This must not be a directory. 
      */
-    void moveOrWarn(File fromFile, File toFile) {
+    void moveOrError(File fromFile, File toFile) {
 	assert fromFile.exists() && !fromFile.isDirectory();
 	assert                      !  toFile.isDirectory();
 	boolean success = fromFile.renameTo(toFile);
 	if (!success) {
-	    this.log.warn("WFU06: Cannot move file '" + 
-			  fromFile + "' to '" + toFile + ". ");
+	    this.log.error("EFU06: Cannot move file '" + 
+			   fromFile + "' to '" + toFile + "'. ");
 	}
     }
 
@@ -565,7 +565,7 @@ class TexFileUtils {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory 
-     * <li> WFU05: Cannot delete... 
+     * <li> EFU05: Cannot delete... 
      * </ul>
      *
      * @param orgNode
@@ -577,7 +577,7 @@ class TexFileUtils {
     // FIXME: warn if deletion failed. 
     void cleanUp(DirNode orgNode, File texDir) {
 	// constructor DirNode may log warning WFU01 Cannot read directory 
-	// cleanUpRec may log warning WFU05 Cannot delete... 
+	// cleanUpRec may log warning EFU05 Cannot delete... 
  	cleanUpRec(texDir, orgNode, new DirNode(texDir, this));
     }
 
@@ -590,7 +590,7 @@ class TexFileUtils {
      * the current ones at the end of the creating goal. 
      * <p>
      * Logging: 
-     * WFU05: Cannot delete... 
+     * EFU05: Cannot delete... 
      *
      * @param orgNode
      *    the node representing the original files. 
@@ -599,7 +599,6 @@ class TexFileUtils {
      *    the node representing the current files. 
      *    This is the latex source directory or a subdirectory. 
      */
-    // FIXME: warn if deletion failed. 
     // used in cleanUp only 
     private void cleanUpRec(File dir, DirNode orgNode, DirNode currNode) {
    	assert       orgNode.getSubdirs().keySet()
@@ -616,8 +615,8 @@ class TexFileUtils {
 
    	for (String fileName : currFileNames) {
  	    file = new File(dir, fileName);
-    	    // may log warning WFU05: Cannot delete file
-    	    deleteOrWarn(file);
+    	    // may log error EFU05: Cannot delete file
+    	    deleteOrError(file);
     	}
     }
 
