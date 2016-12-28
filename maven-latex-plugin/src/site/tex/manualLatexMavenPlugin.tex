@@ -319,7 +319,7 @@ which shall also be installed if a glossary is required.
 
 The package {\tt rerunfilecheck} is in any standard \LaTeX-installation. 
 It is almost mandatory 
-because this software presupposes {\tt rerunfilecheck} 
+because this software presupposes that package is present  
 to ensure that the table of contents, list of figures, list of tables, 
 the index and the glossary are up to date. 
 
@@ -343,8 +343,8 @@ Note that this does not require {\tt pdflatex}.
 As a drawback, not all \LaTeX-packages are supported. 
 \index{latex2rtf}
 \item
-MS word documents are created from open office documents via {\tt odt2doc} 
-and thus require three steps 
+MS word documents are created from open office documents 
+via the command {\tt odt2doc} and thus require three steps 
 and so the according tool chain. 
 \index{odt2doc} 
 \item
@@ -400,7 +400,7 @@ where a deviation from the default requires to do so.
 
 To install the maven-plugin, just type {\tt mvn clean install}. 
 To install the ant-task, one has first to comment out in {\tt build.xml} 
-the taskdef {\tt latex} and the target {\tt latex:cfg}. 
+the task definition {\tt latex} and the target {\tt latex:cfg}. 
 One may also adapt the lib-folder of the ant-installation, 
 i.e.~the property {\tt antJarDir} where {\tt ant.jar} resides. 
 Then just type {\tt ant clean jar} 
@@ -421,7 +421,7 @@ and run {\tt ant latex:cfg} to create this manual.
 Mixing ant and maven builds is not so good. 
 One may always recover by just creating with maven. 
 
-\subsubsection{Test}
+\subsection{Test}
 
 \chapter{Usage of this Plugin and of this Task}\label{chap:usage}
 
@@ -461,11 +461,11 @@ via {\tt\textbackslash input}.
 These formats are essentially \LaTeX{} and are defined in an according package. 
 An example is {\tt eepic} described in~\cite{EEpic}. 
 \item
-the second one via {\tt\textbackslash includegraphics} 
+the second one via the command {\tt\textbackslash includegraphics} 
 defined by the package {\tt graphicx} 
 which is described in~\cite{GraX}. 
 Chapter 2 therein mentions the supported drivers, 
-among these also {\tt dvipdfm} and {\tt dvipdfmx}. 
+among these are also {\tt dvipdfm} and {\tt dvipdfmx}. 
 It is not the package but the driver 
 which decides on the support of graphic formats. 
 The dvipdfm user manual,~\cite{DviPdfMx} lists the allowed formats 
@@ -618,7 +618,7 @@ the above configuration is sufficient.
 Otherwise, parameters have to be given explicitly 
 overwriting the default values. 
 
-\section{Intermedate files, development and cleanup}\label{sec:devel}
+\section{Information development }\label{sec:devel}
 
 During development, it is comfortable, 
 to have the log-file in the same directory as the \LaTeX{} main file. 
@@ -844,8 +844,8 @@ in format {\tt pdftex\_t} which starts like this:
 \lstset{language=tex, breaklines, basicstyle=\small}
 \lstinputlisting[lastline=25]{F4_01fig2dev.ptx}
 
-The file {\tt xxx.ptx} is ``inputted'' to the tex-file of this manual 
-by {\tt\textbackslash input\{xxx.ptx\}} 
+The file {\tt xxx.ptx} is ``inputted'' into the tex-file of this manual 
+by the command {\tt\textbackslash input\{xxx.ptx\}} 
 automatically including {\tt xxx.pdf}. 
 Note that the full path {\tt pppxxx.pdf} to {\tt xxx.pdf} is required, 
 because relative paths are interpreted in terms of the file 
@@ -958,7 +958,7 @@ which is typeset with a postscipt font to make the difference visible.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F4_01fig2dev.ptx}
+%\input{F4_01fig2dev.ptx}
 \end{center}
 \caption{\label{fig:fig2dev}Conversion of a fig-file 
 into pdf-, eps- and ptx-files with inclusions}
@@ -1056,7 +1056,7 @@ and embedded in this \LaTeX-file with the {\tt\textbackslash input}-command.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F4_02gp2pdf.ptx}
+%\input{F4_02gp2pdf.ptx}
 \end{center}
 \caption{\label{fig:gp2pdf}Conversion of a gnuplot-file 
 into pdf-, eps- and ptx-files with inclusions}
@@ -1064,7 +1064,7 @@ into pdf-, eps- and ptx-files with inclusions}
 
 \begin{figure}[htb]
 \begin{center}
-\input{F4_03someGnuplot.ptx}
+%\input{F4_03someGnuplot.ptx}
 \end{center}
 \caption{\label{fig:gnuplot}
 Converted sample gnuplot-file into ptx and pdf files }
@@ -1118,7 +1118,7 @@ and so the mpx-file is not used by this software.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F4_04mp2mps.ptx}
+%\input{F4_04mp2mps.ptx}
 \end{center}
 \caption{\label{fig:mp2mps}Conversion of a metapost-file into an mps-file}
 \end{figure}
@@ -1132,7 +1132,7 @@ with the {\tt\textbackslash includegraphics}-command.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics{F4_05someMetapost1.mps}
+%\includegraphics{F4_05someMetapost1.mps}
 \end{center}
 \caption{\label{fig:metapost}
 Converted sample metapost-file included as mps-file  }
@@ -1214,7 +1214,7 @@ and may be interactive and dynamic,
 which goes beyond what can be included in \LaTeX. 
 
 Figure~\ref{fig:svgWithText} shows a picture in \gls{svg}-format. 
-As pdf-files can be included directly 
+As pdf-files are included directly 
 via the {\tt\textbackslash includegraphics}-command, 
 using the \LaTeX-packages {\tt xcolor} and {\tt graphicx} 
 virtually, 
@@ -1301,7 +1301,7 @@ after conversion the target files must be moved accordingly.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F4_06svg2pdf.ptx}%
+%\input{F4_06svg2pdf.ptx}%
 \end{center}
 \caption{\label{fig:svg2pdf}Conversion of an svg-file 
 into pdf-, eps- and ptx-files with inclusions}
@@ -1310,7 +1310,7 @@ into pdf-, eps- and ptx-files with inclusions}
 
 \begin{figure}[htb]
 \begin{center}
-\def\svgwidth{0.5\textwidth}
+%\def\svgwidth{0.5\textwidth}
 \input{F4_07someSvg.ptx}%
 %\includesvg[eps,width=0.5\textwidth]{06someSvg}%
 \end{center}
@@ -1333,7 +1333,7 @@ This list may be incomplete.
 \begin{figure}[htb]
 \begin{center}
 %\setkeys{Gin}{width=0.9\textwidth}
-\includegraphics[width=0.9\textwidth]{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
+%\includegraphics[width=0.9\textwidth]{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
 \end{center}
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
 \end{figure}
@@ -1345,7 +1345,7 @@ fixme: at the moment, htlatex does not work with pictures at all.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{F4_09somePngOboeBaroqueDennerMIR370}%.png
+%\includegraphics[width=0.9\textwidth]{F4_09somePngOboeBaroqueDennerMIR370}%.png
 \end{center}
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
@@ -1484,7 +1484,7 @@ and of the \LaTeX-processor {\tt latex2pdf} may be necessary.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F5_01tex2pdf.ptx}
+%\input{F5_01tex2pdf.ptx}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file 
 (accordingly into a dvi-file)}
@@ -1521,7 +1521,7 @@ whether {\tt bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F5_02aux2bbl.ptx}
+%\input{F5_02aux2bbl.ptx}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
@@ -1582,7 +1582,7 @@ an index must be generated.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F5_03idx2ind.ptx}
+%\input{F5_03idx2ind.ptx}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
@@ -1735,14 +1735,14 @@ This is illustrated in Figure~\ref{fig:glo2gls}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F5_04glo2gls.ptx}
+%\input{F5_04glo2gls.ptx}
 \end{center}
 \caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
 using {\tt makeglossaries}}
 \end{figure}
 
 
-\section{Rerunning the index processor and the glossary processor}
+\section{Rerunning the index- and glossary processor}
 \label{sec:rerunMakeIndexGlossaries}
 
 As described in Section~\ref{sec:tex2pdf}, 
@@ -1923,12 +1923,12 @@ for executing the requests made in the {\tt xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F5_05tex2xml.ptx}
+%\input{F5_05tex2xml.ptx}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
 
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\tiny]
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/tex4ht.4ht
 version 2009-01-07-07:11
 --------------------------------------
@@ -2097,11 +2097,11 @@ use the command line option `pic-longtable'
 Note --- to ensure proper alignments use fixed size fonts (see listings.dtx
 )
 )
-\end{verbatim}
+\end{Verbatim}
 
 {\tt tex4ht} yields 
 
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\scriptsize]
 ----------------------------
 tex4ht.c (2012-07-25-19:36 kpathsea)
 tex4ht 
@@ -2125,12 +2125,12 @@ tex4ht [-f<path-separator-ch>]in-file[.dvi]
    [-utf8]              utf-8 encoding for unicode characters
    [-v<idv version>]    replacement for the given dvi version
    [-xs]           ms-dos file names for automatically generated gifs
-\end{verbatim}
+\end{Verbatim}
 
 
 {\tt t4ht} yields 
 
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\footnotesize]
 --------------------------------------------------------------------
 t4ht [-f<dir char>]filename ...
   -b     ignore -d -m -M for bitmaps
@@ -2151,7 +2151,7 @@ t4ht [-f<dir char>]filename ...
 Example: 
    t4ht name -d/WWW/temp/ -etex4ht-32.env -m644
 --------------------------------------------------------------------
-\end{verbatim}
+\end{Verbatim}
 
 
 \section{Creating odt-files}\label{sec:tex2odt}
@@ -2168,7 +2168,7 @@ which is illustrated in Figure~\ref{fig:tex2doc}.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F5_06tex2doc.ptx}
+%\input{F5_06tex2doc.ptx}
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -2200,7 +2200,7 @@ Figure~\ref{fig:tex2txt} illustrates the translation process.
 
 \begin{figure}[htb]
 \begin{center}
-\input{F5_07tex2txt.ptx}
+%\input{F5_07tex2txt.ptx}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
@@ -2458,21 +2458,32 @@ Then the default value will be extended.
 
 The default pattern for identifying a \LaTeX{} main file is 
 %
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\footnotesize]
 \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
 %.*$|
 \\input\{[^{}]*\}|
 \s*)*
 \\(documentstyle|documentclass)
-\end{verbatim}
+\end{Verbatim}
 %
 This means that the latex main file is the one 
 containing {\tt\textbackslash documentclass} for modern classes 
 and {\tt\textbackslash documentstyle} for old fashioned ones. 
-This may be preceeded only by the command {\tt\textbackslash RequirePackage}, 
+This may be preceeded only by 
+%
+\begin{itemize}
+\item
+the command {\tt\textbackslash RequirePackage}, 
+\item
 the command {\tt\textbackslash PassOptionsToPackage}, 
-by comment lines, by {\tt\textbackslash input}, and by space. 
+by comment lines, 
+\item
+by {\tt\textbackslash input}, and 
+\item
+by space. 
+\end{itemize}
+%
 Note that {\tt\textbackslash A} represents the beginning of the stream. 
 
 Strictly speaking, also {\tt\textbackslash(re)newcommands} 
@@ -2493,13 +2504,13 @@ For users of emacs with package auctex, there is a valuable alternative:
 
 Latex main files are marked with an end section as this file: 
 %
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\footnotesize]
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-command-extra-options: "-src-specials -recorder -shell-escape" 
 %%% TeX-master: t
 %%% End: 
-\end{verbatim}
+\end{Verbatim}
 % 
 The vital line in this context is {\tt \%\%\% TeX-master: t}. 
 In contrast to this, a non-master file 
@@ -2575,7 +2586,8 @@ The options for the command {\tt\$fig2devCommand}
 common to both output languages. 
 For the options specific for the two output langugages 
 `{\tt pdftex}' and `{\tt pdftex\_t}', 
-see {\tt\$fig2devPtxOptions} and {\tt\$fig2devPdfEpsOptions}, 
+see the explanation of the parameters 
+{\tt\$fig2devPtxOptions} and {\tt\$fig2devPdfEpsOptions}, 
 respectively. 
 % The default value is the empty string. 
 \end{minipage}
@@ -2778,7 +2790,7 @@ and notify the developer of this plugin.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-indicating a warning when running {\tt\$latex2pdfCommand}. 
+which indicates a warning when running {\tt\$latex2pdfCommand}. 
 It is designed to be as complete as possible 
 while not indicating a warning where not appropriate. 
 If the current default value is not appropriate, 
@@ -3079,7 +3091,7 @@ Options `{\tt-M<}' for `{\tt xindy}'
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the glg-file 
-indicating an error when running {\tt\$makeGlossariesCommand}. 
+which indicates an error when running {\tt\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
@@ -3088,7 +3100,7 @@ and notify the developer of this plugin.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the `glg'-file 
-indicating an error when running `{\tt xindy}' 
+which indicates an error when running `{\tt xindy}' 
 via {\tt\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
@@ -3181,46 +3193,10 @@ are hardcoded and take the form
 `{\tt\^{}T\$T\textbackslash.yyy\$}', where `{\tt yyy}' 
 may be an ending or an alternative of endings. 
 		 
-For an explanation of the pattern `{\tt T\$T}', 
-see {\tt\$patternCreatedFromLatexMain}. 
+The explanation of the pattern `{\tt T\$T}' is the same as given 
+for the parameter {\tt\$patternCreatedFromLatexMain}. 
 Spaces and newlines are removed 
 from that pattern before processing. 
-		 
-The default value has the following components: 
-- `{\tt\^{}T\$T\textbackslash.x?html?\$}' is the main file. 
-- `{\tt\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
-toc, lof, lot, indices, glossaries, NOT the bibliography. 
-- `{\tt\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
-are chapters, sections and subsections or below 
-and appendices. 
-- `{\tt\^{}T\$T\textbackslash d+\textbackslash.x?html?\$}' are footnotes. 
-- `{\tt\^{}T\$T\textbackslash.css\$}' are cascaded stylesheets. 
-- `{\tt\^{}T\$T-\textbackslash d+\textbackslash.svg\$}' and 
-  `{\tt\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
-are svg/png-files representing figures. 
-- `{\tt\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
-represents special symbols. 
-		 
-Note that the patterns for the html-files 
-can be summarized as '{\tt\^{}T\$T((ch|se|su|ap|li)?\textbackslash d+)?\textbackslash.x?html?\$}'. 
-Adding the patterns for the css-file and the svg/png-files, 
-we obtain 
-'{\tt\^{}T\$T
-(((ch|se|su|ap|li)?\textbackslash d+)?\textbackslash.x?html?|
-\textbackslash.css|
-\textbackslash d+x\textbackslash.png|
--\textbackslash d+\textbackslash.svg)\$}'. 
-		 
-The pattern is designed to match quite exactly 
-the files to be copied to {\tt\$targetSiteDirectory}, 
-for the goal 'html', 
-not much more and at any case not less. 
-since {\tt\$tex2htCommand} is not well documented, 
-and still subject to development, 
-this pattern cannot be guaranteed to be final. 
-If the user finds an extension, (s)he is asked to contribute 
-and to notify the developer of this plugin. 
-Then the default value will be extended. 
 \end{minipage}
 } \\
 \hline
@@ -3242,6 +3218,59 @@ The default value for this pattern is as follows:
 (cmsy)\d+(-c)?-\d+c?\.png)$
 \end{verbatim}
 
+
+The default value has the following components: 
+%
+\begin{itemize}
+\item
+`{\tt\^{}T\$T\textbackslash.x?html?\$}' is the main file. 
+\item
+`{\tt\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
+toc, lof, lot, indices, glossaries, NOT the bibliography. 
+\item
+`{\tt\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
+are chapters, sections and subsections or below 
+and appendices. 
+\item
+`{\tt\^{}T\$T\textbackslash d+\textbackslash.x?html?\$}' are footnotes. 
+\item
+`{\tt\^{}T\$T\textbackslash.css\$}' are cascaded stylesheets. 
+\item
+`{\tt\^{}T\$T-\textbackslash d+\textbackslash.svg\$}' and 
+`{\tt\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
+are svg/png-files representing figures. 
+\item
+`{\tt\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
+represents special symbols. 
+\end{itemize}
+		 
+Note that the patterns for the html-files can be summarized as 
+%
+\begin{Verbatim}[fontsize=\footnotesize]
+\^{}T\$T((ch|se|su|ap|li)?\textbackslash d+)?\textbackslash.x?html?\$
+\end{Verbatim}
+
+Adding the patterns for the css-file and the svg/png-files, 
+we obtain 
+%
+\begin{Verbatim}[fontsize=\footnotesize]
+\^{}T\$T
+(((ch|se|su|ap|li)?\textbackslash d+)?\textbackslash.x?html?|
+\textbackslash.css|
+\textbackslash d+x\textbackslash.png|
+-\textbackslash d+\textbackslash.svg)\$
+\end{Verbatim}		 
+
+The pattern is designed to match quite exactly 
+the files to be copied to {\tt\$targetSiteDirectory}, 
+for the goal 'html', 
+not much more and at any case not less. 
+since {\tt\$tex2htCommand} is not well documented, 
+and still subject to development, 
+this pattern cannot be guaranteed to be final. 
+If the user finds an extension, (s)he is asked to contribute 
+and to notify the developer of this plugin. 
+Then the default value will be extended. 
 
 TODO: add 
 
@@ -3350,8 +3379,13 @@ Since this plugin is just for documentation,
 there is no need to abort site creation altogether, 
 so only the former exception occurs. 
 
-An ant-task aborts an ant-build 
-throwing a {\tt org.apache.tools.ant.BuildException}. 
+An ant-task aborts an ant-build throwing a
+%
+\begin{verbatim}
+org.apache.tools.ant.BuildException
+\end{verbatim}
+%
+without further distinction. 
 
 This software provides both a maven plugin and an ant task 
 built on the same code base. 
@@ -3483,7 +3517,7 @@ Error execution means
 the file expected to be the working directory 
 does not exist or is not a directory. 
 \item
-{\tt Runtime.exec(String, String[], File)} fails 
+method {\tt Runtime.exec(String, String[], File)} fails 
 throwing an {\tt IOException}. 
 \item
 an error inside systemOut parser occurs 
@@ -3498,7 +3532,8 @@ whereas for EEX01 just a failure code is returned.
 \end{minipage}
 } \\
 \hline
-\caption{\label{tab:TEX} The BuildFailureException of CommandExecutorImpl  }
+\caption{\label{tab:TEX} The BuildFailureException of class
+  CommandExecutorImpl }
 \end{longtable}
 
 
@@ -3621,8 +3656,8 @@ Error execution means that there is even no valid return code.
 
 \end{minipage}
 } \\
-\tt\footnotesize EEX03 & \tt\footnotesize Running \$command failed: 
-                                    Target file '\$fileName' is not updated. \\
+\tt\footnotesize EEX03 & \tt\footnotesize Running \$command failed: \\
+                       &             Target file '\$fileName' is not updated. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
@@ -3744,21 +3779,21 @@ Id.        & Message  \\
 with suffixes \$skipped. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WPP04  & \tt\footnotesize Skip processing '\$srcFile': 
                                   interpreted as target of '\$lmFile'. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WLP01  & \tt\footnotesize LaTeX requires rerun 
-                          but maximum number \$maxNumRerunsLatex reached.  \\
+\tt\footnotesize WLP01  & \tt\footnotesize LaTeX requires rerun \\
+                        & \tt but maximum number \$maxNumRerunsLatex reached.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \hline
