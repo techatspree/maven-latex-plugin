@@ -3,7 +3,7 @@
 %\PassOptionsToPackage{dvipdfmx}{xcolor} %or dvipdfm 
 %\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
 \RequirePackage{lmodern}
-\documentclass[12pt]{article}
+\documentclass[12pt]{book}
 
 \input{header.tex}
 
@@ -81,7 +81,8 @@ glossary file containing sorted, unified and formatted glossary entries}
 
 \section{Introduction}
 
-Mode is 
+This document is created with pdflatex or that like 
+with output format 
 \ifpdf
 pdf
 \else
@@ -1244,7 +1245,7 @@ inkscape -D -z --export-eps=xxx --export-latex xxx.svg
 
 Since both the pdf-file and the eps-file are given without suffix, 
 the resulting tex file is not {\tt xxx.pdf\_tex} and {\tt xxx.eps\_tex} 
-but in both cases just {\tt xxx_tex} 
+but in both cases just {\tt xxx\_tex} 
 as illustrated in Figure~\ref{fig:svg2pdf}. 
 To obtain the correct suffixes, 
 after conversion the target files must be moved accordingly. 
@@ -1282,6 +1283,7 @@ This list may be incomplete.
 
 \begin{figure}[htb]
 \begin{center}
+%\setkeys{Gin}{width=0.9\textwidth}
 \includegraphics[width=0.9\textwidth]{08someJpgOboeBaroqueDennerMIR370}%.jpg
 \end{center}
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
@@ -1290,11 +1292,12 @@ This list may be incomplete.
 As an example, Figure~\ref{fig:asIsPng} shows the same picture 
 as png-file. 
 
-FIXME: at the moment, htlatex does not work with pictures at all. 
+fixme: at the moment, htlatex does not work with pictures at all. 
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{09somePngOboeBaroqueDennerMIR370}%.png
+\includegraphics%[width=0.9\textwidth]
+{09somePngOboeBaroqueDennerMIR370}%.png
 \end{center}
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
@@ -2273,6 +2276,18 @@ relative to {\tt\$baseDirectory}.
 The default value is '{\tt src/site/tex}' on Unix systems. 
 \end{minipage}
 } \\
+\tt readTexSrcDirRec  & \tt tru  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Whether the tex source directory {\tt\$texSrcDirectory} 
+shall be read recursively, 
+i.e. including the subdirectories recursively. 
+This is set to {\tt false} only during information development. 
+%The default value is 'true'.
+\end{minipage}
+} \\
+
+
 \tt outputDirectory  & \tt.             \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}

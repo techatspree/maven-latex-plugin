@@ -88,6 +88,7 @@
 	<!--patternErrXindy="(^ERROR: )" -->
 
       <settings texSrcDirectory="src/site/tex"
+		readTexSrcDirRec='true'
 		outputDirectory="."
 		targets="pdf, html"
 		cleanUp='true'

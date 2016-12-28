@@ -788,12 +788,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param grpFile
      *    a graphic file. 
      */
+    // for formats fig, gp and svg: since all of these create ptx, pdf and eps 
     private void clearTargetPtxPdfEps(File grpFile) {
 	this.log.info("Deleting targets of file '" + grpFile + "'. ");
 	// may log EFU05 
 	deleteIfExists(grpFile, SUFFIX_PTX);
-	deleteIfExists(grpFile, LatexDev.pdf  .getGraphicsInTexSuffix());
- 	deleteIfExists(grpFile, LatexDev.dvips.getGraphicsInTexSuffix());
+	deleteIfExists(grpFile, LatexDev.pdf  .getGraphicsInTexSuffix());// pdf 
+ 	deleteIfExists(grpFile, LatexDev.dvips.getGraphicsInTexSuffix());// eps 
     }
 
     /**
@@ -1243,10 +1244,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     	throws BuildFailureException {
     	Collection<String> skipped        = new TreeSet<String>();
     	Collection<File>   latexMainFiles = new TreeSet<File>();
-	// may throw BuildFailureException TEX01, 
-	// may log EEX01, EEX02, EEX03, 
-	// WEX04, WEX05, WFU03, WPP02, EFU06 
-      	processGraphicsSelectMain(dir, node, skipped, latexMainFiles);
+	if (this.settings.getReadTexSrcDirRec()) {
+	    // may throw BuildFailureException TEX01, 
+	    // may log EEX01, EEX02, EEX03, 
+	    // WEX04, WEX05, WFU03, WPP02, EFU06 
+	    processGraphicsSelectMainRec(dir, node, skipped, latexMainFiles);
+	} else {
+	    // may throw BuildFailureException TEX01, 
+	    // may log EEX01, EEX02, EEX03, 
+	    // WEX04, WEX05, WFU03, WPP02, EFU06 
+	    processGraphicsSelectMain   (dir, node, skipped, latexMainFiles);
+	}
 
     	if (!skipped.isEmpty()) {
     	    this.log.warn("WPP03: Skipped processing of files with suffixes " + 
@@ -1366,16 +1374,29 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // EEX01, EEX02, EEX03, WEX04, WEX05 and EFU06 
 	    entry.getValue().procSrc(entry.getKey(), this);
 	}
+    }
+
+    /**
+     * Like 
+     * {@link #processGraphicsSelectMainRec(File,DirNode,Collection,Collection)}
+     * but with recursion to subdirectories. 
+     */
+    private void processGraphicsSelectMainRec(File dir, 
+					      DirNode node, 
+					      Collection<String> skipped, 
+					      Collection<File> latexMainFiles) 
+    	throws BuildFailureException {
+	processGraphicsSelectMain(dir, node, skipped, latexMainFiles);
 
 	// go on recursively with subdirectories 
     	for (Map.Entry<String, DirNode> entry : node.getSubdirs().entrySet()) {
 	    // may throw BuildFailureException TEX01, 
 	    // may log EEX01, EEX02, EEX03, WEX04, WEX05, WPP03 
 	    // WFU03, WPP02, EFU06 
-     	    processGraphicsSelectMain(new File(dir, entry.getKey()),
-				      entry.getValue(), 
-				      skipped, 
-				      latexMainFiles);
+     	    processGraphicsSelectMainRec(new File(dir, entry.getKey()),
+					 entry.getValue(), 
+					 skipped, 
+					 latexMainFiles);
     	}
     }
 
