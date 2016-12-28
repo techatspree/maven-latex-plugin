@@ -102,6 +102,26 @@ Here, portability of the format \gls{pdf} is a vital feature.
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from \LaTeX-files 
 in an uniform way. 
+Chapter~\ref{chap:install} shows how to install both the maven-plugin 
+and the ant-task 
+and Chapter~\ref{chap:usage} describes the usage. 
+Note that the maven-plugin is both easier to install 
+and more versatile to be used. 
+
+From the \LaTeX-files, the latex main files must be extracted, 
+only these must be compiled. 
+It is very usual to endow \LaTeX-files with figures. 
+On the other hand, there are many graphic formats 
+which cannot be included directly in a \LaTeX-file 
+but must be preprocessed. 
+If there is some format needed but not yet provided, 
+please write an email to the author. 
+
+Graphic files must be preprocessed before processing latex main files, 
+as described in Chapter~\ref{chap:GraphConversions}. 
+Then follows the proper processing of latex main files 
+including creation of index and glossaries 
+as described in Chapter~\ref{chap:latexMainConversions}. 
 Besides \gls{pdf}, these formats include the web-formats \gls{html} 
 and \gls{xhtml}, 
 open offices format \gls{odt}, microsoft's word formats like \gls{docx} 
@@ -110,22 +130,19 @@ and finally plain text.
 Uniformity of ant-task and a maven-plugin means in particular, 
 that the settings which may be passed to the task 
 and those allowed for the plugin are in a one-to-one relation. 
-They are both described in Section~\ref{chap:settings}. 
+They are both described in Chapter~\ref{chap:settings}. 
+It is a design goal, that the auxiliary programs 
+used by this software are fully configurable via parameters, 
+that aspects not completely specified can be handled flexibly, 
+there are parameters supporting information development 
+and that for the parameters are default values 
+which allow to do without explicit parametrization in most of the cases. 
 \index{ant-task}
 Both, the ant-task and the maven-plugin rely on the same code base 
 which form the package {\tt org.m2latex.core}. 
 The code specific for the ant-task is in {\tt org.m2latex.antTask} 
 and that specific for the maven-plugin is in {\tt org.m2latex.mojo}. 
 
-It is very usual to endow \LaTeX-files with figures. 
-We support figures created in the \gls{fig} by the program xfig, 
-figures created by the plotting utility gnuplot, 
-the tex-specific graphic language metapost 
-and finally figures in formats which can be included into a \LaTeX-file 
-without preprocessing like \gls{png} and \gls{jpg} 
-or with automatic conversion like \gls{svg}. 
-Further functionality on \LaTeX{} figures can be easily added. 
-If there is some need, please write an email to the author. 
 
 The creation process supports an index, a glossry and a bibliography. 
 Again, further functionality can be added by demand. 
@@ -140,9 +157,30 @@ for the underlying software.
 The maven-plugin is somehow superior 
 because it better supports the design process for the \LaTeX{} sources. 
 
+If something goes wrong in the build process, 
+or there is an indication 
+of some deficiency in the result of the build process, 
+processing must be aborted if going on does not make sense 
+and there must be some error or warning logging 
+as described in Chapter~\ref{chap:exceptionLogging}. 
+
+A listing of the configuration of the maven plugin and of the ant-task 
+is given in Chapter~\ref{chap:listings}. 
+
+The author found some gaps, i.e. desirable features 
+which are not yet implemented. 
+To priorize further work, 
+all these gaps are collected in Chapter~\ref{chap:gaps}. 
+Accordingly, the most important bugs are collected in
+Chapter~\ref{chap:bugs}. 
+The user is encouraged to contribute with feature requests 
+and bug reports and to vote for realization of features 
+and on fixing bugs. 
+Software quality is ensured mainly through tests 
+which are described in Chapter~\ref{chap:tests}. 
 
 
-\chapter{Installation}
+\chapter{Installation}\label{chap:install}
 
 Both the ant-task and the maven-plugin just direct parameters 
 from ant and from maven, respectively, 
@@ -326,7 +364,7 @@ or at least the subset used, must be installed.
 \section{Setting pom.xml and build.xml}\label{sec:sgml}
 
 To install the maven-plugin within a given maven project, 
-the listing of a pom entry given in Section~\ref{chap:settings} 
+the listing of a pom entry given in Chapter~\ref{chap:settings} 
 can be added to {\tt pom.xml} and modified accordingly. 
 In a default maven project, 
 the default configuration is usable which creates pdf-documents and
@@ -346,7 +384,7 @@ The according entry to be added to the {\tt pom.xml} is then just
 \end{lstlisting}
 
 Likewise to install the ant-task within an ant-project, 
-the listing of a build file entry given in Section~\ref{chap:settings} 
+the listing of a build file entry given in Chapter~\ref{chap:settings} 
 has to be added to the {\tt build.xml}. 
 Also working with an ant project 
 conforming with maven conventions, 
@@ -542,7 +580,7 @@ Only if the folder structure deviates from the standard
 or if the \LaTeX{} sources require special configuation, 
 parameters have to be given explicitly, 
 because they deviate from the default values. 
-Section~\ref{chap:settings} summarizes all available parameters, 
+Chapter~\ref{chap:settings} summarizes all available parameters, 
 giving the default value and a description. 
 
 
@@ -703,6 +741,17 @@ yyy
 
 \chapter{Graphical Preprocessing}\label{chap:GraphConversions}
 
+We support figures created in the \gls{fig} by the program xfig, 
+figures created by the plotting utility gnuplot, 
+the tex-specific graphic language metapost 
+and finally figures in formats which can be included into a \LaTeX-file 
+without preprocessing like \gls{png} and \gls{jpg} 
+or with automatic conversion like \gls{svg}. 
+Further functionality on \LaTeX{} figures can be easily added. 
+If there is some need, please write an email to the author. 
+
+
+
 This section describes the conversions of 
 graphical source files into target files 
 in detail. 
@@ -773,7 +822,7 @@ but must be exported into a \LaTeX-readable format.
 
 To export a file {\tt xxx.fig} into several external formats, 
 {\tt xfig} uses {\tt fig2dev}. 
-A look in \cite{XFigF}, Section 3.4 shows that texts with set ``special''-flag 
+A look in \cite{XFigF}, Section~3.4 shows that texts with set ``special''-flag 
 are interpreted as (la)tex-code. 
 For these texts the appropriate export language would be {\tt latex}. 
 On the other hand, {\tt latex} is weak in graphics 
@@ -1057,7 +1106,7 @@ and an \gls{mpx}-file {\tt xxx.mpx} containing the text of the figure.
 The mps-files look like postscript, or more like encapsulated postscript, 
 but are not completely valid, since the prologue is missing, by default. 
 Inserting the line {\tt prologues := 2;} in the first line of the mp-file 
-solves the problem as~\cite{MPost}, Section 14.2.1 explains. 
+solves the problem as~\cite{MPost}, Section~14.2.1 explains. 
 Then it can be viewed in ghostscript. 
 
 A much better alternative is to specify the the option 
@@ -1158,7 +1207,7 @@ and a specification for SVG Tiny 1.2,
 \cite{Svg12Tiny} which is itself quite short and more readable 
 and gives also a good overview for ``SVG Big''. 
 For a tutorial, see \cite{SvgTut}. 
-As stated in \cite{Svg12Tiny}, Section 1.1, 
+As stated in \cite{Svg12Tiny}, Section~1.1, 
 svg-files may contain vector graphics, raster images and text. 
 It may also contain video and audio elements 
 and may be interactive and dynamic, 
@@ -1191,7 +1240,7 @@ are required.
 Moreover, it may happen that the \LaTeX-package {\tt transparent} 
 is required also, depending on the features used in{\tt xxx.svg}. 
 
-As indicated in \cite{SvgP}, Section 1, 
+As indicated in \cite{SvgP}, Section~1, 
 the {\tt svg}-package delegates the transformation 
 of {\tt xxx.svg} {\tt xxx.pdf} and {\tt xxx.pdf\_tex} 
 to {\tt inkscape}. 
@@ -1214,7 +1263,7 @@ Since this software is still under construction
 and more than that, is in an experimental phase, 
 we provide explicit preprocessing of svg-files using {\tt inkscape}. 
 Another problem with the {\tt svg}-package is, 
-that according to cite{SvgP}, Section 1, 
+that according to cite{SvgP}, Section~1, 
 it does not work on windows platforms. 
 
 
@@ -1307,7 +1356,7 @@ fixme: at the moment, htlatex does not work with pictures at all.
 
 Given graphics in formats includable in tex-files, 
 which may require preprocessing described in 
-Section~\ref{chap:GraphConversions}, 
+Chapter~\ref{chap:GraphConversions}, 
 this section describes the conversions of latex main files 
 into target files in detail. 
 The most important target file formats is \gls{pdf}. 
@@ -1488,7 +1537,7 @@ Also Chapter 10 in~\cite{Gra} gives vital information on {\tt bibtex}.
 Note that despite of the headline of this section, 
 this software supports a single index only and this requires 
 the package {\tt makeidx} described in~\cite{MkidxShIdxP}. 
-For an extension see Section~\ref{chap:gaps}. 
+For an extension see Chapter~\ref{chap:gaps}. 
 
 Interesting enough, 
 the commands {\tt\textbackslash index} and {\tt\textbackslash makeindex} 
@@ -1572,7 +1621,7 @@ whereas the option to do without external programs
 offered also by package {\tt glossaries} 
 is not supported by this software. 
 
-For generalizations see Section~\ref{chap:gaps}. 
+For generalizations see Chapter~\ref{chap:gaps}. 
 
 As for creating indices there is a \LaTeX-command {\tt\textbackslash makeindex}, 
 to create a glossary there is a \LaTeX-command 
@@ -1659,7 +1708,7 @@ The style {\tt list} (which is the default) is set in the form
 \usepackage[style=list]{glossaries}
 \end{verbatim}
 %
-where~\cite{GloP}, Section 15 lists predefined styles. 
+where~\cite{GloP}, Section~15 lists predefined styles. 
 So, the style determines the content of the style definition, 
 whereas the options {\tt makeindex} and {\tt xindy} 
 specify the form in which the style is encoded 
@@ -3274,7 +3323,7 @@ The options of the command {\tt\$pdf2txtCommand}.
 \caption{\label{tab:paramExt} The parameters of further converters }
 \end{longtable}
 
-\chapter{Exceptions and Logging}\label{sec:exceptionLogging}
+\chapter{Exceptions and Logging}\label{chap:exceptionLogging}
 
 If during execution of this software something goes wrong 
 and it is possible to detect that, the user shall be notified. 
@@ -3729,7 +3778,7 @@ with suffixes \$skipped. \\
 
 FIXME: to be added. 
 
-\chapter{Listings}\label{sec:listings}
+\chapter{Listings}\label{chap:listings}% maybe appendix? 
 
 First we provide listings of the configuration 
 in the {\tt pom.xml} for the maven-plugin 
@@ -3803,7 +3852,7 @@ To create multiple indices using makeindex,
 this has to be invoked with an argument 
 specifying the type of index. 
 
-According to~\cite{GloP}, Section 1, 
+According to~\cite{GloP}, Section~1, 
 there are three options to create a glossary, 
 whereas this software supports option two only, 
 which uses {\tt makeindex}. 
@@ -3814,10 +3863,10 @@ supports multiple glossaries via the command
 \newglossary[log-ext]{name}{in-ext}{out-ext}{title}[counter]
 \end{verbatim}
 %
-described in~\cite{GloP}, Section 12, 
+described in~\cite{GloP}, Section~12, 
 this software only supports creating a single glossary. 
 
-Reading~\cite{GloP}, Section 15.1, the glossarystyle {\tt index} 
+Reading~\cite{GloP}, Section~15.1, the glossarystyle {\tt index} 
 seems to allow creating indices through the {\tt glossaries} package 
 making any index-package obsolete. 
 
@@ -3979,8 +4028,12 @@ For the other case, {\tt\$pdfViaDvi} unset, this requires some research.
 Also for creation of the txt-format, 
 {\tt\$pdfViaDvi} must be set. 
 
+FIXME: on bibliography, index and glossary 
 
 
+\chapter{Tests}\label{chap:tests}
+
+FIXME: this chapter describes the tests to be performed. 
 
 \bibliographystyle{alpha}
 \bibliography{lit}{}
