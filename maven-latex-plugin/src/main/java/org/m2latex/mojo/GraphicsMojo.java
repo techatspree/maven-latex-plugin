@@ -48,7 +48,8 @@ public class GraphicsMojo extends AbstractLatexMojo {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory 
-     * <li> WFU03: cannot close 
+     * <li> WFU03: cannot close file 
+     * <li> EFU06: Cannot move file 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 

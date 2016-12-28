@@ -23,7 +23,7 @@ public class LatexClrTask extends AbstractLatexTask {
      * <li> WPP02: tex file may be latex main file 
      * <li> WFU01: Cannot read directory...
      * <li> WFU03: cannot close tex file 
-     * <li> WFU05: Failed to delete file 
+     * <li> EFU05: Failed to delete file 
      * </ul>
      *
      * @throws BuildException 
@@ -34,7 +34,7 @@ public class LatexClrTask extends AbstractLatexTask {
  	initialize();
 	try {
 	    // may throw BuildFailureException TSS01 
-	    // may log warnings WPP02, WFU01, WFU03, WFU05 
+	    // may log warnings WPP02, WFU01, WFU03, EFU05 
 	    this.latexProcessor.clearAll();
 	} catch (BuildFailureException e) {
 	    throw new BuildException(e.getMessage(), e.getCause());

@@ -49,8 +49,9 @@ public class CfgLatexMojo extends AbstractLatexMojo {
      * Logging: 
      * <ul>
      * <li> WFU01: Cannot read directory... 
-     * <li> WFU03: cannot close 
-     * <li> WFU05: Cannot delete... 
+     * <li> WFU03: cannot close
+     * <li> EFU05: Cannot delete
+     * <li> EFU06: Cannot move file 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -64,7 +65,8 @@ public class CfgLatexMojo extends AbstractLatexMojo {
 	initialize();
 	try {
 	    // may throw BuildFailureException FIXME 
-	    // may log warning WFU01, WFU03, WFU05, WPP02, WPP03, 
+	    // may log WFU01, WFU03, EFU05, EFU06, 
+	    // WPP02, WPP03, 
 	    // EEX01, EEX02, EEX03, WEX04, WEX05 
 	    this.latexProcessor.create();
 	} catch (BuildFailureException e) {
