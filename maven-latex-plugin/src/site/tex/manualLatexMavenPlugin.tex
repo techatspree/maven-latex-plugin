@@ -79,7 +79,7 @@ glossary file containing sorted, unified and formatted glossary entries}
 \listoftables
 
 
-\section{Introduction}
+\chapter{Introduction}
 
 This document is created with pdflatex or that like 
 with output format 
@@ -110,7 +110,7 @@ and finally plain text.
 Uniformity of ant-task and a maven-plugin means in particular, 
 that the settings which may be passed to the task 
 and those allowed for the plugin are in a one-to-one relation. 
-They are both described in Section~\ref{sec:settings}. 
+They are both described in Section~\ref{chap:settings}. 
 \index{ant-task}
 Both, the ant-task and the maven-plugin rely on the same code base 
 which form the package {\tt org.m2latex.core}. 
@@ -142,17 +142,17 @@ because it better supports the design process for the \LaTeX{} sources.
 
 
 
-\section{Installation}
+\chapter{Installation}
 
 Both the ant-task and the maven-plugin just direct parameters 
 from ant and from maven, respectively, 
 to the programs that do the proper work. 
 Thus installation of the ant-task and of the maven-plugin 
 requires that all needed programs are installed. 
-These prerequisites are collected in Section~\ref{subsec:prerequisites}. 
+These prerequisites are collected in Section~\ref{sec:prerequisites}. 
 \index{ant-task}
 
-\subsection{Prerequisites}\label{subsec:prerequisites}
+\section{Prerequisites}\label{sec:prerequisites}
 
 The ant-task is tested with 
 {\tt Apache Ant(TM) version 1.9.4 compiled on September 11 2015}\index{ant}
@@ -323,10 +323,10 @@ pdf-files is required.
 So to run this software, the abovementioned programs 
 or at least the subset used, must be installed. 
 
-\subsection{Setting pom.xml and build.xml}\label{subsec:sgml}
+\section{Setting pom.xml and build.xml}\label{sec:sgml}
 
 To install the maven-plugin within a given maven project, 
-the listing of a pom entry given in Section~\ref{sec:settings} 
+the listing of a pom entry given in Section~\ref{chap:settings} 
 can be added to {\tt pom.xml} and modified accordingly. 
 In a default maven project, 
 the default configuration is usable which creates pdf-documents and
@@ -346,7 +346,7 @@ The according entry to be added to the {\tt pom.xml} is then just
 \end{lstlisting}
 
 Likewise to install the ant-task within an ant-project, 
-the listing of a build file entry given in Section~\ref{sec:settings} 
+the listing of a build file entry given in Section~\ref{chap:settings} 
 has to be added to the {\tt build.xml}. 
 Also working with an ant project 
 conforming with maven conventions, 
@@ -358,7 +358,7 @@ where a deviation from the default requires to do so.
 
 
 
-\subsection{Completing the Installation}\label{subsec:instComplete}
+\section{Completing the Installation}\label{sec:instComplete}
 
 To install the maven-plugin, just type {\tt mvn clean install}. 
 To install the ant-task, one has first to comment out in {\tt build.xml} 
@@ -385,14 +385,14 @@ One may always recover by just creating with maven.
 
 \subsubsection{Test}
 
-\section{Usage of this Plugin and of this Task}\label{sec:usage}
+\chapter{Usage of this Plugin and of this Task}\label{chap:usage}
 
 This plugin may be used both if the \LaTeX-sources are finished 
 to create the output described by them 
 and also to support development of the \LaTeX{} sources. 
 Accordingly, this section has two subsections. 
 
-\subsection{The source files}\label{subsec:sources}
+\section{The source files}\label{sec:sources}
 
 The \LaTeX-files and also files included via {\tt\textbackslash input} 
 are in the {\em tex-source directory}, 
@@ -476,7 +476,7 @@ up to the ending is allowed.
 The same is true for the \LaTeX{} main files. 
 
 
-\subsection{Exporting in various formats}\label{sec:stableUsage}
+\section{Exporting in various formats}\label{chap:stableUsage}
 
 
 After having added the configuration of the plugin to the {\tt pom.xml}, 
@@ -534,7 +534,7 @@ there is a target {\em graphics}, invoked by {\tt mvn latex:grp}.
 This target does not create any output in the site directory. 
 Finally,  there is another target for clearing the tex-source directory 
 recursively, invoked by {\tt mvn latex:clr}. 
-For more details on these two targets, see Section~\ref{subsec:devel}. 
+For more details on these two targets, see Section~\ref{sec:devel}. 
 
 In a standard maven project, 
 the above minimal configuration should be sufficient. 
@@ -542,7 +542,7 @@ Only if the folder structure deviates from the standard
 or if the \LaTeX{} sources require special configuation, 
 parameters have to be given explicitly, 
 because they deviate from the default values. 
-Section~\ref{sec:settings} summarizes all available parameters, 
+Section~\ref{chap:settings} summarizes all available parameters, 
 giving the default value and a description. 
 
 
@@ -558,7 +558,7 @@ Example: {\tt ant -d latex:cfg}.
 Whereas by default the target directory and in particular 
 the target site directory with all output of this plugin is deleted 
 in maven's {\tt clean} lifecycle. 
-As is described in more detail in Section~\ref{subsec:devel}, 
+As is described in more detail in Section~\ref{sec:devel}, 
 this software creates target documents and also intermediate files 
 in the tex source directory, at least with cleanup disabled. 
 To eliminate the created files from the souce directory, 
@@ -580,7 +580,7 @@ the above configuration is sufficient.
 Otherwise, parameters have to be given explicitly 
 overwriting the default values. 
 
-\subsection{Intermedate files, development and cleanup}\label{subsec:devel}
+\section{Intermedate files, development and cleanup}\label{sec:devel}
 
 During development, it is comfortable, 
 to have the log-file in the same directory as the \LaTeX{} main file. 
@@ -701,7 +701,7 @@ rasterizer -m application/pdf file.svgz -d file.pdf
 cairosvg in.svg -o out.pdf
 yyy
 
-\section{Graphical Preprocessing}\label{sec:GraphConversions}
+\chapter{Graphical Preprocessing}\label{chap:GraphConversions}
 
 This section describes the conversions of 
 graphical source files into target files 
@@ -709,24 +709,24 @@ in detail.
 
 But pdf also occurs as an intermediate format for pictures. 
 For historical reasons, still \gls{eps} is used. 
-Section~\ref{subsec:figpdf} shows that it suffices to stick to pictures 
+Section~\ref{sec:figpdf} shows that it suffices to stick to pictures 
 in pdf-format. 
 % FIXME: REALLY? 
 %FIXME: missing pdf als basic input format. What about (e)ps? 
-Section~\ref{subsec:fig2dev} shows how {\tt fig2dev} converts fig-files 
+Section~\ref{sec:fig2dev} shows how {\tt fig2dev} converts fig-files 
 into \LaTeX-files containing text and including graphics in as pdf-files. 
-Likewise, Section~\ref{subsec:gnuplot2pdf} describes 
+Likewise, Section~\ref{sec:gnuplot2pdf} describes 
 how gnuplot converts gnuplot-files into pdf-files. 
 An insteresting alternative to gnuplot for computing pictures 
-is metapost described in Section~\ref{subsec:metapost}. 
+is metapost described in Section~\ref{sec:metapost}. 
 A more elaborate alternative to fig-pictures are svg-pictures 
-described in Section~\ref{subsec:picSvg}
-Also several formats collected in Section~\ref{subsec:picasis} 
+described in Section~\ref{sec:picSvg}
+Also several formats collected in Section~\ref{sec:picasis} 
 may be included as is. 
 
 
 
-\subsection{Including pdf-files}\label{subsec:figpdf}
+\section{Including pdf-files}\label{sec:figpdf}
 
 Modern \LaTeX{} implementations directly create pdf-files. 
 Thus it makes sense, to allow including graphics as pdf-files 
@@ -759,7 +759,7 @@ which applies conversion to pdf-files included in the \LaTeX-file {\tt xxx.tex}
 via {\tt \textbackslash includegraphics}. 
 
 
-\subsection{Conversion of fig-files}\label{subsec:fig2dev}
+\section{Conversion of fig-files}\label{sec:fig2dev}
 
 \index{xfig}
 \index{fig2dev}
@@ -807,7 +807,7 @@ for pdf-format this is {\tt.pdf}.
 As we will see below, 
 leaving the suffix away is crucial to make {\tt xxx.ptx} work 
 both for pdf-format and for dvi-format required to create html- and odt-files. 
-As indicated in Section~\ref{subsec:figpdf}, 
+As indicated in Section~\ref{sec:figpdf}, 
 the commands in {\tt xxx.ptx} 
 require the packages {\tt graphicx} and {\tt xcolor}. 
 
@@ -916,7 +916,7 @@ into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
 
 
-\subsection{Conversion of gnuplot-files}\label{subsec:gnuplot2pdf}
+\section{Conversion of gnuplot-files}\label{sec:gnuplot2pdf}
 
 This software supports plots drawn with {\tt gnuplot}, or, to be more precise, 
 figures stored in .gp-files created by {\tt gnuplot}. 
@@ -937,16 +937,16 @@ like {\tt Cairolatex}, {\tt Eepic}, {\tt Epslatex}, {\tt Latex}, {\tt Lua},
 {\tt Texdraw} and {\tt Tpic}. 
 Note that also export into the fig-format via the terminal {\tt Fig} 
 is supported which in turn may be included in latex 
-as described in Section~\ref{subsec:fig2dev}. 
+as described in Section~\ref{sec:fig2dev}. 
 Also {\tt gnuplot} pictures may be exported in metapost format 
 which in turn may be included in latex 
-as described in Section~\ref{subsec:metapost}. 
+as described in Section~\ref{sec:metapost}. 
 
 This software supports only the export via the terminal {\tt Cairolatex} 
 which offers export to mixed pdf and \LaTeX: 
 graphics in pdf and text in \LaTeX{}
 which yields the fonts typical for \LaTeX{} 
-as described for fig-files in Section~\ref{subsec:fig2dev}. 
+as described for fig-files in Section~\ref{sec:fig2dev}. 
 
 Accordingly, the export yields two files 
 but unlike for fig-files these are created with a single command: 
@@ -960,7 +960,7 @@ gnuplot -e "set terminal cairolatex pdf <gnuplotOptions>;
 exports {\tt xxx.gp} to {\tt xxx.ptx} and to {\tt xxx.pdf}, 
 the former containing \LaTeX{} and including the latter 
 using options given by the parameter {\tt gnuplotOptions}. 
-As described for exporting fig-files in Section~\ref{subsec:fig2dev}, 
+As described for exporting fig-files in Section~\ref{sec:fig2dev}, 
 the output must be specified with the full path and without ending. 
 
 Accordingly, 
@@ -1022,7 +1022,7 @@ Converted sample gnuplot-file into ptx and pdf files }
 \end{figure}
 
 
-\subsection{Inclusion of Metapost files}\label{subsec:metapost}
+\section{Inclusion of Metapost files}\label{sec:metapost}
 
 A graphic format, very native to TeX is {\tt metapost}, 
 a derivative of {\tt metafont} originally used to describe shape of fonts. 
@@ -1149,9 +1149,9 @@ mpost -s 'outputformat="svg"' -s 'outputtemplate:="%j%c.svg"' -s prologues=3 fil
 %FIXME: 
 Note that the output 
 
-\subsection{Inclusion of svg-files}\label{subsec:picSvg}
+\section{Inclusion of svg-files}\label{sec:picSvg}
 
-Comparable with the xfig-format described in Section~\ref{subsec:fig2dev} 
+Comparable with the xfig-format described in Section~\ref{sec:fig2dev} 
 but much more elaborate and widely used is the \gls{svg}-format. 
 There is a huge up-to-date official SVG 1.1 specification, \cite{Svg11} 
 and a specification for SVG Tiny 1.2, 
@@ -1181,8 +1181,8 @@ Note that the suffix of the filename shall be omitted.
 A closer look shows, that graphic preprocessing is done behind the scenes 
 in the course of a \LaTeX-run 
 creating files {\tt xxx.pdf} and {\tt xxx.pdf\_tex}. 
-As described for fig-files in Section~\ref{subsec:fig2dev} 
-and for gnuplot-files in Section~\ref{subsec:gnuplot2pdf}: 
+As described for fig-files in Section~\ref{sec:fig2dev} 
+and for gnuplot-files in Section~\ref{sec:gnuplot2pdf}: 
 The latter is a latex-file containing text 
 and including the former. 
 To include {\tt xxx.pdf} 
@@ -1233,8 +1233,8 @@ Also \cite{SvgIncl}, Section~3 indicates how to input the created file
 \input{xxx.pdf\_tex}%
 \end{verbatim}
 
-To obtain a unified conversion as defined in Sections~\ref{subsec:fig2dev} 
-and \ref{subsec:gnuplot2pdf}, 
+To obtain a unified conversion as defined in Sections~\ref{sec:fig2dev} 
+and \ref{sec:gnuplot2pdf}, 
 inkscape is invoked in a way to have the included pdf/eps-files 
 without suffix as follows: 
 %
@@ -1270,13 +1270,13 @@ into pdf-, eps- and ptx-files with inclusions}
 
 
 
-\subsection{Pictures which are not created}\label{subsec:picasis}
+\section{Pictures which are not created}\label{sec:picasis}
 
 Figure~\ref{fig:asIsJpg} shows some picture included as jpg. 
 This is done as usual with {\tt\textbackslash includegraphics}. 
 Note that both for {\tt pdflatex} and siblings creating pdf-output 
 and for {\tt htlatex} in conjunction with {\tt dvipdfmx} 
-(see Section~\ref{subsec:figpdf}) 
+(see Section~\ref{sec:figpdf}) 
 files in the format pdf, \gls{png}, \gls{jpg} are supported. 
  **** what about \gls{gif}? 
 This list may be incomplete. 
@@ -1296,23 +1296,22 @@ fixme: at the moment, htlatex does not work with pictures at all.
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics%[width=0.9\textwidth]
-{09somePngOboeBaroqueDennerMIR370}%.png
+\includegraphics[width=0.9\textwidth]{09somePngOboeBaroqueDennerMIR370}%.png
 \end{center}
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
 
 
 
-\section{Processing of \LaTeX{} main files}\label{sec:latexMainConversions}
+\chapter{Processing of \LaTeX{} main files}\label{chap:latexMainConversions}
 
 Given graphics in formats includable in tex-files, 
 which may require preprocessing described in 
-Section~\ref{sec:GraphConversions}, 
+Section~\ref{chap:GraphConversions}, 
 this section describes the conversions of latex main files 
 into target files in detail. 
 The most important target file formats is \gls{pdf}. 
-Conversion in this format is described in Section~\ref{subsec:tex2pdf}. 
+Conversion in this format is described in Section~\ref{sec:tex2pdf}. 
 Note that \gls{pdf} also occurs as source format 
 for included pictures and as intermediate files. 
 Specific for \LaTeX{} is the \gls{dvi} format, 
@@ -1323,11 +1322,11 @@ Almost independent of the format created,
 Inclusion of bibliographies, indices and glossaries 
 requires additional conversions 
 done by several auxiliary programs. 
-Bibliographies are described in Section~\ref{subsec:bibtex}, 
-indices in Section~\ref{subsec:indices} 
-and glossaires in Section~\ref{subsec:glossaries}. 
-Sections~\ref{subsec:rerunMakeIndexGlossaries} 
-and~\ref{subsec:rerunLatex} 
+Bibliographies are described in Section~\ref{sec:bibtex}, 
+indices in Section~\ref{sec:indices} 
+and glossaires in Section~\ref{sec:glossaries}. 
+Sections~\ref{sec:rerunMakeIndexGlossaries} 
+and~\ref{sec:rerunLatex} 
 are special in that they describe rerunning several programs, 
 which may be necessary even if certain lists are present 
 like table of contents list of figures or list of tables. 
@@ -1335,16 +1334,16 @@ like table of contents list of figures or list of tables.
 
 Besides the output formats traditional for \LaTeX, 
 \gls{pdf} and \gls{dvi} describing e.g. books, 
-Section~\ref{subsec:tex2html} describes creation of 
-\gls{html}, Section~\ref{subsec:tex2odt} the creation of \gls{odt} and 
-Section~\ref{subsec:tex2doc} creation of MS word formats like \gls{docx}. 
+Section~\ref{sec:tex2html} describes creation of 
+\gls{html}, Section~\ref{sec:tex2odt} the creation of \gls{odt} and 
+Section~\ref{sec:tex2doc} creation of MS word formats like \gls{docx}. 
 Finally, also pure text can be generated 
-as described in Section~\ref{subsec:tex2txt}. 
+as described in Section~\ref{sec:tex2txt}. 
 
 
 
 
-\subsection{Transforming (la)tex-files into pdf-files}\label{subsec:tex2pdf}
+\section{Transforming (la)tex-files into pdf-files}\label{sec:tex2pdf}
 
 The next step is to create a pdf-file from the tex-files. 
 \LaTeX{} distinguishes master tex-files from tex-files intended to be inputted
@@ -1388,7 +1387,7 @@ collected and sorted.
 This is done by invoking {\tt bibtex} between two {\tt latex2pdf} runs. 
 Based on the aux-file, {\tt bibtex} creates a bbl-file 
 containing the bibliography, which is read in in the next {\tt latex2pdf} run. 
-For details see Section~\ref{subsec:bibtex}. 
+For details see Section~\ref{sec:bibtex}. 
 
 If an index is demanded, in addition {\tt latex2pdf} creates an \gls{idx}-file. 
 As the citations, it cannot be used directly to create an index in
@@ -1397,7 +1396,7 @@ because the index entries must be collected and sorted before.
 This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs. 
 Based on the idx-file, {\tt makeindex} creates an \gls{ind}-file 
 containing the index, which is read in in the next {\tt latex2pdf} run. 
-For details see Section~\ref{subsec:indices}. 
+For details see Section~\ref{sec:indices}. 
 
 If a glossary is demanded, this can be read off the \gls{aux}-file 
 and a \gls{glo}-file is created. 
@@ -1408,7 +1407,7 @@ This is done by invoking {\tt makeglossaries}
 between the two {\tt latex2pdf} runs. 
 Based on the glo-file, {\tt makeglossaries} creates a \gls{gls}-file 
 containing the glossary, which is read in in the next {\tt latex2pdf} run. 
-For details see Section~\ref{subsec:glossaries}. 
+For details see Section~\ref{sec:glossaries}. 
 
 In addition, 
 if a table of contents, a list of figures or a list of tables is required, 
@@ -1429,8 +1428,8 @@ even two further \LaTeX{} runs are required:
 After the first one, the bibliography, the index or the glossary 
 occurs in the pdf-file but not yet in the table of contents. 
 This happens after the second additional \LaTeX{} run. 
-As described in Sections~\ref{subsec:rerunMakeIndexGlossaries} and 
-\ref{subsec:rerunLatex}, 
+As described in Sections~\ref{sec:rerunMakeIndexGlossaries} and 
+\ref{sec:rerunLatex}, 
 further runs of {\tt makeindex}, {\tt makeglossaries} 
 and of the \LaTeX-processor {\tt latex2pdf} may be necessary. 
 
@@ -1442,7 +1441,7 @@ and of the \LaTeX-processor {\tt latex2pdf} may be necessary.
 (accordingly into a dvi-file)}
 \end{figure}
 
-\subsection{Bibliographies}\label{subsec:bibtex}
+\section{Bibliographies}\label{sec:bibtex}
 
 In case the \LaTeX{} to pdf converter writes bibliographic information, 
 into its aux-file, a bibliography must be generated. 
@@ -1484,12 +1483,12 @@ and in~\cite{BibMar}.
 Also Chapter 10 in~\cite{Gra} gives vital information on {\tt bibtex}. 
 
 
-\subsection{Indices}\label{subsec:indices}
+\section{Indices}\label{sec:indices}
 
 Note that despite of the headline of this section, 
 this software supports a single index only and this requires 
 the package {\tt makeidx} described in~\cite{MkidxShIdxP}. 
-For an extension see Section~\ref{sec:gaps}. 
+For an extension see Section~\ref{chap:gaps}. 
 
 Interesting enough, 
 the commands {\tt\textbackslash index} and {\tt\textbackslash makeindex} 
@@ -1551,7 +1550,7 @@ respectively.
 Also specifying a style file via option {\tt -s} 
 is not recommended because this is used to create a glossary 
 and so breaks glossary creation 
-as described in Section~\ref{subsec:glossaries}. 
+as described in Section~\ref{sec:glossaries}. 
 
 Information on the makeindex program can be found in~\cite{MkIdxMoe} 
 and in~\cite{MkIdxLam}. 
@@ -1560,7 +1559,7 @@ describing all available options for {\tt makeindex}.
 
 
 
-\subsection{Glossaries}\label{subsec:glossaries}
+\section{Glossaries}\label{sec:glossaries}
 
 Creating glossaries 
 requires the package {\tt glossaries} described in~\cite{GloP}. 
@@ -1573,7 +1572,7 @@ whereas the option to do without external programs
 offered also by package {\tt glossaries} 
 is not supported by this software. 
 
-For generalizations see Section~\ref{sec:gaps}. 
+For generalizations see Section~\ref{chap:gaps}. 
 
 As for creating indices there is a \LaTeX-command {\tt\textbackslash makeindex}, 
 to create a glossary there is a \LaTeX-command 
@@ -1694,10 +1693,10 @@ using {\tt makeglossaries}}
 \end{figure}
 
 
-\subsection{Rerunning the index processor and the glossary processor}
-\label{subsec:rerunMakeIndexGlossaries}
+\section{Rerunning the index processor and the glossary processor}
+\label{sec:rerunMakeIndexGlossaries}
 
-As described in Section~\ref{subsec:tex2pdf}, 
+As described in Section~\ref{sec:tex2pdf}, 
 running a \LaTeX-to-pdf converter as {\tt latex2pdf} 
 may detect the presence of a bibliography, an index and/or of a glossary 
 and writes raw files to describe them. 
@@ -1753,10 +1752,10 @@ into the log-file.
 That way, it can be determined whether it is necessary 
 to rerun {\tt makeindex} and {\tt makeglossaries}. 
 After that, of course \LaTeX{} must be rerun at least once. 
-Note that Section~\ref{subsec:rerunLatex} describes 
+Note that Section~\ref{sec:rerunLatex} describes 
 when to rerun \LaTeX{} without prior running *****
 
-\subsection{Rerunning the \LaTeX{} processor}\label{subsec:rerunLatex}
+\section{Rerunning the \LaTeX{} processor}\label{sec:rerunLatex}
 
 FIXME: a word on change in toc, lof and lot. 
 
@@ -1790,7 +1789,7 @@ Inserting the table of contents, the list of figures and the list of tables
 which may shift the subsequent text 
 which may require another run of {\tt latex2pdf} 
 to get the page numbers right. 
-As described in Section~\ref{subsec:rerunMakeIndexGlossaries} 
+As described in Section~\ref{sec:rerunMakeIndexGlossaries} 
 intermediate runs of {\tt makeindex} and {\tt makeglossaries} 
 may be required 
 and these also require another run of {\tt latex2pdf} 
@@ -1818,7 +1817,7 @@ between two runs of {\tt latex2pdf},
 this would require a change in this software. 
 
 
-\subsection{Creating hypertext}\label{subsec:tex2html}
+\section{Creating hypertext}\label{sec:tex2html}
 
 To create html and xhtml from \LaTeX-files, 
 a {\tt htlatex}-command is used. 
@@ -2106,13 +2105,13 @@ Example:
 \end{verbatim}
 
 
-\subsection{Creating odt-files}\label{subsec:tex2odt}
+\section{Creating odt-files}\label{sec:tex2odt}
 
-\subsection{Creating MS word files}\label{subsec:tex2doc}
+\section{Creating MS word files}\label{sec:tex2doc}
 
 The best way to convert \LaTeX-files into MS word files is via odt files. 
 Conversion from \LaTeX{} to odt 
-is already described in Section~\ref{subsec:tex2odt}. 
+is already described in Section~\ref{sec:tex2odt}. 
 The last step can be done by {\tt odt2doc} which can create both 
 doc-format and docx-format and many others 
 which is illustrated in Figure~\ref{fig:tex2doc}. 
@@ -2127,7 +2126,7 @@ which is illustrated in Figure~\ref{fig:tex2doc}.
 
 
 
-\subsection{Creating plain text files}\label{subsec:tex2txt}
+\section{Creating plain text files}\label{sec:tex2txt}
 
 Why should one create plain text from \LaTeX-files? 
 Maybe this is the minimal format the receiver can work with. 
@@ -2142,7 +2141,7 @@ table of contents, list of figures, list of tables, \dots
 and symbols get lost. 
 Thus, the first step we take is complete creation of a pdf-file 
 except display of warnings like bad boxes 
-as described in Section~\ref{subsec:tex2pdf}. 
+as described in Section~\ref{sec:tex2pdf}. 
 This creates an appropriate pdf-file, 
 with correct numberings and links, 
 possibly with overfull boxes and that like. 
@@ -2178,7 +2177,7 @@ What gets lost is the postscript/pdf-parts, i.e.~the plain graphics.
 
 
 
-\section{Parameters resp. Settings}\label{sec:settings}
+\chapter{Parameters resp. Settings}\label{chap:settings}
 
 This section describes the parameters 
 of both the ant-task and the maven-plugin. 
@@ -2191,7 +2190,7 @@ as there are always valid default values.
 Each of the tables is described in a separate section. 
 Table~\ref{tab:paramGen} 
 shows parameter controlling the general conversion process 
-described in detail in Section~\ref{subsec:settingsGen}. 
+described in detail in Section~\ref{sec:settingsGen}. 
 These are directories with names {\tt xxxDirectory} 
 and further parameters not following a naming convention. 
 The other tables show parameters after a certain naming scheme: 
@@ -2227,7 +2226,7 @@ The converter of pdf-files into txt-files.
 \end{itemize}
 
 It is a little more complicated 
-with the parameters in Section~\ref{subsec:settingsLatex2Html}. 
+with the parameters in Section~\ref{sec:settingsLatex2Html}. 
 
 There are some parameters of the form {\tt patternXxxYyy}, 
 referring to a pattern in the log-file of the converter {\tt Xxx} 
@@ -2254,7 +2253,7 @@ are either really crucial
 or are included to allow also development of latex files. 
 
 
-\subsection{General Parameters}\label{subsec:settingsGen}
+\section{General Parameters}\label{sec:settingsGen}
 
 This section describes the parameters of Table~\ref{tab:paramGen}. 
 
@@ -2498,7 +2497,7 @@ zzT$T\.e?ps|
 
 TODO: add 
 
-\subsection{Parameters for graphical preprocessing}\label{subsec:settingsGraph}
+\section{Parameters for graphical preprocessing}\label{sec:settingsGraph}
 
 This section describes the parameters for graphical preprocessing 
 given in Table~\ref{tab:paramGraphics}. 
@@ -2680,8 +2679,8 @@ TODO: add
 %%\tt\small -interaction=nonstopmode -recorder -s prologues=2
 
 
-\subsection{Parameters for the \LaTeX-to-pdf Conversion}
-\label{subsec:settingsLatex2pdf}
+\section{Parameters for the \LaTeX-to-pdf Conversion}
+\label{sec:settingsLatex2pdf}
 
 This section describes the parameters 
 of the \LaTeX-to-pdf converter 
@@ -2856,8 +2855,8 @@ TODO: add
 
 
 
-\subsection{Parameters for Creation of the Bibliography}
-\label{subsec:settingsBibTeX}
+\section{Parameters for Creation of the Bibliography}
+\label{sec:settingsBibTeX}
 
 This section describes the parameters 
 or creation of the bibliography
@@ -2908,8 +2907,8 @@ according to the `{\tt bibtex}' documentation.
 \caption{\label{tab:paramBibTeX} The BibTeX-utility }
 \end{longtable}
 
-\subsection{Parameters for Creation of the Index}
-\label{subsec:settingsMakeIndex}
+\section{Parameters for Creation of the Index}
+\label{sec:settingsMakeIndex}
 
 This section describes the parameters 
 or creation of the index
@@ -2983,8 +2982,8 @@ TODO: add
 
 
 
-\subsection{Parameters for Creation of the Glossary}
-\label{subsec:settingsMakeGlossaries}
+\section{Parameters for Creation of the Glossary}
+\label{sec:settingsMakeGlossaries}
 
 This section describes the parameters 
 or creation of the glossary
@@ -3081,8 +3080,8 @@ TODO: add
 
 
 
-\subsection{Parameters for the \LaTeX-to-html Conversion}
-\label{subsec:settingsLatex2Html}
+\section{Parameters for the \LaTeX-to-html Conversion}
+\label{sec:settingsLatex2Html}
 
 This section describes the parameters 
 of the \LaTeX-to-html converter 
@@ -3200,8 +3199,8 @@ TODO: add
 
 
 
-\subsection{Parameters for Conversion into further Formats}
-\label{subsec:settingsExt}
+\section{Parameters for Conversion into further Formats}
+\label{sec:settingsExt}
 
 This section describes the parameters 
 of the converter of \LaTeX{} to further formats 
@@ -3275,7 +3274,7 @@ The options of the command {\tt\$pdf2txtCommand}.
 \caption{\label{tab:paramExt} The parameters of further converters }
 \end{longtable}
 
-\section{Exceptions and Logging}\label{subsec:exceptionLogging}
+\chapter{Exceptions and Logging}\label{sec:exceptionLogging}
 
 If during execution of this software something goes wrong 
 and it is possible to detect that, the user shall be notified. 
@@ -3311,7 +3310,7 @@ Thus the maven plugin thows a {\tt MojoFailureException}
 if and only if the according ant-task throws an {\tt BuildException} 
 in the same situation. 
 
-Section~\ref{subsec:exception} describes 
+Section~\ref{sec:exception} describes 
 the philosophy of throwing an exception and 
 defines in detail under what circumstances which exception is thrown. 
 
@@ -3326,7 +3325,7 @@ and the build process to go on,
 skipping a section of a task as small as possible. 
 Both, maven and ant provide a logging mechanism 
 with the levels error, warning, info and debug. 
-Section~\ref{subsec:logWarnErr} describes the errors and warnings; 
+Section~\ref{sec:logWarnErr} describes the errors and warnings; 
 the lot of infos and debugging output are not described here. 
 
 Verbosity is choosen by the following command line options: 
@@ -3347,7 +3346,7 @@ The messages are endowed with a unique identifier of the form
 \item[T] Throwable, 
 i.e. {\tt MojoFailureException} for the maven- plugin 
 and {\tt BuildException} for the ant-task. 
-This is described in detail in Section~\ref{subsec:exception} 
+This is described in detail in Section~\ref{sec:exception} 
 \item[E] logging as ERROR, 
 \item[W] logging as WARNING 
 \item[I] logging as INFO which occurs frequently
@@ -3372,7 +3371,7 @@ in the pom for the maven plugin and in the build file for the ant task.
 %
 Finally, {\tt DD} is a two digit number enumerating the messages. 
 
-\subsection{Exceptions}\label{subsec:exception}
+\section{Exceptions}\label{sec:exception}
 
 Exceptions are thrown only if no substantial part of 
 this maven-goal or this ant-task may be completed 
@@ -3493,7 +3492,7 @@ This is mainly because of writing permissions.
 FIXME: to be added. 
 
 
-\subsection{Logging of Warnings and Errors}\label{subsec:logWarnErr}
+\section{Logging of Warnings and Errors}\label{sec:logWarnErr}
 
 The rules for logging warnings and errors is, 
 that the user must be notified, 
@@ -3730,7 +3729,7 @@ with suffixes \$skipped. \\
 
 FIXME: to be added. 
 
-\section{Listings}\label{subsec:listings}
+\chapter{Listings}\label{sec:listings}
 
 First we provide listings of the configuration 
 in the {\tt pom.xml} for the maven-plugin 
@@ -3765,7 +3764,7 @@ requires the following target and task definition in {\tt build.xml}.
 
 
 
-\section{Gaps}\label{sec:gaps}
+\chapter{Gaps}\label{chap:gaps}
 
 Only figures created with xfig and stored as files pdf and ptx 
 may be integrated into a \LaTeX{} document. 
@@ -3847,7 +3846,7 @@ described here, this manual is created through plugin and task.
 What about support for {\tt chktex}? 
 
 
-\section{Bugs}\label{sec:bugs}
+\chapter{Bugs}\label{chap:bugs}
 
 Seemingly, indices and glossaries based on page numbers 
 (there seems to be an alternative to this), 
