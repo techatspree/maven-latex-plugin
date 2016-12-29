@@ -989,7 +989,8 @@ not allowed:
 		 The default value is '-fdocx'. -->
 	    <odt2docOptions>-fdocx</odt2docOptions>
 
-	    <!-- The pdf2txt command converting pdf into plain text. 
+	    <!-- The pdf2txt-command for converting pdf-files 
+		 into plain text files. 
 	    	 The default value is 'pdftotext'.  -->
             <pdf2txtCommand>pdftotext</pdf2txtCommand>
 
