@@ -919,13 +919,17 @@ which deviate from those used here.
 \begin{longtable}{|l|lll|}
 \hline
 Output format (language) & xfig suffix & our suffix & format \\
+\hline
+\hline
+\endfirsthead
+\hline
+\caption{\label{tab:xfigSuffixes} Suffixes used by xfig as opposed to suffixes
+  used here and actual file format }
+\endlastfoot
 pstex                    & pstex       & eps        & eps \\
 pstex\_t                 & pstex\_t    & ptx        & tex \\
 pdftex                   & pdf         & pdf        & pdf \\
 pdftex\_t                & pdf\_t      & pdf        & pdf \\
-\hline
-\caption{\label{tab:xfigSuffixes} Suffixes used by xfig as opposed to suffixes
-  used here and actual file format }
 \end{longtable}
 
 
@@ -2314,6 +2318,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramGen} General parameters}
+\endlastfoot
 \tt texSrcDirectory  & \tt src/site/tex  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -2352,7 +2360,7 @@ A comma separated list of targets to be stored in {\tt\$targetSet}.
 %The default value is '{\tt pdf, html}'. 
 \end{minipage}
 } \\
-\tt patternLatexMainFile   & see Section~\ref{subsubsec:patternLatexMainFile}\\
+\tt patternLatexMainFile   & see Section~\ref{subsec:patternLatexMainFile}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern which identifies a \LaTeX{} main file. 
@@ -2392,7 +2400,7 @@ May be used for debugging when setting {\tt false}.
 %The default value is '{\tt true}'. 
 \end{minipage}
 } \\
-\tt patternCreatedFromLatexMain & see Section~\ref{subsubsec:patternCreatedFromLatexMain} \\
+\tt patternCreatedFromLatexMain & see Section~\ref{subsec:patternCreatedFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 This pattern shall accept all the files 
@@ -2448,13 +2456,11 @@ and to notify the developer of this plugin.
 Then the default value will be extended. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramGen} General parameters}
 \end{longtable}
 
 
-\subsubsection{The parameter {\tt patternLatexMainFile}}
-\label{subsubsec:patternLatexMainFile}
+\subsection{The parameter {\tt patternLatexMainFile}}
+\label{subsec:patternLatexMainFile}
 
 The default pattern for identifying a \LaTeX{} main file is 
 %
@@ -2538,8 +2544,8 @@ The problem is only in case of exchange of the source
 with a developer which does not use emacs/auctex. 
 
 
-\subsubsection{The parameter {\tt patternCreatedFromLatexMain}}
-\label{subsubsec:patternCreatedFromLatexMain}
+\subsection{The parameter {\tt patternCreatedFromLatexMain}}
+\label{subsec:patternCreatedFromLatexMain}
 
 The default value for this pattern is as follows: 
 %
@@ -2571,6 +2577,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramGraphics} Parameters for graphics preprocessing}
+\endlastfoot
 \tt fig2devCommand   & \tt fig2dev  \index{fig2dev}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -2651,7 +2661,7 @@ into metapost's postscript.
 % The default value is 'mpost'. 
 \end{minipage}
 } \\
-\tt metapostOptions & see Section~\ref{subsubsec:patternCreatedFromLatexMain} \\
+\tt metapostOptions & see Section~\ref{subsec:patternCreatedFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$metapostCommand}.
@@ -2730,12 +2740,10 @@ which are added automatically.
 % The default value is `-v'. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramGraphics} Parameters for graphics preprocessing}
 \end{longtable}
 
-\subsubsection{The parameter {\tt metapostOptions}}
-\label{subsubsec:metapostOptions}
+\subsection{The parameter {\tt metapostOptions}}
+\label{subsec:metapostOptions}
 TODO: add 
 %%\tt\small -interaction=nonstopmode -recorder -s prologues=2
 
@@ -2756,6 +2764,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
+\endlastfoot
 \tt latex2pdfCommand       & \tt pdflatex      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -2763,7 +2775,7 @@ The \LaTeX{} command to create a pdf-file with.
 %The default value is '{\tt pdflatex}'. 
 \end{minipage}
 } \\
-\tt latex2pdfOptions   & see Section~\ref{subsubsec:latex2pdfOptions} \\
+\tt latex2pdfOptions   & see Section~\ref{subsec:latex2pdfOptions} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$latex2pdfCommand}.
@@ -2786,7 +2798,7 @@ If this is not complete, please extend
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternWarnLatex & see Section~\ref{subsubsec:patternWarnLatex} \\
+\tt patternWarnLatex & see Section~\ref{subsec:patternWarnLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
@@ -2870,7 +2882,7 @@ The options for the command {\tt\$dvi2pdfCommand}.
 %The default value is the empty string.
 \end{minipage}
 } \\
-\tt patternReRunLatex &  see Section~\ref{subsubsec:patternReRunLatex} \\
+\tt patternReRunLatex &  see Section~\ref{subsec:patternReRunLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers rerunning \LaTeX{}. 
@@ -2895,23 +2907,21 @@ This shall be non-negative
 or -1 which signifies that there is no threshold. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
 \end{longtable}
 
 
-\subsubsection{The parameter {\tt latex2pdfOptions}}
-\label{subsubsec:latex2pdfOptions}
+\subsection{The parameter {\tt latex2pdfOptions}}
+\label{subsec:latex2pdfOptions}
 TODO: add 
 %-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
 
 
-\subsubsection{The parameter {\tt patternWarnLatex}}
-\label{subsubsec:patternWarnLatex}
+\subsection{The parameter {\tt patternWarnLatex}}
+\label{subsec:patternWarnLatex}
 TODO: add 
 
-\subsubsection{The parameter {\tt patternReRunLatex}}
-\label{subsubsec:patternReRunLatex}
+\subsection{The parameter {\tt patternReRunLatex}}
+\label{subsec:patternReRunLatex}
 TODO: add 
 
 
@@ -2931,6 +2941,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramBibTeX} The BibTeX-utility }
+\endlastfoot
 \tt bibtexCommand    & \tt bibtex        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -2964,8 +2978,6 @@ The default value is chosen
 according to the `{\tt bibtex}' documentation. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramBibTeX} The BibTeX-utility }
 \end{longtable}
 
 \section{Parameters for Creation of the Index}
@@ -2984,6 +2996,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramMakeIndex} The MakeIndex-utility }
+\endlastfoot
 \tt makeIndexCommand & \tt makeindex     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -3017,7 +3033,7 @@ The default value is chosen
 according to the `{\tt makeindex}' documentation.
 \end{minipage}
 } \\
-\tt patternReRunMakeIndex & see Section~\ref{subsubsec:patternReRunMakeIndex} \\
+\tt patternReRunMakeIndex & see Section~\ref{subsec:patternReRunMakeIndex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file which triggers 
@@ -3031,13 +3047,11 @@ If the user finds that default value is not appropriate,
 and to notify the developer of this plugin. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramMakeIndex} The MakeIndex-utility }
 \end{longtable}
 
 
-\subsubsection{The parameter {\tt patternReRunMakeIndex}}
-\label{subsubsec:patternReRunMakeIndex}
+\subsection{The parameter {\tt patternReRunMakeIndex}}
+\label{subsec:patternReRunMakeIndex}
 TODO: add 
 
 
@@ -3060,6 +3074,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramMakeGlossaries} The MakeGlossaries-utility }
+\endlastfoot
 \tt makeGlossariesCommand & \tt makeglossaries         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -3117,7 +3135,7 @@ and notify the developer of this plugin.
 \end{minipage}
 } \\
 \tt patternReRunMakeGlossaries  
-& see Section~\ref{subsubsec:patternReRunMakeGlossaries}   \\
+& see Section~\ref{subsec:patternReRunMakeGlossaries}   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers 
@@ -3131,12 +3149,10 @@ If the user finds that default value is not appropriate,
 and to notify the developer of this plugin. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramMakeGlossaries} The MakeGlossaries-utility }
 \end{longtable}
 
-\subsubsection{The parameter {\tt patternReRunMakeGlossaries}}
-\label{subsubsec:patternReRunMakeGlossaries}
+\subsection{The parameter {\tt patternReRunMakeGlossaries}}
+\label{subsec:patternReRunMakeGlossaries}
 TODO: add 
 
 
@@ -3158,6 +3174,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramLatex2Html} The \LaTeX-to-html-converter }
+\endlastfoot
 \tt tex4htCommand       & \tt htlatex  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -3183,7 +3203,7 @@ The value `{\tt-p}' prevents creation of \gls{png}-pictures.
 %The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternT4htOutputFiles & see Section~\ref{subsubsec:patternT4htOutputFiles}\\
+\tt patternT4htOutputFiles & see Section~\ref{subsec:patternT4htOutputFiles}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern for the target files of goal `{\tt html}' 
@@ -3199,13 +3219,11 @@ Spaces and newlines are removed
 from that pattern before processing. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramLatex2Html} The \LaTeX-to-html-converter }
 \end{longtable}
 
 
-\subsubsection{The parameter {\tt patternT4htOutputFiles}}
-\label{subsubsec:patternT4htOutputFiles}
+\subsection{The parameter {\tt patternT4htOutputFiles}}
+\label{subsec:patternT4htOutputFiles}
 
 The default value for this pattern is as follows: 
 %
@@ -3277,15 +3295,20 @@ TODO: add
 
 
 
-\section{Parameters for Conversion into further Formats}
+\section{Parameters for further Conversion }
 \label{sec:settingsExt}
 
 This section describes the parameters 
-of the converter of \LaTeX{} to further formats 
+of the converter from and to further formats 
 which are given in Table~\ref{tab:paramExt}. 
 
-TODO: do this. 
-
+These converters convert latex into rtf directly, 
+they convert odt into doc-like documents 
+and finally pdf into pure text. 
+For each of them, the name of the command can be specified 
+and also the options. 
+Since neither of them write a log-file, 
+there are no further parameters necessary. 
 
 
 \begin{longtable}{|ll|}
@@ -3294,6 +3317,10 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:paramExt} The parameters of further converters }
+\endlastfoot
 \tt latex2rtfCommand    & \tt latex2rtf        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -3337,7 +3364,8 @@ to keep permissions and timestamp of the original document.
 \tt pdf2txtCommand      & \tt pdftotext        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The pdf2txt command converting pdf into plain text. 
+The pdf2txt-command for converting pdf-files 
+into plain text files. 
 %The default value is '{\tt pdftotext}'. 
 \end{minipage}
 } \\
@@ -3348,9 +3376,26 @@ The options of the command {\tt\$pdf2txtCommand}.
 %The default value is the empty string. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:paramExt} The parameters of further converters }
 \end{longtable}
+
+FIXME: 
+Note that {\tt pdftotext -h} prints a usage message. 
+This is a way to obtain not the specified output. 
+It shows that {\tt pdftotext -q} does not print any messages or errors. 
+This indicates that {\tt pdftotext} normally does display error messages 
+on the standard output. 
+These may be led to a log file to indicate errors and warnings. 
+Here, further research is required. 
+
+The option {\tt -htmlmeta} seems not approprate. 
+The option resolution {\tt -r} seems sensible only in conjunction 
+with the crop area defined by {\tt -x} and {\tt -y} 
+which does not make sense in our context. 
+The same holds for specification of the first and the last page 
+via {\tt -f} and {\tt -l}. 
+What does make sense is specifying the encoding via {\tt -enc} 
+with possible values given by {\tt pdftotext -listenc}. 
+What makes sense most ist {\tt UTF-8}. 
 
 \chapter{Exceptions and Logging}\label{chap:exceptionLogging}
 
@@ -3472,6 +3517,10 @@ Identifier        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:WarnLP} The BuildFailureExceptions of Settings   }
+\endlastfoot
 \tt\footnotesize TSS01  & \tt\footnotesize The tex source directory '\$texSrcDirectoryFile'\\
 	   & \tt\footnotesize should be an existing directory, but is not.  \\
 \multicolumn2{|l|}{
@@ -3494,8 +3543,6 @@ If it does not yet exist, it is created
 but if it exists and is a regular file, it cannot be created any more. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:WarnLP} The BuildFailureExceptions of Settings   }
 \end{longtable}
 
 
@@ -3506,6 +3553,11 @@ Identifier        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:TEX} The BuildFailureException of class
+  CommandExecutorImpl }
+\endlastfoot
 \tt\footnotesize TEX01 & \tt\footnotesize Error running \$command.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -3531,9 +3583,6 @@ on the process to be executed thrown by {\tt Proces.waitFor()}.
 whereas for EEX01 just a failure code is returned. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:TEX} The BuildFailureException of class
-  CommandExecutorImpl }
 \end{longtable}
 
 
@@ -3544,6 +3593,10 @@ Id.        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:BFExc} The BuildFailureExceptions of TexFileUtilsImpl  }
+\endlastfoot
 \tt\footnotesize TFU01 & \tt\footnotesize Cannot create destination directory '\$targetDir'.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -3565,8 +3618,6 @@ This failure indicates that another plugin/task disturbs this one.
 This is mainly because of writing permissions. 
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:BFExc} The BuildFailureExceptions of TexFileUtilsImpl  }
 \end{longtable}
 
 
@@ -3634,6 +3685,10 @@ So, e.g. {\tt pdflatex -v xxx.tex} does not create a pdf-file as expected.
 \multicolumn2{|l|}{\small Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:WarnALP} The errors and warnings on running a command  }
+\endlastfoot
 \tt\footnotesize EEX01 & \tt\footnotesize Running \$command 
 			    failed with return code \$returnCode. \\
 \multicolumn2{|l|}{
@@ -3653,60 +3708,58 @@ Error execution means that there is even no valid return code.
 			  No target file '\$fileName' written. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize EEX03 & \tt\footnotesize Running \$command failed: \\
                        &             Target file '\$fileName' is not updated. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WEX04 & \tt\footnotesize Cannot read target file '\$fileName';
                                           may be outdated. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WEX05 & \tt\footnotesize Update control 
                                           may emit false warnings. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize EAP02 & \tt\footnotesize Running \$command failed: 
 No log file '\$logFileName' written.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize EAP01  & \tt\footnotesize Running \$command failed. 
 Errors logged in '\$logFileName'. \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WAP03 & \tt\footnotesize Running \$command emitted warnings 
 logged in '\$logFileName'.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WLP03   & \tt\footnotesize Running \$command created bad boxes 
                               logged in '\$logFileName'.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:WarnALP} The errors and warnings on running a command  }
 \end{longtable}
 
 
@@ -3716,25 +3769,29 @@ Id.        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:WarnCEI} The errors and warnings on files/streams  }
+\endlastfoot
 \tt\footnotesize WFU01  & \tt\footnotesize Cannot read directory '\$dir'; 
 build may be incomplete.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WPP02  & \tt\footnotesize Cannot read tex file '\$texFile'; 
 may bear latex main file.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WAP04  & \tt\footnotesize Cannot read log file '\$logFileName'; 
 			  may hide warnings/errors.   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WLP02  & \tt\footnotesize Cannot read log file 
@@ -3742,13 +3799,13 @@ may bear latex main file.  \\
                             \$kind may require rerun.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize WFU03  & \tt\footnotesize Cannot close '\$closeable'.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
 \tt\footnotesize EFU05  & \tt\footnotesize Cannot delete file '\$delFile'.  \\
@@ -3761,11 +3818,9 @@ may bear latex main file.  \\
                                            to '\$toFile'.  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-
+FIXME
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:WarnCEI} The errors and warnings on files/streams  }
 \end{longtable}
 
 
@@ -3775,6 +3830,10 @@ Id.        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \hline
 \hline
+\endfirsthead
+\hline
+\caption{\label{tab:WarnLPP} Miscellaneous errors and warnings  }
+\endlastfoot
 \tt\footnotesize WPP03  & \tt\footnotesize Skipped processing of files 
 with suffixes \$skipped. \\
 \multicolumn2{|l|}{
@@ -3796,8 +3855,6 @@ FIXME
 FIXME
 \end{minipage}
 } \\
-\hline
-\caption{\label{tab:WarnLPP} Miscellaneous errors and warnings  }
 \end{longtable}
 
 
