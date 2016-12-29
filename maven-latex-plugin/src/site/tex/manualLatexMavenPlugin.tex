@@ -423,7 +423,7 @@ One may always recover by just creating with maven.
 
 \subsection{Test}
 
-\chapter{Usage of this Plugin and of this Task}\label{chap:usage}
+\chapter{Usage of Plugin and Task}\label{chap:usage}
 
 This plugin may be used both if the \LaTeX-sources are finished 
 to create the output described by them 
@@ -2671,8 +2671,7 @@ A sequence of at least one blank separate the proper options.
 %'{\tt-interaction=nonstopmode -recorder -s prologues=2}'. 
 \end{minipage}
 } \\
-
-
+\hline
 \tt svg2devCommand & \tt inkscape \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -2680,44 +2679,15 @@ The command for conversion of svg-files into a mixed format.
 %The default value is 'inkscape'. 
 \end{minipage}
 } \\
-
 \tt svg2devOptions & \tt -z -D --export-latex \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$svg2devCommand} 
 for exporting svg-figures into latex compatible files. 
-
-The following options are mandatory: 
-%
-\begin{itemize}
-\item `-z' or `--without-gui' 
-process files from console. 
-\item `-D' or `--export-area-drawing' 
-Export the drawing (not the page)
-\item `--export-latex' 
-Export PDF/PS/EPS without text. 
-Besides the PDF/PS/EPS, a LaTeX file is exported,
-putting the text on top of the PDF/PS/EPS file. 
-Include the result in LaTeX like: {\tt\textbackslash input\{latexfile.tex\}}. 
-Note that the latter option is necessary, 
-to create the expected files. 
-It is also conceivable to export text as pdf/eps 
-\end{itemize}
-
-The following options are prohibited, 
-because they are automatically added by the software: 
-\begin{itemize}
-\item `-A=FILENAME' or `--export-pdf=FILENAME' 
-Export document to a  PDF file. 
-\item `-E=FILENAME' or `--export-eps=FILENAME' 
-Export document to an EPS file. 		 
-\end{itemize}
-% The default value is the minimal value, `-z -D - -export-latex'. 
+For more details see Section~\ref{subsec:svg2devOptions}. 
 \end{minipage}
 } \\
-
-
-
+\hline
 \tt ebbCommand & \tt ebb \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -2746,6 +2716,37 @@ which are added automatically.
 \label{subsec:metapostOptions}
 TODO: add 
 %%\tt\small -interaction=nonstopmode -recorder -s prologues=2
+
+\subsection{The parameter {\tt svg2devOptions}}
+\label{subsec:svg2devOptions}
+
+The following options are mandatory: 
+%
+\begin{itemize}
+\item `-z' or `--without-gui' 
+process files from console. 
+\item `-D' or `--export-area-drawing' 
+Export the drawing (not the page)
+\item `--export-latex' 
+Export into PDF/PS/EPS format without text. 
+Besides the PDF/PS/EPS files, a LaTeX file is exported,
+putting the text on top of the PDF/PS/EPS file. 
+Include the result in LaTeX like: {\tt\textbackslash input\{latexfile.tex\}}. 
+Note that the latter option is necessary, 
+to create the expected files. 
+It is also conceivable to export text as pdf/eps 
+\end{itemize}
+
+\noindent
+The following options are prohibited, 
+because they are automatically added by the software: 
+\begin{itemize}
+\item `-A=FILENAME' or `--export-pdf=FILENAME' 
+Export document to a  PDF file. 
+\item `-E=FILENAME' or `--export-eps=FILENAME' 
+Export document to an EPS file. 		 
+\end{itemize}
+% The default value is the minimal value, `-z -D - -export-latex'. 
 
 
 \section{Parameters for the \LaTeX-to-pdf Conversion}
@@ -3157,7 +3158,8 @@ TODO: add
 
 
 
-\section{Parameters for the \LaTeX-to-html Conversion}
+\section{Parameters for  Conversion \LaTeX{} to html}
+%\section{Parameters for the \LaTeX-to-html Conversion}
 \label{sec:settingsLatex2Html}
 
 This section describes the parameters 
@@ -3884,7 +3886,7 @@ The maven-plugin described here,
 requires the following definition in {\tt pom.xml}. 
 
 \lstset{language=xml, basicstyle=\scriptsize}
-\lstinputlisting[firstline=205, lastline=984]{../../../pom.xml}
+\lstinputlisting[firstline=220, lastline=1038]{../../../pom.xml}
 
 It has to be placed in the build element where below dots are given. 
 
@@ -3901,7 +3903,7 @@ The ant-task described here,
 requires the following target and task definition in {\tt build.xml}. 
 
 \lstset{language=xml, basicstyle=\scriptsize}
-\lstinputlisting[firstline=74, lastline=200]{../../../build.xml}
+\lstinputlisting[firstline=74, lastline=204]{../../../build.xml}
 
 
 
