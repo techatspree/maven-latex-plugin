@@ -1221,7 +1221,7 @@ public class Settings {
     private String odt2docOptions = "-fdocx";
 
     /**
-     * The pdf2txt command converting pdf into plain text. 
+     * The pdf2txt-command for converting pdf-files into plain text files. 
      * The default value is <code>pdftotext</code>. 
      *
      * @see #pdf2txtOptions
