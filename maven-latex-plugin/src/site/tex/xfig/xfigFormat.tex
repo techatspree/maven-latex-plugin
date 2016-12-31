@@ -10,14 +10,17 @@
 \usepackage{xcolor}  % [pdftex]
 \usepackage{graphicx}% [pdftex] 
 \usepackage{hyperref}% driver [hpdftex] is autodetected 
+  \newcommand{\aaa}{most probably not }
 \else
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
-%\@ifpackageloaded{tex4ht}{%
+\@ifpackageloaded{tex4ht}{%
 %\usepackage[tex4ht]{hyperref}
-%}{%
+  \newcommand{\aaa}{}
+}{%
 %\usepackage[dvipdfmx]{hyperref}
-%}
+  \newcommand{\aaa}{not }
+}
 \usepackage{bmpsize}
 \fi
 
@@ -33,6 +36,15 @@
 \tableofcontents
 
 \section{Introduction}
+
+This document is created with pdflatex or that like 
+with output format 
+\ifpdf
+pdf%
+\else
+dvi%
+\fi.
+The package {\tt tex4ht} is \aaa loaded. 
 
 This documents describes the grammar 
 of the native file format of the xfig graphic program version 3.2. 
