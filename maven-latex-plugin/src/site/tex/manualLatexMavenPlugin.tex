@@ -1,12 +1,17 @@
-
+\RequirePackage[l2tabu, orthodox]{nag}
 % blabla 
 %\PassOptionsToPackage{dvipdfmx}{xcolor} %or dvipdfm 
 %\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
-\RequirePackage{lmodern}
+%\RequirePackage{lmodern} % does not work with htlatex
 \documentclass[12pt]{book}
 
 \input{header.tex}
 
+\ifthenelse{\boolean{texFhtLoaded}}{%
+  % no glossaries and no index with tex4ht 
+  \newcommand{\gls}[1]{#1}
+  \renewcommand{\index}[1]{ }
+}{%
 \setacronymstyle{long-short}
 % file formats 
 \newacronym{pdf}{pdf}{portable document format}
@@ -47,6 +52,7 @@ glossary file containing sorted, unified and formatted glossary entries}
 \newacronym{ps}{ps}{PostScript}
 \newacronym{mps}{mps}{metapost's postscript like output including text}
 \newacronym{mpx}{mpx}{metapost tex output: texts }
+}
 
 % \newglossaryentry{latex}{name={latex},description={%
 % A document preparation system 
@@ -63,6 +69,7 @@ glossary file containing sorted, unified and formatted glossary entries}
 %\newglossaryentry{ps}{name={PostScript},description={%
 %A computer language for creating vector graphics. 
 %}}
+
 
 % how to number the glossary in the toc? seemingly a gap in tocbibind 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
@@ -84,13 +91,14 @@ glossary file containing sorted, unified and formatted glossary entries}
 This document is created with pdflatex or that like 
 with output format 
 \ifpdf
-pdf
+pdf%
 \else
-dvi
-\fi
+dvi%
+\fi.
+The package {\tt tex4ht} is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
 
 \LaTeX{} is a beautyful way to create printable documents, 
-today in preferrably as \gls{pdf}-files, 
+in our days preferrably as \gls{pdf}-files, 
 with a particular strength in typesetting formulae like 
 %
 \begin{eqnarray*}
@@ -98,6 +106,9 @@ with a particular strength in typesetting formulae like
 \end{eqnarray*}
 %
 Here, portability of the format \gls{pdf} is a vital feature. 
+In the past, normally \gls{dvi} has been used 
+and still creation of external formats like \gls{html}, 
+\gls{odt} and \gls{docx} are based on an intermediate \gls{dvi}-file. 
 
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from \LaTeX-files 
@@ -1315,8 +1326,8 @@ into pdf-, eps- and ptx-files with inclusions}
 \begin{figure}[htb]
 \begin{center}
 %\def\svgwidth{0.5\textwidth}
-\input{F4_07someSvg.ptx}%
-%\includesvg[eps,width=0.5\textwidth]{06someSvg}%
+%\input{F4_07someSvg.ptx}%
+%%\includesvg[eps,width=0.5\textwidth]{06someSvg}%
 \end{center}
 \caption{\label{fig:svgWithText}Some svg-picture with text FIXME: uniformity  }
 \end{figure}
@@ -4132,8 +4143,14 @@ FIXME: this chapter describes the tests to be performed.
 \bibliographystyle{alpha}
 \bibliography{lit}{}
 
-\printindex
-\printglossaries
+\ifthenelse{\boolean{texFhtLoaded}}{
+  % no index and no glossaries with tex4ht 
+}{
+  \printindex
+  \printglossaries
+}
+
+
 %  "-src-specials -shell-escape -recorder" 
 \end{document}
 
