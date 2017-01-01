@@ -976,7 +976,7 @@ which is typeset with a postscipt font to make the difference visible.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F4_01fig2dev.ptx}
+\import{}{F4_01fig2dev.ptx}
 }
 \end{center}
 \caption{\label{fig:fig2dev}Conversion of a fig-file 
@@ -1078,7 +1078,7 @@ and embedded in this \LaTeX-file with the {\tt\textbackslash input}-command.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F4_02gp2pdf.ptx}
+\import{}{F4_02gp2pdf.ptx}
 }
 \end{center}
 \caption{\label{fig:gp2pdf}Conversion of a gnuplot-file 
@@ -1090,7 +1090,7 @@ into pdf-, eps- and ptx-files with inclusions}
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F4_03someGnuplot.ptx}
+\import{}{F4_03someGnuplot.ptx}
 }
 \end{center}
 \caption{\label{fig:gnuplot}
@@ -1148,7 +1148,7 @@ and so the mpx-file is not used by this software.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F4_04mp2mps.ptx}
+\import{}{F4_04mp2mps.ptx}
 }
 \end{center}
 \caption{\label{fig:mp2mps}Conversion of a metapost-file into an mps-file}
@@ -1314,7 +1314,7 @@ Also \cite{SvgIncl}, Section~3 indicates how to input the created file
 %
 \begin{verbatim}
 \def\svgwidth{0.5\textwidth}
-\input{xxx.pdf\_tex}%
+\import{}{xxx.pdf\_tex}%
 \end{verbatim}
 
 To obtain a unified conversion as defined in Sections~\ref{sec:fig2dev} 
@@ -1339,7 +1339,7 @@ after conversion the target files must be moved accordingly.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F4_06svg2pdf.ptx}%
+\import{}{F4_06svg2pdf.ptx}%
 }
 \end{center}
 \caption{\label{fig:svg2pdf}Conversion of an svg-file 
@@ -1353,7 +1353,7 @@ into pdf-, eps- and ptx-files with inclusions}
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F4_07someSvg.ptx}%
+\import{}{F4_07someSvg.ptx}%
 }
 %%\includesvg[eps,width=0.5\textwidth]{06someSvg}%
 \end{center}
@@ -1538,7 +1538,7 @@ and of the \LaTeX-processor \texttt{latex2pdf} may be necessary.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F5_01tex2pdf.ptx}
+\import{}{F5_01tex2pdf.ptx}
 }
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file 
@@ -1579,7 +1579,7 @@ whether \texttt{bibtex} emitted an error or warnings.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F5_02aux2bbl.ptx}
+\import{}{F5_02aux2bbl.ptx}
 }
 \end{center}
 \caption{\label{fig:aux2bbl}
@@ -1644,7 +1644,7 @@ an index must be generated.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F5_03idx2ind.ptx}
+\import{}{F5_03idx2ind.ptx}
 }
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
@@ -1801,7 +1801,7 @@ This is illustrated in Figure~\ref{fig:glo2gls}.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F5_04glo2gls.ptx}
+\import{}{F5_04glo2gls.ptx}
 }
 \end{center}
 \caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
@@ -1993,7 +1993,7 @@ for executing the requests made in the \texttt{xxx.lg} script.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F5_05tex2xml.ptx}
+\import{}{F5_05tex2xml.ptx}
 }
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
@@ -2242,7 +2242,7 @@ which is illustrated in Figure~\ref{fig:tex2doc}.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F5_06tex2doc.ptx}
+\import{}{F5_06tex2doc.ptx}
 }
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
@@ -2278,7 +2278,7 @@ Figure~\ref{fig:tex2txt} illustrates the translation process.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\input{F5_07tex2txt.ptx}
+\import{}{F5_07tex2txt.ptx}
 }
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
