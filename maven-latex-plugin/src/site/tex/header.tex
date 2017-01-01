@@ -1,11 +1,19 @@
-
 \listfiles
+
+\usepackage[a4paper]{geometry}
+\usepackage{microtype}
+%\usepackage{cleveref}
+
 
 % used by hyperref and also to update index and glossary 
 % to avoid clash because of loading with different options: 
 % declare first 
 \usepackage[aux]{rerunfilecheck}
 %\usepackage{ifpdf}
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
+
 
 % graphics 
 \makeatletter
@@ -14,16 +22,23 @@
 \usepackage{xcolor}  % [pdftex]  
 \usepackage{graphicx}% [pdftex] 
 \usepackage{hyperref}% driver [hpdftex] is autodetected 
+\usepackage{transparent}% sometimes comes in with svg import 
+% warning transparent package: loading aborted if not pdf-mode 
 \else
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
 \@ifpackageloaded{tex4ht}{%
-%\usepackage[tex4ht]{hyperref}
+  \setboolean{texFhtLoaded}{true}
+  \newcommand{\aaa}{}
+  % \usepackage[tex4ht]{hyperref}
 }{%
-\usepackage[dvipdfmx]{hyperref}
-}
+  \usepackage[dvipdfmx]{hyperref}
+  \newcommand{\aaa}{not }
+}% tex4ht not loaded 
+
 \usepackage{bmpsize}
 \fi
+\makeatother
 
 % \@ifpackageloaded{tex4ht}{%
 % \usepackage[dvipdfmx]{xcolor}
@@ -37,7 +52,6 @@
 % }
 
 %\usepackage[clear,pdf,eps]{svg}
-\usepackage{transparent}% sometimes comes in with svg import 
 
 %\usepackage{import}
 
@@ -58,13 +72,19 @@
 \fi
 
 % index and glossary
-\usepackage{makeidx}
-\makeindex
-\usepackage[toc]{glossaries}%,automake
-%, xindy or even [xindy={language=english,codepage=utf8}]
-% mainly for index and glossaries 
-%\makeglossaries
-\makeglossary% for rerunfilecheck 
+\ifthenelse{\boolean{texFhtLoaded}}{%
+}{
+  \usepackage{makeidx}
+  \makeindex
+  \usepackage[toc]{glossaries}%,automake
+  % , xindy or even [xindy={language=english,codepage=utf8}]
+  % mainly for index and glossaries 
+  \makeglossaries
+}
+
+%\makeglossary% for rerunfilecheck 
+
+%\usepackage{etexcmds} %still later 
 
 %%% Local Variables:
 %%% mode: latex
