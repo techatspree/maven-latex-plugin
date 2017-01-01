@@ -1,4 +1,4 @@
-\RequirePackage[l2tabu, orthodox]{nag}
+%\RequirePackage[l2tabu, orthodox]{nag}
 % blabla 
 %\PassOptionsToPackage{dvipdfmx}{xcolor} %or dvipdfm 
 %\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
@@ -150,9 +150,9 @@ and that for the parameters are default values
 which allow to do without explicit parametrization in most of the cases. 
 \index{ant-task}
 Both, the ant-task and the maven-plugin rely on the same code base 
-which form the package {\tt org.m2latex.core}. 
-The code specific for the ant-task is in {\tt org.m2latex.antTask} 
-and that specific for the maven-plugin is in {\tt org.m2latex.mojo}. 
+which form the package \texttt{org.m2latex.core}. 
+The code specific for the ant-task is in \texttt{org.m2latex.antTask} 
+and that specific for the maven-plugin is in \texttt{org.m2latex.mojo}. 
 
 
 The creation process supports an index, a glossry and a bibliography. 
@@ -204,7 +204,7 @@ These prerequisites are collected in Section~\ref{sec:prerequisites}.
 \section{Prerequisites}\label{sec:prerequisites}
 
 The ant-task is tested with 
-{\tt Apache Ant(TM) version 1.9.4 compiled on September 11 2015}\index{ant}
+\texttt{Apache Ant(TM) version 1.9.4 compiled on September 11 2015}\index{ant}
 and the maven-plugin with 
 %
 \index{maven}
@@ -216,7 +216,7 @@ Apache Maven 3.3.9 \
 %
 Both, ant and maven are written in java and require a java installation. 
 The java\index{java} version used for tests 
-is {\tt 1.8.0\_101, vendor: Oracle Corporation}. 
+is \texttt{1.8.0\_101, vendor: Oracle Corporation}. 
 
 
 So, a java installation is the base for running either the ant-task 
@@ -236,24 +236,24 @@ this software also supports documentation development.
 \LaTeX{} and related programs are based on text files mainly 
 and so a good editor is required for development. 
 The author recommends and uses good old 
-{\tt GNU Emacs 24.3.1 (x86\_64-suse-linux-gnu, GTK+ Version 3.16.7)} 
+\texttt{GNU Emacs 24.3.1 (x86\_64-suse-linux-gnu, GTK+ Version 3.16.7)} 
 together with several packages to support 
 various file formats. 
 To list the available packages type 
-{\tt M-x list-packages}. 
+\texttt{M-x list-packages}. 
 For comfortable development with \LaTeX, 
-the {\tt auctex} package, version {\tt 11.88} is recommended. 
+the \texttt{auctex} package, version \texttt{11.88} is recommended. 
 The version is displayed from within emacs 
-by typing {\tt C-h v AUCTeX-version RET}. 
-For an overview on {\tt auctex} see \cite{AucTeX}. 
+by typing \texttt{C-h v AUCTeX-version RET}. 
+For an overview on \texttt{auctex} see \cite{AucTeX}. 
 
 
 FIXME: gnuplot-mode expects file extension gp. 
 Should be made configurable. 
 
-To edit metapost, the mode built-in mode {\tt Metamode} is used. 
+To edit metapost, the mode built-in mode \texttt{Metamode} is used. 
 
-Built-in mode {\tt Docview} to view pdf, ps and dvi. 
+Built-in mode \texttt{Docview} to view pdf, ps and dvi. 
 
 latexmk
 
@@ -270,37 +270,37 @@ the following programs are required:
 \begin{itemize}
 \item
 To convert the \gls{fig}-files into \gls{pdf}-files, 
-by default {\tt fig2dev}\index{fig2dev} is used. 
-It makes sense to have {\tt xfig}\index{xfig} installed 
+by default \texttt{fig2dev}\index{fig2dev} is used. 
+It makes sense to have \texttt{xfig}\index{xfig} installed 
 to create and edit fig-files, but this is not mandatory. 
 \item
 To convert gnuplot files into pdf-files, there is no alternative, 
-to have installed {\tt gnuplot}\index{gnuplot}. 
+to have installed \texttt{gnuplot}\index{gnuplot}. 
 It serves as an interpreter and also as a converter. 
 Strictly speaking, only the latter functionality is required here. 
 \item
 To convert \gls{mp}-files into \gls{eps}-files, 
 \index{mpost}\index{metapost}
-the interpreter {\tt mpost} or equivalent is required. 
+the interpreter \texttt{mpost} or equivalent is required. 
 This comes with a standard tex-installation. 
 With the standard configuration, 
-the resultign eps-file can be viewed with {\tt ghostscript} 
-and for developping it is recommended to have {\tt ghostscript} installed. 
+the resultign eps-file can be viewed with \texttt{ghostscript} 
+and for developping it is recommended to have \texttt{ghostscript} installed. 
 \item
 To include \gls{svg}-files into \LaTeX\index{svg}, 
-{\tt inkscape}\index{inkscape} must be installed. 
+\texttt{inkscape}\index{inkscape} must be installed. 
 It also serves to create and to edit svg-files. 
 \end{itemize}
 
 
 
 Currently for including pdf-files in both cases, 
-the driver {\tt dvipdfmx} must be installed. 
+the driver \texttt{dvipdfmx} must be installed. 
 Strictly speaking, this is required only for html-creation and related. 
-Note that if no pictures created by {\tt fig2dev}, {\tt gnuplot}, 
-{\tt mpost} or by {\tt inkscape} are used, of course, 
-neither {\tt fig2dev} nor {\tt gnuplot}, {\tt mpost}, {\tt inkscape} 
-nor {\tt dvipdfmx} is needed. 
+Note that if no pictures created by \texttt{fig2dev}, \texttt{gnuplot}, 
+\texttt{mpost} or by \texttt{inkscape} are used, of course, 
+neither \texttt{fig2dev} nor \texttt{gnuplot}, \texttt{mpost}, \texttt{inkscape} 
+nor \texttt{dvipdfmx} is needed. 
 To include graphics, the grapics bundle described in~\cite{GraX} is required, 
 except for svg-files which requires the svg-package 
 described in~\cite{SvgP}. 
@@ -312,59 +312,59 @@ to be supported:
 %
 \begin{itemize}
 \item
-To create pdf-files from \LaTeX-files we use {\tt pdflatex} 
+To create pdf-files from \LaTeX-files we use \texttt{pdflatex} 
 or some other kind of \LaTeX{} creating pdf-files 
-like {\tt xelatex} or {\tt lualatex}. 
+like \texttt{xelatex} or \texttt{lualatex}. 
 \index{pdflatex}\index{xelatex}\index{lualatex} 
 \LaTeX{} uses several auxiliary programs. 
-Above all {\tt bibtex} to create the bibliography 
-and {\tt makeindex} for the index and {\tt makeglossaries} for the glossary. 
+Above all \texttt{bibtex} to create the bibliography 
+and \texttt{makeindex} for the index and \texttt{makeglossaries} for the glossary. 
 \index{bibtex}\index{makeindex}\index{makeglossaries}
 The latter two 
-also require the latex packages {\tt makeidx} and {\tt glossaries} 
+also require the latex packages \texttt{makeidx} and \texttt{glossaries} 
 described in~\cite{MkidxShIdxP} and in~\cite{GloP}. 
-Note that {\tt makeglossaries} eiter invokes {\tt makeindex} 
-or {\tt xindy}, depending on the parametrization of {\tt glossaries}. 
-Both, {\tt makeglossaries} and {\tt xindy} are written in perl, 
+Note that \texttt{makeglossaries} eiter invokes \texttt{makeindex} 
+or \texttt{xindy}, depending on the parametrization of \texttt{glossaries}. 
+Both, \texttt{makeglossaries} and \texttt{xindy} are written in perl, 
 which shall also be installed if a glossary is required. 
 
-The package {\tt rerunfilecheck} is in any standard \LaTeX-installation. 
+The package \texttt{rerunfilecheck} is in any standard \LaTeX-installation. 
 It is almost mandatory 
 because this software presupposes that package is present  
 to ensure that the table of contents, list of figures, list of tables, 
 the index and the glossary are up to date. 
 
 It is standard to endow a pdf-file with hyperlinks. 
-To support this, the package {\tt hyperref} is required. 
+To support this, the package \texttt{hyperref} is required. 
 
 ****
 \item
 To create \gls{html}-files, 
 or to be more precise any kind of \gls{sgml} and \gls{xml}, 
-from \LaTeX-files, {\tt htlatex} or alternatively {\tt htxelatex} is used. 
+from \LaTeX-files, \texttt{htlatex} or alternatively \texttt{htxelatex} is used. 
 Currently the author is not aware of any alternative to the two. 
 This includes also creating open office documents like odt-files. 
 Thus open office documents are created in two steps, 
 the first is to create pdf-files with the according tools, 
-the second one is done by {\tt htlatex} or that like. 
+the second one is done by \texttt{htlatex} or that like. 
 \index{htlatex}\index{htxelatex}
 \item
-To create rtf-files, currently {\tt latex2rtf} is used. 
-Note that this does not require {\tt pdflatex}. 
+To create rtf-files, currently \texttt{latex2rtf} is used. 
+Note that this does not require \texttt{pdflatex}. 
 As a drawback, not all \LaTeX-packages are supported. 
 \index{latex2rtf}
 \item
 MS word documents are created from open office documents 
-via the command {\tt odt2doc} and thus require three steps 
+via the command \texttt{odt2doc} and thus require three steps 
 and so the according tool chain. 
 \index{odt2doc} 
 \item
 Finally, there is a way, to create plain text files from the pdf-files 
-via {\tt pdftotext}. 
+via \texttt{pdftotext}. 
 The way from \LaTeX{} to text via pdf makes sense 
 because that text is well formatted math mode symbols like $\pi$. 
 and because table of contents, index, glossary and that like are included. 
-So, for that task, besides {\tt pdftotext} the whole toolchain to create
+So, for that task, besides \texttt{pdftotext} the whole toolchain to create
 pdf-files is required. 
 \index{pdftotext}
 \end{itemize}
@@ -376,11 +376,11 @@ or at least the subset used, must be installed.
 
 To install the maven-plugin within a given maven project, 
 the listing of a pom entry given in Chapter~\ref{chap:settings} 
-can be added to {\tt pom.xml} and modified accordingly. 
+can be added to \texttt{pom.xml} and modified accordingly. 
 In a default maven project, 
 the default configuration is usable which creates pdf-documents and
 \gls{html}-sites. 
-The according entry to be added to the {\tt pom.xml} is then just 
+The according entry to be added to the \texttt{pom.xml} is then just 
 %
 \lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}
@@ -396,7 +396,7 @@ The according entry to be added to the {\tt pom.xml} is then just
 
 Likewise to install the ant-task within an ant-project, 
 the listing of a build file entry given in Chapter~\ref{chap:settings} 
-has to be added to the {\tt build.xml}. 
+has to be added to the \texttt{build.xml}. 
 Also working with an ant project 
 conforming with maven conventions, 
 no explicit configuration is needed. 
@@ -409,25 +409,25 @@ where a deviation from the default requires to do so.
 
 \section{Completing the Installation}\label{sec:instComplete}
 
-To install the maven-plugin, just type {\tt mvn clean install}. 
-To install the ant-task, one has first to comment out in {\tt build.xml} 
-the task definition {\tt latex} and the target {\tt latex:cfg}. 
+To install the maven-plugin, just type \texttt{mvn clean install}. 
+To install the ant-task, one has first to comment out in \texttt{build.xml} 
+the task definition \texttt{latex} and the target \texttt{latex:cfg}. 
 One may also adapt the lib-folder of the ant-installation, 
-i.e.~the property {\tt antJarDir} where {\tt ant.jar} resides. 
-Then just type {\tt ant clean jar} 
-which creates the jar-file (property {\tt createdJar}) defining the ant-task. 
-After that one may copy the created jar into folder {\tt antJarDir}, 
-where ant finds it typing {\tt sudo ant install}. 
+i.e.~the property \texttt{antJarDir} where \texttt{ant.jar} resides. 
+Then just type \texttt{ant clean jar} 
+which creates the jar-file (property \texttt{createdJar}) defining the ant-task. 
+After that one may copy the created jar into folder \texttt{antJarDir}, 
+where ant finds it typing \texttt{sudo ant install}. 
 \index{ant-task}
 
-Note that, if maven is installed, the command {\tt mvn clean install} 
-also creates the jar-file {\tt createdJar} defining the ant-task. 
+Note that, if maven is installed, the command \texttt{mvn clean install} 
+also creates the jar-file \texttt{createdJar} defining the ant-task. 
 Also with this method, one has to copy the jar-file defining the ant-task 
 later into ant's lib-folder. 
 
 After having installed the ant-task, 
-reactivate the taskdef {\tt latex} and the target {\tt latex:cfg} 
-and run {\tt ant latex:cfg} to create this manual. 
+reactivate the taskdef \texttt{latex} and the target \texttt{latex:cfg} 
+and run \texttt{ant latex:cfg} to create this manual. 
 
 Mixing ant and maven builds is not so good. 
 One may always recover by just creating with maven. 
@@ -454,8 +454,8 @@ typically not inputted anywhere via {\tt\textbackslash input},
 are called {\em \LaTeX{} main files}. 
 As an example, 
 in the {\em tex-source directory\/} of this software, 
-{\tt manualLatexMavenPlugin.tex} is a \LaTeX{} main file, 
-whereas the file {\tt header.tex} is not although also a \LaTeX-file. 
+\texttt{manualLatexMavenPlugin.tex} is a \LaTeX{} main file, 
+whereas the file \texttt{header.tex} is not although also a \LaTeX-file. 
 % identification of the latex main file? 
 \index{latex main file}
 
@@ -470,13 +470,13 @@ all included in the tex-source directory.
 The first can be included into \LaTeX-files directly 
 via {\tt\textbackslash input}. 
 These formats are essentially \LaTeX{} and are defined in an according package. 
-An example is {\tt eepic} described in~\cite{EEpic}. 
+An example is \texttt{eepic} described in~\cite{EEpic}. 
 \item
 the second one via the command {\tt\textbackslash includegraphics} 
-defined by the package {\tt graphicx} 
+defined by the package \texttt{graphicx} 
 which is described in~\cite{GraX}. 
 Chapter 2 therein mentions the supported drivers, 
-among these are also {\tt dvipdfm} and {\tt dvipdfmx}. 
+among these are also \texttt{dvipdfm} and \texttt{dvipdfmx}. 
 It is not the package but the driver 
 which decides on the support of graphic formats. 
 The dvipdfm user manual,~\cite{DviPdfMx} lists the allowed formats 
@@ -500,7 +500,7 @@ Note that, although not required to be explicitly transformed,
 those graphics files induce additional files 
 by running \LaTeX. 
 Currently, there is only one single example for that, 
-the \gls{svg}-format included by the package {\tt svg}. 
+the \gls{svg}-format included by the package \texttt{svg}. 
 \end{enumerate}
 
 The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
@@ -528,23 +528,23 @@ The same is true for the \LaTeX{} main files.
 \section{Exporting in various formats}\label{chap:stableUsage}
 
 
-After having added the configuration of the plugin to the {\tt pom.xml}, 
+After having added the configuration of the plugin to the \texttt{pom.xml}, 
 it can be used directly invoking maven through 
-{\tt mvn latex:cfg}. 
-Here {\tt latex} is the (short) name of the plugin and {\tt cfg} is the target. 
-It can also be interpreted as {\tt mvn $<$source$>$:$<$target$>$}: 
-The source files are in {\tt latex}-format and the target-format(s) 
+\texttt{mvn latex:cfg}. 
+Here \texttt{latex} is the (short) name of the plugin and \texttt{cfg} is the target. 
+It can also be interpreted as \texttt{mvn $<$source$>$:$<$target$>$}: 
+The source files are in \texttt{latex}-format and the target-format(s) 
 are read from the {\em configuration} in the pom 
-({\em configuration} is what {\tt cfg} stands for). 
-The goal {\tt cfg} is executed in maven's {\tt site} lifecycle by default. 
+({\em configuration} is what \texttt{cfg} stands for). 
+The goal \texttt{cfg} is executed in maven's \texttt{site} lifecycle by default. 
 
-By default, the target formats are {\tt pdf} and {\tt html}. 
+By default, the target formats are \texttt{pdf} and \texttt{html}. 
 The following listing shows a configuration 
 with the full range of output formats including in addition 
-the open office document format {\tt odt}, 
-the MS word-format(s) {\tt doc(x)} and {\tt rtf}
-and also plain text format {\tt txt} in utf8 encoding. 
-Note that the target {\tt docx} converts by default into \gls{docx} 
+the open office document format \texttt{odt}, 
+the MS word-format(s) \texttt{doc(x)} and \texttt{rtf}
+and also plain text format \texttt{txt} in utf8 encoding. 
+Note that the target \texttt{docx} converts by default into \gls{docx} 
 but may also be configured to produce the old fashioned \gls{doc} format. 
 %
 \lstset{language=xml, basicstyle=\small}
@@ -567,22 +567,22 @@ but may also be configured to produce the old fashioned \gls{doc} format.
 
 The resulting files in the given output formats 
 are copied to the site directory, 
-which is {\tt ./target/site} in a default maven project. 
+which is \texttt{./target/site} in a default maven project. 
 
 Sometimes it is more convenient 
 to specify the output formats not via the pom 
 but directly on the command line. 
-In particular, one may write {\tt mvn latex:pdf} to create documentation 
+In particular, one may write \texttt{mvn latex:pdf} to create documentation 
 in pdf-format only. 
-Note that the {\tt -X} switch activates debugging 
+Note that the \texttt{-X} switch activates debugging 
 which results in a more verbose output. 
-Example: {\tt mvn -X latex:cfg}. 
+Example: \texttt{mvn -X latex:cfg}. 
 
 For creating the graphic files in the tex-source directory, 
-there is a target {\em graphics}, invoked by {\tt mvn latex:grp}. 
+there is a target {\em graphics}, invoked by \texttt{mvn latex:grp}. 
 This target does not create any output in the site directory. 
 Finally,  there is another target for clearing the tex-source directory 
-recursively, invoked by {\tt mvn latex:clr}. 
+recursively, invoked by \texttt{mvn latex:clr}. 
 For more details on these two targets, see Section~\ref{sec:devel}. 
 
 In a standard maven project, 
@@ -596,31 +596,31 @@ giving the default value and a description.
 
 
 For sake of uniformity, 
-the name of the ant-task is {\tt latex:cfg} 
-and it can be invoked via {\tt ant latex:cfg}. 
+the name of the ant-task is \texttt{latex:cfg} 
+and it can be invoked via \texttt{ant latex:cfg}. 
 Unlike the maven-plugin, the ant-task 
 does not allow to specify a target on the command line. 
-The {\tt -d} switch activates debugging 
+The \texttt{-d} switch activates debugging 
 which results in a more verbose output. 
-Example: {\tt ant -d latex:cfg}. 
+Example: \texttt{ant -d latex:cfg}. 
 
 Whereas by default the target directory and in particular 
 the target site directory with all output of this plugin is deleted 
-in maven's {\tt clean} lifecycle. 
+in maven's \texttt{clean} lifecycle. 
 As is described in more detail in Section~\ref{sec:devel}, 
 this software creates target documents and also intermediate files 
 in the tex source directory, at least with cleanup disabled. 
 To eliminate the created files from the souce directory, 
-just type {\tt mvn latex:clr}. 
-By default, the goal {\tt clr} 
-is also executed in maven's {\tt clear} lifecycle. 
+just type \texttt{mvn latex:clr}. 
+By default, the goal \texttt{clr} 
+is also executed in maven's \texttt{clear} lifecycle. 
 
-There is an according ant-task {\tt latex:cfg} 
-which can be invoked via {\tt ant -d latex:cfg}. 
+There is an according ant-task \texttt{latex:cfg} 
+which can be invoked via \texttt{ant -d latex:cfg}. 
 FIXME: ant latex:clr has duplicate parameters. 
 This can be fixed only by properties. 
 Another problem is, to provide a complete subset of parameters 
-which apply to {\tt latex:cfg} and to {\tt latex:cfg}, respectively. 
+which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively. 
 
 If this ant-task is used in an ant project 
 with folder structure conforming with a maven project 
@@ -645,16 +645,16 @@ Also, typically, one wants to mix creation by this maven-plugin or ant-task
 with at least partial creation through external tools. 
 For example, if writing \LaTeX-files with emacs, 
 it is much more convenient, to compile the \LaTeX{} main file 
-via {\tt pdflatex} from within emacs 
+via \texttt{pdflatex} from within emacs 
 or to create a pdf-file from a \gls{fig}-file 
-through {\tt xfig}'s export dialog, 
+through \texttt{xfig}'s export dialog, 
 than using this maven-plugin or this ant-task. 
 Also these tools work best, if all is in one folder. 
 
 On the other hand, 
 conventionally, in a maven project, 
-sources are held in folder {\tt src}, 
-whereas created files occur in the folder {\tt target}. 
+sources are held in folder \texttt{src}, 
+whereas created files occur in the folder \texttt{target}. 
 Likewise for ant. 
 The compromise, this maven-plugin and this ant-task take, 
 is, that at the end of a run, 
@@ -680,7 +680,7 @@ Remove all files not present at the begin of a run, by default.
 To keep e.g. the resulting pdf, 
 just create it via compilation through emacs, 
 even if not all graphic files to be included are present 
-or just by a {\tt touch}-command. 
+or just by a \texttt{touch}-command. 
 Then in the next run of this plugin, 
 this pdf will be re-created, 
 that time complete with the graphics output. 
@@ -690,8 +690,8 @@ Likewise, to keep the log-file or the aux-file, just touch it.
 This technique is really valuable for debugging. 
 
 To keep all created files after a run of this maven-plugin, 
-set the parameter {\tt cleanUp} in the pom 
-to {\tt false} as illustrated in the listing below. 
+set the parameter \texttt{cleanUp} in the pom 
+to \texttt{false} as illustrated in the listing below. 
 For the ant-task likewise. 
 %
 \lstset{language=xml, basicstyle=\small}
@@ -715,19 +715,19 @@ For the ant-task likewise.
 
 
 But how can one get rid of all these newly created files? 
-That is what is the target {\tt latex:clr} is for: 
+That is what is the target \texttt{latex:clr} is for: 
 It removes all created graphic files 
 and for each latex main file, it removes all files with ``similar'' names. 
 Typically, this suffices, to remove all files created. 
 If not, please inform the developer of this software. 
 Of course, if further software is used which creates additional files, 
-like emacs creates a folder {\tt auto}, 
+like emacs creates a folder \texttt{auto}, 
 these files cannot be removed by this maven-pugin or this ant-task. 
 
 During development of a \LaTeX-main file, 
 it is often more conventient to compile from within an editor like emacs. 
 The problem is, that compilation fails if the graphic files are missing. 
-This is what the target {\tt latex:grp} is for: 
+This is what the target \texttt{latex:grp} is for: 
 It creates all graphic files required to compile the \LaTeX-main files. 
 
 Still this does not create a bibliography, an index or a glossary. 
@@ -738,9 +738,9 @@ To create a glossary, auctex has to be modified a little.
 FIXME: include this into auctex. 
 
 That way also the log-files required are created: 
-In this case, the files {\tt ManualLatexMavenPlugin.xxx} 
-where {\tt xxx} is {\tt log} for \LaTeX, {\tt blg} for {\tt BibTeX}, 
-{\tt glg} for {\tt makeglossaries} and {\tt ilg} for {\tt makeindex}. 
+In this case, the files \texttt{ManualLatexMavenPlugin.xxx} 
+where \texttt{xxx} is \texttt{log} for \LaTeX, \texttt{blg} for \texttt{BibTeX}, 
+\texttt{glg} for \texttt{makeglossaries} and \texttt{ilg} for \texttt{makeindex}. 
 
 
 rsvg-convert -f pdf -o t.pdf t.svg
@@ -773,7 +773,7 @@ Section~\ref{sec:figpdf} shows that it suffices to stick to pictures
 in pdf-format. 
 % FIXME: REALLY? 
 %FIXME: missing pdf als basic input format. What about (e)ps? 
-Section~\ref{sec:fig2dev} shows how {\tt fig2dev} converts fig-files 
+Section~\ref{sec:fig2dev} shows how \texttt{fig2dev} converts fig-files 
 into \LaTeX-files containing text and including graphics in as pdf-files. 
 Likewise, Section~\ref{sec:gnuplot2pdf} describes 
 how gnuplot converts gnuplot-files into pdf-files. 
@@ -792,11 +792,11 @@ Modern \LaTeX{} implementations directly create pdf-files.
 Thus it makes sense, to allow including graphics as pdf-files 
 in \LaTeX-files. 
 This is done in pdf mode 
-by the \LaTeX-packages {\tt xcolor} and {\tt graphicx}. 
+by the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx}. 
 In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}-format 
 which is still used to create \gls{html}-output, 
 this is not supported by the default driver, 
-Instead it shall be used the driver {\tt dvipdfmx}. 
+Instead it shall be used the driver \texttt{dvipdfmx}. 
 To obtain a \LaTeX-file which works both for creating pdf and html, 
 insert in the header of the \LaTeX{} main file 
 %
@@ -804,74 +804,74 @@ insert in the header of the \LaTeX{} main file
 \lstinputlisting[firstline=9, lastline=21]{header.tex}
 
 An alternative, which we do not use 
-is replacing the pdf by an \gls{eps} via configuration file {\tt myxhtml.cfg} 
+is replacing the pdf by an \gls{eps} via configuration file \texttt{myxhtml.cfg} 
 which is listed below. 
 %
 \lstset{language=tex, basicstyle=\scriptsize}
 \lstinputlisting{myxhtml.tex}
 %
 It applies when converting \LaTeX{} into html and that like 
-with htlatex if invoking someting like {\tt htlatex xxx.tex myxhtml,...} 
-where {\tt myxhtml} is located in the same directory as the \LaTeX-file 
+with htlatex if invoking someting like \texttt{htlatex xxx.tex myxhtml,...} 
+where \texttt{myxhtml} is located in the same directory as the \LaTeX-file 
 to be processed. 
 The configuration file essentially contains a graphics configuration, 
-which applies conversion to pdf-files included in the \LaTeX-file {\tt xxx.tex}
-via {\tt \textbackslash includegraphics}. 
+which applies conversion to pdf-files included in the \LaTeX-file \texttt{xxx.tex}
+via \texttt{\textbackslash includegraphics}. 
 
 
 \section{Conversion of fig-files}\label{sec:fig2dev}
 
 \index{xfig}
 \index{fig2dev}
-A simple but still useful tool to draw figures is {\tt xfig} 
+A simple but still useful tool to draw figures is \texttt{xfig} 
 which stores graphics in a native format 
-described in \cite{XFigF} with file extionsion {\tt .fig}. 
-The file extension {\tt .fig} is also used by matlab to store plots 
+described in \cite{XFigF} with file extionsion \texttt{.fig}. 
+The file extension \texttt{.fig} is also used by matlab to store plots 
 but this is something different. 
 Graphics in xfig format cannot be directly included in latex files 
 but must be exported into a \LaTeX-readable format. 
 
-To export a file {\tt xxx.fig} into several external formats, 
-{\tt xfig} uses {\tt fig2dev}. 
+To export a file \texttt{xxx.fig} into several external formats, 
+\texttt{xfig} uses \texttt{fig2dev}. 
 A look in \cite{XFigF}, Section~3.4 shows that texts with set ``special''-flag 
 are interpreted as (la)tex-code. 
-For these texts the appropriate export language would be {\tt latex}. 
-On the other hand, {\tt latex} is weak in graphics 
-and {\tt pdf} would be the ideal export format for all kinds of objects, 
+For these texts the appropriate export language would be \texttt{latex}. 
+On the other hand, \texttt{latex} is weak in graphics 
+and \texttt{pdf} would be the ideal export format for all kinds of objects, 
 except for texts with set ``special''-flag. 
-In {\tt pdf} format, texts are interpreted litterally, 
+In \texttt{pdf} format, texts are interpreted litterally, 
 independent of the ``special''-flag. 
-Thus {\tt fig2dev} offers a mixed solution: 
-export format {\tt pdftex} which yields a pdf-file 
+Thus \texttt{fig2dev} offers a mixed solution: 
+export format \texttt{pdftex} which yields a pdf-file 
 containing all but text with set ``special''-flag 
-and complementary {\tt pdftex\_t} which yields a tex-file 
+and complementary \texttt{pdftex\_t} which yields a tex-file 
 including the pdf-file and the texts with set ``special''-flag. 
 \index{special-flag}%maybe glossary 
 
 For example, the fig-file defining Figure~\ref{fig:fig2dev}, 
-{\tt 01fig2dev.fig} is transformed into a file  {\tt 01fig2dev.ptx} 
-in format {\tt pdftex\_t} which starts like this: 
+\texttt{01fig2dev.fig} is transformed into a file  \texttt{01fig2dev.ptx} 
+in format \texttt{pdftex\_t} which starts like this: 
 %
 \lstset{language=tex, breaklines, basicstyle=\small}
 \lstinputlisting[lastline=25]{F4_01fig2dev.ptx}
 
-The file {\tt xxx.ptx} is ``inputted'' into the tex-file of this manual 
+The file \texttt{xxx.ptx} is ``inputted'' into the tex-file of this manual 
 by the command {\tt\textbackslash input\{xxx.ptx\}} 
-automatically including {\tt xxx.pdf}. 
-Note that the full path {\tt pppxxx.pdf} to {\tt xxx.pdf} is required, 
+automatically including \texttt{xxx.pdf}. 
+Note that the full path \texttt{pppxxx.pdf} to \texttt{xxx.pdf} is required, 
 because relative paths are interpreted in terms of the file 
 containing {\tt\textbackslash input\{xxx.ptx\}}. 
-Observe also that we can drop the suffix which is expressed as ``{\tt pppxxx}'' 
+Observe also that we can drop the suffix which is expressed as ``\texttt{pppxxx}'' 
 because \LaTeX{} chooses the right suffix: 
 for pdf-format this is {\tt.pdf}. 
 As we will see below, 
-leaving the suffix away is crucial to make {\tt xxx.ptx} work 
+leaving the suffix away is crucial to make \texttt{xxx.ptx} work 
 both for pdf-format and for dvi-format required to create html- and odt-files. 
 As indicated in Section~\ref{sec:figpdf}, 
-the commands in {\tt xxx.ptx} 
-require the packages {\tt graphicx} and {\tt xcolor}. 
+the commands in \texttt{xxx.ptx} 
+require the packages \texttt{graphicx} and \texttt{xcolor}. 
 
-To export {\tt xxx.fig} into {\tt xxx.ptx} and {\tt xxx.pdf} 
+To export \texttt{xxx.fig} into \texttt{xxx.ptx} and \texttt{xxx.pdf} 
 requires two commands: 
 %
 \begin{Verbatim}[fontsize=\scriptsize]
@@ -879,40 +879,40 @@ fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig
 fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p pppxxx xxx.fig xxx.ptx
 \end{Verbatim}
 %
-Both commands specify the input file {\tt xxx.fig}, 
-both use the options given by the parameter {\tt fig2devGenOptions} 
+Both commands specify the input file \texttt{xxx.fig}, 
+both use the options given by the parameter \texttt{fig2devGenOptions} 
 while each invocation allows to specify also specific options, 
-{\tt fig2devPdfEpsOptions} and {\tt fig2devPtxOptions}, respectively, 
-and both use the option {\tt -L} to specify the output format (``language''). 
+\texttt{fig2devPdfEpsOptions} and \texttt{fig2devPtxOptions}, respectively, 
+and both use the option \texttt{-L} to specify the output format (``language''). 
 
 %FIXME: ptx-->tex and then: convention: intuitive suffixes 
 
-The parameters specific for {\tt pdftex} are called {\tt fig2devPdfEpsOptions} 
+The parameters specific for \texttt{pdftex} are called \texttt{fig2devPdfEpsOptions} 
 because the options available are the same 
-as for output format {\tt pstex} creating eps-files. 
-An example for a common option would be {\tt -b width} 
+as for output format \texttt{pstex} creating eps-files. 
+An example for a common option would be \texttt{-b width} 
 which shall specify the same boundary for both formats; 
 otherwise they do not fit. 
 
-For the output format {\tt pdftex\_t}, 
-the option {\tt -p pppxxx} says, 
-that the string {\tt pppxxx} must be included in {\tt xxx.ptx} 
+For the output format \texttt{pdftex\_t}, 
+the option \texttt{-p pppxxx} says, 
+that the string \texttt{pppxxx} must be included in \texttt{xxx.ptx} 
 as {\tt\textbackslash includegraphics\{pppxxx\}}. 
 Note that the option {\tt-p} shall not be specified 
-in {\tt fig2devPtxOptions}, because it is automatically added. 
+in \texttt{fig2devPtxOptions}, because it is automatically added. 
 
-Equivalent to mixed export with formats {\tt pdftex} and {\tt pdftex\_t} 
+Equivalent to mixed export with formats \texttt{pdftex} and \texttt{pdftex\_t} 
 which is appropriate for \LaTeX-output format pdf, 
 is the mixed export with the according formats 
-{\tt pstex} and {\tt pstex\_t} appropriate for \LaTeX-output format dvi. 
-The difference is that {\tt pstex} creates an eps-file instead of a pdf-file 
+\texttt{pstex} and \texttt{pstex\_t} appropriate for \LaTeX-output format dvi. 
+The difference is that \texttt{pstex} creates an eps-file instead of a pdf-file 
 with the same content 
-and {\tt pstex\_t} creates a tex-file which looks like that 
-created by {\tt pdftex\_t} except including the eps-file 
+and \texttt{pstex\_t} creates a tex-file which looks like that 
+created by \texttt{pdftex\_t} except including the eps-file 
 instead of the pdf-file. 
 If the suffix is not given, 
-{\tt pstex\_t} and {\tt pdftex\_t} create identical files. 
-Thus exporting {\tt xxx.fig} via 
+\texttt{pstex\_t} and \texttt{pdftex\_t} create identical files. 
+Thus exporting \texttt{xxx.fig} via 
 %
 \begin{Verbatim}[fontsize=\scriptsize]
 fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig xxx.eps   
@@ -920,10 +920,10 @@ fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig
 fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p pppxxx xxx.fig xxx.ptx
 \end{Verbatim}
 %
-and ``inputting'' {\tt xxx.ptx} works for both \LaTeX{} output formats. 
+and ``inputting'' \texttt{xxx.ptx} works for both \LaTeX{} output formats. 
 
 
-Note that {\tt xfig} chooses its file endings 
+Note that \texttt{xfig} chooses its file endings 
 according to Table~\ref {tab:xfigSuffixes} 
 which deviate from those used here. 
 
@@ -945,22 +945,22 @@ pdftex\_t                & pdf\_t      & pdf        & pdf \\
 
 
 Maybe xfig is intended to export from within the export dialog 
-and not directly via a script like {\tt fig2dev}. 
+and not directly via a script like \texttt{fig2dev}. 
 This may be the reason 
 why the magnification must be set in the export dialog, 
 but it is stored in the fig-file nevertheless. 
 
 Figure~\ref{fig:fig2dev} shows the transformation 
-of figures with {\tt fig2dev} 
+of figures with \texttt{fig2dev} 
 and the inclusion of the eps-file and of the pdf-file in the ptx-file. 
-Note that the {\tt fig2dev}-command is configurable 
-via the parameter {\tt fig2devCommand}, 
+Note that the \texttt{fig2dev}-command is configurable 
+via the parameter \texttt{fig2devCommand}, 
 but there will be hardly any command with the same command line interface 
 performing exactly the transformations given in Figure~\ref{fig:fig2dev}, 
-except {\tt fig2dev} itself. 
+except \texttt{fig2dev} itself. 
 
 At the same time, Figure~\ref{fig:fig2dev} is an example 
-for a \LaTeX-file {\tt xxx.ptx} created from a fig-file 
+for a \LaTeX-file \texttt{xxx.ptx} created from a fig-file 
 and embedded in this \LaTeX-file 
 with the {\tt\textbackslash input}-command. 
 More than that, 
@@ -973,7 +973,11 @@ which is typeset with a postscipt font to make the difference visible.
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F4_01fig2dev.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F4_01fig2dev.ptx}
+}
 \end{center}
 \caption{\label{fig:fig2dev}Conversion of a fig-file 
 into pdf-, eps- and ptx-files with inclusions}
@@ -982,31 +986,31 @@ into pdf-, eps- and ptx-files with inclusions}
 
 \section{Conversion of gnuplot-files}\label{sec:gnuplot2pdf}
 
-This software supports plots drawn with {\tt gnuplot}, or, to be more precise, 
-figures stored in .gp-files created by {\tt gnuplot}. 
+This software supports plots drawn with \texttt{gnuplot}, or, to be more precise, 
+figures stored in .gp-files created by \texttt{gnuplot}. 
 Note that there seems to official file extension 
 to identify gnuplot files. 
 From the most common extensions {\tt.plt}, {\tt.gpi} and {\tt.gp} 
 we have choosen the one with the least collision 
 and supported by emacs and by my file browser: {\tt.gp}. 
 % FIXME: should be configurable. 
-To export a file {\tt xxx.gp} into several external formats, 
-it uses {\tt gnuplot} itself. 
+To export a file \texttt{xxx.gp} into several external formats, 
+it uses \texttt{gnuplot} itself. 
 % FIXME: look at https://www.file-extensions.org/
 According to the manual~\cite{GnuPlot}, Part IV, 
-{\tt gnuplot} supports output formats through so called {\em terminals}. 
+\texttt{gnuplot} supports output formats through so called {\em terminals}. 
 Among those are several ones intended for inclusion into latex-files, 
-like {\tt Cairolatex}, {\tt Eepic}, {\tt Epslatex}, {\tt Latex}, {\tt Lua}, 
-{\tt Mf}, {\tt Mp}, {\tt Postscript}, {\tt Ps(la)tex}, {\tt Pstricks}, 
-{\tt Texdraw} and {\tt Tpic}. 
-Note that also export into the fig-format via the terminal {\tt Fig} 
+like \texttt{Cairolatex}, \texttt{Eepic}, \texttt{Epslatex}, \texttt{Latex}, \texttt{Lua}, 
+\texttt{Mf}, \texttt{Mp}, \texttt{Postscript}, \texttt{Ps(la)tex}, \texttt{Pstricks}, 
+\texttt{Texdraw} and \texttt{Tpic}. 
+Note that also export into the fig-format via the terminal \texttt{Fig} 
 is supported which in turn may be included in latex 
 as described in Section~\ref{sec:fig2dev}. 
-Also {\tt gnuplot} pictures may be exported in metapost format 
+Also \texttt{gnuplot} pictures may be exported in metapost format 
 which in turn may be included in latex 
 as described in Section~\ref{sec:metapost}. 
 
-This software supports only the export via the terminal {\tt Cairolatex} 
+This software supports only the export via the terminal \texttt{Cairolatex} 
 which offers export to mixed pdf and \LaTeX: 
 graphics in pdf and text in \LaTeX{}
 which yields the fonts typical for \LaTeX{} 
@@ -1021,9 +1025,9 @@ gnuplot -e "set terminal cairolatex pdf <gnuplotOptions>;
             load 'xxx.gp'"
 \end{verbatim}
 %
-exports {\tt xxx.gp} to {\tt xxx.ptx} and to {\tt xxx.pdf}, 
+exports \texttt{xxx.gp} to \texttt{xxx.ptx} and to \texttt{xxx.pdf}, 
 the former containing \LaTeX{} and including the latter 
-using options given by the parameter {\tt gnuplotOptions}. 
+using options given by the parameter \texttt{gnuplotOptions}. 
 As described for exporting fig-files in Section~\ref{sec:fig2dev}, 
 the output must be specified with the full path and without ending. 
 
@@ -1035,17 +1039,17 @@ gnuplot -e "set terminal cairolatex eps <gnuplotOptions>;
             load 'xxx.gp'"
 \end{verbatim}
 %
-exports {\tt xxx.gp} to {\tt xxx.ptx} and to {\tt xxx.eps}, 
+exports \texttt{xxx.gp} to \texttt{xxx.ptx} and to \texttt{xxx.eps}, 
 the former containing \LaTeX{} and including the latter 
-using options given by the parameter {\tt gnuplotOptions}. 
-Note that this writes another but identical file {\tt xxx.ptx}. 
-Thus performance is not optimal, but {\tt gnuplot} offers no way to avoid this. 
-If being strict, {\tt xxx.ptx} is perfectly correct only for output {\tt eps}, 
+using options given by the parameter \texttt{gnuplotOptions}. 
+Note that this writes another but identical file \texttt{xxx.ptx}. 
+Thus performance is not optimal, but \texttt{gnuplot} offers no way to avoid this. 
+If being strict, \texttt{xxx.ptx} is perfectly correct only for output \texttt{eps}, 
 if comments and error messages are taken into account 
-but as long as no error occurs, the result is perfectly ok also for {\tt pdf}. 
+but as long as no error occurs, the result is perfectly ok also for \texttt{pdf}. 
 
 As for inclusion of fig-files, 
-packages {\tt graphicx} and {\tt color} are needed. 
+packages \texttt{graphicx} and \texttt{color} are needed. 
 
 
 %FIXME: 
@@ -1063,15 +1067,19 @@ and the inclusion of graphic files.
 In addition, Figure~\ref{fig:gnuplot} shows an example of a \LaTeX-file 
 created from a gnuplot file 
 and embedded in this \LaTeX-file with the {\tt\textbackslash input}-command. 
-%Note that the {\tt gnuplot}-command is configurable 
-%via the parameter {\tt gnuplotCommand}, 
+%Note that the \texttt{gnuplot}-command is configurable 
+%via the parameter \texttt{gnuplotCommand}, 
 %but there will be hardly any command with the same command line interface 
 %performing exactly the transformations given in Figure~\ref{fig:gp2pdf}, 
-%except {\tt gnuplot} itself. 
+%except \texttt{gnuplot} itself. 
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F4_02gp2pdf.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F4_02gp2pdf.ptx}
+}
 \end{center}
 \caption{\label{fig:gp2pdf}Conversion of a gnuplot-file 
 into pdf-, eps- and ptx-files with inclusions}
@@ -1079,7 +1087,11 @@ into pdf-, eps- and ptx-files with inclusions}
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F4_03someGnuplot.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F4_03someGnuplot.ptx}
+}
 \end{center}
 \caption{\label{fig:gnuplot}
 Converted sample gnuplot-file into ptx and pdf files }
@@ -1088,39 +1100,39 @@ Converted sample gnuplot-file into ptx and pdf files }
 
 \section{Inclusion of Metapost files}\label{sec:metapost}
 
-A graphic format, very native to TeX is {\tt metapost}, 
-a derivative of {\tt metafont} originally used to describe shape of fonts. 
+A graphic format, very native to TeX is \texttt{metapost}, 
+a derivative of \texttt{metafont} originally used to describe shape of fonts. 
 Although seemingly supported by \TeX{} only, 
-{\tt metapost} is interesting at its own, 
+\texttt{metapost} is interesting at its own, 
 as it is a graphical programming language, 
 Turing complete, much like postscript. 
-Files containing {\tt metapost} have the ending {\tt .mp}. 
+Files containing \texttt{metapost} have the ending \texttt{.mp}. 
 Note that there are other graphic formats 
 like monochrome pictures in TIFF-format 
 which are identified with the same extension 
 but the metapost format has nothing to do with this. 
 
-The interpreter for {\tt metapost} 
-is given by the parameter {\tt metapostCommand} 
-which defaults to {\tt mpost}. 
+The interpreter for \texttt{metapost} 
+is given by the parameter \texttt{metapostCommand} 
+which defaults to \texttt{mpost}. 
 
 
-Figure~\ref{fig:mp2mps} illustrates how {\tt mpost} converts an \gls{mp}-file 
-{\tt xxx.mp} by default: 
+Figure~\ref{fig:mp2mps} illustrates how \texttt{mpost} converts an \gls{mp}-file 
+\texttt{xxx.mp} by default: 
 %
 \begin{itemize}
 \item
-into one or more \gls{mps}-files {\tt xxx1.mps}\dots {\tt xxxn.mps}, 
+into one or more \gls{mps}-files \texttt{xxx1.mps}\dots \texttt{xxxn.mps}, 
 (as the mp-file may declare more than one figure) 
 \item
-creating a log-file {\tt xxx.log} much like \LaTeX{} does 
+creating a log-file \texttt{xxx.log} much like \LaTeX{} does 
 \item
-and an \gls{mpx}-file {\tt xxx.mpx} containing the text of the figure. 
+and an \gls{mpx}-file \texttt{xxx.mpx} containing the text of the figure. 
 \end{itemize}
 
 The mps-files look like postscript, or more like encapsulated postscript, 
 but are not completely valid, since the prologue is missing, by default. 
-Inserting the line {\tt prologues := 2;} in the first line of the mp-file 
+Inserting the line \texttt{prologues := 2;} in the first line of the mp-file 
 solves the problem as~\cite{MPost}, Section~14.2.1 explains. 
 Then it can be viewed in ghostscript. 
 
@@ -1133,7 +1145,11 @@ and so the mpx-file is not used by this software.
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F4_04mp2mps.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F4_04mp2mps.ptx}
+}
 \end{center}
 \caption{\label{fig:mp2mps}Conversion of a metapost-file into an mps-file}
 \end{figure}
@@ -1147,13 +1163,17 @@ with the {\tt\textbackslash includegraphics}-command.
 
 \begin{figure}[htb]
 \begin{center}
-%\includegraphics{F4_05someMetapost1.mps}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\includegraphics{F4_05someMetapost1.mps}
+}
 \end{center}
 \caption{\label{fig:metapost}
 Converted sample metapost-file included as mps-file  }
 \end{figure}
 
-Note that {\tt metapostCommand} may also besides \gls{eps} 
+Note that \texttt{metapostCommand} may also besides \gls{eps} 
 output \gls{svg} and \gls{png}, 
 just by setting 
 %
@@ -1162,7 +1182,7 @@ outputformat:="svg"
 \end{verbatim}
 %
 or that like 
-(caution: case sensitive, assuming silently {\tt eps} if not recognized). 
+(caution: case sensitive, assuming silently \texttt{eps} if not recognized). 
 One would also adapt 
 %
 \begin{verbatim}
@@ -1192,7 +1212,7 @@ outputtemplate:="\%j\%c.svg";
 prologues := 3;
 \end{lstlisting}
 
-As an alternative, {\tt mpost} compiler may be invoked with option 
+As an alternative, \texttt{mpost} compiler may be invoked with option 
 %
 \begin{verbatim}
 -s<key>=<value>
@@ -1231,53 +1251,53 @@ which goes beyond what can be included in \LaTeX.
 Figure~\ref{fig:svgWithText} shows a picture in \gls{svg}-format. 
 As pdf-files are included directly 
 via the {\tt\textbackslash includegraphics}-command, 
-using the \LaTeX-packages {\tt xcolor} and {\tt graphicx} 
+using the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx} 
 virtually, 
-{\tt xxx.svg} can be included directly via 
+\texttt{xxx.svg} can be included directly via 
 % FIXME: done differently 
 \begin{verbatim}
 %\includesvg[width=0.5\textwidth]{xxx}%
 \end{verbatim}
 %
-using the \LaTeX-packages {\tt svg} described in~\cite{SvgP}. 
+using the \LaTeX-packages \texttt{svg} described in~\cite{SvgP}. 
 Note that the suffix of the filename shall be omitted. 
 
 A closer look shows, that graphic preprocessing is done behind the scenes 
 in the course of a \LaTeX-run 
-creating files {\tt xxx.pdf} and {\tt xxx.pdf\_tex}. 
+creating files \texttt{xxx.pdf} and \texttt{xxx.pdf\_tex}. 
 As described for fig-files in Section~\ref{sec:fig2dev} 
 and for gnuplot-files in Section~\ref{sec:gnuplot2pdf}: 
 The latter is a latex-file containing text 
 and including the former. 
-To include {\tt xxx.pdf} 
-of course the \LaTeX-packages {\tt xcolor} and {\tt graphicx} 
+To include \texttt{xxx.pdf} 
+of course the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx} 
 are required. 
-Moreover, it may happen that the \LaTeX-package {\tt transparent} 
-is required also, depending on the features used in{\tt xxx.svg}. 
+Moreover, it may happen that the \LaTeX-package \texttt{transparent} 
+is required also, depending on the features used in\texttt{xxx.svg}. 
 
 As indicated in \cite{SvgP}, Section~1, 
-the {\tt svg}-package delegates the transformation 
-of {\tt xxx.svg} {\tt xxx.pdf} and {\tt xxx.pdf\_tex} 
-to {\tt inkscape}. 
+the \texttt{svg}-package delegates the transformation 
+of \texttt{xxx.svg} \texttt{xxx.pdf} and \texttt{xxx.pdf\_tex} 
+to \texttt{inkscape}. 
 This is a graphical editor with export functions 
 which can be invoked in batchmode also. 
-Of course using the {\tt svg}-package has the advantage 
+Of course using the \texttt{svg}-package has the advantage 
 that no explicit preprocessing is required, 
 the created files updated by need. 
 It is worth thinking about whether it is worthwile 
-writing according packages {\tt fig} and {\tt gnuplot}. 
+writing according packages \texttt{fig} and \texttt{gnuplot}. 
 
 On the other hand, 
 this breaks the workflow this software normally applies to graphic files. 
 In particular, the package creates latex main files 
 which are not removed after the latex run 
 if parametrized accordingly or if something goes wrong. 
-Also, the {\tt svg}-package does not provide the full flexibility 
+Also, the \texttt{svg}-package does not provide the full flexibility 
 of a standard solution. 
 Since this software is still under construction 
 and more than that, is in an experimental phase, 
-we provide explicit preprocessing of svg-files using {\tt inkscape}. 
-Another problem with the {\tt svg}-package is, 
+we provide explicit preprocessing of svg-files using \texttt{inkscape}. 
+Another problem with the \texttt{svg}-package is, 
 that according to cite{SvgP}, Section~1, 
 it does not work on windows platforms. 
 
@@ -1290,7 +1310,7 @@ inkscape -D -z --export-pdf=xxx.pdf --export-latex xxx.svg
 \end{Verbatim} 
 %
 Also \cite{SvgIncl}, Section~3 indicates how to input the created file 
-{\tt xxx.pdf\_tex} into the latex document: 
+\texttt{xxx.pdf\_tex} into the latex document: 
 %
 \begin{verbatim}
 \def\svgwidth{0.5\textwidth}
@@ -1308,15 +1328,19 @@ inkscape -D -z --export-eps=xxx --export-latex xxx.svg
 \end{Verbatim} 
 
 Since both the pdf-file and the eps-file are given without suffix, 
-the resulting tex file is not {\tt xxx.pdf\_tex} and {\tt xxx.eps\_tex} 
-but in both cases just {\tt xxx\_tex} 
+the resulting tex file is not \texttt{xxx.pdf\_tex} and \texttt{xxx.eps\_tex} 
+but in both cases just \texttt{xxx\_tex} 
 as illustrated in Figure~\ref{fig:svg2pdf}. 
 To obtain the correct suffixes, 
 after conversion the target files must be moved accordingly. 
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F4_06svg2pdf.ptx}%
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F4_06svg2pdf.ptx}%
+}
 \end{center}
 \caption{\label{fig:svg2pdf}Conversion of an svg-file 
 into pdf-, eps- and ptx-files with inclusions}
@@ -1326,7 +1350,11 @@ into pdf-, eps- and ptx-files with inclusions}
 \begin{figure}[htb]
 \begin{center}
 %\def\svgwidth{0.5\textwidth}
-%\input{F4_07someSvg.ptx}%
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F4_07someSvg.ptx}%
+}
 %%\includesvg[eps,width=0.5\textwidth]{06someSvg}%
 \end{center}
 \caption{\label{fig:svgWithText}Some svg-picture with text FIXME: uniformity  }
@@ -1338,8 +1366,8 @@ into pdf-, eps- and ptx-files with inclusions}
 
 Figure~\ref{fig:asIsJpg} shows some picture included as jpg. 
 This is done as usual with {\tt\textbackslash includegraphics}. 
-Note that both for {\tt pdflatex} and siblings creating pdf-output 
-and for {\tt htlatex} in conjunction with {\tt dvipdfmx} 
+Note that both for \texttt{pdflatex} and siblings creating pdf-output 
+and for \texttt{htlatex} in conjunction with \texttt{dvipdfmx} 
 (see Section~\ref{sec:figpdf}) 
 files in the format pdf, \gls{png}, \gls{jpg} are supported. 
  **** what about \gls{gif}? 
@@ -1347,8 +1375,12 @@ This list may be incomplete.
 
 \begin{figure}[htb]
 \begin{center}
-%\setkeys{Gin}{width=0.9\textwidth}
-%\includegraphics[width=0.9\textwidth]{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\setkeys{Gin}{width=0.9\textwidth}
+\includegraphics[width=0.9\textwidth]{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
+}
 \end{center}
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
 \end{figure}
@@ -1360,7 +1392,11 @@ fixme: at the moment, htlatex does not work with pictures at all.
 
 \begin{figure}[htb]
 \begin{center}
-%\includegraphics[width=0.9\textwidth]{F4_09somePngOboeBaroqueDennerMIR370}%.png
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+  \includegraphics[width=0.9\textwidth]{F4_09somePngOboeBaroqueDennerMIR370}%.png
+}
 \end{center}
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
@@ -1423,17 +1459,17 @@ Master tex-files have the form
 \end{document}
 \end{lstlisting}
 
-To satisfy this task, one may apply a \LaTeX{} to pdf converter {\tt latex2pdf} 
-to a master tex-file {\tt xxx.tex}. 
-The \LaTeX-to-pdf converter {\tt latex2pdf} 
-is configurable via the parameter {\tt latex2pdfCommand}. 
-Possible values are {\tt pdflatex}, {\tt lualatex} and {\tt xelatex}, 
+To satisfy this task, one may apply a \LaTeX{} to pdf converter \texttt{latex2pdf} 
+to a master tex-file \texttt{xxx.tex}. 
+The \LaTeX-to-pdf converter \texttt{latex2pdf} 
+is configurable via the parameter \texttt{latex2pdfCommand}. 
+Possible values are \texttt{pdflatex}, \texttt{lualatex} and \texttt{xelatex}, 
 where the first is the default for which this software is also tested. 
 It is also possible to pass parameters to the \LaTeX{} to pdf converter. 
 
-In fact, the converter {\tt latex2pdf} 
+In fact, the converter \texttt{latex2pdf} 
 does much more than converting tex to pdf. 
-Figure~\ref{fig:tex2pdf} shows for {\tt latex2pdf} set to {\tt pdflatex}, 
+Figure~\ref{fig:tex2pdf} shows for \texttt{latex2pdf} set to \texttt{pdflatex}, 
 that besides the pdf-file also a log-file and an aux-file is created. 
 The log-file contains logging information on the run of the conversion 
 and the aux-file transports information from one run to the next. 
@@ -1444,33 +1480,33 @@ What is in fact in the aux-file depends on the package.
 Among other information, 
 also citations and the location of the bibliography file with ending bib 
 are present. 
-This cannot be used directly in the next {\tt latex2pdf} run 
+This cannot be used directly in the next \texttt{latex2pdf} run 
 to create the bibiography, 
 because the entries must be retrieved from the bib-file, 
 collected and sorted. 
-This is done by invoking {\tt bibtex} between two {\tt latex2pdf} runs. 
-Based on the aux-file, {\tt bibtex} creates a bbl-file 
-containing the bibliography, which is read in in the next {\tt latex2pdf} run. 
+This is done by invoking \texttt{bibtex} between two \texttt{latex2pdf} runs. 
+Based on the aux-file, \texttt{bibtex} creates a bbl-file 
+containing the bibliography, which is read in in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:bibtex}. 
 
-If an index is demanded, in addition {\tt latex2pdf} creates an \gls{idx}-file. 
+If an index is demanded, in addition \texttt{latex2pdf} creates an \gls{idx}-file. 
 As the citations, it cannot be used directly to create an index in
-the next {\tt latex2pdf} run, 
+the next \texttt{latex2pdf} run, 
 because the index entries must be collected and sorted before. 
-This is done by invoking {\tt makeindex} between the two {\tt latex2pdf} runs. 
-Based on the idx-file, {\tt makeindex} creates an \gls{ind}-file 
-containing the index, which is read in in the next {\tt latex2pdf} run. 
+This is done by invoking \texttt{makeindex} between the two \texttt{latex2pdf} runs. 
+Based on the idx-file, \texttt{makeindex} creates an \gls{ind}-file 
+containing the index, which is read in in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:indices}. 
 
 If a glossary is demanded, this can be read off the \gls{aux}-file 
 and a \gls{glo}-file is created. 
 As the index, it cannot be used directly to create a glossary in
-the next {\tt latex2pdf} run, 
+the next \texttt{latex2pdf} run, 
 because the glossary entries must be collected and sorted before. 
-This is done by invoking {\tt makeglossaries} 
-between the two {\tt latex2pdf} runs. 
-Based on the glo-file, {\tt makeglossaries} creates a \gls{gls}-file 
-containing the glossary, which is read in in the next {\tt latex2pdf} run. 
+This is done by invoking \texttt{makeglossaries} 
+between the two \texttt{latex2pdf} runs. 
+Based on the glo-file, \texttt{makeglossaries} creates a \gls{gls}-file 
+containing the glossary, which is read in in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:glossaries}. 
 
 In addition, 
@@ -1479,7 +1515,7 @@ also a toc-file, a lof-file and a lot-file is created
 collecting the according information. 
 If such a file is present, it is read in 
 and is used to create a table of contents, a list of figures and of tables 
-in the second run of {\tt latex2pdf}. 
+in the second run of \texttt{latex2pdf}. 
 
 To summarize, 
 if a table of contents, a list of figures, a list of tables or 
@@ -1494,12 +1530,16 @@ occurs in the pdf-file but not yet in the table of contents.
 This happens after the second additional \LaTeX{} run. 
 As described in Sections~\ref{sec:rerunMakeIndexGlossaries} and 
 \ref{sec:rerunLatex}, 
-further runs of {\tt makeindex}, {\tt makeglossaries} 
-and of the \LaTeX-processor {\tt latex2pdf} may be necessary. 
+further runs of \texttt{makeindex}, \texttt{makeglossaries} 
+and of the \LaTeX-processor \texttt{latex2pdf} may be necessary. 
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F5_01tex2pdf.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F5_01tex2pdf.ptx}
+}
 \end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file 
 (accordingly into a dvi-file)}
@@ -1513,13 +1553,13 @@ Bibliographic information are
 citations, a link to the bib-file containing the bibliography data, 
 and optionally a link to the bibliography style file. 
 
-To create a bibliography, a {\tt bibtex}-command must be run after the \LaTeX{} run. 
-Essentially, {\tt bibtex} extracts the citations in the aux-file, 
+To create a bibliography, a \texttt{bibtex}-command must be run after the \LaTeX{} run. 
+Essentially, \texttt{bibtex} extracts the citations in the aux-file, 
 unifies them, 
 retrieves the according entries from the bib-file, sorts these 
 and writes them into a bbl-file 
-which can be included in the next run of {\tt latex2pdf}. 
-Note that after a {\tt bibtex}-run, 
+which can be included in the next run of \texttt{latex2pdf}. 
+Note that after a \texttt{bibtex}-run, 
 two \LaTeX{} runs are required: 
 The first one just puts the bibliography in the bbl-file into the pdf-file 
 and the labels of the citations into the aux-file. 
@@ -1527,39 +1567,43 @@ The second run places the labels at the citations
 (and puts the bibiliography
 into the table of contents if there is one). 
 
-This software presupposes, that {\tt bibtex} reads the aux-file 
+This software presupposes, that \texttt{bibtex} reads the aux-file 
 and creates a bbl-file and also an blg-file with logging output 
 as illustrated by Figure~\ref{fig:aux2bbl}. 
 From the blg-file this software may determine 
-whether {\tt bibtex} emitted an error or warnings. 
+whether \texttt{bibtex} emitted an error or warnings. 
 
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F5_02aux2bbl.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F5_02aux2bbl.ptx}
+}
 \end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
 \end{figure}
 
-Vital information on {\tt bibtex} can be found in~\cite{BibPat} 
+Vital information on \texttt{bibtex} can be found in~\cite{BibPat} 
 and in~\cite{BibMar}. 
-Also Chapter 10 in~\cite{Gra} gives vital information on {\tt bibtex}. 
+Also Chapter 10 in~\cite{Gra} gives vital information on \texttt{bibtex}. 
 
 
 \section{Indices}\label{sec:indices}
 
 Note that despite of the headline of this section, 
 this software supports a single index only and this requires 
-the package {\tt makeidx} described in~\cite{MkidxShIdxP}. 
+the package \texttt{makeidx} described in~\cite{MkidxShIdxP}. 
 For an extension see Chapter~\ref{chap:gaps}. 
 
 Interesting enough, 
 the commands {\tt\textbackslash index} and {\tt\textbackslash makeindex} 
-work even without using the package {\tt makeidx}. 
+work even without using the package \texttt{makeidx}. 
 The former essentially does nothing without the latter
-but if the latter is present, if {\tt xxx.tex} is the \LaTeX{} main file, 
-the former writes an according entry in a file {\tt xxx.idx}. 
+but if the latter is present, if \texttt{xxx.tex} is the \LaTeX{} main file, 
+the former writes an according entry in a file \texttt{xxx.idx}. 
 Essentially, 
 {\tt\textbackslash makeindex} prepares writing to the \gls{idx}-file, 
 whereas {\tt\textbackslash index} performs writing a line. 
@@ -1569,25 +1613,25 @@ For example {\tt\textbackslash index\{ant-task\}} creates an entry
 \textbackslash indexentry\{ant-task|hyperpage\}\{3\}
 \end{verbatim}
 %
-in {\tt xxx.idx}. 
-Note that {\tt xxx.idx} typically contains entries more than once 
+in \texttt{xxx.idx}. 
+Note that \texttt{xxx.idx} typically contains entries more than once 
 and that the entries are not sorted. 
  
-Running, the {\tt makeindex}-command performs sorting, formatting 
+Running, the \texttt{makeindex}-command performs sorting, formatting 
 and typically also unification. 
-Essentially, {\tt makeindex} sorts and combines index entries. 
-This software presupposes, that {\tt makeindex} converts the idx-file 
+Essentially, \texttt{makeindex} sorts and combines index entries. 
+This software presupposes, that \texttt{makeindex} converts the idx-file 
 into an ind-file containing the index 
 and creating also an ilg-file with logging output 
 as shown in Figure~\ref{fig:idx2ind}. 
 From the ilg-file this software may determine 
-whether {\tt makeindex} emitted an error or warnings. 
+whether \texttt{makeindex} emitted an error or warnings. 
 
-The package {\tt makeidx} provides a single command, 
+The package \texttt{makeidx} provides a single command, 
 {\tt\textbackslash printindex} which reads in the ind-file 
 and prints the index in a separate section, 
 typically at the end of the pdf-file. 
-The package {\tt tocbibind} described in~\cite{TocBibIndP}, 
+The package \texttt{tocbibind} described in~\cite{TocBibIndP}, 
 then writes the headline of the index into the table of contents. 
 \index{table of contents}
 
@@ -1597,21 +1641,25 @@ an index must be generated.
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F5_03idx2ind.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F5_03idx2ind.ptx}
+}
 \end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
 
 It is possible to configure the makeindex-command 
 and to pass arbitrary options. 
-CAUTION: For the usual {\tt makeindex}-command, 
-the options {\tt -o} specifying an output file 
-and {\tt -t} (transcript) specifying the logging file are not allowed, 
+CAUTION: For the usual \texttt{makeindex}-command, 
+the options \texttt{-o} specifying an output file 
+and \texttt{-t} (transcript) specifying the logging file are not allowed, 
 because this breaks the expectation to find the sorted index 
-in file {\tt xxx.ind} 
+in file \texttt{xxx.ind} 
 and bypasses the detection of errors and warnings of this software, 
 respectively. 
-Also specifying a style file via option {\tt -s} 
+Also specifying a style file via option \texttt{-s} 
 is not recommended because this is used to create a glossary 
 and so breaks glossary creation 
 as described in Section~\ref{sec:glossaries}. 
@@ -1619,21 +1667,21 @@ as described in Section~\ref{sec:glossaries}.
 Information on the makeindex program can be found in~\cite{MkIdxMoe} 
 and in~\cite{MkIdxLam}. 
 Also there is a site~\cite{MakeIdxOpts} 
-describing all available options for {\tt makeindex}. 
+describing all available options for \texttt{makeindex}. 
 
 
 
 \section{Glossaries}\label{sec:glossaries}
 
 Creating glossaries 
-requires the package {\tt glossaries} described in~\cite{GloP}. 
+requires the package \texttt{glossaries} described in~\cite{GloP}. 
 Note that despite of the headline of this section, 
-an despite {\tt glossaries} itself supports multiple glossaries, 
+an despite \texttt{glossaries} itself supports multiple glossaries, 
 this software supports only a single glossary 
 and also sorting and unifying is done 
-either via {\tt makeindex} as for indices or via {\tt xindy}, 
+either via \texttt{makeindex} as for indices or via \texttt{xindy}, 
 whereas the option to do without external programs 
-offered also by package {\tt glossaries} 
+offered also by package \texttt{glossaries} 
 is not supported by this software. 
 
 For generalizations see Chapter~\ref{chap:gaps}. 
@@ -1642,34 +1690,34 @@ As for creating indices there is a \LaTeX-command {\tt\textbackslash makeindex},
 to create a glossary there is a \LaTeX-command 
 {\tt\textbackslash makeglossaries} 
 but the latter is not builtin as {\tt\textbackslash makeindex} 
-but provided by the package {\tt glossaries}. 
-If {\tt xxx.tex} is the \LaTeX{} main file, 
-{\tt\textbackslash makeglossaries} opens the glo-file {\tt xxx.glo} 
+but provided by the package \texttt{glossaries}. 
+If \texttt{xxx.tex} is the \LaTeX{} main file, 
+{\tt\textbackslash makeglossaries} opens the glo-file \texttt{xxx.glo} 
 containing glossary entries for writing. 
 As the builtin command {\tt\textbackslash index} 
 writes entries into the idx-file defining the index, 
-the command {\tt\textbackslash gls} defined by the package {\tt glossaries} 
+the command {\tt\textbackslash gls} defined by the package \texttt{glossaries} 
 writes an entry into the glo-file. 
-Note that {\tt xxx.glo} typically contains entries more than once 
+Note that \texttt{xxx.glo} typically contains entries more than once 
 and that the entries are not sorted. 
 
 To perform sorting, formatting and typically also unification, 
-the package {\tt glossaries} allows three mechanisms. 
+the package \texttt{glossaries} allows three mechanisms. 
 This software supports two of them: 
-via the shell command {\tt makeindex}, which is also used for indices, 
-and via the shell command {\tt xindy}. 
-Using {\tt makeindex} is the default but can also be activated through 
+via the shell command \texttt{makeindex}, which is also used for indices, 
+and via the shell command \texttt{xindy}. 
+Using \texttt{makeindex} is the default but can also be activated through 
 {\tt\textbackslash usepackage[makeindex]\{glossaries\}}. 
-Using {\tt xindy} is triggered through 
+Using \texttt{xindy} instead of \texttt{makeindex} is triggered through 
 {\tt\textbackslash usepackage[xindy]\{glossaries\}}. 
-Accordingly, for {\tt makeindex} the aux-file receives lines 
+Accordingly, for \texttt{makeindex} the aux-file receives lines 
 %
 \begin{verbatim}
 \providecommand\@istfilename[1]{}
 \@istfilename{manualLatexMavenPlugin.ist}
 \end{verbatim}
 %
-whereas for {\tt xindy}, there are lines 
+whereas for \texttt{xindy}, there are lines 
 %
 \begin{verbatim}
 \providecommand\@istfilename[1]{}
@@ -1683,41 +1731,41 @@ whereas for {\tt xindy}, there are lines
 
 
 
-This software neither invokes {\tt makeindex} nor {\tt xindy} directly. 
-Instead it invokes the shell command {\tt makeglossaries}
+This software neither invokes \texttt{makeindex} nor \texttt{xindy} directly. 
+Instead it invokes the shell command \texttt{makeglossaries}
 invoked without file ending  
 which determines from the aux-file 
-whether to invoke {\tt makeindex} nor {\tt xindy}. 
+whether to invoke \texttt{makeindex} nor \texttt{xindy}. 
 Accordingly, it writes the style definition 
-by creating an ist-file {\tt xxx.ist} or an xdy-file {\tt xxx.xdy} 
-if {\tt makeindex} or {\tt xindy} is specified as package option, 
+by creating an ist-file \texttt{xxx.ist} or an xdy-file \texttt{xxx.xdy} 
+if \texttt{makeindex} or \texttt{xindy} is specified as package option, 
 respectively. 
 
-Seemingly, {\tt makeglossaries} relies on the aux-file 
-to determine whether to invoke {\tt makeindex} or {\tt xindy} 
+Seemingly, \texttt{makeglossaries} relies on the aux-file 
+to determine whether to invoke \texttt{makeindex} or \texttt{xindy} 
 for sorting and unification. 
 Then it invokes the according command and writes a log-file 
-with ending {\tt glg}, 
-redirecting the logging output of {\tt makeindex} or {\tt xindy} 
+with ending \texttt{glg}, 
+redirecting the logging output of \texttt{makeindex} or \texttt{xindy} 
 adding own output so that a glg-file may be written, 
-even if e.g. {\tt makeindex} is invoked and does not. 
+even if e.g. \texttt{makeindex} is invoked and does not. 
 In any case, if the glg-file is written, 
-{\tt makeglossaries} writes text matching 
+\texttt{makeglossaries} writes text matching 
 %
 \begin{verbatim}
 (^\*\*\* unable to execute: )
 \end{verbatim}
 %
 in the glg-file if an error occurs, 
-no matter whether {\tt makeindex} or {\tt xindy} is invoked. 
+no matter whether \texttt{makeindex} or \texttt{xindy} is invoked. 
 Possibly, there are cases where an error causes no glg-file to be written. 
 If no error occurs, a glg-file is written 
 and if warnings are emitted, 
-they either come from {\tt makeindex} or from {\tt xindy}. 
+they either come from \texttt{makeindex} or from \texttt{xindy}. 
 Thus warnings may be detected with the patterns 
-defined by {\tt makeindex} and by {\tt xindy}. 
+defined by \texttt{makeindex} and by \texttt{xindy}. 
 
-The style {\tt list} (which is the default) is set in the form 
+The style \texttt{list} (which is the default) is set in the form 
 %
 \begin{verbatim}
 \usepackage[style=list]{glossaries}
@@ -1725,35 +1773,39 @@ The style {\tt list} (which is the default) is set in the form
 %
 where~\cite{GloP}, Section~15 lists predefined styles. 
 So, the style determines the content of the style definition, 
-whereas the options {\tt makeindex} and {\tt xindy} 
+whereas the options \texttt{makeindex} and \texttt{xindy} 
 specify the form in which the style is encoded 
-and thus the ending of the style file, which is either {\tt ist} or {\tt xdy}. 
+and thus the ending of the style file, which is either \texttt{ist} or \texttt{xdy}. 
 
 Sorting the glo-file, as said above, 
-currently is only supported using {\tt makeglossaries}. 
+currently is only supported using \texttt{makeglossaries}. 
 The allowed options are essentially those 
-making sense for {\tt makeindex} and those making sense for {\tt xindy}. 
-If the shell command {\tt makeglossaries} 
-invokes {\tt makeindex} of course only the according options 
+making sense for \texttt{makeindex} and those making sense for \texttt{xindy}. 
+If the shell command \texttt{makeglossaries} 
+invokes \texttt{makeindex} of course only the according options 
 are passed supplemented by additional options 
-{\tt -s}, {\tt -t}, {\tt -o}, to specify the
+\texttt{-s}, \texttt{-t}, \texttt{-o}, to specify the
 ist-file, the log-file (the transcript-file) and the gls-file 
 which is the result of sorting, the output file, 
 and contains the entries of the glo-file 
 just sorted, formatted and unified. 
-Accordingly, if the shell command {\tt makeglossaries} 
-invokes {\tt xindy} of course only the according options 
+Accordingly, if the shell command \texttt{makeglossaries} 
+invokes \texttt{xindy} of course only the according options 
 are passed supplemented by additional options 
-{\tt -M}, {\tt -t}, {\tt -o}. 
+\texttt{-M}, \texttt{-t}, \texttt{-o}. 
 This is illustrated in Figure~\ref{fig:glo2gls}. 
 
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F5_04glo2gls.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F5_04glo2gls.ptx}
+}
 \end{center}
 \caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
-using {\tt makeglossaries}}
+using \texttt{makeglossaries}}
 \end{figure}
 
 
@@ -1761,7 +1813,7 @@ using {\tt makeglossaries}}
 \label{sec:rerunMakeIndexGlossaries}
 
 As described in Section~\ref{sec:tex2pdf}, 
-running a \LaTeX-to-pdf converter as {\tt latex2pdf} 
+running a \LaTeX-to-pdf converter as \texttt{latex2pdf} 
 may detect the presence of a bibliography, an index and/or of a glossary 
 and writes raw files to describe them. 
 After that, an intermediate step is required, 
@@ -1775,7 +1827,7 @@ of the entries of the index or of the glossary.
 Thus the sorted index and glossary must be rebuild 
 before the next \LaTeX{} run makes them visible in the pdf-file. 
 
-To that end, we use the package {\tt rerunfilecheck}. 
+To that end, we use the package \texttt{rerunfilecheck}. 
 %
 \begin{verbatim}
 \usepackage[index, glossary]{rerunfilecheck}
@@ -1795,7 +1847,7 @@ must be put before
 in particular before {\tt\textbackslash makeindex} and 
 {\tt\textbackslash makeglossaries}. 
 
-Note that the package {\tt hyperref} already loads {\tt rerunfilecheck} 
+Note that the package \texttt{hyperref} already loads \texttt{rerunfilecheck} 
 but with the wrong options. 
 Thus the above declaration must come before 
 %
@@ -1810,11 +1862,11 @@ Option clash for package rerunfilecheck
 \end{verbatim}
 
 
-Package {\tt rerunfilecheck} detects almost safely 
+Package \texttt{rerunfilecheck} detects almost safely 
 changes of the raw index file writing an according message 
 into the log-file. 
 That way, it can be determined whether it is necessary 
-to rerun {\tt makeindex} and {\tt makeglossaries}. 
+to rerun \texttt{makeindex} and \texttt{makeglossaries}. 
 After that, of course \LaTeX{} must be rerun at least once. 
 Note that Section~\ref{sec:rerunLatex} describes 
 when to rerun \LaTeX{} without prior running *****
@@ -1824,26 +1876,26 @@ when to rerun \LaTeX{} without prior running *****
 FIXME: a word on change in toc, lof and lot. 
 
 As indicated in the previous sections, 
-{\tt latex2pdf} must be rerun, 
-if {\tt bibtex} or {\tt makeindex} or {\tt makeglossaries} had been run 
-to read in the bibliography created by {\tt bibtex} 
-or the index created by {\tt makeindex} 
-or the glossary created by {\tt makeglossaries}. 
+\texttt{latex2pdf} must be rerun, 
+if \texttt{bibtex} or \texttt{makeindex} or \texttt{makeglossaries} had been run 
+to read in the bibliography created by \texttt{bibtex} 
+or the index created by \texttt{makeindex} 
+or the glossary created by \texttt{makeglossaries}. 
 Likewise, if a toc-file, a lof-file or a lot-file 
-had been created in the first {\tt latex2pdf} run, 
+had been created in the first \texttt{latex2pdf} run, 
 another run is needed to read in these files 
 to create a table of contents, a list of figures or a list of tables, 
 respectively. 
 Note that for all these cases, 
-the log-file does not allow to detect that {\tt latex2pdf} has to be rerun, 
+the log-file does not allow to detect that \texttt{latex2pdf} has to be rerun, 
 by matching a fixed pattern. 
 
-After the second run of {\tt latex2pdf}, 
+After the second run of \texttt{latex2pdf}, 
 the table of contents, the list of figures and the list of tables 
 are included and a section with the bibliography, 
 the index and the glossary are
 inserted. 
-It takes a thtird run of {\tt latex2pdf} 
+It takes a thtird run of \texttt{latex2pdf} 
 to include the bibliography the index and the glossary 
 into the table of contents. 
 Also it takes that third run to replace the citations 
@@ -1851,20 +1903,20 @@ with the proper labels given in the bibliography.
 
 Inserting the table of contents, the list of figures and the list of tables 
 which may shift the subsequent text 
-which may require another run of {\tt latex2pdf} 
+which may require another run of \texttt{latex2pdf} 
 to get the page numbers right. 
 As described in Section~\ref{sec:rerunMakeIndexGlossaries} 
-intermediate runs of {\tt makeindex} and {\tt makeglossaries} 
+intermediate runs of \texttt{makeindex} and \texttt{makeglossaries} 
 may be required 
-and these also require another run of {\tt latex2pdf} 
+and these also require another run of \texttt{latex2pdf} 
 also to get the page numbers right. 
-The package {\tt rerunfileckeck} allows to detect this need to rerun 
+The package \texttt{rerunfileckeck} allows to detect this need to rerun 
 by pattern matching on the log-file almost for sure: 
 Still there is some chance 
 that the lengths and the md5-sum of all relevant files 
 remain the same, although there is a relevant change. 
 In this case, this software fails to update 
-triggering another {\tt latex2pdf} run. 
+triggering another \texttt{latex2pdf} run. 
 
 
 Note that there are several packages which require additional runs, 
@@ -1877,68 +1929,72 @@ also the pattern cannot be fixed.
 Thus it is configurable. 
 
 Note that, if a package requires running other programs 
-between two runs of {\tt latex2pdf}, 
+between two runs of \texttt{latex2pdf}, 
 this would require a change in this software. 
 
 
 \section{Creating hypertext}\label{sec:tex2html}
 
 To create html and xhtml from \LaTeX-files, 
-a {\tt htlatex}-command is used. 
-This may be {\tt htlatex}, the default based on {\tt latex} 
-and {\tt htxelatex} based on {\tt xelatex}. 
+a \texttt{htlatex}-command is used. 
+This may be \texttt{htlatex}, the default based on \texttt{latex} 
+and \texttt{htxelatex} based on \texttt{xelatex}. 
 
-Figure~\ref{fig:tex2xml} shows the steps {\tt htlatex} performs: 
-From the input \LaTeX-file {\tt xxx.tex} 
-another \LaTeX-file {\tt yyy.tex} is created 
-which arises from {\tt xxx.tex} by adding 
-{\tt \textbackslash usepackage[\ldots]\{tex4ht\}}. 
-Then {\tt htlatex} runs {\tt latex} on {\tt yyy.tex} 
-which results in {\tt yyy.dvi}. 
-Note that this is in contrast to {\tt pdflatex} 
-which would create some {\tt yyy.pdf}. 
+Figure~\ref{fig:tex2xml} shows the steps \texttt{htlatex} performs: 
+From the input \LaTeX-file \texttt{xxx.tex} 
+another \LaTeX-file \texttt{yyy.tex} is created 
+which arises from \texttt{xxx.tex} by adding 
+\texttt{\textbackslash usepackage[\ldots]\{tex4ht\}}. 
+Then \texttt{htlatex} runs \texttt{latex} on \texttt{yyy.tex} 
+which results in \texttt{yyy.dvi}. 
+Note that this is in contrast to \texttt{pdflatex} 
+which would create some \texttt{yyy.pdf}. 
 
-Then comes the converter {\tt tex4ht} into the game 
-which creates several html-files among those also {\tt xxx.html}. 
-The other files, {\tt yyy.idv} and {\tt yyy.lg}, 
-are further processed by {\tt t4ht} 
-creating the stylesheet {\tt xxx.css} and graphic files. 
+Then comes the converter \texttt{tex4ht} into the game 
+which creates several html-files among those also \texttt{xxx.html}. 
+The other files, \texttt{yyy.idv} and \texttt{yyy.lg}, 
+are further processed by \texttt{t4ht} 
+creating the stylesheet \texttt{xxx.css} and graphic files. 
 
 The output of TeX is a standard \gls{dvi}-file 
 interleaved with special instructions for the postprocessor tex4ht to use. 
 The special instructions come from implicit and explicit requests 
 made in the source file through commands of TeX4ht.
 
-The utility {\tt tex4ht} translates the dvi-code into standard text, 
+The utility \texttt{tex4ht} translates the dvi-code into standard text, 
 while obeying the requests it gets from the special instructions. 
 The special instructions may request the creation of files, 
 insertion of html code, filtering of pictures, and so forth. 
 In the extreme case that the source code contains no commands of TeX4ht, 
-{\tt tex4ht} gets pure dvi-code and it outputs (almost) plain text 
+\texttt{tex4ht} gets pure dvi-code and it outputs (almost) plain text 
 with no hypertext elements in it.
 
 The special ({\tt\textbackslash special}) instructions seeded in the dvi-code 
 are not understood by dvi processors other than those of TeX4ht.
 
 
-{\tt xxx.idv}
-This is a dvi-file extracted from {\tt xxx.dvi}, 
+\texttt{xxx.idv}
+This is a dvi-file extracted from \texttt{xxx.dvi}, 
 and it contains the pictures needed in the html files.
 
-{\tt xxx.lg}
-This is a log file listing the pictures of {\tt xxx.idv}, 
+\texttt{xxx.lg}
+This is a log file listing the pictures of \texttt{xxx.idv}, 
 the \gls{png} files that should be created, CSS information, 
 and user directives introduced 
 through the ``{\tt\textbackslash Needs\{\ldots\}}'' command.
 
 
-{\tt t4ht}
+\texttt{t4ht}
 This is an interpreter 
-for executing the requests made in the {\tt xxx.lg} script.
+for executing the requests made in the \texttt{xxx.lg} script.
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F5_05tex2xml.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F5_05tex2xml.ptx}
+}
 \end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -2114,7 +2170,7 @@ Note --- to ensure proper alignments use fixed size fonts (see listings.dtx
 )
 \end{Verbatim}
 
-{\tt tex4ht} yields 
+\texttt{tex4ht} yields 
 
 \begin{Verbatim}[fontsize=\scriptsize]
 ----------------------------
@@ -2143,7 +2199,7 @@ tex4ht [-f<path-separator-ch>]in-file[.dvi]
 \end{Verbatim}
 
 
-{\tt t4ht} yields 
+\texttt{t4ht} yields 
 
 \begin{Verbatim}[fontsize=\footnotesize]
 --------------------------------------------------------------------
@@ -2176,14 +2232,18 @@ Example:
 The best way to convert \LaTeX-files into MS word files is via odt files. 
 Conversion from \LaTeX{} to odt 
 is already described in Section~\ref{sec:tex2odt}. 
-The last step can be done by {\tt odt2doc} which can create both 
+The last step can be done by \texttt{odt2doc} which can create both 
 doc-format and docx-format and many others 
 which is illustrated in Figure~\ref{fig:tex2doc}. 
 
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F5_06tex2doc.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F5_06tex2doc.ptx}
+}
 \end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -2210,17 +2270,21 @@ This creates an appropriate pdf-file,
 with correct numberings and links, 
 possibly with overfull boxes and that like. 
 As a final step, we convert the pdf-file into a text file 
-using, as a default {\tt pdftotext} with ending {\tt txt}. 
+using, as a default \texttt{pdftotext} with ending \texttt{txt}. 
 Figure~\ref{fig:tex2txt} illustrates the translation process. 
 
 \begin{figure}[htb]
 \begin{center}
-%\input{F5_07tex2txt.ptx}
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\input{F5_07tex2txt.ptx}
+}
 \end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
 
-Note that {\tt pdftotext} produces a text file with page numbers 
+Note that \texttt{pdftotext} produces a text file with page numbers 
 and signifies the end of a page 
 (to see how, just have a look at the end of the file), 
 so that one can identify page numbers as such. 
@@ -2228,7 +2292,7 @@ Thus references, index, glossary, table of contents and that like
 referring to page numbers carry valuable information. 
 Also symbols available in utf8 encoding are preserved. 
 In contrast, heavily stacked formulae become unreadable, 
-because {\tt pdftotext} displays them line by line 
+because \texttt{pdftotext} displays them line by line 
 and drops fraction bars completely. 
 Also formulae with complex subformulae in a root operator  
 become unreadable because the root operator becomes just a root symbol. 
@@ -2255,12 +2319,12 @@ Each of the tables is described in a separate section.
 Table~\ref{tab:paramGen} 
 shows parameter controlling the general conversion process 
 described in detail in Section~\ref{sec:settingsGen}. 
-These are directories with names {\tt xxxDirectory} 
+These are directories with names \texttt{xxxDirectory} 
 and further parameters not following a naming convention. 
 The other tables show parameters after a certain naming scheme: 
-Command names have the form {\tt xxxCommand} 
-and the parameter with the according options have the form {\tt xxxOptions}. 
-Here {\tt xxx} represents a certain converter. 
+Command names have the form \texttt{xxxCommand} 
+and the parameter with the according options have the form \texttt{xxxOptions}. 
+Here \texttt{xxx} represents a certain converter. 
 This is one of 
 %
 \begin{itemize}
@@ -2292,17 +2356,17 @@ The converter of pdf-files into txt-files.
 It is a little more complicated 
 with the parameters in Section~\ref{sec:settingsLatex2Html}. 
 
-There are some parameters of the form {\tt patternXxxYyy}, 
-referring to a pattern in the log-file of the converter {\tt Xxx} 
-indicating an event {\tt Yyy} which is one of the following: 
+There are some parameters of the form \texttt{patternXxxYyy}, 
+referring to a pattern in the log-file of the converter \texttt{Xxx} 
+indicating an event \texttt{Yyy} which is one of the following: 
 %
 \begin{itemize}
 \item[ReRun]
-indicates that {\tt Xxx} needs to be rerun.
+indicates that \texttt{Xxx} needs to be rerun.
 \item[Err]
-indicates that {\tt Xxx} had an error. 
+indicates that \texttt{Xxx} had an error. 
 \item[Warn]
-indicates that {\tt Xxx} had a warning. 
+indicates that \texttt{Xxx} had a warning. 
 \end{itemize}
 
 Essentially, there are two kinds of parameters: 
@@ -2340,7 +2404,7 @@ The tex source directory as a string,
 containing all tex main documents 
 (including subfolders) to be processed
 relative to {\tt\$baseDirectory}. 
-The default value is '{\tt src/site/tex}' on Unix systems. 
+The default value is '\texttt{src/site/tex}' on Unix systems. 
 \end{minipage}
 } \\
 \tt readTexSrcDirRec  & \tt tru  \\
@@ -2349,7 +2413,7 @@ The default value is '{\tt src/site/tex}' on Unix systems.
 Whether the tex source directory {\tt\$texSrcDirectory} 
 shall be read recursively, 
 i.e. including the subdirectories recursively. 
-This is set to {\tt false} only during information development. 
+This is set to \texttt{false} only during information development. 
 %The default value is 'true'.
 \end{minipage}
 } \\
@@ -2358,7 +2422,7 @@ This is set to {\tt false} only during information development.
 \tt outputDirectory  & \tt.             \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The generated artifacts will be copied to {\tt outputDirectory}
+The generated artifacts will be copied to \texttt{outputDirectory}
 relative to {\tt\$targetSiteDirectory} 
 which is by default '{\tt\$targetDirectory/site}' on Unix systems. 
 %The default value is '{\tt.}'.  
@@ -2368,7 +2432,7 @@ which is by default '{\tt\$targetDirectory/site}' on Unix systems.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 A comma separated list of targets to be stored in {\tt\$targetSet}. 
-%The default value is '{\tt pdf, html}'. 
+%The default value is '\texttt{pdf, html}'. 
 \end{minipage}
 } \\
 \tt patternLatexMainFile   & see Section~\ref{subsec:patternLatexMainFile}\\
@@ -2407,17 +2471,17 @@ The default value is null.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Clean up the working directory in the end? 
-May be used for debugging when setting {\tt false}. 
-%The default value is '{\tt true}'. 
+May be used for debugging when setting \texttt{false}. 
+%The default value is '\texttt{true}'. 
 \end{minipage}
 } \\
 \tt patternCreatedFromLatexMain & see Section~\ref{subsec:patternCreatedFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 This pattern shall accept all the files 
-which were created from a latex main file `{\tt xxx.tex}'. 
+which were created from a latex main file `\texttt{xxx.tex}'. 
 It is neither applied to directories 
-nor to `{\tt xxx.tex}' itself. 
+nor to `\texttt{xxx.tex}' itself. 
 It shall not comprise neither graphic files to be processed 
 nor files created from those graphic files. 
 
@@ -2436,13 +2500,13 @@ first those created from latex main files.
 As an approximation, 
 those are removed which match this pattern. 
 
-The sequence '{\tt T\$T}' 
-is replaced by the prefix '{\tt xxx}'. 
-The sequence '{\tt T\$T}' must always be replaced: 
+The sequence '\texttt{T\$T}' 
+is replaced by the prefix '\texttt{xxx}'. 
+The sequence '\texttt{T\$T}' must always be replaced: 
 The symbol '{\tt\$}' occurs as end-sign as '{\tt)\$}' 
 or as literal symbol as '{\tt\$}'. 
-Thus '{\tt T\$T}' is no regular occurrence 
-and must always be replaced with '{\tt xxx}'. 
+Thus '\texttt{T\$T}' is no regular occurrence 
+and must always be replaced with '\texttt{xxx}'. 
 		 
 Spaces and newlines are removed 
 from that pattern before matching. 
@@ -2450,10 +2514,10 @@ from that pattern before matching.
 The default value 
 '{\tt\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
 is appropriate for most parameters and packages. 
-Package '{\tt srcltx}' 
+Package '\texttt{srcltx}' 
 requires in addition 
 '{\tt\^{}T\$T\textbackslash.synctex\textbackslash.gz}' 
-and package '{\tt tex4ht}' is for all the rest. 
+and package '\texttt{tex4ht}' is for all the rest. 
 The pattern is designed 
 to match quite exactly the created files, 
 not much more and at any case not less. 
@@ -2470,7 +2534,7 @@ Then the default value will be extended.
 \end{longtable}
 
 
-\subsection{The parameter {\tt patternLatexMainFile}}
+\subsection{The parameter \texttt{patternLatexMainFile}}
 \label{subsec:patternLatexMainFile}
 
 The default pattern for identifying a \LaTeX{} main file is 
@@ -2529,11 +2593,11 @@ Latex main files are marked with an end section as this file:
 %%% End: 
 \end{Verbatim}
 % 
-The vital line in this context is {\tt \%\%\% TeX-master: t}. 
+The vital line in this context is \texttt{\%\%\% TeX-master: t}. 
 In contrast to this, a non-master file 
 either has no end-section at all or has an end section 
 declaring the according master file (if it is unique) 
-explicitly as the following one from {\tt header.tex}: 
+explicitly as the following one from \texttt{header.tex}: 
 %
 \begin{verbatim}
 %%% Local Variables:
@@ -2555,7 +2619,7 @@ The problem is only in case of exchange of the source
 with a developer which does not use emacs/auctex. 
 
 
-\subsection{The parameter {\tt patternCreatedFromLatexMain}}
+\subsection{The parameter \texttt{patternCreatedFromLatexMain}}
 \label{subsec:patternCreatedFromLatexMain}
 
 The default value for this pattern is as follows: 
@@ -2596,8 +2660,8 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The fig2dev command for conversion of fig-files into various formats. 
-Currently only {\tt pdf} combined with {\tt ptx} is supported. 
-%The default value is '{\tt fig2dev}'. 
+Currently only \texttt{pdf} combined with \texttt{ptx} is supported. 
+%The default value is '\texttt{fig2dev}'. 
 \end{minipage}
 } \\
 \tt fig2devGenOptions   & empty     \\
@@ -2606,7 +2670,7 @@ Currently only {\tt pdf} combined with {\tt ptx} is supported.
 The options for the command {\tt\$fig2devCommand} 
 common to both output languages. 
 For the options specific for the two output langugages 
-`{\tt pdftex}' and `{\tt pdftex\_t}', 
+`\texttt{pdftex}' and `\texttt{pdftex\_t}', 
 see the explanation of the parameters 
 {\tt\$fig2devPtxOptions} and {\tt\$fig2devPdfEpsOptions}, 
 respectively. 
@@ -2617,12 +2681,12 @@ respectively.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$fig2devCommand} 
-specific for the output language `{\tt pdftex\_t}'. 
+specific for the output language `\texttt{pdftex\_t}'. 
 Note that in addition to these options, 
 the option `{\tt-L pdftex\_t}' specifies the language, 
 {\tt\$fig2devGenOptions} specifies the options 
 common for the two output langugages 
-`{\tt pdftex}' and `{\tt pdftex\_t}' 
+`\texttt{pdftex}' and `\texttt{pdftex\_t}' 
 and `{\tt-p xxx.pdf}' specifies the pdf-file to be included. 
 % The default value for this option is the empty string. 
 \end{minipage}
@@ -2631,12 +2695,12 @@ and `{\tt-p xxx.pdf}' specifies the pdf-file to be included.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command {\tt\$fig2devCommand} 
-specific for the output language `{\tt pdftex}'. 
+specific for the output language `\texttt{pdftex}'. 
 Note that in addition to these option1s, 
-the option `{\tt -L pdftex}' specifies the language and 
+the option `\texttt{-L pdftex}' specifies the language and 
 {\tt\$fig2devGenOptions} specifies the options 
 common for the two output langugages 
-`{\tt pdftex}' and `{\tt pdftex\_t}'. 
+`\texttt{pdftex}' and `\texttt{pdftex\_t}'. 
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
@@ -2657,8 +2721,8 @@ combined with pdf\_t (latex-texts) is supported.
 The options specific for {\tt\$gnuplotCommand}'s 
 output terminal 'cairolatex', 
 used for mixed latex/pdf-creation. 
-Note that the option `{\tt pdf|eps}' 
-of the terminal `{\tt cairolatex}' is not available, 
+Note that the option `\texttt{pdf|eps}' 
+of the terminal `\texttt{cairolatex}' is not available, 
 because it is set internally. 
 % The default option string is empty. 
 \end{minipage}
@@ -2723,12 +2787,12 @@ which are added automatically.
 } \\
 \end{longtable}
 
-\subsection{The parameter {\tt metapostOptions}}
+\subsection{The parameter \texttt{metapostOptions}}
 \label{subsec:metapostOptions}
 TODO: add 
 %%\tt\small -interaction=nonstopmode -recorder -s prologues=2
 
-\subsection{The parameter {\tt svg2devOptions}}
+\subsection{The parameter \texttt{svg2devOptions}}
 \label{subsec:svg2devOptions}
 
 The following options are mandatory: 
@@ -2784,7 +2848,7 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The \LaTeX{} command to create a pdf-file with. 
-%The default value is '{\tt pdflatex}'. 
+%The default value is '\texttt{pdflatex}'. 
 \end{minipage}
 } \\
 \tt latex2pdfOptions   & see Section~\ref{subsec:latex2pdfOptions} \\
@@ -2805,7 +2869,7 @@ FIXME:  -output-format is not allowed because set automatically.
 The pattern in the log-file 
 indicating a failure when running the {\tt\$latex2pdfCommand}. 
 %The default value is 
-%'{\tt ! $|$Fatal error$|$LaTeX Error$|$Emergency stop}'. 
+%'\texttt{! $|$Fatal error$|$LaTeX Error$|$Emergency stop}'. 
 If this is not complete, please extend 
 and notify the developer of this plugin. 
 \end{minipage}
@@ -2829,7 +2893,7 @@ Whether debugging of overfull/underfull hboxes/vboxes is on:
 If so, a bad box occurs in the last \LaTeX{} run, a warning is displayed. 
 For details, set {\tt\$cleanUp} to false, 
 rerun \LaTeX{} and have a look at the log-file.
-%The default value is '{\tt true}'. 
+%The default value is '\texttt{true}'. 
 \end{minipage}
 } \\
 \tt debugWarnings    & \tt true          \\
@@ -2839,7 +2903,7 @@ Whether debugging of warnings is on:
 If so, a warning in the last \LaTeX{} run is displayed. 
 For details, set {\tt\$cleanUp} to false, 
 rerun \LaTeX{} and have a look at the log-file. 
-%The default value is '{\tt true}'. 
+%The default value is '\texttt{true}'. 
 \end{minipage}
 } \\
 \tt pdfViaDvi    & \tt false          \\
@@ -2871,7 +2935,7 @@ Although these are based on htlatex which is always dvi-based,
 the preprocessing is done in dvi or in pdf. 
 Also the task txt is affected. 
 
-%The default value is '{\tt false}'. 
+%The default value is '\texttt{false}'. 
 \end{minipage}
 } \\
 \tt dvi2pdfCommand   & \tt dvipdfmx         \\
@@ -2879,11 +2943,11 @@ Also the task txt is affected.
 \begin{minipage}{0.95\linewidth}
 The driver to convert dvi into pdf-files. 
 Note that this must fit the options 
-of the packages `{\tt xcolor}' and `{\tt graphicx}'. 
+of the packages `\texttt{xcolor}' and `\texttt{graphicx}'. 
 Sensible values are 
-`{\tt dvipdf'}, `{\tt dvipdfm'}, `{\tt dvipdfmx}', 
-and `{\tt dvipdft}' 
-(which is `{\tt dvipdfm}' with option `{\tt -t}').  
+`\texttt{dvipdf'}, `\texttt{dvipdfm'}, `\texttt{dvipdfmx}', 
+and `\texttt{dvipdft}' 
+(which is `\texttt{dvipdfm}' with option `\texttt{-t}').  
 %The default value is `dvipdfmx'. 
 \end{minipage}
 } \\
@@ -2922,17 +2986,17 @@ or -1 which signifies that there is no threshold.
 \end{longtable}
 
 
-\subsection{The parameter {\tt latex2pdfOptions}}
+\subsection{The parameter \texttt{latex2pdfOptions}}
 \label{subsec:latex2pdfOptions}
 TODO: add 
 %-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
 
 
-\subsection{The parameter {\tt patternWarnLatex}}
+\subsection{The parameter \texttt{patternWarnLatex}}
 \label{subsec:patternWarnLatex}
 TODO: add 
 
-\subsection{The parameter {\tt patternReRunLatex}}
+\subsection{The parameter \texttt{patternReRunLatex}}
 \label{subsec:patternReRunLatex}
 TODO: add 
 
@@ -2962,7 +3026,7 @@ Parameter        & Default  \\
 \begin{minipage}{0.95\linewidth}
 The BibTeX command to create a bbl-file 
 from an aux-file and a bib-file (using a bst-style file). 
-%The default value is '{\tt bibtex}'. 
+%The default value is '\texttt{bibtex}'. 
 \end{minipage}
 } \\
 \tt bibtexOptions    & empty        \\
@@ -2978,7 +3042,7 @@ The options for the command {\tt\$bibtexCommand}.
 The Pattern in the blg-file 
 indicating that {\tt\$bibtexCommand} failed. 
 The default value is chosen 
-according to the `{\tt bibtex}' documentation. 
+according to the `\texttt{bibtex}' documentation. 
 \end{minipage}
 } \\
 \tt patternWarnBibtex    & \tt Warning-{}-        \\
@@ -2987,7 +3051,7 @@ according to the `{\tt bibtex}' documentation.
 The Pattern in the blg-file 
 indicating a warning {\tt\$bibtexCommand} emitted. 
 The default value is chosen 
-according to the `{\tt bibtex}' documentation. 
+according to the `\texttt{bibtex}' documentation. 
 \end{minipage}
 } \\
 \end{longtable}
@@ -3017,7 +3081,7 @@ Parameter        & Default  \\
 \begin{minipage}{0.95\linewidth}
 The MakeIndex command to create an ind-file from an idx-file 
 logging on an ilg-file. 
-%The default value is '{\tt makeindex}'. 
+%The default value is '\texttt{makeindex}'. 
 \end{minipage}
 } \\
 \tt makeIndexOptions & the empty string     \\
@@ -3033,7 +3097,7 @@ The options for the MakeIndex command.
 The pattern in the ilg-file 
 indicating that {\tt\$makeIndexCommand} failed. 
 The default value is chosen 
-according to the `{\tt makeindex}' documentation.
+according to the `\texttt{makeindex}' documentation.
 \end{minipage}
 } \\
 \tt patternWarnMakeIndex & \tt (\#\# Warning )        \\
@@ -3042,7 +3106,7 @@ according to the `{\tt makeindex}' documentation.
 The pattern in the ilg-file 
 indicating a warning {\tt\$makeIndexCommand} emitted. 
 The default value is chosen 
-according to the `{\tt makeindex}' documentation.
+according to the `\texttt{makeindex}' documentation.
 \end{minipage}
 } \\
 \tt patternReRunMakeIndex & see Section~\ref{subsec:patternReRunMakeIndex} \\
@@ -3050,8 +3114,8 @@ according to the `{\tt makeindex}' documentation.
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file which triggers 
 rerunning MakeIndex followed by \LaTeX{}. 
-This pattern only occurs, if package `{\tt rerunfilecheck}' 
-is used with option `{\tt index}'. 
+This pattern only occurs, if package `\texttt{rerunfilecheck}' 
+is used with option `\texttt{index}'. 
 The default value 
 is chosen according to the package documentation. 
 If the user finds that default value is not appropriate, 
@@ -3062,7 +3126,7 @@ and to notify the developer of this plugin.
 \end{longtable}
 
 
-\subsection{The parameter {\tt patternReRunMakeIndex}}
+\subsection{The parameter \texttt{patternReRunMakeIndex}}
 \label{subsec:patternReRunMakeIndex}
 TODO: add 
 
@@ -3103,17 +3167,17 @@ into account logging on a glg-file.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the {\tt\$makeGlossariesCommand}. 
-These are the options for `{\tt makeindex}' (not for {\tt\$makeIndexCommand}) 
-and for `{\tt xindy}' (also hardcoded). 
+These are the options for `\texttt{makeindex}' (not for {\tt\$makeIndexCommand}) 
+and for `\texttt{xindy}' (also hardcoded). 
 The aux-file decides on whether program is executed 
 and consequently which options are used. 
 		 
 The default value is the empty option string. 
-Nevertheless, `{\tt xindy}' is invoked as `{\tt xindy -L english  -I xindy -M\ldots}'. 
+Nevertheless, `\texttt{xindy}' is invoked as `\texttt{xindy -L english  -I xindy -M\ldots}'. 
 With option `{\tt-L german}', this is added. 
-Options `{\tt-M<}' for `{\tt xindy}' 
-`{\tt-s}' for `{\tt makeindex}' and `{\tt-t}' and `{\tt-o}' for both, 
-`{\tt xindy}' and `{\tt makeindex}'. 
+Options `{\tt-M<}' for `\texttt{xindy}' 
+`{\tt-s}' for `\texttt{makeindex}' and `{\tt-t}' and `{\tt-o}' for both, 
+`\texttt{xindy}' and `\texttt{makeindex}'. 
 \end{minipage}
 } \\
 \tt patternErrMakeGlossaries & 
@@ -3130,7 +3194,7 @@ and notify the developer of this plugin.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the `glg'-file 
-which indicates an error when running `{\tt xindy}' 
+which indicates an error when running `\texttt{xindy}' 
 via {\tt\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
@@ -3140,7 +3204,7 @@ and notify the developer of this plugin.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the `glg'-file 
-indicating a warning when running `{\tt xindy}' 
+indicating a warning when running `\texttt{xindy}' 
 via {\tt\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
@@ -3152,8 +3216,8 @@ and notify the developer of this plugin.
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers 
 rerunning MakeGlossaries followed by \LaTeX{}. 
-This pattern only occurs, if package `{\tt rerunfilecheck}' 
-is used with option `{\tt glossary}'. 
+This pattern only occurs, if package `\texttt{rerunfilecheck}' 
+is used with option `\texttt{glossary}'. 
 The default value 
 is chosen according to the package documentation. 
 If the user finds that default value is not appropriate, 
@@ -3163,7 +3227,7 @@ and to notify the developer of this plugin.
 } \\
 \end{longtable}
 
-\subsection{The parameter {\tt patternReRunMakeGlossaries}}
+\subsection{The parameter \texttt{patternReRunMakeGlossaries}}
 \label{subsec:patternReRunMakeGlossaries}
 TODO: add 
 
@@ -3209,7 +3273,7 @@ Parameter        & Default  \\
 \tt t4htOptions         & the empty string              \\%-cvalidate
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for `{\tt t4ht}' which converts idv-file and lg-file 
+The options for `\texttt{t4ht}' which converts idv-file and lg-file 
 into css-files, tmp-file and, 
 by need and if configured accordingly into \gls{png}-files. 
 The value `{\tt-p}' prevents creation of \gls{png}-pictures.
@@ -3219,14 +3283,14 @@ The value `{\tt-p}' prevents creation of \gls{png}-pictures.
 \tt patternT4htOutputFiles & see Section~\ref{subsec:patternT4htOutputFiles}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The pattern for the target files of goal `{\tt html}' 
-for a given latex main file `{\tt xxx.tex}'. 
+The pattern for the target files of goal `\texttt{html}' 
+for a given latex main file `\texttt{xxx.tex}'. 
 The patterns for the other targets 
 are hardcoded and take the form 
-`{\tt\^{}T\$T\textbackslash.yyy\$}', where `{\tt yyy}' 
+`{\tt\^{}T\$T\textbackslash.yyy\$}', where `\texttt{yyy}' 
 may be an ending or an alternative of endings. 
 		 
-The explanation of the pattern `{\tt T\$T}' is the same as given 
+The explanation of the pattern `\texttt{T\$T}' is the same as given 
 for the parameter {\tt\$patternCreatedFromLatexMain}. 
 Spaces and newlines are removed 
 from that pattern before processing. 
@@ -3235,7 +3299,7 @@ from that pattern before processing.
 \end{longtable}
 
 
-\subsection{The parameter {\tt patternT4htOutputFiles}}
+\subsection{The parameter \texttt{patternT4htOutputFiles}}
 \label{subsec:patternT4htOutputFiles}
 
 The default value for this pattern is as follows: 
@@ -3338,7 +3402,7 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The latex2rtf command to create rtf from latex directly. 
-%The default value is '{\tt latex2rtf}'. 
+%The default value is '\texttt{latex2rtf}'. 
 \end{minipage}
 } \\
 \tt latex2rtfOptions    & empty        \\
@@ -3352,7 +3416,7 @@ The options of the command {\tt\$latex2rtfCommand}.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The odt2doc command to create MS word-formats from otd-files. 
-%The default value is '{\tt odt2doc}'. 
+%The default value is '\texttt{odt2doc}'. 
 \end{minipage}
 } \\
 \tt odt2docOptions      & \tt -fdocx          \\
@@ -3361,17 +3425,17 @@ The odt2doc command to create MS word-formats from otd-files.
 The options of the command {\tt\$odt2docCommand}. 
 Above all specification of output format 
 via the option '-f'. 
-Invocation is '{\tt odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
-All output formats are shown by `{\tt odt2doc --show}' 
+Invocation is '\texttt{odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
+All output formats are shown by `\texttt{odt2doc --show}' 
 but the formats interesting in this context 
 are the following: 
-{\tt doc}, {\tt doc6}, {\tt doc95}, {\tt docbook}, {\tt docx}, 
-{\tt docx7}, {\tt ooxml} and {\tt rtf}. 
+\texttt{doc}, \texttt{doc6}, \texttt{doc95}, \texttt{docbook}, \texttt{docx}, 
+\texttt{docx7}, \texttt{ooxml} and \texttt{rtf}. 
 Interesting also the verbosity options 
 `{\tt-v}', `{\tt-vv}', `{\tt-vvv}' 
 the timeout `{\tt-T=secs}' and `{\tt--preserve}' 
 to keep permissions and timestamp of the original document. 
-%The default value is '{\tt -fdocx}'. 
+%The default value is '\texttt{-fdocx}'. 
 \end{minipage}
 } \\
 \tt pdf2txtCommand      & \tt pdftotext        \\
@@ -3379,7 +3443,7 @@ to keep permissions and timestamp of the original document.
 \begin{minipage}{0.95\linewidth}
 The pdf2txt-command for converting pdf-files 
 into plain text files. 
-%The default value is '{\tt pdftotext}'. 
+%The default value is '\texttt{pdftotext}'. 
 \end{minipage}
 } \\
 \tt pdf2txtOptions      & the empty string  \\
@@ -3392,23 +3456,23 @@ The options of the command {\tt\$pdf2txtCommand}.
 \end{longtable}
 
 FIXME: 
-Note that {\tt pdftotext -h} prints a usage message. 
+Note that \texttt{pdftotext -h} prints a usage message. 
 This is a way to obtain not the specified output. 
-It shows that {\tt pdftotext -q} does not print any messages or errors. 
-This indicates that {\tt pdftotext} normally does display error messages 
+It shows that \texttt{pdftotext -q} does not print any messages or errors. 
+This indicates that \texttt{pdftotext} normally does display error messages 
 on the standard output. 
 These may be led to a log file to indicate errors and warnings. 
 Here, further research is required. 
 
-The option {\tt -htmlmeta} seems not approprate. 
-The option resolution {\tt -r} seems sensible only in conjunction 
-with the crop area defined by {\tt -x} and {\tt -y} 
+The option \texttt{-htmlmeta} seems not approprate. 
+The option resolution \texttt{-r} seems sensible only in conjunction 
+with the crop area defined by \texttt{-x} and \texttt{-y} 
 which does not make sense in our context. 
 The same holds for specification of the first and the last page 
-via {\tt -f} and {\tt -l}. 
-What does make sense is specifying the encoding via {\tt -enc} 
-with possible values given by {\tt pdftotext -listenc}. 
-What makes sense most ist {\tt UTF-8}. 
+via \texttt{-f} and \texttt{-l}. 
+What does make sense is specifying the encoding via \texttt{-enc} 
+with possible values given by \texttt{pdftotext -listenc}. 
+What makes sense most ist \texttt{UTF-8}. 
 
 \chapter{Exceptions and Logging}\label{chap:exceptionLogging}
 
@@ -3447,8 +3511,8 @@ without further distinction.
 
 This software provides both a maven plugin and an ant task 
 built on the same code base. 
-Thus the maven plugin thows a {\tt MojoFailureException} 
-if and only if the according ant-task throws an {\tt BuildException} 
+Thus the maven plugin thows a \texttt{MojoFailureException} 
+if and only if the according ant-task throws an \texttt{BuildException} 
 in the same situation. 
 
 Section~\ref{sec:exception} describes 
@@ -3481,12 +3545,12 @@ There seems no way to get warnings only.
 
 Each exception offers a message and also each warning has a warning message. 
 The messages are endowed with a unique identifier of the form 
-{\tt KCCDD}, where {\tt K} is the kind which is one of 
+\texttt{KCCDD}, where \texttt{K} is the kind which is one of 
 %
 \begin{itemize}
 \item[T] Throwable, 
-i.e. {\tt MojoFailureException} for the maven- plugin 
-and {\tt BuildException} for the ant-task. 
+i.e. \texttt{MojoFailureException} for the maven- plugin 
+and \texttt{BuildException} for the ant-task. 
 This is described in detail in Section~\ref{sec:exception} 
 \item[E] logging as ERROR, 
 \item[W] logging as WARNING 
@@ -3494,7 +3558,7 @@ This is described in detail in Section~\ref{sec:exception}
 \item[D] logging as DEBUGGING output, which is lengthy 
 \end{itemize}
 
-The shortcut {\tt CC} describes the class where the exception is thrown 
+The shortcut \texttt{CC} describes the class where the exception is thrown 
 or the warning is logged: 
 %
 \begin{itemize}
@@ -3510,7 +3574,7 @@ in the pom for the maven plugin and in the build file for the ant task.
 \item[FU] TexFileUtilsImpl: a class providing access to files. 
 \end{itemize}
 %
-Finally, {\tt DD} is a two digit number enumerating the messages. 
+Finally, \texttt{DD} is a two digit number enumerating the messages. 
 
 \section{Exceptions}\label{sec:exception}
 
@@ -3582,15 +3646,15 @@ Error execution means
 the file expected to be the working directory 
 does not exist or is not a directory. 
 \item
-method {\tt Runtime.exec(String, String[], File)} fails 
-throwing an {\tt IOException}. 
+method \texttt{Runtime.exec(String, String[], File)} fails 
+throwing an \texttt{IOException}. 
 \item
 an error inside systemOut parser occurs 
 \item
 an error inside systemErr parser occurs 
 \item
-Wrapping an {\tt InterruptedException} 
-on the process to be executed thrown by {\tt Proces.waitFor()}. 
+Wrapping an \texttt{InterruptedException} 
+on the process to be executed thrown by \texttt{Proces.waitFor()}. 
 \end{itemize}
 %
 whereas for EEX01 just a failure code is returned. 
@@ -3689,7 +3753,7 @@ If an application does not create the expected output file,
 this software logs an error. 
 This may be because of an internal error as described above, 
 but also because of wrong parameters. 
-So, e.g. {\tt pdflatex -v xxx.tex} does not create a pdf-file as expected. 
+So, e.g. \texttt{pdflatex -v xxx.tex} does not create a pdf-file as expected. 
 
 
 \begin{longtable}{|ll|}
@@ -3886,15 +3950,15 @@ FIXME: to be added.
 \chapter{Listings}\label{chap:listings}% maybe appendix? 
 
 First we provide listings of the configuration 
-in the {\tt pom.xml} for the maven-plugin 
-and in the {\tt build.xml} for the ant-task. 
-The listing of the {\tt build.xml} shows 
+in the \texttt{pom.xml} for the maven-plugin 
+and in the \texttt{build.xml} for the ant-task. 
+The listing of the \texttt{build.xml} shows 
 which parameters are attributes and which ones are text elements. 
-In {\tt pom.xml} only text elements occur. 
+In \texttt{pom.xml} only text elements occur. 
 
 
 The maven-plugin described here, 
-requires the following definition in {\tt pom.xml}. 
+requires the following definition in \texttt{pom.xml}. 
 
 \lstset{language=xml, basicstyle=\scriptsize}
 \lstinputlisting[firstline=220, lastline=1038]{../../../pom.xml}
@@ -3911,7 +3975,7 @@ It has to be placed in the build element where below dots are given.
 
 
 The ant-task described here, 
-requires the following target and task definition in {\tt build.xml}. 
+requires the following target and task definition in \texttt{build.xml}. 
 
 \lstset{language=xml, basicstyle=\scriptsize}
 \lstinputlisting[firstline=74, lastline=204]{../../../build.xml}
@@ -3946,13 +4010,13 @@ once for pdf itself, once for odt and once for docx.
 
 Creating more than one index is not supported. 
 This could be done with one of the following packages 
-{\tt index} described in~\cite{IndexP}, 
-{\tt amsmidx} described in~\cite{AmsmidxP} and 
-{\tt imakeidx} described in~\cite{ImakeidxP}.
+\texttt{index} described in~\cite{IndexP}, 
+\texttt{amsmidx} described in~\cite{AmsmidxP} and 
+\texttt{imakeidx} described in~\cite{ImakeidxP}.
 Somehow special is the package 
-{\tt splitidx} coming with the program {\tt SplitIndex} 
-which replaces {\tt makeindex} described in~\cite{AmsmidxP}. 
-Note that the package {\tt multind} is obsolete. 
+\texttt{splitidx} coming with the program \texttt{SplitIndex} 
+which replaces \texttt{makeindex} described in~\cite{AmsmidxP}. 
+Note that the package \texttt{multind} is obsolete. 
 To create multiple indices using makeindex, 
 this has to be invoked with an argument 
 specifying the type of index. 
@@ -3960,8 +4024,8 @@ specifying the type of index.
 According to~\cite{GloP}, Section~1, 
 there are three options to create a glossary, 
 whereas this software supports option two only, 
-which uses {\tt makeindex}. 
-Also, although the package {\tt glossaries} itself 
+which uses \texttt{makeindex}. 
+Also, although the package \texttt{glossaries} itself 
 supports multiple glossaries via the command
 %
 \begin{verbatim}
@@ -3971,21 +4035,21 @@ supports multiple glossaries via the command
 described in~\cite{GloP}, Section~12, 
 this software only supports creating a single glossary. 
 
-Reading~\cite{GloP}, Section~15.1, the glossarystyle {\tt index} 
-seems to allow creating indices through the {\tt glossaries} package 
+Reading~\cite{GloP}, Section~15.1, the glossarystyle \texttt{index} 
+seems to allow creating indices through the \texttt{glossaries} package 
 making any index-package obsolete. 
 
-For development given the \LaTeX{} main file {\tt xxx.tex}, 
-the files {\tt xxx.pdf}, {\tt xxx.pdf}, {\tt xxx.synctex.gz} 
-and {\tt xxx.log} are vital. 
+For development given the \LaTeX{} main file \texttt{xxx.tex}, 
+the files \texttt{xxx.pdf}, \texttt{xxx.pdf}, \texttt{xxx.synctex.gz} 
+and \texttt{xxx.log} are vital. 
 Thus it would be fine to have a goal which touches these files 
 or to have a parameter to touch these prior to creation 
 to avoid that these are cleaned up after the run. 
-This is an alternative to setting parameter {\tt cleanup} to {\tt false}. 
-On the other hand, goal {\tt grp} creating graphics 
-in conjunction with a development tool like {\tt auctex} for {\tt emacs}, 
+This is an alternative to setting parameter \texttt{cleanup} to \texttt{false}. 
+On the other hand, goal \texttt{grp} creating graphics 
+in conjunction with a development tool like \texttt{auctex} for \texttt{emacs}, 
 allows to compile a latex main file in that tool 
-and thus to access {\tt xxx.log} and {\tt xxx.pdf}. 
+and thus to access \texttt{xxx.log} and \texttt{xxx.pdf}. 
 
 
 The ant-task does not allow to create single formats, e.g.~pdf selectively. 
@@ -3997,7 +4061,7 @@ This manual is not finished.
 To test the overall functionality of the maven-plugin and of the ant-task 
 described here, this manual is created through plugin and task. 
 
-What about support for {\tt chktex}? 
+What about support for \texttt{chktex}? 
 
 
 \chapter{Bugs}\label{chap:bugs}
@@ -4005,48 +4069,48 @@ What about support for {\tt chktex}?
 Seemingly, indices and glossaries based on page numbers 
 (there seems to be an alternative to this), 
 may be out of date with the current algorithm: 
-First {\tt pdflatex} is run to create the raw index. 
-Then a sorting program like {\tt makeindex} is called 
+First \texttt{pdflatex} is run to create the raw index. 
+Then a sorting program like \texttt{makeindex} is called 
 which creates the sorted, collected and formatted index. 
-Then one {\tt pdflatex} run is required to include this index 
+Then one \texttt{pdflatex} run is required to include this index 
 into the created pdf-file. 
-A second {\tt pdflatex} run is required 
+A second \texttt{pdflatex} run is required 
 to write the index to the table of contents, as typically required. 
 The problem with this procedure is, 
-that the subsequent runs of {\tt pdflatex} change the raw index 
-which requires rerunning {\tt makeindex} and after that again {\tt pdflatex}. 
+that the subsequent runs of \texttt{pdflatex} change the raw index 
+which requires rerunning \texttt{makeindex} and after that again \texttt{pdflatex}. 
 
-One way to solve that problem is to use the package {\tt imakeidx} 
-(improved makeidx) instead of the traditional package {\tt makeidx}. 
+One way to solve that problem is to use the package \texttt{imakeidx} 
+(improved makeidx) instead of the traditional package \texttt{makeidx}. 
 This offers also multiple indices, which is another gap to be filled. 
-Seemingly, {\tt imakeidx} does not support glossaries 
+Seemingly, \texttt{imakeidx} does not support glossaries 
 and so for these, another solution is required, 
 although the problem is the same. 
 
-Packages {\tt robustindex} and {\tt robustglossaries} offer another solution. 
+Packages \texttt{robustindex} and \texttt{robustglossaries} offer another solution. 
 The advantage would be to have handled both index and glossary. 
 Also support of hyperrefs within indices and glossaries seem to be expanded. 
 On the other hand, the two packages seem experimental 
-and seem to to play with package {\tt hyperref}. 
+and seem to to play with package \texttt{hyperref}. 
 
-The current implementation is based on package {\tt rerunfilecheck} 
+The current implementation is based on package \texttt{rerunfilecheck} 
 which works for index but not for glossary. 
 
-Check whether {\tt glossaries} option {\tt autorun} makes sense. 
-Seems to run {\tt makeglossaries} after each latex run. 
+Check whether \texttt{glossaries} option \texttt{autorun} makes sense. 
+Seems to run \texttt{makeglossaries} after each latex run. 
 But how to find out whether to rerun latex??? 
 
 Pattern to identify latex main file: 
-Documentation: shall not include {\tt documentclass/documentstyle} 
+Documentation: shall not include \texttt{documentclass/documentstyle} 
 in an input. 
-Also check {\tt RequiresPackage} 
-and check whether {\tt (re)newcommand} is possible or makes sense. 
+Also check \texttt{RequiresPackage} 
+and check whether \texttt{(re)newcommand} is possible or makes sense. 
 
 Maybe there is a bug in the number of reruns: 
 I think, makeglossaries is like bibtex needing two latex reruns 
 and not like makeindex, which requires a single rerun. 
 
-Since this software heavily relies on {\tt rerunfilecheck}, 
+Since this software heavily relies on \texttt{rerunfilecheck}, 
 maybe a warning if not used is a good idea. 
 
 Figures are missing in html output 
@@ -4058,8 +4122,8 @@ Did not find a way to add a numbered entry for the glossary
 into the table of contents. 
 
 The pattern {\tt(! )} detects an error only 
-{\tt -no-file-line-error} (which is the default) is set 
-but does not work with option {\tt -file-line-error}. 
+\texttt{-no-file-line-error} (which is the default) is set 
+but does not work with option \texttt{-file-line-error}. 
 This yields 
 %
 \begin{verbatim}
@@ -4088,7 +4152,7 @@ pattern {\tt\~(\textbackslash s*)*xx} seems not to terminate.
 
 A problem is also that the ending .svg may occur as a source 
 and as a target file of htlatex. 
-Thus {\tt mvn latex:clr} tries to delete the targets of the svg-files, 
+Thus \texttt{mvn latex:clr} tries to delete the targets of the svg-files, 
 although these are not sources but themselves targets. 
 
 A way to solve this problem is, 
@@ -4109,13 +4173,13 @@ Maybe htlatex still relies on eps-format.
 Table is very wide. 
 Umlauts and sz maybe also not properly represented. 
 
-For files {\tt .directory} (. first), 
+For files \texttt{.directory} (. first), 
 the separation of root and suffix does not work. 
 Maybe the best to ignore files like that. 
 
-Target {\tt txt}: seems as if index and glossary not up to date. 
+Target \texttt{txt}: seems as if index and glossary not up to date. 
 
-target {\tt pdf}: Idea to run {\tt makeglossaries} 
+target \texttt{pdf}: Idea to run \texttt{makeglossaries} 
 always prior to pdflatex. 
 
 Maybe this is more a gap than a bug: 
