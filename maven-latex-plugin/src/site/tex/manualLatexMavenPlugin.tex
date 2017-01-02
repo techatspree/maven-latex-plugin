@@ -101,9 +101,9 @@ The package \texttt{tex4ht} is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded
 in our days preferrably as \gls{pdf}-files, 
 with a particular strength in typesetting formulae like 
 %
-\begin{eqnarray*}
-\pi & = & \sqrt{12}\;\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}. 
-\end{eqnarray*}
+\begin{align}
+\pi & = \sqrt{12}\;\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}. 
+\end{align}
 %
 Here, portability of the format \gls{pdf} is a vital feature. 
 In the past, normally \gls{dvi} has been used 
@@ -800,14 +800,14 @@ Instead it shall be used the driver \texttt{dvipdfmx}.
 To obtain a \LaTeX-file which works both for creating pdf and html, 
 insert in the header of the \LaTeX{} main file 
 %
-\lstset{language=tex, basicstyle=\small}
+\lstset{language=tex, basicstyle=\small}% FIXME: nag complains for htlatex 
 \lstinputlisting[firstline=9, lastline=21]{header.tex}
 
 An alternative, which we do not use 
 is replacing the pdf by an \gls{eps} via configuration file \texttt{myxhtml.cfg} 
 which is listed below. 
 %
-\lstset{language=tex, basicstyle=\scriptsize}
+\lstset{language=tex, basicstyle=\scriptsize}% FIXME: nag complains for htlatex 
 \lstinputlisting{myxhtml.tex}
 %
 It applies when converting \LaTeX{} into html and that like 
@@ -853,6 +853,7 @@ For example, the fig-file defining Figure~\ref{fig:fig2dev},
 in format \texttt{pdftex\_t} which starts like this: 
 %
 \lstset{language=tex, breaklines, basicstyle=\small}
+% FIXME: nag complains for htlatex 
 \lstinputlisting[lastline=25]{F4_01fig2dev.ptx}
 
 The file \texttt{xxx.ptx} is ``inputted'' into the tex-file of this manual 
@@ -972,13 +973,12 @@ which is typeset with a postscipt font to make the difference visible.
 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F4_01fig2dev.ptx}
 }
-\end{center}
 \caption{\label{fig:fig2dev}Conversion of a fig-file 
 into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
@@ -1074,25 +1074,23 @@ and embedded in this \LaTeX-file with the \texttt{\textbackslash input}-command.
 %except \texttt{gnuplot} itself. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F4_02gp2pdf.ptx}
 }
-\end{center}
 \caption{\label{fig:gp2pdf}Conversion of a gnuplot-file 
 into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F4_03someGnuplot.ptx}
 }
-\end{center}
 \caption{\label{fig:gnuplot}
 Converted sample gnuplot-file into ptx and pdf files }
 \end{figure}
@@ -1144,13 +1142,12 @@ more knowledge is not necessary, as the texts are also in the mps-files
 and so the mpx-file is not used by this software. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F4_04mp2mps.ptx}
 }
-\end{center}
 \caption{\label{fig:mp2mps}Conversion of a metapost-file into an mps-file}
 \end{figure}
 
@@ -1162,13 +1159,12 @@ and embedded in this \LaTeX-file
 with the \texttt{\textbackslash includegraphics}-command. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \includegraphics{F4_05someMetapost1.mps}
 }
-\end{center}
 \caption{\label{fig:metapost}
 Converted sample metapost-file included as mps-file  }
 \end{figure}
@@ -1335,28 +1331,25 @@ To obtain the correct suffixes,
 after conversion the target files must be moved accordingly. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F4_06svg2pdf.ptx}%
 }
-\end{center}
 \caption{\label{fig:svg2pdf}Conversion of an svg-file 
 into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 %\def\svgwidth{0.5\textwidth}
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F4_07someSvg.ptx}%
 }
-%%\includesvg[eps,width=0.5\textwidth]{06someSvg}%
-\end{center}
 \caption{\label{fig:svgWithText}Some svg-picture with text FIXME: uniformity  }
 \end{figure}
 
@@ -1374,14 +1367,13 @@ files in the format pdf, \gls{png}, \gls{jpg} are supported.
 This list may be incomplete. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \setkeys{Gin}{width=0.9\textwidth}
 \includegraphics[width=0.9\textwidth]{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
 }
-\end{center}
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
 \end{figure}
 
@@ -1391,13 +1383,12 @@ as png-file.
 fixme: at the moment, htlatex does not work with pictures at all. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-  \includegraphics[width=0.9\textwidth]{F4_09somePngOboeBaroqueDennerMIR370}%.png
+\includegraphics[width=0.9\textwidth]{F4_09somePngOboeBaroqueDennerMIR370}%.png
 }
-\end{center}
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
 
@@ -1534,13 +1525,12 @@ further runs of \texttt{makeindex}, \texttt{makeglossaries}
 and of the \LaTeX-processor \texttt{latex2pdf} may be necessary. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F5_01tex2pdf.ptx}
 }
-\end{center}
 \caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file 
 (accordingly into a dvi-file)}
 \end{figure}
@@ -1575,13 +1565,12 @@ whether \texttt{bibtex} emitted an error or warnings.
 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F5_02aux2bbl.ptx}
 }
-\end{center}
 \caption{\label{fig:aux2bbl}
 Conversion of an aux-file into a bbl-file using a bibliography}
 \end{figure}
@@ -1640,13 +1629,12 @@ an index must be generated.
 % Well, this is not really the truth: it is needed only if ...
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F5_03idx2ind.ptx}
 }
-\end{center}
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
 \end{figure}
 
@@ -1797,13 +1785,12 @@ This is illustrated in Figure~\ref{fig:glo2gls}.
 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F5_04glo2gls.ptx}
 }
-\end{center}
 \caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
 using \texttt{makeglossaries}}
 \end{figure}
@@ -1989,13 +1976,12 @@ This is an interpreter
 for executing the requests made in the \texttt{xxx.lg} script.
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F5_05tex2xml.ptx}
 }
-\end{center}
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
 
@@ -2238,13 +2224,12 @@ which is illustrated in Figure~\ref{fig:tex2doc}.
 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F5_06tex2doc.ptx}
 }
-\end{center}
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
 
@@ -2274,13 +2259,12 @@ using, as a default \texttt{pdftotext} with ending \texttt{txt}.
 Figure~\ref{fig:tex2txt} illustrates the translation process. 
 
 \begin{figure}[htb]
-\begin{center}
+\centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
 \import{}{F5_07tex2txt.ptx}
 }
-\end{center}
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
 
@@ -2806,7 +2790,8 @@ Export the drawing (not the page)
 Export into PDF/PS/EPS format without text. 
 Besides the PDF/PS/EPS files, a LaTeX file is exported,
 putting the text on top of the PDF/PS/EPS file. 
-Include the result in LaTeX like: \texttt{\textbackslash input\{latexfile.tex\}}. 
+Include the result in LaTeX like: 
+\texttt{\textbackslash input\{latexfile.tex\}}. 
 Note that the latter option is necessary, 
 to create the expected files. 
 It is also conceivable to export text as pdf/eps 
@@ -3973,7 +3958,7 @@ In \texttt{pom.xml} only text elements occur.
 The maven-plugin described here, 
 requires the following definition in \texttt{pom.xml}. 
 
-\lstset{language=xml, basicstyle=\scriptsize}
+\lstset{language=xml, basicstyle=\scriptsize}% FIXME: nag complains for htlatex 
 \lstinputlisting[firstline=220, lastline=1038]{../../../pom.xml}
 
 It has to be placed in the build element where below dots are given. 
@@ -3990,7 +3975,7 @@ It has to be placed in the build element where below dots are given.
 The ant-task described here, 
 requires the following target and task definition in \texttt{build.xml}. 
 
-\lstset{language=xml, basicstyle=\scriptsize}
+\lstset{language=xml, basicstyle=\scriptsize}% FIXME: nag complains for htlatex 
 \lstinputlisting[firstline=74, lastline=204]{../../../build.xml}
 
 
@@ -4185,6 +4170,16 @@ whereas the pdf is still missing.
 Maybe htlatex still relies on eps-format. 
 Table is very wide. 
 Umlauts and sz maybe also not properly represented. 
+
+Still for target html: currently all aspects making problems 
+are deactivated: 
+Figures, index and glossary. 
+For the index have a look at the log-file. 
+These aspects must be re-integrated as soon as possible. 
+
+For html: run package tex4ht with option \texttt{info} 
+to obtain further options and their descriptions. 
+Also add a proper description into this manual. 
 
 For files \texttt{.directory} (. first), 
 the separation of root and suffix does not work. 
