@@ -1,4 +1,4 @@
-%\RequirePackage[l2tabu, orthodox]{nag}
+\RequirePackage[l2tabu, orthodox]{nag}
 % blabla 
 %\PassOptionsToPackage{dvipdfmx}{xcolor} %or dvipdfm 
 %\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
@@ -95,7 +95,7 @@ pdf%
 \else
 dvi%
 \fi.
-The package {\tt tex4ht} is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
+The package \texttt{tex4ht} is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
 
 \LaTeX{} is a beautyful way to create printable documents, 
 in our days preferrably as \gls{pdf}-files, 
@@ -443,14 +443,14 @@ Accordingly, this section has two subsections.
 
 \section{The source files}\label{sec:sources}
 
-The \LaTeX-files and also files included via {\tt\textbackslash input} 
+The \LaTeX-files and also files included via \texttt{\textbackslash input} 
 are in the {\em tex-source directory}, 
 \index{tex-source directory}
-which is by default {\tt./src/site/tex}, 
-where {\tt.} is the {\em base directory\/} of this maven-project. 
+which is by default \texttt{./src/site/tex}, 
+where \texttt{.} is the {\em base directory\/} of this maven-project. 
 \index{base directory}
 The \LaTeX-files to be compiled top level, 
-typically not inputted anywhere via {\tt\textbackslash input}, 
+typically not inputted anywhere via \texttt{\textbackslash input}, 
 are called {\em \LaTeX{} main files}. 
 As an example, 
 in the {\em tex-source directory\/} of this software, 
@@ -468,11 +468,11 @@ all included in the tex-source directory.
 \begin{enumerate}
 \item
 The first can be included into \LaTeX-files directly 
-via {\tt\textbackslash input}. 
+via \texttt{\textbackslash input}. 
 These formats are essentially \LaTeX{} and are defined in an according package. 
 An example is \texttt{eepic} described in~\cite{EEpic}. 
 \item
-the second one via the command {\tt\textbackslash includegraphics} 
+the second one via the command \texttt{\textbackslash includegraphics} 
 defined by the package \texttt{graphicx} 
 which is described in~\cite{GraX}. 
 Chapter 2 therein mentions the supported drivers, 
@@ -856,14 +856,14 @@ in format \texttt{pdftex\_t} which starts like this:
 \lstinputlisting[lastline=25]{F4_01fig2dev.ptx}
 
 The file \texttt{xxx.ptx} is ``inputted'' into the tex-file of this manual 
-by the command {\tt\textbackslash input\{xxx.ptx\}} 
+by the command \texttt{\textbackslash input\{xxx.ptx\}} 
 automatically including \texttt{xxx.pdf}. 
 Note that the full path \texttt{pppxxx.pdf} to \texttt{xxx.pdf} is required, 
 because relative paths are interpreted in terms of the file 
-containing {\tt\textbackslash input\{xxx.ptx\}}. 
+containing \texttt{\textbackslash input\{xxx.ptx\}}. 
 Observe also that we can drop the suffix which is expressed as ``\texttt{pppxxx}'' 
 because \LaTeX{} chooses the right suffix: 
-for pdf-format this is {\tt.pdf}. 
+for pdf-format this is \texttt{.pdf}. 
 As we will see below, 
 leaving the suffix away is crucial to make \texttt{xxx.ptx} work 
 both for pdf-format and for dvi-format required to create html- and odt-files. 
@@ -897,8 +897,8 @@ otherwise they do not fit.
 For the output format \texttt{pdftex\_t}, 
 the option \texttt{-p pppxxx} says, 
 that the string \texttt{pppxxx} must be included in \texttt{xxx.ptx} 
-as {\tt\textbackslash includegraphics\{pppxxx\}}. 
-Note that the option {\tt-p} shall not be specified 
+as \texttt{\textbackslash includegraphics\{pppxxx\}}. 
+Note that the option \texttt{-p} shall not be specified 
 in \texttt{fig2devPtxOptions}, because it is automatically added. 
 
 Equivalent to mixed export with formats \texttt{pdftex} and \texttt{pdftex\_t} 
@@ -962,12 +962,12 @@ except \texttt{fig2dev} itself.
 At the same time, Figure~\ref{fig:fig2dev} is an example 
 for a \LaTeX-file \texttt{xxx.ptx} created from a fig-file 
 and embedded in this \LaTeX-file 
-with the {\tt\textbackslash input}-command. 
+with the \texttt{\textbackslash input}-command. 
 More than that, 
 Figure~\ref{fig:fig2dev} describes the way it has been created. 
 Note that all text labels are specified with set ``special''-flag, 
 and are thus included as \LaTeX-text, 
-except the text {\bf\tiny postscript} 
+except the text \textbf{\tiny postscript} 
 which is typeset with a postscipt font to make the difference visible. 
 
 
@@ -990,9 +990,9 @@ This software supports plots drawn with \texttt{gnuplot}, or, to be more precise
 figures stored in .gp-files created by \texttt{gnuplot}. 
 Note that there seems to official file extension 
 to identify gnuplot files. 
-From the most common extensions {\tt.plt}, {\tt.gpi} and {\tt.gp} 
+From the most common extensions \texttt{.plt}, \texttt{.gpi} and \texttt{.gp} 
 we have choosen the one with the least collision 
-and supported by emacs and by my file browser: {\tt.gp}. 
+and supported by emacs and by my file browser: \texttt{.gp}. 
 % FIXME: should be configurable. 
 To export a file \texttt{xxx.gp} into several external formats, 
 it uses \texttt{gnuplot} itself. 
@@ -1066,7 +1066,7 @@ Figure~\ref{fig:gp2pdf} shows the transformation of the plots
 and the inclusion of graphic files. 
 In addition, Figure~\ref{fig:gnuplot} shows an example of a \LaTeX-file 
 created from a gnuplot file 
-and embedded in this \LaTeX-file with the {\tt\textbackslash input}-command. 
+and embedded in this \LaTeX-file with the \texttt{\textbackslash input}-command. 
 %Note that the \texttt{gnuplot}-command is configurable 
 %via the parameter \texttt{gnuplotCommand}, 
 %but there will be hardly any command with the same command line interface 
@@ -1159,7 +1159,7 @@ Figure~\ref{fig:metapost} gives an example of a metapost file
 included in this \LaTeX-file as ab mps-file 
 created from the metapost file 
 and embedded in this \LaTeX-file 
-with the {\tt\textbackslash includegraphics}-command. 
+with the \texttt{\textbackslash includegraphics}-command. 
 
 \begin{figure}[htb]
 \begin{center}
@@ -1190,7 +1190,7 @@ outputtemplate:="\%j\%c.svg"
 \end{verbatim}
 %
 to control the names of the mps-files created. 
-Here {\tt\%j} represents the jobname and $\%c$ the number. 
+Here \texttt{\%j} represents the jobname and $\%c$ the number. 
 One may well define alternatively 
 %
 \begin{verbatim}
@@ -1250,7 +1250,7 @@ which goes beyond what can be included in \LaTeX.
 
 Figure~\ref{fig:svgWithText} shows a picture in \gls{svg}-format. 
 As pdf-files are included directly 
-via the {\tt\textbackslash includegraphics}-command, 
+via the \texttt{\textbackslash includegraphics}-command, 
 using the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx} 
 virtually, 
 \texttt{xxx.svg} can be included directly via 
@@ -1365,7 +1365,7 @@ should be a picture
 \section{Pictures which are not created}\label{sec:picasis}
 
 Figure~\ref{fig:asIsJpg} shows some picture included as jpg. 
-This is done as usual with {\tt\textbackslash includegraphics}. 
+This is done as usual with \texttt{\textbackslash includegraphics}. 
 Note that both for \texttt{pdflatex} and siblings creating pdf-output 
 and for \texttt{htlatex} in conjunction with \texttt{dvipdfmx} 
 (see Section~\ref{sec:figpdf}) 
@@ -1599,15 +1599,15 @@ the package \texttt{makeidx} described in~\cite{MkidxShIdxP}.
 For an extension see Chapter~\ref{chap:gaps}. 
 
 Interesting enough, 
-the commands {\tt\textbackslash index} and {\tt\textbackslash makeindex} 
+the commands \texttt{\textbackslash index} and \texttt{\textbackslash makeindex} 
 work even without using the package \texttt{makeidx}. 
 The former essentially does nothing without the latter
 but if the latter is present, if \texttt{xxx.tex} is the \LaTeX{} main file, 
 the former writes an according entry in a file \texttt{xxx.idx}. 
 Essentially, 
-{\tt\textbackslash makeindex} prepares writing to the \gls{idx}-file, 
-whereas {\tt\textbackslash index} performs writing a line. 
-For example {\tt\textbackslash index\{ant-task\}} creates an entry 
+\texttt{\textbackslash makeindex} prepares writing to the \gls{idx}-file, 
+whereas \texttt{\textbackslash index} performs writing a line. 
+For example \texttt{\textbackslash index\{ant-task\}} creates an entry 
 %
 \begin{verbatim}
 \textbackslash indexentry\{ant-task|hyperpage\}\{3\}
@@ -1628,7 +1628,7 @@ From the ilg-file this software may determine
 whether \texttt{makeindex} emitted an error or warnings. 
 
 The package \texttt{makeidx} provides a single command, 
-{\tt\textbackslash printindex} which reads in the ind-file 
+\texttt{\textbackslash printindex} which reads in the ind-file 
 and prints the index in a separate section, 
 typically at the end of the pdf-file. 
 The package \texttt{tocbibind} described in~\cite{TocBibIndP}, 
@@ -1686,17 +1686,17 @@ is not supported by this software.
 
 For generalizations see Chapter~\ref{chap:gaps}. 
 
-As for creating indices there is a \LaTeX-command {\tt\textbackslash makeindex}, 
+As for creating indices there is a \LaTeX-command \texttt{\textbackslash makeindex}, 
 to create a glossary there is a \LaTeX-command 
-{\tt\textbackslash makeglossaries} 
-but the latter is not builtin as {\tt\textbackslash makeindex} 
+\texttt{\textbackslash makeglossaries} 
+but the latter is not builtin as \texttt{\textbackslash makeindex} 
 but provided by the package \texttt{glossaries}. 
 If \texttt{xxx.tex} is the \LaTeX{} main file, 
-{\tt\textbackslash makeglossaries} opens the glo-file \texttt{xxx.glo} 
+\texttt{\textbackslash makeglossaries} opens the glo-file \texttt{xxx.glo} 
 containing glossary entries for writing. 
-As the builtin command {\tt\textbackslash index} 
+As the builtin command \texttt{\textbackslash index} 
 writes entries into the idx-file defining the index, 
-the command {\tt\textbackslash gls} defined by the package \texttt{glossaries} 
+the command \texttt{\textbackslash gls} defined by the package \texttt{glossaries} 
 writes an entry into the glo-file. 
 Note that \texttt{xxx.glo} typically contains entries more than once 
 and that the entries are not sorted. 
@@ -1707,9 +1707,9 @@ This software supports two of them:
 via the shell command \texttt{makeindex}, which is also used for indices, 
 and via the shell command \texttt{xindy}. 
 Using \texttt{makeindex} is the default but can also be activated through 
-{\tt\textbackslash usepackage[makeindex]\{glossaries\}}. 
+\texttt{\textbackslash usepackage[makeindex]\{glossaries\}}. 
 Using \texttt{xindy} instead of \texttt{makeindex} is triggered through 
-{\tt\textbackslash usepackage[xindy]\{glossaries\}}. 
+\texttt{\textbackslash usepackage[xindy]\{glossaries\}}. 
 Accordingly, for \texttt{makeindex} the aux-file receives lines 
 %
 \begin{verbatim}
@@ -1844,8 +1844,8 @@ must be put before
 \makeglossaries
 \end{verbatim}
 %
-in particular before {\tt\textbackslash makeindex} and 
-{\tt\textbackslash makeglossaries}. 
+in particular before \texttt{\textbackslash makeindex} and 
+\texttt{\textbackslash makeglossaries}. 
 
 Note that the package \texttt{hyperref} already loads \texttt{rerunfilecheck} 
 but with the wrong options. 
@@ -1969,7 +1969,7 @@ In the extreme case that the source code contains no commands of TeX4ht,
 \texttt{tex4ht} gets pure dvi-code and it outputs (almost) plain text 
 with no hypertext elements in it.
 
-The special ({\tt\textbackslash special}) instructions seeded in the dvi-code 
+The special (\texttt{\textbackslash special}) instructions seeded in the dvi-code 
 are not understood by dvi processors other than those of TeX4ht.
 
 
@@ -1981,7 +1981,7 @@ and it contains the pictures needed in the html files.
 This is a log file listing the pictures of \texttt{xxx.idv}, 
 the \gls{png} files that should be created, CSS information, 
 and user directives introduced 
-through the ``{\tt\textbackslash Needs\{\ldots\}}'' command.
+through the ``\texttt{\textbackslash Needs\{\ldots\}}'' command.
 
 
 \texttt{t4ht}
@@ -2397,20 +2397,20 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramGen} General parameters}
 \endlastfoot
-\tt texSrcDirectory  & \tt src/site/tex  \\
+\texttt{texSrcDirectory}  & \texttt {src/site/tex}  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The tex source directory as a string, 
 containing all tex main documents 
 (including subfolders) to be processed
-relative to {\tt\$baseDirectory}. 
+relative to \texttt{\$baseDirectory}. 
 The default value is '\texttt{src/site/tex}' on Unix systems. 
 \end{minipage}
 } \\
-\tt readTexSrcDirRec  & \tt tru  \\
+\texttt{readTexSrcDirRec}  & \texttt{true}  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Whether the tex source directory {\tt\$texSrcDirectory} 
+Whether the tex source directory \texttt{\$texSrcDirectory} 
 shall be read recursively, 
 i.e. including the subdirectories recursively. 
 This is set to \texttt{false} only during information development. 
@@ -2419,23 +2419,23 @@ This is set to \texttt{false} only during information development.
 } \\
 
 
-\tt outputDirectory  & \tt.             \\
+\texttt{outputDirectory}  & \texttt{.}             \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The generated artifacts will be copied to \texttt{outputDirectory}
-relative to {\tt\$targetSiteDirectory} 
-which is by default '{\tt\$targetDirectory/site}' on Unix systems. 
-%The default value is '{\tt.}'.  
+relative to \texttt{\$targetSiteDirectory} 
+which is by default '\texttt{\$targetDirectory/site}' on Unix systems. 
+%The default value is '\texttt{.}'.  
 \end{minipage}
 } \\
-\tt targets          & \tt pdf, html     \\
+\texttt{targets}          & \texttt{pdf, html}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-A comma separated list of targets to be stored in {\tt\$targetSet}. 
+A comma separated list of targets to be stored in \texttt{\$targetSet}. 
 %The default value is '\texttt{pdf, html}'. 
 \end{minipage}
 } \\
-\tt patternLatexMainFile   & see Section~\ref{subsec:patternLatexMainFile}\\
+\texttt{patternLatexMainFile} & see Section~\ref{subsec:patternLatexMainFile}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern which identifies a \LaTeX{} main file. 
@@ -2457,17 +2457,17 @@ If the user finds that default value is not appropriate,
 and to notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt texPath          &  empty string        \\
+\texttt{texPath}          &  empty string        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Path to the TeX scripts or null. 
 In the latter case, the scripts must be on the system path. 
-Note that in the pom, {\tt$<$texPath/$>$} 
-and even {\tt$<$texPath$>$\ \ \ \ $<$/texPath$>$} represent the null-File. 
+Note that in the pom, \texttt{$<$texPath/$>$} 
+and even \texttt{$<$texPath$>$\ \ \ \ $<$/texPath$>$} represent the null-File. 
 The default value is null.
 \end{minipage}
 } \\
-\tt cleanUp             & \tt true             \\
+\texttt{cleanUp}             & \texttt{true}             \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Clean up the working directory in the end? 
@@ -2475,7 +2475,7 @@ May be used for debugging when setting \texttt{false}.
 %The default value is '\texttt{true}'. 
 \end{minipage}
 } \\
-\tt patternCreatedFromLatexMain & see Section~\ref{subsec:patternCreatedFromLatexMain} \\
+\texttt{patternCreatedFromLatexMain} & see Section~\ref{subsec:patternCreatedFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 This pattern shall accept all the files 
@@ -2494,7 +2494,7 @@ that graphic files to be processed
 are skipped or that processing a latex main file overwrites 
 the result of graphic preprocessing. 
 
-When clearing the tex source directory {\tt\$texSrcDirectory}, 
+When clearing the tex source directory \texttt{\$texSrcDirectory}, 
 i.e. all generated files should be removed, 
 first those created from latex main files. 
 As an approximation, 
@@ -2503,8 +2503,8 @@ those are removed which match this pattern.
 The sequence '\texttt{T\$T}' 
 is replaced by the prefix '\texttt{xxx}'. 
 The sequence '\texttt{T\$T}' must always be replaced: 
-The symbol '{\tt\$}' occurs as end-sign as '{\tt)\$}' 
-or as literal symbol as '{\tt\$}'. 
+The symbol '\texttt{\$}' occurs as end-sign as '\texttt{)\$}' 
+or as literal symbol as '\texttt{\$}'. 
 Thus '\texttt{T\$T}' is no regular occurrence 
 and must always be replaced with '\texttt{xxx}'. 
 		 
@@ -2512,17 +2512,17 @@ Spaces and newlines are removed
 from that pattern before matching. 
 		 
 The default value 
-'{\tt\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
+'\texttt{\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
 is appropriate for most parameters and packages. 
 Package '\texttt{srcltx}' 
 requires in addition 
-'{\tt\^{}T\$T\textbackslash.synctex\textbackslash.gz}' 
+'\texttt{\^{}T\$T\textbackslash.synctex\textbackslash.gz}' 
 and package '\texttt{tex4ht}' is for all the rest. 
 The pattern is designed 
 to match quite exactly the created files, 
 not much more and at any case not less. 
 In particular it has to comprise the files matching pattern 
-{\tt\$patternT4htOutputFiles}. 
+\texttt{\$patternT4htOutputFiles}. 
 Nevertheless, since any new package may break the pattern, 
 and not every package is well documented, 
 this pattern cannot be guaranteed to be final. 
@@ -2549,36 +2549,36 @@ The default pattern for identifying a \LaTeX{} main file is
 \end{Verbatim}
 %
 This means that the latex main file is the one 
-containing {\tt\textbackslash documentclass} for modern classes 
-and {\tt\textbackslash documentstyle} for old fashioned ones. 
+containing \texttt{\textbackslash documentclass} for modern classes 
+and \texttt{\textbackslash documentstyle} for old fashioned ones. 
 This may be preceeded only by 
 %
 \begin{itemize}
 \item
-the command {\tt\textbackslash RequirePackage}, 
+the command \texttt{\textbackslash RequirePackage}, 
 \item
-the command {\tt\textbackslash PassOptionsToPackage}, 
+the command \texttt{\textbackslash PassOptionsToPackage}, 
 by comment lines, 
 \item
-by {\tt\textbackslash input}, and 
+by \texttt{\textbackslash input}, and 
 \item
 by space. 
 \end{itemize}
 %
-Note that {\tt\textbackslash A} represents the beginning of the stream. 
+Note that \texttt{\textbackslash A} represents the beginning of the stream. 
 
-Strictly speaking, also {\tt\textbackslash(re)newcommands} 
+Strictly speaking, also \texttt{\textbackslash(re)newcommands} 
 and other constructs are possible but not allowed here. 
-Strictly speaking also {\tt\textbackslash documentclass} is not required, 
-it could be hidden in some {\tt\textbackslash input}-file. 
+Strictly speaking also \texttt{\textbackslash documentclass} is not required, 
+it could be hidden in some \texttt{\textbackslash input}-file. 
 If we stick to the wise convention to open and close the same environment 
-in the same file and to have {\tt\textbackslash documentclass}, 
-{\tt\textbackslash begin\{document\}} and {\tt\textbackslash end\{document\}} 
+in the same file and to have \texttt{\textbackslash documentclass}, 
+\texttt{\textbackslash begin\{document\}} and \texttt{\textbackslash end\{document\}} 
 in the same file also, 
-then a latex main file without {\tt\textbackslash documentclass} 
+then a latex main file without \texttt{\textbackslash documentclass} 
 cannot contain very much material. 
 
-So we ask the user to have {\tt\textbackslash documentclass} 
+So we ask the user to have \texttt{\textbackslash documentclass} 
 declared in the latex main file. 
 
 For users of emacs with package auctex, there is a valuable alternative: 
@@ -2656,7 +2656,7 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramGraphics} Parameters for graphics preprocessing}
 \endlastfoot
-\tt fig2devCommand   & \tt fig2dev  \index{fig2dev}     \\
+\texttt{fig2devCommand}   & \texttt{fig2dev}  \index{fig2dev}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The fig2dev command for conversion of fig-files into various formats. 
@@ -2664,48 +2664,48 @@ Currently only \texttt{pdf} combined with \texttt{ptx} is supported.
 %The default value is '\texttt{fig2dev}'. 
 \end{minipage}
 } \\
-\tt fig2devGenOptions   & empty     \\
+\texttt{fig2devGenOptions}   & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$fig2devCommand} 
+The options for the command \texttt{\$fig2devCommand} 
 common to both output languages. 
 For the options specific for the two output langugages 
 `\texttt{pdftex}' and `\texttt{pdftex\_t}', 
 see the explanation of the parameters 
-{\tt\$fig2devPtxOptions} and {\tt\$fig2devPdfEpsOptions}, 
+\texttt{\$fig2devPtxOptions} and \texttt{\$fig2devPdfEpsOptions}, 
 respectively. 
 % The default value is the empty string. 
 \end{minipage}
 } \\
-\tt fig2devPtxOptions   & empty     \\
+\texttt{fig2devPtxOptions}   & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$fig2devCommand} 
+The options for the command \texttt{\$fig2devCommand} 
 specific for the output language `\texttt{pdftex\_t}'. 
 Note that in addition to these options, 
-the option `{\tt-L pdftex\_t}' specifies the language, 
-{\tt\$fig2devGenOptions} specifies the options 
+the option `\texttt{-L pdftex\_t}' specifies the language, 
+\texttt{\$fig2devGenOptions} specifies the options 
 common for the two output langugages 
 `\texttt{pdftex}' and `\texttt{pdftex\_t}' 
-and `{\tt-p xxx.pdf}' specifies the pdf-file to be included. 
+and `\texttt{-p xxx.pdf}' specifies the pdf-file to be included. 
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
-\tt fig2devPdfEpsOptions   & empty     \\
+\texttt{fig2devPdfEpsOptions}   & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$fig2devCommand} 
+The options for the command \texttt{\$fig2devCommand} 
 specific for the output language `\texttt{pdftex}'. 
 Note that in addition to these option1s, 
 the option `\texttt{-L pdftex}' specifies the language and 
-{\tt\$fig2devGenOptions} specifies the options 
+\texttt{\$fig2devGenOptions} specifies the options 
 common for the two output langugages 
 `\texttt{pdftex}' and `\texttt{pdftex\_t}'. 
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
 \hline
-\tt gnuplotCommand   & \tt gnuplot  \index{gnuplot}     \\
+\texttt{gnuplotCommand}   & \texttt{gnuplot}  \index{gnuplot}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The command for conversion of gnuplot-files 
@@ -2715,10 +2715,10 @@ combined with pdf\_t (latex-texts) is supported.
 % The default value is 'gnuplot'. 
 \end{minipage}
 } \\
-\tt gnuplotOptions   & empty    \\
+\texttt{gnuplotOptions}   & empty    \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options specific for {\tt\$gnuplotCommand}'s 
+The options specific for \texttt{\$gnuplotCommand}'s 
 output terminal 'cairolatex', 
 used for mixed latex/pdf-creation. 
 Note that the option `\texttt{pdf|eps}' 
@@ -2728,7 +2728,7 @@ because it is set internally.
 \end{minipage}
 } \\
 \hline
-\tt metapostCommand & \tt mpost\index{metapost}\index{mpost}     \\
+\texttt{metapostCommand} & \texttt{mpost}\index{metapost}\index{mpost}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The command for conversion of gnuplot-files 
@@ -2736,34 +2736,34 @@ into metapost's postscript.
 % The default value is 'mpost'. 
 \end{minipage}
 } \\
-\tt metapostOptions & see Section~\ref{subsec:patternCreatedFromLatexMain} \\
+\texttt{metapostOptions} & see Section~\ref{subsec:patternCreatedFromLatexMain} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$metapostCommand}.
+The options for the command \texttt{\$metapostCommand}.
 Leading and trailing blanks are ignored. 
 A sequence of at least one blank separate the proper options. 
 %The default value is 
-%'{\tt-interaction=nonstopmode -recorder -s prologues=2}'. 
+%'\texttt{-interaction=nonstopmode -recorder -s prologues=2}'. 
 \end{minipage}
 } \\
 \hline
-\tt svg2devCommand & \tt inkscape \\
+\texttt{svg2devCommand} & \texttt{inkscape} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The command for conversion of svg-files into a mixed format. 
 %The default value is 'inkscape'. 
 \end{minipage}
 } \\
-\tt svg2devOptions & \tt -z -D --export-latex \\
+\texttt{svg2devOptions} & \texttt{-z -D --export-latex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$svg2devCommand} 
+The options for the command \texttt{\$svg2devCommand} 
 for exporting svg-figures into latex compatible files. 
 For more details see Section~\ref{subsec:svg2devOptions}. 
 \end{minipage}
 } \\
 \hline
-\tt ebbCommand & \tt ebb \\
+\texttt{ebbCommand} & \texttt{ebb} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The command to create bounding box information 
@@ -2776,10 +2776,10 @@ to create `.xbb'-files for driver `dvipdfmx'.
 % The default value is 'ebb'. 
 \end{minipage}
 } \\
-\tt ebbOptions & \tt -v \\
+\texttt{ebbOptions} & \texttt{-v} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$ebbCommand} 
+The options for the command \texttt{\$ebbCommand} 
 except `-m' and `-x' 
 which are added automatically. 
 % The default value is `-v'. 
@@ -2790,7 +2790,7 @@ which are added automatically.
 \subsection{The parameter \texttt{metapostOptions}}
 \label{subsec:metapostOptions}
 TODO: add 
-%%\tt\small -interaction=nonstopmode -recorder -s prologues=2
+%%\texttt{\small -interaction=nonstopmode -recorder -s prologues=2}
 
 \subsection{The parameter \texttt{svg2devOptions}}
 \label{subsec:svg2devOptions}
@@ -2806,7 +2806,7 @@ Export the drawing (not the page)
 Export into PDF/PS/EPS format without text. 
 Besides the PDF/PS/EPS files, a LaTeX file is exported,
 putting the text on top of the PDF/PS/EPS file. 
-Include the result in LaTeX like: {\tt\textbackslash input\{latexfile.tex\}}. 
+Include the result in LaTeX like: \texttt{\textbackslash input\{latexfile.tex\}}. 
 Note that the latter option is necessary, 
 to create the expected files. 
 It is also conceivable to export text as pdf/eps 
@@ -2844,41 +2844,41 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
 \endlastfoot
-\tt latex2pdfCommand       & \tt pdflatex      \\
+\texttt{latex2pdfCommand}       & \texttt{pdflatex}      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The \LaTeX{} command to create a pdf-file with. 
 %The default value is '\texttt{pdflatex}'. 
 \end{minipage}
 } \\
-\tt latex2pdfOptions   & see Section~\ref{subsec:latex2pdfOptions} \\
+\texttt{latex2pdfOptions}   & see Section~\ref{subsec:latex2pdfOptions} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$latex2pdfCommand}.
+The options for the command \texttt{\$latex2pdfCommand}.
 Leading and trailing blanks are ignored. 
 A sequence of at least one blank separate the proper options. 
 
 FIXME:  -output-format is not allowed because set automatically. 
 %The default value is 
-%'{\tt-interaction=nonstopmode -src-specials}'. 
+%'\texttt{-interaction=nonstopmode -src-specials}'. 
 \end{minipage}
 } \\
-\tt patternErrLatex & \tt(\^{}!\ ) \\
+\texttt{patternErrLatex} & \texttt{(\^{}!\ )} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-indicating a failure when running the {\tt\$latex2pdfCommand}. 
+indicating a failure when running the \texttt{\$latex2pdfCommand}. 
 %The default value is 
 %'\texttt{! $|$Fatal error$|$LaTeX Error$|$Emergency stop}'. 
 If this is not complete, please extend 
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternWarnLatex & see Section~\ref{subsec:patternWarnLatex} \\
+\texttt{patternWarnLatex} & see Section~\ref{subsec:patternWarnLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-which indicates a warning when running {\tt\$latex2pdfCommand}. 
+which indicates a warning when running \texttt{\$latex2pdfCommand}. 
 It is designed to be as complete as possible 
 while not indicating a warning where not appropriate. 
 If the current default value is not appropriate, 
@@ -2886,38 +2886,38 @@ please overwrite and notify the developer of this plugin.
 % The default value is given below. 
 \end{minipage}
 } \\
-\tt debugBadBoxes    & \tt true          \\
+\texttt{debugBadBoxes}    & \texttt{true}          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether debugging of overfull/underfull hboxes/vboxes is on: 
 If so, a bad box occurs in the last \LaTeX{} run, a warning is displayed. 
-For details, set {\tt\$cleanUp} to false, 
+For details, set \texttt{\$cleanUp} to false, 
 rerun \LaTeX{} and have a look at the log-file.
 %The default value is '\texttt{true}'. 
 \end{minipage}
 } \\
-\tt debugWarnings    & \tt true          \\
+\texttt{debugWarnings}    & \texttt{true}          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether debugging of warnings is on: 
 If so, a warning in the last \LaTeX{} run is displayed. 
-For details, set {\tt\$cleanUp} to false, 
+For details, set \texttt{\$cleanUp} to false, 
 rerun \LaTeX{} and have a look at the log-file. 
 %The default value is '\texttt{true}'. 
 \end{minipage}
 } \\
-\tt pdfViaDvi    & \tt false          \\
+\texttt{pdfViaDvi}    & \texttt{false}          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether creation of pdf-files from latex-files 
 goes via dvi-files. 
 
-If {\tt\$pdfViaDvi} is set 
+If \texttt{\$pdfViaDvi} is set 
 and the latex processor needs repetitions, 
 these are all done creating dvi 
 and then pdf is created in a final step 
-invoking the command {\tt\$dvi2pdfCommand} 
-If {\tt\$pdfViaDvi} is not set, 
+invoking the command \texttt{\$dvi2pdfCommand} 
+If \texttt{\$pdfViaDvi} is not set, 
 latex is directly converted into pdf. 
 
 Currently, not only conversion of latex-files is affected, 
@@ -2938,7 +2938,7 @@ Also the task txt is affected.
 %The default value is '\texttt{false}'. 
 \end{minipage}
 } \\
-\tt dvi2pdfCommand   & \tt dvipdfmx         \\
+\texttt{dvi2pdfCommand}   & \texttt{dvipdfmx}         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The driver to convert dvi into pdf-files. 
@@ -2951,14 +2951,14 @@ and `\texttt{dvipdft}'
 %The default value is `dvipdfmx'. 
 \end{minipage}
 } \\
-\tt dvi2pdfOptions   & the empty string          \\
+\texttt{dvi2pdfOptions}   & the empty string          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$dvi2pdfCommand}. 
+The options for the command \texttt{\$dvi2pdfCommand}. 
 %The default value is the empty string.
 \end{minipage}
 } \\
-\tt patternReRunLatex &  see Section~\ref{subsec:patternReRunLatex} \\
+\texttt{patternReRunLatex} &  see Section~\ref{subsec:patternReRunLatex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log file which triggers rerunning \LaTeX{}. 
@@ -2966,14 +2966,14 @@ This pattern may never be ensured to be complete,
 because any new package may break completeness. 
 Nevertheless, the default value aims completeness 
 while be restrictive enough not to trigger another \LaTeX{} run if not needed. 
-To ensure termination, let {\tt\$maxNumRerunsLatex} 
+To ensure termination, let \texttt{\$maxNumRerunsLatex} 
 specify the maximum number of \LaTeX{} runs. 
 If the user finds an extension, (s)he is asked to contribute 
 and to notify the developer of this plugin. 
 Then the default value will be extended. 
 \end{minipage}
 } \\
-\tt maxNumRerunsLatex        & \tt 5               \\
+\texttt{maxNumRerunsLatex}        & \texttt{5}               \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The maximal allowed number of reruns of the \LaTeX{} process. 
@@ -3021,7 +3021,7 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramBibTeX} The BibTeX-utility }
 \endlastfoot
-\tt bibtexCommand    & \tt bibtex        \\
+\texttt{bibtexCommand}    & \texttt{bibtex}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The BibTeX command to create a bbl-file 
@@ -3029,27 +3029,27 @@ from an aux-file and a bib-file (using a bst-style file).
 %The default value is '\texttt{bibtex}'. 
 \end{minipage}
 } \\
-\tt bibtexOptions    & empty        \\
+\texttt{bibtexOptions}    & empty        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the command {\tt\$bibtexCommand}. 
+The options for the command \texttt{\$bibtexCommand}. 
 % The default value is the empty string.
 \end{minipage}
 } \\
-\tt patternErrBibtex    & \tt error message        \\
+\texttt{patternErrBibtex}    & \texttt{error message}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the blg-file 
-indicating that {\tt\$bibtexCommand} failed. 
+indicating that \texttt{\$bibtexCommand} failed. 
 The default value is chosen 
 according to the `\texttt{bibtex}' documentation. 
 \end{minipage}
 } \\
-\tt patternWarnBibtex    & \tt Warning-{}-        \\
+\texttt{patternWarnBibtex}    & \texttt{Warning-{}-}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the blg-file 
-indicating a warning {\tt\$bibtexCommand} emitted. 
+indicating a warning \texttt{\$bibtexCommand} emitted. 
 The default value is chosen 
 according to the `\texttt{bibtex}' documentation. 
 \end{minipage}
@@ -3076,7 +3076,7 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramMakeIndex} The MakeIndex-utility }
 \endlastfoot
-\tt makeIndexCommand & \tt makeindex     \\
+\texttt{makeIndexCommand} & \texttt{makeindex}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The MakeIndex command to create an ind-file from an idx-file 
@@ -3084,32 +3084,32 @@ logging on an ilg-file.
 %The default value is '\texttt{makeindex}'. 
 \end{minipage}
 } \\
-\tt makeIndexOptions & the empty string     \\
+\texttt{makeIndexOptions} & the empty string     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the MakeIndex command. 
 % The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternErrMakeIndex & \tt (!! Input index error\ )        \\
+\texttt{patternErrMakeIndex} & \texttt{(!! Input index error\ )}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
-indicating that {\tt\$makeIndexCommand} failed. 
+indicating that \texttt{\$makeIndexCommand} failed. 
 The default value is chosen 
 according to the `\texttt{makeindex}' documentation.
 \end{minipage}
 } \\
-\tt patternWarnMakeIndex & \tt (\#\# Warning )        \\
+\texttt{patternWarnMakeIndex} & \texttt{(\#\# Warning )}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the ilg-file 
-indicating a warning {\tt\$makeIndexCommand} emitted. 
+indicating a warning \texttt{\$makeIndexCommand} emitted. 
 The default value is chosen 
 according to the `\texttt{makeindex}' documentation.
 \end{minipage}
 } \\
-\tt patternReRunMakeIndex & see Section~\ref{subsec:patternReRunMakeIndex} \\
+\texttt{patternReRunMakeIndex} & see Section~\ref{subsec:patternReRunMakeIndex} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file which triggers 
@@ -3154,7 +3154,7 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramMakeGlossaries} The MakeGlossaries-utility }
 \endlastfoot
-\tt makeGlossariesCommand & \tt makeglossaries         \\
+\texttt{makeGlossariesCommand} & \texttt{makeglossaries}         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The MakeGlossaries command to create a gls-file 
@@ -3163,54 +3163,54 @@ also taking ist-file or xdy-file
 into account logging on a glg-file. 
 \end{minipage}
 } \\
-\tt makeGlossariesOptions & the empty string          \\
+\texttt{makeGlossariesOptions} & the empty string          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options for the {\tt\$makeGlossariesCommand}. 
-These are the options for `\texttt{makeindex}' (not for {\tt\$makeIndexCommand}) 
+The options for the \texttt{\$makeGlossariesCommand}. 
+These are the options for `\texttt{makeindex}' (not for \texttt{\$makeIndexCommand}) 
 and for `\texttt{xindy}' (also hardcoded). 
 The aux-file decides on whether program is executed 
 and consequently which options are used. 
 		 
 The default value is the empty option string. 
 Nevertheless, `\texttt{xindy}' is invoked as `\texttt{xindy -L english  -I xindy -M\ldots}'. 
-With option `{\tt-L german}', this is added. 
-Options `{\tt-M<}' for `\texttt{xindy}' 
-`{\tt-s}' for `\texttt{makeindex}' and `{\tt-t}' and `{\tt-o}' for both, 
+With option `\texttt{-L german}', this is added. 
+Options `\texttt{-M<}' for `\texttt{xindy}' 
+`\texttt{-s}' for `\texttt{makeindex}' and `\texttt{-t}' and `\texttt{-o}' for both, 
 `\texttt{xindy}' and `\texttt{makeindex}'. 
 \end{minipage}
 } \\
-\tt patternErrMakeGlossaries & 
-\tt(\^{}\textbackslash*\textbackslash*\textbackslash* unable to execute:\ ) \\
+\texttt{patternErrMakeGlossaries} & 
+\texttt{(\^{}\textbackslash*\textbackslash*\textbackslash* unable to execute:\ )} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The Pattern in the glg-file 
-which indicates an error when running {\tt\$makeGlossariesCommand}. 
+which indicates an error when running \texttt{\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternErrXindy & \tt (\^{}ERROR:\ )         \\
+\texttt{patternErrXindy} & \texttt{(\^{}ERROR:\ )}         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the `glg'-file 
 which indicates an error when running `\texttt{xindy}' 
-via {\tt\$makeGlossariesCommand}. 
+via \texttt{\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternWarnXindy & \tt (\^{}WARNING:\ )         \\
+\texttt{patternWarnXindy} & \texttt{(\^{}WARNING:\ )}         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the `glg'-file 
 indicating a warning when running `\texttt{xindy}' 
-via {\tt\$makeGlossariesCommand}. 
+via \texttt{\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
 } \\
-\tt patternReRunMakeGlossaries  
+\texttt{patternReRunMakeGlossaries}  
 & see Section~\ref{subsec:patternReRunMakeGlossaries}   \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -3255,43 +3255,43 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramLatex2Html} The \LaTeX-to-html-converter }
 \endlastfoot
-\tt tex4htCommand       & \tt htlatex  \\
+\texttt{tex4htCommand}       & \texttt{htlatex}  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
-\tt tex4htStyOptions    & \tt xhtml,uni-html4,2,svg,pic-tabular  \\
+\texttt{tex4htStyOptions}    & \texttt{xhtml,uni-html4,2,svg,pic-tabular}  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
-\tt tex4htOptions       & \tt' -cunihtf -utf8'         \\
+\texttt{tex4htOptions}       & \texttt{' -cunihtf -utf8'}         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 \end{minipage}
 } \\
-\tt t4htOptions         & the empty string              \\%-cvalidate
+\texttt{t4htOptions}         & the empty string              \\%-cvalidate
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for `\texttt{t4ht}' which converts idv-file and lg-file 
 into css-files, tmp-file and, 
 by need and if configured accordingly into \gls{png}-files. 
-The value `{\tt-p}' prevents creation of \gls{png}-pictures.
+The value `\texttt{-p}' prevents creation of \gls{png}-pictures.
 %The default value is the empty string. 
 \end{minipage}
 } \\
-\tt patternT4htOutputFiles & see Section~\ref{subsec:patternT4htOutputFiles}\\
+\texttt{patternT4htOutputFiles} & see Section~\ref{subsec:patternT4htOutputFiles}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern for the target files of goal `\texttt{html}' 
 for a given latex main file `\texttt{xxx.tex}'. 
 The patterns for the other targets 
 are hardcoded and take the form 
-`{\tt\^{}T\$T\textbackslash.yyy\$}', where `\texttt{yyy}' 
+`\texttt{\^{}T\$T\textbackslash.yyy\$}', where `\texttt{yyy}' 
 may be an ending or an alternative of endings. 
 		 
 The explanation of the pattern `\texttt{T\$T}' is the same as given 
-for the parameter {\tt\$patternCreatedFromLatexMain}. 
+for the parameter \texttt{\$patternCreatedFromLatexMain}. 
 Spaces and newlines are removed 
 from that pattern before processing. 
 \end{minipage}
@@ -3318,24 +3318,24 @@ The default value has the following components:
 %
 \begin{itemize}
 \item
-`{\tt\^{}T\$T\textbackslash.x?html?\$}' is the main file. 
+`\texttt{\^{}T\$T\textbackslash.x?html?\$}' is the main file. 
 \item
-`{\tt\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
+`\texttt{\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
 toc, lof, lot, indices, glossaries, NOT the bibliography. 
 \item
-`{\tt\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
+`\texttt{\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
 are chapters, sections and subsections or below 
 and appendices. 
 \item
-`{\tt\^{}T\$T\textbackslash d+\textbackslash.x?html?\$}' are footnotes. 
+`\texttt{\^{}T\$T\textbackslash d+\textbackslash.x?html?\$}' are footnotes. 
 \item
-`{\tt\^{}T\$T\textbackslash.css\$}' are cascaded stylesheets. 
+`\texttt{\^{}T\$T\textbackslash.css\$}' are cascaded stylesheets. 
 \item
-`{\tt\^{}T\$T-\textbackslash d+\textbackslash.svg\$}' and 
-`{\tt\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
+`\texttt{\^{}T\$T-\textbackslash d+\textbackslash.svg\$}' and 
+`\texttt{\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
 are svg/png-files representing figures. 
 \item
-`{\tt\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
+`\texttt{\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
 represents special symbols. 
 \end{itemize}
 		 
@@ -3357,10 +3357,10 @@ we obtain
 \end{Verbatim}		 
 
 The pattern is designed to match quite exactly 
-the files to be copied to {\tt\$targetSiteDirectory}, 
+the files to be copied to \texttt{\$targetSiteDirectory}, 
 for the goal 'html', 
 not much more and at any case not less. 
-since {\tt\$tex2htCommand} is not well documented, 
+since \texttt{\$tex2htCommand} is not well documented, 
 and still subject to development, 
 this pattern cannot be guaranteed to be final. 
 If the user finds an extension, (s)he is asked to contribute 
@@ -3398,31 +3398,31 @@ Parameter        & Default  \\
 \hline
 \caption{\label{tab:paramExt} The parameters of further converters }
 \endlastfoot
-\tt latex2rtfCommand    & \tt latex2rtf        \\
+\texttt{latex2rtfCommand}    & \texttt{latex2rtf}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The latex2rtf command to create rtf from latex directly. 
 %The default value is '\texttt{latex2rtf}'. 
 \end{minipage}
 } \\
-\tt latex2rtfOptions    & empty        \\
+\texttt{latex2rtfOptions}    & the empty string        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the command {\tt\$latex2rtfCommand}. 
+The options of the command \texttt{\$latex2rtfCommand}. 
 % The default value is the empty string. 
 \end{minipage}
 } \\
-\tt odt2docCommand      & \tt odt2doc          \\
+\texttt{odt2docCommand}      & \texttt{odt2doc}          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The odt2doc command to create MS word-formats from otd-files. 
 %The default value is '\texttt{odt2doc}'. 
 \end{minipage}
 } \\
-\tt odt2docOptions      & \tt -fdocx          \\
+\texttt{odt2docOptions}      & \texttt{-fdocx}          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the command {\tt\$odt2docCommand}. 
+The options of the command \texttt{\$odt2docCommand}. 
 Above all specification of output format 
 via the option '-f'. 
 Invocation is '\texttt{odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
@@ -3432,13 +3432,13 @@ are the following:
 \texttt{doc}, \texttt{doc6}, \texttt{doc95}, \texttt{docbook}, \texttt{docx}, 
 \texttt{docx7}, \texttt{ooxml} and \texttt{rtf}. 
 Interesting also the verbosity options 
-`{\tt-v}', `{\tt-vv}', `{\tt-vvv}' 
-the timeout `{\tt-T=secs}' and `{\tt--preserve}' 
+`\texttt{-v}', `\texttt{-vv}', `\texttt{-vvv}' 
+the timeout `\texttt{-T=secs}' and `\texttt{--preserve}' 
 to keep permissions and timestamp of the original document. 
 %The default value is '\texttt{-fdocx}'. 
 \end{minipage}
 } \\
-\tt pdf2txtCommand      & \tt pdftotext        \\
+\texttt{pdf2txtCommand}      & \texttt{pdftotext}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pdf2txt-command for converting pdf-files 
@@ -3446,10 +3446,10 @@ into plain text files.
 %The default value is '\texttt{pdftotext}'. 
 \end{minipage}
 } \\
-\tt pdf2txtOptions      & the empty string  \\
+\texttt{pdf2txtOptions}      & the empty string  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The options of the command {\tt\$pdf2txtCommand}. 
+The options of the command \texttt{\$pdf2txtCommand}. 
 %The default value is the empty string. 
 \end{minipage}
 } \\
@@ -3536,9 +3536,9 @@ the lot of infos and debugging output are not described here.
 Verbosity is choosen by the following command line options: 
 %
 \begin{itemize}
-\item[{\tt-e}] shows error messages, 
-\item[{\tt-X}] shows debug-messages, 
-\item[{\tt-q}] quiet hides the info-level and shows {\em only} errors. 
+\item[\texttt{-e}] shows error messages, 
+\item[\texttt{-X}] shows debug-messages, 
+\item[\texttt{-q}] quiet hides the info-level and shows {\em only} errors. 
 \end{itemize}
 %
 There seems no way to get warnings only. 
@@ -3598,22 +3598,23 @@ Identifier        & Message  \\
 \hline
 \caption{\label{tab:WarnLP} The BuildFailureExceptions of Settings   }
 \endlastfoot
-\tt\footnotesize TSS01  & \tt\footnotesize The tex source directory '\$texSrcDirectoryFile'\\
-	   & \tt\footnotesize should be an existing directory, but is not.  \\
+\texttt{\footnotesize TSS01} 
+& \texttt{\footnotesize The tex source directory '\$texSrcDirectoryFile'} \\
+& \texttt{\footnotesize should be an existing directory, but is not. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The tex source directory is given in the pom/build-file 
-with default value {\tt./src/site/tex}. 
+with default value \texttt{./src/site/tex}. 
 It contains all files to be processed. 
 Thus is must be a directory. 
 \end{minipage}
 } \\
-\tt\footnotesize TSS02  & \tt\footnotesize The output directory '\$outputDirectory' \\
-           & \tt\footnotesize should be a directory if it exists, but is not.  \\
+\texttt{\footnotesize TSS02}  & \texttt{\footnotesize The output directory '\$outputDirectory'} \\
+& \texttt{\footnotesize should be a directory if it exists, but is not. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The output directory is given in the pom/build-file 
-with default value {\tt./target/site/.}. 
+with default value \texttt{./target/site/.}. 
 The output directory is where the result of the goal/task 
 are copied to. 
 If it does not yet exist, it is created 
@@ -3621,7 +3622,6 @@ but if it exists and is a regular file, it cannot be created any more.
 \end{minipage}
 } \\
 \end{longtable}
-
 
 
 \begin{longtable}{|ll|}
@@ -3635,7 +3635,7 @@ Identifier        & Message  \\
 \caption{\label{tab:TEX} The BuildFailureException of class
   CommandExecutorImpl }
 \endlastfoot
-\tt\footnotesize TEX01 & \tt\footnotesize Error running \$command.   \\
+\texttt{\footnotesize TEX01} & \texttt{\footnotesize Error running \$command. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Compare with EEX01 in Table~\ref{tab:WarnCEI}: 
@@ -3674,13 +3674,15 @@ Id.        & Message  \\
 \hline
 \caption{\label{tab:BFExc} The BuildFailureExceptions of TexFileUtilsImpl  }
 \endlastfoot
-\tt\footnotesize TFU01 & \tt\footnotesize Cannot create destination directory '\$targetDir'.   \\
+\texttt{\footnotesize TFU01} 
+& \texttt{\footnotesize Cannot create destination directory '\$targetDir'. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 This is mainly because of writing permissions. 
 \end{minipage}
 } \\
-\tt\footnotesize TFU04 & \tt\footnotesize Cannot overwrite directory '\$destFile'.   \\
+\texttt{\footnotesize TFU04} 
+& \texttt{\footnotesize Cannot overwrite directory '\$destFile'. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Because this plugin shall not turn directories into regular files 
@@ -3688,8 +3690,9 @@ and vice versa.
 This failure indicates that another plugin/task disturbs this one. 
 \end{minipage}
 } \\
-\tt\footnotesize TFU06 & \tt\footnotesize Cannot copy file '\$srcFileName'
-		     to directory '\$targetDir'.   \\
+\texttt{\footnotesize TFU06 }
+& \texttt
+{\footnotesize Cannot copy file '\$srcFileName' to directory '\$targetDir'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 This is mainly because of writing permissions. 
@@ -3766,8 +3769,8 @@ So, e.g. \texttt{pdflatex -v xxx.tex} does not create a pdf-file as expected.
 \hline
 \caption{\label{tab:WarnALP} The errors and warnings on running a command  }
 \endlastfoot
-\tt\footnotesize EEX01 & \tt\footnotesize Running \$command 
-			    failed with return code \$returnCode. \\
+\texttt{\footnotesize EEX01} & \texttt{\footnotesize Running \$command 
+			    failed with return code \$returnCode. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Compare with TEX01 in Table~\ref{tab:TEX}: 
@@ -3775,63 +3778,66 @@ Error execution means that there is even no valid return code.
 % Variables: 
 % %
 % \begin{itemize}
-% \item {\tt\$command}: The command executed. 
-% \item {\tt\$returnCode}: The failure code which is not $0$ in this case. 
+% \item \texttt{\$command}: The command executed. 
+% \item \texttt{\$returnCode}: The failure code which is not $0$ in this case. 
 % \end{itemize}
 \end{minipage}
 } \\
-
-\tt\footnotesize EEX02 & \tt\footnotesize Running \$command failed: 
-			  No target file '\$fileName' written. \\
+\texttt{\footnotesize EEX02} & \texttt{\footnotesize Running \$command failed: 
+			  No target file '\$fileName' written. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize EEX03 & \tt\footnotesize Running \$command failed: \\
-                       &             Target file '\$fileName' is not updated. \\
+\texttt{\footnotesize EEX03} 
+& \texttt{\footnotesize Running \$command failed: } \\
+& \texttt{\footnotesize Target file '\$fileName' is not updated. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WEX04 & \tt\footnotesize Cannot read target file '\$fileName';
-                                          may be outdated. \\
+\texttt{\footnotesize WEX04} 
+& \texttt
+{\footnotesize Cannot read target file '\$fileName'; may be outdated. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WEX05 & \tt\footnotesize Update control 
-                                          may emit false warnings. \\
+\texttt{\footnotesize WEX05} 
+& \texttt{\footnotesize Update control may emit false warnings. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize EAP02 & \tt\footnotesize Running \$command failed: 
-No log file '\$logFileName' written.   \\
+\texttt{\footnotesize EAP02} & \texttt{\footnotesize Running \$command failed: 
+No log file '\$logFileName' written. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize EAP01  & \tt\footnotesize Running \$command failed. 
-Errors logged in '\$logFileName'. \\
+\texttt{\footnotesize EAP01}  & \texttt{\footnotesize Running \$command failed. 
+Errors logged in '\$logFileName'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WAP03 & \tt\footnotesize Running \$command emitted warnings 
-logged in '\$logFileName'.   \\
+\texttt{\footnotesize WAP03} 
+& \texttt{\footnotesize Running \$command emitted warnings 
+logged in '\$logFileName'. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WLP03   & \tt\footnotesize Running \$command created bad boxes 
-                              logged in '\$logFileName'.  \\
+\texttt{\footnotesize WLP03} 
+& \texttt{\footnotesize Running \$command created bad boxes 
+logged in '\$logFileName'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
@@ -3850,49 +3856,54 @@ Id.        & Message  \\
 \hline
 \caption{\label{tab:WarnCEI} The errors and warnings on files/streams  }
 \endlastfoot
-\tt\footnotesize WFU01  & \tt\footnotesize Cannot read directory '\$dir'; 
-build may be incomplete.  \\
+\texttt{\footnotesize WFU01} 
+& \texttt{\footnotesize Cannot read directory '\$dir'; 
+build may be incomplete. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WPP02  & \tt\footnotesize Cannot read tex file '\$texFile'; 
-may bear latex main file.  \\
+\texttt{\footnotesize WPP02} 
+& \texttt{\footnotesize Cannot read tex file '\$texFile'; 
+may bear latex main file. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WAP04  & \tt\footnotesize Cannot read log file '\$logFileName'; 
-			  may hide warnings/errors.   \\
+\texttt{\footnotesize WAP04} 
+& \texttt{\footnotesize Cannot read log file '\$logFileName'; 
+  may hide warnings/errors. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WLP02  & \tt\footnotesize Cannot read log file 
-'\$logFileName'; 
-                            \$kind may require rerun.  \\
+\texttt{\footnotesize WLP02} 
+& \texttt{\footnotesize Cannot read log file '\$logFileName'; 
+  \$kind may require rerun. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WFU03  & \tt\footnotesize Cannot close '\$closeable'.  \\
+\texttt{\footnotesize WFU03} 
+& \texttt{\footnotesize Cannot close '\$closeable'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize EFU05  & \tt\footnotesize Cannot delete file '\$delFile'.  \\
+\texttt{\footnotesize EFU05} 
+& \texttt{\footnotesize Cannot delete file '\$delFile'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 
 \end{minipage}
 } \\
-\tt\footnotesize EFU06  & \tt\footnotesize Cannot move file '\$fromFile' 
-                                           to '\$toFile'.  \\
+\texttt{\footnotesize EFU06} 
+& \texttt{\footnotesize Cannot move file '\$fromFile' to '\$toFile'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
@@ -3911,22 +3922,24 @@ Id.        & Message  \\
 \hline
 \caption{\label{tab:WarnLPP} Miscellaneous errors and warnings  }
 \endlastfoot
-\tt\footnotesize WPP03  & \tt\footnotesize Skipped processing of files 
-with suffixes \$skipped. \\
+\texttt{\footnotesize WPP03} 
+& \texttt{\footnotesize Skipped processing of files with suffixes \$skipped. }\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WPP04  & \tt\footnotesize Skip processing '\$srcFile': 
-                                  interpreted as target of '\$lmFile'. \\
+\texttt{\footnotesize WPP04} 
+& \texttt{\footnotesize Skip processing '\$srcFile': 
+  interpreted as target of '\$lmFile'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
 \end{minipage}
 } \\
-\tt\footnotesize WLP01  & \tt\footnotesize LaTeX requires rerun \\
-                        & \tt but maximum number \$maxNumRerunsLatex reached.  \\
+\texttt{\footnotesize WLP01} 
+& \texttt{\footnotesize LaTeX requires rerun } \\
+& \texttt{but maximum number \$maxNumRerunsLatex reached. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
@@ -4121,7 +4134,7 @@ Glossary occurs in the toc but is not numbered.
 Did not find a way to add a numbered entry for the glossary 
 into the table of contents. 
 
-The pattern {\tt(! )} detects an error only 
+The pattern \texttt{(! )} detects an error only 
 \texttt{-no-file-line-error} (which is the default) is set 
 but does not work with option \texttt{-file-line-error}. 
 This yields 
@@ -4148,7 +4161,7 @@ but also for further patterns like multiline-warnings.
 
 Also there seems to be a bug in java's regex package, 
 which leads to nontermination: 
-pattern {\tt\~(\textbackslash s*)*xx} seems not to terminate. 
+pattern \texttt{\~(\textbackslash s*)*xx} seems not to terminate. 
 
 A problem is also that the ending .svg may occur as a source 
 and as a target file of htlatex. 
@@ -4187,15 +4200,15 @@ support for dvi-creation should be provided separately.
 
 For target dvi, 
 neither png nor jpg-pictures are included. 
-The other formats work with {\tt\$pdfViaDvi} set. 
+The other formats work with \texttt{\$pdfViaDvi} set. 
 Note that the postscript-files must be in the same directory 
 as the dvi, probably because it includes them 
 only by link. 
 
-For the other case, {\tt\$pdfViaDvi} unset, this requires some research. 
+For the other case, \texttt{\$pdfViaDvi} unset, this requires some research. 
 
 Also for creation of the txt-format, 
-{\tt\$pdfViaDvi} must be set. 
+\texttt{\$pdfViaDvi} must be set. 
 
 FIXME: on bibliography, index and glossary 
 
