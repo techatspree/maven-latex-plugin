@@ -52,13 +52,13 @@ Single
 6 6975 1350 10575 2700
 5 1 0 1 0 7 50 -1 -1 0.000 0 0 1 0 8325.000 2025.000 7425 2700 7200 2025 7425 1350
 	1 0 1.00 120.00 240.00
-4 0 0 50 -1 0 10 0.0000 7 165 3015 7425 2025 \\texttt{\\textbackslash includegraphics\\{pppxxx\\}}\001
+4 0 0 50 -1 0 10 0.0000 7 165 3015 7425 2025 \\texttt{\\textbackslash includegraphics\\{xxx\\}}\001
 -6
 # Inclusion of xxx.eps in xxx.ptx 
 6 6975 3375 10575 4725
 5 1 0 1 0 7 50 -1 -1 0.000 0 1 1 0 8325.000 4050.000 7425 3375 7200 4050 7425 4725
 	1 0 1.00 120.00 240.00
-4 0 0 50 -1 0 10 0.0000 7 165 3015 7425 4050 \\texttt{\\textbackslash includegraphics\\{pppxxx\\}}\001
+4 0 0 50 -1 0 10 0.0000 7 165 3015 7425 4050 \\texttt{\\textbackslash includegraphics\\{xxx\\}}\001
 -6
 # performs some shift to the left which is necessary to avoid overfull hbox 
 4 0 0 50 -1 0 12 0.0000 4 180 795 8775 5175  \001
