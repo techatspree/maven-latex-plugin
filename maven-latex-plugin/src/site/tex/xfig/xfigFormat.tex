@@ -569,7 +569,7 @@ int    & ObjectCode & always 4 (see Section~\ref{sec:obj}) \\
 int    & SubType    & 0: Left justified \\ %better: Justification 
 &&                    1: Center justified \\
 &&                    2: Right justified \\
-int    & PenColor   & see Section~\ref{subsec:paramColorsFill}xs \\
+int    & PenColor   & see Section~\ref{subsec:paramColorsFill} \\
 int    & Depth      & see Section~\ref{subsec:styDep} \\
 int    & PenStyle   & -1, not used \\
 int    & Font       & see below \\
@@ -665,15 +665,18 @@ For {\tt FontFlags} bit 2 = 1,
 \end{enumerate}
       
 The {\tt Text} field above is a sequence of ASCII characters. 
-It starts after a single blank character 
-which separates the coordinate field {\tt x, y} from the {\tt Text} field 
-and ends before the sequence ``{\tt\textbackslash 001}''. 
-This sequence is not part of the string. 
+It starts after a {\em single} blank character 
+which separates the coordinate field {\tt x, y} from the {\tt Text} field. 
+This allows to specify texts with leading blanks. 
+The text field ends before the sequence ``{\tt\textbackslash 001}''; 
+the latter sequence is not part of the text field. 
 Characters above octal 177 are represented by ``{\tt\textbackslash xxx}'' 
 where {\tt xxx} is the octal value. 
 This permits fig files to be edited with 7-bit editors 
 and sent by e-mail without data loss. 
 Note that the {\tt Text} field may contain ``{\tt\textbackslash n}''. 
+To specify a literal backslash write ``{\tt\textbackslash\textbackslash}''. 
+The latter is vital for including \LaTeX{} in fig-figures. 
 
 
 Text	 
