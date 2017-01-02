@@ -1,4 +1,4 @@
-
+\RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[10pt, a4paper]{article}
 
 \usepackage[aux]{rerunfilecheck}
@@ -44,16 +44,16 @@ pdf%
 \else
 dvi%
 \fi.
-The package {\tt tex4ht} is \aaa loaded. 
+The package \texttt{tex4ht} is \aaa loaded. 
 
 This documents describes the grammar 
 of the native file format of the xfig graphic program version 3.2. 
 It is based on xfig.3.2/Doc/FORMAT3.2 in xfig 3.2 source distribution. 
-The file extension is {\tt.fig} and the file-format is human-readable. 
+The file extension is \texttt{.fig} and the file-format is human-readable. 
 
-If a line contains {\tt\#}, 
+If a line contains \texttt{\#}, 
 the rest of the line is ignored as regards the 
-Lines starting with {\tt\#} are comment lines and are ignored. 
+Lines starting with \texttt{\#} are comment lines and are ignored. 
 Also xfig does not insert comments, 
 except the first line as described in Section~\ref{sec:header}. 
 On the other hand, if one writes comments, e.g. with an editor, 
@@ -101,7 +101,7 @@ Trailing blanks are not preserved.
 Leading blanks do not occur in the header. 
 Lines with leading blanks in the header are ignored. 
 Thus e.g. the orientation line 
-``{\tt\ \ \ Landscape}'' is replaced by ``{\tt Portrait}'', 
+``\texttt{\ \ \ Landscape}'' is replaced by ``\texttt{Portrait}'', 
 which demands the default orientation. 
 
 Whereas each attribute given in the header is described by a single line, 
@@ -273,7 +273,7 @@ figObjects :: [Commented Object]
 
 
 The rest of the file contains various objects.  
-An object can be one of six classes (or types) with according {\tt ObjectCode}.
+An object can be one of six classes (or types) with according \texttt{ObjectCode}.
 %
 \begin{enumerate}
 \item[0]
@@ -328,7 +328,7 @@ hex-string & RgbValues   & red, green and blue values (e.g. \#330099) \\
 \hline
 \end{tabular}
 
-The {\tt Headline} ist the sole line defining a Color Pseudo-Object. 
+The \texttt{Headline} ist the sole line defining a Color Pseudo-Object. 
 
 
 \subsection{Ellipse including Circle}\label{subsec:ellipse}
@@ -369,7 +369,7 @@ int   &  end-x, end-y       & Fig units; the last point entered \\
 \hline
 \end{tabular}
 %
-The {\tt Headline} ist the sole line defining an ellipse. 
+The \texttt{Headline} ist the sole line defining an ellipse. 
 
 \noindent
 For further explanations on start-x/y and end-x/y: \\
@@ -406,7 +406,7 @@ Defines various kinds of polygonal lines, both open and closed.
 As special cases also boxes and arc-boxes, i.e. boxes with rounded vertices. 
 As a special case also a box which serves as bounding box for a picture. 
 In this case, this polygonal line finally defines the picture itself. 
-See {\tt SubType} in the Headline below. 
+See \texttt{SubType} in the Headline below. 
 
 \noindent
 Headline: \\
@@ -448,16 +448,16 @@ After the Headline follows
 %
 \begin{itemize}
 \item
-the {\tt ForwardArrowLine}  only if {\tt ForwardArrow}  is not 0 and 
+the \texttt{ForwardArrowLine}  only if \texttt{ForwardArrow}  is not 0 and 
 \item
-the {\tt BackwardArrowLine} only if {\tt BackwardArrow} is not 0; 
+the \texttt{BackwardArrowLine} only if \texttt{BackwardArrow} is not 0; 
 \end{itemize}
 %
 both described in Section~\ref{subsec:paramArrowLines}. 
 
 
-Only if {\tt SubType} in the Headline is 5, 
-follows a {\tt PicLine} with the following form:
+Only if \texttt{SubType} in the Headline is 5, 
+follows a \texttt{PicLine} with the following form:
 %
 \begin{tabular}{|lll|}
 \hline
@@ -470,11 +470,11 @@ string  & File        & name of picture file to import \\
 \hline
 \end{tabular}
 
-Then follows a {\tt PointsLine} with a number of coordinates 
-given by {\tt NPoints} in the first line. 
-If the {\tt SubType} is 5, the {\tt PointsLine} 
+Then follows a \texttt{PointsLine} with a number of coordinates 
+given by \texttt{NPoints} in the first line. 
+If the \texttt{SubType} is 5, the \texttt{PointsLine} 
 defines the boundary of the picture and also rotation. 
-The form of the {\tt PointsLine} is given 
+The form of the \texttt{PointsLine} is given 
 in Section~\ref{subsec:paramPointsLine}. 
 This is the same as for Polylines described in Section~\ref{subsec:spline}. 
 
@@ -521,23 +521,23 @@ After the first line follows
 %
 \begin{itemize}
 \item
-the {\tt ForwardArrowLine}  only if {\tt ForwardArrow}  is not 0 and 
+the \texttt{ForwardArrowLine}  only if \texttt{ForwardArrow}  is not 0 and 
 \item
-the {\tt BackwardArrowLine} only if {\tt BackwardArrow} is not 0; 
+the \texttt{BackwardArrowLine} only if \texttt{BackwardArrow} is not 0; 
 \end{itemize}
 %
 both described in Section~\ref{subsec:paramArrowLines}. 
 
-Then follows a {\tt PointsLine} with a number of coordinates 
-given by {\tt NPoints} in the first line. 
-The form of the {\tt PointsLine} is given 
+Then follows a \texttt{PointsLine} with a number of coordinates 
+given by \texttt{NPoints} in the first line. 
+The form of the \texttt{PointsLine} is given 
 in Section~\ref{subsec:paramPointsLine}. 
 This is the same as for Polylines described in Section~\ref{subsec:polyline}. 
 
-Finally, and unlike for Polylines, there comes the {\tt ControlPointsLine}: 
+Finally, and unlike for Polylines, there comes the \texttt{ControlPointsLine}: 
 
-There is one shape factor for each point in the {\tt PointsLine}, 
-i.e. {\tt NPoints} shape factors. 
+There is one shape factor for each point in the \texttt{PointsLine}, 
+i.e. \texttt{NPoints} shape factors. 
 The value of this factor must be between 
 %
 \begin{itemize}
@@ -585,10 +585,10 @@ string & Text       & see below \\
 \hline
 \end{tabular}
 
-The {\tt Headline} ist the sole line defining a text object. 
+The \texttt{Headline} ist the sole line defining a text object. 
 
 \noindent
-The bits of the {\tt FontFlags} field are defined as follows:
+The bits of the \texttt{FontFlags} field are defined as follows:
 %
 \begin{enumerate}
 \item[0]
@@ -598,7 +598,7 @@ Special text: interprete test as for \LaTeX-code.
 If this is set, the following flag affects the view on the xfig GUI 
 but not external view, e.g. when printing or exporting. 
 \item
-PostScript font: interprete {\tt Font} above 
+PostScript font: interprete \texttt{Font} above 
 as Postscript font (otherwise as \LaTeX{}-font) 
 Details follow below. 
 \item
@@ -606,12 +606,12 @@ Hidden text: whether the text is hidden in the xfig GUI.
 This does not affect the external view, e.g. printing and export. 
 \end{enumerate}
 
-The {\tt Font} field is immaterial, if the Special flag above is set. 
+The \texttt{Font} field is immaterial, if the Special flag above is set. 
 Otherwise its meaning depends on the PostScrpt/\LaTeX-flag 
 described above: 
 
-For {\tt FontFlags} bit 2 = 0, 
-{\tt Font} is interpreted as \LaTeX-font with the following encoding: 
+For \texttt{FontFlags} bit 2 = 0, 
+\texttt{Font} is interpreted as \LaTeX-font with the following encoding: 
 %
 \begin{enumerate}
 \item[0] \LaTeX{} Default font
@@ -622,8 +622,8 @@ For {\tt FontFlags} bit 2 = 0,
 \item    Typewriter
 \end{enumerate}
 
-For {\tt FontFlags} bit 2 = 1, 
-{\tt Font} is interpreted as PostScript-font with the following encoding: 
+For \texttt{FontFlags} bit 2 = 1, 
+\texttt{Font} is interpreted as PostScript-font with the following encoding: 
 
 \begin{enumerate}
 \item[-1] PostScript Default font
@@ -664,18 +664,18 @@ For {\tt FontFlags} bit 2 = 1,
 \item     Zapf Dingbats
 \end{enumerate}
       
-The {\tt Text} field above is a sequence of ASCII characters. 
+The \texttt{Text} field above is a sequence of ASCII characters. 
 It starts after a {\em single} blank character 
-which separates the coordinate field {\tt x, y} from the {\tt Text} field. 
+which separates the coordinate field \texttt{x, y} from the \texttt{Text} field. 
 This allows to specify texts with leading blanks. 
-The text field ends before the sequence ``{\tt\textbackslash 001}''; 
+The text field ends before the sequence ``\texttt{\textbackslash 001}''; 
 the latter sequence is not part of the text field. 
-Characters above octal 177 are represented by ``{\tt\textbackslash xxx}'' 
-where {\tt xxx} is the octal value. 
+Characters above octal 177 are represented by ``\texttt{\textbackslash xxx}'' 
+where \texttt{xxx} is the octal value. 
 This permits fig files to be edited with 7-bit editors 
 and sent by e-mail without data loss. 
-Note that the {\tt Text} field may contain ``{\tt\textbackslash n}''. 
-To specify a literal backslash write ``{\tt\textbackslash\textbackslash}''. 
+Note that the \texttt{Text} field may contain ``\texttt{\textbackslash n}''. 
+To specify a literal backslash write ``\texttt{\textbackslash\textbackslash}''. 
 The latter is vital for including \LaTeX{} in fig-figures. 
 
 
@@ -797,9 +797,9 @@ After the first line follows
 %
 \begin{itemize}
 \item
-the {\tt ForwardArrowLine}  only if {\tt ForwardArrow}  is not 0 and 
+the \texttt{ForwardArrowLine}  only if \texttt{ForwardArrow}  is not 0 and 
 \item
-the {\tt BackwardArrowLine} only if {\tt BackwardArrow} is not 0; 
+the \texttt{BackwardArrowLine} only if \texttt{BackwardArrow} is not 0; 
 \end{itemize}
 %
 both described in Section~\ref{subsec:paramArrowLines}. 
@@ -870,7 +870,7 @@ int & LowerLeft-corner-y  & Fig units \\
 Subsequent lines of the compound except the last one 
 define a list of objects in the Compound
 These objects may well be Compounds themselves. 
-The last line is {\tt-6}. 
+The last line is \texttt{-6}. 
 
 Compound CompoundLine [Commented Object]	 
 Polyline PolylineLine (Maybe Arrow) (Maybe Arrow) (Maybe Pic) [(Integer, Integer)]	 
@@ -930,7 +930,7 @@ AreaFill:(NoFill|Filled Integer|Pattern Integer)
 
 \subsection{Style and Depth}\label{subsec:styDep}
 
-The {\tt CapStyle} field is defined FOR LINES, OPEN SPLINES and ARCS only 
+The \texttt{CapStyle} field is defined FOR LINES, OPEN SPLINES and ARCS only 
 used in ArcLine, SplineLine, PolylineLine
 and is encoded as follows:
 %
@@ -941,7 +941,7 @@ and is encoded as follows:
 \end{enumerate}
 
 \noindent
-The {\tt LineStyle} field is encoded as follows:
+The \texttt{LineStyle} field is encoded as follows:
 %
 \begin{enumerate}
 \item[-1] Default
@@ -954,7 +954,7 @@ The {\tt LineStyle} field is encoded as follows:
 \end{enumerate}
 
 \noindent
-The {\tt StyleVal} field is defined as 
+The \texttt{StyleVal} field is defined as 
 %
 \begin{itemize}
 \item
@@ -964,7 +964,7 @@ the distance between the dots, in 1/80 inches, for dotted lines.
 \end{itemize}
 
 \noindent
-The {\tt Depth} field is defined as follows:
+The \texttt{Depth} field is defined as follows:
 
          0 ... 999 where larger value means object is deeper than (under)
                    objects with smaller depth
@@ -1001,7 +1001,7 @@ float  & ArrowHeight    & Fig units \\
 \hline
 \end{tabular}
 
-The {\tt ArrowType} field is defined for LINES, ARCS and OPEN SPLINES only as follows:
+The \texttt{ArrowType} field is defined for LINES, ARCS and OPEN SPLINES only as follows:
 %
 \begin{enumerate}
 \item[0] Stick-type (the default in xfig 2.1 and earlier)
@@ -1033,19 +1033,19 @@ The {\tt ArrowType} field is defined for LINES, ARCS and OPEN SPLINES only as fo
 \end{enumerate}
 
 
-The {\tt ArrowStyle} field is defined for LINES, ARCS and OPEN SPLINES only 
+The \texttt{ArrowStyle} field is defined for LINES, ARCS and OPEN SPLINES only 
 as follows:
 %
 \begin{enumerate}
 \item[0] Hollow (actually filled with white)
-\item    Filled with {\tt PenColor} defined in Section~\ref{subsec:paramColorsFill}
+\item    Filled with \texttt{PenColor} defined in Section~\ref{subsec:paramColorsFill}
 \end{enumerate}
 
 
 \subsection{PointsLine}\label{subsec:paramPointsLine}
 
 \noindent
-The form of the {\tt PointsLine} is as follows: \\
+The form of the \texttt{PointsLine} is as follows: \\
 %
 \begin{tabular}{|lll|}
 \hline
@@ -1065,7 +1065,7 @@ int & xnpoints ynpoints & this will be the same as the 1st point \\
 \subsection{Colors and Filling}\label{subsec:paramColorsFill}
 
 \noindent
-Both {\tt PenColor} and {\tt FillColor} are encoded as follows: 
+Both \texttt{PenColor} and \texttt{FillColor} are encoded as follows: 
 %
 \begin{enumerate}
 \item[-1]    Default
@@ -1092,18 +1092,18 @@ Both {\tt PenColor} and {\tt FillColor} are encoded as follows:
               which are previously defined in some color pseudo-object. 
 \end{enumerate}
 
-The field {\tt AreaFill} is defined depending on the value of {\tt FillColor} 
+The field \texttt{AreaFill} is defined depending on the value of \texttt{FillColor} 
 (which is defined for all kinds of objects 
-for which {\tt AreaFill} is defined). 
+for which \texttt{AreaFill} is defined). 
 
 
-For all {\tt FillColor}s except {\tt Black} or {\tt Default} and {\tt White}, 
-the {\tt AreaFill} pattern is defined as follows: 
+For all \texttt{FillColor}s except \texttt{Black} or \texttt{Default} and \texttt{White}, 
+the \texttt{AreaFill} pattern is defined as follows: 
 %
 \begin{enumerate}
 \item[-1]    not filled
 \item[0]     black
-\item[1-19]  "shades" of the {\tt FillColor}, from darker to lighter.
+\item[1-19]  "shades" of the \texttt{FillColor}, from darker to lighter.
              A shade is defined as the color mixed with black
 \item[20]    full saturation of the color
 \item[21-39] "tints" of the color from the color to white.
@@ -1127,7 +1127,7 @@ the {\tt AreaFill} pattern is defined as follows:
 \item[56]    vertical "tire treads"
 \end{enumerate}
 
-For {\tt FillColor}s {\tt Black} and {\tt Default}, 
+For \texttt{FillColor}s \texttt{Black} and \texttt{Default}, 
 there are the following deviations: 
 %
 \begin{enumerate}
@@ -1138,7 +1138,7 @@ there are the following deviations:
 \item[21-40] not used. 
 \end{enumerate}
 
-If the {\tt FillColor} is {\tt White} there are the following deviations 
+If the \texttt{FillColor} is \texttt{White} there are the following deviations 
 from standard colors: 
 %
 \begin{enumerate}
