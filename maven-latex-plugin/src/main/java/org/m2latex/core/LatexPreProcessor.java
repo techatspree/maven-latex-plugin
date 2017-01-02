@@ -505,8 +505,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 
     /**
-     * Runs fig2dev on fig-files to generate pdf and pdf_t files. 
-     * This is a quite restricted usage of fig2dev. 
+     * Converts the fig-file <code>figFile</code> 
+     * into a tex-file with ending ptx 
+     * including a pdf-file or an eps-file also created. 
+     * To that end, invokes {@link #runFig2DevInTex(File, LatexDev)} twice 
+     * to create a pdf-file and an eps-file 
+     * and invokes {@link #runFig2TexInclDev(File)} (once) 
+     * to create the tex-file. 
      * <p>
      * Logging: 
      * <ul>
@@ -539,12 +544,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * From <code>figFile</code> create pdf/eps-file 
-     * (graphics without text with special flag set) 
-     * depending on <code>dev</code> embedded in some tex-file 
+     * containing graphics without text with special flag set. 
+     * The output format depends on <code>dev</code>. 
+     * The resulting file is included in some tex-file 
      * created by {@link #runFig2TexInclDev(File)}. 
+     * Conversion is done by {@link Settings#getFig2devCommand()}. 
      * <p>
      * Logging: FIXME: 
-     * warning EEX01, EEX02, EEX03, WEX04, WEX05 
+     * EEX01, EEX02, EEX03, WEX04, WEX05 
      *
      * @param figFile
      *    the fig-file to be processed 
@@ -654,41 +661,65 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // -n is pstex but not in pdf, 
     // -a is pdf but not pstex... strange: is postscript 
 
-    // -L pdftex/pstex <optionsGen> <optionsPdf> xxx.fig xxx.pdf/xxx.eps 
+    /**
+     * Returns an array of options of the form 
+     * <code>-L &lt;language> &lt;optionsGen> &lt;optionsPdfEps> xxx.fig xxx.pdf/xxx.eps 
+     * </code> for invocation of {@link Settings#getFig2devCommand()} 
+     * for creation of the pdf/eps-part of a fig-figure 
+     * as done in {@link #runFig2DevInTex(File, LatexDev)}. 
+     *
+     * @param language
+     *    is the output language 
+     *    which is either <code>pdftex</code> or <code>pstex</code> 
+     * @param optionsGen
+     *    the general options, applying to both the pdf/eps part 
+     *    and the tex part of the figure under consideration. 
+     * @param optionsPdfEps
+     *    the options, specific for the pdf/eps part (which is the same)
+     *    of the figure under consideration. 
+     * @param figFile
+     *    the fig-file to be transformed. 
+     * @param grpFile
+     *    the graphics file (pdf/eps-file) 
+     *    which is the result of the transformation. 
+     */
     private String[] buildArgumentsFig2PdfEps(String language,
 					      String optionsGen, 
-					      String optionsPdf, 
+					      String optionsPdfEps, 
 					      File figFile, 
-					      File figInTexFile) {
-	String[] optionsGenArr = optionsGen.isEmpty() 
-	    ? new String[0] : optionsGen.split(" ");
-	String[] optionsPdfArr = optionsPdf.isEmpty() 
-	    ? new String[0] : optionsPdf.split(" ");
-	int lenSum = optionsGenArr.length +optionsPdfArr.length;
+					      File grpFile) {
+	String[] optionsGenArr    = optionsGen   .isEmpty() 
+	    ? new String[0] : optionsGen   .split(" ");
+	String[] optionsPdfEpsArr = optionsPdfEps.isEmpty() 
+	    ? new String[0] : optionsPdfEps.split(" ");
+	int lenSum = optionsGenArr.length + optionsPdfEpsArr.length;
 
+	// add the four additional options 
 	String[] args = new String[lenSum + 4];
 	// language 
 	args[0] = "-L";
 	args[1] = language;
 	// general options 
-	System.arraycopy(optionsGenArr, 0, args, 2, optionsGenArr.length);
+	System.arraycopy(optionsGenArr,    0, args, 2, 
+			 optionsGenArr   .length);
 	// language specific options 
-	System.arraycopy(optionsPdfArr, 0, 
-			 args, 2+optionsGenArr.length, optionsPdfArr.length);
+	System.arraycopy(optionsPdfEpsArr, 0, args, 2+optionsGenArr.length, 
+			 optionsPdfEpsArr.length);
 	// input: fig-file 
         args[2+lenSum] = figFile.getName();
 	// output: pdf/eps-file 
-	args[3+lenSum] = figInTexFile.getName();
+	args[3+lenSum] = grpFile.getName();
 	return args;
     }
 
     /**
      * From <code>figFile</code> create tex-file 
      * containing text with special flag set and 
-     * including the rest of <code>figFile</code>. 
+     * including a graphic file containing the rest of <code>figFile</code>. 
      * Inclusion is without file extension and so both possible results 
      * of {@link #runFig2DevInTex(File, LatexDev)} can be included 
-     * at latex compile runtime. 
+     * when compiling with latex. 
+     * Conversion is done by {@link Settings#getFig2devCommand()}. 
      * <p>
      * Logging: FIXME: 
      * warning EEX01, EEX02, EEX03, WEX04, WEX05 
@@ -743,7 +774,31 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     //                   set it from latex
     //   -p name       name of the PostScript file to be overlaid
 
-    // -L (pdf/ps)tex_t <optionsGen> <optionsPdf> -p xxx xxx.fig xxx.ptx
+    /**
+     * Returns an array of options of the form 
+     * <code>-L &lt;language> &lt;optionsGen> &lt;optionsPdfEps> -p xxx xxx.fig xxx.ptx</code> for invocation of {@link Settings#getFig2devCommand()} 
+     * for creation of the tex-part of a fig-figure 
+     * as done in {@link #runFig2TexInclDev(File)}. 
+     * Note that the option <code>-p xxx</code> 
+     * specifies the name of the pdf/eps-file 
+     * included in the result file <code>ptxFile</code> 
+     * without suffix. 
+     *
+     * @param language
+     *    is the output language 
+     *    which is either <code>pdftex_t</code> or <code>pstex_t</code> 
+     *    (which yield the same result). 
+     * @param optionsGen
+     *    the general options, applying to both the pdf/eps part 
+     *    and the tex part of the figure under consideration. 
+     * @param optionsPtx
+     *    the options, specific for the tex part 
+     *    of the figure under consideration (for the ptx-file). 
+     * @param figFile
+     *    the fig-file to be transformed. 
+     * @param ptxFile
+     *    the ptx-file which is the result of the transformation. 
+     */
     private String[] buildArgumentsFig2Ptx(String optionsGen,
 					   String optionsPtx,
 					   File figFile, 
@@ -754,21 +809,22 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    ? new String[0] : optionsPtx.split(" ");
 	int lenSum = optionsGenArr.length +optionsPtxArr.length;
 
+	// add the six additional options 
 	String[] args = new String[lenSum + 6];
 	// language 
 	args[0] = "-L";
 	args[1] = XFIG_TEX_LANGUAGE;
 	// general options 
-	System.arraycopy(optionsGenArr, 0, 
-			 args, 2, optionsGenArr.length);
+	System.arraycopy(optionsGenArr, 0, args, 2, 
+			 optionsGenArr.length);
 	// language specific options 
-	System.arraycopy(optionsPtxArr, 0, 
-			 args, 2+optionsGenArr.length, optionsPtxArr.length);
+	System.arraycopy(optionsPtxArr, 0, args, 2+optionsGenArr.length, 
+			 optionsPtxArr.length);
 	// -p pdf/eps-file name in ptx-file without suffix 
 	args[2+lenSum] = "-p";
 	// full path without suffix 
 	args[3+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_VOID)
-	    .toString();
+	    .getName();
 	// input: fig-file 
         args[4+lenSum] = figFile.getName();
 	// output: ptx-file 
@@ -799,7 +855,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Converts a gnuplot-file into a tex-file with ending ptx 
-     * including a pdf-file. 
+     * including a pdf-file or an eps-file also created. 
+     * To that end, invokes {@link #runGnuplot2Dev(File, LatexDev)} twice 
+     * to create a pdf-file and an eps-file 
+     * and to create the tex-file which can include both. 
      * <p>
      * Logging: 
      * <ul>
@@ -829,10 +888,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	String command = this.settings.getGnuplotCommand();
-	// FIXME: eliminate literal 
-	// FIXME: wrong name 
 	File grpFile = this.fileUtils.replaceSuffix
-	    (gpFile, "."+dev.getGnuplotInTexLanguage());
+	    (gpFile, dev.getGraphicsInTexSuffix());
 	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
 	String[] args = new String[] {
@@ -840,20 +897,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // 
 	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
 	    " " + this.settings.getGnuplotOptions() + 
-	    ";set output \"" + ptxFile + //.getName()
+	    ";set output \"" + ptxFile.getName() + 
 	    "\";load \"" + gpFile.getName() + "\""
 	};
-	// FIXME: include options. 
-// set terminal cairolatex
-// {eps | pdf} done before. 
-// {standalone | input}
-// {blacktext | colortext | colourtext}
-// {header <header> | noheader}
-// {mono|color}
-// {{no}transparent} {{no}crop} {background <rgbcolor>}
-// {font <font>} {fontscale <scale>}
-// {linewidth <lw>} {rounded|butt|square} {dashlength <dl>}
-// {size <XX>{unit},<YY>{unit}}
 
 
 //	if (update(gpFile, ptxFile)) {
@@ -953,7 +999,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
      /**
      * Converts an svg-file into a tex-file with ending ptx 
-     * including a pdf-file. FIXME: not yet
+     * including a pdf-file or an eps-file also created. 
+     * To that end, invokes {@link #runSvg2Dev(File, LatexDev, boolean)} twice 
+     * to create a pdf-file and an eps-file 
+     * and to create the tex-file which can include both. 
      * <p>
      * Logging: 
      * <ul>
@@ -983,14 +1032,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // with full path in ptx-file 
     // may throw BuildFailureException TEX01, 
     // may log EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
-
     private void runSvg2Dev(File svgFile, 
 			    LatexDev dev, 
 			    boolean renameTex) throws BuildFailureException {
 	String command = this.settings.getSvg2devCommand();
 
 	// full path without suffix 
-	// FIXME: although this is full path, the result is not 
 	File grpFile = this.fileUtils.replaceSuffix(svgFile, SUFFIX_VOID);
 	
 	// FIXME: eliminate literal: comes from .pdf_tex and .eps_tex 
@@ -999,7 +1046,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	String[] args = buildNullArguments(this.settings.getSvg2devOptions(), 
 					   svgFile);
-	args[0] = dev.getSvgExportOption() + grpFile;
+	args[0] = dev.getSvgExportOption() + grpFile.getName();
 
 	this.log.debug("Running " + command + 
 		       " on '" + svgFile.getName() + "'. ");
@@ -1066,6 +1113,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Returns an array of strings, 
      * where the 0th entry is <code>null</code> 
      * and a placeholder for option <code>-x</code> or <code>-m</code> 
+     * when used by {@link #runEbb(File)} 
+     * and for the export option 
+     * when used by {@link #runSvg2Dev(File, LatexDev, boolean)} 
      * then follow the options from <code>options</code> 
      * and finally comes the name of <code>file</code>. 
      */
