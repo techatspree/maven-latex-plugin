@@ -752,15 +752,91 @@ yyy
 
 \chapter{Graphical Preprocessing}\label{chap:GraphConversions}
 
+While \LaTeX{} is really strong in text processing 
+and also in formula processing, 
+in itself it is weak in its graphical abilities. 
+To include graphics into a \LaTeX-document, 
+several \LaTeX-packages are required and must be installed: 
+%
+\begin{itemize}
+\item[graphicx]
+is the basic graphics package which provides the command 
+\texttt{\textbackslash includegraphics} 
+which allows to include graphics natively 
+in the formats pdf, eps, jpg and png at least. 
+For details see \cite{GraX}. 
+\item[xcolor]
+allows to use colors in graphics. 
+Even if the author does not use graphics, 
+several formats, like \gls{fig}, \gls{gp} and \gls{svg} 
+offer it and so the according converters 
+transforming them into the native formats 
+create color information and so the package must be installed 
+if using those formats. 
+For details see \cite{XColorP}. 
+\item[transparent]
+allows to specify transparency in graphics. 
+Here the same applies as for color: 
+Even if you do not use the feature, 
+some source formats do (in fact only \gls{svg}) does 
+and so the according converters create according information 
+and so \LaTeX{} must get along with it. 
+For details see \cite{TransP}. 
+\item[bmpsize]
+is needed for bitmap formats like \gls{jpg} and \gls{png} only. 
+Used to extract resolution and bounding box. 
+FIXME: needed more information. 
+For details see \cite{BmpP}. 
+\item[import]
+is strictly speaking no graphics package. 
+According to its documentation \cite{ImpoP}, 
+it allows an imported file to find its own inputs 
+(using ``\texttt{\textbackslash input}'',
+``\texttt{\textbackslash includegraphics}'' etc.) in that directory. 
+This is vital for the graphic formats for which a tex-file is imported 
+which itself imports a pdf/eps file located in the same folder 
+but not in the folder of the importing file. 
+\end{itemize}
+
 We support figures created in the \gls{fig} by the program xfig, 
 figures created by the plotting utility gnuplot, 
-the tex-specific graphic language metapost 
+the tex-specific graphic language metapost, 
+figures in \gls{svg}-format 
 and finally figures in formats which can be included into a \LaTeX-file 
-without preprocessing like \gls{png} and \gls{jpg} 
-or with automatic conversion like \gls{svg}. 
+without preprocessing like \gls{png} and \gls{jpg}. 
 Further functionality on \LaTeX{} figures can be easily added. 
 If there is some need, please write an email to the author. 
 
+Table~\ref{tab:graphicOverview} gives an overview over the supported formats 
+together with the graphic converters, 
+the name of the parameter to configure which one is used 
+and the default value. 
+Of course this converter must be installed. 
+It is advisable to have also an editor installed. 
+Sometimes the editor is used also as converter. 
+For human readable formats like \texttt{fig}, it often makes sense, 
+to use both the graphical editor and the textual one. 
+
+\begin{longtable}{|l|ll|}
+\hline
+Graphic format & conversion tool & editor \\
+\hline
+\hline
+\endfirsthead
+\hline
+\caption{\label{tab:graphicOverview} 
+Overview over the supported graphic formats }
+\endlastfoot
+fig             & \texttt{fig2devCommand}, e.g. \texttt{fig2dev}  & xfig, emacs   \\
+gnuplot (gp)    & \texttt{gnuplotCommand}, e.g. \texttt{gnuplot}  & emacs         \\
+metapost (mp)   & \texttt{metapostCommand}, e.g. \texttt{mpost}   & emacs         \\
+svg             & \texttt{svg2devCommand}, e.g. \texttt{inkscape} & inkscape      \\
+jpg, png        & -        & gimp          \\
+\end{longtable}
+
+Besides the converter external to \LaTeX, 
+also several \LaTeX-packages are required 
+to use graphics. 
 
 
 This section describes the conversions of 
@@ -775,7 +851,7 @@ in pdf-format.
 %FIXME: missing pdf als basic input format. What about (e)ps? 
 Section~\ref{sec:fig2dev} shows how \texttt{fig2dev} converts fig-files 
 into \LaTeX-files containing text and including graphics in as pdf-files. 
-Likewise, Section~\ref{sec:gnuplot2pdf} describes 
+Likewise, Section~\ref{sec:gnuplot2dev} describes 
 how gnuplot converts gnuplot-files into pdf-files. 
 An insteresting alternative to gnuplot for computing pictures 
 is metapost described in Section~\ref{sec:metapost}. 
@@ -831,7 +907,8 @@ but this is something different.
 Graphics in xfig format cannot be directly included in latex files 
 but must be exported into a \LaTeX-readable format. 
 
-To export a file \texttt{xxx.fig} into several external formats, 
+To export a file \texttt{xxx.fig} residing in directory \texttt{yyy} 
+into several external formats, 
 \texttt{xfig} uses \texttt{fig2dev}. 
 A look in \cite{XFigF}, Section~3.4 shows that texts with set ``special''-flag 
 are interpreted as (la)tex-code. 
@@ -842,53 +919,91 @@ except for texts with set ``special''-flag.
 In \texttt{pdf} format, texts are interpreted litterally, 
 independent of the ``special''-flag. 
 Thus \texttt{fig2dev} offers a mixed solution: 
-export format \texttt{pdftex} which yields a pdf-file 
-containing all but text with set ``special''-flag 
-and complementary \texttt{pdftex\_t} which yields a tex-file 
+export \texttt{xxx.fig} in format \texttt{pdftex} which yields a pdf-file 
+\texttt{xxx.pdf} containing all but text with set ``special''-flag 
+and complementary \texttt{pdftex\_t} which yields a tex-file \texttt{xxx.ptx} 
 including the pdf-file and the texts with set ``special''-flag. 
 \index{special-flag}%maybe glossary 
+The exported files are in the same directory \texttt{yyy} 
+as the original file \texttt{xxx.fig}. 
 
-For example, the fig-file defining Figure~\ref{fig:fig2dev}, 
-\texttt{01fig2dev.fig} is transformed into a file  \texttt{01fig2dev.ptx} 
+For example, 
+the fig-file \texttt{F4\_01fig2dev.fig} defining Figure~\ref{fig:fig2dev}, 
+is transformed into a file \texttt{F4\_01fig2dev.ptx} 
 in format \texttt{pdftex\_t} which starts like this: 
 %
 \lstset{language=tex, breaklines, basicstyle=\small}
 % FIXME: nag complains for htlatex 
 \lstinputlisting[lastline=25]{F4_01fig2dev.ptx}
 
-The file \texttt{xxx.ptx} is ``inputted'' into the tex-file of this manual 
-by the command \texttt{\textbackslash input\{xxx.ptx\}} 
-automatically including \texttt{xxx.pdf}. 
-Note that the full path \texttt{pppxxx.pdf} to \texttt{xxx.pdf} is required, 
-because relative paths are interpreted in terms of the file 
-containing \texttt{\textbackslash input\{xxx.ptx\}}. 
-Observe also that we can drop the suffix which is expressed as ``\texttt{pppxxx}'' 
+The file \texttt{xxx.ptx} is ``imported'' into the tex-file of this manual 
+by the command 
+%
+\begin{verbatim}
+\import{yyy}{xxx.ptx}
+\end{verbatim}
+%
+and includes \texttt{xxx.pdf} automatically the file \texttt{xxx.pdf} 
+via \texttt{\textbackslash includegraphics\{xxx\}} (line 2). 
+Note the following remarkable details: 
+%
+\begin{itemize}
+\item
+Observe that we can drop the suffix of the inlcuded file \texttt{xxx.pdf} 
+which is expressed as ``\texttt{xxx}'' 
 because \LaTeX{} chooses the right suffix: 
-for pdf-format this is \texttt{.pdf}. 
+If instead of \texttt{xxx.pdf} there is a file \texttt{xxx.eps}, 
+the latter is chosen if no suffix is specified. 
 As we will see below, 
-leaving the suffix away is crucial to make \texttt{xxx.ptx} work 
-both for pdf-format and for dvi-format required to create html- and odt-files. 
+omitting the suffix is crucial to make \texttt{xxx.ptx} work 
+for both \LaTeX-output formats: 
+the pdf-format can include pdf-files, 
+whereas the dvi-format which is required to create html- and
+odt-files can include eps-files. 
+\item
+If \texttt{xxx.pdf} is included in \texttt{xxx.ptx} 
+with the full path name, 
+we may use \texttt{\textbackslash input\{xxx.ptx\}} 
+instead of \texttt{\textbackslash import\{yyy\}\{xxx.ptx\}}. 
+
+If in contrast, \texttt{xxx.pdf} is included in \texttt{xxx.ptx} 
+with the short name only, 
+\texttt{xxx.pdf} is assumed to be in the same directory 
+as the file inputting \texttt{xxx.ptx}. 
+So in general, i.e. if this is not \texttt{yyy}, we need import 
+\texttt{\textbackslash import\{yyy\}\{xxx.ptx\}}. 
+If the directories coincide, 
+in the import the string \texttt{yyy} may be empty. 
+If the string \texttt{yyy} is not empty, it must end with the path delimiter, 
+i.e. \texttt/ for unix like systems and 
+\texttt\textbackslash for win-like systems. 
+\end{itemize}
+
 As indicated in Section~\ref{sec:figpdf}, 
 the commands in \texttt{xxx.ptx} 
 require the packages \texttt{graphicx} and \texttt{xcolor}. 
+Also the \texttt{\textbackslash import} command 
+requires the \texttt{import} package. 
 
 To export \texttt{xxx.fig} into \texttt{xxx.ptx} and \texttt{xxx.pdf} 
-requires two commands: 
+this software invokes two commands: 
 %
 \begin{Verbatim}[fontsize=\scriptsize]
-fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig xxx.pdf   
-fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p pppxxx xxx.fig xxx.ptx
+fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.pdf   
+fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xxx.ptx
 \end{Verbatim}
 %
 Both commands specify the input file \texttt{xxx.fig}, 
 both use the options given by the parameter \texttt{fig2devGenOptions} 
 while each invocation allows to specify also specific options, 
 \texttt{fig2devPdfEpsOptions} and \texttt{fig2devPtxOptions}, respectively, 
-and both use the option \texttt{-L} to specify the output format (``language''). 
+and both use the option \texttt{-L} 
+to specify the output format (``language''). 
 
 %FIXME: ptx-->tex and then: convention: intuitive suffixes 
 
-The parameters specific for \texttt{pdftex} are called \texttt{fig2devPdfEpsOptions} 
+The parameters specific for \texttt{pdftex} 
+are called \texttt{fig2devPdfEpsOptions} 
 because the options available are the same 
 as for output format \texttt{pstex} creating eps-files. 
 An example for a common option would be \texttt{-b width} 
@@ -896,9 +1011,9 @@ which shall specify the same boundary for both formats;
 otherwise they do not fit. 
 
 For the output format \texttt{pdftex\_t}, 
-the option \texttt{-p pppxxx} says, 
-that the string \texttt{pppxxx} must be included in \texttt{xxx.ptx} 
-as \texttt{\textbackslash includegraphics\{pppxxx\}}. 
+the option \texttt{-p xxx} says, 
+that the string \texttt{xxx} must be included in \texttt{xxx.ptx} 
+as \texttt{\textbackslash includegraphics\{xxx\}}. 
 Note that the option \texttt{-p} shall not be specified 
 in \texttt{fig2devPtxOptions}, because it is automatically added. 
 
@@ -916,15 +1031,15 @@ If the suffix is not given,
 Thus exporting \texttt{xxx.fig} via 
 %
 \begin{Verbatim}[fontsize=\scriptsize]
-fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig xxx.eps   
-fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>           xxx.fig xxx.pdf   
-fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p pppxxx xxx.fig xxx.ptx
+fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.eps   
+fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.pdf   
+fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xxx.ptx
 \end{Verbatim}
 %
 and ``inputting'' \texttt{xxx.ptx} works for both \LaTeX{} output formats. 
 
 
-Note that \texttt{xfig} chooses its file endings 
+Note that \texttt{xfig} chooses its file suffix 
 according to Table~\ref {tab:xfigSuffixes} 
 which deviate from those used here. 
 
@@ -984,9 +1099,10 @@ into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
 
 
-\section{Conversion of gnuplot-files}\label{sec:gnuplot2pdf}
+\section{Conversion of gnuplot-files}\label{sec:gnuplot2dev}
 
-This software supports plots drawn with \texttt{gnuplot}, or, to be more precise, 
+This software supports plots drawn with \texttt{gnuplot}, 
+or, to be more precise, 
 figures stored in .gp-files created by \texttt{gnuplot}. 
 Note that there seems to official file extension 
 to identify gnuplot files. 
@@ -1000,9 +1116,10 @@ it uses \texttt{gnuplot} itself.
 According to the manual~\cite{GnuPlot}, Part IV, 
 \texttt{gnuplot} supports output formats through so called {\em terminals}. 
 Among those are several ones intended for inclusion into latex-files, 
-like \texttt{Cairolatex}, \texttt{Eepic}, \texttt{Epslatex}, \texttt{Latex}, \texttt{Lua}, 
-\texttt{Mf}, \texttt{Mp}, \texttt{Postscript}, \texttt{Ps(la)tex}, \texttt{Pstricks}, 
-\texttt{Texdraw} and \texttt{Tpic}. 
+like \texttt{Cairolatex}, \texttt{Eepic}, \texttt{Epslatex}, 
+\texttt{Latex}, \texttt{Lua}, 
+\texttt{Mf}, \texttt{Mp}, \texttt{Postscript}, \texttt{Ps(la)tex}, 
+\texttt{Pstricks}, \texttt{Texdraw} and \texttt{Tpic}. 
 Note that also export into the fig-format via the terminal \texttt{Fig} 
 is supported which in turn may be included in latex 
 as described in Section~\ref{sec:fig2dev}. 
@@ -1010,43 +1127,54 @@ Also \texttt{gnuplot} pictures may be exported in metapost format
 which in turn may be included in latex 
 as described in Section~\ref{sec:metapost}. 
 
-This software supports only the export via the terminal \texttt{Cairolatex} 
+This software supports the export of a file \texttt{xxx.gp} 
+only via the terminal \texttt{Cairolatex} 
 which offers export to mixed pdf and \LaTeX: 
 graphics in pdf and text in \LaTeX{}
-which yields the fonts typical for \LaTeX{} 
-as described for fig-files in Section~\ref{sec:fig2dev}. 
+which yields the fonts typical for \LaTeX. 
+This is as described for fig-files in Section~\ref{sec:fig2dev}, 
+except that text is generally converted in \LaTeX{}-format, 
+and not selectively those text marked with special flag. 
 
-Accordingly, the export yields two files 
-but unlike for fig-files these are created with a single command: 
+Accordingly, the export yields two files \texttt{xxx.ptx} and
+\texttt{xxx.pdf}, both in the directory \texttt{yyy} 
+in which \texttt{xxx.gp} resides. 
+The file \texttt{xxx.ptx} must be imported via 
+%
+\begin{verbatim}
+\import{yyy}{xxx.ptx}
+\end{verbatim}
+%
+It contains the texts and includes \texttt{xxx.pdf} 
+via \texttt{\textbackslash includegraphics\{xxx\}} 
+without specifying a suffix. 
+
+Unlike for fig-files, 
+\texttt{xxx.ptx} and \texttt{xxx.pdf} are created with a single command: 
 %
 \begin{verbatim}
 gnuplot -e "set terminal cairolatex pdf <gnuplotOptions>;
-            set output 'pppxxx';
+            set output 'xxx';
             load 'xxx.gp'"
 \end{verbatim}
-%
-exports \texttt{xxx.gp} to \texttt{xxx.ptx} and to \texttt{xxx.pdf}, 
-the former containing \LaTeX{} and including the latter 
-using options given by the parameter \texttt{gnuplotOptions}. 
-As described for exporting fig-files in Section~\ref{sec:fig2dev}, 
-the output must be specified with the full path and without ending. 
 
 Accordingly, 
+\texttt{xxx.ptx} and \texttt{xxx.eps} are created with a single command: 
 %
 \begin{verbatim}
 gnuplot -e "set terminal cairolatex eps <gnuplotOptions>;
-            set output 'pppxxx';
+            set output 'xxx';
             load 'xxx.gp'"
 \end{verbatim}
 %
-exports \texttt{xxx.gp} to \texttt{xxx.ptx} and to \texttt{xxx.eps}, 
-the former containing \LaTeX{} and including the latter 
-using options given by the parameter \texttt{gnuplotOptions}. 
 Note that this writes another but identical file \texttt{xxx.ptx}. 
-Thus performance is not optimal, but \texttt{gnuplot} offers no way to avoid this. 
-If being strict, \texttt{xxx.ptx} is perfectly correct only for output \texttt{eps}, 
+Thus performance is not optimal, 
+but \texttt{gnuplot} offers no way to avoid this. 
+If being strict, 
+\texttt{xxx.ptx} is perfectly correct only for output \texttt{eps}, 
 if comments and error messages are taken into account 
-but as long as no error occurs, the result is perfectly ok also for \texttt{pdf}. 
+but as long as no error occurs, 
+the result is perfectly ok also for \texttt{pdf}. 
 
 As for inclusion of fig-files, 
 packages \texttt{graphicx} and \texttt{color} are needed. 
@@ -1066,7 +1194,7 @@ Figure~\ref{fig:gp2pdf} shows the transformation of the plots
 and the inclusion of graphic files. 
 In addition, Figure~\ref{fig:gnuplot} shows an example of a \LaTeX-file 
 created from a gnuplot file 
-and embedded in this \LaTeX-file with the \texttt{\textbackslash input}-command. 
+and embedded in this \LaTeX-file . 
 %Note that the \texttt{gnuplot}-command is configurable 
 %via the parameter \texttt{gnuplotCommand}, 
 %but there will be hardly any command with the same command line interface 
@@ -1115,8 +1243,8 @@ is given by the parameter \texttt{metapostCommand}
 which defaults to \texttt{mpost}. 
 
 
-Figure~\ref{fig:mp2mps} illustrates how \texttt{mpost} converts an \gls{mp}-file 
-\texttt{xxx.mp} by default: 
+Figure~\ref{fig:mp2mps} illustrates 
+how \texttt{mpost} converts an \gls{mp}-file \texttt{xxx.mp} by default: 
 %
 \begin{itemize}
 \item
@@ -1236,18 +1364,18 @@ but much more elaborate and widely used is the \gls{svg}-format.
 There is a huge up-to-date official SVG 1.1 specification, \cite{Svg11} 
 and a specification for SVG Tiny 1.2, 
 \cite{Svg12Tiny} which is itself quite short and more readable 
-and gives also a good overview for ``SVG Big''. 
+and gives also a good overview on ``SVG Big''. 
 For a tutorial, see \cite{SvgTut}. 
 As stated in \cite{Svg12Tiny}, Section~1.1, 
 svg-files may contain vector graphics, raster images and text. 
 It may also contain video and audio elements 
 and may be interactive and dynamic, 
-which goes beyond what can be included in \LaTeX. 
+which goes beyond what can be included in \LaTeX-files. 
 
 Figure~\ref{fig:svgWithText} shows a picture in \gls{svg}-format. 
 As pdf-files are included directly 
 via the \texttt{\textbackslash includegraphics}-command, 
-using the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx} 
+using the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx}, 
 virtually, 
 \texttt{xxx.svg} can be included directly via 
 % FIXME: done differently 
@@ -1262,7 +1390,7 @@ A closer look shows, that graphic preprocessing is done behind the scenes
 in the course of a \LaTeX-run 
 creating files \texttt{xxx.pdf} and \texttt{xxx.pdf\_tex}. 
 As described for fig-files in Section~\ref{sec:fig2dev} 
-and for gnuplot-files in Section~\ref{sec:gnuplot2pdf}: 
+and for gnuplot-files in Section~\ref{sec:gnuplot2dev}: 
 The latter is a latex-file containing text 
 and including the former. 
 To include \texttt{xxx.pdf} 
@@ -1294,12 +1422,12 @@ Since this software is still under construction
 and more than that, is in an experimental phase, 
 we provide explicit preprocessing of svg-files using \texttt{inkscape}. 
 Another problem with the \texttt{svg}-package is, 
-that according to cite{SvgP}, Section~1, 
+that according to \cite{SvgP}, Section~1, 
 it does not work on windows platforms. 
 
 
 According to \cite{SvgIncl}, Section~2.4.1, 
-incscape exports mixed pdf and latex if invoked approximately as 
+\texttt{incscape} exports mixed pdf and latex if invoked approximately as 
 %
 \begin{Verbatim}[fontsize=\normalsize]
 inkscape -D -z --export-pdf=xxx.pdf --export-latex xxx.svg 
@@ -1310,18 +1438,28 @@ Also \cite{SvgIncl}, Section~3 indicates how to input the created file
 %
 \begin{verbatim}
 \def\svgwidth{0.5\textwidth}
-\import{}{xxx.pdf\_tex}%
+\import{yyy}{xxx.pdf\_tex}%
 \end{verbatim}
+%
+This is essentially the same technique as applied for fig-files 
+and for gnuplot-files as described in Sections~\ref{sec:fig2dev} 
+and \ref{sec:gnuplot2dev}. 
 
-To obtain a unified conversion as defined in Sections~\ref{sec:fig2dev} 
-and \ref{sec:gnuplot2pdf}, 
+To obtain a unified conversion, 
 inkscape is invoked in a way to have the included pdf/eps-files 
 without suffix as follows: 
 %
 \begin{Verbatim}[fontsize=\normalsize]
 inkscape -D -z --export-pdf=xxx --export-latex xxx.svg 
 inkscape -D -z --export-eps=xxx --export-latex xxx.svg 
-\end{Verbatim} 
+\end{Verbatim}
+%
+Unlike \texttt{fig2dev} and \texttt{gnuplot}, 
+specifying the pdf/eps-file \text{xxx} with its full path, 
+has no effect, i.e. inclusion uses the filename only. 
+Thus \texttt{\textbackslash import} 
+cannot be replaced by \texttt{\textbackslash input} 
+and so the \LaTeX-package \texttt{import} is required. 
 
 Since both the pdf-file and the eps-file are given without suffix, 
 the resulting tex file is not \texttt{xxx.pdf\_tex} and \texttt{xxx.eps\_tex} 
@@ -1354,11 +1492,17 @@ should be a picture
 \end{figure}
 
 
-
-\section{Pictures which are not created}\label{sec:picasis}
+\section{Pictures which are not transformed}\label{sec:picasis}
 
 Figure~\ref{fig:asIsJpg} shows some picture included as jpg. 
-This is done as usual with \texttt{\textbackslash includegraphics}. 
+This is done as usual with the command \texttt{\textbackslash includegraphics}
+provided by the package \texttt{graphicx}. 
+According to the documentation \cite{GraX}, page 13, 
+the bounding box must be provided somehow. 
+This may be done via the package \texttt{bmpsize} 
+but also using the command \texttt{ebb}. 
+FIXME: further research and further documentation is required. 
+
 Note that both for \texttt{pdflatex} and siblings creating pdf-output 
 and for \texttt{htlatex} in conjunction with \texttt{dvipdfmx} 
 (see Section~\ref{sec:figpdf}) 
@@ -1372,7 +1516,8 @@ This list may be incomplete.
 should be a picture 
 }{
 \setkeys{Gin}{width=0.9\textwidth}
-\includegraphics[width=0.9\textwidth]{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
+\includegraphics%[width=0.9\textwidth]
+{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
 }
 \caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
 \end{figure}
@@ -1923,7 +2068,9 @@ this would require a change in this software.
 \section{Creating hypertext}\label{sec:tex2html}
 
 To create html and xhtml from \LaTeX-files, 
-a \texttt{htlatex}-command is used. 
+a \texttt{tex4htCommand}-command is used 
+Together with its parameters, 
+it is described in Section!\ref{sec:settingsLatex2Html}. 
 This may be \texttt{htlatex}, the default based on \texttt{latex} 
 and \texttt{htxelatex} based on \texttt{xelatex}. 
 
@@ -1931,22 +2078,32 @@ Figure~\ref{fig:tex2xml} shows the steps \texttt{htlatex} performs:
 From the input \LaTeX-file \texttt{xxx.tex} 
 another \LaTeX-file \texttt{yyy.tex} is created 
 which arises from \texttt{xxx.tex} by adding 
-\texttt{\textbackslash usepackage[\ldots]\{tex4ht\}}. 
+%FIXME: maybe instead: \RequirePackage which may be placed before documentclass
+\begin{verbatim}
+\usepackage[...]{tex4ht}. 
+\end{verbatim}
+%
 Then \texttt{htlatex} runs \texttt{latex} on \texttt{yyy.tex} 
 which results in \texttt{yyy.dvi}. 
 Note that this is in contrast to \texttt{pdflatex} 
-which would create some \texttt{yyy.pdf}. 
+which would create some \texttt{yyy.pdf} unless otherwise specified. 
 
 Then comes the converter \texttt{tex4ht} into the game 
 which creates several html-files among those also \texttt{xxx.html}. 
 The other files, \texttt{yyy.idv} and \texttt{yyy.lg}, 
 are further processed by \texttt{t4ht} 
 creating the stylesheet \texttt{xxx.css} and graphic files. 
+\medskip
 
-The output of TeX is a standard \gls{dvi}-file 
-interleaved with special instructions for the postprocessor tex4ht to use. 
+
+Let us make this more precise. 
+The output of latex is a standard \gls{dvi}-file 
+interleaved with special instructions 
+for the postprocessor \texttt{tex4ht} to use. 
+Note that \texttt{tex4ht} is the name both of the postprocessor 
+and of the \LaTeX-package. 
 The special instructions come from implicit and explicit requests 
-made in the source file through commands of TeX4ht.
+made in the source file through commands for TeX4ht. 
 
 The utility \texttt{tex4ht} translates the dvi-code into standard text, 
 while obeying the requests it gets from the special instructions. 
@@ -1956,9 +2113,13 @@ In the extreme case that the source code contains no commands of TeX4ht,
 \texttt{tex4ht} gets pure dvi-code and it outputs (almost) plain text 
 with no hypertext elements in it.
 
-The special (\texttt{\textbackslash special}) instructions seeded in the dvi-code 
+The special (\texttt{\textbackslash special}) 
+instructions seeded in the dvi-code 
 are not understood by dvi processors other than those of TeX4ht.
 
+\texttt{t4ht}
+This is an interpreter 
+for executing the requests made in the \texttt{xxx.lg} script.
 
 \texttt{xxx.idv}
 This is a dvi-file extracted from \texttt{xxx.dvi}, 
@@ -1971,9 +2132,6 @@ and user directives introduced
 through the ``\texttt{\textbackslash Needs\{\ldots\}}'' command.
 
 
-\texttt{t4ht}
-This is an interpreter 
-for executing the requests made in the \texttt{xxx.lg} script.
 
 \begin{figure}[htb]
 \centering
@@ -3675,7 +3833,7 @@ and vice versa.
 This failure indicates that another plugin/task disturbs this one. 
 \end{minipage}
 } \\
-\texttt{\footnotesize TFU06 }
+\texttt{\footnotesize TFU06} 
 & \texttt
 {\footnotesize Cannot copy file '\$srcFileName' to directory '\$targetDir'. } \\
 \multicolumn2{|l|}{
