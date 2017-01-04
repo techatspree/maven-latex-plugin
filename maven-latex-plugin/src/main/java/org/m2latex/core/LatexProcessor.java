@@ -176,14 +176,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    <li> TSS01 if 
      *    the tex source directory does either not exist 
      *    or is not a directory. 
+     *    <li> TSS02 if 
+     *    the tex source processing directory does either not exist 
+     *    or is not a directory. 
+     *    <li> TSS03 if 
+     *    the output directory exists and is no directory. 
      *    <li> TEX01 if 
      *    invocation of applications for preprocessing graphic files 
      *    or processing a latex main file fails 
      *    <li> TFU01 if 
      *    the target directory that would be returned 
      *    exists already as a regular file. 
-     *    <li> TSS02 if 
-     *    the output directory exists and is no directory. 
      *    <li> TFU03, TFU04, TFU05, TFU06 if 
      *    copy of output files to target folder fails. 
      *    For details see 
@@ -199,8 +202,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	File texDir = this.settings.getTexSrcDirectoryFile();
 	assert texDir.exists() && texDir.isDirectory();
 
+	// may throw BuildFailureException TSS02 
+	File texProcDir = this.settings.getTexSrcProcDirectoryFile();
+	assert texProcDir.exists() && texProcDir.isDirectory();
+
 	// constructor DirNode may log warning WFU01 Cannot read directory 
-	DirNode node = new DirNode(texDir, this.fileUtils);
+	DirNode node = new DirNode(texProcDir, this.fileUtils);
 
 	try {
 	    // process graphics and determine latexMainFiles 
@@ -208,7 +215,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // log warning WFU03, WPP02, WPP03, 
 	    // EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
 	    Collection<File> latexMainFiles = this.preProc
-		.processGraphicsSelectMain(texDir, node);
+		.processGraphicsSelectMain(texProcDir, node);
 
 	    for (File texFile : latexMainFiles) {
 		// throws BuildFailureException TFU01 
@@ -216,7 +223,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		File targetDir = this.fileUtils.getTargetDirectory
 		    (texFile, 
 		     texDir,
-		     // throws BuildFailureException TSS02 
+		     // throws BuildFailureException TSS03 
 		     // if exists and is no dir 
 		     this.settings.getOutputDirectoryFile());
 		assert !targetDir.exists() || targetDir.isDirectory();
@@ -240,7 +247,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	} finally {
 	    if (this.settings.isCleanUp()) {
 		// may log warning WFU01, EFU05 
-		this.fileUtils.cleanUp(node, texDir);
+		this.fileUtils.cleanUp(node, texProcDir);
             }
         }
     }
@@ -262,7 +269,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @throws BuildFailureException
      *    <ul>
      *    <li> 
-     *    TSS01 if the tex source directory does either not exist 
+     *    TSS02 if the tex source processing directory does either not exist 
      *    or is not a directory. 
      *    <li> 
      *    TEX01 invoking FIXME
@@ -270,16 +277,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     // used in GraphicsMojo.execute() only 
     public void processGraphics() throws BuildFailureException {
-	// may throw BuildFailureException TSS01 
-	File texDir = this.settings.getTexSrcDirectoryFile();
-	assert texDir.exists() && texDir.isDirectory();
+	// may throw BuildFailureException TSS02 
+	File texProcDir = this.settings.getTexSrcProcDirectoryFile();
+	assert texProcDir.exists() && texProcDir.isDirectory();
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
- 	DirNode node = new DirNode(texDir, this.fileUtils);
+ 	DirNode node = new DirNode(texProcDir, this.fileUtils);
 	// may throw BuildFailureException TEX01, 
 	// log warning WFU03, WPP02, WPP03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
-	this.preProc.processGraphicsSelectMain(texDir, node);
+	this.preProc.processGraphicsSelectMain(texProcDir, node);
     }
 
     /**
@@ -291,7 +298,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * The parameters this method depends on are (currently): 
      * <ul>
      * <li>
-     * {@link Settings#getTexSrcDirectoryFile()}
+     * {@link Settings#getTexSrcProcDirectoryFile()}
      * <li>
      * {@link Settings#getPatternLatexMainFile()}
      * <li>
@@ -307,20 +314,20 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @throws BuildFailureException 
-     *    TSS01 if the tex source directory does either not exist 
+     *    TSS02 if the tex source processing directory does either not exist 
      *    or is not a directory. 
      */
     public void clearAll() throws BuildFailureException {
         this.paramAdapt.initialize();
         this.log.debug("Settings: " + this.settings.toString());
 
-	// may throw BuildFailureException TSS01 
-        File texDir = this.settings.getTexSrcDirectoryFile();
-	assert texDir.exists() && texDir.isDirectory();
+	// may throw BuildFailureException TSS02 
+        File texProcDir = this.settings.getTexSrcProcDirectoryFile();
+	assert texProcDir.exists() && texProcDir.isDirectory();
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	// clearCreated may log warnings WPP02, WFU01, WFU03, EFU05 
-	this.preProc.clearCreated(texDir);
+	this.preProc.clearCreated(texProcDir);
    }
 
 
@@ -433,7 +440,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * The latter also holds, if a table of contents, a list of figures 
      * or a list of tables is specified. 
      * The output format of the LaTeX run is given by <code>dev</code>, 
-     * to be more precise by {@link LatexDev#getLatexLanguage()}. 
+     * to be more precise by {@link LatexDev#getLatexOutputFormat()}. 
      * <p>
      * A warning is logged if the LaTeX, a BibTeX run a MakeIndex 
      * or a MakeGlossaries run fails 
@@ -460,7 +467,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    to be processed. 
      * @param dev
      *    the device describing the output format which is either pdf or dvi. 
-     *    See {@link LatexDev#getLatexLanguage()}. 
+     *    See {@link LatexDev#getLatexOutputFormat()}. 
      * @return
      *    the number of LaTeX runs required 
      *    because bibtex, makeindex or makeglossaries had been run 
@@ -564,7 +571,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * is required by {@link #processLatex2txt(File)}. 
      * <p>
      * The output format of the LaTeX run is given by <code>dev</code>, 
-     * to be more precise by {@link LatexDev#getLatexLanguage()}. 
+     * to be more precise by {@link LatexDev#getLatexOutputFormat()}. 
      * <p>
      * Logging: 
      * WLP01: if another rerun is required but the maximum number of runs 
@@ -587,7 +594,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    to be processed. 
      * @param dev
      *    the device describing the output format which is either pdf or dvi. 
-     *    See {@link LatexDev#getLatexLanguage()}. 
+     *    See {@link LatexDev#getLatexOutputFormat()}. 
      * @throws BuildFailureException
      *    TEX01 as for 
      *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)} 
@@ -732,7 +739,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    to be processed. 
      * @param dev
      *    the device describing the output format which is either pdf or dvi. 
-     *    See {@link LatexDev#getLatexLanguage()}. 
+     *    See {@link LatexDev#getLatexOutputFormat()}. 
      * @throws BuildFailureException
      *    TEX01 as for 
      *    {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)}.
@@ -812,7 +819,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <ul>
      * <li>
      * another LaTeX rerun is required 
-     * beyond {@link Settings#maxNumReRnsLatex}, 
+     * beyond {@link Settings#maxNumReRunsLatex}, 
      * <li>
      * bad boxes occurred and shall be logged 
      * according to {@link Settings#getDebugBadBoxes()}. 
@@ -1269,7 +1276,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * in the directory containing <code>texFile</code> with arguments 
      * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
      * The output format of the LaTeX run is given by <code>dev</code>, 
-     * to be more precise by {@link LatexDev#getLatexLanguage()}. 
+     * to be more precise by {@link LatexDev#getLatexOutputFormat()}. 
      * <p>
      * Logs a warning or an error if the latex run failed 
      * invoking {@link #logErrs(File, String)}
@@ -1293,7 +1300,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    to be processed. 
      * @param dev
      *    the device describing the output format which is either pdf or dvi. 
-     *    See {@link LatexDev#getLatexLanguage()}. 
+     *    See {@link LatexDev#getLatexOutputFormat()}. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the latex2pdf command 
      *    returned by {@link Settings#getLatex2pdfCommand()} failed. 
