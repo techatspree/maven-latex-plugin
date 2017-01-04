@@ -91,7 +91,8 @@ public enum LatexDev {
     abstract String getGnuplotInTexLanguage();
 
     /**
-     * Returns the export option used by the {@link #getSvg2devCommand()} 
+     * Returns the export option 
+     * used by the command {@link Settings#getSvg2devCommand()} 
      * which determines the export format. 
      * In fact, there is a file of that format 
      * to be embedded with <code>\includegraphics</code> in latex-code. 
@@ -104,7 +105,7 @@ public enum LatexDev {
      * representing all but text. 
      * This is used for processing fig-files and for processing svg-files 
      * in {@link LatexPreProcessor#runFig2DevInTex(File, LatexDev)} and 
-     * in {@link LatexPreProcessor#runSvg2DevInTex(File, LatexDev, boolean)}, 
+     * in {@link LatexPreProcessor#runSvg2Dev(File, LatexDev, boolean)}, 
      * whereas for conversion of gnuplot-files, 
      * this suffix is set automatically. 
      * Note also that this is used to clear the created files 
