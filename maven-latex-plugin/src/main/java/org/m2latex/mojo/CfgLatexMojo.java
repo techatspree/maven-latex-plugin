@@ -59,7 +59,6 @@ public class CfgLatexMojo extends AbstractLatexMojo {
      *      or processing a latex main file fails. 
      * </ul>
      * @throws MojoFailureException
-     *    FIXME 
      *    <ul>
      *    <li> TSS01 if 
      *    the tex source directory does either not exist 
