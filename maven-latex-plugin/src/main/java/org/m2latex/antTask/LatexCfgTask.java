@@ -29,13 +29,33 @@ public class LatexCfgTask extends AbstractLatexTask {
      *      or processing a latex main file fails. 
      * </ul>
      * @throws BuildException
-     *    FIXME 
+     *    <ul>
+     *    <li> TSS01 if 
+     *    the tex source directory does either not exist 
+     *    or is not a directory. 
+     *    <li> TSS02 if 
+     *    the tex source processing directory does either not exist 
+     *    or is not a directory. 
+     *    <li> TSS03 if 
+     *    the output directory exists and is no directory. 
+     *    <li> TEX01 if 
+     *    invocation of applications for preprocessing graphic files 
+     *    or processing a latex main file fails 
+     *    <li> TFU01 if 
+     *    the target directory that would be returned 
+     *    exists already as a regular file. 
+     *    <li> TFU03, TFU04, TFU05, TFU06 if 
+     *    copy of output files to target folder fails. 
+     *    For details see {@link LatexProcessor#create()}. 
+     *    </ul>
      */
     public void execute() throws BuildException {
  	initialize();
 	try {
-	    // may throw BuildFailureException FIXME 
-	    // may log warning WFU01, WFU03, WPP02, WPP03, 
+	    // may throw BuildFailureException 
+	    // TSS01, TSS02, TSS03, TEX01, TFU01, TFU03, TFU04, TFU05, TFU06 
+	    // may log WFU01, WFU03, EFU05, EFU06, 
+	    // WPP02, WPP03, 
 	    // EEX01, EEX02, EEX03, WEX04, WEX05 
 	    this.latexProcessor.create();
 	} catch (BuildFailureException e) {
