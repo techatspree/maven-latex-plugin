@@ -59,7 +59,7 @@ public class GraphicsMojo extends AbstractLatexMojo {
      * @throws MojoFailureException
      *    <ul>
      *    <li> 
-     *    TSS01 if the tex source directory does either not exist 
+     *    TSS02 if the tex source processing directory does either not exist 
      *    or is not a directory. 
      *    <li> 
      *    TEX01 invoking FIXME
@@ -68,7 +68,7 @@ public class GraphicsMojo extends AbstractLatexMojo {
     public void execute() throws MojoFailureException  {
 	initialize();
 	try {
-	    // may throw BuildFailureException TSS01, TEX01 
+	    // may throw BuildFailureException TSS02, TEX01 
 	    // may log warnings WFU01, WFU03, WPP02, WPP03, 
 	    // EEX01, EEX02, EEX03, WEX04, WEX05: 
 	    this.latexProcessor.processGraphics();

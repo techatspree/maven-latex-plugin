@@ -55,13 +55,13 @@ public class ClearMojo extends AbstractLatexMojo {
      * </ul>
      *
      * @throws BuildFailureException 
-     *    TSS01 if the tex source directory does either not exist 
+     *    TSS02 if the tex source processing directory does either not exist 
      *    or is not a directory. 
      */
     public void execute() throws MojoFailureException {
 	initialize();
 	try {
-	    // may throw BuildFailureException TSS01 
+	    // may throw BuildFailureException TSS02 
 	    // may log warnings WPP02, WFU01, WFU03, EFU05 
 	    this.latexProcessor.clearAll();
 	} catch (BuildFailureException e) {
