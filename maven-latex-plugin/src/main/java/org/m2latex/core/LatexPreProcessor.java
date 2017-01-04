@@ -521,8 +521,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *
      * @param figFile
      *    the fig file to be processed. 
-     * @param dev
-     *    the 'device' which determines whether to create pdf or pstex. 
      * @throws BuildFailureException
      *    TEX01 if invocation of the fig2dev command 
      *    returned by {@link Settings#getFig2devCommand()} failed. 
@@ -784,10 +782,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * included in the result file <code>ptxFile</code> 
      * without suffix. 
      *
-     * @param language
-     *    is the output language 
-     *    which is either <code>pdftex_t</code> or <code>pstex_t</code> 
-     *    (which yield the same result). 
      * @param optionsGen
      *    the general options, applying to both the pdf/eps part 
      *    and the tex part of the figure under consideration. 
@@ -1292,9 +1286,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // where 'node' represents the tex source directory 
     Collection<File> processGraphicsSelectMain(File dir, DirNode node) 
     	throws BuildFailureException {
+
     	Collection<String> skipped        = new TreeSet<String>();
     	Collection<File>   latexMainFiles = new TreeSet<File>();
-	if (this.settings.getReadTexSrcDirRec()) {
+	if (this.settings.getReadTexSrcProcDirRec()) {
 	    // may throw BuildFailureException TEX01, 
 	    // may log EEX01, EEX02, EEX03, 
 	    // WEX04, WEX05, WFU03, WPP02, EFU06 
