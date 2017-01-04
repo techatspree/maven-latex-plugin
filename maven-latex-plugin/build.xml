@@ -88,7 +88,8 @@
 	<!--patternErrXindy="(^ERROR: )" -->
 
       <settings texSrcDirectory="src/site/tex"
-		readTexSrcDirRec='true'
+		texSrcProcDirectory='.'
+		readTexSrcProcDirRec='true'
 		outputDirectory="."
 		targets="pdf, html"
 		cleanUp='true'
@@ -214,8 +215,7 @@ zzT$T\.e?ps|
 
 	<!--patternErrXindy="(^ERROR: )" -->
 
-      <settings texSrcDirectory="src/site/tex"
->
+      <settings texSrcDirectory="src/site/tex">
 	<patternLatexMainFile>
 	  \s*\\(documentstyle|documentclass).*
 	</patternLatexMainFile>
