@@ -2542,25 +2542,37 @@ Parameter        & Default  \\
 \texttt{texSrcDirectory}  & \texttt {src/site/tex}  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The tex source directory as a string, 
-containing all tex main documents 
-(including subfolders) to be processed
-relative to \texttt{\$baseDirectory}. 
-The default value is '\texttt{src/site/tex}' on Unix systems. 
+The latex source directory as a string 
+relative to \texttt{\$baseDirectory}, 
+containing \texttt{\$texSrcProcDirectory}. 
+This directory determines also the subdirectory of 
+\texttt{\$outputDirectory} to lay down the generated artifacts. 
+The default value is ``\texttt{src/site/tex}'' on Unix systems. 
 \end{minipage}
 } \\
-\texttt{readTexSrcDirRec}  & \texttt{true}  \\
+\texttt{texSrcProcDirectory}  & \texttt {.}  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Whether the tex source directory \texttt{\$texSrcDirectory} 
+The latex source processing directory as a string 
+relative to \texttt{\$texSrcDirectory}
+containing all tex main documents 
+and the graphic files to be processed 
+and also to be cleaned. 
+Whether this is done recursively in subfolders 
+is specified by \texttt{\$readTexSrcProcDirRec}. 
+The default value is ``\texttt{.}''. 
+\end{minipage}
+} \\
+\texttt{readTexSrcProcDirRec}  & \texttt{true}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Whether the tex source directory \texttt{\$texSrcProcDirectory} 
 shall be read recursively, 
 i.e. including the subdirectories recursively. 
 This is set to \texttt{false} only during information development. 
 %The default value is 'true'.
 \end{minipage}
 } \\
-
-
 \texttt{outputDirectory}  & \texttt{.}             \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -2636,7 +2648,8 @@ that graphic files to be processed
 are skipped or that processing a latex main file overwrites 
 the result of graphic preprocessing. 
 
-When clearing the tex source directory \texttt{\$texSrcDirectory}, 
+When clearing the tex source processing directory 
+\texttt{\$texSrcProcDirectory}, 
 i.e. all generated files should be removed, 
 first those created from latex main files. 
 As an approximation, 
@@ -3748,11 +3761,23 @@ Identifier        & Message  \\
 \begin{minipage}{0.95\linewidth}
 The tex source directory is given in the pom/build-file 
 with default value \texttt{./src/site/tex}. 
+It contains or is \texttt{\$texSrcProcDirectoryFile}. 
+Thus is must be a directory. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS02} 
+& \texttt{\footnotesize The tex source processing directory '\$texSrcProcDirectoryFile'} \\
+& \texttt{\footnotesize should be an existing directory, but is not. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The tex source processing directory is given in the pom/build-file 
+relative to \texttt{\$texSrcDirectoryFile}
+with default value \texttt{.}. 
 It contains all files to be processed. 
 Thus is must be a directory. 
 \end{minipage}
 } \\
-\texttt{\footnotesize TSS02}  & \texttt{\footnotesize The output directory '\$outputDirectory'} \\
+\texttt{\footnotesize TSS03}  & \texttt{\footnotesize The output directory '\$outputDirectory'} \\
 & \texttt{\footnotesize should be a directory if it exists, but is not. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
