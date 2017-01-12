@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 import java.util.Collection;
+import java.util.Arrays;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
@@ -105,6 +106,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     // pdftotext 
     private final static String SUFFIX_TXT = ".txt";
+
+    // ChkTeX: log file 
+    private final static String SUFFIX_CLG = ".clg";
 
     private final ParameterAdapter paramAdapt;
 
@@ -250,6 +254,55 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		this.fileUtils.cleanUp(node, texProcDir);
             }
         }
+    }
+
+    /**
+     * Defines check goal of the maven plugin in {@link ChkMojo}. 
+     * This includes also creation of graphic files. 
+     *
+     *
+     * @throws BuildFailureException
+     *    <ul>
+     *    <li> 
+     *    TSS02 if the tex source processing directory does either not exist 
+     *    or is not a directory. 
+     *    <li> 
+     *    TEX01 invoking FIXME
+     *    </ul>
+     */
+    // used in ChkMojo.execute() only 
+    // FIXME: maybe sufficient not to create graphics, if no \input. 
+    // Also, maybe good not to remove log file 
+    // maybe good to make suffix configurable rather than hardcoded. 
+    public void checkAll() throws BuildFailureException {
+
+        this.paramAdapt.initialize();
+        this.log.debug("Settings: " + this.settings.toString() );
+
+	// may throw BuildFailureException TSS02 
+	File texProcDir = this.settings.getTexSrcProcDirectoryFile();
+	assert texProcDir.exists() && texProcDir.isDirectory();
+
+	// constructor DirNode may log warning WFU01 Cannot read directory 
+	DirNode node = new DirNode(texProcDir, this.fileUtils);
+
+	try {
+	    // may throw BuildFailureException TEX01, 
+	    // log warning WFU03, WPP02, WPP03, 
+	    // EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
+	    Collection<File> latexMainFiles = this.preProc
+		.processGraphicsSelectMain(texProcDir, node);
+
+	    for (File latexMain : latexMainFiles) {
+		runCheck(latexMain);
+	    }
+	} finally {
+	    // FIXME: also removes the clg-files 
+	    if (this.settings.isCleanUp()) {
+		// may log warning WFU01, EFU05 
+		this.fileUtils.cleanUp(node, texProcDir);
+            }
+	}
     }
 
     /**
@@ -1074,7 +1127,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *    the latex-file BibTeX is to be processed for. 
+     *    the latex main file BibTeX is to be processed for. 
      * @return
      *    whether BibTeX has been run. 
      *    Equivalently, whether LaTeX has to be rerun because of BibTeX. 
@@ -1627,4 +1680,75 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// FIXME: what about error logging? 
 	// Seems not to create a log-file. 
     }
+
+    /**
+     * Runs the check command given by {@link Settings#getChkTexCommand()} 
+     * on the latex main file <code>texFile</code> 
+     * in the directory containing <code>texFile</code> 
+     * creating a log file with ending {@link #SUFFIX_CLG} 
+     * in that directory. 
+     * <p>
+     * Logging: 
+     * <ul>
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
+     * if running the ChkTeX command failed. 
+     * </ul>
+     *
+     * @param texFile
+     *    the latex main file to be checked for. 
+     * @throws BuildFailureException
+     *    TEX01 if invocation of the check command 
+     *    returned by {@link Settings#getChkTexCommand()} failed. 
+     */
+    private void runCheck(File texFile) throws BuildFailureException {
+	// 
+	File clgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_CLG);
+	String command = this.settings.getChkTexCommand();
+	this.log.debug("Running " + command + 
+		       " on '" + texFile.getName() + "'. ");
+	String[] args = buildChkTexArguments(this.settings.getChkTexOptions(),
+					     clgFile, 
+					     texFile);
+	// may throw BuildFailureException TEX01, 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	this.executor.execute(texFile.getParentFile(), 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args, 
+			      clgFile);
+	if (!clgFile.exists()) {
+	    // Here, chktex could not perform the check 
+	    // but the failure is already logged. 
+	    return;
+	}
+	assert !clgFile.isDirectory();
+	if (clgFile.length() != 0) {
+	    // FIXME: maybe we shall distinguish errors/warnings/messages
+	    // FIXME: identifier missing 
+	    this.log.warn("ChkTeX found warnings in '" + 
+			  texFile.getName() + "'. ");
+	}
+	// FIXME: no distinction: error/warning/message 
+	// given by chktex 
+    }
+
+    protected static String[] buildChkTexArguments(String options, 
+						   File clgFile, 
+						   File texFile) {
+    	if (options.isEmpty()) {
+    	    return new String[] {
+		"-o", 
+		clgFile.getName(),
+		texFile.getName()
+	    };
+    	}
+        String[] optionsArr = options.split(" ");
+        String[] args = Arrays.copyOf(optionsArr, optionsArr.length + 3);
+        args[optionsArr.length ] = "-o";
+        args[optionsArr.length+1] = clgFile.getName();
+        args[optionsArr.length+2] = texFile.getName();
+	
+    	return args;
+     }
+
  }
