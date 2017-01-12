@@ -164,7 +164,7 @@ abstract class AbstractLatexProcessor {
      *    the options string. The individual options 
      *    are expected to be separated by a single blank. 
      * @param file
-     *    
+     *    the file argument 
      * @return
      *    An array of strings: 
      *    The 0th entry is the file name, 
