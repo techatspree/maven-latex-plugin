@@ -115,6 +115,8 @@ abstract class AbstractLatexProcessor {
      * Logging: 
      * WAP03 Running <code>command</code> emitted warnings. 
      */
+    // invoked by logWarns(File, String, String) and 
+    // LatexProcessor.logWarns(File, String)
     protected void logWarn(File logFile, String command) {
 	this.log.warn("WAP03: Running " + command + 
 		      " emitted warnings logged in '" + 
