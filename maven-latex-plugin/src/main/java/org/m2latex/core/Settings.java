@@ -1253,15 +1253,91 @@ public class Settings {
     private String pdf2txtCommand = "pdftotext";
 
     /**
-     * The options of the pdf2txt command. 
+     * The options of the command {@link #pdf2txtCommand}. 
      * The default value is the empty string. 
      *
      * @see #pdf2txtCommand
      */
-    @Parameter(name = "pdf2txtOptions", defaultValue = "")
-    private String pdf2txtOptions = "";
+    @Parameter(name = "pdf2txtOptions", defaultValue = "-q")
+    private String pdf2txtOptions = "-q";
 
 
+
+    /**
+     * The chktex-command for checking latex main files. 
+     * The default value is <code>chktex</code>. 
+     *
+     * @see #chkTexOptions
+     */
+    @Parameter(name = "chkTexCommand", defaultValue = "chktex")
+    private String chkTexCommand = "chktex";
+
+
+    /**
+     * The options of the command {@link #chkTexCommand}, 
+     * except <code>-o output-file</code> 
+     * specifying the output file which is added automatically. 
+     * <p>
+     * Here is a list of options useful in this context. 
+     * The first group of these are muting options: 
+     * <ul>
+     * <li><code>-w</code>, <code>-e</code>, <code>-m</code>, 
+     * Make the message number passed as parameter 
+     * a warning/an error/a message and turns it on. 
+     * Messages are not counted. 
+     * <li><code>-n</code>
+     * Turns the warning/error number passed as a parameter off. 
+     * <li><code>-L</code>
+     * Turns off suppression of messages on a per line basis. 
+     * </ul>
+     * The next group of interesting options are for output control: 
+     * <ul>
+     * <li><code>-q</code>
+     * Shuts up about copyright information.
+     * <li><code>-o output-file</code>
+     * Specifies the output file. This is added automatically 
+     * and shall thus not be specified by the user. 
+     * <li><code>-b[0|1]</code>
+     * If you use the -o switch, and the named outputfile exists,
+     * it will be renamed to <code>filename.bak</code>.
+     * <li><code>-f format</code>
+     * Specifies the format of the output 
+     * via a format similar to <code>printf()</code>. 
+     * For details consult the manual. 
+     * <li><code>-vd</code>
+     * Verbosity level followed by a number <code>d</code> 
+     * specifying the format of the output. 
+     * The verbosity number is resolved as a pattern 
+     * as if given by the option <code>-f format</code>. 
+     * Thus the option <code>-v</code> is ignored 
+     * if the option <code>-f format</code> is specified. 
+     * </ul>
+     * The default value is <code>-q -b0</code> 
+     * avoiding verbose output and backing up the output log-file. 
+     *
+     * @see #chkTexCommand
+     */
+    // -v: verbosity: 
+    //     - 0 File:Line:Column:Warning number:Warning message
+    //         No specification on the kind of the entry 
+    //     - 1 1st line: (Error|Warning|Message) in <File> line <Line>: message 
+    //         2nd line: according line of the source 
+    //         3rd line: cursor ^ pointing to the place where the problem is 
+    //     - 2 1st line as for level 1 
+    //         2nd line: line of source with pointer for the problem 
+    //                   has shape: [7m [0m
+    //     - 3 "File", line Line: Warning message 
+    //     - 4 1st line as for 3, 
+    //         2nd line as for 1 
+    //         3rd line as for 1 
+    // -f format: this allows to create more flexible formats as with -vxxx 
+    //         to determine the kind of entry (Error|Warning|Message) 
+    //         if kind is given, it must be at the beginning of the line 
+    // -q: no copyright information 
+    // -b: toggle creation of backup file: with -o: yes, additional -b: no 
+    //     explicitly as -b0 and -b1, respectively. 
+    @Parameter(name = "chkTexOptions", defaultValue = "")
+    private String chkTexOptions = "-q -b0";
 
     // getter methods partially implementing default values. 
 
@@ -1574,6 +1650,14 @@ public class Settings {
 
     public String getPdf2txtOptions() {
         return  this.pdf2txtOptions;
+    }
+
+    public String getChkTexCommand() {
+        return  this.chkTexCommand;
+    }
+
+    public String getChkTexOptions() {
+        return  this.chkTexOptions;
     }
 
 
@@ -2134,6 +2218,15 @@ public class Settings {
 	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
+    public void setChkTexCommand(String chkTexCommand) {
+        this.chkTexCommand = chkTexCommand;
+    }
+
+    public void setChkTexOptions(String chkTexOptions) {
+        this.chkTexOptions = chkTexOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
+    }
+
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -2219,8 +2312,11 @@ public class Settings {
 	// parameters for pdf2txt 
         sb.append(", pdf2txtCommand=")      .append(this.pdf2txtCommand);
         sb.append(", pdf2txtOptions=")      .append(this.pdf2txtOptions);
+	// parameters for chktex
+	sb.append(", chkTexCommand=")      .append(this.chkTexCommand);
+        sb.append(", chkTexOptions=")      .append(this.chkTexOptions);
 
-       sb.append(']');
+	sb.append(']');
         return sb.toString();
     }
 
