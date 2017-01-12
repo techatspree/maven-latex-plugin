@@ -4147,8 +4147,8 @@ FIXME
 \end{minipage}
 } \\
 \texttt{\footnotesize EEX03} 
-& \texttt{\footnotesize Running \$command failed: } \\
-& \texttt{\footnotesize Target file '\$fileName' is not updated. } \\
+& \texttt{\footnotesize Running \$command failed: 
+Target file '\$fileName' is not updated. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
@@ -4197,6 +4197,17 @@ logged in '\$logFileName'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP04} 
+& \texttt{\footnotesize Running \$command 
+found issues logged in '\$logFileName'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Here, \texttt{\$command} is a checker tool. 
+Strictly speaking, unlike the other warnings here, 
+this does not signify that running \texttt{\$command} went wrong 
+but uncovered an issue (warning/error/message) logged in a file. 
 \end{minipage}
 } \\
 \end{longtable}
