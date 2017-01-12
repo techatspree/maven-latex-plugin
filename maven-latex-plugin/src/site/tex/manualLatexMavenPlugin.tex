@@ -4151,7 +4151,9 @@ FIXME
 Target file '\$fileName' is not updated. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-FIXME
+The command \texttt{\$command} is expected 
+to write to the file '\texttt{\$fileName}' but this file is not updated. 
+This indicates an error executing \texttt{\$command}. 
 \end{minipage}
 } \\
 \texttt{\footnotesize WEX04} 
@@ -4173,14 +4175,18 @@ FIXME
 No log file '\$logFileName' written. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-FIXME
+The command \texttt{\$command} is expected 
+to write a log file '\texttt{\$logFileName}' but no such file exists. 
+This indicates an error executing \texttt{\$command}. 
 \end{minipage}
 } \\
 \texttt{\footnotesize EAP01}  & \texttt{\footnotesize Running \$command failed. 
 Errors logged in '\$logFileName'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-FIXME
+The command \texttt{\$command} logged at least one error 
+in the file '\texttt{\$logFileName}', 
+where more details can be found. 
 \end{minipage}
 } \\
 \texttt{\footnotesize WAP03} 
@@ -4188,7 +4194,12 @@ FIXME
 logged in '\$logFileName'. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-FIXME
+The command \texttt{\$command} logged at least one warning 
+in the file '\texttt{\$logFileName}', 
+where more details can be found. 
+Note that if \texttt{\$command} is a latex processor, 
+this warning comes only iff the parameter \texttt{\$debugWarnings} is set. 
+Note also that notifications on bad boxes are not counted as warnings here. 
 \end{minipage}
 } \\
 \texttt{\footnotesize WLP03} 
@@ -4196,7 +4207,12 @@ FIXME
 logged in '\$logFileName'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-FIXME
+Here, \texttt{\$command} is a latex processor. 
+It logged at least one bad box, 
+overfull or underfull, horizontal or vertical 
+in \texttt{\$logFileName} where more details can be found. 
+Note that 
+this warning comes only iff the parameter \texttt{\$debugBadBoxes} is set. 
 \end{minipage}
 } \\
 \texttt{\footnotesize WLP04} 
@@ -4305,8 +4321,8 @@ FIXME
 \end{minipage}
 } \\
 \texttt{\footnotesize WLP01} 
-& \texttt{\footnotesize LaTeX requires rerun } \\
-& \texttt{but maximum number \$maxNumRerunsLatex reached. } \\
+& \texttt{\footnotesize LaTeX requires rerun 
+but maximum number \$maxNumRerunsLatex reached. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
