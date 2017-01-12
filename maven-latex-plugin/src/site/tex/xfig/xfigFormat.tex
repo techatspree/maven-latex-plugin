@@ -1,25 +1,31 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[10pt, a4paper]{article}
 
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
+
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
+
 \usepackage[aux]{rerunfilecheck}
 
 % graphics 
 \makeatletter
 
-\ifpdf
+\ifpdf%
 \usepackage{xcolor}  % [pdftex]
 \usepackage{graphicx}% [pdftex] 
 \usepackage{hyperref}% driver [hpdftex] is autodetected 
-  \newcommand{\aaa}{most probably not }
 \else
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
 \@ifpackageloaded{tex4ht}{%
-%\usepackage[tex4ht]{hyperref}
-  \newcommand{\aaa}{}
+  % \usepackage[tex4ht]{hyperref}
+  \setboolean{texFhtLoaded}{true}
 }{%
 %\usepackage[dvipdfmx]{hyperref}
-  \newcommand{\aaa}{not }
 }
 \usepackage{bmpsize}
 \fi
@@ -34,17 +40,19 @@
 
 \maketitle
 \tableofcontents
+%\listoftables
 
 \section{Introduction}
 
 This document is created with pdflatex or that like 
 with output format 
-\ifpdf
+\ifpdf%
 pdf%
 \else
 dvi%
 \fi.
-The package \texttt{tex4ht} is \aaa loaded. 
+The package \texttt{tex4ht} 
+is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
 
 This documents describes the grammar 
 of the native file format of the xfig graphic program version 3.2. 
@@ -56,7 +64,7 @@ the rest of the line is ignored as regards the
 Lines starting with \texttt{\#} are comment lines and are ignored. 
 Also xfig does not insert comments, 
 except the first line as described in Section~\ref{sec:header}. 
-On the other hand, if one writes comments, e.g. with an editor, 
+On the other hand, if one writes comments, e.g.~with an editor, 
 these are essentially preserved when xfig reads the file and writes it 
 (well, if the first character of a comment is not a blank, 
 a blank is added, but that is all what is changed). 
@@ -100,7 +108,7 @@ Trailing blanks are not preserved.
 
 Leading blanks do not occur in the header. 
 Lines with leading blanks in the header are ignored. 
-Thus e.g. the orientation line 
+Thus e.g.~the orientation line 
 ``\texttt{\ \ \ Landscape}'' is replaced by ``\texttt{Portrait}'', 
 which demands the default orientation. 
 
@@ -130,8 +138,8 @@ points in a same curve.
 More precisely, it means that an X-spline curve 
 is neither an interpolated spline nor an approximated one, 
 it is BOTH (the behaviour of each point 
-is controlled by one single parameter called "shape factor"). 
-For additional information about X-splines, see \cite{XSpline}. 
+is controlled by one single parameter called ``shape factor''). 
+For additional information about X-splines, see~\cite{XSpline}. 
 
 Caveat: Because spline models of previous versions 
 (quadratic B-splines and Bezier with hidden points) 
@@ -157,29 +165,29 @@ The very first line is comment line containing the name and version:
 The subsequent non-comment lines of the header are the following 
 (in the order given): \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type & name & Possible values or explanation \\
-\hline
-\hline
-string & Orientation             & 'Landscape'|'Portrait' \\
-string & justification           & "Center" or "Flush Left" \\
-string & units                   & "Metric" or "Inches" \\
-string & PaperSize               & 'Letter'|'Legal'|'Ledger'|'Tabloid'|\\
-&&                                 'A'|'B'|'C'|'D'|'E'|\\
-&&                                 'A4'|'A3'|'A2'|'A1'|'A0'|'B5' \\
+\midrule
+\midrule
+string & Orientation             & `Landscape'|`Portrait' \\
+string & justification           & `Center' or `Flush Left' \\
+string & units                   & `Metric' or `Inches' \\
+string & PaperSize               & `Letter'|`Legal'|`Ledger'|`Tabloid'|\\
+&&                                 `A'|`B'|`C'|`D'|`E'|\\
+&&                                 `A4'|`A3'|`A2'|`A1'|`A0'|`B5' \\
 float  & magnification           & export and print magnification, \% \\
-string & multiple-page           & "Single" or "Multiple" pages \\
+string & multiple-page           & `Single' or `Multiple' pages \\
 int    & transparent color       & color number for transparent color \\
 &&                                 for GIF export. \\
 &&                                -2=None, -1=background, \\
-&&                                0-31 for standard colors or \\
-&&                                32- for user colors \\
+&&                                0--31 for standard colors or \\
+&&                                32-- for user colors \\
 int    & resolution coord-system & Fig units/inch and coordinate system:\\
 &&                                 1: origin at lower left corner \\
 &&                                    (NOT USED)\\
 &&                                 2: upper left \\
-\hline
+\bottomrule
 \end{tabular}
 
 
@@ -194,11 +202,11 @@ int    & resolution coord-system & Fig units/inch and coordinate system:\\
 
     The units specification is self-explanatory.
 
-    The coordinate-system variable is ignored - the origin is ALWAYS the
+    The coordinate-system variable is ignored --- the origin is ALWAYS the
     upper-left corner.
 
-    ** Coordinates are given in "fig\_resolution" units.
-    ** Line thicknesses are given in 80-ths of an inch ("display units").
+    ** Coordinates are given in `fig\_resolution' units.
+    ** Line thicknesses are given in 80-ths of an inch (`display units').
     ** dash-lengths/dot-gaps are given in 80-ths of an inch.
 
 
@@ -220,21 +228,21 @@ Transparent
 Resolution
 CoordinateSystem
 
-Orientation:('Landscape'|'Portrait')
+Orientation: (`Landscape'|`Portrait')
 
-Justification:('Center'|'FlushLeft')
+Justification: (`Center'|`FlushLeft')
 
-Units:('Metric'|'Inches')
+Units: (`Metric'|`Inches')
 
 PaperSize:
-('Letter'|'Legal'|'Ledger'|'Tabloid'|
-'A'|'B'|'C'|'D'|'E'|
-'A4'|'A3'|'A2'|'A1'|'A0'|
-'B5')
+(`Letter'|`Legal'|`Ledger'|`Tabloid'|
+`A'|`B'|`C'|`D'|`E'|
+`A4'|`A3'|`A2'|`A1'|`A0'|
+`B5')
 
 Magnification: Double
 resolution: Integer
-MultiplePage: ('Single'|'Multiple')
+MultiplePage: (`Single'|`Multiple')
 
 
 Transparent:
@@ -254,8 +262,8 @@ Comment [String] a
 
 
 Color:
-color\_number :: Integer
-color\_rgb\_values :: String
+color\_number:: Integer
+color\_rgb\_values:: String
 
 
 Documentation
@@ -264,9 +272,9 @@ data Fig
 Source
 
 Fig	 
-figHeader :: Header
-figColors :: [Commented Color]
-figObjects :: [Commented Object]
+figHeader:: Header
+figColors:: [Commented Color]
+figObjects:: [Commented Object]
 
 
 \section{Objects}\label{sec:obj}
@@ -296,10 +304,10 @@ which is composed of one or more objects.
 
 In the following elaboration on object formats, 
 every value of fig output are separated by blank characters 
-or new line (`\textbackslash n').  
+or new line (`\textbackslash{}n').  
 The value of the unused parameters will be -1.
 
- Some fields are described as "enumeration type" or "bit vector"; the
+ Some fields are described as `enumeration type' or `bit vector'; the
  values which these fields can take are defined in the header file object.h.
  The pen\_style field is unused.
  These values may be defined in some future version of Fig.
@@ -317,15 +325,15 @@ The color objects must be defined before any other Fig objects.
 \noindent
 Headline: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type & name & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int        & ObjectCode  & always 0 (see Section~\ref{sec:obj}) \\
-int        & ColorNumber & color number, from 32-543 (512 total)\\
-hex-string & RgbValues   & red, green and blue values (e.g. \#330099) \\
-\hline
+int        & ColorNumber & color number, from 32--543 (512 total)\\
+hex-string & RgbValues   & red, green and blue values (e.g.~\#330099) \\
+\bottomrule
 \end{tabular}
 
 The \texttt{Headline} ist the sole line defining a Color Pseudo-Object. 
@@ -341,11 +349,11 @@ or in terms of two points on the circle.
 \noindent
 Headline: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type  & name                & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int   &  ObjectCode         & always 1 (see Section~\ref{sec:obj}) \\
 int   &  SubType            & 1: ellipse defined by ``radiuses'' \\
 &&                            2: ellipse defined by ``diameters'' \\
@@ -366,7 +374,7 @@ int   &  center-x, center-y & Fig units \\
 int   &  radius-x, radius-y & Fig units (same for circles) \\
 int   &  start-x, start-y   & Fig units; the 1st point entered \\
 int   &  end-x, end-y       & Fig units; the last point entered \\
-\hline
+\bottomrule
 \end{tabular}
 %
 The \texttt{Headline} ist the sole line defining an ellipse. 
@@ -374,36 +382,36 @@ The \texttt{Headline} ist the sole line defining an ellipse.
 \noindent
 For further explanations on start-x/y and end-x/y: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 SubType  & start-x, start-y  & end-x, end-y \\
-\hline
-\hline
+\midrule
+\midrule
 1 & the center            & some vertex of the BB \\
 2 & a vertex of the BB    & opposite vertex of the BB \\
 3 & the center            & a point on the circle \\
 4 & a point on the circle & opposite point on the circle \\
-\hline
+\bottomrule
 \end{tabular}
 
 Ellipse	 
 
-ellipse\_common :: Common
-ellipse\_direction :: Integer
-ellipse\_angle :: Double
-ellipse\_center\_x :: Integer
-ellipse\_center\_y :: Integer
-ellipse\_radius\_x :: Integer
-ellipse\_radius\_y :: Integer
-ellipse\_start\_x :: Integer
-ellipse\_start\_y :: Integer
-ellipse\_end\_x :: Integer
-ellipse\_end\_y :: Integer
+ellipse\_common:: Common
+ellipse\_direction:: Integer
+ellipse\_angle:: Double
+ellipse\_center\_x:: Integer
+ellipse\_center\_y:: Integer
+ellipse\_radius\_x:: Integer
+ellipse\_radius\_y:: Integer
+ellipse\_start\_x:: Integer
+ellipse\_start\_y:: Integer
+ellipse\_end\_x:: Integer
+ellipse\_end\_y:: Integer
 
 \subsection{Polygonal line}\label{subsec:polyline}
 
 Defines various kinds of polygonal lines, both open and closed. 
-As special cases also boxes and arc-boxes, i.e. boxes with rounded vertices. 
+As special cases also boxes and arc-boxes, i.e.~boxes with rounded vertices. 
 As a special case also a box which serves as bounding box for a picture. 
 In this case, this polygonal line finally defines the picture itself. 
 See \texttt{SubType} in the Headline below. 
@@ -411,11 +419,11 @@ See \texttt{SubType} in the Headline below.
 \noindent
 Headline: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type   & name          & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int    & ObjectCode    & always 2 (see Section~\ref{sec:obj}) \\
 int    & SubType       & 1: polyline (open) \\
 &&                       2: box \\
@@ -440,7 +448,7 @@ int    & Radius        & radius of arc-boxes as multiples of 1/80 inch \\
 int    & ForwardArrow  & 0: off, 1: on \\
 int    & BackwardArrow & 0: off, 1: on \\
 int    & NPoints       & number of points in line \\
-\hline
+\bottomrule
 \end{tabular}
 
 \noindent
@@ -459,15 +467,15 @@ both described in Section~\ref{subsec:paramArrowLines}.
 Only if \texttt{SubType} in the Headline is 5, 
 follows a \texttt{PicLine} with the following form:
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type    & name        & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 boolean & Orientation & 0: normal \\
 &&                      1: flipped at diagonal \\
 string  & File        & name of picture file to import \\
-\hline
+\bottomrule
 \end{tabular}
 
 Then follows a \texttt{PointsLine} with a number of coordinates 
@@ -489,11 +497,11 @@ something in between as x-spline.
 \noindent
 Headline: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type  & name          & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int   & ObjectCode    & always 3 (see Section~\ref{sec:obj}) \\
 int   & SubType       & 0: opened approximated spline \\
 &&                      1: closed approximated spline \\
@@ -513,7 +521,7 @@ int   & CapStyle      & Section~\ref{subsec:styDep}, only used for open splines 
 int   & ForwardArrow  & 0: off, 1: on \\
 int   & BackwardArrow & 0: off, 1: on \\
 int   & NPoints       & number of control points in spline \\
-\hline
+\bottomrule
 \end{tabular}
 
 \noindent
@@ -537,7 +545,7 @@ This is the same as for Polylines described in Section~\ref{subsec:polyline}.
 Finally, and unlike for Polylines, there comes the \texttt{ControlPointsLine}: 
 
 There is one shape factor for each point in the \texttt{PointsLine}, 
-i.e. \texttt{NPoints} shape factors. 
+i.e.~\texttt{NPoints} shape factors. 
 The value of this factor must be between 
 %
 \begin{itemize}
@@ -547,7 +555,7 @@ The value of this factor must be between
 %
 The spline is always smooth in the neighbourhood of a control point, 
 except when the value of the factor is 0 
-for which there is a first-order discontinuity (i.e. angular point).
+for which there is a first-order discontinuity (i.e.~angular point).
 
 
 \subsection{Text}\label{subsec:text}
@@ -560,11 +568,11 @@ but not vertical justification.
 \noindent
 Headline: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type   & name       & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int    & ObjectCode & always 4 (see Section~\ref{sec:obj}) \\
 int    & SubType    & 0: Left justified \\ %better: Justification 
 &&                    1: Center justified \\
@@ -582,7 +590,7 @@ int    & x, y       & Fig units, coordinate of the origin of the string.  \\
 &&                    If SubType is 0/1/2, it is the \\
 &&                    lower left/center/right corner of the string.\\
 string & Text       & see below \\
-\hline
+\bottomrule
 \end{tabular}
 
 The \texttt{Headline} ist the sole line defining a text object. 
@@ -596,14 +604,14 @@ Rigid text: text doesn't scale when scaling compound objects
 \item
 Special text: interprete test as for \LaTeX-code. 
 If this is set, the following flag affects the view on the xfig GUI 
-but not external view, e.g. when printing or exporting. 
+but not external view, e.g.~when printing or exporting. 
 \item
 PostScript font: interprete \texttt{Font} above 
 as Postscript font (otherwise as \LaTeX{}-font) 
 Details follow below. 
 \item
-Hidden text: whether the text is hidden in the xfig GUI. 
-This does not affect the external view, e.g. printing and export. 
+Hidden text: whether the text is hidden in the xfig GUI\@. 
+This does not affect the external view, e.g.~printing and export. 
 \end{enumerate}
 
 The \texttt{Font} field is immaterial, if the Special flag above is set. 
@@ -665,36 +673,36 @@ For \texttt{FontFlags} bit 2 = 1,
 \end{enumerate}
       
 The \texttt{Text} field above is a sequence of ASCII characters. 
-It starts after a {\em single} blank character 
+It starts after a {\em single\/} blank character 
 which separates the coordinate field \texttt{x, y} from the \texttt{Text} field. 
 This allows to specify texts with leading blanks. 
-The text field ends before the sequence ``\texttt{\textbackslash 001}''; 
+The text field ends before the sequence ``\texttt{\textbackslash{}001}''; 
 the latter sequence is not part of the text field. 
-Characters above octal 177 are represented by ``\texttt{\textbackslash xxx}'' 
+Characters above octal 177 are represented by ``\texttt{\textbackslash{}xxx}'' 
 where \texttt{xxx} is the octal value. 
 This permits fig files to be edited with 7-bit editors 
 and sent by e-mail without data loss. 
-Note that the \texttt{Text} field may contain ``\texttt{\textbackslash n}''. 
+Note that the \texttt{Text} field may contain ``\texttt{\textbackslash{}n}''. 
 To specify a literal backslash write ``\texttt{\textbackslash\textbackslash}''. 
 The latter is vital for including \LaTeX{} in fig-figures. 
 
 
 Text	 
-text\_sub\_type :: Integer
-text\_color :: ColorSpec
-text\_depth :: Integer
-text\_pen\_style :: Integer
-text\_font :: Font
-text\_font\_size :: Double
-text\_angle :: Double
-text\_font\_flags :: FontFlags
-text\_height :: Double
-text\_length :: Double
-text\_x :: Integer
-text\_y :: Integer
-text\_string :: String
+text\_sub\_type:: Integer
+text\_color:: ColorSpec
+text\_depth:: Integer
+text\_pen\_style:: Integer
+text\_font:: Font
+text\_font\_size:: Double
+text\_angle:: Double
+text\_font\_flags:: FontFlags
+text\_height:: Double
+text\_length:: Double
+text\_x:: Integer
+text\_y:: Integer
+text\_string:: String
 
-ColorSpec: see Section \ref{subsec:paramColorsFill}
+ColorSpec: see Section~\ref{subsec:paramColorsFill}
 Font:
 Latex LatexFont	 
 Ps PsFont	 
@@ -749,9 +757,9 @@ ZapfDingbats
 
 
 FontFlags:
-hidden :: Bool
-special :: Bool
-rigid :: Bool
+hidden:: Bool
+special:: Bool
+rigid:: Bool
 
 
 
@@ -759,17 +767,17 @@ rigid :: Bool
 
 \subsection{Arc}\label{subsec:arc}
 
-Defines an arc, i.e. a segment of a circle by a start point, 
+Defines an arc, i.e.~a segment of a circle by a start point, 
 an intermediate point and an end point. 
 
 \noindent
 Headline: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type  & name               & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int   & ObjectCode         & always 5 (see Section~\ref{sec:obj}) \\
 int   & SubType            & 0: closed (pie-wedge) \\
 &&                           1: open ended  \\
@@ -789,7 +797,7 @@ float & center-x, center-y & center of the arc \\
 int   & x1, y1             & Fig units, the 1st point the user entered \\
 int   & x2, y2             & Fig units, the 2nd point \\
 int   & x3, y3             & Fig units, the last point \\
-\hline
+\bottomrule
 \end{tabular}
 
 \noindent
@@ -809,28 +817,28 @@ Arc ArcLine (Maybe Arrow) (Maybe Arrow)
 Spline SplineLine (Maybe Arrow) (Maybe Arrow) [(Integer, Integer)] [Double]
 
 ArcLine:
-arc\_common :: Common
-arc\_cap\_style :: CapStyle
-arc\_direction :: Integer
-arc\_center\_x :: Double
-arc\_center\_y :: Double
-arc\_x1 :: Integer
-arc\_y1 :: Integer
-arc\_x2 :: Integer
-arc\_y2 :: Integer
-arc\_x3 :: Integer
-arc\_y3 :: Integer
+arc\_common:: Common
+arc\_cap\_style:: CapStyle
+arc\_direction:: Integer
+arc\_center\_x:: Double
+arc\_center\_y:: Double
+arc\_x1:: Integer
+arc\_y1:: Integer
+arc\_x2:: Integer
+arc\_y2:: Integer
+arc\_x3:: Integer
+arc\_y3:: Integer
 
 SplineLine:
-spline\_common :: Common
-spline\_cap\_style :: CapStyle
+spline\_common:: Common
+spline\_cap\_style:: CapStyle
 
 Arrow:
-arrowType :: ArrowType
-arrowStyle :: ArrowStyle
-arrowThickness :: Double
-arrowWidth :: Double
-arrowHeight :: Double
+arrowType:: ArrowType
+arrowStyle:: ArrowStyle
+arrowThickness:: Double
+arrowWidth:: Double
+arrowHeight:: Double
 
 
 ArrowStyle:
@@ -854,17 +862,17 @@ which may well be compounds themselves.
 \noindent
 Headline: \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type & name & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int & ObjectCode          & always 6 (see Section~\ref{sec:obj}) \\
 int & UpperRight-corner-x & Fig units \\
 int & UpperRight-corner-y & Fig units \\
 int & LowerLeft-corner-x  & Fig units \\
 int & LowerLeft-corner-y  & Fig units \\
-\hline
+\bottomrule
 \end{tabular}
 
 Subsequent lines of the compound except the last one 
@@ -878,20 +886,20 @@ Polyline PolylineLine (Maybe Arrow) (Maybe Arrow) (Maybe Pic) [(Integer, Integer
 
 
 PolylineLine:
-polyline\_common :: Common
-polyline\_join\_style :: JoinStyle
-polyline\_cap\_style :: CapStyle
-polyline\_radius :: Integer
+polyline\_common:: Common
+polyline\_join\_style:: JoinStyle
+polyline\_cap\_style:: CapStyle
+polyline\_radius:: Integer
 
 
-CapStyle: see Section \ref{subsec:styDep}
+CapStyle: see Section~\ref{subsec:styDep}
 
 
 CompoundLine:
-compound\_upperleft\_corner\_x :: Integer
-compound\_upperleft\_corner\_y :: Integer
-compound\_lowerright\_corner\_x :: Integer
-compound\_lowerright\_corner\_y :: Integer
+compound\_upperleft\_corner\_x:: Integer
+compound\_upperleft\_corner\_y:: Integer
+compound\_lowerright\_corner\_x:: Integer
+compound\_lowerright\_corner\_y:: Integer
 
 
 
@@ -899,15 +907,15 @@ compound\_lowerright\_corner\_y :: Integer
 
 
 Common:
-subType :: Integer
-lineStyle :: LineStyle
-lineThickness :: Integer
-penColor :: ColorSpec
-fillColor :: ColorSpec
-depth :: Integer
-penStyle :: Integer
-areaFill :: AreaFill
-styleVal :: Double
+subType:: Integer
+lineStyle:: LineStyle
+lineThickness:: Integer
+penColor:: ColorSpec
+fillColor:: ColorSpec
+depth:: Integer
+penStyle:: Integer
+areaFill:: AreaFill
+styleVal:: Double
 
 LineStyle:
 LineStyleDefault	 
@@ -920,7 +928,7 @@ DashTripleDotted
 
 
 
-AreaFill:(NoFill|Filled Integer|Pattern Integer)
+AreaFill: (NoFill|Filled Integer|Pattern Integer)
 
 
 
@@ -966,39 +974,39 @@ the distance between the dots, in 1/80 inches, for dotted lines.
 \noindent
 The \texttt{Depth} field is defined as follows:
 
-         0 ... 999 where larger value means object is deeper than (under)
+         0 \ldots 999 where larger value means object is deeper than (under)
                    objects with smaller depth
 
 \subsection{Arrow lines}\label{subsec:paramArrowLines}
 
 Forward arrow line (Optional; absent if ForwardArrow is 0): \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type & name & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int    & ArrowType      & see below \\
 int    & ArrowStyle     & see below \\
 float  & ArrowThickness & multiples of 1/80 inch \\
 float  & ArrowWidth     & Fig units \\
 float  & ArrowHeight    & Fig units \\
-\hline
+\bottomrule
 \end{tabular}
 
 Backward arrow line (Optional; absent if backward-arrow is 0): \\
 %
-\begin{tabular}{|lll|}
-\hline
+\begin{tabular}{lll}
+\toprule
 type & name & Possible values or explanation \\
-\hline
-\hline
+\midrule
+\midrule
 int    & ArrowType      & see below \\
 int    & ArrowStyle     & see below \\
 float  & ArrowThickness & multiples of 1/80 inch \\
 float  & ArrowWidth     & Fig units \\
 float  & ArrowHeight    & Fig units \\
-\hline
+\bottomrule
 \end{tabular}
 
 The \texttt{ArrowType} field is defined for LINES, ARCS and OPEN SPLINES only as follows:
@@ -1012,7 +1020,7 @@ The \texttt{ArrowType} field is defined for LINES, ARCS and OPEN SPLINES only as
                 % |    /
                 % |  /
                 % |/
- \item   Closed with "indented" butt:
+ \item   Closed with `indented' butt:
                 % |\
                 % \  \
                 %  \   \
@@ -1021,7 +1029,7 @@ The \texttt{ArrowType} field is defined for LINES, ARCS and OPEN SPLINES only as
                 %  /   /
                 % /  /
                 % |/
-\item    Closed with "pointed" butt:
+\item    Closed with `pointed' butt:
                 %    |\
                 %   /   \
                 %  /      \
@@ -1047,19 +1055,18 @@ as follows:
 \noindent
 The form of the \texttt{PointsLine} is as follows: \\
 %
-\begin{tabular}{|lll|}
-\hline
-type & name  & Possible values or explanation \\
-\hline
-\hline
-int & x1, y1 & Fig units \\
-int & x2, y2 & Fig units \\
-  . &  .     &  .    \\
-  . &  .     &  .    \\
-int & xnpoints ynpoints & this will be the same as the 1st point \\
-    &                   & if the described line is closed \\
-    &                   & and in particular if it is the outline of a picture \\
-\hline
+\begin{tabular}{lll}
+\toprule
+type    & name             & Possible values or explanation \\
+\midrule
+\midrule
+int    & x1, y1            & Fig units \\
+int    & x2, y2            & Fig units \\
+\vdots & \vdots            &  \vdots    \\
+int    & xnpoints ynpoints & this will be the same as the 1st point \\
+       &                   & if the described line is closed \\
+       &                   & and in particular if it is the outline of a picture \\
+\bottomrule
 \end{tabular}
 
 \subsection{Colors and Filling}\label{subsec:paramColorsFill}
@@ -1077,15 +1084,15 @@ Both \texttt{PenColor} and \texttt{FillColor} are encoded as follows:
 \item        Magenta
 \item        Yellow
 \item        White
-\item[8-11]  four shades of blue (dark to lighter)
-\item[12-14] three shades of green (dark to lighter)
-\item[15-17] three shades of cyan (dark to lighter)
-\item[18-20] three shades of red (dark to lighter)
-\item[21-23] three shades of magenta (dark to lighter)
-\item[24-26] three shades of brown (dark to lighter)
-\item[27-30] four shades of pink (dark to lighter)
+\item[ 8--11] four shades of blue (dark to lighter)
+\item[12--14] three shades of green (dark to lighter)
+\item[15--17] three shades of cyan (dark to lighter)
+\item[18--20] three shades of red (dark to lighter)
+\item[21--23] three shades of magenta (dark to lighter)
+\item[24--26] three shades of brown (dark to lighter)
+\item[27--30] four shades of pink (dark to lighter)
 \item[31]    Gold
-\item[32-543] (512 total) are user colors and
+\item[32--543] (512 total) are user colors and
               are defined in color pseudo-objects 
               described in Section~\ref{subsec:colorPseudoObj}. 
               Only those indices may be used 
@@ -1103,10 +1110,10 @@ the \texttt{AreaFill} pattern is defined as follows:
 \begin{enumerate}
 \item[-1]    not filled
 \item[0]     black
-\item[1-19]  "shades" of the \texttt{FillColor}, from darker to lighter.
+\item[1--19]  `shades' of the \texttt{FillColor}, from darker to lighter.
              A shade is defined as the color mixed with black
 \item[20]    full saturation of the color
-\item[21-39] "tints" of the color from the color to white.
+\item[21--39] `tints' of the color from the color to white.
              A tint is defined as the color mixed with white
 \item[40]    white
 \item[41]    30 degree left diagonal pattern
@@ -1123,8 +1130,8 @@ the \texttt{AreaFill} pattern is defined as follows:
 \item[52]    fish scales
 \item[53]    small fish scales
 \item[54]    octagons
-\item[55]    horizontal "tire treads"
-\item[56]    vertical "tire treads"
+\item[55]    horizontal `tire treads'
+\item[56]    vertical `tire treads'
 \end{enumerate}
 
 For \texttt{FillColor}s \texttt{Black} and \texttt{Default}, 
@@ -1133,9 +1140,9 @@ there are the following deviations:
 \begin{enumerate}
 \item[-1]    not filled
 \item[0]     white
-\item[1-19]  "shades" of grey, from lighter to darker.
+\item[1--19]  `shades' of grey, from lighter to darker.
 \item[20]    (full saturation of) black
-\item[21-40] not used. 
+\item[21--40] not used. 
 \end{enumerate}
 
 If the \texttt{FillColor} is \texttt{White} there are the following deviations 
@@ -1144,9 +1151,9 @@ from standard colors:
 \begin{enumerate}
 \item[-1]    not filled
 \item[0]     black
-\item[1-19]  "shades" of grey, from darker to lighter.
+\item[1--19]  `shades' of grey, from darker to lighter.
 \item[20]    (full saturation of) white
-\item[21-40] not used. 
+\item[21--40] not used. 
 \end{enumerate}
 
 
@@ -1190,7 +1197,7 @@ Gold
 UserDefined Integer	 
 
 \bibliographystyle{alpha}
-\bibliography{../lit}{}
+\bibliography{../lit}{}% chktex 11 
 
 
 \end{document}
