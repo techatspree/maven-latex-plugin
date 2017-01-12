@@ -1010,6 +1010,49 @@ not allowed:
 		 The default value is the empty string. -->
             <pdf2txtOptions></pdf2txtOptions>
 
+	    <!-- The chktex-command for checking latex main files. 
+		 The default value is 'chktex'. -->
+           <chkTexCommand>chktex</chkTexCommand>
+
+	   <!-- The options of the command $chkTexCommand, 
+		except '-o output-file' 
+		specifying the output file which is added automatically. 
+		
+		Here is a list of options useful in this context. 
+		The first group of these are muting options: 
+		- '-w', '-e', '-m', 
+		Make the message number passed as parameter 
+		a warning/an error/a message and turns it on. 
+		Messages are not counted. 
+		- '-n'
+		Turns the warning/error number passed as a parameter off. 
+		- '-L'
+		Turns off suppression of messages on a per line basis. 
+		
+		The next group of interesting options are for output control: 
+		- '-q'
+		Shuts up about copyright information.
+		- '-o output-file'
+		Specifies the output file. This is added automatically 
+		and shall thus not be specified by the user. 
+		- '-b[0|1]'
+		If you use the -o switch, and the named outputfile exists,
+		it will be renamed to 'filename.bak'.
+		- '-f format'
+		Specifies the format of the output 
+		via a format similar to 'printf()'. 
+		For details consult the manual. 
+		- '-vd'
+		Verbosity level followed by a number 'd' 
+		specifying the format of the output. 
+		The verbosity number is resolved as a pattern 
+		as if given by the option '-f format'. 
+		Thus the option '-v' is ignored 
+		if the option '-f format' is specified. 
+		
+		The default value is '-q -b0' 
+		avoiding verbose output and backing up the output log-file. -->
+           <chkTexOptions>-q -b0 -v1</chkTexOptions>
   	  </settings>
 	</configuration>
 
@@ -1029,6 +1072,7 @@ not allowed:
               <!--goal>odt</goal-->
               <!--goal>docx</goal-->
               <!--goal>txt</goal-->
+              <!--goal>chk</goal-->
   <!--
 here is a bug affecting goal odt: 
 /usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def

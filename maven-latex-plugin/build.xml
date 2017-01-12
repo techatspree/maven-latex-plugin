@@ -82,8 +82,7 @@
 	   classpathref="latex.classpath"/>
 
   <target name="latex:cfg"
-	  description="Create pdf, html and other formats 
-		       from latex. ">
+	  description="Create pdf, html and other formats from latex. ">
     <latexCfg>
 	<!--patternErrXindy="(^ERROR: )" -->
 
@@ -128,7 +127,9 @@
 		odt2docCommand="odt2doc"
 		odt2docOptions="-fdocx"
 		pdf2txtCommand="pdftotext"
-		pdf2txtOptions="">
+		pdf2txtOptions=""
+		chkTexCommand='chktex'
+		chkTexOptions='-q -b0'>
 	<patternLatexMainFile>
 ^(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
