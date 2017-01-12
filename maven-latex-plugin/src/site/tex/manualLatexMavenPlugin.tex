@@ -587,10 +587,10 @@ Instead it populates the source directories
 with graphic files which can be directly included into the \LaTeX-file 
 and so it allows to run the \LaTeX-compiler on the latex main files 
 from within a development environment. 
-Thus the goal {\em graphics} is thus a vital feature 
+Thus the goal {\em graphics\/} is thus a vital feature 
 for information development. 
 
-Another goal useful for information development is {\em check} 
+Another goal useful for information development is {\em check\/} 
 invoked by \texttt{mvn latex:chk}, 
 which essentially runs the checker \texttt{chktex} on the latex main files 
 after creating graphic files as for goal {\em graphics}. 
@@ -749,7 +749,7 @@ these files cannot be removed by this maven-pugin or this ant-task.
 During development of a \LaTeX-main file, 
 it is often more convenient to compile from within an editor like emacs. 
 The problem is, that compilation fails if the graphic files are missing. 
-This is what the goal {\em graphics} accesible via 
+This is what the goal {\em graphics\/} accesible via 
 \texttt{mvn latex:grp} is for: 
 It creates all graphic files required to compile the \LaTeX-main files. 
 
@@ -2730,7 +2730,7 @@ If the user finds an extension, (s)he is asked to contribute % chktex 36
 and to notify the developer of this plugin. 
 Then the default value will be extended. 
 \end{minipage}
-} \\% chktex 9
+} \\ % chktex 10 (bug) 
 \end{longtable}
 
 
@@ -3526,7 +3526,7 @@ The default value has the following components:
 `\texttt{\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
 toc, lof, lot, indices, glossaries, NOT the bibliography. 
 \item
-`\texttt{\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
+`\texttt{\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' % chktex 36
 are chapters, sections and subsections or below 
 and appendices. 
 \item
@@ -3538,7 +3538,7 @@ and appendices.
 `\texttt{\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
 are svg/png-files representing figures. 
 \item
-`\texttt{\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
+`\texttt{\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' % chktex 36
 represents special symbols. 
 \end{itemize}
 		 
@@ -3725,20 +3725,21 @@ Turns off suppression of messages on a per line basis.
 The next group of interesting options are for output control: 
 %
 \begin{itemize}
-\item '-q'
+\item['-q']
 Shuts up about copyright information.
-\item '-o output-file'
+\item['-o output-file']
 Specifies the output file. This is added automatically 
 and shall thus not be specified by the user. 
-\item '-b[0|1]'
+\item['-b0/1']
 If you use the -o switch, and the named outputfile exists,
-it will be renamed to `filename.bak'.
-\item '-f format'
+it will be renamed to `filename.bak' for option \texttt{-b1} 
+and not for \texttt{-b0}.
+\item['-f format']
 Specifies the format of the output 
-via a format similar to `printf()'. 
+via a format similar to ``\texttt{printf()}'. %chktex 36
 For details consult the manual~\cite{ChkTeX}, Section 6.1.2. 
 The codes are listed below. 
-\item '-vd'
+\item['-vd']
 Verbosity level followed by a number `d' 
 specifying the format of the output according to the listing below. 
 The verbosity number is resolved as a pattern 
@@ -3813,7 +3814,7 @@ OutFormat
 }
 \end{verbatim}
 
-Note that ! is to escape quotes and newline. 
+Note that ``\texttt!'' is to escape quotes and newline. 
 More than these can be added to \texttt{chktexrc}. 
 
 
@@ -4608,6 +4609,22 @@ Also for creation of the txt-format,
 
 FIXME\@: on bibliography, index and glossary 
 
+The application \texttt{chktex} does not necessarily return an error code 
+if something goes wrong, e.g.~reading \texttt{-l chktexrc}. 
+Thus only in debug mode one can recognize the misbehavior. 
+This knocks out detection of build failures. 
+
+Also I would like to replace the global \texttt{chktexrc} by a local version, 
+via `\texttt{-g0 -l chktexrc.my}'. 
+The problem is, 
+that the file is interpreted relative to the working directory. 
+
+The application chtex has an option \texttt{-I} to specify, 
+whether input files shall be read. 
+If not, creation of graphics is immaterial. 
+I can also imagine, that one wants to configure, 
+whether graphics shall be created or not. 
+
 
 \chapter{Tests}\label{chap:tests}
 
@@ -4631,4 +4648,4 @@ FIXME\@: this chapter describes the tests to be performed.
 %%% mode: latex
 %%% TeX-command-extra-options: "-src-specials -recorder -shell-escape -output-format=pdf"  
 %%% TeX-master: t
-%%% End: 
+%%% End: % chktex 17 (bug) 
