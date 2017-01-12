@@ -18,7 +18,7 @@
 % graphics 
 \makeatletter
 
-\ifpdf
+\ifpdf%
 \usepackage{xcolor}  % [pdftex]  
 \usepackage{graphicx}% [pdftex] 
 \usepackage{hyperref}% driver [hpdftex] is autodetected 
@@ -64,7 +64,7 @@
 % only with pdflatex, warnings for xelatex and for lualatex 
 % ifxetex, ifluatex, ifpdf
 \usepackage{ifpdf,ifxetex,ifluatex}
-\ifpdf
+\ifpdf%
 %\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \else
@@ -78,12 +78,19 @@
   \usepackage[toc]{glossaries}%,automake
   % , xindy or even [xindy={language=english,codepage=utf8}]
   % mainly for index and glossaries 
-  \makeglossaries
+  \makeglossaries%
 }
+
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
 
 %\makeglossary% for rerunfilecheck 
 
 %\usepackage{etexcmds} %still later 
+
+
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
 
 %%% Local Variables:
 %%% mode: latex
