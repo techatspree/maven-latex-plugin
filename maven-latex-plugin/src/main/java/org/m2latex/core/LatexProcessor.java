@@ -1706,9 +1706,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	String command = this.settings.getChkTexCommand();
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
-	String[] args = buildChkTexArguments(this.settings.getChkTexOptions(),
-					     clgFile, 
-					     texFile);
+	String[] args = buildChkTexArguments(this.settings.getChkTexOptions(), 
+					     texFile,
+					     clgFile);
 	// may throw BuildFailureException TEX01, 
 	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(texFile.getParentFile(), 
@@ -1721,20 +1721,37 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // but the failure is already logged. 
 	    return;
 	}
-	assert !clgFile.isDirectory();
+	// assert !clgFile.isDirectory();
 	if (clgFile.length() != 0) {
 	    // FIXME: maybe we shall distinguish errors/warnings/messages
-	    // FIXME: identifier missing 
-	    this.log.warn("ChkTeX found warnings in '" + 
+	    this.log.warn("WLP04: Running " + command + 
+			  " found issues logged in '" + 
 			  texFile.getName() + "'. ");
 	}
-	// FIXME: no distinction: error/warning/message 
-	// given by chktex 
     }
 
+    /**
+     * Returns an array of strings, 
+     * each entry with a single option given by <code>options</code> 
+     * except the last three which represent <code>-o clgFile texFile</code>. 
+     *
+     * @param options
+     *    the options string. The individual options 
+     *    are expected to be separated by a single blank. 
+     * @param texFile
+     *    the latex main file to be checked. 
+     * @param clgFile
+     *    the log-file with the result of the check of <code>texFile</code>. 
+     * @return
+     *    An array of strings: 
+     *    If <code>options</code> is not empty, 
+     *    the first entries are the options in <code>options</code>. 
+     *    The last three entries are 
+     *    <code>-o</code>, <code>clgFile</code> and <code>texFile</code>. 
+     */
     protected static String[] buildChkTexArguments(String options, 
-						   File clgFile, 
-						   File texFile) {
+						   File texFile, 
+						   File clgFile) {
     	if (options.isEmpty()) {
     	    return new String[] {
 		"-o", 
