@@ -2,6 +2,11 @@
 ##  ChkTeX, example resource file for ChkTeX.
 ##  Copyright (C) 1995-96 Jens T. Berger Thielemann
 ##
+##       adapted to satisfy my personal needs: E. Reissner 
+##       - Silent: \textbackslash
+##       - VerbEnvir: Verbatim lstlisting
+##       - OutFormat: all but headlines start with blank. 
+##
 ##  This program is free software; you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
 ##  the Free Software Foundation; either version 2 of the License, or
@@ -296,24 +301,28 @@ TeXInputs
 
 OutFormat
 {
+# Modifications by E. Reissner, to have all but headlines 
+# starting with blank. 
+# That way, %k: error/warning/message are easily detected. 
 
 # -v0; silent mode
 %f%b%l%b%c%b%n%b%m!n
 
-# -v1; normal mode
-"%k %n in %f line %l: %m!n%r%s%t!n%u!n"
+# -v1; normal mode, modified so that subsequent lines start with ' '
+"%k %n in %f line %l: %m!n %r%s%t!n %u!n"
 
-# -v2; fancy mode
-"%k %n in %f line %l: %m!n%r%i%s%I%t!n!n"
+# -v2; fancy mode, modified so that subsequent lines start with ' '
+"%k %n in %f line %l: %m!n %r%i%s%I%t!n!n"
 
 # -v3; lacheck mode
 "!"%f!", line %l: %m!n"
 
-# -v4; verbose lacheck mode
-"!"%f!", line %l: %m!n%r%s%t!n%u!n"
+# -v4; verbose lacheck mode, modified so that subsequent lines start with ' '
+"!"%f!", line %l: %m!n %r%s%t!n %u!n"
 
-# -v5; no line number, ease auto-test
-"%k %n in %f: %m!n%r%s%t!n%u!n"
+# -v5; no line number, ease auto-test 
+# modified so that subsequent lines start with ' '
+"%k %n in %f: %m!n %r%s%t!n %u!n"
 
 # -v6; emacs compilation mode
 "!"%f!", line %l.%c:(#%n) %m!n"
@@ -336,6 +345,8 @@ Silent
     \rmfamily \sffamily \ttfamily \mdseries \bfseries
     \slshape \scshape \relax
     \vskip \pagebreak \nopagebreak
+
+    \textbackslash
 
     \textrm \textem \textbf \textit \textsl \textsf \textsc \texttt
 
@@ -524,7 +535,9 @@ TextCmd
 
 VerbEnvir
 {
-    verbatim comment listing verbatimtab rawhtml errexam picture texdraw
+    verbatim Verbatim verbatimtab 
+    lstlisting listing comment 
+    rawhtml errexam picture texdraw
     filecontents pgfpicture tikzpicture
 }
 
