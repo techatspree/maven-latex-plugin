@@ -3818,6 +3818,35 @@ Note that ``\texttt!'' is to escape quotes and newline.
 More than these can be added to \texttt{chktexrc}. 
 
 
+This document is checked with options deviating from the default value: 
+%
+\begin{verbatim}
+-q -b0 -v1 -g0 -l ${basedir}/src/site/tex/chktexrc
+\end{verbatim}
+%
+The default ist \texttt{-q -b0}, 
+option \texttt{-g0} means that the global \texttt{chktexrc} is not used 
+and option 
+%
+\begin{verbatim}
+-l ${basedir}/src/site/tex/chktexrc
+\end{verbatim}
+%
+specifies a record file tailored to the needs of this project. 
+In particular, the pattern for \texttt{-v1} is slightly modified: 
+It is 
+%
+\begin{verbatim}
+# -v1; normal mode
+"%k %n in %f line %l: %m!n %r%s%t!n %u!n"
+\end{verbatim}
+%
+which adds a blank to all lines but the headlines. 
+That way, the kind of issue (\%k) is easily parsed. 
+This could be used for emitting an error instead of a warning 
+when processing goal {\em check}. 
+
+
 
 \chapter{Exceptions and Logging}\label{chap:exceptionLogging}
 
@@ -4624,6 +4653,14 @@ whether input files shall be read.
 If not, creation of graphics is immaterial. 
 I can also imagine, that one wants to configure, 
 whether graphics shall be created or not. 
+
+It may make sense to define in \texttt{chktexrc} another verbosity level 
+with format allowing to decide whether there is a warning/error/message. 
+Now I modified the levels that all but the headlines start with blank. 
+This makes it easy in -v1 and in -v2 to detect warning/error/message 
+at the beginning of a line, 
+without the risk of false error because a message is logged 
+on a text starting with the word ``error''. 
 
 
 \chapter{Tests}\label{chap:tests}
