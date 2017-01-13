@@ -129,7 +129,8 @@
 		pdf2txtCommand="pdftotext"
 		pdf2txtOptions=""
 		chkTexCommand='chktex'
-		chkTexOptions='-q -b0'>
+		chkTexOptions='-q -b0'> 
+<!-- -v1 -g0 -l ${basedir}/src/site/tex/chktexrc nowhere used. -->
 	<patternLatexMainFile>
 ^(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|

@@ -1052,7 +1052,7 @@ not allowed:
 		
 		The default value is '-q -b0' 
 		avoiding verbose output and backing up the output log-file. -->
-           <chkTexOptions>-q -b0 -v1</chkTexOptions>
+           <chkTexOptions>-q -b0 -v1 -g0 -l ${basedir}/src/site/tex/chktexrc</chkTexOptions>
   	  </settings>
 	</configuration>
 
