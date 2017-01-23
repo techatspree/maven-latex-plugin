@@ -204,8 +204,12 @@ These prerequisites are collected in Section~\ref{sec:prerequisites}.
 
 \section{Prerequisites}\label{sec:prerequisites}
 
-The ant-task is tested with 
-\texttt{Apache Ant(TM) version 1.9.4 compiled on September 11 2015}\index{ant}% chktex 36
+The ant-task is tested with \index{ant}
+%
+\begin{verbatim}
+Apache Ant(TM) version 1.9.4 compiled on September 11 2015}
+\end{verbatim}
+%
 and the maven-plugin with 
 %
 \index{maven}
@@ -372,6 +376,111 @@ pdf-files is required.
 
 So to run this software, the abovementioned programs 
 or at least the subset used, must be installed. 
+
+There are also several \LaTeX-packages needed or at least recommended. 
+The recommended ones are 
+%
+\begin{itemize}
+\item
+\texttt{geometry} described in \cite{GeomP} 
+to control page layout. 
+\item
+\texttt{microtype} described in \cite{MicroTyP} improve readability 
+and make the document look nicer. 
+It also helps to avoid bad boxes. 
+\item
+\texttt{hyperref} described in \cite{HyperTextP} 
+to insert hypertext marks, which i do not want to miss in larger documents. 
+\item
+\texttt{srcltx} described in \cite{SrcLtxP} 
+which allows to jump from the DVI file to the .tex source and back. 
+\item
+\texttt{showframe} 
+if \texttt{geometry} is not used with option \texttt{showframe}. 
+There seems to be no package documentation for package \texttt{showframe}. 
+\item
+\texttt{booktabs} described in \cite{BooktP} 
+
+
+\end{itemize}
+
+\noindent
+Almost required are 
+%
+\begin{itemize}
+\item
+\texttt{rerunfilecheck} described in \cite{RerunFChkP} 
+which writes additional rerun warnings to the log file 
+if some auxiliary files have changed. 
+This software relies on these warnings 
+to control rerun latex and other applications. 
+\item
+\texttt{ifthen} described in \cite{IfThenP} 
+which provides the \texttt{ifthenelse}-command 
+which is needed to create both pdf and html and also to create rtf. 
+\item
+\texttt{ifpdf} described in \cite{IfPdfP} 
+which provides the \texttt{ifpdf}-command to detect pdf-mode. 
+This is required to distinguish creation of pdf and text 
+from html, odt, doc and others, based on dvi. 
+\item
+The graphics packages described in \cite{GraX}, 
+in particular \texttt{graphicx}, \texttt{xcolor} and \texttt{transparent}, 
+the latter two descibed in \cite{XColorP} and in \cite{TransP}, 
+respectively. 
+Sometimes also \texttt{bmpsize} described in \cite{BmpP} 
+if pixel graphics is used. 
+\item
+\texttt{import} described in \cite{ImpoP} 
+e.g.~to import nested graphic files from arbitrary directories. 
+\item
+\texttt{inputenc} described in \cite{InputencP} 
+to select an input encoding 
+\texttt{fontenc} to select a font encoding. 
+\cite{FontSel} describes font selection in general, 
+with Section 5 on font encoding and 
+Section 5.1 on the \texttt{fontenc} package. 
+This package is almost indispenible if you do not write English, 
+e.g.~to access German umlauts. 
+Note that \cite{FontEnc} describes font encoding in more detail. 
+\item 
+\texttt{makeidx} and \texttt{showidx} described in \cite{MkidxShIdxP} 
+or something comparable for creating indices. 
+\item 
+\texttt{glossaries} described in \cite{GloP} 
+with tutorial \cite{GloPGuide}
+or something comparable for creating glossaries. 
+\item 
+\texttt{tocbibind} described in \cite{TocBibIndP} 
+to include bibliography and index (what about glossaries?) 
+into the table of contents. 
+\item 
+\texttt{nag} described in \cite{NagP} 
+which performs certain checks unveiling deficiencies 
+not filtered by the compiler nor by another check tool. 
+\end{itemize}
+
+\noindent
+Useful packages with which this software is tested: 
+%
+\begin{itemize}
+\item
+The ams-packages **** \texttt{amsmath}
+\item
+\texttt{longtable} described in \cite{LongTabP} 
+for long tables, i.e.~tables exceeding a page. 
+\item
+\texttt{listings} described in \cite{ListingsP} for listings. 
+\item
+\texttt{fancyvrb} described in \cite{FancyVerbP} 
+provides useful environments to mark verbatim text. 
+\item
+\texttt{ifxetex} described in \cite{IfXeTeXP} and 
+\texttt{ifluatex} described in \cite{IfLuaTeXP} 
+are to determine the tex-engine (regardless the output format). 
+
+\end{itemize}
+
 
 \section{Setting pom.xml and build.xml}\label{sec:sgml}
 
@@ -1886,14 +1995,14 @@ Using \texttt{makeindex} is the default but can also be activated through
 \cmd{usepackage[makeindex]\{glossaries\}}. 
 Using \texttt{xindy} instead of \texttt{makeindex} is triggered through 
 \cmd{usepackage[xindy]\{glossaries\}}. 
-Accordingly, for \texttt{makeindex} the aux-file receives lines 
+Accordingly, for option \texttt{makeindex} the aux-file receives lines 
 %
 \begin{verbatim}
 \providecommand\@istfilename[1]{}
 \@istfilename{manualLatexMavenPlugin.ist}
 \end{verbatim}
 %
-whereas for \texttt{xindy}, there are lines 
+whereas for option \texttt{xindy}, there are lines 
 %
 \begin{verbatim}
 \providecommand\@istfilename[1]{}
@@ -1951,10 +2060,11 @@ where~\cite{GloP}, Section~15 lists predefined styles.
 So, the style determines the content of the style definition, 
 whereas the options \texttt{makeindex} and \texttt{xindy} 
 specify the form in which the style is encoded 
-and thus the ending of the style file, which is either \texttt{ist} or \texttt{xdy}. 
+and thus the ending of the style file, 
+which is either \texttt{ist} or \texttt{xdy}. 
 
 Sorting the glo-file, as said above, 
-currently is only supported using \texttt{makeglossaries}. 
+currently is only supported using the command \texttt{makeglossaries}. 
 The allowed options are essentially those 
 making sense for \texttt{makeindex} and those making sense for \texttt{xindy}. 
 If the shell command \texttt{makeglossaries} 
@@ -3005,10 +3115,11 @@ process files from console.
 Export the drawing (not the page)
 \item `--export-latex' 
 Export into PDF/PS/EPS format without text. 
-Besides the PDF/PS/EPS files, a LaTeX file is exported,
+Besides the PDF/PS/EPS files, a \LaTeX-file \texttt{latexfile.tex} is exported,
 putting the text on top of the PDF/PS/EPS file. 
-Include the result in LaTeX like: 
+Include the result in LaTeX as: 
 \cmd{input\{latexfile.tex\}}. 
+
 Note that the latter option is necessary, 
 to create the expected files. 
 It is also conceivable to export text as pdf/eps 
@@ -3069,7 +3180,8 @@ FIXME\@:  -output-format is not allowed because set automatically.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-indicating a failure when running the \texttt{\$latex2pdfCommand}. 
+indicating an error when running the command 
+\texttt{\$latex2pdfCommand}. 
 %The default value is 
 %'\texttt{! $|$Fatal error$|$LaTeX Error$|$Emergency stop}'. 
 If this is not complete, please extend 
@@ -3080,7 +3192,8 @@ and notify the developer of this plugin.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the log-file 
-which indicates a warning when running \texttt{\$latex2pdfCommand}. 
+which indicates a warning when running the command 
+\texttt{\$latex2pdfCommand}. 
 It is designed to be as complete as possible 
 while not indicating a warning where not appropriate. 
 If the current default value is not appropriate, 
@@ -3387,8 +3500,9 @@ Options `\texttt{-M<}' for `\texttt{xindy}'
 \texttt{(\^{}\textbackslash*\textbackslash*\textbackslash* unable to execute:\ )} \\% chktex 37
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The Pattern in the glg-file 
-which indicates an error when running \texttt{\$makeGlossariesCommand}. 
+The Pattern in the `glg'-file 
+which indicates an error when running the command 
+\texttt{\$makeGlossariesCommand}. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
@@ -3923,7 +4037,7 @@ The messages are endowed with a unique identifier of the form
 %
 \begin{itemize}
 \item[T] Throwable, 
-i.e.~\texttt{MojoFailureException} for the maven- plugin 
+which results in a\texttt{MojoFailureException} for the maven-plugin 
 and \texttt{BuildException} for the ant-task. 
 This is described in detail in Section~\ref{sec:exception} 
 \item[E] logging as ERROR, 
@@ -4368,7 +4482,7 @@ FIXME
 
 
 %\begin{longtable}
-
+  
 %\end{longtable}
 
 FIXME\@: to be added. 
@@ -4525,12 +4639,12 @@ The current implementation is based on package \texttt{rerunfilecheck}
 which works for index but not for glossary. 
 
 Check whether \texttt{glossaries} option \texttt{autorun} makes sense. 
-Seems to run \texttt{makeglossaries} after each latex run. 
+Seems to run the command \texttt{makeglossaries} after each latex run. 
 But how to find out whether to rerun latex??? 
 
 Pattern to identify latex main file: 
-Documentation: shall not include \texttt{documentclass/documentstyle} 
-in an input. 
+Documentation: shall not include the environment 
+\texttt{documentclass/documentstyle} in an input. 
 Also check \texttt{RequiresPackage} 
 and check whether \texttt{(re)newcommand} is possible % chktex 36
 or makes sense. 
@@ -4681,8 +4795,8 @@ FIXME\@: this chapter describes the tests to be performed.
 %  "-src-specials -shell-escape -recorder" 
 \end{document}
 
-%%% Local Variables: 
+
+%%% Local Variables:
 %%% mode: latex
-%%% TeX-command-extra-options: "-src-specials -recorder -shell-escape -output-format=pdf"  
-%%% TeX-master: t
-%%% End: % chktex 17 (bug) 
+%%% TeX-master: "manualLatexMavenPlugin"
+%%% End:
