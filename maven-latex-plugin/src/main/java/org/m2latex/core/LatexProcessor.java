@@ -204,11 +204,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// may throw BuildFailureException TSS01 
 	File texDir = this.settings.getTexSrcDirectoryFile();
-	assert texDir.exists() && texDir.isDirectory();
+	assert texDir.exists() && texDir.isDirectory()
+	    : "Expected existing tex folder "+texDir;
 
 	// may throw BuildFailureException TSS02 
 	File texProcDir = this.settings.getTexSrcProcDirectoryFile();
-	assert texProcDir.exists() && texProcDir.isDirectory();
+	assert texProcDir.exists() && texProcDir.isDirectory()
+	    : "Expected existing tex processing folder "+texDir;
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	DirNode node = new DirNode(texProcDir, this.fileUtils);
@@ -230,7 +232,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		     // throws BuildFailureException TSS03 
 		     // if exists and is no dir 
 		     this.settings.getOutputDirectoryFile());
-		assert !targetDir.exists() || targetDir.isDirectory();
+		assert !targetDir.exists() || targetDir.isDirectory()
+		    : "Expected target folder "+targetDir+" folder if exists. ";
 
 		for (Target target : this.paramAdapt.getTargetSet()) {
 		    // may throw BuildFailureException TEX01, 
@@ -281,7 +284,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// may throw BuildFailureException TSS02 
 	File texProcDir = this.settings.getTexSrcProcDirectoryFile();
-	assert texProcDir.exists() && texProcDir.isDirectory();
+	assert texProcDir.exists() && texProcDir.isDirectory()
+	    : "Expected existing tex processing folder "+texProcDir;
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	DirNode node = new DirNode(texProcDir, this.fileUtils);
@@ -332,7 +336,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     public void processGraphics() throws BuildFailureException {
 	// may throw BuildFailureException TSS02 
 	File texProcDir = this.settings.getTexSrcProcDirectoryFile();
-	assert texProcDir.exists() && texProcDir.isDirectory();
+	assert texProcDir.exists() && texProcDir.isDirectory()
+	    : "Expected existing tex processing folder "+texProcDir;
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
  	DirNode node = new DirNode(texProcDir, this.fileUtils);
@@ -376,7 +381,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// may throw BuildFailureException TSS02 
         File texProcDir = this.settings.getTexSrcProcDirectoryFile();
-	assert texProcDir.exists() && texProcDir.isDirectory();
+	assert texProcDir.exists() && texProcDir.isDirectory()
+	    : "Expected existing tex processing folder "+texProcDir;
 
 	// constructor DirNode may log warning WFU01 Cannot read directory 
 	// clearCreated may log warnings WPP02, WFU01, WFU03, EFU05 

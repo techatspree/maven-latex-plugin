@@ -1181,7 +1181,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // by addIfLatexMain(File, Collection) and 
     // by clearTargetTexIfLatexMain(File) 
     private boolean isLatexMainFile(File texFile) {
-	assert texFile.exists();
+	assert texFile.exists() && !texFile.isDirectory()
+	    : "Expected existing regular tex file "+texFile;
 	// may log WFU03 cannot close 
 	Boolean res = this.fileUtils.matchInFile
 	    (texFile, this.settings.getPatternLatexMainFile());
@@ -1512,7 +1513,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    a node associated with <code>dir</code>. 
      */
     private void clearCreated(File dir, DirNode node) {
-	assert dir.isDirectory();
+	assert dir.isDirectory()
+	    : "Expected existing directory "+dir+" to be cleared. ";
 	File file;
 	SuffixHandler handler;
 	Map<File, SuffixHandler> file2handler = 

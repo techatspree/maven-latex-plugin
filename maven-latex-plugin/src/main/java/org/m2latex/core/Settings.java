@@ -1982,7 +1982,8 @@ public class Settings {
 
     // FIXME: real check needed. also in other locations. 
     public void setMaxNumReRunsLatex(int maxNumReRunsLatex) {
-	assert maxNumReRunsLatex >= 1 || maxNumReRunsLatex == -1;
+	assert maxNumReRunsLatex >= 1 || maxNumReRunsLatex == -1
+	    : "Found illegal max number of reruns "+maxNumReRunsLatex+". ";
 	this.maxNumReRunsLatex = maxNumReRunsLatex;
     }
 

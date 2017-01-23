@@ -71,7 +71,7 @@ class TexFileUtils {
     // constructor of DirNode 
     // copyOutputToTargetFolder, deleteX
     File[] listFilesOrWarn(File dir) {
-	assert dir != null && dir.isDirectory();
+	assert dir != null && dir.isDirectory() : "Expected folder found "+dir;
         File[] files = dir.listFiles();
 	if (files == null) {
 	    this.log.warn("WFU01: Cannot read directory '" + dir + 
@@ -213,8 +213,10 @@ class TexFileUtils {
     void copyOutputToTargetFolder(File texFile, 
 				  FileFilter fileFilter, 
 				  File targetDir) throws BuildFailureException {
-	assert    texFile.exists() && ! texFile.isDirectory();
-	assert !targetDir.exists() || targetDir.isDirectory();
+	assert    texFile.exists() && ! texFile.isDirectory()
+	    : "Expected existing (regular) tex file "+texFile;
+	assert !targetDir.exists() || targetDir.isDirectory()
+	    : "Expected existing target folder "+targetDir;
 
 	File texFileDir = texFile.getParentFile();
 	// may log warning WFU01 
@@ -228,11 +230,12 @@ class TexFileUtils {
 	File srcFile, destFile;
 	for (int idx = 0; idx < outputFiles.length; idx++) {
 	    srcFile = outputFiles[idx];
-	    assert srcFile.exists();
+	    assert srcFile.exists() : "Missing " + srcFile;
 	    if (!fileFilter.accept(srcFile)) {
 		continue;
 	    }
-	    assert srcFile.exists() && !srcFile.isDirectory();
+	    assert srcFile.exists() && !srcFile.isDirectory()
+	    : "Expected existing (regular) tex file "+texFile;
 	    // since !targetDir.exists() || targetDir.isDirectory() 
 	    assert !srcFile.equals(targetDir);
 	    assert !srcFile.equals(texFile);
@@ -297,7 +300,8 @@ class TexFileUtils {
  	    closeQuietly(input);
 	}
 
-	assert !destFile.isDirectory() && destFile.canWrite();
+	assert !destFile.isDirectory() && destFile.canWrite()
+	    : "Expected existing (regular) writable file "+destFile;
 	destFile.setLastModified(srcFile.lastModified());
     }
 
@@ -494,7 +498,8 @@ class TexFileUtils {
     void deleteX(File pFile, FileFilter filter) {
 	// FIXME: not true for clear target. 
 	// Required: cleanup in order reverse to creation. 
-	assert pFile.exists() && !pFile.isDirectory();
+	assert pFile.exists() && !pFile.isDirectory()
+	    : "Expected existing (regular) file "+pFile;
 	File dir = pFile.getParentFile();
 	// may log warning WFU01 
 	File[] found = listFilesOrWarn(dir);
@@ -507,7 +512,8 @@ class TexFileUtils {
 	    // Required: cleanup in order reverse to creation. 
 	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
-		assert delFile.exists() && !delFile.isDirectory();
+		assert delFile.exists() && !delFile.isDirectory()
+		    : "Expected existing (regular) file "+delFile;
 		// may log EFU05: failed to delete 
 		deleteOrError(delFile);
 	    }
@@ -525,7 +531,8 @@ class TexFileUtils {
      *    This must not be a directory. 
      */
     void deleteOrError(File delFile) {
-	assert delFile.exists() && !delFile.isDirectory();
+	assert delFile.exists() && !delFile.isDirectory()
+	    : "Expected existing (regular) file "+delFile;
 	if (!delFile.delete()) {
 	    this.log.error("EFU05: Cannot delete file '" + 
 			   delFile + "'. ");
@@ -547,8 +554,10 @@ class TexFileUtils {
      *    This must not be a directory. 
      */
     void moveOrError(File fromFile, File toFile) {
-	assert fromFile.exists() && !fromFile.isDirectory();
-	assert                      !  toFile.isDirectory();
+	assert fromFile.exists() && !fromFile.isDirectory()
+	    : "Expected existing (regular) source file "+fromFile;
+	assert                      !  toFile.isDirectory()
+	    : "Expected (regular) target file "+toFile;
 	boolean success = fromFile.renameTo(toFile);
 	if (!success) {
 	    this.log.error("EFU06: Cannot move file '" + 

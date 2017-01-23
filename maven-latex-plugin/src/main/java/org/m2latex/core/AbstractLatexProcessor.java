@@ -136,7 +136,8 @@ abstract class AbstractLatexProcessor {
     // logErrs (File, String, String)
     // logWarns(File, String, String)
     protected boolean hasErrsWarns(File logFile, String pattern) {
-	assert logFile.exists();
+	assert logFile.exists() && !logFile.isDirectory()
+	    : "Expected existing (regular) log file "+logFile;
 	// may log warning WFU03 cannot close 
 	Boolean res = this.fileUtils.matchInFile(logFile, pattern);
 	if (res == null) {
@@ -152,7 +153,8 @@ abstract class AbstractLatexProcessor {
 	if (!target.exists()) {
 	    return true;
 	}
-	assert source.exists();
+	assert source.exists() && !source.isDirectory()
+	    : "Expected existing (regular) source "+source;
 
 	return source.lastModified() > target.lastModified();
     }
