@@ -1,4 +1,9 @@
-\documentclass{article}
+\RequirePackage[l2tabu, orthodox]{nag}
+\documentclass[10pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+
 \title{The dvi-format and the program dvitype}
 \author{Ernst Reissner (rei3ner@arcor.de)}
 
@@ -299,7 +304,11 @@ Ending of the postamble, see below.
 
 The preamble contains basic information about the file as a whole. 
 As stated above, there are six parameters:
-$$\hbox{i[1]| num[4], den[4], mag[4], k[1], x[k]}$$
+%
+\[
+\hbox{i[1]| num[4], den[4], mag[4], k[1], x[k]}
+\]
+%
 The $i$ byte identifies \texttt{DVI} format; 
 currently this byte is always set to~2. 
 (The value $i=3$ is currently used for an extended format that
@@ -333,7 +342,9 @@ interpreted further. The length of comment $x$ is $k$, where $0<=k<256$.
 \label{sec:fontDef}
 
 Font definitions for a given font number $k$ contain further parameters
-$$\hbox{$c[4]$ $s[4]$ $d[4]$ $a[1]$ $l[1]$ $n[a+l]$.}$$
+\[
+\hbox{$c[4]$ $s[4]$ $d[4]$ $a[1]$ $l[1]$ $n[a+l]$.}
+\]
 The four-byte value $c$ is the check sum that \TeX\ (or whatever program
 generated the \texttt{DVI} file) found in the \texttt{TFM} file for this font;
 $c$ should match the check sum of the font found by programs that read
@@ -435,7 +446,9 @@ desirable.
 This saves a lot of time, 
 since \texttt{DVI} files used in production jobs tend to be large.
 
+\begin{Verbatim}[fontsize=\scriptsize]
 ftp://ftp.rrzn.uni-hannover.de/pub/mirror/tex-archive/systems/knuth/dist/texware/dvitype.web
+\end{Verbatim}
 \end{document}
 
 %%% Local Variables:
