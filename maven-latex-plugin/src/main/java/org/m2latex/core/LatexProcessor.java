@@ -916,6 +916,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			  " created bad boxes logged in '" + 
 			  logFile.getName() + "'. ");
 	}
+
 	if (this.settings.getDebugWarnings() && 
 	    hasErrsWarns(logFile, this.settings.getPatternWarnLatex())) {
 	    // logs warning WAP03: emitted warnings 
@@ -1161,7 +1162,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.fileUtils.replaceSuffix(texFile,SUFFIX_BBL));
 
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
-	// may log warnings WFU03, EAP01, EAP02, WAP04
+	// may log EAP01, EAP02, WAP04, WFU03
 	logErrs (logFile, command, this.settings.getPatternErrBibtex());
 	// may log warnings WFU03, WAP03, WAP04
 	logWarns(logFile, command, this.settings.getPatternWarnBibtex());
@@ -1255,8 +1256,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      desc.indFile);
 
 	// detect errors and warnings makeindex wrote into xxx.ilg 
- 	// may log warnings WFU03, EAP01, EAP02, WAP04
-	logErrs (desc.ilgFile, command,this.settings.getPatternErrMakeIndex());
+	// may log EAP01, EAP02, WAP04, WFU03
+ 	logErrs (desc.ilgFile, command,this.settings.getPatternErrMakeIndex());
 	// may log warnings WFU03, WAP03, WAP04
 	logWarns(desc.ilgFile, command,this.settings.getPatternWarnMakeIndex());
     }
@@ -1320,7 +1321,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// detect errors and warnings makeglossaries wrote into xxx.glg 
 	File glgFile = desc.glgFile;
-	// may log warnings WFU03, EAP01, EAP02, WAP04
+	// may log EAP01, EAP02, WAP04, WFU03
 	logErrs (glgFile, command, this.settings.getPatternErrMakeGlossaries());
 	// may log warnings WFU03, WAP03, WAP04
 	logWarns(glgFile, command, this.settings.getPatternWarnMakeIndex() 
@@ -1382,7 +1383,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      dev.latexTargetFile(desc));
 
 	// logging errors (warnings are done in processLatex2pdf)
-	// may log warnings WFU03, EAP01, EAP02, WAP04
+	// may log EAP01, EAP02, WAP04, WFU03
 	logErrs(desc.logFile, command);
 
 	// FIXME: documentation that in the dvi file, 
@@ -1481,7 +1482,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 							   SUFFIX_HTML));
 
 	// logging errors and warnings 
-	// may log warnings WFU03, EAP01, EAP02, WAP04
+	// may log EAP01, EAP02, WAP04, WFU03
 	logErrs (desc.logFile, command);
 	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, command);
@@ -1590,7 +1591,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.fileUtils.replaceSuffix(texFile,SUFFIX_ODT));
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
-	// may log warnings WFU03, EAP01, EAP02, WAP04
+	// may log EAP01, EAP02, WAP04, WFU03
 	logErrs (desc.logFile, command);
 	// may log warnings WFU03, WAP04, WLP03, WLP04 
 	logWarns(desc.logFile, command);
