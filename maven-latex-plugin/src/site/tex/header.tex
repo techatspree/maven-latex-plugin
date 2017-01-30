@@ -1,8 +1,20 @@
 \listfiles
 
-\usepackage[a4paper]{geometry}% option , showframe
+\usepackage[T1]{fontenc}
+
+% only with pdflatex, warnings for xelatex and for lualatex 
+% ifxetex, ifluatex, ifpdf
+\usepackage{ifpdf,ifxetex,ifluatex}
+\ifpdf%
+%\usepackage[utf8]{inputenc}
+\else
+\fi
+
+
+\usepackage[a4paper, showframe]{geometry}% option , showframe
 %\usepackage{showframe} as an alternative 
 \usepackage{microtype}
+%\usepackage{anyfontsize}
 %\usepackage{cleveref}
 
 
@@ -50,6 +62,11 @@
 % \usepackage{hyperref}% driver [hpdftex] is autodetected 
 % }
 
+
+
+
+
+
 %\usepackage[clear,pdf,eps]{svg}
 
 \usepackage{import}
@@ -61,14 +78,6 @@
 \usepackage{listings}
 \usepackage{fancyvrb}
 
-% only with pdflatex, warnings for xelatex and for lualatex 
-% ifxetex, ifluatex, ifpdf
-\usepackage{ifpdf,ifxetex,ifluatex}
-\ifpdf%
-%\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\else
-\fi
 
 % index and glossary
 \ifthenelse{\boolean{texFhtLoaded}}{%
