@@ -1,6 +1,9 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[10pt, a4paper]{article}
 
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+
 \usepackage{ifthen}
 \newboolean{texFhtLoaded}
 \setboolean{texFhtLoaded}{false}
@@ -171,19 +174,20 @@ type & name & Possible values or explanation \\
 \midrule
 \midrule
 string & Orientation             & `Landscape'|`Portrait' \\
-string & justification           & `Center' or `Flush Left' \\
-string & units                   & `Metric' or `Inches' \\
+string & Justification           & `Center' or `Flush Left' \\
+string & Units                   & `Metric' or `Inches' \\
 string & PaperSize               & `Letter'|`Legal'|`Ledger'|`Tabloid'|\\
 &&                                 `A'|`B'|`C'|`D'|`E'|\\
 &&                                 `A4'|`A3'|`A2'|`A1'|`A0'|`B5' \\
-float  & magnification           & export and print magnification, \% \\
-string & multiple-page           & `Single' or `Multiple' pages \\
-int    & transparent color       & color number for transparent color \\
+float  & Magnification           & export and print magnification, \% \\
+string & MultiplePage           & `Single' or `Multiple' pages \\
+int    & TransparentColor       & color number for transparent color \\
 &&                                 for GIF export. \\
 &&                                -2=None, -1=background, \\
 &&                                0--31 for standard colors or \\
 &&                                32-- for user colors \\
-int    & resolution coord-system & Fig units/inch and coordinate system:\\
+string & [Comment]              & optional comment \\%FIXME: how? #? 
+int    & Resolution coord-system & Fig units/inch and coordinate system:\\
 &&                                 1: origin at lower left corner \\
 &&                                    (NOT USED)\\
 &&                                 2: upper left \\
@@ -212,21 +216,13 @@ int    & resolution coord-system & Fig units/inch and coordinate system:\\
 
 %\begin{grammar} 
 %\end{grammar}
+\begin{Verbatim}[fontsize=\scriptsize]
 https://hackage.haskell.org/package/fig-1.4.0/docs/Graphics-Fig-Syntax.html
+\end{Verbatim}
 
 
 
-Header:
-Orientation
-Justification
-Units
-PaperSize
-Magnification
-MultiplePage
-Transparent
-[Comment]
-Resolution
-CoordinateSystem
+
 
 Orientation: (`Landscape'|`Portrait')
 
@@ -234,15 +230,8 @@ Justification: (`Center'|`FlushLeft')
 
 Units: (`Metric'|`Inches')
 
-PaperSize:
-(`Letter'|`Legal'|`Ledger'|`Tabloid'|
-`A'|`B'|`C'|`D'|`E'|
-`A4'|`A3'|`A2'|`A1'|`A0'|
-`B5')
 
-Magnification: Double
-resolution: Integer
-MultiplePage: (`Single'|`Multiple')
+
 
 
 Transparent:
@@ -292,7 +281,7 @@ Ellipse (see Section~\ref{subsec:ellipse}) which is a generalization of circle.
 Polyline (see Section~\ref{subsec:polyline}) which includes polygon and box.
 \item
 Spline (see Section~\ref{subsec:spline}) 
-which includes closed/open approximated/interpolated/x-spline spline.
+which may be closed, open approximated, interpolated or an x-spline.
 \item
 Text (see Section~\ref{subsec:text}).
 \item
@@ -347,7 +336,7 @@ Defines also a circle in terms of center and a point on the circle
 or in terms of two points on the circle. 
 
 \noindent
-Headline: \\
+The \texttt{Headline} following now is the sole line defining an ellipse. \\
 %
 \begin{tabular}{lll}
 \toprule
@@ -376,8 +365,7 @@ int   &  start-x, start-y   & Fig units; the 1st point entered \\
 int   &  end-x, end-y       & Fig units; the last point entered \\
 \bottomrule
 \end{tabular}
-%
-The \texttt{Headline} ist the sole line defining an ellipse. 
+
 
 \noindent
 For further explanations on start-x/y and end-x/y: \\
@@ -674,7 +662,8 @@ For \texttt{FontFlags} bit 2 = 1,
       
 The \texttt{Text} field above is a sequence of ASCII characters. 
 It starts after a {\em single\/} blank character 
-which separates the coordinate field \texttt{x, y} from the \texttt{Text} field. 
+which separates the coordinate field \texttt{x, y} 
+from the \texttt{Text} field. 
 This allows to specify texts with leading blanks. 
 The text field ends before the sequence ``\texttt{\textbackslash{}001}''; 
 the latter sequence is not part of the text field. 
@@ -687,20 +676,7 @@ To specify a literal backslash write ``\texttt{\textbackslash\textbackslash}''.
 The latter is vital for including \LaTeX{} in fig-figures. 
 
 
-Text	 
-text\_sub\_type:: Integer
-text\_color:: ColorSpec
-text\_depth:: Integer
-text\_pen\_style:: Integer
-text\_font:: Font
-text\_font\_size:: Double
-text\_angle:: Double
-text\_font\_flags:: FontFlags
-text\_height:: Double
-text\_length:: Double
-text\_x:: Integer
-text\_y:: Integer
-text\_string:: String
+
 
 ColorSpec: see Section~\ref{subsec:paramColorsFill}
 Font:
@@ -715,45 +691,6 @@ Bold
 Italic	 
 SansSerif	 
 Typewriter	 
-
-
-PsFont:
-PsDefault	 
-TimesRoman	 
-TimesItalic	 
-TimesBold	 
-TimesBoldItalic	 
-AvantGardeBook	 
-AvantGardeBookOblique	 
-AvantGardeDemi	 
-AvantGardeDemiOblique	 
-BookmanLight	 
-BookmanLightItalic	 
-BookmanDemi	 
-BookmanDemiItalic	 
-Courier	 
-CourierOblique	 
-CourierBold	 
-CourierBoldOblique	 
-Helvetica	 
-HelveticaOblique	 
-HelveticaBold	 
-HelveticaBoldOblique	 
-HelveticaNarrow	 
-HelveticaNarrowOblique	 
-HelveticaNarrowBold	 
-HelveticaNarrowBoldOblique	 
-NewCenturySchoolbookRoman	 
-NewCenturySchoolbookItalic	 
-NewCenturySchoolbookBold	 
-NewCenturySchoolbookBoldItalic	 
-PalatinoRoman	 
-PalatinoItalic	 
-PalatinoBold	 
-PalatinoBoldItalic	 
-Symbol	 
-ZapfChanceryMediumItalic	 
-ZapfDingbats	 
 
 
 FontFlags:
@@ -816,18 +753,6 @@ both described in Section~\ref{subsec:paramArrowLines}.
 Arc ArcLine (Maybe Arrow) (Maybe Arrow)	 
 Spline SplineLine (Maybe Arrow) (Maybe Arrow) [(Integer, Integer)] [Double]
 
-ArcLine:
-arc\_common:: Common
-arc\_cap\_style:: CapStyle
-arc\_direction:: Integer
-arc\_center\_x:: Double
-arc\_center\_y:: Double
-arc\_x1:: Integer
-arc\_y1:: Integer
-arc\_x2:: Integer
-arc\_y2:: Integer
-arc\_x3:: Integer
-arc\_y3:: Integer
 
 SplineLine:
 spline\_common:: Common
@@ -874,32 +799,18 @@ int & LowerLeft-corner-x  & Fig units \\
 int & LowerLeft-corner-y  & Fig units \\
 \bottomrule
 \end{tabular}
+% FIXME: another information: not FigUnits, but integers 
 
 Subsequent lines of the compound except the last one 
 define a list of objects in the Compound
 These objects may well be Compounds themselves. 
 The last line is \texttt{-6}. 
 
-Compound CompoundLine [Commented Object]	 
-Polyline PolylineLine (Maybe Arrow) (Maybe Arrow) (Maybe Pic) [(Integer, Integer)]	 
-
-
-
-PolylineLine:
-polyline\_common:: Common
-polyline\_join\_style:: JoinStyle
-polyline\_cap\_style:: CapStyle
-polyline\_radius:: Integer
 
 
 CapStyle: see Section~\ref{subsec:styDep}
 
 
-CompoundLine:
-compound\_upperleft\_corner\_x:: Integer
-compound\_upperleft\_corner\_y:: Integer
-compound\_lowerright\_corner\_x:: Integer
-compound\_lowerright\_corner\_y:: Integer
 
 
 
