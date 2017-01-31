@@ -1,13 +1,24 @@
 \listfiles
 
-\usepackage[T1]{fontenc}
+
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
 
 % only with pdflatex, warnings for xelatex and for lualatex 
 % ifxetex, ifluatex, ifpdf
 \usepackage{ifpdf,ifxetex,ifluatex}
 \ifpdf%
 %\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \else
+\makeatletter
+\@ifpackageloaded{tex4ht}{%
+  \setboolean{texFhtLoaded}{true}
+}{%
+\usepackage[T1]{fontenc}
+}% tex4ht not loaded 
+\makeatother
 \fi
 
 
@@ -22,14 +33,9 @@
 % to avoid clash because of loading with different options: 
 % declare first 
 \usepackage[aux]{rerunfilecheck}
-%\usepackage{ifpdf}
-\usepackage{ifthen}
-\newboolean{texFhtLoaded}
-\setboolean{texFhtLoaded}{false}
 
 
 % graphics 
-\makeatletter
 
 \ifpdf%
 \usepackage{xcolor}  % [pdftex]  
@@ -40,16 +46,15 @@
 \else
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
-\@ifpackageloaded{tex4ht}{%
-  \setboolean{texFhtLoaded}{true}
+\ifthenelse{\boolean{texFhtLoaded}}{%
   % \usepackage[tex4ht]{hyperref}
+\newcommand{\url}[1]{\texttt{#1}}% not active, replacement for hyperref
 }{%
   \usepackage[dvipdfmx]{hyperref}
 }% tex4ht not loaded 
 
 \usepackage{bmpsize}
 \fi
-\makeatother
 
 % \@ifpackageloaded{tex4ht}{%
 % \usepackage[dvipdfmx]{xcolor}
