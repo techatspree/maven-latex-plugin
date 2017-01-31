@@ -165,24 +165,24 @@ zzT$T\.e?ps|
 	</latex2pdfOptions>
 	<patternErrLatex>(^! )</patternErrLatex>
 	<patternWarnLatex>
-	(^LaTeX Warning: |
-	^LaTeX Font Warning: |
-	^(Package|Class) .+ Warning: |
-	^Missing character: There is no .* in font .*!$|
-	^pdfTeX warning (ext4): destination with the same identifier|
-	^* Font .+ does not contain script |
-	^A space is missing\. (No warning)\.)
+^(LaTeX Warning: |
+LaTeX Font Warning: |
+(Package|Class) .+ Warning: |
+pdfTeX warning( \((\d|\w)+\))?: |
+\* fontspec warning: |
+Missing character: There is no .* in font .*!$|
+A space is missing\. (No warning)\.)
 	</patternWarnLatex>
 	<patternReRunLatex>
-(^LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
-^Package \w+ Warning: .*Rerun .*$|
-^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
-^LaTeX Warning: Etaremune labels have changed\.$|
-^\(rerunfilecheck\)                Rerun to get outlines right$)
+^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
+Package \w+ Warning: .*Rerun .*$|
+Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+LaTeX Warning: Etaremune labels have changed\.$|
+\(rerunfilecheck\)                Rerun to get outlines right$)
 	</patternReRunLatex>
 
 	<patternErrBibtex>error message</patternErrBibtex>
-	<patternWarnBibtex>Warning--</patternWarnBibtex>
+	<patternWarnBibtex>^Warning--</patternWarnBibtex>
 
 	<patternErrMakeIndex>(!! Input index error )</patternErrMakeIndex>
 	<patternWarnMakeIndex>(## Warning )</patternWarnMakeIndex>
@@ -196,10 +196,10 @@ zzT$T\.e?ps|
 
 	<patternT4htOutputFiles>
 	  ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
-	  \.css|
-          \d+x\.x?bb|
-	  \d+x\.png|
-	  -\d+\.svg)|
+	        \.css|
+		\d+x\.x?bb|
+		\d+x\.png|
+		-\d+\.svg)|
 	  (cmsy)\d+(-c)?-\d+c?\.png)$
 	</patternT4htOutputFiles>
       </settings>

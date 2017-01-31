@@ -265,7 +265,10 @@
 		 The default value is 'pdf, html'. -->
 	    <targets>pdf, html</targets>
 
-	    <!-- The pattern which identifies a latex main file. 
+	    <!-- The pattern to be applied to the contents of tex-files 
+
+NOT QUITE: to the beginning 
+		 which identifies a latex main file. 
 		 The default value is choosen to match quite exactly 
 		 the latex main files. 
 		 Here we assume that the latex main file should contain 
@@ -276,12 +279,15 @@
 		 For a more thorough discussion,  
 		 and for an alternative approach, consult the manual. 
 		 
+		 The default value is choosen to match quite exactly 
+		 the latex main files, no more no less. 
 		 Since the pattern is chosen 
 		 according to documentation collected from the internet, 
 		 one can never be sure whether the pattern is perfect. 
-		 If the user finds that default value is not appropriate, 
-		 (s)he is asked to contribute 
-		 and to notify the developer of this plugin. -->
+
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the deficiency. -->
 	    <patternLatexMainFile>
 \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
@@ -303,7 +309,8 @@
 		 The default value is 'true'. -->
             <cleanUp>false</cleanUp>
 
-	    <!-- This pattern shall accept all the files 
+	    <!-- This pattern is applied to file names 
+		 and matching shall accept all the files 
 		 which were created from a latex main file 'xxx.tex'. 
 		 It is neither applied to directories 
 		 nor to 'xxx.tex' itself. 
@@ -336,22 +343,15 @@
 		 Spaces and newlines are removed 
 		 from that pattern before matching. 
 		 
-		 The default value '^T$T\.[^.]*' 
-		 is appropriate for most parameters and packages. 
-		 Package 'srcltx' 
-		 requires in addition '^T$T\.synctex\.gz' 
-		 and package 'tex4ht' is for all the rest. 
-		 The pattern is designed 
-		 to match quite exactly the created files, 
-		 not much more and at any case not less. 
-		 In particular it has to comprise the files matching pattern 
-		 $patternT4htOutputFiles. 
-		 Nevertheless, since any new package may break the pattern, 
-		 and not every package is well documented, 
-		 this pattern cannot be guaranteed to be final. 
-		 If the user finds an extension, (s)he is asked to contribute 
-		 and to notify the developer of this plugin. 
-		 Then the default value will be extended.  -->
+		 This pattern may never be ensured to be complete, 
+		 because any package 
+		 may create files with names matching its own patterns 
+		 and so any new package may break completeness. 
+		 
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the deficiency. 
+		 The default value is given below. -->
 	    <patternCreatedFromLatexMain>
 ^(
 T$T             (\.([^.]*|synctex\.gz|out\.ps)|
@@ -619,30 +619,48 @@ not allowed:
 	      -shell-escape 
 	    </latex2pdfOptions>
 
-	    <!-- The pattern in the log-file 
-		 indicating an error when running $latex2pdfCommand. 
-		 The default value is '(^! )' (note the space). 
-		 If this is not appropriate, please modify 
-		 and notify the developer of this plugin. -->
+	    <!-- The pattern is applied linewise to the log-file 
+		 and matching indicates an error 
+		 emitted by the command $latex2pdfCommand. 
+
+		 The default value is choosen to match quite exactly 
+		 the latex errors in the log file, no more no less. 
+		 Since no official documentation was found, 
+		 the default pattern may be incomplete. 
+		 In fact it presupposes, that $latex2pdfOptions 
+		 does not contain '-file-line-error-style'.   
+
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the deficiency. 
+		 The default value is '(^! )' (note the space). -->
 	    <patternErrLatex>(^! )</patternErrLatex>
 
-	    <!-- The pattern in the log-file 
-		 indicating that $latex2pdfCommand emitted a warning, 
+	    <!-- The pattern is applied linewise to the log-file 
+		 and matching indicates a warning 
+		 emitted by the command $latex2pdfCommand, 
 		 disragarding warnings on bad boxes 
-		 and taking $debugWarnings into account. 
-		 It is designed to be as complete as possible 
-		 while not indicating a warning where not appropriate. 
+		 provided $debugWarnings is set. 
+		 
+		 This pattern may never be ensured to be complete, 
+		 because any package may indicate a warning 
+		 with its own pattern any new package may break completeness. 
+		 Nevertheless, the default value aims completeness 
+		 while be restrictive enough 
+		 not to indicate a warning where none was emitted. 
+
 		 If the current default value is not appropriate, 
-		 please overwrite and notify the developer of this plugin. 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the deficiency. 
 		 The default value is given below. -->
 	    <patternWarnLatex>
-	      (^LaTeX Warning: |
-	      ^LaTeX Font Warning: |
-	      ^(Package|Class) .+ Warning: |
-	      ^Missing character: There is no .* in font .*!$|
-	      ^pdfTeX warning (ext4): destination with the same identifier|
-	      ^* Font .+ does not contain script |
-	      ^A space is missing\. (No warning)\.)
+^(LaTeX Warning: |
+LaTeX Font Warning: |
+(Package|Class) .+ Warning: |
+pdfTeX warning( \((\d|\w)+\))?: |
+\* fontspec warning: |
+Missing character: There is no .* in font .*!$|
+A space is missing\. (No warning)\.)
 	    </patternWarnLatex>
 
 	    <!-- Whether debugging of 
@@ -701,7 +719,7 @@ not allowed:
 		 true:  22.449s-24.500s
 
 		 The default value is 'false'. -->
-	    <pdfViaDvi>true</pdfViaDvi>
+	    <pdfViaDvi>false</pdfViaDvi>
 
 	    <!-- The driver to convert dvi into pdf-files. 
 		 Note that this must fit the options 
@@ -717,32 +735,28 @@ not allowed:
 		 The default value is the empty string. -->
  	    <dvi2pdfOptions></dvi2pdfOptions>
 
-	    <!-- The pattern in the log-file 
-		 which triggers rerunning $latex2pdfCommand 
-		 taking $maxNumReRunsLatex into account. 
-		 This pattern may never be ensured to be complete, 
-		 because any new package may break completeness. 
-		 Nevertheless, the default value aims completeness 
-		 while be restrictive enough
-		 not to trigger another latex run if not needed. 
-		 Note that the log file may contain text from the tex file, 
-		 e.g. if warning for an overfull hbox. 
-		 Thus the pattern must be restrictive enough 
-		 to avoid false rerun warning 
-		 e.g. caused by occurrence of the word 'rerun'. 
+	    <!-- The pattern is applied linewise to the log-file 
+		 and matching triggers rerunning $latex2pdfCommand 
+		 if $maxNumReRunsLatex is not yet reached 
+		 to ensure termination. 
 		 
-		 To ensure termination, let $maxNumRerunsLatex 
-		 specify the maximum number of latex runs. 
-		 If the user finds an extension, 
-		 (s)he is asked to contribute 
-		 and to notify the developer of this plugin. 
-		 Then the default value will be extended. -->
+		 This pattern may never be ensured to be complete, 
+		 because any package 
+		 may indicate the need to rerun $latex2pdfCommand 
+		 with its own pattern any new package may break completeness. 
+		 Nevertheless, the default value aims completeness 
+		 while be tight enough not to trigger a superfluous rerun. 
+		 
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the deficiency. 
+		 The default value is given below. -->
 	    <patternReRunLatex>
-(^LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
-^Package \w+ Warning: .*Rerun .*$|
-^Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
-^LaTeX Warning: Etaremune labels have changed\.$|
-^\(rerunfilecheck\)                Rerun to get outlines right$)
+^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
+Package \w+ Warning: .*Rerun .*$|
+Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+LaTeX Warning: Etaremune labels have changed\.$|
+\(rerunfilecheck\)                Rerun to get outlines right$)
 	    </patternReRunLatex>
 
 	    <!-- The maximal allowed number of reruns of $latex2pdfCommand. 
@@ -763,17 +777,17 @@ not allowed:
 		 The default value is the empty string. -->
 	    <bibtexOptions></bibtexOptions>
 
-	    <!-- The Pattern in the blg-file 
-		 indicating that $bibtexCommand failed. 
+	    <!-- The pattern is applied linewise to the blg-file 
+		 and matching indicates that $bibtexCommand failed. 
 		 The default value is chosen 
 		 according to the 'bibtex' documentation. -->
 	    <patternErrBibtex>error message</patternErrBibtex>
 
-	    <!-- The Pattern in the blg-file 
-		 indicating a warning $bibtexCommand emitted. 
+	    <!-- The pattern is applied linewise to the blg-file 
+		 and matching indicates a warning $bibtexCommand emitted. 
 		 The default value is chosen 
 		 according to the 'bibtex' documentation. -->
-	    <patternWarnBibtex>Warning--</patternWarnBibtex>
+	    <patternWarnBibtex>^Warning--</patternWarnBibtex>
 
 	    <!-- The MakeIndex command to create an ind-file 
 		 from an idx-file logging on an ilg-file. 
@@ -784,30 +798,33 @@ not allowed:
 		 The default value is the empty string. -->
 	    <makeIndexOptions>-c</makeIndexOptions>
 
-	    <!-- The pattern in the ilg-file 
-		 indicating that $makeIndexCommand failed. 
+	    <!-- The pattern is applied linewise to the ilg-file 
+		 and matching indicates that $makeIndexCommand failed. 
 		 The default value '(!! Input index error )' 
 		 is chosen according to the 'makeindex' documentation. -->
 	    <patternErrMakeIndex>
 	    (!! Input index error )
 	    </patternErrMakeIndex>
 
-	    <!-- The Pattern in the ilg-file 
-		 indicating a warning $makeIndexCommand emitted. 
+	    <!-- The pattern is applied linewise to the ilg-file 
+		 and matching indicates a warning $makeIndexCommand emitted. 
 		 The default value '(## Warning )' 
 		 is chosen according to the 'makeindex' documentation. -->
 	    <patternWarnMakeIndex>(## Warning )</patternWarnMakeIndex>
 
-	    <!-- The pattern in the log-file which triggers 
-		 rerunning $makeIndexCommand 
+	    <!-- The pattern is applied linewise to the log-file 
+		 and matching triggers rerunning $makeIndexCommand 
 		 followed by $latex2pdfCommand. 
-		 This pattern only occurs, if package 'rerunfilecheck' 
-		 is used with option 'index'. 
+
+		 This pattern only matches a warning 
+		 emitted by the package 'rerunfilecheck' 
+		 e.g. used with option 'index'. 
 		 The default value 
 		 is chosen according to the package documentation. 
-		 If the user finds that default value is not appropriate, 
-		 (s)he is asked to contribute 
-		 and to notify the developer of this plugin. -->
+
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the bug. -->
 	    <patternReRunMakeIndex>
 (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
 	    </patternReRunMakeIndex>
@@ -835,11 +852,14 @@ not allowed:
 		 '-t' and '-o' for both, 'xindy' and 'makeindex'. -->
 	    <makeGlossariesOptions></makeGlossariesOptions>
 
-	    <!-- The Pattern in the glg-file 
-		 indicating that $makeGlossariesCommand failed. 
-		 The default value is '(^\*\*\* unable to execute: )'. 
-		 If this is not appropriate, please modify 
-		 and notify the developer of this plugin. -->
+	    <!-- The pattern is applied linewise to the glg-file 
+		 and matching indicates that $makeGlossariesCommand failed. 
+		 The default value '(^\*\*\* unable to execute: )' 
+		 is chosen according to the 'makeindex' documentation. 
+
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the bug. -->
 	    <patternErrMakeGlossaries>
 	      (^\*\*\* unable to execute: )
 	    </patternErrMakeGlossaries>
@@ -853,26 +873,32 @@ not allowed:
 		 and notify the developer of this plugin. -->
 	    <!--patternErrXindy>(^ERROR: )</patternErrXindy-->
  
-	    <!-- The pattern in the glg-file 
-		 indicating a warning when running 'xindy' 
+	    <!-- The pattern is applied linewise to the glg-file 
+		 and matching indicates a warning when running 'xindy' 
 		 via $makeGlossariesCommand. 
-		 The default value is '(^WARNING: )' 
-		 (note the space and the brackets). 
-		 If this is not appropriate, please modify 
-		 and notify the developer of this plugin. -->
+		 
+		 The default value '(^WARNING: )' 
+		 (note the space and the brackets) 
+		 is chosen according to the 'xindy' documentation. 
+
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the deficiency. -->
 	    <patternWarnXindy>(^WARNING: )</patternWarnXindy>
 
-
-	    <!-- The pattern in the log-file which triggers 
-		 rerunning $makeGlossariesCommand 
+	    <!-- The pattern is applied linewise to the log-file 
+		 and matching triggers rerunning $makeGlossariesCommand 
 		 followed by $latex2pdfCommand. 
-		 This pattern only occurs, if package 'rerunfilecheck' 
-		 is used with option 'glossary'. 
+
+		 This pattern only matches a warning 
+		 emitted by the package 'rerunfilecheck' 
+		 e.g. used with option 'glossary'. 
 		 The default value 
 		 is chosen according to the package documentation. 
-		 If the user finds that default value is not appropriate, 
-		 (s)he is asked to contribute 
-		 and to notify the developer of this plugin. -->
+
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the bug. -->
 	    <patternReRunMakeGlossaries>
 (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
 	    </patternReRunMakeGlossaries>
@@ -922,37 +948,23 @@ not allowed:
 		 The default value is the empty string. -->
             <t4htOptions>-cvalidate</t4htOptions>
 
-	    <!-- The pattern for the target files of goal 'html' 
+	    <!-- The pattern is applied to file names 
+		 and matching shall accept 
+		 exactly the target files of goal 'html' 
 		 for a given latex main file 'xxx.tex'. 
+		 Matching triggers copying those files to $outputDirectory. 
+
 		 The patterns for the other targets 
 		 are hardcoded and take the form 
 		 '^T$T\.yyy$', where 'yyy' 
 		 may be an ending or an alternative of endings. 
+		 This pattern is neither applied to directories 
+		 nor to 'xxx.tex' itself. 
 		 
 		 For an explanation of the pattern 'T$T', 
 		 see $patternCreatedFromLatexMain. 
 		 Spaces and newlines are removed 
 		 from that pattern before processing. 
-		 
-		 The default value has the following components: 
-		 - '^T$T\.x?html?$' is the main file. 
-		 - '^T$Tli\d+\.x?html?$' are lists: 
-		 toc, lof, lot, indices, glossaries, NOT the bibliography. 
-		 - '^T$T(ch|se|su|ap)\d+\.x?html?$' 
-		 are chapters, sections and subsections or below 
-		 and appendices. 
-		 - '^T$T\d+\.x?html?$' are footnotes. 
-		 - '^T$T\.css$' are cascaded stylesheets. 
-		 - '^T$T-\d+\.svg$' and '^T$T\d+x\.png$' 
-		 are svg/png-files representing figures. 
-		 - '^(cmsy)\d+(-c)?-\d+c?\.png$' represents special symbols. 
-		 
-		 Note that the patterns for the html-files 
-		 can be summarized as '^T$T((ch|se|su|ap|li)?\d+)?\.x?html?$'. 
-		 Adding the patterns for the css-file and the svg/png-files, 
-		 we obtain 
-		 '^T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
-		 \.css|\d+x\.png|-\d+\.svg)$'. 
 		 
 		 The pattern is designed to match quite exactly 
 		 the files to be copied to $targetSiteDirectory, 
@@ -961,16 +973,18 @@ not allowed:
 		 since $tex2htCommand is not well documented, 
 		 and still subject to development, 
 		 this pattern cannot be guaranteed to be final. 
-		 If the user finds an extension, (s)he is asked to contribute 
-		 and to notify the developer of this plugin. 
-		 Then the default value will be extended. -->
+
+		 If the current default value is not appropriate, 
+		 please overwrite it in the configuration 
+		 and notify the developer of this plugin of the bug. 
+		 The default value is given below. -->
 	    <patternT4htOutputFiles>
 	      ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
-	      \.css|
-              \d+x\.x?bb|
-	      \d+x\.png|
-	      -\d+\.svg)|
-	      (cmsy)\d+(-c)?-\d+c?\.png)$
+	            \.css|
+		    \d+x\.x?bb|
+		    \d+x\.png|
+		    -\d+\.svg)|
+	           (cmsy)\d+(-c)?-\d+c?\.png)$
 	    </patternT4htOutputFiles>
 
             <!-- The latex2rtf command to create rtf from latex directly. 
