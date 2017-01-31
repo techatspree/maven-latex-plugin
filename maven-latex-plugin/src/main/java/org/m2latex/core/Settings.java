@@ -673,7 +673,7 @@ public class Settings {
 		// pdfTeX warning: pdflatex (file pdftex.map): cannot open font map file 
 		// pdfTeX warning: Found pdf version 1.5, allowed maximum 1.4 
 		// pdfTeX warning: pdflatex (file ./Carlito-Bold.pfb): glyph `index130' undefined
-		"pdfTeX warning( \((\\d|\\w)+\))?: |" +
+		"pdfTeX warning( \\((\\d|\\w)+\\))?: |" +
 		"\\* fontspec warning: |" +
 		"Missing character: There is no .* in font .*!$|" +
 		"A space is missing\\. (No warning)\\.)")
@@ -681,7 +681,7 @@ public class Settings {
 	"^(LaTeX Warning: |" +
 	"LaTeX Font Warning: |" + 
 	"(Package|Class) .+ Warning: |" + 
-	"pdfTeX warning( \((\\d|\\w)+\))?: |" +
+	"pdfTeX warning( \\((\\d|\\w)+\\))?: |" +
 	"\\* fontspec warning: |" +
 	"Missing character: There is no .* in font .*!$|" +
 	"A space is missing\\. (No warning)\\.)";
