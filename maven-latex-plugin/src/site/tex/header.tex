@@ -1,5 +1,7 @@
 \listfiles
 
+%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 
 \usepackage{ifthen}
 \newboolean{texFhtLoaded}
@@ -9,14 +11,11 @@
 % ifxetex, ifluatex, ifpdf
 \usepackage{ifpdf,ifxetex,ifluatex}
 \ifpdf%
-%\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
 \else
 \makeatletter
 \@ifpackageloaded{tex4ht}{%
   \setboolean{texFhtLoaded}{true}
 }{%
-\usepackage[T1]{fontenc}
 }% tex4ht not loaded 
 \makeatother
 \fi
@@ -33,7 +32,6 @@
 % to avoid clash because of loading with different options: 
 % declare first 
 \usepackage[aux]{rerunfilecheck}
-
 
 % graphics 
 
