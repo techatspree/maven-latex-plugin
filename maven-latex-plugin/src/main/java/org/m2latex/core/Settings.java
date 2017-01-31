@@ -158,28 +158,31 @@ public class Settings {
 
 
     /**
-     * The pattern which identifies a latex main file. 
-
-     * The pattern which identifies a \LaTeX{} main file. 
+     * The pattern to be applied to the beginning of the contents of tex-files 
+     * which identifies a latex main file. 
      * The default value is choosen to match quite exactly 
      * the latex main files. 
      * Here we assume that the latex main file should contain 
-     * the declaration `\textbackslash documentclass' 
-     * or the old fashioned 'documentstyle' 
+     * the declaration `\documentclass' 
+     * or the old fashioned `documentstyle' 
      * preceeded by a few constucts. 
      * Strictly speaking, this is not necessary. 
      * For a more thorough discussion, 
      * and for an alternative approach, consult the manual. 
      * <p>
+     * The default value is choosen to match quite exactly 
+     * the latex main files, no more no less. 
      * Since the pattern is chosen 
      * according to documentation collected from the internet, 
      * one can never be sure whether the pattern is perfect. 
-     * If the user finds that default value is not appropriate, 
-     * (s)he is asked to contribute 
-     * and to notify the developer of this plugin. 
+     * <p>
+     * If the current default value is not appropriate, 
+     * please overwrite it in the configuration 
+     * and notify the developer of this plugin of the deficiency. 
      */
     // FIXME: not only on this pattern: 
     // Matching is linewise which is inappropriate. 
+    // pattern is to be applied to the start of the tex-file 
     @Parameter(name = "patternLatexMainFile")
     private String patternLatexMainFile = 
 	"\\A(\\\\RequirePackage\\s*" +           // RequirePackage 
@@ -217,7 +220,8 @@ public class Settings {
     private boolean cleanUp;
 
     /**
-     * This pattern shall accept all the files 
+     * This pattern is applied to file names 
+     * and matching shall accept all the files 
      * which were created from a latex main file <code>xxx.tex</code>. 
      * It is neither applied to directories 
      * nor to <code>xxx.tex</code> itself. 
@@ -250,22 +254,15 @@ public class Settings {
      * Spaces and newlines are removed 
      * from that pattern before matching. 
      * <p>
-     * The default value <code>^T$T\.[^.]*</code> 
-     * is appropriate for most parameters and packages. 
-     * Package <code>srcltx</code> 
-     * requires in addition <code>^T$T\.synctex\.gz</code> 
-     * and package <code>tex4ht</code> is for all the rest. 
-     * The pattern is designed 
-     * to match quite exactly the created files, 
-     * not much more and at any case not less. 
-     * In particular it has to comprise the files matching pattern 
-     * {@link #patternT4htOutputFiles}. 
-     * Nevertheless, since any new package may break the pattern, 
-     * and not every package is well documented, 
-     * this pattern cannot be guaranteed to be final. 
-     * If the user finds an extension, (s)he is asked to contribute 
-     * and to notify the developer of this plugin. 
-     * Then the default value will be extended. 
+     * This pattern may never be ensured to be complete, 
+     * because any package 
+     * may create files with names matching its own patterns 
+     * and so any new package may break completeness. 
+     * <p>	 
+     * If the current default value is not appropriate, 
+     * please overwrite it in the configuration 
+     * and notify the developer of this plugin of the deficiency. 
+     * The default value is given below. 
      */
     @Parameter(name = "patternCreatedFromLatexMain")
     private String patternCreatedFromLatexMain = 
@@ -625,61 +622,69 @@ public class Settings {
 	"-shell-escape";
 
     /**
-     * The pattern in the <code>log</code> file 
-     * indicating an error when running {@link #latex2pdfCommand}. 
-     * The default value is <code>(^! )</code> (note the space). 
-     * If this is not appropriate, please modify 
-     * and notify the developer of this plugin. 
+     * The pattern is applied linewise to the log-file 
+     * and matching indicates an error 
+     * emitted by the command {@link #latex2pdfCommand}. 
+     * <p>
+     * The default value is choosen to match quite exactly 
+     * the latex errors in the log file, no more no less. 
+     * Since no official documentation was found, 
+     * the default pattern may be incomplete. 
+     * In fact it presupposes, that $latex2pdfOptions 
+     * does not contain `<code>-file-line-error-style</code>'.   
+     * <p>
+     * If the current default value is not appropriate, 
+     * please overwrite it in the configuration 
+     * and notify the developer of this plugin of the deficiency. 
+     * The default value is `<code>(^! )</code>' (note the space). 
      */
     // FIXME: Problem with line error style 
     @Parameter(name = "patternErrLatex", defaultValue = "(^! )")
     private String patternErrLatex = "(^! )";
 
     /**
-     * The pattern in the <code>log</code> file 
-     * indicating that {@link #latex2pdfCommand} emitted a warning, 
+     * The pattern is applied linewise to the log-file 
+     * and matching indicates a warning 
+     * emitted by the command {@link #latex2pdfCommand}, 
      * disragarding warnings on bad boxes 
-     * and taking {@link #debugWarnings} into account. 
-     * The default value is 
-     * <pre>
-     *(^LaTeX Warning: |
-     *^LaTeX Font Warning: |
-     *^(Package|Class) .+ Warning: |
-     *^Missing character: There is no .* in font .*!$|
-     *^pdfTeX warning (ext4): destination with the same identifier|
-     *^* Font .+ does not contain script |
-     *^A space is missing. (No warning).)
-     * </pre>. 
-     * It is designed to be as complete as possible 
-     * while not indicating a warning where not appropriate. 
+     * provided {@link #debugWarnings} is set. 
+     * <p>
+     * This pattern may never be ensured to be complete, 
+     * because any package may indicate a warning 
+     * with its own pattern any new package may break completeness. 
+     * Nevertheless, the default value aims completeness 
+     * while be restrictive enough 
+     * not to indicate a warning where none was emitted. 
+     * <p>
      * If the current default value is not appropriate, 
-     * please overwrite and notify the developer of this plugin. 
+     * please overwrite it in the configuration 
+     * and notify the developer of this plugin of the deficiency. 
+     * The default value is given below. 
      *
      * @see #debugBadBoxes
      */
-    // Note that there are warnings not indicated by a pattern containing 
-    // '[Ww]arning' and that there are warnings declared as 'no warning'. 
-    // a few of them I did take into account, some not: 
-    // Too much space after a point. (No warning).
-    // Bad line break. (No warning).
-    // Bad page break. (No warning).
-    @Parameter(name = "patternWarnLatex", 
-	       defaultValue = 
-	       "(^LaTeX Warning: |" +
-	       "^LaTeX Font Warning: |" + 
-	       "^(Package|Class) .+ Warning: |" + 
-	       "^Missing character: There is no .* in font .*!$|" +
-	       "^pdfTeX warning (ext4): destination with the same identifier|" +
-	       "^* Font .+ does not contain script |" +
-	       "^A space is missing\\. (No warning)\\.)")
+     @Parameter(name = "patternWarnLatex", 
+		defaultValue = 
+		"^(LaTeX Warning: |" +
+		"LaTeX Font Warning: |" + 
+		"(Package|Class) .+ Warning: |" + 
+		// pdftex warning (ext4): destination with the same identifier
+		// pdfTeX warning (dest): ... has been referenced ...
+		// pdfTeX warning: pdflatex (file pdftex.map): cannot open font map file 
+		// pdfTeX warning: Found pdf version 1.5, allowed maximum 1.4 
+		// pdfTeX warning: pdflatex (file ./Carlito-Bold.pfb): glyph `index130' undefined
+		"pdfTeX warning( \((\\d|\\w)+\))?: |" +
+		"\\* fontspec warning: |" +
+		"Missing character: There is no .* in font .*!$|" +
+		"A space is missing\\. (No warning)\\.)")
     private String patternWarnLatex = 
-	"(^LaTeX Warning: |" +
-	"^LaTeX Font Warning: |" + 
-	"^(Package|Class) .+ Warning: |" + 
-	"^Missing character: There is no .* in font .*!$|" +
-	"^pdfTeX warning (ext4): destination with the same identifier|" +
-	"^* Font .+ does not contain script |" +
-	"^A space is missing\\. (No warning)\\.)";
+	"^(LaTeX Warning: |" +
+	"LaTeX Font Warning: |" + 
+	"(Package|Class) .+ Warning: |" + 
+	"pdfTeX warning( \((\\d|\\w)+\))?: |" +
+	"\\* fontspec warning: |" +
+	"Missing character: There is no .* in font .*!$|" +
+	"A space is missing\\. (No warning)\\.)";
 
     /**
      * Whether debugging of overfull/underfull hboxes/vboxes is on: 
@@ -754,73 +759,78 @@ public class Settings {
     private String dvi2pdfOptions = "";
 
     /**
-     * The pattern in the log-file 
-     * which triggers rerunning {@link #latex2pdfCommand} 
-     * taking {@link #maxNumReRunsLatex} into account. 
-     * This pattern may never be ensured to be complete, 
-     * because any new package may break completeness. 
-     * Nevertheless, the default value aims completeness 
-     * while be restrictive enough not to trigger another latex run 
-     * if not needed. 
-     * Note that the log file may contain text from the tex file, 
-     * e.g. if warning for an overfull hbox. 
-     * Thus the pattern must be restrictive enough 
-     * to avoid false rerun warning 
-     * e.g. caused by occurrence of the word 'rerun'. 
-     * The default value is quite complex. 
+     * The pattern is applied linewise to the log-file 
+     * and matching triggers rerunning {@link #latex2pdfCommand} 
+     * if {@link #maxNumReRunsLatex} is not yet reached 
+     * to ensure termination. 
      * <p>
-     * To ensure termination, let {@link #maxNumReRunsLatex} 
-     * specify the maximum number of latex runs. 
-     * If the user finds an extension, (s)he is asked to contribute 
-     * and to notify the developer of this plugin. 
-     * Then the default value will be extended. 
-     * FIXME: default? to be replaced by an array of strings? **** 
+     * This pattern may never be ensured to be complete, 
+     * because any package 
+     * may indicate the need to rerun {@link #latex2pdfCommand} 
+     * with its own pattern any new package may break completeness. 
+     * Nevertheless, the default value aims completeness 
+     * while be tight enough not to trigger a superfluous rerun. 
+     * <p>
+     * If the current default value is not appropriate, 
+     * please overwrite it in the configuration 
+     * and notify the developer of this plugin of the deficiency. 
+     * The default value is given below. 
      */
+    // FIXME: default? to be replaced by an array of strings? **** 
     // FIXME: explicit tests required for each pattern. 
     // Not only those but all patterns. 
+    // FIXME: seems a problem with the pattern spreading over two lines 
     @Parameter(name = "patternReRunLatex", 
 	       defaultValue = 
 	       // general message 
-	       "(^LaTeX Warning: Label\\(s\\) may have changed. " 
+	       "^(LaTeX Warning: Label\\(s\\) may have changed. " 
 	       + "Rerun to get cross-references right\\.$|" +
 	       // default message in one line for packages 
-	       "^Package \\w+ Warning: .*Rerun .*$|" +
+	       "Package \\w+ Warning: .*Rerun .*$|" +
 	       // works for 
 	       // Package totcount Warning: Rerun to get correct total counts
 	       // Package longtable Warning: Table widths have changed. Rerun LaTeX ...
 	       // Package hyperref Warning: Rerun to get outlines right (old hyperref)
 	       // ... 
 	       // default message in two lines for packages 
-	       "^Package \\w+ Warning: .*$"
+	       // FIXME: would require parsing of more than one line 
+	       "Package \\w+ Warning: .*$"
 	       + "^\\(\\w+\\) .*Rerun .*$|" +
 	       // works for 
 	       // Package natbib Warning: Citation\\(s\\) may have changed.
 	       // (natbib)                Rerun to get citations correct.
 	       // Package Changebar Warning: Changebar info has changed.
 	       // (Changebar)                Rerun to get the bars right
+	       // Package rerunfilecheck Warning: File `foo.out' has changed.
+	       // (rerunfilecheck)                Rerun to get outlines right"
+	       // (rerunfilecheck)                or use package `bookmark'.
+	       // but not for 
+	       // Package biblatex Warning: Please (re)run Biber on the file:
+	       // (biblatex)                test
+	       // (biblatex)                and rerun LaTeX afterwards. 
 	       //
 	       // messages specific to various packages 
-	       "^LaTeX Warning: Etaremune labels have changed\\.$|" +
+	       "LaTeX Warning: Etaremune labels have changed\\.$|" +
 	       // 'Rerun to get them right.' is on the next line
 	       //
 	       // from package rerunfilecheck used by other packages like new hyperref 
 	       // Package rerunfilecheck Warning: File `foo.out' has changed.
-	       "^\\(rerunfilecheck\\)                Rerun to get outlines right$)"
-	       //  (rerunfilecheck)                or use package `xxx'.
+	       "\\(rerunfilecheck\\)                Rerun to get outlines right$)"
+	       //  (rerunfilecheck)                or use package `bookmark'.
     )
    private String patternReRunLatex = 
        // general message 
-       "(^LaTeX Warning: Label\\(s\\) may have changed. " 
+       "^(LaTeX Warning: Label\\(s\\) may have changed. " 
        + "Rerun to get cross-references right\\.$|" +
        // default message in one line for packages 
-       "^Package \\w+ Warning: .*Rerun .*$|" +
+       "Package \\w+ Warning: .*Rerun .*$|" +
        // works for 
        // Package totcount Warning: Rerun to get correct total counts
        // Package longtable Warning: Table widths have changed. Rerun LaTeX ...
        // Package hyperref Warning: Rerun to get outlines right (old hyperref)
        // ... 
        // default message in two lines for packages 
-       "^Package \\w+ Warning: .*$"
+       "Package \\w+ Warning: .*$"
        + "^\\(\\w+\\) .*Rerun .*$|" +
        // works for 
        // Package natbib Warning: Citation\\(s\\) may have changed.
@@ -829,13 +839,13 @@ public class Settings {
        // (Changebar)                Rerun to get the bars right
        //
        // messages specific to various packages 
-       "^LaTeX Warning: Etaremune labels have changed\\.$|" +
+       "LaTeX Warning: Etaremune labels have changed\\.$|" +
        // 'Rerun to get them right.' is on the next line
        //
        // from package rerunfilecheck used by other packages like new hyperref 
        // Package rerunfilecheck Warning: File `foo.out' has changed.
-       "^\\(rerunfilecheck\\)                Rerun to get outlines right$)";
-       //  (rerunfilecheck)                or use package `xxx'.
+       "\\(rerunfilecheck\\)                Rerun to get outlines right$)";
+       // (rerunfilecheck)                or use package `xxx'.
 
     /**
      * The maximal allowed number of reruns of {@link #latex2pdfCommand}. 
@@ -896,8 +906,8 @@ public class Settings {
      * The default value is chosen 
      * according to the <code>bibtex</code> documentation. 
      */
-    @Parameter(name = "patternWarnBibtex", defaultValue = "Warning--")
-    private String patternWarnBibtex = "Warning--";
+    @Parameter(name = "patternWarnBibtex", defaultValue = "^Warning--")
+    private String patternWarnBibtex = "^Warning--";
 
 
     // parameters for index 
