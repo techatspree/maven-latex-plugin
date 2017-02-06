@@ -1861,7 +1861,18 @@ Bibliographic information are
 citations, a link to the bib-file containing the bibliography data, 
 and optionally a link to the bibliography style file. 
 
-To create a bibliography, a \texttt{bibtex}-command must be run after the \LaTeX{} run. 
+To create a bibliography, 
+a \texttt{bibtexCommand} must be run after the \LaTeX{} run. 
+The default command is the traditional \texttt{bibtex} 
+but there are more modern alternatives 
+like \texttt{bibtexu} and \texttt{bibtex8} supporting utf8 encoding 
+and others. 
+
+% FIXME: write BibTeX instead or, even better, bibtexCommand 
+% because there are alternatives to bibtex 
+
+% mention Biber and biblatex and also mlbibtex 
+
 Essentially, \texttt{bibtex} extracts the citations in the aux-file, 
 unifies them, 
 retrieves the according entries from the bib-file, sorts these 
