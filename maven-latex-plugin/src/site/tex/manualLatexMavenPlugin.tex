@@ -373,6 +373,10 @@ and because table of contents, index, glossary and that like are included.
 So, for that task, besides \texttt{pdftotext} the whole toolchain to create
 pdf-files is required. 
 \index{pdftotext}
+\item
+An application which does not create a target, 
+i.e. a file in the target directory is \texttt{chktex} 
+which just checks the latex main files and associated files. 
 \end{itemize}
 
 So to run this software, the aforementioned programs 
@@ -3459,7 +3463,7 @@ The resulting default pattern is
 %
 \begin{Verbatim}[fontsize=\scriptsize]
 ^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
-Package \w+ Warning: .*Rerun .*$|
+Package \w+ Warning: .*Rerun( .*|\.)$|
 Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
 LaTeX Warning: Etaremune labels have changed\.$|
 \(rerunfilecheck\)                Rerun to get outlines right$)
@@ -4789,6 +4793,17 @@ This manual is not finished.
 To test the overall functionality of the maven-plugin and of the ant-task 
 described here, this manual is created through plugin and task. 
 
+Support for djvu via pdf2djvu: 
+pdf2djvu -o output_file input_file
+
+pdf2dsc
+(ps with document structuring convention) 
+
+pdf2svg is not so useful. 
+
+pdftohtml -c is also not bad, 
+
+consider also pdftocairo for creation of tiff and ps and many others. 
 
 \chapter{Bugs}\label{chap:bugs}
 
