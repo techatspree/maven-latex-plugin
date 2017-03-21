@@ -783,14 +783,15 @@ public class Settings {
     @Parameter(name = "patternReRunLatex", 
 	       defaultValue = 
 	       // general message 
-	       "^(LaTeX Warning: Label\\(s\\) may have changed. " 
+	       "^(LaTeX Warning: Label\\(s\\) may have changed\\. " 
 	       + "Rerun to get cross-references right\\.$|" +
 	       // default message in one line for packages 
-	       "Package \\w+ Warning: .*Rerun .*$|" +
+	       "Package \\w+ Warning: .*Rerun( .*|\\.)$|" +
 	       // works for 
 	       // Package totcount Warning: Rerun to get correct total counts
 	       // Package longtable Warning: Table widths have changed. Rerun LaTeX ...
 	       // Package hyperref Warning: Rerun to get outlines right (old hyperref)
+	       // Package rerunfilecheck Warning: File `...' has changed. Rerun.
 	       // ... 
 	       // default message in two lines for packages 
 	       // FIXME: would require parsing of more than one line 
