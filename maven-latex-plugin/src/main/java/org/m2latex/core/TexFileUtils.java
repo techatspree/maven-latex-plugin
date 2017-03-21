@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.io.IOException;
 
 import java.nio.file.Path;
+import java.nio.CharBuffer;
 
 import java.util.Collection;
 
@@ -439,20 +440,38 @@ class TexFileUtils {
 	try {
 	    // may throw FileNotFoundException < IOExcption 
 	    FileReader fileReader = new FileReader(file);
+	    // BufferedReader for perfromance 
 	    BufferedReader bufferedReader = new BufferedReader(fileReader);
-	    Pattern pattern = Pattern.compile(regex);
+	    Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);//
+	    boolean fromStart = regex.startsWith("\\A");
+	    String lines = "";
+	    //CharBuffer chars = CharBuffer.allocate(1000);
 	    try {
-		//      readLine may thr. IOException
+		// may throw IOException 
+		// int numRead = bufferedReader.read(chars);
+		// System.out.println("file: "+file);
+		// System.out.println("numRead: "+numRead);
+		// System.out.println("chars: '"+chars+"'");
+		
+
+		// FIXME: seemingly, 
+		// find may not terminate in case ^(\s*)* but with ^s* 
+		// but this seems a bug in java's regex engine 
+//		return pattern.matcher(chars).find();
+
+
+		// readLine may throw IOException 
 		for (String line = bufferedReader.readLine();
 		     line != null;
 		     // readLine may thr. IOException
 		     line = bufferedReader.readLine()) {
 // FIXME: linewise matching is not appropriate 
-// for parameter patternLatexMainFile 
-// but may be inappropriate also for further patterns line patternReRunLatex 
+// for further patterns line patternReRunLatex 
 // FIXME: seemingly, find may not terminate in case ^(\s*)* but with ^s* 
-// 
-		    if (pattern.matcher(line).find()) {
+// but this seems a bug in java's regex engine 
+
+		    lines = fromStart ? lines += "\n"+line : line;
+		    if (pattern.matcher(lines).find()) {
 			return true;
 		    }
 		}
@@ -630,7 +649,19 @@ class TexFileUtils {
     }
 
     public static void main(String[] args) {
-	Pattern pattern = Pattern.compile("^! ");
-	System.out.println("res: "+pattern.matcher(args[0]).find());
+	String regex = args[0];
+	String text  = args[1];
+	text = "xx\nyzzz";
+	System.out.println("regex: "+regex);
+	System.out.println("text: "+text);
+	System.out.println("len: "+text.length());
+
+	
+ 	Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+	java.util.regex.Matcher matcher = pattern.matcher(text);
+	matcher.useAnchoringBounds(true);
+	System.out.println("find:   "+matcher.find());
+	System.out.println("hitEnd: "+matcher.hitEnd());
+	System.out.println("hitEnd: "+matcher.end());
     }
  }
