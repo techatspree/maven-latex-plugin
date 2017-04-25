@@ -270,10 +270,10 @@ public class Settings {
 	// we allow T$T.synctex.gz and T$T.out.ps 
 	"^(T$T(\\.([^.]*|synctex\\.gz|out\\.ps)|" + 
 	// tex4ht creates files T$Tyy.(x)htm(l)... 
-	"(ch|se|su|ap|li)?\\d+\\.x?html?|" + 
+	"(-|ch|se|su|ap|li)?\\d+\\.x?html?|" + 
 	// ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 
 	"\\d+x\\.x?bb|" + 
-	"\\d+x\\.png|" + 
+	"\\d+x?\\.png|" + 
 	"-\\d+\\.svg)|" + 
 	// ... and xxT$T.eps... 
 	"zzT$T\\.e?ps|" + 
