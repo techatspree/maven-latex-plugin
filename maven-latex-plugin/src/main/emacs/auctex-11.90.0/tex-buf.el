@@ -1190,6 +1190,26 @@ run of `TeX-run-TeX', use
         process
       (TeX-synchronous-sentinel name file process))))
 
+; splitidx with splitindex only 
+(defun TeX-run-splitindex (name command file)
+  "Create a process for NAME using COMMAND to compile the index file."
+  (let ((process (TeX-run-command name command file))
+	(element nil))
+    (setq TeX-sentinel-function #'TeX-splitindex-sentinel)
+    ;; Same cleaning as that for `LaTeX-idx-md5-alist' in `TeX-run-TeX'.
+    (while (setq element
+		 ;; `file' has been determined in `TeX-command-buffer', while
+		 ;; this function has `TeX-master-directory' as
+		 ;; `default-directory', then we have to expand `file' file-name
+		 ;; in the same directory of `TeX-command-buffer'.
+		 (assoc (with-current-buffer TeX-command-buffer
+			    (expand-file-name (concat file ".idx")))
+			LaTeX-idx-changed-alist))
+      (setq LaTeX-idx-changed-alist (delq element LaTeX-idx-changed-alist)))
+    (if TeX-process-asynchronous
+        process
+      (TeX-synchronous-sentinel name file process))))
+
 (defun TeX-run-glossary (name command file)
   "Create a process for NAME using COMMAND to compile the glossary file."
   (let ((process (TeX-run-command name command file))
@@ -1759,6 +1779,19 @@ Rerun to get mark in right position\\." nil t)
    (t
     (setq TeX-command-next TeX-command-default)
     (message (concat "Index finished successfully. "
+		     "Run LaTeX again to get index right.")))))
+
+(defun TeX-splitindex-sentinel (_process _name)
+  "Cleanup TeX output buffer after compiling index with splitindex."
+  (goto-char (point-max))
+  (cond
+   ((search-backward "TeX Output exited abnormally" nil t)
+    (message "Splitindex failed.  Type `%s' to display output."
+	     (substitute-command-keys
+              "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
+   (t
+    (setq TeX-command-next TeX-command-default)
+    (message (concat "Splitindex finished successfully. "
 		     "Run LaTeX again to get index right.")))))
 
 (defun TeX-glossary-sentinel (_process _name)
