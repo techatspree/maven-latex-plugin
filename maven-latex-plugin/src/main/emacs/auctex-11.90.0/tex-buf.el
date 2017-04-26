@@ -366,6 +366,12 @@ Car is the idx file, cdr is its md5 hash.")
 Car is the idx file, cdr is whether idx changed after LaTeX
 run.")
 
+(defvar LaTeX-glo-changed-alist nil
+  "Whether the glo files changed.
+
+Car is the glo file, cdr is whether glo changed after LaTeX
+run.")
+
 (defcustom TeX-check-engine t
   "Whether AUCTeX should check the correct engine has been set before running LaTeX commands."
   :group 'TeX-command
@@ -1184,6 +1190,28 @@ run of `TeX-run-TeX', use
         process
       (TeX-synchronous-sentinel name file process))))
 
+(defun TeX-run-glossary (name command file)
+  "Create a process for NAME using COMMAND to compile the glossary file."
+  (let ((process (TeX-run-command name command file))
+	(element nil))
+    (setq TeX-sentinel-function #'TeX-glossary-sentinel)
+    ;; Same cleaning as that for `LaTeX-idx-md5-alist' in `TeX-run-TeX'.
+    (while (setq element
+		 ;; `file' has been determined in `TeX-command-buffer', while
+		 ;; this function has `TeX-master-directory' as
+		 ;; `default-directory', then we have to expand `file' file-name
+		 ;; in the same directory of `TeX-command-buffer'.
+		 (assoc (with-current-buffer TeX-command-buffer
+			    (expand-file-name (concat file ".glo")))
+			LaTeX-glo-changed-alist))
+      (setq LaTeX-glo-changed-alist (delq element LaTeX-glo-changed-alist)))
+    (if TeX-process-asynchronous
+        process
+      (TeX-synchronous-sentinel name file process))))
+
+
+
+
 (defun TeX-run-compile (_name command _file)
   "Ignore first and third argument, start compile with second argument."
   (let ((default-directory (TeX-master-directory)))
@@ -1732,6 +1760,19 @@ Rerun to get mark in right position\\." nil t)
     (setq TeX-command-next TeX-command-default)
     (message (concat "Index finished successfully. "
 		     "Run LaTeX again to get index right.")))))
+
+(defun TeX-glossary-sentinel (_process _name)
+  "Cleanup TeX output buffer after compiling glossary."
+  (goto-char (point-max))
+  (cond
+   ((search-backward "TeX Output exited abnormally" nil t)
+    (message "Glossary failed.  Type `%s' to display output."
+	     (substitute-command-keys
+              "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
+   (t
+    (setq TeX-command-next TeX-command-default)
+    (message (concat "Glossary finished successfully. "
+		     "Run LaTeX again to get glossary right.")))))
 
 (defun TeX-command-sequence-sentinel (process string)
   "Call the appropriate sentinel for the current process.
