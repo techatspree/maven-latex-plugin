@@ -3732,6 +3732,29 @@ This command invokes \texttt{\$makeIndexCommand}.
 %The default value is `splitindex'. 
 \end{minipage}
 } \\
+\texttt{splitIndexOptions} & \texttt{-V}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for \texttt{\$splitIndexCommand}. 
+Here, one has to distinguish between the options 
+processed by \texttt{\$splitIndexCommand} 
+and those passed to \texttt{\$makeIndexCommand}. 
+The second category cannot be specified here, 
+it is already given by \texttt{\$makeIndexOptions}. 
+In the first category is the option `\texttt{-m}' 
+to specify the \texttt{\$makeIndexCommand}. 
+This is used automatically and cannot be specified here. 
+Since \texttt{\$splitIndexCommand} is used 
+in conjunction with package `\texttt{splitidx}', 
+which hardcodes various parameters 
+which are the default values for \texttt{\$splitIndexCommand} 
+and because the option may not alter certain interfaces, 
+the only option which may be given explicitly 
+is `\texttt{-V}', the short cut for `\texttt{--verbose}'. 
+Do not use `\texttt{--verbose}' either for sake of portability. 
+%The default value is `-V'; it could also be empty. 
+\end{minipage}
+} \\
 \end{longtable}
 
 
