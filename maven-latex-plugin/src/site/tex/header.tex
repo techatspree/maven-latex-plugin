@@ -85,7 +85,9 @@
 % index and glossary
 \ifthenelse{\boolean{texFhtLoaded}}{%
 }{
-  \usepackage{makeidx}
+  \usepackage{splitidx}%[split]
+%  \usepackage{makeidx}
+%  \usepackage{showidx}
   \makeindex
   \usepackage[toc]{glossaries}%,automake
   % , xindy or even [xindy={language=english,codepage=utf8}]
