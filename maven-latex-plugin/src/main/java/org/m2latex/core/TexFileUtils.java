@@ -34,8 +34,10 @@ import java.nio.file.Path;
 import java.nio.CharBuffer;
 
 import java.util.Collection;
+import java.util.TreeSet;
 
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 // FIXME: jdee bug: delete static imports: does not find superfluous 
 
@@ -74,11 +76,41 @@ class TexFileUtils {
     File[] listFilesOrWarn(File dir) {
 	assert dir != null && dir.isDirectory() : "Expected folder found "+dir;
         File[] files = dir.listFiles();
+	warnIfNull(files, dir);
+	return files;
+    }
+
+    /**
+     * Returns the listing of the directory <code>dir</code> 
+     * filtered by <code>filter</code> 
+     * or <code>null</code> if <code>dir</code> is not readable 
+     * and emit an according warning if so. 
+     * <p>
+     * Logging: 
+     * WFU01: Cannot read directory 
+     *
+     * @param dir
+     *    an existing directory. 
+     * @param filter
+     *    a file filter 
+     * @return
+     *    the list of entries of <code>dir</code> 
+     *    accepted by <code>filter</code>
+     *    or <code>null</code> if <code>dir</code> is not readable. 
+     */
+    // used by LatexProcessor.runMakeIndexByNeed only 
+    File[] listFilesOrWarn(File dir, FileFilter filter) {
+	assert dir != null && dir.isDirectory() : "Expected folder found "+dir;
+        File[] files = dir.listFiles(filter);
+	warnIfNull(files, dir);
+	return files;
+    }
+
+    private void warnIfNull(File[] files, File dir) {
 	if (files == null) {
 	    this.log.warn("WFU01: Cannot read directory '" + dir + 
 			  "'; build may be incomplete. ");
 	}
-	return files;
     }
 
     /**
@@ -165,6 +197,34 @@ class TexFileUtils {
 		// the second is superfluous for copying 
 		// and only needed for deletion. 
 		if (file.isDirectory() || file.equals(texFile)) {
+		    return false;
+		}
+		return file.getName().matches(patternAccept);
+	    }
+	};
+    }
+
+    /**
+     * Returns a file filter matching no directories 
+     * but else all files with names matching <code>xxx<pattern>.idx</code>, 
+     * where <code>idxFile</code> has the form <code>xxx.idx</code>. 
+     *
+     * @param idxFile
+     *    an idx file for which a file filter has to be created. 
+     * @param pattern
+     *    a pattern which is inserted in the name of <code>idxFile</code> 
+     *    right before the suffix. 
+     * @return
+     *    a non-null file filter matching no directories 
+     *    but else all files matching <code>xxx<pattern>.idx</code>. 
+     */
+    // used by LatexProcessor.runMakeIndexByNeed only 
+    FileFilter getFileFilterReplace(File idxFile, String pattern) {
+	final String patternAccept = getFileNameWithoutSuffix(idxFile) 
+	    + pattern + getSuffix(idxFile); 
+	return new FileFilter() {
+	    public boolean accept(File file) {
+		if (file.isDirectory()) {
 		    return false;
 		}
 		return file.getName().matches(patternAccept);
@@ -415,12 +475,15 @@ class TexFileUtils {
     /**
      * Returns whether the given file <code>file</code> (which shall exist) 
      * contains the given pattern <code>pattern</code> 
-     * and <code>null</code> in case of problems reading <code>file</code> 
+     * or <code>null</code> in case of problems reading <code>file</code>. 
      * This is typically applied to log files, 
      * but also to latex-files to find the latex main files. 
      * <p>
      * Logging: 
-     * WFU03 cannot close 
+     * WFU03 cannot close <br>
+     * Note that in case <code>null</code> is returned, 
+     * no error/warning is logged. 
+     * This must be done by the invoking method. 
      *
      * @param file
      *    an existing proper file, not a folder. 
@@ -437,14 +500,15 @@ class TexFileUtils {
     // LatexProcessor.needRun(...)
     // AbstractLatexProcessor.hasErrsWarns(File, String)
     Boolean matchInFile(File file, String regex) {
+	Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);//
+	boolean fromStart = regex.startsWith("\\A");
+	String lines = "";
+
 	try {
 	    // may throw FileNotFoundException < IOExcption 
 	    FileReader fileReader = new FileReader(file);
 	    // BufferedReader for perfromance 
 	    BufferedReader bufferedReader = new BufferedReader(fileReader);
-	    Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);//
-	    boolean fromStart = regex.startsWith("\\A");
-	    String lines = "";
 	    //CharBuffer chars = CharBuffer.allocate(1000);
 	    try {
 		// may throw IOException 
@@ -477,6 +541,7 @@ class TexFileUtils {
 		}
 		return false;
 	    } catch (IOException ioe) {
+		// Error/Warning must be issued by invoking method 
 		return null;
 	    } finally {
 		// Here, an IOException may have occurred 
@@ -484,6 +549,70 @@ class TexFileUtils {
 		closeQuietly(bufferedReader);
 	    }
 	} catch (FileNotFoundException ffe) {
+	    // Error/Warning must be issued by invoking method 
+	    return null;
+	}
+    }
+
+    /**
+     * Returns the set of strings representing the <code>idxGroup</code> 
+     * of the pattern <code>regex</code> matching a line 
+     * in file <code>file</code> or returns <code>null</code> 
+     * in case of problems reading <code>file</code>. 
+     * <p>
+     * This is used only to collect the identifiers 
+     * of explicitly given indices in an idx-file. 
+     * @param file
+     *    an existing proper file, not a folder. 
+     *    In practice this is an idx file. 
+     * @param regex
+     *    the pattern (regular expression) to look for in <code>file</code>. 
+     * @param idxGroup
+     *    the number of a group of the pattern <code>regex</code>. 
+     * @return
+     *    the set of strings representing the <code>idxGroup</code> 
+     *    of the pattern <code>regex</code> matching a line 
+     *    in file <code>file</code> or returns <code>null</code> 
+     *    in case of problems reading <code>file</code>. 
+     */
+    // used in LatexProcessor.runMakeIndexByNeed only 
+    // **** a lot of copying from method matchInFile 
+    Collection<String> collectMatches(File file, String regex, int idxGroup) {
+	Collection<String> res = new TreeSet<String>();
+	Pattern pattern = Pattern.compile(regex);
+
+ 	try {
+	    // may throw FileNotFoundException < IOExcption 
+	    FileReader fileReader = new FileReader(file);
+	    // BufferedReader for perfromance 
+	    BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+	    try {
+		// readLine may throw IOException 
+		Matcher matcher;
+		for (String line = bufferedReader.readLine();
+		     line != null;
+		     // readLine may thr. IOException
+		     line = bufferedReader.readLine()) {
+
+		    matcher = pattern.matcher(line);
+		    if (matcher.find()) {
+			// Here, a match has been found 
+			res.add(matcher.group(idxGroup));
+		    }
+		} // for 
+
+		return res;
+	    } catch (IOException ioe) {
+		// Error/Warning must be issued by invoking method 
+		return null;
+	    } finally {
+		// Here, an IOException may have occurred 
+		// may log warning WFU03
+		closeQuietly(bufferedReader);
+	    }
+	} catch (FileNotFoundException ffe) {
+	    // Error/Warning must be issued by invoking method 
 	    return null;
 	}
     }
