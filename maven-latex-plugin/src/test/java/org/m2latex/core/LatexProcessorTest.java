@@ -22,6 +22,7 @@ import org.m2latex.mojo.MavenLogWrapper;
 import org.m2latex.mojo.PdfMojo;
 
 import java.io.File;
+import java.io.FileFilter;
 // import java.io.FileWriter;
 // import java.io.Writer;
 import java.io.IOException;
@@ -67,6 +68,15 @@ public class LatexProcessorTest {
 
     private final static File WORKING_DIR = 
 	new File(System.getProperty("testResourcesDir"));
+
+    /**
+     * Filter rejecting all files. 
+     */
+    private final static FileFilter FILTER_FALSE = new FileFilter() {
+		public boolean accept(File pathname) {
+		    return false;
+		}
+	    };
 
     private final CommandExecutor executor = mock(CommandExecutor.class,
 						  RETURNS_SMART_NULLS);
@@ -594,6 +604,12 @@ public class LatexProcessorTest {
     private void mockRunMakeIndexByNeed(boolean runMakeIndex) 
 	throws BuildFailureException {
 
+	when(this.fileUtils.getFileFilterReplace(this.idxFile, "-.+"))
+	    .thenReturn(FILTER_FALSE);
+
+	when(this.fileUtils.listFilesOrWarn(WORKING_DIR, FILTER_FALSE))
+	    .thenReturn(new File[0]);
+
 	assert !runMakeIndex;
 
 	if (!runMakeIndex) {
@@ -604,6 +620,11 @@ public class LatexProcessorTest {
 
     private void verifyRunMakeIndexByNeed(boolean runMakeIndex) 
 	throws BuildFailureException {
+
+	this.inOrder.verify(this.fileUtils)
+	    .getFileFilterReplace(this.idxFile, "-.+");
+	this.inOrder.verify(this.fileUtils)
+	    .listFilesOrWarn(WORKING_DIR, FILTER_FALSE);
 
 	assert !runMakeIndex;
 
