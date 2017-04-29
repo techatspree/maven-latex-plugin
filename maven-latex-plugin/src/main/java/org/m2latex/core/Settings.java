@@ -274,7 +274,9 @@ public class Settings {
 	// ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 
 	"\\d+x\\.x?bb|" + 
 	"\\d+x?\\.png|" + 
-	"-\\d+\\.svg)|" + 
+	"-\\d+\\.svg|" + 
+	// by (splitidx and) splitindex 
+	"-.+\\.(idx|ind|ilg))|" + 
 	// ... and xxT$T.eps... 
 	"zzT$T\\.e?ps|" + 
 	// ... and scripts cmsy....png 
