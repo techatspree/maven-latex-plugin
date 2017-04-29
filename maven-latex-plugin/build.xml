@@ -142,11 +142,12 @@
 
 	<patternCreatedFromLatexMain>
 ^(
-T$T             (\.([^.]*|synctex\.gz|out\.ps)|
-   (-|ch|se|su|ap|li)?\d+\.x?html?|
-             \d+x\.x?bb|
-             \d+x?\.png|
-             -\d+\.svg)|
+T$T(                        \.([^.]*|synctex\.gz|out\.ps)|
+      (-|ch|se|su|ap|li)?\d+\.x?html?|
+                        \d+x\.x?bb|
+                       \d+x?\.png|
+                        -\d+\.svg|
+                         -.+\.(idx|ind|ilg))|
 zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
@@ -224,10 +225,12 @@ LaTeX Warning: Etaremune labels have changed\.$|
 
 	<patternCreatedFromLatexMain>
 ^(
-T$T             (\.([^.]*|synctex\.gz|out\.ps)|
-   (ch|se|su|ap|li)?\d+\.x?html?|
-             \d+x\.png|
-             -\d+\.svg)|
+T$T(                        \.([^.]*|synctex\.gz|out\.ps)|
+      (-|ch|se|su|ap|li)?\d+\.x?html?|
+                        \d+x\.x?bb|
+                       \d+x?\.png|
+                        -\d+\.svg|
+                         -.+\.(idx|ind|ilg))|
 zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
