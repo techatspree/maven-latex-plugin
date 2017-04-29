@@ -1477,7 +1477,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.debug("Running " + command  + 
 		       " on '" + idxFile.getName() + "'. ");
 	//buildArguments(this.settings.getMakeIndexOptions(), idxFile);
-	String[] args = new String[] {
+	String[] argsDefault = new String[] {
 	    "-m " + this.settings.getMakeIndexCommand(),
 	    // **** no splitindex.tlu 
 	    // This is hardcoded by splitidx when writing xxx.ind
@@ -1485,11 +1485,21 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // This is hardcoded by makeindex when writing xxx.ind
 	    "-r $1$3", // groups in IDX_EXPL: \indexentry{...}
 	    // -s -$2 is hardcoded by splitidx when readin in the -xxx.ind-files
-	    "-s " + SEP_IDENT_IDX + "$" + GRP_IDENT_IDX,  // groups in IDX_EXPL
+	    "-s " + SEP_IDENT_IDX + "$" + GRP_IDENT_IDX  // groups in IDX_EXPL
 	    // **** Here, only -V may occur in addition. 
-	    "-V",
-	    desc.xxxFile.getName()
+	    //"-V",
+	    //desc.xxxFile.getName()
 	};
+
+	String argsOption = this.settings.getMakeIndexOptions();
+	String[] args = argsOption.isEmpty() 
+	    ? new String[argsDefault.length+1]
+	    : new String[argsDefault.length+2];
+	System.arraycopy(argsDefault, 0, args, 0, argsDefault.length);
+	if (!argsOption.isEmpty()) {
+	    args[args.length-2] = argsOption;
+	}
+	args[args.length-1] = desc.xxxFile.getName();
 
 	String optionsMakeIndex = this.settings.getMakeIndexOptions();
 	if (!optionsMakeIndex.isEmpty()) {

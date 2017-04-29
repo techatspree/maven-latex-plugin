@@ -1013,7 +1013,29 @@ public class Settings {
     @Parameter(name = "splitIndexCommand", defaultValue = "splitindex")
     private String splitIndexCommand = "splitindex";
 
- 
+    /**
+     * The options for {@link #splitIndexCommand}. 
+     * Here, one has to distinguish between the options 
+     * processed by {@link #splitIndexCommand} 
+     * and those passed to {@link #makeIndexCommand}. 
+     * The second category cannot be specified here, 
+     * it is already given by {@link #makeIndexOptions}. 
+     * In the first category is the option <code>-m</code> 
+     * to specify the {@link #makeIndexCommand}. 
+     * This is used automatically and cannot be specified here. 
+     * Since {@link #splitIndexCommand} is used 
+     * in conjunction with package <code>splitidx</code>, 
+     * which hardcodes various parameters 
+     * which are the default values for {@link #splitIndexCommand} 
+     * and because the option may not alter certain interfaces, 
+     * the only option which may be given explicitly 
+     * is <code>-V</code>, the short cut for <code>--verbose</code>. 
+     * Do not use <code>--verbose</code> either for sake of portability. 
+     * The default value is <code>-V</code>; it could also be empty. 
+     */
+    @Parameter(name = "splitIndexOptions", defaultValue = "-V")
+    private String splitIndexOptions = "splitindexOptions";
+
 
     // parameters for glossary 
 
@@ -1613,6 +1635,10 @@ public class Settings {
 	return  this.splitIndexCommand;
     }
 
+    public String getSplitIndexOptions() {
+	return  this.splitIndexOptions;
+    }
+
     public String getMakeGlossariesCommand() {
 	return  this.makeGlossariesCommand;
     }
@@ -2140,6 +2166,11 @@ public class Settings {
         this.splitIndexCommand = splitIndexCommand;
     }
 
+    public void setSplitIndexOptions(String splitIndexOptions) {
+        this.splitIndexOptions = splitIndexOptions
+	    .replaceAll("(\t|\n| )+", " ").trim();
+    }
+
     public void setMakeGlossariesCommand(String makeGlossariesCommand) {
         this.makeGlossariesCommand = makeGlossariesCommand;
     }
@@ -2318,6 +2349,7 @@ public class Settings {
         sb.append(", patternReRunMakeIndex=")
 	    .append(this.patternReRunMakeIndex);
 	sb.append(", splitIndexCommand=")    .append(this.splitIndexCommand);
+	sb.append(", splitIndexOptions=")    .append(this.splitIndexOptions);
  	// parameters for MakeGlossaries
         sb.append(", makeGlossariesCommand=")
 	    .append(this.makeGlossariesCommand);
