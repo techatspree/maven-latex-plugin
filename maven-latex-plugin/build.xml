@@ -115,6 +115,7 @@
 		makeIndexCommand="makeindex"
 		makeIndexOptions="-c"
 		splitIndexCommand='splitindex'
+		splitIndexOptions="-V"
 		makeGlossariesCommand="makeglossaries" 
 		makeGlossariesOptions=""
 		patternErrMakeGlossaries="(^\*\*\* unable to execute: )"

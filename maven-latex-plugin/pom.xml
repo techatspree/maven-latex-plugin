@@ -840,6 +840,26 @@ LaTeX Warning: Etaremune labels have changed\.$|
                  The default value is 'splitindex'. -->
 	    <splitIndexCommand>splitindex</splitIndexCommand>
 
+	    <!-- The options for $splitIndexCommand. 
+                 Here, one has to distinguish between the options 
+                 processed by $splitIndexCommand 
+                 and those passed to $makeIndexCommand. 
+                 The second category cannot be specified here, 
+                 it is already given by $makeIndexOptions. 
+                 In the first category is the option '-m' 
+                 to specify the $makeIndexCommand. 
+                 This is used automatically and cannot be specified here. 
+                 Since $splitIndexCommand is used 
+                 in conjunction with package 'splitidx', 
+                 which hardcodes various parameters 
+                 which are the default values for $splitIndexCommand 
+                 and because the option may not alter certain interfaces, 
+                 the only option which may be given explicitly 
+                 is '-V', the short cut for '- -verbose'. 
+                 Do not use '- -verbose' either for sake of portability. 
+                 The default value is '-V'; it could also be empty. -->
+	    <splitIndexOptions>-V</splitIndexOptions>
+
 	    <!-- The MakeGlossaries command to create a gls-file 
 		 from a glo-file (invoked without file ending) 
 		 also taking ist-file or xdy-file 
