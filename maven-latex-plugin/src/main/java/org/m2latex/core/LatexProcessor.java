@@ -1472,8 +1472,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			       Collection<String> explIdxIdent) 
 	throws BuildFailureException {
 
-	String command = "splitindex";
-	    //this.settings.getSplitIndexCommand();
+	String command = this.settings.getSplitIndexCommand();
 	File idxFile = desc.idxFile;
 	this.log.debug("Running " + command  + 
 		       " on '" + idxFile.getName() + "'. ");

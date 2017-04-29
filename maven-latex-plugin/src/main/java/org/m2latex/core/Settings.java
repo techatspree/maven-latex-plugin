@@ -1004,6 +1004,16 @@ public class Settings {
 	//"^Package rerunfilecheck Warning: File `.*\\.idx' has changed\\.$" //+
 	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get index right\\.$";
  
+    /**
+     * The SplitIndex command to create ind-files 
+     * from an idx-file logging on ilg-files. 
+     * This command invokes {@link #makeIndexCommand}. 
+     * The default value is <code>splitindex</code>. 
+     */
+    @Parameter(name = "splitIndexCommand", defaultValue = "splitindex")
+    private String splitIndexCommand = "splitindex";
+
+ 
 
     // parameters for glossary 
 
@@ -1599,6 +1609,9 @@ public class Settings {
 	return this.patternReRunMakeIndex;
     }
 
+    public String getSplitIndexCommand() {
+	return  this.splitIndexCommand;
+    }
 
     public String getMakeGlossariesCommand() {
 	return  this.makeGlossariesCommand;
@@ -2123,6 +2136,10 @@ public class Settings {
    	}
     }
 
+    public void setSplitIndexCommand(String splitIndexCommand) {
+        this.splitIndexCommand = splitIndexCommand;
+    }
+
     public void setMakeGlossariesCommand(String makeGlossariesCommand) {
         this.makeGlossariesCommand = makeGlossariesCommand;
     }
@@ -2300,7 +2317,8 @@ public class Settings {
         sb.append(", patternWarnMakeIndex=").append(this.patternWarnMakeIndex);
         sb.append(", patternReRunMakeIndex=")
 	    .append(this.patternReRunMakeIndex);
-	// parameters for MakeGlossaries
+	sb.append(", splitIndexCommand=")    .append(this.splitIndexCommand);
+ 	// parameters for MakeGlossaries
         sb.append(", makeGlossariesCommand=")
 	    .append(this.makeGlossariesCommand);
         sb.append(", makeGlossariesOptions=")
