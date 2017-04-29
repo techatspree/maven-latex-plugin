@@ -1483,8 +1483,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * whereas the targets of the graphic (source) files 
      * are just scheduled for deletion. 
      * For details see 
-     * {@link LatexPreProcessor.SuffixHandler#clearTarget(File, LatexPreProcessor, Map)} 
-     * {@link LatexPreProcessor.SuffixHandler#tex#clearTarget(File, LatexPreProcessor, Map)} . 
+     * {@link LatexPreProcessor.SuffixHandler#clearTarget(File, LatexPreProcessor, Map)}. 
      * FIXME: what about deletion of a graphic source file in this course? 
      * <li>
      * Then the graphic source files scheduled are un-scheduled 

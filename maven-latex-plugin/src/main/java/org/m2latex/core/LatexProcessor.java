@@ -21,6 +21,7 @@ package org.m2latex.core;
 import org.m2latex.mojo.CfgLatexMojo;
 import org.m2latex.mojo.GraphicsMojo;
 import org.m2latex.mojo.ClearMojo;
+import org.m2latex.mojo.ChkMojo;
 
 import org.m2latex.antTask.LatexCfgTask;
 import org.m2latex.antTask.LatexClrTask;
