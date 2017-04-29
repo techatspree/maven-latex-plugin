@@ -452,7 +452,7 @@ respectively.
 Sometimes also \pkg{bmpsize} described in \cite{BmpP} 
 if pixel graphics is used. 
 \item
-\texttt{import} described in \cite{ImpoP} 
+\pkg{import} described in \cite{ImpoP} 
 e.g.~to import nested graphic files from arbitrary directories. 
 \item
 \texttt{inputenc} described in \cite{InputencP} 
@@ -472,15 +472,15 @@ or something comparable for creating indices.
 with tutorial \cite{GloPGuide}
 or something comparable for creating glossaries. 
 \item 
-\texttt{tocbibind} described in \cite{TocBibIndP} 
+\pkg{tocbibind} described in \cite{TocBibIndP} 
 to include bibliography and index (what about glossaries?) 
 into the table of contents. 
 \item 
-\texttt{nag} described in \cite{NagP} 
+\pkg{nag} described in \cite{NagP} 
 which performs certain checks unveiling deficiencies 
 not filtered by the compiler nor by another check tool. 
 \item 
-\texttt{babel} described in \cite{BabelP} for language support. 
+\pkg{babel} described in \cite{BabelP} for language support. 
 This is not used by this manual, because it is in English. 
 \end{itemize}
 
@@ -489,18 +489,18 @@ Useful packages with which this software is tested:
 %
 \begin{itemize}
 \item
-The ams-packages **** \texttt{amsmath}
+The ams-packages **** \pkg{amsmath}
 \item
-\texttt{longtable} described in \cite{LongTabP} 
+\pkg{longtable} described in \cite{LongTabP} 
 for long tables, i.e.~tables exceeding a page. 
 \item
-\texttt{listings} described in \cite{ListingsP} for listings. 
+\pkg{listings} described in \cite{ListingsP} for listings. 
 \item
-\texttt{fancyvrb} described in \cite{FancyVerbP} 
+\pkg{fancyvrb} described in \cite{FancyVerbP} 
 provides useful environments to mark verbatim text. 
 \item
-\texttt{ifxetex} described in \cite{IfXeTeXP} and 
-\texttt{ifluatex} described in \cite{IfLuaTeXP} 
+\pkg{ifxetex} described in \cite{IfXeTeXP} and 
+\pkg{ifluatex} described in \cite{IfLuaTeXP} 
 are to determine the tex-engine (regardless the output format). 
 
 \end{itemize}
@@ -603,7 +603,7 @@ all included in the tex-source directory.
 \item
 The first can be included into \LaTeX-files directly via \cmd{input}. 
 These formats are essentially \LaTeX{} and are defined in an according package. 
-An example is \texttt{eepic} described in~\cite{EEpic}. 
+An example is \pkg{eepic} described in~\cite{EEpic}. 
 \item
 the second one via the command \cmd{includegraphics}{} 
 defined by the package \pkg{graphicx} 
@@ -633,7 +633,7 @@ Note that, although not required to be explicitly transformed,
 those graphics files induce additional files 
 by running \LaTeX. 
 Currently, there is only one single example for that, 
-the \gls{svg}-format included by the package \texttt{svg}. 
+the \gls{svg}-format included by the package \pkg{svg} (see \cite{SvgP}). 
 \end{enumerate}
 
 The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
@@ -1161,7 +1161,7 @@ As indicated in Section~\ref{sec:figpdf},
 the commands in \texttt{xxx.ptx} 
 require the packages \pkg{graphicx} and \pkg{xcolor}. 
 Also the \cmd{import}{} command 
-requires the \texttt{import} package. 
+requires the \pkg{import} package. 
 
 To export \texttt{xxx.fig} into \texttt{xxx.ptx} and \texttt{xxx.pdf} 
 this software invokes two commands: 
@@ -1569,7 +1569,7 @@ virtually,
 %\includesvg[width=0.5\textwidth]{xxx}%
 \end{verbatim}
 %
-using the \LaTeX-packages \texttt{svg} described in~\cite{SvgP}. 
+using the \LaTeX-packages \pkg{svg} described in~\cite{SvgP}. 
 Note that the suffix of the file name shall be omitted. 
 
 A closer look shows, that graphic preprocessing is done behind the scenes 
@@ -1586,12 +1586,12 @@ Moreover, it may happen that the \LaTeX-package \pkg{transparent}
 is required also, depending on the features used in\texttt{xxx.svg}. 
 
 As indicated in~\cite{SvgP}, Section~1, 
-the \texttt{svg}-package delegates the transformation 
+the \pkg{svg}-package delegates the transformation 
 of \texttt{xxx.svg} \texttt{xxx.pdf} and \texttt{xxx.pdf\_tex} 
 to \texttt{inkscape}. 
 This is a graphical editor with export functions 
 which can be invoked in batch-mode also. 
-Of course using the \texttt{svg}-package has the advantage 
+Of course using the \pkg{svg}-package has the advantage 
 that no explicit preprocessing is required, 
 the created files updated by need. 
 It is worth thinking about whether it is worthwhile 
@@ -1602,12 +1602,12 @@ this breaks the workflow this software normally applies to graphic files.
 In particular, the package creates latex main files 
 which are not removed after the latex run 
 if parametrized accordingly or if something goes wrong. 
-Also, the \texttt{svg}-package does not provide the full flexibility 
+Also, the \pkg{svg}-package does not provide the full flexibility 
 of a standard solution. 
 Since this software is still under construction 
 and more than that, is in an experimental phase, 
 we provide explicit preprocessing of svg-files using \texttt{inkscape}. 
-Another problem with the \texttt{svg}-package is, 
+Another problem with the \pkg{svg}-package is, 
 that according to~\cite{SvgP}, Section~1, 
 it does not work on windows platforms. 
 
@@ -1644,7 +1644,7 @@ Unlike \texttt{fig2dev} and \texttt{gnuplot},
 specifying the pdf/eps-file \text{xxx} with its full path, 
 has no effect, i.e.~inclusion uses the file name only. 
 Thus \cmd{import}{} cannot be replaced by \cmd{input}{} 
-and so the \LaTeX-package \texttt{import} is required. 
+and so the \LaTeX-package \pkg{import} is required. 
 
 Since both the pdf-file and the eps-file are given without suffix, 
 the resulting tex file is not \texttt{xxx.pdf\_tex} and \texttt{xxx.eps\_tex} 
@@ -1815,7 +1815,8 @@ in addition \texttt{latex2pdf} creates an \gls{idx}-file.
 As the citations, it cannot be used directly to create an index in
 the next \texttt{latex2pdf} run, 
 because the index entries must be collected and sorted before. 
-This is done by invoking \texttt{makeindex} between the two \texttt{latex2pdf} runs. 
+This is done by invoking \texttt{makeindex} 
+between the two \texttt{latex2pdf} runs. 
 Based on the idx-file, \texttt{makeindex} creates an \gls{ind}-file 
 containing the index, which is read in in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:indices}. 
@@ -1852,7 +1853,8 @@ occurs in the pdf-file but not yet in the table of contents.
 This happens after the second additional \LaTeX{} run. 
 As described in Sections~\ref{sec:rerunMakeIndexGlossaries} and 
 \ref{sec:rerunLatex}, 
-further runs of \texttt{makeindex}, \texttt{makeglossaries} 
+further runs of \texttt{makeindex}, resp,~\texttt{splitindex}, 
+\texttt{makeglossaries} 
 and of the \LaTeX-processor \texttt{latex2pdf} may be necessary. 
 
 \begin{figure}[htb]
@@ -1901,7 +1903,7 @@ into the pdf-file and the labels of the citations into the aux-file
 as \cmd{bibcite}-commands. 
 The second run places the labels of the citations found in the aux-file 
 at the citations given by \cmd{cite}. 
-The package \texttt{tocbibind} described in~\cite{TocBibIndP}, 
+The package \pkg{tocbibind} described in~\cite{TocBibIndP}, 
 then writes the headline of the bibliography into the table of contents. 
 \index{table of contents}
 The package \pkg{rerunfilecheck} described in~\cite{RerunFChkP}, 
@@ -1965,7 +1967,7 @@ The most basic package to provide this command
 is \pkg{makeidx} described in~\cite{MkidxShIdxP}. 
 In addition, \pkg{makeidx} provides the command \cmd{see}{} 
 which is for cross reference within an index. 
-The package \texttt{tocbibind} described in~\cite{TocBibIndP}, 
+The package \pkg{tocbibind} described in~\cite{TocBibIndP}, 
 then writes the headline of the index into the table of contents. 
 \index{table of contents}
 The package \pkg{rerunfilecheck} described in~\cite{RerunFChkP}, 
@@ -2097,7 +2099,7 @@ as used to *****
 Then splitindex.tlu is not allowed, 
 because this has another expression. 
 
-Only allowable seems \texttt{-v}, the short cut for \texttt{--verbose}. 
+Only allowable seems \texttt{-V}, the short cut for \texttt{--verbose}. 
 
 Then comes the name of the index file to be processed 
 without suffix. 
@@ -2312,7 +2314,9 @@ FIXME\@: a word on change in toc, lof and lot.
 
 As indicated in the previous sections, 
 \texttt{latex2pdf} must be rerun, 
-if \texttt{bibtex} or \texttt{makeindex} or \texttt{makeglossaries} had been run 
+if \texttt{bibtex} or \texttt{makeindex} \texttt{splitindex} 
+or \texttt{makeglossaries} 
+had been run 
 to read in the bibliography created by \texttt{bibtex} 
 or the index created by \texttt{makeindex} 
 or the glossary created by \texttt{makeglossaries}. 
@@ -2345,7 +2349,7 @@ intermediate runs of \texttt{makeindex} and \texttt{makeglossaries}
 may be required 
 and these also require another run of \texttt{latex2pdf} 
 also to get the page numbers right. 
-The package \texttt{rerunfileckeck} allows to detect this need to rerun 
+The package \pkg{rerunfilecheck} allows to detect this need to rerun 
 by pattern matching on the log-file almost for sure: 
 Still there is some chance 
 that the lengths and the md5-sum of all relevant files 
@@ -4881,10 +4885,10 @@ Creating more than one index is supported only
 via package \pkg{splitidx} in conjunction with \texttt{SplitIndex}. 
 There are the following packages also supporting multiple indices 
 but not supported officially: 
-\texttt{index} described in~\cite{IndexP}, 
-\texttt{amsmidx} described in~\cite{AmsmidxP} and 
-\texttt{imakeidx} described in~\cite{ImakeidxP}.
-Note that the package \texttt{multind} is obsolete. 
+\pkg{index} described in~\cite{IndexP}, 
+\pkg{amsmidx} described in~\cite{AmsmidxP} and 
+\pkg{imakeidx} described in~\cite{ImakeidxP}.
+Note that the package \pkg{multind} is obsolete. 
 
 According to~\cite{GloP}, Section~1, 
 there are three options to create a glossary, 
@@ -4954,16 +4958,19 @@ A second \texttt{pdflatex} run is required
 to write the index to the table of contents, as typically required. 
 The problem with this procedure is, 
 that the subsequent runs of \texttt{pdflatex} change the raw index 
-which requires rerunning \texttt{makeindex} and after that again \texttt{pdflatex}. 
+which requires rerunning \texttt{makeindex} 
+and after that again \texttt{pdflatex}. 
 
-One way to solve that problem is to use the package \texttt{imakeidx} 
+One way to solve that problem is to use the package \pkg{imakeidx} 
 (improved makeidx) instead of the traditional package \pkg{makeidx}. 
 This offers also multiple indices, which is another gap to be filled. 
-Seemingly, \texttt{imakeidx} does not support glossaries 
+Seemingly, \pkg{imakeidx} does not support glossaries 
 and so for these, another solution is required, 
 although the problem is the same. 
 
-Packages \texttt{robustindex} and \texttt{robustglossaries} offer another solution. 
+Packages \pkg{robustindex} and \pkg{robustglossaries} 
+% **** reference? 
+offer another solution. 
 The advantage would be to have handled both index and glossary. 
 Also support of hyperrefs within indices and glossaries seem to be expanded. 
 On the other hand, the two packages seem experimental 
