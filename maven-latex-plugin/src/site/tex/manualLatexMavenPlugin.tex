@@ -75,6 +75,11 @@ glossary file containing sorted, unified and formatted glossary entries}
 % how to number the glossary in the toc? seemingly a gap in tocbibind 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
 
+\newindex[General Index]{idx}
+\newindex[LaTeX Packages]{pkg}
+% does not work 
+%\setindexpreamble[pkg]{This index comprises all the latex packages used. }
+
 \title{Manual for the latex-maven-plugin and for an according ant-task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
 
@@ -96,7 +101,7 @@ pdf%
 \else
 dvi%
 \fi.
-The package \texttt{tex4ht} 
+The package \pkg{tex4ht} 
 is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
 
 \LaTeX{} is a beautiful way to create printable documents, 
@@ -324,24 +329,27 @@ like \texttt{xelatex} or \texttt{lualatex}.
 \index{pdflatex}\index{xelatex}\index{lualatex} 
 \LaTeX{} uses several auxiliary programs. 
 Above all \texttt{bibtex} to create the bibliography 
-and \texttt{makeindex} for the index and \texttt{makeglossaries} for the glossary. 
-\index{bibtex}\index{makeindex}\index{makeglossaries}
+and \texttt{makeindex} and \texttt{splitindex} for the index 
+and \texttt{makeglossaries} for the glossary. 
+\index{bibtex}\index{makeindex}\index{splitindex}\index{makeglossaries}
 The latter two 
-also require the latex packages \texttt{makeidx} and \texttt{glossaries} 
-described in~\cite{MkidxShIdxP} and in~\cite{GloP}. 
+also require the latex packages \pkg{makeidx}, optionally \pkg{showidx}, 
+both described in~\cite{MkidxShIdxP}, 
+the package \pkg{splitidx} documented in~\cite{SplitidxP}
+and \pkg{glossaries} specified in~\cite{GloP}. 
 Note that \texttt{makeglossaries} either invokes \texttt{makeindex} 
-or \texttt{xindy}, depending on the parametrization of \texttt{glossaries}. 
+or \texttt{xindy}, depending on the parametrization of \pkg{glossaries}. 
 Both, \texttt{makeglossaries} and \texttt{xindy} are written in Perl, 
 which shall also be installed if a glossary is required. 
 
-The package \texttt{rerunfilecheck} is in any standard \LaTeX-installation. 
+The package \pkg{rerunfilecheck} is in any standard \LaTeX-installation. 
 It is almost mandatory 
 because this software presupposes that package is present  
 to ensure that the table of contents, list of figures, list of tables, 
 the index and the glossary are up to date. 
 
 It is standard to endow a pdf-file with hyperlinks. 
-To support this, the package \texttt{hyperref} is required. 
+To support this, the package \pkg{hyperref} is required. 
 
 ****
 \item
@@ -387,14 +395,14 @@ The recommended ones are
 %
 \begin{itemize}
 \item
-\texttt{geometry} described in \cite{GeomP} 
+\pkg{geometry} described in \cite{GeomP} 
 to control page layout. 
 \item
-\texttt{microtype} described in \cite{MicroTyP} improve readability 
+\pkg{microtype} described in \cite{MicroTyP} improve readability 
 and make the document look nicer. 
 It also helps to avoid bad boxes. 
 \item
-\texttt{hyperref} described in \cite{HyperTextP} 
+\pkg{hyperref} described in \cite{HyperTextP} 
 to insert hypertext marks, which i do not want to miss in larger documents. 
 % FIXME: with latex2rtf: 
 %\newif\iflatextortf% false for latex but set true for latex2rtf internally 
@@ -402,18 +410,18 @@ to insert hypertext marks, which i do not want to miss in larger documents.
 %\iflatextortf\else\begin{appendix}\fi
 %\iflatextortf\else\end{appendix}\fi
 \item
-\texttt{srcltx} described in \cite{SrcLtxP} 
+\pkg{srcltx} described in \cite{SrcLtxP} 
 which allows to jump from the DVI file to the .tex source and back. 
 \item
-\texttt{showframe} 
-if \texttt{geometry} is not used with option \texttt{showframe}. 
-There seems to be no package documentation for package \texttt{showframe}. 
+\pkg{showframe} 
+if \pkg{geometry} is not used with option \pkg{showframe}. 
+There seems to be no package documentation for package \pkg{showframe}. 
 \item
-\texttt{booktabs} described in \cite{BooktP} 
+\pkg{booktabs} described in \cite{BooktP} 
 
 \item
-\texttt{fix-cm} described in \cite{FixCmP} and 
-\texttt{anyfontsize} described in \cite{AnyfontsizeP} 
+\pkg{fix-cm} described in \cite{FixCmP} and 
+\pkg{anyfontsize} described in \cite{AnyfontsizeP} 
 to allow arbitrary font sizes, eliminating certain warnings. 
 \end{itemize}
 
@@ -422,26 +430,26 @@ Almost required are
 %
 \begin{itemize}
 \item
-\texttt{rerunfilecheck} described in \cite{RerunFChkP} 
+\pkg{rerunfilecheck} described in \cite{RerunFChkP} 
 which writes additional rerun warnings to the log file 
 if some auxiliary files have changed. 
 This software relies on these warnings 
 to control rerun latex and other applications. 
 \item
-\texttt{ifthen} described in \cite{IfThenP} 
+\pkg{ifthen} described in \cite{IfThenP} 
 which provides the \texttt{ifthenelse}-command 
 which is needed to create both pdf and html and also to create rtf. 
 \item
-\texttt{ifpdf} described in \cite{IfPdfP} 
-which provides the \texttt{ifpdf}-command to detect pdf-mode. 
+\pkg{ifpdf} described in \cite{IfPdfP} 
+which provides the \cmd{ifpdf}-command to detect pdf-mode. 
 This is required to distinguish creation of pdf and text 
 from html, odt, doc and others, based on dvi. 
 \item
 The graphics packages described in \cite{GraX}, 
-in particular \texttt{graphicx}, \texttt{xcolor} and \texttt{transparent}, 
+in particular \pkg{graphicx}, \pkg{xcolor} and \pkg{transparent}, 
 the latter two described in \cite{XColorP} and in \cite{TransP}, 
 respectively. 
-Sometimes also \texttt{bmpsize} described in \cite{BmpP} 
+Sometimes also \pkg{bmpsize} described in \cite{BmpP} 
 if pixel graphics is used. 
 \item
 \texttt{import} described in \cite{ImpoP} 
@@ -457,10 +465,10 @@ This package is almost indispensable if you do not write English,
 e.g.~to access German umlauts. 
 Note that \cite{FontEnc} describes font encoding in more detail. 
 \item 
-\texttt{makeidx} and \texttt{showidx} described in \cite{MkidxShIdxP} 
+\pkg{makeidx} and \pkg{showidx} described in \cite{MkidxShIdxP} 
 or something comparable for creating indices. 
 \item 
-\texttt{glossaries} described in \cite{GloP} 
+\pkg{glossaries} described in \cite{GloP} 
 with tutorial \cite{GloPGuide}
 or something comparable for creating glossaries. 
 \item 
@@ -598,7 +606,7 @@ These formats are essentially \LaTeX{} and are defined in an according package.
 An example is \texttt{eepic} described in~\cite{EEpic}. 
 \item
 the second one via the command \cmd{includegraphics}{} 
-defined by the package \texttt{graphicx} 
+defined by the package \pkg{graphicx} 
 which is described in~\cite{GraX}. 
 Chapter 2 therein mentions the supported drivers, 
 among these are also \texttt{dvipdfm} and \texttt{dvipdfmx}. 
@@ -912,7 +920,7 @@ If the log-file contains an entry,
 an according message is logged. 
 % FIXME: there is a lot more to do here. 
 Note that, with default configuration, 
-\texttt{chktex} requires the \LaTeX-package \texttt{booktabs} 
+\texttt{chktex} requires the \LaTeX-package \pkg{booktabs} 
 described in~\cite{BooktP}. 
 
 % rsvg-convert -f pdf -o t.pdf t.svg
@@ -1039,7 +1047,7 @@ Modern \LaTeX{} implementations directly create pdf-files.
 Thus it makes sense, to allow including graphics as pdf-files 
 in \LaTeX-files. 
 This is done in pdf mode 
-by the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx}. 
+by the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx}. 
 In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}-format 
 which is still used to create \gls{html}-output, 
 this is not supported by the default driver, 
@@ -1113,7 +1121,7 @@ by the command
 \begin{verbatim}
 \import{yyy}{xxx.ptx}
 \end{verbatim}
-%
+%texttt
 and includes \texttt{xxx.pdf} automatically the file \texttt{xxx.pdf} 
 via \cmd{includegraphics\{xxx\}}{} (line 2). 
 Note the following remarkable details: 
@@ -1151,7 +1159,7 @@ i.e.~\texttt/ for Unix like systems and
 
 As indicated in Section~\ref{sec:figpdf}, 
 the commands in \texttt{xxx.ptx} 
-require the packages \texttt{graphicx} and \texttt{xcolor}. 
+require the packages \pkg{graphicx} and \pkg{xcolor}. 
 Also the \cmd{import}{} command 
 requires the \texttt{import} package. 
 
@@ -1354,7 +1362,7 @@ but as long as no error occurs,
 the result is perfectly ok also for \texttt{pdf}. 
 
 As for inclusion of fig-files, 
-packages \texttt{graphicx} and \texttt{color} are needed. 
+packages \pkg{graphicx} and \texttt{color} are needed. 
 
 
 %FIXME\@: 
@@ -1553,7 +1561,7 @@ which goes beyond what can be included in \LaTeX-files.
 Figure~\ref{fig:svgWithText} shows a picture in \gls{svg}-format. 
 As pdf-files are included directly 
 via the \cmd{includegraphics}-command, 
-using the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx}, 
+using the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx}, 
 virtually, 
 \texttt{xxx.svg} can be included directly via 
 % FIXME\@: done differently 
@@ -1572,9 +1580,9 @@ and for gnuplot-files in Section~\ref{sec:gnuplot2dev}:
 The latter is a latex-file containing text 
 and including the former. 
 To include \texttt{xxx.pdf} 
-of course the \LaTeX-packages \texttt{xcolor} and \texttt{graphicx} 
+of course the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx} 
 are required. 
-Moreover, it may happen that the \LaTeX-package \texttt{transparent} 
+Moreover, it may happen that the \LaTeX-package \pkg{transparent} 
 is required also, depending on the features used in\texttt{xxx.svg}. 
 
 As indicated in~\cite{SvgP}, Section~1, 
@@ -1673,10 +1681,10 @@ should be a picture
 
 Figure~\ref{fig:asIsJpg} shows some picture included as jpg. 
 This is done as usual with the command \cmd{includegraphics}{}
-provided by the package \texttt{graphicx}. 
+provided by the package \pkg{graphicx}. 
 According to the documentation~\cite{GraX}, page 13, 
 the bounding box must be provided somehow. 
-This may be done via the package \texttt{bmpsize} 
+This may be done via the package \pkg{bmpsize} 
 but also using the command \texttt{ebb}. 
 FIXME\@: further research and further documentation is required. 
 
@@ -1802,7 +1810,8 @@ Based on the aux-file, \texttt{bibtex} creates a bbl-file
 containing the bibliography, which is read in in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:bibtex}. 
 
-If an index is demanded, in addition \texttt{latex2pdf} creates an \gls{idx}-file. 
+If an index is demanded, 
+in addition \texttt{latex2pdf} creates an \gls{idx}-file. 
 As the citations, it cannot be used directly to create an index in
 the next \texttt{latex2pdf} run, 
 because the index entries must be collected and sorted before. 
@@ -1861,9 +1870,14 @@ should be a picture
 
 In case the \LaTeX{} to pdf converter writes bibliographic information, 
 into its aux-file, a bibliography must be generated. 
-Bibliographic information are 
-citations, a link to the bib-file containing the bibliography data, 
-and optionally a link to the bibliography style file. 
+For each ocurrence of a \cmd{cite}-command in the tex-file, 
+\texttt{latex2pdf} writes an according entry \cmd{citation}. 
+Moreover, a \cmd{bibliography}-command in the tex-file 
+writes a link to the bib-file containing the bibliography data 
+into the aux-file as \cmd{bibdata}. 
+Optionally, a \cmd{bibliographystyle}-command in the tex-file 
+writes a link to the bibliography style file 
+into the aux-file as \cmd{bibstyle}. 
 
 To create a bibliography, 
 a \texttt{bibtexCommand} must be run after the \LaTeX{} run. 
@@ -1872,23 +1886,28 @@ but there are more modern alternatives
 like \texttt{bibtexu} and \texttt{bibtex8} supporting utf8 encoding 
 and others. 
 
-% FIXME: write BibTeX instead or, even better, bibtexCommand 
-% because there are alternatives to bibtex 
-
 % mention Biber and biblatex and also mlbibtex 
 
 Essentially, \texttt{bibtex} extracts the citations in the aux-file, 
-unifies them, 
-retrieves the according entries from the bib-file, sorts these 
-and writes them into a bbl-file 
+unifies them, i.e.~a citation is listed once even if it is used more than once, 
+retrieves the according entries from the bib-file, sorts these, 
+performs formatting and writes all into a bbl-file 
 which can be included in the next run of \texttt{latex2pdf}. 
+
 Note that after a \texttt{bibtex}-run, 
 two \LaTeX{} runs are required: 
-The first one just puts the bibliography in the bbl-file into the pdf-file 
-and the labels of the citations into the aux-file. 
-The second run places the labels at the citations 
-(and puts the bibliography
-into the table of contents if there is one). 
+The first one just puts the bibliography found in the bbl-file 
+into the pdf-file and the labels of the citations into the aux-file 
+as \cmd{bibcite}-commands. 
+The second run places the labels of the citations found in the aux-file 
+at the citations given by \cmd{cite}. 
+The package \texttt{tocbibind} described in~\cite{TocBibIndP}, 
+then writes the headline of the bibliography into the table of contents. 
+\index{table of contents}
+The package \pkg{rerunfilecheck} described in~\cite{RerunFChkP}, 
+ensures that \texttt{latex2pdf} is rerun if needed, 
+provided loaded with option \texttt{aux}. 
+
 
 This software presupposes, that \texttt{bibtex} reads the aux-file 
 and creates a bbl-file and also an blg-file with logging output 
@@ -1915,51 +1934,99 @@ Also Chapter 10 in~\cite{Gra} gives vital information on \texttt{bibtex}.
 
 \section{Indices}\label{sec:indices}
 
-Note that despite of the headline of this section, 
-this software supports a single index only and this requires 
-the package \texttt{makeidx} described in~\cite{MkidxShIdxP}. 
-For an extension see Chapter~\ref{chap:gaps}. 
-
-Interesting enough, 
-the commands \cmd{index}{} and \cmd{makeindex}{} 
-work even without using the package \texttt{makeidx}. 
-The former essentially does nothing without the latter
-but if the latter is present, if \texttt{xxx.tex} is the \LaTeX{} main file, 
-the former writes an according entry in a file \texttt{xxx.idx}. 
+In case the \LaTeX{} to pdf converter writes index information, 
+into its idx-file, at least one index must be generated. 
+Since the idx-file contains nothing but index information, 
+an index is created if and only if the \gls{idx}-file is created. 
+% Well, this is not really the truth: it is needed only if ...
 Essentially, 
-\cmd{makeindex}{} prepares writing to the \gls{idx}-file, 
-whereas \cmd{index}{} performs writing a line. 
+the command \cmd{makeindex}{} tells \texttt{latex2pdf} 
+to open the idx-file for writing. 
+Then for each occurrence of the \cmd{index}-command 
+or similar (details see below) in the tex-file, 
+an entry is written sequentially to the idx-file as 
+\cmd{indexentry}{} comprising the keyword given by the \cmd{index}-command 
+and the page number where the \cmd{index}-command occured. 
 For example \cmd{index\{ant-task\}}{} creates an entry 
 %
 \begin{verbatim}
-\textbackslash indexentry\{ant-task|hyperpage\}\{3\}
+\indexentry{ant-task|hyperpage}{3}
 \end{verbatim}
 %
 in \texttt{xxx.idx}. 
-Note that \texttt{xxx.idx} typically contains entries more than once 
-and that the entries are not sorted. 
- 
-Running, the \texttt{makeindex}-command performs sorting, formatting 
-and typically also unification. 
-Essentially, \texttt{makeindex} sorts and combines index entries. 
+
+Then the \texttt{makeindex}-command is applied to the idx-file 
+which sorts keywords and for each keyword collects the according page numbers, 
+sorts it and and writes the result into an \gls{ind}-file. 
+In the next run of \texttt{latex2pdf}, 
+the \cmd{prindindex}-command includes the index as a separate section; 
+typically at the end of the pdf-file. 
+The most basic package to provide this command 
+is \pkg{makeidx} described in~\cite{MkidxShIdxP}. 
+In addition, \pkg{makeidx} provides the command \cmd{see}{} 
+which is for cross reference within an index. 
+The package \texttt{tocbibind} described in~\cite{TocBibIndP}, 
+then writes the headline of the index into the table of contents. 
+\index{table of contents}
+The package \pkg{rerunfilecheck} described in~\cite{RerunFChkP}, 
+ensures that \texttt{latex2pdf} is rerun if needed, 
+provided loaded with option \texttt{aux}. 
+
+The same document,~\cite{MkidxShIdxP} 
+also describes the package \pkg{showidx} 
+which prints index entries at the margin of the document. 
+This is for debugging only. 
+\medskip
+
+
+The main restriction of the package \pkg{makeidx} is, 
+that only a single index can be created. 
+The reason is that, \texttt{latex2pdf} creates a single idx-file 
+and, as illustrated in Figure~\ref{fig:idx2ind}, 
+\texttt{makeindex} creates a single ind-file from that, 
+representing a single index. 
+
+To overcome this restriction, 
+replace package \pkg{makeidx} and \texttt{makeindex} 
+with package \pkg{splitidx} and \texttt{splitindex} 
+both described in \cite{SplitidxP}. 
+
+The package \pkg{splitidx} is used 
+in conjunction with the program \texttt{splitindex}. 
+It must be possible to create a single index 
+without using \pkg{splitidx} and \texttt{splitindex}. **** 
+
+Package option \texttt{split} makes \texttt{latex2pdf} 
+creating idx-files \texttt{xxx-y.idx} directly. 
+Here \texttt{y} represents the identifier of an individual index. 
+These idx-files can be transformed individually with \texttt{makeindex} 
+into ind-files as illustrated in Figure~\ref{fig:idx2indMult}. 
+Since \texttt{latex2pdf} can keep open only up to 16 output streams, 
+not all of which can be used to create a file \texttt{xxx-y.idx}, 
+this approach allows a limited number of indices 
+and is thus not recommended and not supported. 
+Another reason is, that this approach undermines 
+the package \pkg{rerunfilecheck} described in~\cite{RerunFChkP}, 
+and so it is not guaranteed that \texttt{latex2pdf} is rerun if needed. 
+This explains why option \texttt{split} is not allowed. 
+% **** check? 
+
+Instead, without option \texttt{split}, 
+\texttt{latex2pdf} creates a single idx-file. 
+The program \texttt{splitindex} splits it up into several idx-files 
+and applies \texttt{makeindex} to each of them separately 
+as illustrated in Figure~\ref{fig:idx2indSplit}. 
+
+For usage of further packages supporting multiple indices 
+which are not intended to be used with this software, 
+see Chapter~\ref{chap:gaps}. 
+
 This software presupposes, that \texttt{makeindex} converts the idx-file 
 into an ind-file containing the index 
 and creating also an ilg-file with logging output 
 as shown in Figure~\ref{fig:idx2ind}. 
 From the ilg-file this software may determine 
 whether \texttt{makeindex} emitted an error or warnings. 
-
-The package \texttt{makeidx} provides a single command, 
-\cmd{printindex}{} which reads in the ind-file 
-and prints the index in a separate section, 
-typically at the end of the pdf-file. 
-The package \texttt{tocbibind} described in~\cite{TocBibIndP}, 
-then writes the headline of the index into the table of contents. 
-\index{table of contents}
-
-In case the \LaTeX{} to pdf converter creates an idx-file, 
-an index must be generated. 
-% Well, this is not really the truth: it is needed only if ...
 
 \begin{figure}[htb]
 \centering
@@ -1969,6 +2036,27 @@ should be a picture
 \import{}{F5_03idx2ind.ptx}
 }
 \caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\import{}{F5_04idx2indMult.ptx}
+}
+\caption{\label{fig:idx2indMult}
+Not supported: Conversion of idx-files into ind-files}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{
+\import{}{F5_05idx2indSplit.ptx}
+}
+\caption{\label{fig:idx2indSplit}Conversion of an idx-file into ind-files}
 \end{figure}
 
 It is possible to configure the makeindex-command 
@@ -1990,19 +2078,47 @@ and in~\cite{MkIdxLam}.
 Also there is a site~\cite{MakeIdxOpts} 
 describing all available options for \texttt{makeindex}. 
 
+As indicated above, the program \texttt{splitindex} 
+invokes \texttt{makeindex}. 
+Its options are described in \cite{SplitidxP}, Section~3.10. 
+Since the long option names are not understood in all environments, 
+only the short options are recommended. 
+
+Since \texttt{splitindex} must satisfy the interface 
+given by Figure~\ref{fig:idx2indSplit}, 
+the option \texttt{--help} and its shortcut \texttt{-h} are not allowed. 
+Likewise for option \texttt{--version} and its shortcut \texttt{-V}. 
+The option \texttt{--makeindex <makeindex>}, resp.~\texttt{-m <makeindex>}, 
+is used with the \texttt{makeindex} command used for single indices. 
+Thus this may not be given explicitly but is specified implicitly. 
+Also, the option \texttt{--identify <regex>}, resp.~\texttt{-i <regex>} 
+must be set implicitly because it must be the same expression 
+as used to ***** 
+Then splitindex.tlu is not allowed, 
+because this has another expression. 
+
+Only allowable seems \texttt{-v}, the short cut for \texttt{--verbose}. 
+
+Then comes the name of the index file to be processed 
+without suffix. 
+
+The program \texttt{splitindex} invokes \texttt{makeindex}. 
+The option option \texttt{--} coming after the filename, 
+indicates that all following options are passed to \texttt{makeindex} 
+
 
 
 \section{Glossaries}\label{sec:glossaries}
 
 Creating glossaries 
-requires the package \texttt{glossaries} described in~\cite{GloP}. 
+requires the package \pkg{glossaries} described in~\cite{GloP}. 
 Note that despite of the headline of this section, 
-an despite \texttt{glossaries} itself supports multiple glossaries, 
+an despite \pkg{glossaries} itself supports multiple glossaries, 
 this software supports only a single glossary 
 and also sorting and unifying is done 
 either via \texttt{makeindex} as for indices or via \texttt{xindy}, 
 whereas the option to do without external programs 
-offered also by package \texttt{glossaries} 
+offered also by package \pkg{glossaries} 
 is not supported by this software. 
 
 For generalizations see Chapter~\ref{chap:gaps}. 
@@ -2010,19 +2126,19 @@ For generalizations see Chapter~\ref{chap:gaps}.
 As for creating indices there is a \LaTeX-command \cmd{makeindex}, 
 to create a glossary there is a \LaTeX-command \cmd{makeglossaries}{} 
 but the latter is not builtin as \cmd{makeindex} 
-but provided by the package \texttt{glossaries}. 
+but provided by the package \pkg{glossaries}. 
 If \texttt{xxx.tex} is the \LaTeX{} main file, 
 \cmd{makeglossaries}{} opens the glo-file \texttt{xxx.glo} 
 containing glossary entries for writing. 
 As the builtin command \cmd{index}{} 
 writes entries into the idx-file defining the index, 
-the command \cmd{gls}{} defined by the package \texttt{glossaries} 
+the command \cmd{gls}{} defined by the package \pkg{glossaries} 
 writes an entry into the glo-file. 
 Note that \texttt{xxx.glo} typically contains entries more than once 
 and that the entries are not sorted. 
 
 To perform sorting, formatting and typically also unification, 
-the package \texttt{glossaries} allows three mechanisms. 
+the package \pkg{glossaries} allows three mechanisms. 
 This software supports two of them: 
 via the shell command \texttt{makeindex}, which is also used for indices, 
 and via the shell command \texttt{xindy}. 
@@ -2122,7 +2238,7 @@ This is illustrated in Figure~\ref{fig:glo2gls}.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F5_04glo2gls.ptx}
+\import{}{F5_06glo2gls.ptx}
 }
 \caption{\label{fig:glo2gls}Conversion of a glo-file into a gls-file 
 using \texttt{makeglossaries}}
@@ -2147,7 +2263,7 @@ of the entries of the index or of the glossary.
 Thus the sorted index and glossary must be rebuild 
 before the next \LaTeX{} run makes them visible in the pdf-file. 
 
-To that end, we use the package \texttt{rerunfilecheck}. 
+To that end, we use the package \pkg{rerunfilecheck}. 
 %
 \begin{verbatim}
 \usepackage[index, glossary]{rerunfilecheck}
@@ -2166,7 +2282,7 @@ must be put before
 %
 in particular before \cmd{makeindex}{} and \cmd{makeglossaries}. 
 
-Note that the package \texttt{hyperref} already loads \texttt{rerunfilecheck} 
+Note that the package \pkg{hyperref} already loads \pkg{rerunfilecheck} 
 but with the wrong options. 
 Thus the above declaration must come before 
 %
@@ -2181,7 +2297,7 @@ Option clash for package rerunfilecheck
 \end{verbatim}
 
 
-Package \texttt{rerunfilecheck} detects almost safely 
+Package \pkg{rerunfilecheck} detects almost safely 
 changes of the raw index file writing an according message 
 into the log-file. 
 That way, it can be determined whether it is necessary 
@@ -2275,7 +2391,7 @@ which results in \texttt{yyy.dvi}.
 Note that this is in contrast to \texttt{pdflatex} 
 which would create some \texttt{yyy.pdf} unless otherwise specified. 
 
-Then comes the converter \texttt{tex4ht} into the game 
+Then comes the converter \pkg{tex4ht} into the game 
 which creates several html-files among those also \texttt{xxx.html}. 
 The other files, \texttt{yyy.idv} and \texttt{yyy.lg}, 
 are further processed by \texttt{t4ht} 
@@ -2286,18 +2402,18 @@ creating the stylesheet \texttt{xxx.css} and graphic files.
 Let us make this more precise. 
 The output of latex is a standard \gls{dvi}-file 
 interleaved with special instructions 
-for the post-processor \texttt{tex4ht} to use. 
-Note that \texttt{tex4ht} is the name both of the post-processor 
+for the post-processor \pkg{tex4ht} to use. 
+Note that \pkg{tex4ht} is the name both of the post-processor 
 and of the \LaTeX-package. 
 The special instructions come from implicit and explicit requests 
 made in the source file through commands for TeX4ht. 
 
-The utility \texttt{tex4ht} translates the dvi-code into standard text, 
+The utility \pkg{tex4ht} translates the dvi-code into standard text, 
 while obeying the requests it gets from the special instructions. 
 The special instructions may request the creation of files, 
 insertion of html code, filtering of pictures, and so forth. 
 In the extreme case that the source code contains no commands of TeX4ht, 
-\texttt{tex4ht} gets pure dvi-code and it outputs (almost) plain text 
+\pkg{tex4ht} gets pure dvi-code and it outputs (almost) plain text 
 with no hypertext elements in it.
 
 The special (\cmd{special}) 
@@ -2325,7 +2441,7 @@ through the ``\cmd{Needs\{\ldots\}}'' command.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F5_05tex2xml.ptx}
+\import{}{F5_07tex2xml.ptx}
 }
 \caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
 \end{figure}
@@ -2501,7 +2617,7 @@ Note --- to ensure proper alignments use fixed size fonts (see listings.dtx
 )
 \end{Verbatim}
 
-\texttt{tex4ht} yields 
+\pkg{tex4ht} yields 
 
 \begin{Verbatim}[fontsize=\scriptsize]
 ----------------------------
@@ -2573,7 +2689,7 @@ which is illustrated in Figure~\ref{fig:tex2doc}.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F5_06tex2doc.ptx}
+\import{}{F5_08tex2doc.ptx}
 }
 \caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
 \end{figure}
@@ -2608,7 +2724,7 @@ Figure~\ref{fig:tex2txt} illustrates the translation process.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F5_07tex2txt.ptx}
+\import{}{F5_09tex2txt.ptx}
 }
 \caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
 \end{figure}
@@ -2968,17 +3084,21 @@ The files created from a latex main file
 depend strongly on the compiler options 
 and on packages used in the latex main file 
 and in the tex files inputted. 
-
 The default value 
-'\texttt{\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
+`\texttt{\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
 is appropriate for most parameters and packages: 
 most packages create files with names only 
 which coincide with the name of the latex main file, except the suffix. 
+This is all sufficient even for programs doing postprocessing 
+such as \texttt{bibtex}, \texttt{makeindex}, \texttt{xindy} and 
+\texttt{makeglossaries}. 
+The only exception is \texttt{splitindex} 
+which requires in addition 
+`\texttt{\^{}T\$T\textbackslash-.+\.(idx|ind|ilg)}'. 
 
-Package `\texttt{srcltx}' 
-requires in addition 
+Package `\pkg{srcltx}' requires in addition 
 `\texttt{\^{}T\$T\textbackslash.synctex\textbackslash.gz}' 
-and finally package `\texttt{tex4ht}' is for all the rest. 
+and finally package `\pkg{tex4ht}' is for all the rest. 
 The pattern is designed 
 to match quite exactly the created files, 
 not much more and at any case not less. 
@@ -3332,7 +3452,7 @@ Also the task txt is affected.
 \begin{minipage}{0.95\linewidth}
 The driver to convert dvi into pdf-files. 
 Note that this must fit the options 
-of the packages `\texttt{xcolor}' and `\texttt{graphicx}'. 
+of the packages `\pkg{xcolor}' and `\pkg{graphicx}'. 
 Sensible values are 
 `\texttt{dvipdf'}, `\texttt{dvipdfm'}, `\texttt{dvipdfmx}', 
 and `\texttt{dvipdft}' 
@@ -3589,7 +3709,7 @@ and matching triggers rerunning \texttt{\$makeIndexCommand}
 followed by \texttt{\$latex2pdfCommand}. 
 
 This pattern only matches a warning 
-emitted by the package `\texttt{rerunfilecheck}' 
+emitted by the package `\pkg{rerunfilecheck}' 
 e.g. used with option `\texttt{index}'. 
 The default value 
 is chosen according to the package documentation. 
@@ -3708,7 +3828,7 @@ and matching triggers rerunning \texttt{\$makeGlossariesCommand}
 followed by \texttt{\$latex2pdfCommand}. 
 
 This pattern only matches a warning 
-emitted by the package `\texttt{rerunfilecheck}' 
+emitted by the package `\pkg{rerunfilecheck}' 
 e.g. used with option `\texttt{glossary}'. 
 The default value 
 is chosen according to the package documentation. 
@@ -4549,7 +4669,7 @@ Note that
 this warning comes only iff the parameter \texttt{\$debugBadBoxes} is set. 
 \end{minipage}
 } \\
-\texttt{\footnotesize WLP04} 
+\texttt{\footnotesize WLP06} 
 & \texttt{\footnotesize Running \$command 
 found issues logged in '\$logFileName'. } \\
 \multicolumn2{|l|}{
@@ -4558,6 +4678,17 @@ Here, \texttt{\$command} is a checker tool.
 Strictly speaking, unlike the other warnings here, 
 this does not signify that running \texttt{\$command} went wrong 
 but uncovered an issue (warning/error/message) logged in a file. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP05} 
+& \texttt{\footnotesize Use package 'splitidx' 
+without option 'split' in '\$texFileName'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+This indicates that an extended idx-file ``\texttt{xxx-yy.idx}'' 
+has been found without \texttt{xxx.idx} or without according entry 
+\texttt{\textbackslash indexentry[yy]\{\dots\}\{\dots\}} 
+in \texttt{xxx.idx}. 
 \end{minipage}
 } \\
 \end{longtable}
@@ -4600,6 +4731,14 @@ FIXME
 \texttt{\footnotesize WLP02} 
 & \texttt{\footnotesize Cannot read log file '\$logFileName'; 
   \$kind may require rerun. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP04} 
+& \texttt{\footnotesize Cannot read idx file '\$idxFileName'; 
+skip creation of index. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 FIXME
@@ -4737,25 +4876,21 @@ odt is done twice (once for odt second for docx)
 and pdf is done even trice: 
 once for pdf itself, once for odt and once for docx. 
 
-
-Creating more than one index is not supported. 
-This could be done with one of the following packages 
+% This has to be removed. 
+Creating more than one index is supported only 
+via package \pkg{splitidx} in conjunction with \texttt{SplitIndex}. 
+There are the following packages also supporting multiple indices 
+but not supported officially: 
 \texttt{index} described in~\cite{IndexP}, 
 \texttt{amsmidx} described in~\cite{AmsmidxP} and 
 \texttt{imakeidx} described in~\cite{ImakeidxP}.
-Somehow special is the package 
-\texttt{splitidx} coming with the program \texttt{SplitIndex} 
-which replaces \texttt{makeindex} described in~\cite{AmsmidxP}. 
 Note that the package \texttt{multind} is obsolete. 
-To create multiple indices using makeindex, 
-this has to be invoked with an argument 
-specifying the type of index. 
 
 According to~\cite{GloP}, Section~1, 
 there are three options to create a glossary, 
 whereas this software supports option two only, 
 which uses \texttt{makeindex}. 
-Also, although the package \texttt{glossaries} itself 
+Also, although the package \pkg{glossaries} itself 
 supports multiple glossaries via the command
 %
 \begin{verbatim}
@@ -4766,7 +4901,7 @@ described in~\cite{GloP}, Section~12,
 this software only supports creating a single glossary. 
 
 Reading~\cite{GloP}, Section~15.1, the glossarystyle \texttt{index} 
-seems to allow creating indices through the \texttt{glossaries} package 
+seems to allow creating indices through the \pkg{glossaries} package 
 making any index-package obsolete. 
 
 For development given the \LaTeX{} main file \texttt{xxx.tex}, 
@@ -4822,7 +4957,7 @@ that the subsequent runs of \texttt{pdflatex} change the raw index
 which requires rerunning \texttt{makeindex} and after that again \texttt{pdflatex}. 
 
 One way to solve that problem is to use the package \texttt{imakeidx} 
-(improved makeidx) instead of the traditional package \texttt{makeidx}. 
+(improved makeidx) instead of the traditional package \pkg{makeidx}. 
 This offers also multiple indices, which is another gap to be filled. 
 Seemingly, \texttt{imakeidx} does not support glossaries 
 and so for these, another solution is required, 
@@ -4832,12 +4967,12 @@ Packages \texttt{robustindex} and \texttt{robustglossaries} offer another soluti
 The advantage would be to have handled both index and glossary. 
 Also support of hyperrefs within indices and glossaries seem to be expanded. 
 On the other hand, the two packages seem experimental 
-and seem to to play with package \texttt{hyperref}. 
+and seem to to play with package \pkg{hyperref}. 
 
-The current implementation is based on package \texttt{rerunfilecheck} 
+The current implementation is based on package \pkg{rerunfilecheck} 
 which works for index but not for glossary. 
 
-Check whether \texttt{glossaries} option \texttt{autorun} makes sense. 
+Check whether \pkg{glossaries} option \texttt{autorun} makes sense. 
 Seems to run the command \texttt{makeglossaries} after each latex run. 
 But how to find out whether to rerun latex??? 
 
@@ -4852,7 +4987,7 @@ Maybe there is a bug in the number of reruns:
 I think, makeglossaries is like bibtex needing two latex reruns 
 and not like makeindex, which requires a single rerun. 
 
-Since this software heavily relies on \texttt{rerunfilecheck}, 
+Since this software heavily relies on \pkg{rerunfilecheck}, 
 maybe a warning if not used is a good idea. 
 
 Figures are missing in html output 
@@ -5028,7 +5163,9 @@ defined by invocation of auxiliary applications for index, glossary, \dots
 \ifthenelse{\boolean{texFhtLoaded}}{
   % no index and no glossaries with tex4ht 
 }{
-  \printindex
+%\chapter{Indices}
+  \printindex[idx]
+  \printindex[pkg]
   \printglossaries%
 }
 
