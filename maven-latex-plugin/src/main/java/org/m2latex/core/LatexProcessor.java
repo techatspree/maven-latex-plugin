@@ -110,6 +110,40 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // ChkTeX: log file 
     private final static String SUFFIX_CLG = ".clg";
 
+    /**
+     * The shape of the entries of an index file 
+     * with explicit identifier of the index. 
+     * If not explicitly given, this is just <code>idx</code>. 
+     * Note that this regular expression has three groups 
+     * as in the specification of <code>splitindex</code>. 
+     */
+    private final static String IDX_EXPL = 
+	"^(\\\\indexentry)\\[([^]]*)\\](.*)$";
+
+    /**
+     * Index of the group in {@link #IDX_EXPL} 
+     * containing the identifier of the index. 
+     */
+    private final static int GRP_IDENT_IDX = 2;
+
+    /**
+     * The implicit default identifier of an index 
+     * hardcoded into the package <code>splitidx</code> 
+     * and into the program <code>splitindex</code>. 
+     */
+    private final static String IMPL_IDENT_IDX = "idx";
+
+    /**
+     * Separator <code>-</code> of the index identifier 
+     * used in files <code>xxx-yy.idx</code>, <code>xxx-yy.ind</code> 
+     * and <code>xxx-yy.ilg</code>. 
+     * This is hardcoded by the package <code>splitidx</code> 
+     * when reading <code>xxx-yy.ind</code> files 
+     * but is configurable as an option in the program <code>splitindex</code>. 
+     */
+    private final static String SEP_IDENT_IDX = "-";
+
+
     private final ParameterAdapter paramAdapt;
 
     private final LatexPreProcessor preProc;
@@ -515,6 +549,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> EAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
      * <li> WFU03: cannot close log file 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05:
@@ -575,7 +611,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	boolean hasBib    = runBibtexByNeed      (texFile);
 	// may both throw BuildFailureException, both TEX01 
 	// may both log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	// EAP01, EAP02, WAP03, WAP04, WFU03
+	// EAP01, EAP02, WLP04, WLP05, WAP03, WAP04, WFU03
 	boolean hasIdxGls = runMakeIndexByNeed   (desc)
 	    |               runMakeGlossaryByNeed(desc);
 
@@ -637,6 +673,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * {@link Settings#getMaxNumReRunsLatex()} is reached. 
      * Further logging is inherited by invoked methods: 
      * <ul>
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> EAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
@@ -665,7 +703,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	// may throw BuildFailureException TEX01, 
-	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, 
+	// log warning WLP04, WLP05, EAP01, EAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
  	int numLatexReRuns = preProcessLatex2dev(desc, dev);
 				      
@@ -706,7 +744,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		// FIXME: not by need 
 		// may throw BuildFailureException TEX01 
 		// may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-		// EAP01, EAP02, WAP03, WAP04, WFU03
+		// EAP01, EAP02, WLP04, WLP05, WAP03, WAP04, WFU03
 		runMakeIndexByNeed(desc);
 	    }
 
@@ -788,6 +826,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *             but the maximum number of runs is reached. 
      * <li> WLP03: <code>command</code> created bad boxes 
      * <li> WLP04: <code>command</code> emitted warnings 
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)} 
      *      if running an exernal command fails. 
@@ -808,7 +848,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void processLatex2dev(LatexMainDesc desc, LatexDev dev) 
 	throws BuildFailureException {
 	// may throw BuildFailureException TEX01, 
-	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, WLP04, WLP05, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
 	processLatex2devCore(desc, dev);
 
@@ -832,7 +872,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexDev dev = this.settings.getPdfViaDvi();
 
 	// may throw BuildFailureException TEX01, 
-	// log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	// log warning EEX01, EEX02, EEX03, WEX04, WEX05, WLP04, WLP05 
 	processLatex2dev(desc, dev);
 	// FIXME: certain figures are invisible in the intermediate dvi file, 
 	// but converstion to pdf shows that the figures are present. 
@@ -931,11 +971,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
-     * <li> EAP01: Running <code>command</code> failed. For details...
+      * <li> EAP01: Running <code>command</code> failed. For details...
      * <li> EAP02: Running <code>command</code> failed. No log file 
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
      * <li> WFU03: cannot close log file 
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
@@ -954,7 +996,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into html: LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
-	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, EAP02, WLP04, WLP05, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
 	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
@@ -975,6 +1017,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
      * <li> WFU03: cannot close log file 
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
@@ -993,7 +1037,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into odt:  LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX01, 
-	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, WLP04, WLP05 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
         preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX01, 
@@ -1014,6 +1058,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WAP04: if <code>logFile</code> is not readable. 
      * <li> WLP02: Cannot read blg file: BibTeX run required? 
      * <li> WFU03: cannot close log file 
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
@@ -1034,7 +1080,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
 	LatexMainDesc desc = getLatexMainDesc(texFile);
 	// may throw BuildFailureException TEX0, 
-	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, WLP04, WLP05 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
  	preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
 	// may throw BuildFailureException TEX0, 
@@ -1078,6 +1124,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging: FIXME: incomplete 
      * <ul>
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      if running an exernal command fails. 
      * </ul>
@@ -1098,7 +1146,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexDev dev = this.settings.getPdfViaDvi();
 
 	// may throw BuildFailureException TEX01, 
-	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, 
+	// log warning EAP01, EAP02, WAP04, WLP02, WFU03, WLP04, WLP05, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
 	processLatex2devCore(desc, dev);
 	if (dev.isViaDvi()) {
@@ -1177,8 +1225,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * provided that the existence of an idx-file indicates 
      * that an index shall be created. 
      * <p>
+     * Note that {@link Settings#getMakeIndexCommand()} 
+     * is invoked either directly, or, in case of a multiple index, 
+     * via {@link Settings#getSplitIndexCommand()}. 
+     * <p>
      * Logging: 
      * <ul>
+     * <li> WLP04: Cannot read idx file; skip creation of index 
+     * <li> WLP05: Use package 'splitidx' without option 'split' 
      * <li> EAP01: Running <code>makeindex</code> failed. For details...
      * <li> EAP02: Running <code>makeindex</code> failed. No log file 
      * <li> WAP03: Running <code>makeindex</code> emitted warnings. 
@@ -1208,11 +1262,101 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// raw index file written by pdflatex 
 	boolean needRun = desc.idxFile.exists();
 	this.log.debug("MakeIndex run required? " + needRun);
+
+	// determine the explicit given identifiers of indices 
+	Collection<String> explIdxIdent = null;
 	if (needRun) {
-	    // may throw BuildFailureException TEX01 
-	    // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
-	    // EAP01, EAP02, WAP03, WAP04, WFU03
-	    runMakeIndex(desc);
+	    explIdxIdent = this.fileUtils
+		.collectMatches(desc.idxFile, IDX_EXPL, GRP_IDENT_IDX);
+	    if (explIdxIdent == null) {
+		this.log.warn("WLP04: Cannot read idx file '" + 
+			      desc.idxFile.getName() + 
+			      "'; skip creation of index. ");
+		return false;
+	    }
+	}
+	assert (explIdxIdent != null) == needRun;
+	// Here, explIdxIdent contains the explicit identifiers of all indices 
+	// The identifier idx may be missing or not. 
+
+	// package splitidx is used with option split 
+	// is in general not allowed. The criteria are: 
+	// - if \jobname-xxx.idx exists for some xxx 
+	//   whereas \jobname.idx does not: 
+	//   This occurs only for option split 
+	//   and does not allow applying splitindex 
+	//   as intended in this software. 
+	//   This would require applying makeindex separately 
+	//   to all \jobname-xxx.idx
+	// - if \jobname-xxx.idx exists for some xxx 
+	//   and also \jobname.idx exists but has no entry 
+	//   \indexentry[xxx]{...}{..}: 
+	//   This occurs only for option split 
+	//   and applying splitindex yields the wrong result. 
+	//   This would require applying makeindex separately 
+	//   to all \jobname-xxx.idx and to \jobname.idx 
+	// - if \jobname-xxx.idx does not exist for any xxx 
+	//   then all is ok, whether \jobname.idx exists or not. 
+	//   If it exists, even splitidx with option split is ok. 
+
+	// so algorithm: 
+	// determine list of these xxx for which \jobname-xxx.idx exists
+	// if (\jobname-xxx.idx exists for some xxx) {
+	//   if (!(\jobname.idx exists && 
+	//         \jobname.idx matches some \indexentry[xxx]{...}{.. )) {
+	//     log.error(cannot handle splitidx with option split)
+	//     return false;
+	//   }
+	//   // For second condition, 
+	//   // determine list of all yyy matching \indexentry[yyy]{...}{..} 
+	//   // and make sure that it is non-empty. 
+	// }
+
+	// filter for extended raw idx-files: \jobname-xxx.idx 
+	FileFilter filter = this.fileUtils
+	    .getFileFilterReplace(desc.idxFile, SEP_IDENT_IDX + ".+");
+	// may cause WFU01: Cannot read directory 
+	File[] idxFilesExtInDir = this.fileUtils
+	    .listFilesOrWarn(desc.idxFile.getParentFile(), filter);
+
+
+	// If the directory compising idxFile is not readable, 
+	// idxFilesExtInDir == null
+	// Then the check for option split cannot be done. 
+	
+
+	if (idxFilesExtInDir != null && idxFilesExtInDir.length > 0) {
+	    // Here, idxFilesExtInDir contains the idx-files \jobname-xxx.idx 
+	    if (!needRun || explIdxIdent.isEmpty()) {
+		// Here, either \jobname.idx does not exist at all 
+		// or does not contain an entry \indexentry[yyy]{...}{..} 
+
+		this.log.warn("WLP05: Use package 'splitidx' " + 
+			      "without option 'split' in '" + 
+			      desc.texFile.getName() + "'. ");
+		// this.log.warn("WLP05: Found extended idx-file " + 
+		// 	      " without (according entry in) '" + 
+		// 	      desc.idxFile.getName() +
+		// 	      "': use package 'splitidx' " + 
+		// 	      "without option 'split'. ");
+	    }
+	}
+
+	if (needRun) {
+	    // Here, runMakeIndex or runSplitIndex must be performed 
+
+	    // check whether more than one index has to be created 
+	    if (explIdxIdent.isEmpty()) {
+		// may throw BuildFailureException TEX01 
+		// may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
+		// EAP01, EAP02, WAP03, WAP04, WFU03
+		runMakeIndex(desc);
+	    } else {
+		// may throw BuildFailureException TEX01 
+		// may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
+		// EAP01, EAP02, WAP03, WAP04, WFU03
+		runSplitIndex(desc, explIdxIdent);
+	    }
 	}
 	return needRun;
     }
@@ -1236,11 +1380,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the description of a latex main file <code>texFile</code> 
      *    including the idx-file MakeIndex is to be run on. 
      * @throws BuildFailureException
-     *    TEX01 if invocation of the makeindex command 
+     *    TEX01 if invocation of the MakeIndex command 
      *    returned by {@link Settings#getMakeIndexCommand()} failed. 
      */
     private void runMakeIndex(LatexMainDesc desc) 
 	throws BuildFailureException {
+
 	String command = this.settings.getMakeIndexCommand();
 	File idxFile = desc.idxFile;
 	this.log.debug("Running " + command  + 
@@ -1260,6 +1405,132 @@ public class LatexProcessor extends AbstractLatexProcessor {
  	logErrs (desc.ilgFile, command,this.settings.getPatternErrMakeIndex());
 	// may log warnings WFU03, WAP03, WAP04
 	logWarns(desc.ilgFile, command,this.settings.getPatternWarnMakeIndex());
+    }
+
+    /**
+     * Combines an array of files from a file prefix <code>filePrefix</code>, 
+     * a collection of intermediate strings <code>variant</code> 
+     * and of the suffix <code>suffix</code>. 
+     *
+     * @param filePrefix
+     *    prefix of file name; in practice of index file without suffix 
+     * @param variant
+     *    collection of strings; in practice set of identifiers of indices 
+     * @param suffix
+     *    the suffix of a file; in practice {@link #SUFFIX_IDX}. 
+     * @return
+     *    an array of file names of the form 
+     *    <code>&lt;filePrefix>&lt;ident>&lt;suffix></code>, 
+     *    where <code>ident</code> runs in <code>variant</code>. 
+     */
+    private File[] files(String filePrefix, 
+			 Collection<String> variant, 
+			 String suffix) {
+	File[] res = new File[variant.size()];
+	int idx = 0;
+	StringBuilder strb;
+	for (String idxIdent : variant) {
+	    strb = new StringBuilder();
+	    strb.append(filePrefix);
+	    strb.append(idxIdent);
+	    strb.append(suffix);
+
+	    res[idx++] = new File(strb.toString());
+	}
+	return res;
+    }
+
+    /**
+     * Runs the SplitIndex command 
+     * given by {@link Settings#getSplitIndexCommand()}. 
+     * <p>
+     * Logging: 
+     * Note that <code>splitindex</code> neither writes a log file 
+     * nor may it fail in itself but invoking <code>makeindex</code> 
+     * or whatever program it uses. 
+     * <ul>
+     * <li> EAP01: Running <code>splitindex</code> failed. For details...
+     * <li> EAP02: Running <code>splitindex</code> failed. No log file 
+     * <li> WAP03: Running <code>splitindex</code> emitted warnings. 
+     * <li> WAP04 .ilg-file is not readable. 
+     * <li> WFU03: cannot close .ilg-file 
+     * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
+     * if running the splitindex command failed. 
+     * </ul>
+     *
+     * @param desc
+     *    the description of a latex main file <code>texFile</code> 
+     *    including the idx-file SplitIndex is to be run on. 
+     * @param explIdxIdent
+     *    the set of identifiers of indices, 
+     *    whether explicitly given or not in the idx file. 
+     * @throws BuildFailureException
+     *    TEX01 if invocation of the SplitIndex command 
+     *    returned by {@link Settings#getSplitIndexCommand()} failed. 
+     */
+    private void runSplitIndex(LatexMainDesc desc, 
+			       Collection<String> explIdxIdent) 
+	throws BuildFailureException {
+
+	String command = "splitindex";
+	    //this.settings.getSplitIndexCommand();
+	File idxFile = desc.idxFile;
+	this.log.debug("Running " + command  + 
+		       " on '" + idxFile.getName() + "'. ");
+	//buildArguments(this.settings.getMakeIndexOptions(), idxFile);
+	String[] args = new String[] {
+	    "-m " + this.settings.getMakeIndexCommand(),
+	    // **** no splitindex.tlu 
+	    // This is hardcoded by splitidx when writing xxx.ind
+	    "-i " + IDX_EXPL,
+	    // This is hardcoded by makeindex when writing xxx.ind
+	    "-r $1$3", // groups in IDX_EXPL: \indexentry{...}
+	    // -s -$2 is hardcoded by splitidx when readin in the -xxx.ind-files
+	    "-s " + SEP_IDENT_IDX + "$" + GRP_IDENT_IDX,  // groups in IDX_EXPL
+	    // **** Here, only -V may occur in addition. 
+	    "-V",
+	    desc.xxxFile.getName()
+	};
+
+	String optionsMakeIndex = this.settings.getMakeIndexOptions();
+	if (!optionsMakeIndex.isEmpty()) {
+	    String[] optionsMake_IndexArr = optionsMakeIndex.split(" ");
+	    String[] optionsSplitIndexArr = args;
+	    args = new String[optionsMake_IndexArr.length+1+
+			      optionsSplitIndexArr.length];
+	    System.arraycopy(optionsSplitIndexArr, 0, args, 0, 
+			     optionsSplitIndexArr.length); 
+	    args[optionsSplitIndexArr.length] = "--"; 
+	    System.arraycopy(optionsMake_IndexArr,  0, args, 
+			     optionsSplitIndexArr.length+1, 
+			     optionsMake_IndexArr.length);
+ 	}
+
+	// determine the resulting ind-files 
+	explIdxIdent.add(IMPL_IDENT_IDX);
+	String filePrefix = desc.xxxFile.toString() + SEP_IDENT_IDX;
+	File[] indFiles = files(filePrefix, explIdxIdent, SUFFIX_IND);
+
+	// may throw BuildFailureException TEX01, 
+	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
+	this.executor.execute(idxFile.getParentFile(), //workingDir 
+			      this.settings.getTexPath(), 
+			      command, 
+			      args,
+			      indFiles);
+
+	// detect errors and warnings splitindex, 
+	// aka makeindex wrote into xxx.ilg 
+	File[] ilgFiles = files(filePrefix, explIdxIdent, SUFFIX_ILG);
+	command = this.settings.getMakeIndexCommand();
+	for (int idx = 0; idx < explIdxIdent.size(); idx++) {
+	    // may log EAP01, EAP02, WAP04, WFU03
+	    logErrs (ilgFiles[idx], command, 
+		     this.settings.getPatternErrMakeIndex());
+	    // may log warnings WFU03, WAP03, WAP04
+	    logWarns(ilgFiles[idx], command, 
+		     this.settings.getPatternWarnMakeIndex());
+	}
     }
 
     /**
@@ -1731,7 +2002,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// assert !clgFile.isDirectory();
 	if (clgFile.length() != 0) {
 	    // FIXME: maybe we shall distinguish errors/warnings/messages
-	    this.log.warn("WLP04: Running " + command + 
+	    this.log.warn("WLP06: Running " + command + 
 			  " found issues logged in '" + 
 			  texFile.getName() + "'. ");
 	}
