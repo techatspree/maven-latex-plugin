@@ -834,6 +834,12 @@ LaTeX Warning: Etaremune labels have changed\.$|
 (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
 	    </patternReRunMakeIndex>
 
+	    <!-- The SplitIndex command to create ind-files 
+                 from an idx-file logging on ilg-files. 
+                 This command invokes $makeIndexCommand. 
+                 The default value is 'splitindex'. -->
+	    <splitIndexCommand>splitindex</splitIndexCommand>
+
 	    <!-- The MakeGlossaries command to create a gls-file 
 		 from a glo-file (invoked without file ending) 
 		 also taking ist-file or xdy-file 

@@ -114,6 +114,7 @@
 		bibtexOptions=""
 		makeIndexCommand="makeindex"
 		makeIndexOptions="-c"
+		splitIndexCommand='splitindex'
 		makeGlossariesCommand="makeglossaries" 
 		makeGlossariesOptions=""
 		patternErrMakeGlossaries="(^\*\*\* unable to execute: )"
