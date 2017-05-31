@@ -34,11 +34,11 @@ import java.util.SortedSet;
  * Defines the goal <code>clr</code> 
  * and adds it to the lifecycle phase <code>clean</code>. 
  */
-@Mojo(name = "chk")
-public class ChkMojo extends AbstractLatexMojo {
+@Mojo(name = "help")
+public class HelpMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 
-    // FIXME: not required by ClearMojo, GraphicsMojo, ChkMojo  
+    // FIXME: not required by ClearMojo, GraphicsMojo, ChkMojo, HelpMojo  
      public SortedSet<Target> getTargetSet() {
     	throw new IllegalStateException();
     }
@@ -46,27 +46,25 @@ public class ChkMojo extends AbstractLatexMojo {
     /**
      * Invoked by maven executing the plugin. 
      * <p>
-     * Logging: 
-     * <ul>
-     * <li> WPP02: tex file may be latex main file 
-     * <li> WFU01: Cannot read directory...
-     * <li> WFU03: cannot close tex file 
-     * <li> EFU05: Failed to delete file 
-     * </ul>
+     * No logging. 
      *
-     * @throws BuildFailureException 
-     *    TSS02 if the tex source processing directory does either not exist 
-     *    or is not a directory. 
      */
     public void execute() throws MojoFailureException {
-	initialize();
-	try {
-	    // may throw BuildFailureException TSS02 
-	    // may log warnings WPP02, WFU01, WFU03, EFU05 
-	    this.latexProcessor.checkAll();
-	} catch (BuildFailureException e) {
-	    throw new MojoFailureException(e.getMessage(), e.getCause());
-	}
+	System.out.println("This plugin has the following goals: ");
+	System.out.println("- chk  to check latex sources ");
+	System.out.println("- clr  to clear artifacts in the working directory ");
+	System.out.println("- docx to create doc(x) documents ");
+	System.out.println("- dvi  to create dvi documents ");
+	System.out.println("- grp  to perform preprocessing (above all graphics) ");
+	System.out.println("- help to obtain this help message ");
+	System.out.println("- html to create (x)html documents ");
+	System.out.println("- odt  to create open document documents ");
+	System.out.println("- rtf  to create rtf documents ");
+	System.out.println("- txt  to create formatted text documents ");
+
+	// **** explanation for each parameter is required. 
+	// but this is only if parameter -Ddetail=true 
+	// To this end: new parameter in configuration 
     }
 
 }
