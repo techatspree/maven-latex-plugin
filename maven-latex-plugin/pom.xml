@@ -1,4 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
   <parent>
@@ -28,9 +31,13 @@
   </licenses>
   
   <scm>
-    <connection>scm:git:git://github.com/akquinet/maven-latex-plugin.git</connection>
+    <connection>
+    scm:git:git://github.com/akquinet/maven-latex-plugin.git
+    </connection>
     <url>https://github.com/akquinet/maven-latex-plugin</url>
-    <developerConnection>scm:git:git@github.com:akquinet/maven-latex-plugin.git</developerConnection>
+    <developerConnection>
+    scm:git:git@github.com:akquinet/maven-latex-plugin.git
+    </developerConnection>
     <tag>1.3</tag>
   </scm>
 
@@ -69,7 +76,7 @@
     <developer>
       <id>ereissner</id>
       <name>Ernst Reissner</name>
-      <email>rei3ner at arcor dot de</email>
+      <email>ernst.reissner at simuline dot eu</email>
     </developer>
   </developers>
 
@@ -1098,6 +1105,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		The default value is '-q -b0' 
 		avoiding verbose output and backing up the output log-file. -->
            <chkTexOptions>-q -b0 -v1 -g0 -l ${basedir}/src/site/tex/chktexrc</chkTexOptions>
+	   <detail>false</detail>
   	  </settings>
 	</configuration>
 
