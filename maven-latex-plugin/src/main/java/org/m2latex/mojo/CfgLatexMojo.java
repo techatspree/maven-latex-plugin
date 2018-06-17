@@ -31,9 +31,9 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import java.util.SortedSet;
 
 /**
- * Builds documents in the formats configured in the pom from LaTeX sources. 
- * Defines the goal <code>cfg</code> 
- * and adds it to the lifecycle phase <code>site</code>. 
+ * Builds documents in the formats configured in the pom from LaTeX sources 
+ * for the goal <code>cfg</code> 
+ * tied to the lifecycle phase <code>site</code>. 
  */
 @Mojo(name = "cfg", defaultPhase = LifecyclePhase.SITE)
 public class CfgLatexMojo extends AbstractLatexMojo {

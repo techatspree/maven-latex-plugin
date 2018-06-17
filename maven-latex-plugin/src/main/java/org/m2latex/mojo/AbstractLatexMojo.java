@@ -64,10 +64,13 @@ abstract class AbstractLatexMojo extends AbstractMojo
     protected File targetSiteDirectory;
 
     /**
-     * Contains all parameters for executing this maven plugin. 
+     * Comrpises all parameters for executing this maven plugin. 
      * If not set in the pom prior to execution, 
      * is set in {@link #initialize()}. 
      */
+    // for help plugin this does not fit. 
+    // also not ideal that settings is all the same independent of target. 
+    // also for help plugin this is not detailed enough. 
     @Parameter(name = "settings")
     protected Settings settings;
 

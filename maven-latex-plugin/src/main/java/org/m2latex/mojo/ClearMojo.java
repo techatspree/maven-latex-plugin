@@ -30,9 +30,9 @@ import java.util.SortedSet;
 //import java.util.EnumSet;
 
 /**
- * Clears all created files in the folders containing the LaTeX sources.
- * Defines the goal <code>clr</code> 
- * and adds it to the lifecycle phase <code>clean</code>. 
+ * Clears all created files in the folders containing the LaTeX sources 
+ * for the goal <code>clr</code> 
+ * tied to the lifecycle phase <code>clean</code>. 
  */
 @Mojo(name = "clr", defaultPhase = LifecyclePhase.CLEAN)
 public class ClearMojo extends AbstractLatexMojo {

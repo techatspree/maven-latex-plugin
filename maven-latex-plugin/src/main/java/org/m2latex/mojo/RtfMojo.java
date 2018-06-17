@@ -27,8 +27,8 @@ import java.util.TreeSet;
 //import java.util.EnumSet;
 
 /**
- * Build rtf documents from LaTeX sources.
- * Defines the goal <code>rtf</code> which is not tied to a lifecycle phase. 
+ * Builds rtf documents from LaTeX sources 
+ * for the goal <code>rtf</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "rtf")
 public class RtfMojo extends CfgLatexMojo {

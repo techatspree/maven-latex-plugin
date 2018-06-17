@@ -27,8 +27,8 @@ import java.util.TreeSet;
 //import java.util.EnumSet;
 
 /**
- * Build DVI documents from LaTeX sources.
- * Defines the goal <code>dvi</code> which is not tied to a lifecycle phase. 
+ * Builds DVI documents from LaTeX sources 
+ * for the goal <code>dvi</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "dvi")
 public class DviMojo extends CfgLatexMojo {

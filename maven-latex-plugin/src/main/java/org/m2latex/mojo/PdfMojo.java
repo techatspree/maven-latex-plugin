@@ -27,8 +27,8 @@ import java.util.TreeSet;
 //import java.util.EnumSet;
 
 /**
- * Build PDF documents from LaTeX sources.
- * Defines the goal <code>pdf</code> which is not tied to a lifecycle phase. 
+ * Builds PDF documents from LaTeX sources 
+ * for the goal <code>pdf</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "pdf")
 public class PdfMojo extends CfgLatexMojo {

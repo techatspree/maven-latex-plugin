@@ -30,8 +30,8 @@ import java.util.SortedSet;
 
 /**
  * Transforms all graphic files into formats 
- * which can be included into LaTeX files.
- * Defines the goal <code>grp</code> which is not tied to a lifecycle phase. 
+ * which can be included into LaTeX files 
+ * for the goal <code>grp</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "grp")
 public class GraphicsMojo extends AbstractLatexMojo {

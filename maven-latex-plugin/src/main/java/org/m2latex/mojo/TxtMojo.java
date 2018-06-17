@@ -27,8 +27,8 @@ import java.util.TreeSet;
 //import java.util.EnumSet;
 
 /**
- * Build documents in plain text weakly formatted (e.g. symbols).
- * Defines the goal <code>txt</code> which is not tied to a lifecycle phase. 
+ * Builds documents in plain text weakly formatted (e.g. symbols) 
+ * for the goal <code>txt</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "txt")
 public class TxtMojo extends CfgLatexMojo {

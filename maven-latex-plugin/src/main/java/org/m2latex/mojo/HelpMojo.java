@@ -30,9 +30,8 @@ import java.util.SortedSet;
 //import java.util.EnumSet;
 
 /**
- * Clears all created files in the folders containing the LaTeX sources.
- * Defines the goal <code>clr</code> 
- * and adds it to the lifecycle phase <code>clean</code>. 
+ * Displays a help text defining for the goal <code>help</code> 
+ * which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "help")
 public class HelpMojo extends AbstractLatexMojo {
@@ -61,6 +60,8 @@ public class HelpMojo extends AbstractLatexMojo {
 	System.out.println("- odt  to create open document documents ");
 	System.out.println("- rtf  to create rtf documents ");
 	System.out.println("- txt  to create formatted text documents ");
+
+
 
 	// **** explanation for each parameter is required. 
 	// but this is only if parameter -Ddetail=true 
