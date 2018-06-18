@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package org.m2latex.core;
+package eu.simuline.m2latex.core;
 
-import org.m2latex.mojo.MavenLogWrapper;
+import eu.simuline.m2latex.mojo.MavenLogWrapper;
 
-import org.m2latex.core.BuildExecutionException;
-import org.m2latex.core.BuildFailureException;
+import eu.simuline.m2latex.core.BuildExecutionException;
+import eu.simuline.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 

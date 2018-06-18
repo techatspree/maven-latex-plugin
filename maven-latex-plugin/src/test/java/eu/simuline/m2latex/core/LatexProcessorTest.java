@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package org.m2latex.core;
+package eu.simuline.m2latex.core;
 
-import org.m2latex.mojo.MavenLogWrapper;
-import org.m2latex.mojo.PdfMojo;
+import eu.simuline.m2latex.mojo.MavenLogWrapper;
+import eu.simuline.m2latex.mojo.PdfMojo;
 
 import java.io.File;
 import java.io.FileFilter;
