@@ -1,60 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <project 
     xmlns="http://maven.apache.org/POM/4.0.0" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- coordinates for model and artifact xxx -->
   <modelVersion>4.0.0</modelVersion>
   
-  <parent>
+  <!--parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
-  </parent>
+  </parent-->
 
+  <!-- The Basics -->
   <groupId>de.akquinet.jbosscc.latex</groupId>
   <artifactId>latex-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <version>1.3-SNAPSHOT</version>
-  <name>Maven LaTeX Plugin</name>
-  <url>http://akquinet.github.com/maven-latex-plugin/</url>
 
+
+  <!-- information for generating a site -->
+  <name>Maven LaTeX Plugin</name>
+  <!--url>http://akquinet.github.com/latex-maven-plugin/</url-->
   <description>
     Automatically create pdf, doc, odt, txt or html documents 
     from LaTeX sources during the Maven site phase.
   </description>
 
+  <url>https://github.com/Reissner/maven-latex-plugin</url>
+  <inceptionYear>2016</inceptionYear>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
     </license>
   </licenses>
-  
-  <scm>
-    <connection>
-    scm:git:git://github.com/akquinet/maven-latex-plugin.git
-    </connection>
-    <url>https://github.com/akquinet/maven-latex-plugin</url>
-    <developerConnection>
-    scm:git:git@github.com:akquinet/maven-latex-plugin.git
-    </developerConnection>
-    <tag>1.3</tag>
-  </scm>
 
-  <mailingLists>
-    <mailingList>
-      <name>maven-latex-plugin Users</name>
-      <archive>http://groups.google.com/group/maven-latex-plugin-users</archive>
-      <post>maven-latex-plugin-users@googlegroups.com</post>
-      <subscribe>maven-latex-plugin-users+subscribe@googlegroups.com</subscribe>
-      <unsubscribe>maven-latex-plugin-users+unsubscribe@googlegroups.com</unsubscribe>
-    </mailingList>
-  </mailingLists>
 
   <organization>
+    <name>Simuline Organization (l2r)</name>
+    <url>http://www.simuline.eu</url>
+  </organization>
+
+ 
+  <!--organization>
     <name>akquinet AG</name>
     <url>http://www.akquinet.de</url>
-  </organization>
+  </organization-->
 
   <developers>
     <developer>
@@ -77,13 +73,81 @@
       <id>ereissner</id>
       <name>Ernst Reissner</name>
       <email>ernst.reissner at simuline dot eu</email>
+      <organization>l2r</organization>
+      <organizationUrl>https://www.simuline.eu</organizationUrl>
+      <timezone>Europe/Berlin</timezone>
+      <properties>
+        <picUrl>http://www.simuline.eu/Gluck_0001.gif</picUrl>
+      </properties>
     </developer>
   </developers>
 
-  <issueManagement>
+
+  <!-- source repositories: at the moment not needed. -->
+  <repositories>
+    <repository>
+      <id>localRepository</id>
+      <!--url>file:///home/ernst/Software/RepositoryLocal/maven2/</url-->
+      <!-- in intermediate step to come for testhelpers only -->
+      <url>https://www.simuline.eu/RepositoryMaven</url>
+    </repository>
+  </repositories>
+
+
+
+
+
+  <!--scm>
+    <connection>
+    scm:git:git://github.com/akquinet/maven-latex-plugin.git
+    </connection>
+    <url>https://github.com/akquinet/maven-latex-plugin</url>
+    <developerConnection>
+    scm:git:git@github.com:akquinet/maven-latex-plugin.git
+    </developerConnection>
+    <tag>1.3</tag>
+  </scm-->
+
+  <scm>
+    <connection>
+      scm:git:https://github.com/Reissner/maven-latex-plugin.git
+    </connection>
+    <developerConnection>
+      scm:git:https://github.com/Reissner/maven-latex-plugin.git
+    </developerConnection>
+    <url>https://github.com/Reissner/maven-latex-plugin</url>
+    <tag>1.3</tag>
+  </scm>
+
+  <distributionManagement><!-- For authentication see ~/.m2/settings.xml -->
+    <site>
+      <id>fileSite</id>
+      <!--url>file:///home/ernst/Software/RepositoryTarget/Site</url-->
+      <url>ftp://www.simuline.eu/public_html/LatexMavenPlugin</url>
+      <!--url>http://www.simuline.eu/public_html/JavaOctave</url-->
+    </site>
+
+    <repository>
+      <id>fileRepository</id>
+      <url>ftp://www.simuline.eu/public_html/RepositoryMaven</url>
+    </repository>
+  </distributionManagement>
+
+
+  <mailingLists>
+    <!--mailingList>
+      <name>maven-latex-plugin Users</name>
+      <archive>http://groups.google.com/group/maven-latex-plugin-users</archive>
+      <post>maven-latex-plugin-users@googlegroups.com</post>
+      <subscribe>maven-latex-plugin-users+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>maven-latex-plugin-users+unsubscribe@googlegroups.com</unsubscribe>
+    </mailingList-->
+  </mailingLists>
+
+  <!--issueManagement>
     <system>Github Issues</system>
     <url>https://github.com/akquinet/maven-latex-plugin/issues</url>
-  </issueManagement>
+  </issueManagement-->
 
   <dependencies>
     <dependency>
@@ -139,12 +203,34 @@
     <dependency>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-site-plugin</artifactId>
-      <version>3.5.1</version>
+      <version>3.7</version>
       <type>maven-plugin</type>
     </dependency>
   </dependencies>
 
   <build>
+
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ftp</artifactId>
+         <version>2.10</version>
+      </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-file</artifactId>
+         <version>2.10</version>
+      </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-http</artifactId>
+         <version>3.1.0</version>
+      </extension>
+    </extensions>
+
+
+
+
     <plugins>
 
       <!-- creates HelpMojo 
@@ -1165,13 +1251,13 @@ here is a bug affecting goal odt:
 	       or one of its dependencies could not be resolved: 
 	       Could not find artifact 
 	       de.akquinet.jbosscc.latex:latex-maven-plugin:jar:1.3-SNAPSHOT -->
-          <execution>
+          <!--execution>
 	    <id>clear latex sources</id>
             <phase>clean</phase>
             <goals>
               <goal>clr</goal>
             </goals>
-          </execution>
+          </execution-->
   	</executions>
       </plugin>
     </plugins>
