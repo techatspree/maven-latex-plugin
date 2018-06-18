@@ -268,7 +268,7 @@ public class Settings {
     private String patternCreatedFromLatexMain = 
 	// besides T$T.xxx, with xxx not containing ., 
 	// we allow T$T.synctex.gz and T$T.out.ps 
-	"^(T$T(\\.([^.]*|synctex\\.gz|out\\.ps)|" + 
+	"^(T$T(\\.([^.]*|synctex\\.gz(\\(busy\\))?|out\\.ps)|" + 
 	// tex4ht creates files T$Tyy.(x)htm(l)... 
 	"(-|ch|se|su|ap|li)?\\d+\\.x?html?|" + 
 	// ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 
