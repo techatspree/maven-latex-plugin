@@ -1,4 +1,4 @@
-package eu.simulineg.m2latex.antTask;
+package eu.simuline.m2latex.antTask;
 
 import eu.simuline.m2latex.core.LogWrapper;
 
