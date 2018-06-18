@@ -1,11 +1,11 @@
-package org.m2latex.antTask;
+package eu.simuline.m2latex.antTask;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 
-import org.m2latex.core.Settings;
-import org.m2latex.core.LatexProcessor;
-import org.m2latex.core.ParameterAdapter;
+import eu.simuline.m2latex.core.Settings;
+import eu.simuline.m2latex.core.LatexProcessor;
+import eu.simuline.m2latex.core.ParameterAdapter;
 
 import java.io.File;
 

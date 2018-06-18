@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package org.m2latex.mojo;
+package eu.simuline.m2latex.mojo;
 
-import org.m2latex.core.BuildFailureException;
-import org.m2latex.core.ParameterAdapter;
-import org.m2latex.core.Target;
-import org.m2latex.core.LatexProcessor;
+import eu.simuline.m2latex.core.BuildFailureException;
+import eu.simuline.m2latex.core.ParameterAdapter;
+import eu.simuline.m2latex.core.Target;
+import eu.simuline.m2latex.core.LatexProcessor;
 
 import org.apache.maven.plugin.MojoFailureException;
 

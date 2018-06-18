@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package org.m2latex.mojo;
+package eu.simuline.m2latex.mojo;
 
-import org.m2latex.core.Target;
-import org.m2latex.core.BuildFailureException;
+import eu.simuline.m2latex.core.Target;
+import eu.simuline.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;

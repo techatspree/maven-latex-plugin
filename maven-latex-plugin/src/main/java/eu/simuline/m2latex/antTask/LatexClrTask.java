@@ -1,10 +1,10 @@
-package org.m2latex.antTask;
+package eu.simuline.m2latex.antTask;
 
 import org.apache.tools.ant.BuildException;
 
-import org.m2latex.core.BuildFailureException;
-import org.m2latex.core.ParameterAdapter;
-import org.m2latex.core.Target;
+import eu.simuline.m2latex.core.BuildFailureException;
+import eu.simuline.m2latex.core.ParameterAdapter;
+import eu.simuline.m2latex.core.Target;
 
 import java.util.SortedSet;
 

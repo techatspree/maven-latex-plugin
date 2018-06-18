@@ -1,4 +1,4 @@
-package org.m2latex.core;
+package eu.simuline.m2latex.core;
 
 /**
  * The base class for {@link BuildExecutionException} 

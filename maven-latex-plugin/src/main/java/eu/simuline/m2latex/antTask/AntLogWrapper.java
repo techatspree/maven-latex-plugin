@@ -1,6 +1,6 @@
-package org.m2latex.antTask;
+package eu.simulineg.m2latex.antTask;
 
-import org.m2latex.core.LogWrapper;
+import eu.simuline.m2latex.core.LogWrapper;
 
 import org.apache.tools.ant.Project;
 

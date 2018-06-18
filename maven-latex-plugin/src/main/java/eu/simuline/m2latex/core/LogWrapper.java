@@ -1,4 +1,4 @@
-package org.m2latex.core;
+package eu.simuline.m2latex.core;
 
 /**
  * Common interface for logging in ant task and in maven plugin. 

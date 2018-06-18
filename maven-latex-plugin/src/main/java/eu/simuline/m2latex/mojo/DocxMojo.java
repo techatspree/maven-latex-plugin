@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package org.m2latex.mojo;
+package eu.simuline.m2latex.mojo;
 
-import org.m2latex.core.Target;
+import eu.simuline.m2latex.core.Target;
 
 import java.util.SortedSet;
 import java.util.TreeSet;

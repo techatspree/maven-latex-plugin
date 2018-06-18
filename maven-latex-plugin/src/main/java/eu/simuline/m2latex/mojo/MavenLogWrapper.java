@@ -1,6 +1,6 @@
-package org.m2latex.mojo;
+package eu.simuline.m2latex.mojo;
 
-import org.m2latex.core.LogWrapper;
+import eu.simuline.m2latex.core.LogWrapper;
 
 import org.apache.maven.plugin.logging.Log;
 

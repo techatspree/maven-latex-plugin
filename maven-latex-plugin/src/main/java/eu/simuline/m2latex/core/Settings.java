@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package org.m2latex.core;
+package eu.simuline.m2latex.core;
 // is AbstractLatexMojo but not public 
-import org.m2latex.mojo.CfgLatexMojo;// for javadoc only 
+import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only 
 
 import java.io.File;
 

@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package org.m2latex.core;
+package eu.simuline.m2latex.core;
 
 import java.io.File;
 
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.Commandline;// constructor
+import        org.codehaus.plexus.util.cli.CommandLineException;
+import        org.codehaus.plexus.util.cli.Commandline;// constructor
 import static org.codehaus.plexus.util.cli.CommandLineUtils.executeCommandLine;
-import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
+import        org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
 
 /**
  * Execution of an executable with given arguments 
