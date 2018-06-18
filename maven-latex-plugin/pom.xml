@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project 
-    xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!-- coordinates for model and artifact xxx -->
   <modelVersion>4.0.0</modelVersion>
@@ -18,7 +15,7 @@
   <groupId>de.akquinet.jbosscc.latex</groupId>
   <artifactId>latex-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
 
 
   <!-- information for generating a site -->
@@ -116,7 +113,7 @@
       scm:git:https://github.com/Reissner/maven-latex-plugin.git
     </developerConnection>
     <url>https://github.com/Reissner/maven-latex-plugin</url>
-    <tag>1.3</tag>
+    <tag>latex-maven-plugin-1.3</tag>
   </scm>
 
   <distributionManagement><!-- For authentication see ~/.m2/settings.xml -->
@@ -339,7 +336,7 @@
       <plugin>
 	<groupId>de.akquinet.jbosscc.latex</groupId>
 	<artifactId>latex-maven-plugin</artifactId>
-	<version>1.3-SNAPSHOT</version><!--uptodate?-->
+	<version>1.3</version><!--uptodate?-->
 	<!--artifactId>maven-latex-plugin</artifactId>
 	    <version>1.2</version--><!--uptodate?-->
 	
@@ -417,10 +414,10 @@ NOT QUITE: to the beginning
 
            <!-- Path to the TeX scripts or null. 
 		In the latter case, the scripts must be on the system path. 
-		Note that in the pom, <texPath/> 
+		Note that in the pom, <texPath /> 
 		and even <texPath>    </texPath> represent the null-File. 
 		The default value is null. -->
-            <texPath/> 
+            <texPath /> 
 
             <!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
@@ -515,7 +512,7 @@ zzT$T\.e?ps|
 		 Refers to the latex-fonts only. 
 		 o '-b width' 
 		 specify width of blank border around figure (1/72 inch). -->
- 	    <fig2devGenOptions></fig2devGenOptions>
+ 	    <fig2devGenOptions />
 
 	    <!-- The options for the command $fig2devCommand 
 		 specific for the output languages 'pdftex_t' 
@@ -544,7 +541,7 @@ zzT$T\.e?ps|
 		 Verbose mode.
   
 		 The default value for this option is the empty string. -->
-	    <fig2devPtxOptions></fig2devPtxOptions>
+	    <fig2devPtxOptions />
 
 	    <!-- The options for the command $fig2devCommand 
 		 specific for the output language 'pdftex'. 
@@ -554,7 +551,7 @@ zzT$T\.e?ps|
 		 common for the two output langugages 
 		 'pdftex' and 'pdftex_t'. 
 		 The default value for this option is the empty string. -->
-	    <fig2devPdfEpsOptions></fig2devPdfEpsOptions>
+	    <fig2devPdfEpsOptions />
 
 	    <!-- The command for conversion of gnuplot-files 
 		 into various formats. 
@@ -570,7 +567,7 @@ zzT$T\.e?ps|
 		 of the terminal 'cairolatex' is not available, 
 		 because it is set internally. 
 		 The default option string is empty. -->
-	    <gnuplotOptions></gnuplotOptions>
+	    <gnuplotOptions />
 
 	    <!-- The command for conversion of gnuplot-files 
 		 into metapost`s postscript. 
@@ -852,7 +849,7 @@ A space is missing\. (No warning)\.)
 
 	    <!-- The options for the command $dvi2pdfCommand. 
 		 The default value is the empty string. -->
- 	    <dvi2pdfOptions></dvi2pdfOptions>
+ 	    <dvi2pdfOptions />
 
 	    <!-- The pattern is applied linewise to the log-file 
 		 and matching triggers rerunning $latex2pdfCommand 
@@ -898,7 +895,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
 
 	    <!-- The options for the command $bibtexCommand. 
 		 The default value is the empty string. -->
-	    <bibtexOptions></bibtexOptions>
+	    <bibtexOptions />
 
 	    <!-- The pattern is applied linewise to the blg-file 
 		 and matching indicates that $bibtexCommand failed. 
@@ -996,10 +993,9 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 Nevertheless, 'xindy' is invoked as 
 		 'xindy -L english  -I xindy -M ...'. 
 		 With option '-L german', this is added. 
-		 Options '-M<' for 'xindy' 
-		 '-s' for 'makeindex' and 
+		 Options '-M<' for 'xindy' '-s' for 'makeindex' and 
 		 '-t' and '-o' for both, 'xindy' and 'makeindex'. -->
-	    <makeGlossariesOptions></makeGlossariesOptions>
+	    <makeGlossariesOptions />
 
 	    <!-- The pattern is applied linewise to the glg-file 
 		 and matching indicates that $makeGlossariesCommand failed. 
@@ -1142,7 +1138,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
 
             <!-- The options of the command $latex2rtfCommand. 
 		 The default value is the empty string. -->
-	    <latex2rtfOptions></latex2rtfOptions>
+	    <latex2rtfOptions />
 
             <!-- The odt2doc command 
 		 to create MS word-formats from otd-files. 
@@ -1171,7 +1167,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
 
 	    <!-- The options of the command $pdf2txtCommand. 
 		 The default value is the empty string. -->
-            <pdf2txtOptions></pdf2txtOptions>
+            <pdf2txtOptions />
 
 	    <!-- The chktex-command for checking latex main files. 
 		 The default value is 'chktex'. -->
