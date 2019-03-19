@@ -3,7 +3,7 @@ package eu.simuline.m2latex.core;
 /**
  * This is needed as a wrapper 
  * to {@link org.apache.maven.plugin.MojoExecutionException} 
- * in {@link org.m2latex.mojo.AbstractLatexMojo#execute()} 
+ * in {@link eu.simuline.m2latex.mojo.AbstractLatexMojo#execute()} 
  * to avoid maven-specific classes. 
  * <p>
  * We read from the documentation which applies to this exception type also: 
