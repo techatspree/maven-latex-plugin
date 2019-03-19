@@ -1,3 +1,4 @@
 # emacs 
 *.xml~
 *.java~
+**/auto/*.el
