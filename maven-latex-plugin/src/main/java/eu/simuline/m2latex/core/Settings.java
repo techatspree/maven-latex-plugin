@@ -1274,7 +1274,7 @@ public class Settings {
      * The options of the command {@link #odt2docCommand}. 
      * Above all specification of output format 
      * via the option <code>-f</code>. 
-     * Invocation is <code>odt2doc -f&lt;format> &lt;file>.odt</code>. 
+     * Invocation is <code>odt2doc -f&lt;format&gt; &lt;file&gt;.odt</code>. 
      * All output formats are shown by <code>odt2doc --show</code> 
      * but the formats interesting in this context 
      * are <code>doc, doc6, doc95,docbook, docx, docx7, ooxml, rtf</code>. 

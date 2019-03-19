@@ -149,9 +149,9 @@ public abstract class CommandLineUtils
      * @throws CommandLineTimeOutException 
      *    Wrapping an {@link InterruptedException} 
      *    on the process to be executed: 
-     *    If <code>timeoutInSeconds<=0</code> 
+     *    If <code>timeoutInSeconds&lt;=0</code> 
      *    thrown by {@link Process#waitFor()}. 
-     *    If <code>timeoutInSeconds > 0</code> thrown 
+     *    If <code>timeoutInSeconds &gt; 0</code> thrown 
      *    <ul>
      *    <li>by {@link Thread#sleep(long)} 
      *    <li>if after sleep {@link #isAlive(Process)} holds. 

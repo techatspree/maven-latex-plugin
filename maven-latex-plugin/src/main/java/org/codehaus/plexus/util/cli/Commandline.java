@@ -694,7 +694,7 @@ public class Commandline
 
     /**
      * @deprecated 
-     * Remove once backward compat with plexus-utils <= 1.4 
+     * Remove once backward compat with plexus-utils &lt;= 1.4 
      * is no longer a consideration
      */
     // used by execute()

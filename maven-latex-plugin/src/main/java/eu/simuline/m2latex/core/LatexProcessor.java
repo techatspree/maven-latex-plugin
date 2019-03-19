@@ -1421,7 +1421,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    the suffix of a file; in practice {@link #SUFFIX_IDX}. 
      * @return
      *    an array of file names of the form 
-     *    <code>&lt;filePrefix>&lt;ident>&lt;suffix></code>, 
+     *    <code>&lt;filePrefix&gt;&lt;ident&gt;&lt;suffix&gt;</code>, 
      *    where <code>ident</code> runs in <code>variant</code>. 
      */
     private File[] files(String filePrefix, 

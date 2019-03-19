@@ -661,7 +661,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Returns an array of options of the form 
-     * <code>-L &lt;language> &lt;optionsGen> &lt;optionsPdfEps> xxx.fig xxx.pdf/xxx.eps 
+     * <code>-L &lt;language&gt; &lt;optionsGen&gt; &lt;optionsPdfEps&gt; xxx.fig xxx.pdf/xxx.eps 
      * </code> for invocation of {@link Settings#getFig2devCommand()} 
      * for creation of the pdf/eps-part of a fig-figure 
      * as done in {@link #runFig2DevInTex(File, LatexDev)}. 
@@ -774,7 +774,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
     /**
      * Returns an array of options of the form 
-     * <code>-L &lt;language> &lt;optionsGen> &lt;optionsPdfEps> -p xxx xxx.fig xxx.ptx</code> for invocation of {@link Settings#getFig2devCommand()} 
+     * <code>-L &lt;language&gt; &lt;optionsGen&gt; &lt;optionsPdfEps&gt; -p xxx xxx.fig xxx.ptx</code> for invocation of {@link Settings#getFig2devCommand()} 
      * for creation of the tex-part of a fig-figure 
      * as done in {@link #runFig2TexInclDev(File)}. 
      * Note that the option <code>-p xxx</code> 

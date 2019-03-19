@@ -12,14 +12,14 @@ import java.util.SortedSet;
  * <p> 
  * TODO: describe getTarget()
  *
- * @see org.m2latex.antTask.LatexCfgTask
- * @see org.m2latex.mojo.AbstractLatexMojo
+ * @see eu.simuline.m2latex.antTask.LatexCfgTask
+ * @see eu.simuline.m2latex.mojo.AbstractLatexMojo
  */
 public interface ParameterAdapter {
 
     /**
      * Sets up the parameters and initializes 
-     * {@link org.m2latex.core.LatexProcessor}. 
+     * {@link eu.simuline.m2latex.core.LatexProcessor}. 
      */
     void initialize();
 
