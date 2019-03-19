@@ -12,7 +12,7 @@
   </parent-->
 
   <!-- The Basics -->
-  <groupId>de.akquinet.jbosscc.latex</groupId>
+  <groupId>eu.simuline.m2latex</groupId>
   <artifactId>latex-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <version>1.5-SNAPSHOT</version>
@@ -23,7 +23,8 @@
   <!--url>http://akquinet.github.com/latex-maven-plugin/</url-->
   <description>
     Automatically create pdf, doc, odt, txt or html documents 
-    from LaTeX sources during the Maven site phase.
+    from LaTeX sources during the Maven site phase
+    allowing typical graphic formats native to tex or to the package graphics.
   </description>
 
   <url>https://github.com/Reissner/maven-latex-plugin</url>
@@ -144,27 +145,35 @@
   <!--issueManagement>
     <system>Github Issues</system>
     <url>https://github.com/akquinet/maven-latex-plugin/issues</url>
-  </issueManagement-->
+    </issueManagement-->
+
+  <properties>
+    <!-- checked during validation -->
+    <versionMvn>3.6.0</versionMvn>
+    <!-- Using platform encoding to copy filtered resources; 
+    without project.build.sourceEncoding the build is platform dependent! -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>3.0</version>
+      <version>3.6.0</version>
     </dependency>
     
     <!-- dependencies to annotations -->
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.5</version>
+      <version>3.6.0</version>
       <scope>provided</scope>
     </dependency>
  
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-ant-tasks</artifactId>
-      <version>2.1.3</version>
+      <version>2.1.3</version><!-- maybe outdated -->
     </dependency>
 
     <!--dependency>
@@ -229,6 +238,31 @@
 
 
     <plugins>
+      <!-- at the moment just to enforce maven version
+	   use as mvn validate not as mvn enforcer:enforce
+	   TBD: add a lot of tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>${versionMvn}</version>
+                </requireMavenVersion>
+              </rules>    
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      
 
       <!-- creates HelpMojo 
 	   Still there is a problem with detail=true. 
@@ -322,7 +356,8 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>3.0.0-M1</version><!-- not up to date: gtM5 -->
+        <!--version>2.19.1</version-->
         <configuration>
           <systemPropertyVariables>
             <!--testResourcesDir>${project.testResources}</testResourcesDir-->
