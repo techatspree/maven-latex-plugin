@@ -2,3 +2,5 @@
 *.xml~
 *.java~
 **/auto/*.el
+# dolphin
+.directory
