@@ -1263,9 +1263,13 @@ This is itself a todo.
   There is a manual. 
   First shot: got a good result with 
 ```
-pandoc -t html -s --toc manualLatexMavenPlugin. -o manual.html
-pandoc -t odt  -s --toc manualLatexMavenPlugin. -o manual.odt
+pandoc -t html -s --toc manualLatexMavenPlugin.tex -o manual.html
+pandoc -t odt  -s --toc manualLatexMavenPlugin.tex -o manual.odt
 ```
+
+one could also try with `--mathml`, `--mathjax` and with `--webtex` 
+which works well.. somehow. 
+See the pandoc manual for further ideas including gladtex
   Here, `-t` or `--target` indicates the target format. 
   The list of available formats: 
 ```
@@ -1277,6 +1281,9 @@ pandoc --list-output-formats
   - `html`, `html4`, `html5` maybe substituting tex4ht 
   - `plain`, maybe text, then substituting 
   - `pdf` (maybe using pdflatex)
+  
+  Pandoc shall be invoked with option `--verbose` 
+  which seem to indicate the most important flaws. 
   
 - missings support for ps. 
 
