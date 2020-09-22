@@ -24,6 +24,7 @@
        <action dev="reissner" type="add">
          Added a readme.md file. 
        </action>
+       <!-- further actions are given in the Readme.md -->
      </release>
     <!-- TBD: added older changes -->
   </body>
