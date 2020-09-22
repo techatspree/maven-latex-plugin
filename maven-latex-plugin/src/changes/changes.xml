@@ -24,8 +24,16 @@
        <action dev="reissner" type="add">
          Added a readme.md file. 
        </action>
+       <action dev="reissner" type="update">
+         Converter gnuplot from gp to pdf changed version
+	 and command line interface.
+	 Likewise for inkscape, the converter from svn to pdf.
+	 Added according manuals. 
+       </action>
+       
        <!-- further actions are given in the Readme.md -->
        <!-- TBD: include also hints in the manual. -->
+       <!-- update to newer java version. e.g. define modules, packagedocs -->
      </release>
     <!-- TBD: added older changes -->
   </body>
