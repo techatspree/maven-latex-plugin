@@ -23,11 +23,11 @@
     <version>1.2</version>
   </skin>
 
-    <!--skin>
+  <!--skin>
         <groupId>com.googlecode.fluido-skin</groupId>
-        <artifactId>fluido-skin</artifactId>
-        <version>1.3</version>
-    </skin-->
+	<artifactId>fluido-skin</artifactId>
+	<version>1.3</version>
+	</skin-->
 
     <body>
       <menu name="Overview">
