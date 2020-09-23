@@ -4,7 +4,7 @@
 
 <!-- https://maven.apache.org/plugins/maven-changes-plugin/changes.html -->
     <!-- action types: 
-	 add: added functionnality to the project.
+	 add: added functionality to the project.
 	 fix: bug fix for the project.
 	 update: updated some part of the project.
 	 remove: removed some functionnality from the project. -->
@@ -30,6 +30,8 @@
 	 Likewise for inkscape, the converter from svn to pdf.
 	 Added according manuals. 
        </action>
+
+       <!-- in manual fix underfull boxes and pdf version -->
        
        <!-- further actions are given in the Readme.md -->
        <!-- TBD: include also hints in the manual. -->

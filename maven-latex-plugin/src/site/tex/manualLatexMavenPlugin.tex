@@ -38,6 +38,7 @@
 \newacronym{toc}{toc}{table of contents}
 \newacronym{lof}{lof}{list of figures}
 \newacronym{lot}{lot}{list of tables}
+\newacronym{lol}{lol}{list of listings}
 \newacronym{aux}{aux}{auxiliary file}
 \newacronym{log}{log}{logging file (for \LaTeX{} and mpost)}
 \newacronym{idx}{idx}{index file containing unsorted and multiple index entries}
@@ -75,6 +76,17 @@ glossary file containing sorted, unified and formatted glossary entries}
 % how to number the glossary in the toc? seemingly a gap in tocbibind 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
 
+\renewcommand{\lstlistoflistings}{\begingroup
+\tocfile{\lstlistingname}{lol}
+\endgroup}
+%and to number the Listof heading do:
+\renewcommand{\lstlistoflistings}{\begingroup
+\tocsection
+\tocchapter
+\tocfile{List of \lstlistingname{}s}{lol}
+\endgroup}
+
+
 \newindex[General Index]{idx}
 \newindex[LaTeX Packages]{pkg}
 % does not work 
@@ -90,11 +102,12 @@ glossary file containing sorted, unified and formatted glossary entries}
 \tableofcontents
 \listoffigures
 \listoftables
+\lstlistoflistings
 
 
 \chapter{Introduction}
 
-This document is created with pdflatex or that like 
+This document is created with \texttt{pdflatex} or that like 
 with output format 
 \ifpdf%
 pdf%
@@ -106,7 +119,18 @@ is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded.
 
 \LaTeX{} is a beautiful way to create printable documents, 
 in our days preferably as \gls{pdf}-files, 
-with a particular strength in typesetting formulae like 
+with a particular strength in typesetting formulae like
+% pandoc invocation given in README.md
+% TBD: check why pandoc can create this formula whereas it fails for align.
+% TBD: pandoc seems to have problems with links to tables
+% and tables dont look optimal.
+% TBD: link to figures seem not to work, to be honest i cannot see any figure
+% whereas toc is present, other tables are not.
+% also index, bibliography and that like seems to miss. 
+%
+% \begin{equation*}
+%   \pi  = \sqrt{12}\;\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}. %chktex 3
+% \end{equation*}
 %
 \begin{align}
 \pi & = \sqrt{12}\;\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}. %chktex 3
@@ -514,10 +538,13 @@ can be added to \texttt{pom.xml} and modified accordingly.
 In a default maven project, 
 the default configuration is usable which creates pdf-documents and
 \gls{html}-sites. 
-The according entry to be added to the \texttt{pom.xml} is then just 
+The according entry to be added to the \texttt{pom.xml}
+is then just the one given in Listing~\ref{lst:coords}. 
 %
-\lstset{language=xml, basicstyle=\small}
-\begin{lstlisting}
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\small,
+float, captionpos=b, label={lst:coords}, 
+caption={The coordinates of this plugin}]
 <!-- create html and pdf and other formats from latex -->
 <plugin>
   <groupId>de.akquinet.jbosscc.latex</groupId>
@@ -674,7 +701,7 @@ The goal \texttt{cfg}
 is executed in maven's \texttt{site} life-cycle by default. 
 
 By default, the target formats are \texttt{pdf} and \texttt{html}. 
-The following listing shows a configuration 
+The following Listing~\ref{lst:targetsAll} shows a configuration 
 with the full range of output formats including in addition 
 the open office document format \texttt{odt}, 
 the MS word-formats \texttt{doc(x)} and \texttt{rtf} % chktex 36
@@ -682,8 +709,10 @@ and also plain text format \texttt{txt} in utf8 encoding.
 Note that the target \texttt{docx} converts by default into \gls{docx} 
 but may also be configured to produce the old fashioned \gls{doc} format. 
 %
-\lstset{language=xml, basicstyle=\small}
-\begin{lstlisting}
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\small,
+float, captionpos=b, label={lst:targetsAll}, 
+caption={Configuration with full range output formats}]
 <!-- create html and pdf and other formats from latex -->
 <plugin>
   <groupId>de.akquinet.jbosscc.latex</groupId>
@@ -843,11 +872,13 @@ This technique is really valuable for debugging.
 
 To keep all created files after a run of this maven-plugin, 
 set the parameter \texttt{cleanUp} in the pom 
-to \texttt{false} as illustrated in the listing below. 
+to \texttt{false} as illustrated in Listing~\ref{lst:noCleanup}. 
 For the ant-task likewise. 
 %
-\lstset{language=xml, basicstyle=\small}
-\begin{lstlisting}
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\small,
+float, captionpos=b, label={lst:noCleanup},
+caption={Configuration without cleanup}]
 <!-- create html and pdf and other formats from latex -->
 <plugin>
   <groupId>de.akquinet.jbosscc.latex</groupId>
@@ -1053,17 +1084,27 @@ which is still used to create \gls{html}-output,
 this is not supported by the default driver, 
 Instead it shall be used the driver \texttt{dvipdfmx}. 
 To obtain a \LaTeX-file which works both for creating pdf and html, 
-insert in the header of the \LaTeX{} main file 
+insert in the header of the \LaTeX{} main file
+given by Listing~\ref{lst:header}. 
 %
-\lstset{language=tex, basicstyle=\small}% FIXME\@: nag complains for htlatex 
-\lstinputlisting[firstline=9, lastline=21]{header.tex}
+%\lstset{language=tex, basicstyle=\small}
+% FIXME\@: nag complains for htlatex 
+\lstinputlisting[firstline=9, lastline=21,
+language=tex, basicstyle=\small,
+float, captionpos=b, label={lst:header}, 
+caption={The header of the tex-source of this manual}]%
+{header.tex}
 
 An alternative, which we do not use 
 is replacing the pdf by an \gls{eps} via configuration file \texttt{myxhtml.cfg} 
-which is listed below. 
+which is given by Listing~\ref{lst:xhtml}. 
 %
-\lstset{language=tex, basicstyle=\scriptsize}% FIXME\@: nag complains for htlatex 
-\lstinputlisting{myxhtml.tex}
+%\lstset{language=tex, basicstyle=\scriptsize}
+% FIXME\@: nag complains for htlatex 
+\lstinputlisting[language=tex, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:xhtml},
+caption={Configuration file \texttt{myxhtml.cfg}}]
+{myxhtml.tex}
 %
 It applies when converting \LaTeX{} into html and that like 
 with htlatex if invoking something like \texttt{htlatex xxx.tex myxhtml,\ldots} 
@@ -1109,18 +1150,21 @@ as the original file \texttt{xxx.fig}.
 For example, 
 the fig-file \texttt{F4\_01fig2dev.fig} defining Figure~\ref{fig:fig2dev}, 
 is transformed into a file \texttt{F4\_01fig2dev.ptx} 
-in format \texttt{pdftex\_t} which starts like this: 
+in format \texttt{pdftex\_t} which starts as given by Listing~\ref{lst:ptx}. 
 %
-\lstset{language=tex, breaklines, basicstyle=\footnotesize}
+%\lstset{language=tex, breaklines, basicstyle=\footnotesize}
 % FIXME\@: nag complains for htlatex 
-\lstinputlisting[lastline=25]{F4_01fig2dev.ptx}
+\lstinputlisting[language=tex, basicstyle=\footnotesize,
+breaklines, lastline=25,
+float, captionpos=b, label={lst:ptx}, 
+caption={The ptx-file for a fig-file}]{F4_01fig2dev.ptx}
 
 The file \texttt{xxx.ptx} is ``imported'' into the tex-file of this manual 
 by the command 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \import{yyy}{xxx.ptx}
-\end{verbatim}
+\end{lstlisting}
 %texttt
 and includes \texttt{xxx.pdf} automatically the file \texttt{xxx.pdf} 
 via \cmd{includegraphics\{xxx\}}{} (line 2). 
@@ -1327,9 +1371,9 @@ Accordingly, the export yields two files \texttt{xxx.ptx} and
 in which \texttt{xxx.gp} resides. 
 The file \texttt{xxx.ptx} must be imported via 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \import{yyy}{xxx.ptx}
-\end{verbatim}
+\end{lstlisting}
 %
 It contains the texts and includes \texttt{xxx.pdf} 
 via \cmd{includegraphics\{xxx\}}{} without specifying a suffix. 
@@ -1515,8 +1559,8 @@ prologues := 3;
 
 So the mp-file starts 
 %
-\lstset{language=metapost, basicstyle=\normalsize}
-\begin{lstlisting}
+%\lstset{language=metapost, basicstyle=\normalsize}
+\begin{lstlisting}[language=metapost, basicstyle=\normalsize]
 outputformat:="svg";
 outputtemplate:="\%j\%c.svg";
 prologues := 3;
@@ -1565,9 +1609,9 @@ using the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx},
 virtually, 
 \texttt{xxx.svg} can be included directly via 
 % FIXME\@: done differently 
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 %\includesvg[width=0.5\textwidth]{xxx}%
-\end{verbatim}
+\end{lstlisting}
 %
 using the \LaTeX-packages \pkg{svg} described in~\cite{SvgP}. 
 Note that the suffix of the file name shall be omitted. 
@@ -1622,10 +1666,10 @@ inkscape -D -z --export-pdf=xxx.pdf --export-latex xxx.svg
 Also~\cite{SvgIncl}, Section~3 indicates how to input the created file 
 \texttt{xxx.pdf\_tex} into the latex document: 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \def\svgwidth{0.5\textwidth}
 \import{yyy}{xxx.pdf\_tex}%
-\end{verbatim}
+\end{lstlisting}
 %
 This is essentially the same technique as applied for fig-files 
 and for gnuplot-files as described 
@@ -1771,8 +1815,8 @@ The next step is to create a pdf-file from the tex-files.
 from elsewhere. 
 Master tex-files have the form 
 %
-\lstset{language=tex, basicstyle=\small}
-\begin{lstlisting}
+%\lstset{language=tex, basicstyle=\small}
+\begin{lstlisting}[language=tex, basicstyle=\small]
 \documentclass{...}
 
 \begin{document}
@@ -1780,7 +1824,8 @@ Master tex-files have the form
 \end{document}
 \end{lstlisting}
 
-To satisfy this task, one may apply a \LaTeX{} to pdf converter \texttt{latex2pdf} 
+To satisfy this task,
+one may apply a \LaTeX{} to pdf converter \texttt{latex2pdf} 
 to a master tex-file \texttt{xxx.tex}. 
 The \LaTeX-to-pdf converter \texttt{latex2pdf} 
 is configurable via the parameter \texttt{latex2pdfCommand}. 
@@ -1832,12 +1877,13 @@ Based on the glo-file, \texttt{makeglossaries} creates a \gls{gls}-file
 containing the glossary, which is read in in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:glossaries}. 
 
-In addition, 
-if a table of contents, a list of figures or a list of tables is required, 
-also a toc-file, a lof-file and a lot-file is created 
+In addition, if
+a table of contents, a list of figures, a list of tables or a list of listings is required, 
+also a toc-file, a lof-file, a lot-file and a lol-file is created,
+respectively, 
 collecting the according information. 
-If such a file is present, it is read in 
-and is used to create a table of contents, a list of figures and of tables 
+If such a file is present, it is read in and is used
+to create a table of contents, a list of figures, of tables and of listings 
 in the second run of \texttt{latex2pdf}. 
 
 To summarize, 
@@ -1951,9 +1997,9 @@ an entry is written sequentially to the idx-file as
 and the page number where the \cmd{index}-command occured. 
 For example \cmd{index\{ant-task\}}{} creates an entry 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \indexentry{ant-task|hyperpage}{3}
-\end{verbatim}
+\end{lstlisting}
 %
 in \texttt{xxx.idx}. 
 
@@ -2150,14 +2196,14 @@ Using \texttt{xindy} instead of \texttt{makeindex} is triggered through
 \cmd{usepackage[xindy]\{glossaries\}}. 
 Accordingly, for option \texttt{makeindex} the aux-file receives lines 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \providecommand\@istfilename[1]{}
 \@istfilename{manualLatexMavenPlugin.ist}
-\end{verbatim}
+\end{lstlisting}
 %
 whereas for option \texttt{xindy}, there are lines 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \providecommand\@istfilename[1]{}
 \@istfilename{manualLatexMavenPlugin.xdy}
 ...
@@ -2165,7 +2211,7 @@ whereas for option \texttt{xindy}, there are lines
 \@xdylanguage{main}{english}
 \providecommand\@gls@codepage[2]{}
 \@gls@codepage{main}{}
-\end{verbatim}
+\end{lstlisting}
 
 
 
@@ -2205,9 +2251,9 @@ defined by \texttt{makeindex} and by \texttt{xindy}.
 
 The style \texttt{list} (which is the default) is set in the form 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \usepackage[style=list]{glossaries}
-\end{verbatim}
+\end{lstlisting}
 %
 where~\cite{GloP}, Section~15 lists predefined styles. 
 So, the style determines the content of the style definition, 
@@ -2224,10 +2270,18 @@ If the shell command \texttt{makeglossaries}
 invokes \texttt{makeindex} of course only the according options 
 are passed supplemented by additional options 
 \texttt{-s}, \texttt{-t}, \texttt{-o}, to specify the
-ist-file, the log-file (the transcript-file) and the gls-file 
+ist-file, the glg-file (the transcript-file) and the gls-file,
+respectively, 
 which is the result of sorting, the output file, 
 and contains the entries of the glo-file 
-just sorted, formatted and unified. 
+just sorted, formatted and unified.
+So for a tex main file \texttt{xxx.tex}
+\texttt{makeglossaries} invokes
+%
+\begin{verbatim}
+makeindex  -s "xxx.ist" -t "xxx.glg" -o "xxx.gls" "xxx.glo"
+\end{verbatim}
+%
 Accordingly, if the shell command \texttt{makeglossaries} 
 invokes \texttt{xindy} of course only the according options 
 are passed supplemented by additional options 
@@ -2267,20 +2321,20 @@ before the next \LaTeX{} run makes them visible in the pdf-file.
 
 To that end, we use the package \pkg{rerunfilecheck}. 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \usepackage[index, glossary]{rerunfilecheck}
-\end{verbatim}
+\end{lstlisting}
 %
 must be put before 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \usepackage{makeidx}
 \makeindex
 \usepackage[toc, xindy]{glossaries}
 %, xindy or even [xindy={language=english,codepage=utf8}]
 % mainly for index and glossaries 
 \makeglossaries
-\end{verbatim}
+\end{lstlisting}
 %
 in particular before \cmd{makeindex}{} and \cmd{makeglossaries}. 
 
@@ -2288,9 +2342,9 @@ Note that the package \pkg{hyperref} already loads \pkg{rerunfilecheck}
 but with the wrong options. 
 Thus the above declaration must come before 
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \usepackage[...]{hyperref}
-\end{verbatim}
+\end{lstlisting}
 %
 to avoid error 
 %
@@ -2310,7 +2364,7 @@ when to rerun \LaTeX{} without prior running *****
 
 \section{Rerunning the \LaTeX{} processor}\label{sec:rerunLatex}
 
-FIXME\@: a word on change in toc, lof and lot. 
+FIXME\@: a word on change in toc, lof, lot and lol. 
 
 As indicated in the previous sections, 
 \texttt{latex2pdf} must be rerun, 
@@ -2320,7 +2374,7 @@ had been run
 to read in the bibliography created by \texttt{bibtex} 
 or the index created by \texttt{makeindex} 
 or the glossary created by \texttt{makeglossaries}. 
-Likewise, if a toc-file, a lof-file or a lot-file 
+Likewise, if a toc-file, a lof-file, a lot-file or a lol-file
 had been created in the first \texttt{latex2pdf} run, 
 another run is needed to read in these files 
 to create a table of contents, a list of figures or a list of tables, 
@@ -2330,18 +2384,19 @@ the log-file does not allow to detect that \texttt{latex2pdf} has to be rerun,
 by matching a fixed pattern. 
 
 After the second run of \texttt{latex2pdf}, 
-the table of contents, the list of figures and the list of tables 
+the table of contents,
+the list of figures, the list of tables and the list of listings 
 are included and a section with the bibliography, 
-the index and the glossary are
-inserted. 
+the index and the glossary are inserted. 
 It takes a third run of \texttt{latex2pdf} 
 to include the bibliography the index and the glossary 
 into the table of contents. 
 Also it takes that third run to replace the citations 
 with the proper labels given in the bibliography. 
 
-Inserting the table of contents, the list of figures and the list of tables 
-which may shift the subsequent text 
+Inserting the table of contents,
+the list of figures, the list of tables and the list of listings 
+may shift the subsequent text 
 which may require another run of \texttt{latex2pdf} 
 to get the page numbers right. 
 As described in Section~\ref{sec:rerunMakeIndexGlossaries} 
@@ -2386,9 +2441,9 @@ From the input \LaTeX-file \texttt{xxx.tex}
 another \LaTeX-file \texttt{yyy.tex} is created 
 which arises from \texttt{xxx.tex} by adding 
 %FIXME\@: maybe instead: \RequirePackage which may be placed before documentclass
-\begin{verbatim}
+\begin{lstlisting}[language=TeX]
 \usepackage[...]{tex4ht}. 
-\end{verbatim}
+\end{lstlisting}
 %
 Then \texttt{htlatex} runs \texttt{latex} on \texttt{yyy.tex} 
 which results in \texttt{yyy.dvi}. 
@@ -2836,8 +2891,7 @@ or are included to allow also development of latex files.
 \section{General Parameters}\label{sec:settingsGen}
 
 This section describes the parameters of Table~\ref{tab:paramGen}. 
-
-TODO\@: do this. 
+%TODO\@: do this. 
 
 \begin{longtable}{|ll|}
 \toprule
@@ -3899,7 +3953,7 @@ This section describes the parameters
 of the \LaTeX-to-html converter 
 which are given in Table~\ref{tab:paramLatex2Html}. 
 
-TODO\@: do this. 
+%TODO\@: do this. 
 
 
 
@@ -4866,10 +4920,18 @@ In \texttt{pom.xml} only text elements occur.
 
 
 The maven-plugin described here, 
-requires the following definition in \texttt{pom.xml}. 
+requires the definition in \texttt{pom.xml}
+given by Listing~\ref{lst:fullConfig}. 
 
-\lstset{language=xml, basicstyle=\scriptsize}% FIXME\@: nag complains for htlatex 
-\lstinputlisting[firstline=220, lastline=1108]{../../../pom.xml}% chktex 11 
+%\lstset{language=xml, basicstyle=\scriptsize}
+% FIXME\@: nag complains for htlatex 
+\lstinputlisting[language=xml, basicstyle=\scriptsize,
+firstline=220, lastline=1108,
+breaklines,
+%float,
+captionpos=b, label={lst:fullConfig},
+caption={The full configuration of this maven plugin}]
+{../../../pom.xml}% chktex 11 
 
 It has to be placed in the build element where below dots are given. 
 
@@ -4882,11 +4944,19 @@ It has to be placed in the build element where below dots are given.
 \end{lstlisting}
 
 
-The ant-task described here, 
-requires the following target and task definitions in \texttt{build.xml}. 
+The ant-task described here 
+requires the target and task definitions in \texttt{build.xml}
+given by Listing~\ref{lst:fullConfigAnt}. 
 
-\lstset{language=xml, basicstyle=\scriptsize}% FIXME\@: nag complains for htlatex 
-\lstinputlisting[firstline=74, lastline=238]{../../../build.xml}% chktex 11 
+%\lstset{language=xml, basicstyle=\scriptsize}
+% FIXME\@: nag complains for htlatex 
+\lstinputlisting[language=xml, basicstyle=\scriptsize,
+firstline=74, lastline=238,
+breaklines,
+%float,
+captionpos=b, label={lst:fullConfigAnt},
+caption={The definition of this ant task and target}]
+{../../../build.xml}% chktex 11 
 
 
 
@@ -4932,9 +5002,9 @@ which uses \texttt{makeindex}.
 Also, although the package \pkg{glossaries} itself 
 supports multiple glossaries via the command
 %
-\begin{verbatim}
+\begin{lstlisting}[language=TeX, basicstyle=\small]
 \newglossary[log-ext]{name}{in-ext}{out-ext}{title}[counter]
-\end{verbatim}
+\end{lstlisting}
 %
 described in~\cite{GloP}, Section~12, 
 this software only supports creating a single glossary. 
@@ -5177,13 +5247,13 @@ entering extended mode
 %
 and also the behavior is slightly different, 
 e.g. on file 
-%
-\begin{Verbatim}
+% TBD: clarify why this does not work with lstlisting...
+\begin{verbatim}
 \documentclass{article}
 \begin{document}
  äö¿
 \end{document}
-\end{Verbatim}
+\end{verbatim}
 
 The parameter \texttt{patternReRunLatex} 
 treated in Section~\ref{subsec:patternReRunLatex} 
