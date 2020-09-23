@@ -138,27 +138,46 @@ Thus the following table lists in brackets also software which is not in use
 but worth to be evaluated. 
 the following converters are used for the various *output* formats. 
 
-| format | executable             | package              | version      |
-|:-------|------------------------|:---------------------|:-------------|
-| html   | **htlatex,...**        | tex2live-tex4ht      | ?            |
-| rtf    | **latex2rtf**          |         latex2rtf    | 2.3.16 r1254 |
-| png    |  (latex2png)           |         latex2rtf    | 1.50         |
-| html   |  (latex2html)          |         latex2html   | 2019.2       |
-| man    |  (latex2man)           | texlive-latex2man    | 1.29         |
-| braile |  (latex2nemeth)        | texlive-latex2nemeth | ??           |
-| *      | **odt2doc**, (unoconv) | unoconv              | 0.9.9        |
-| *      | **(pandoc)**           | pandoc               | 2.10.1       |
-| txt    | **pdftotext**          | poppler-tools        | 0.90.0       |
-| html   |   (pdftohtml)          | poppler-tools        | 0.90.0       |
-| ps     |   (pdftops)            | poppler-tools        | 0.90.0       |
-| *      |   (pdftocairo)         | poppler-tools        | 0.90.0       |
-| pdf    |    dvipdf              | ghostscript          | ??           |
-| *      |   (pdf2ps)             | ghostscript          | 2020.1       |
-| *      |   (gs)                 | ghostscript          | 9.52         |
-| ---    | **chktex**             | texlive-chktex-bin   | 1.7.6        |
+| format | executable             | package              | version       |
+|:-------|------------------------|:---------------------|:--------------|
+| html   | **htlatex,...**        | tex2live-tex4ht      | ?             |
+| rtf    | **latex2rtf**          |         latex2rtf    | 2.3.16 r1254  |
+| png    |  (latex2png)           |         latex2rtf    | 1.50          |
+| html   |  (latex2html)          |         latex2html   | 2019.2        |
+| man    |  (latex2man)           | texlive-latex2man    | 1.29          |
+| braile |  (latex2nemeth)        | texlive-latex2nemeth | ??            |
+| *      | **odt2doc**, (unoconv) | unoconv              | 0.9.9         |
+| *      | **(pandoc)**           | pandoc               | 2.10.1        |
+| txt    | **pdftotext**          | poppler-tools        | 0.90.0        |
+| html   |   (pdftohtml)          | poppler-tools        | 0.90.0        |
+| ps     |   (pdftops)            | poppler-tools        | 0.90.0        |
+| *      |   (pdftocairo)         | poppler-tools        | 0.90.0        |
+| ps     |    dvips               | texlive-dvips-bin    | 2020.1        |
+| pdf    |    dvipdfm             | texlive-dvipdfmx-bin | 20200315      |
+| pdf    |  **dvipdfmx**          | texlive-dvipdfmx-bin | 20200315      |
+| pdf    |   xdvipdfmx            | texlive-dvipdfmx-bin | 20200315      |
+| pdf    |    dvipdft             | texlive-dvipdfmx-bin | 20090604.0046 |
+| pdf    |    dvipdf              | ghostscript          | ??            |
+| ps     |   (pdf2ps)             | ghostscript          | 2020.1        |
+| *      |    gs                  | ghostscript          | 9.52          |
+| ---    | **chktex**             | texlive-chktex-bin   | 1.7.6         |
+
+The program `chktex` just checks the style 
+but has no deliverable output. 
 
 For some software (output) format `*` is given. 
 These programs are discussed below. 
+
+Note that `dvips` and `gs` play a special role: 
+even if not invoked directly as ps-format is not used, 
+converter like `dvipdf` or `dvipdft` 
+invoke them as a combination to create ps from dvi via `dvips` 
+and then apply `gs` to obtain pdf.
+
+The structure of `dvipdf` allows to reconstruct its version 
+from that of `dvips` and of `gs`. 
+
+
 
 To check style of latex sources use `chktex`. 
 To convert to text, first convert to pdf and then to pdf 
@@ -222,14 +241,13 @@ used for various graphic *input* formats
 
 | format      | executable       | package          | version  |
 |:------------|------------------|:-----------------|:---------|
-| tex         | ---              | texlive-pgf      | 3.2.7b   |
+| tex         | ---              | texlive-pgf      | 3.1.5b   |
 | mp          | **mpost**        | texlive-metapost | 2.00     |
 | jpg,png,... | **ebb**          | texlive-dvipdfmx | 20200315 |
 | gp          | **gnuplot**      | gnuplot          | 5.4      |
 | svg         | **inkscape**     | inkscape         | 1.0.1    |
 | xfig        | **fig2dev**      | transfig         | 3.2.7b   |
-| xfig        | **fig2dev**      | transfig         | 3.2.7b   |
-
+|
 The easiest and still very strong graphic package is tikz/pgf. 
 It is included within tex 
 and although it creates intermediate pdf, 
