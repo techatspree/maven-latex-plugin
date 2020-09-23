@@ -113,15 +113,18 @@ and [The latex ant tasks](ss:antTasks) and their subsections.
 This section is more about the converter used by the '*LaTeX builder*'. 
 We provide the executables and the packages with versions tested. 
 The default values are emphasized. 
+Note that this software is designed only to run with the executables 
+with the versions given in 
+[VERSIONS](./maven-latex-plugin/src/main/resources/version.properties).
 
 At first, converting LaTeX into pdf format choose one of the 
 applications mentioned in the next table 
 
-| executable   | package               | version                      |
-|:-------------|:----------------------|:-----------------------------|
-| **pdflatex** | texlive-latex-bin-bin | pdfTeX 3.14159265-2.6-1.40.21|
-| lualatex     | texlive-latex-bin-bin | 1.12.0                       |
-| xelatex      | texlive-xetex-bin     | XeTeX 3.14159265-2.6-0.999992|
+| executable   | package               |
+|:-------------|:----------------------|
+| **pdflatex** | texlive-latex-bin-bin |
+| lualatex     | texlive-latex-bin-bin |
+| xelatex      | texlive-xetex-bin     |
 
 Besides pdf, also other output formats are supported. 
 The aim is to create formats from the world of 
@@ -138,29 +141,29 @@ Thus the following table lists in brackets also software which is not in use
 but worth to be evaluated. 
 the following converters are used for the various *output* formats. 
 
-| format | executable             | package              | version       |
-|:-------|------------------------|:---------------------|:--------------|
-| html   | **htlatex,...**        | tex2live-tex4ht      | ?             |
-| rtf    | **latex2rtf**          |         latex2rtf    | 2.3.16 r1254  |
-| png    |  (latex2png)           |         latex2rtf    | 1.50          |
-| html   |  (latex2html)          |         latex2html   | 2019.2        |
-| man    |  (latex2man)           | texlive-latex2man    | 1.29          |
-| braile |  (latex2nemeth)        | texlive-latex2nemeth | ??            |
-| *      | **odt2doc**, (unoconv) | unoconv              | 0.9.9         |
-| *      | **(pandoc)**           | pandoc               | 2.10.1        |
-| txt    | **pdftotext**          | poppler-tools        | 0.90.0        |
-| html   |   (pdftohtml)          | poppler-tools        | 0.90.0        |
-| ps     |   (pdftops)            | poppler-tools        | 0.90.0        |
-| *      |   (pdftocairo)         | poppler-tools        | 0.90.0        |
-| ps     |    dvips               | texlive-dvips-bin    | 2020.1        |
-| pdf    |    dvipdfm             | texlive-dvipdfmx-bin | 20200315      |
-| pdf    |  **dvipdfmx**          | texlive-dvipdfmx-bin | 20200315      |
-| pdf    |   xdvipdfmx            | texlive-dvipdfmx-bin | 20200315      |
-| pdf    |    dvipdft             | texlive-dvipdfmx-bin | 20090604.0046 |
-| pdf    |    dvipdf              | ghostscript          | ??            |
-| ps     |   (pdf2ps)             | ghostscript          | 2020.1        |
-| *      |    gs                  | ghostscript          | 9.52          |
-| ---    | **chktex**             | texlive-chktex-bin   | 1.7.6         |
+| format | executable             | package              |
+|:-------|------------------------|:---------------------|
+| html   | **htlatex,...**        | tex2live-tex4ht      |
+| rtf    | **latex2rtf**          |         latex2rtf    |
+| png    |  (latex2png)           |         latex2rtf    |
+| html   |  (latex2html)          |         latex2html   |
+| man    |  (latex2man)           | texlive-latex2man    |
+| braile |  (latex2nemeth)        | texlive-latex2nemeth |
+| *      | **odt2doc**, (unoconv) | unoconv              |
+| *      | **(pandoc)**           | pandoc               |
+| txt    | **pdftotext**          | poppler-tools        |
+| html   |   (pdftohtml)          | poppler-tools        |
+| ps     |   (pdftops)            | poppler-tools        |
+| *      |   (pdftocairo)         | poppler-tools        |
+| ps     |    dvips               | texlive-dvips-bin    |
+| pdf    |    dvipdfm             | texlive-dvipdfmx-bin |
+| pdf    |  **dvipdfmx**          | texlive-dvipdfmx-bin |
+| pdf    |   xdvipdfmx            | texlive-dvipdfmx-bin |
+| pdf    |    dvipdft             | texlive-dvipdfmx-bin |
+| pdf    |    dvipdf              | ghostscript          |
+| ps     |   (pdf2ps)             | ghostscript          |
+| *      |    gs                  | ghostscript          |
+| ---    | **chktex**             | texlive-chktex-bin   |
 
 The program `chktex` just checks the style 
 but has no deliverable output. 
@@ -210,28 +213,28 @@ This may be needed in future to include pictures into latex via pdf.
 
 To support bibliographies, traditionally a variant of `bibtex` is used. 
 
-| executable  | package               | version                     |
-|:------------|:----------------------|:----------------------------|
-| **bibtex**  | texlive-latex-bin-bin | BibTeX 0.99d                |
-| bibtexu     | texlive-latex-bin-bin | Release version: 3.71       |
-| bibtex8     | texlive-xetex-bin     | Release version: 3.71       |
+| executable  | package               |
+|:------------|:----------------------|
+| **bibtex**  | texlive-latex-bin-bin |
+| bibtexu     | texlive-latex-bin-bin |
+| bibtex8     | texlive-xetex-bin     |
 
 Accordingly, traditionally `makeindex` creates indices; 
 a newer alternative is `xindy`. 
 If one needs split indices, use `splitindex` invoking `makeindex`. 
 
-| executable     | package                | version                     |
-|:---------------|:-----------------------|:----------------------------|
-| **makeindex**  | texlive-makeindex-bin  | 2.15                        |
-| **splitindex** | texlive-splitindex-bin | splitindex.pl 0.1           |
-| xindy          | xindy                  | xindy release: 2.5.1        |
+| executable     | package                |
+|:---------------|:-----------------------|
+| **makeindex**  | texlive-makeindex-bin  |
+| **splitindex** | texlive-splitindex-bin |
+| xindy          | xindy                  |
 
 Closely related to indices are glossaries created by `makeglossaries` 
 which can use `makeindex` or `xindy`. 
 
-| executable         | package                    | version         |
-|:--------------- ---|:---------------------------|:----------------|
-| **makeglossaries** | texlive-makeglossaries-bin | Version 4.45    |
+| executable         | package                    |
+|:--------------- ---|:---------------------------|
+| **makeglossaries** | texlive-makeglossaries-bin |
 
 
 Next we talk about the graphic formats which can be included into tex. 
@@ -239,14 +242,14 @@ Next we talk about the graphic formats which can be included into tex.
 The following table shows a list of converters 
 used for various graphic *input* formats 
 
-| format      | executable       | package          | version  |
-|:------------|------------------|:-----------------|:---------|
-| tex         | ---              | texlive-pgf      | 3.1.5b   |
-| mp          | **mpost**        | texlive-metapost | 2.00     |
-| jpg,png,... | **ebb**          | texlive-dvipdfmx | 20200315 |
-| gp          | **gnuplot**      | gnuplot          | 5.4      |
-| svg         | **inkscape**     | inkscape         | 1.0.1    |
-| xfig        | **fig2dev**      | transfig         | 3.2.7b   |
+| format      | executable       | package          |
+|:------------|------------------|:-----------------|
+| tex         | ---              | texlive-pgf      |
+| mp          | **mpost**        | texlive-metapost |
+| jpg,png,... | **ebb**          | texlive-dvipdfmx |
+| gp          | **gnuplot**      | gnuplot          |
+| svg         | **inkscape**     | inkscape         |
+| xfig        | **fig2dev**      | transfig         |
 |
 The easiest and still very strong graphic package is tikz/pgf. 
 It is included within tex 

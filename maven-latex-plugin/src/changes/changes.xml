@@ -34,6 +34,10 @@
          Aligned licenses: eliminated contradictions:
 	 License delivered is what is given top level on github. 
        </action>
+       <action dev="reissner" type="add">
+         Handling of versions: now in a separate resource file
+	 for access from markdown, latex and java (the latter to come). 
+       </action>
 
        <!-- in manual fix underfull boxes and pdf version -->
        
