@@ -30,6 +30,10 @@
 	 Likewise for inkscape, the converter from svn to pdf.
 	 Added according manuals. 
        </action>
+       <action dev="reissner" type="fix">
+         Aligned licenses: eliminated contradictions:
+	 License delivered is what is given top level on github. 
+       </action>
 
        <!-- in manual fix underfull boxes and pdf version -->
        
