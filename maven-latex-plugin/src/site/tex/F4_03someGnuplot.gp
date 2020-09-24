@@ -172,6 +172,6 @@ GNUTERM = "qt"
 ARGC = 0
 ARG0 = ""
 a = 4
-GPFUN_f = "f(x)=a*sin(x)"
+#GPFUN_f = "f(x)=a*sin(x)"
 plot f(x)
 #    EOF
