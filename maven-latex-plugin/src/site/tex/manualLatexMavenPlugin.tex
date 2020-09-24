@@ -137,9 +137,14 @@ with a particular strength in typesetting formulae like
 \end{align}
 %
 Here, portability of the format \gls{pdf} is a vital feature. 
-In the past, normally \gls{dvi} has been used 
+In the past, normally \gls{dvi} (device independent)
+described in~\cite{DviF} has been used 
 and still creation of external formats like \gls{html}, 
-\gls{odt} and \gls{docx} are based on an intermediate \gls{dvi}-file. 
+\gls{odt} and \gls{docx} are based on an intermediate \gls{dvi}-file.
+It is much more lightweight than pdf specified in~\cite{Pdf1}, \cite{Pdf2}
+and in~\cite{Pdf3}.
+% strange: no mention of other formats
+% epub for example, html and office formats 
 
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from \LaTeX-files 
