@@ -40,6 +40,11 @@ class CommandExecutor {
 
 
     /**
+     * Executes <code>command</code> in <code>workingDir</code> 
+     * with list of arguments given by <code>args</code> 
+     * and logs if one of the expected target files 
+     * given by <code>resFile</code> is not newly created, 
+     * i.e. if it does not exist or is not updated. 
      * Logging: 
      * <ul>
      * <li> EEX01: return code other than 0. 
@@ -64,8 +69,11 @@ class CommandExecutor {
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
      * @param resFile
-     *    result files, i.e. target files which shall be updated 
-     *    bu this command. 
+     *    optional result files, i.e. target files which shall be updated 
+     *    by this command. 
+     * @return
+     *    The output of execution on stdio/errio (TBC). 
+     *    This is used in tests only. 
      */
     String execute(File workingDir, 
 		   File pathToExecutable, 
@@ -162,9 +170,10 @@ class CommandExecutor {
 
     /**
      * Execute <code>command</code> with arguments <code>args</code> 
-     * in the working directory <code>workingDir</code>. 
+     * in the working directory <code>workingDir</code> 
+     * and return the output. 
      * Here, <code>pathToExecutable</code> is the path 
-     * to the executable. May be null? 
+     * to the executable. It may be null. 
      * <p>
      * Logging: 
      * EEX01 for return code other than 0. 
@@ -183,6 +192,8 @@ class CommandExecutor {
      * @param args
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
+     * @return
+     *    the output of the command. 
      * @throws BuildFailureException
      *    TEX01 if invocation of <code>command</code> fails very basically: 
      *    <ul>

@@ -369,17 +369,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     // used in GraphicsMojo.execute() only 
     public void processGraphics() throws BuildFailureException {
-	// may throw BuildFailureException TSS02 
-	File texProcDir = this.settings.getTexSrcProcDirectoryFile();
-	assert texProcDir.exists() && texProcDir.isDirectory()
-	    : "Expected existing tex processing folder "+texProcDir;
+		// may throw BuildFailureException TSS02
+		File texProcDir = this.settings.getTexSrcProcDirectoryFile();
+		assert texProcDir.exists() && texProcDir.isDirectory() 
+		: "Expected existing tex processing folder " + texProcDir;
 
-	// constructor DirNode may log warning WFU01 Cannot read directory 
- 	DirNode node = new DirNode(texProcDir, this.fileUtils);
-	// may throw BuildFailureException TEX01, 
-	// log warning WFU03, WPP02, WPP03, 
-	// EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
-	this.preProc.processGraphicsSelectMain(texProcDir, node);
+		// constructor DirNode may log warning WFU01 Cannot read directory
+		DirNode node = new DirNode(texProcDir, this.fileUtils);
+		// may throw BuildFailureException TEX01,
+		// log warning WFU03, WPP02, WPP03,
+		// EEX01, EEX02, EEX03, WEX04, WEX05, EFU06
+		this.preProc.processGraphicsSelectMain(texProcDir, node);
     }
 
     /**
@@ -499,6 +499,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	private final File glgFile;
 	private final File xxxFile;
 
+	// TBC: does not depend on dev 
 	LatexMainDesc(File texFile, TexFileUtils fileUtils, LatexDev dev) {
 	    this.texFile = texFile;
 	    // FIXME: easier to create xxxFile first 

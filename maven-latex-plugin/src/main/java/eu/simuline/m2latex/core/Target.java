@@ -3,9 +3,11 @@ package eu.simuline.m2latex.core;
 import java.io.File;
 
 /**
- * The enumeration of all supported creational targets. 
- * Additional targets are <code>clr</code> and <code>grp</code>. 
- * The latter is not creational. 
+ * The enumeration of all supported (creational) targets. 
+ * These are targets where tex files are converted into a target format 
+ * and the resulting document is included in the target folder for delivery.  
+ * Additional targets are <code>clr</code>, <code>grp</code> and <code>chk</code>. 
+ * None of them are creational. 
  *
  *
  * Created: Fri Oct  7 13:32:21 2016

@@ -9,7 +9,11 @@ import eu.simuline.m2latex.core.ParameterAdapter;
 
 import java.io.File;
 
-
+/**
+ * Abstract base class of all tasks provided by this latex converter. 
+ * @author ernst
+ *
+ */
 abstract class AbstractLatexTask extends Task implements ParameterAdapter {
 
     /**
@@ -33,7 +37,7 @@ abstract class AbstractLatexTask extends Task implements ParameterAdapter {
     }
 
     // api-docs inherited from ParameterAdapter 
-    public void initialize() {
+    public final void initialize() {
 	// use of the reference to Project-instance
         //String message = getProperty("ant.project.name");
         // Task's log method

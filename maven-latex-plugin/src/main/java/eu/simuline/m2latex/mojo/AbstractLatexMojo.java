@@ -79,7 +79,7 @@ abstract class AbstractLatexMojo extends AbstractMojo
 
 
     // api-docs inherited from ParameterAdapter 
-    public void initialize() {
+    public final void initialize() {
 	if (this.settings == null) {
 	    // Here, no configuration is defined in pom, 
 	    // i.e. object is not created by Maven

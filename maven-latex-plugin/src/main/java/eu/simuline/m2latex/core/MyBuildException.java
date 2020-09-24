@@ -1,5 +1,5 @@
 package eu.simuline.m2latex.core;
-
+// TBD: rename: LatexBuildException, maybe abstract 
 /**
  * The base class for {@link BuildExecutionException} 
  * and for {@link BuildFailureException}. 
@@ -15,11 +15,11 @@ package eu.simuline.m2latex.core;
  */
 class MyBuildException extends Exception {
 
-   public MyBuildException(String message) {
+   protected MyBuildException(String message) {
        super(message);
     }
 
-    public MyBuildException(String message, Throwable cause) {
+    protected MyBuildException(String message, Throwable cause) {
 	super(message, cause);
     }
 }
