@@ -341,7 +341,8 @@ the driver \texttt{dvipdfmx} must be installed.
 Strictly speaking, this is required only for html-creation and related. 
 Note that if no pictures created by \texttt{fig2dev}, \texttt{gnuplot}, 
 \texttt{mpost} or by \texttt{inkscape} are used, of course, 
-neither \texttt{fig2dev} nor \texttt{gnuplot}, \texttt{mpost}, \texttt{inkscape} 
+neither \texttt{fig2dev} nor \texttt{gnuplot},
+\texttt{mpost}, \texttt{inkscape} 
 nor \texttt{dvipdfmx} is needed. 
 To include graphics, the graphics bundle described in~\cite{GraX} is required, 
 except for svg-files which requires the svg-package 
@@ -640,8 +641,10 @@ all included in the tex-source directory.
 \begin{enumerate}
 \item
 The first can be included into \LaTeX-files directly via \cmd{input}. 
-These formats are essentially \LaTeX{} and are defined in an according package. 
-An example is \pkg{eepic} described in~\cite{EEpic}. 
+These formats are essentially \LaTeX{}
+and are defined in an according package. 
+Examples are \pkg{eepic} described in~\cite{EEpic}
+and above all \pkg{tikz} described in~\cite{TikzPGF}. 
 \item
 the second one via the command \cmd{includegraphics}{} 
 defined by the package \pkg{graphicx} 
@@ -658,10 +661,26 @@ the third one must be transformed into a graphics format
 of one of the former two kinds using an external tool for transformation. 
 Here, of course, only a limited support is possible, 
 because there is a broad variety of formats. 
-We have chosen the \gls{fig}-format **** citation **** because of its simplicity, 
-the gnuplot format, described in~\cite{GnuPlot}, 
-because it allows computation of pictures, 
-likewise metapost, described in~\cite{MPost}. 
+We have chosen
+%
+\begin{itemize}
+\item
+the \gls{fig}-format described in~\cite{XFigF}
+because of its simplicity, 
+\item
+the gnuplot format , described in~\cite{GnuPlot}, 
+because it allows computation of function plots, 
+\item
+  scaleable vector graphics svg format specified in~\cite{Svg11} 
+  as it is important for construction and the counterpart of pixel oriented
+  formats.
+  As the specification is hard to digest,
+  we refer to the tutorial \cite{SvgTut}. 
+\item
+  likewise metapost (\gls{mp}-format),
+  described in~\cite{MPost} because it is native to \LaTeX
+  and quite versatile. 
+\end{itemize}
 \item\label{it:transImp}
 finally the fourth kind of graphics formats 
 has to be transformed into one of the kinds one or two 
@@ -669,9 +688,13 @@ but unlike in type three, this is not done explicitly
 by an external tool but by a latex-package during the \LaTeX-run. 
 Note that, although not required to be explicitly transformed, 
 those graphics files induce additional files 
-by running \LaTeX. 
-Currently, there is only one single example for that, 
-the \gls{svg}-format included by the package \pkg{svg} (see \cite{SvgP}). 
+by running \LaTeX.
+Essentially, each of the abovementioned type of format
+can be included that way but currently,
+this is done for the \gls{svg}-format only
+included by the package \pkg{svg} (see \cite{SvgP}).
+The author personally refrains from using packages like that
+because of the lack of flexibility and further advantages. 
 \end{enumerate}
 
 The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
