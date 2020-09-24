@@ -887,14 +887,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
 	String[] args = new String[] {
-	    "-e",   // run a command string "..." with commands sparated by ';' 
+	    "-e",   // run a command string "..." with commands separated by ';' 
 	    // 
 	    "set terminal cairolatex " + dev.getGnuplotInTexLanguage() + 
 	    " " + this.settings.getGnuplotOptions() + 
-	    ";set output \"" + ptxFile.getName() + 
-	    "\";load \"" + gpFile.getName() + "\""
+	    ";set output '" + ptxFile.getName() + 
+	    "';load '" + gpFile.getName() + "'"
 	};
-
 
 //	if (update(gpFile, ptxFile)) {
 	    this.log.debug("Running " + command + 

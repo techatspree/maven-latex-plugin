@@ -49,8 +49,8 @@ unset grid
 unset raxis
 set theta counterclockwise right
 set style parallel front  lt black linewidth 2.000 dashtype solid
-set key title "" center
-set key inside right top vertical Right noreverse enhanced autotitle nobox
+set key notitle
+set key fixed right top vertical Right noreverse enhanced autotitle nobox
 set key noinvert samplen 4 spacing 1 width 0 height 0 
 set key maxcolumns 0 maxrows 0
 set key noopaque
@@ -122,13 +122,6 @@ set cbtics  norangelimit autofreq
 set rtics axis in scale 1,0.5 nomirror norotate  autojustify
 set rtics  norangelimit autofreq 
 unset ttics
-unset paxis 1 tics
-unset paxis 2 tics
-unset paxis 3 tics
-unset paxis 4 tics
-unset paxis 5 tics
-unset paxis 6 tics
-unset paxis 7 tics
 set title "" 
 set title  font "" textcolor lt -1 norotate
 set timestamp bottom 
@@ -158,13 +151,6 @@ set cbrange [ * : * ] noreverse writeback
 set rlabel "" 
 set rlabel  font "" textcolor lt -1 norotate
 set rrange [ * : * ] noreverse writeback
-set paxis 1 range [ * : * ]  noextend
-set paxis 2 range [ * : * ]  noextend
-set paxis 3 range [ * : * ]  noextend
-set paxis 4 range [ * : * ]  noextend
-set paxis 5 range [ * : * ]  noextend
-set paxis 6 range [ * : * ]  noextend
-set paxis 7 range [ * : * ]  noextend
 unset logscale
 unset jitter
 set zero 1e-08
@@ -187,9 +173,7 @@ set loadpath
 set fontpath
 set psdir
 set fit brief errorvariables nocovariancevariables errorscaling prescale nowrap v5
-f(x)=a*sin(x)
 GNUTERM = "qt"
 VoxelDistance = 9.00500479207635e-308
-a = 4
-plot f(x)
+plot [-10:10] sin(x), atan(x), cos(atan(x))
 #    EOF

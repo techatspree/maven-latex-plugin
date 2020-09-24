@@ -208,7 +208,7 @@ class CommandExecutor {
 	// prepare execution 
 	String executable = new File(pathToExecutable, command).getPath();
 	Commandline cl = new Commandline(executable);
-	cl.getShell().setQuotedArgumentsEnabled(false);
+	cl.getShell().setQuotedArgumentsEnabled(true);
 	cl.addArguments(args);
 	cl.setWorkingDirectory(workingDir.getPath());
 	StringStreamConsumer output = new StringStreamConsumer();
