@@ -38,6 +38,21 @@
          Handling of versions: now in a separate resource file
 	 for access from markdown, latex and java (the latter to come). 
        </action>
+       <action dev="reissner" type="update">
+         Updated a lot of versions in pom. 
+       </action>
+       <action dev="reissner" type="fix">
+         Eliminated most of the javadoc failures. 
+       </action>
+       <action dev="reissner" type="add">
+         Use maven enforcer plugin. 
+       </action>
+       <action dev="reissner" type="add">
+         added docs for various packages. 
+       </action>
+
+
+       
 
        <!-- in manual fix underfull boxes and pdf version -->
        
@@ -69,6 +84,143 @@
        <!-- support epub -->
        <!-- work through pdf: eine texnische kommödie --> 
      </release>
+
+
+     
+     <!-- Here starts version 1.4 -->
+     <release version="1.4" 
+	     date="2018-06-19" 
+	     description="TBD">
+      <action dev="reissner" type="add">
+        added goal help
+       </action>
+      <action dev="reissner" type="update">
+        email address: ernst.reissner@simuline.eu,
+	site org.m2latex --> eu.simuline.m2latex also repo
+       </action>
+      </release>
+
+     <!-- 1.3 does not exist!!! -->
+     <release version="1.3" 
+	      date="2016-09-09" 
+	      description="Renamed plugin">
+       <action dev="reissner" type="update">
+         Renamed plugin due to new convention into latex-maven-plugin
+	 and changed version. (without release plugin)
+	 CAUTION: Thus no snapshot release was created
+	 and so there is more than one checkin with a release version,
+	 i.e. no snapshot. 
+       </action>
+       <action dev="reissner" type="update">
+         Updated java version to 1.5,
+	 replaced javadoc tags by annotations,
+	 updated junit to 4.12,
+	 replaced easymock by mockito,
+	 updated all to eu.simuline.m2latex
+       </action>
+       <action dev="reissner" type="add">
+	 Made rerun mechanism configurable:
+	 added parameter patternNeedAnotherLatexRun
+	 containing a pattern to regocnize need to rerun from log file
+	 and added parameter maxNumReruns signifying a maximum number of reruns.
+       </action>
+       <action dev="reissner" type="add">
+	 added parameter tex4htOutputDirectory
+       </action>
+       <action dev="reissner" type="add">
+	 added conversion to rtf via latex2rtf and parameter latex2rtfCommand
+       </action>
+       <action dev="reissner" type="add">
+	 added conversion to odt and docx also via htlatex and dot2doc
+	 adding parameter odt2docCommand
+       </action>
+      <action dev="reissner" type="add">
+	added conversion of document to dvi and ps and
+	conversion of graphic to eps besides pdf 
+       </action>
+       <action dev="reissner" type="add">
+	 added conversion to txt via pdftotext with parameter pdf2txtCommand
+       </action>
+       <action dev="reissner" type="add">
+	 added support for makeindes along the same lines as bibtex
+	 also multiple indices and split ones.
+	 added glossaries 
+	 adding parameters makeIndexCommand
+       </action>
+       <action dev="reissner" type="add">
+	 now in one run conversion in many formats can be done
+	 and made configurable through the parameter targets.
+	 There are goals to create a specified output format
+	 e.g running mvn latex:pdf
+	 or all formats configured by mvn latex:cfg
+       </action>
+       <action dev="reissner" type="add">
+	 added detection of failures and warnings for latex, htlatex
+	 auxiliary programs like bibtex.
+	 In particular added parameters patternErrLatex,
+	 patternErrMakeindex
+
+	 Made display of warnings and box-warnings over/underfull configurable
+	 adding parameters debugWarnings and debugBadBoxes
+	 Detected errors and warnings on conversions 
+	 due to monitoring of files to be created.
+	 TBD: just mere existence, but could be also modification time.
+
+	 Added warnings on files skipped. 
+       </action>
+        <action dev="reissner" type="add">
+	 added handling of toc, listoffigures, listoftables, listoflistings 
+       </action>
+       
+       <action dev="reissner" type="add">
+	 added support for new graphic formats fig, gnuplot, jpg, png, svg 
+	 with parameters fig2devCommand, 
+       </action>
+      <action dev="reissner" type="add">
+	 added selection of latex documents from all files with ending .tex
+       </action>
+       <action dev="reissner" type="add">
+	 added javadoc plugin 
+       </action>
+      <action dev="reissner" type="add">
+	added ant tasks besides the maven plugin
+	dividing the software in mojos defining a mavan plugin,
+	ant tasks and core classes in separate packages. 
+       </action>
+     <action dev="reissner" type="add">
+       added a manual written in tex and to be compiled
+       by this plugin and by ant task defined  here. 
+       </action>
+     <action dev="reissner" type="add">
+       added documentation of latex pacakges, tools,
+       and file formats including self written ones on fig and dvi. 
+       </action>
+    <action dev="reissner" type="add">
+       processing in source directories
+       which is considered the working directory
+       and move of results into target directory.
+       Also clean goal and task to restore the source directory.
+       This eases development of latex files considerably
+       because one can invoke the needed tools directly
+       without using this plugin/task.
+       Also one can use forward/backward search between editor and viewer.
+       But the viewer has to be in the source directory then.
+       Nevertheless cleaning up works. 
+       </action>
+    <action dev="reissner" type="add">
+      added goal/task clear.
+      Added goals grp (graphics) and chk (check)
+       </action>
+
+     </release>
+
+     
+     
+     <release version="1.2" 
+	     date="2012-02-07" 
+	     description="TBD">
+     </release>
+
     <!-- TBD: added older changes -->
   </body>
 </document>
