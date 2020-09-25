@@ -1043,7 +1043,7 @@ but not in the folder of the importing file.
 \end{itemize}
 
 We support figures created in the \gls{fig} by the program xfig, 
-figures created by the plotting utility gnuplot, 
+figures created by the plotting utility \texttt{gnuplot}, 
 the tex-specific graphic language metapost, 
 figures in \gls{svg}-format 
 and finally figures in formats which can be included into a \LaTeX-file 
@@ -1467,7 +1467,8 @@ Note that this writes another but identical file \texttt{xxx.ptx}.
 Thus performance is not optimal, 
 but \texttt{gnuplot} offers no way to avoid this. 
 If being strict, 
-\texttt{xxx.ptx} is perfectly correct only for output \texttt{eps}, 
+\texttt{xxx.ptx} is perfectly correct only for output \texttt{eps},
+% TBC: in which respect? 
 if comments and error messages are taken into account 
 but as long as no error occurs, 
 the result is perfectly ok also for \texttt{pdf}. 
@@ -1723,46 +1724,61 @@ that according to~\cite{SvgP}, Section~1,
 it does not work on windows platforms. 
 
 
-According to~\cite{SvgIncl}, Section~2.4.1, 
-\texttt{inkscape} exports mixed pdf and latex if invoked approximately as 
+Some research shows,
+that \texttt{inkscape} in the version current at time of this writing
+exports mixed pdf and latex: If invoked as 
 %
 \begin{Verbatim}[fontsize=\normalsize]
-inkscape -D -z --export-pdf=xxx.pdf --export-latex xxx.svg 
-\end{Verbatim} 
+inkscape -D --export-filename=xxx.pdf --export-latex xxx.svg 
+\end{Verbatim}
 %
-Also~\cite{SvgIncl}, Section~3 indicates how to input the created file 
-\texttt{xxx.pdf\_tex} into the latex document: 
+\texttt{inkscape} creates a file \texttt{xxx.pdf}
+containing all graphics but text and a file \texttt{xxx.pdf\_tex}
+containing text and including \texttt{xxx.pdf}.
+The file \texttt{xxx.pdf\_tex}
+can be be integrated into the latex document as
 %
 \begin{lstlisting}[language=TeX]
 \def\svgwidth{0.5\textwidth}
 \import{yyy}{xxx.pdf\_tex}%
 \end{lstlisting}
 %
+Unlike \texttt{fig2dev} and \texttt{gnuplot}, 
+specifying the files with their full path, 
+has no effect, i.e.~inclusion uses the file name only. 
+Thus \cmd{import}{} cannot be replaced by \cmd{input}{} 
+and so the \LaTeX-package \pkg{import} is required. 
+ 
+
 This is essentially the same technique as applied for fig-files 
 and for gnuplot-files as described 
 in Sections~\ref{sec:fig2dev}~and~\ref{sec:gnuplot2dev}. 
 
-To obtain a unified conversion, 
-inkscape is invoked in a way to have the included pdf/eps-files 
-without suffix as follows: 
+Analogously,
 %
 \begin{Verbatim}[fontsize=\normalsize]
-inkscape -D -z --export-pdf=xxx --export-latex xxx.svg 
-inkscape -D -z --export-eps=xxx --export-latex xxx.svg 
+inkscape -D --export-filename=xxx.eps --export-latex xxx.svg 
 \end{Verbatim}
 %
-Unlike \texttt{fig2dev} and \texttt{gnuplot}, 
-specifying the pdf/eps-file \text{xxx} with its full path, 
-has no effect, i.e.~inclusion uses the file name only. 
-Thus \cmd{import}{} cannot be replaced by \cmd{input}{} 
-and so the \LaTeX-package \pkg{import} is required. 
+exports files \texttt{xxx.eps\_tex} and \texttt{xxx.eps}.
 
-Since both the pdf-file and the eps-file are given without suffix, 
-the resulting tex file is not \texttt{xxx.pdf\_tex} and \texttt{xxx.eps\_tex} 
-but in both cases just \texttt{xxx\_tex} 
-as illustrated in Figure~\ref{fig:svg2pdf}. 
-To obtain the correct suffixes, 
-after conversion the target files must be moved accordingly. 
+In older versions of \texttt{inkscape},
+there was a configuration which made \texttt{xxx.eps\_tex}
+able to include uniformly both \texttt{xxx.pdf} and \texttt{xxx.eps}.
+Thus \texttt{xxx.pdf\_tex} could be deleted
+and \texttt{xxx.eps\_tex} moved to \texttt{xxx.ptx}
+which in turn could be included into the main document.
+
+As shown in Figure~\ref{fig:svg2pdf},
+for the current version of \texttt{inkscape},
+this software filters \texttt{xxx.eps\_tex} into \texttt{xxx.ptx}
+``manually'' so that both \texttt{xxx.pdf} and \texttt{xxx.eps}
+are included in \texttt{xxx.ptx}.
+Then it deletes the original files
+\texttt{xxx.pdf\_tex} and \texttt{xxx.eps\_tex}.
+
+The author has filed a bug report to the inkscape-team,
+to avoid this workaround in future. 
 
 \begin{figure}[htb]
 \centering
@@ -1782,7 +1798,7 @@ into pdf-, eps- and ptx-files with inclusions}
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F4_07someSvg.ptx}%
+  \import{}{F4_07someSvg.ptx}% this should be the standard
 }
 \caption{\label{fig:svgWithText}Some svg-picture with text FIXME\@: uniformity  }
 \end{figure}
@@ -4507,7 +4523,7 @@ The messages are endowed with a unique identifier of the form
 %
 \begin{itemize}
 \item[T] Throwable, 
-which results in a\texttt{MojoFailureException} for the maven-plugin 
+which results in a \texttt{MojoFailureException} for the maven-plugin 
 and \texttt{BuildException} for the ant-task. 
 This is described in detail in Section~\ref{sec:exception} 
 \item[E] logging as ERROR, 
@@ -4532,7 +4548,83 @@ in the pom for the maven plugin and in the build file for the ant task.
 \item[FU] TexFileUtilsImpl: a class providing access to files. 
 \end{itemize}
 %
-Finally, \texttt{DD} is a two digit number enumerating the messages. 
+Finally, \texttt{DD} is a two digit number enumerating the messages.
+
+
+\begin{longtable}{|ll|}
+\toprule
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:LogFU} The logging for TexFileUtils   }
+\endlastfoot%
+\texttt{\footnotesize WFU01} 
+& \texttt{\footnotesize Cannot read directory '\$dir';  } \\
+& \texttt{\footnotesize build may be incomplete. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD. 
+\end{minipage}
+} \\
+\texttt{\footnotesize XFU02} 
+& \texttt{\footnotesize  TBD} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize WFU03}  & \texttt{\footnotesize Cannot close '\$file'.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU05}  & \texttt{\footnotesize Cannot delete file '\$file'.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU06}  & \texttt{\footnotesize Cannot move file '\$src'
+                                to '\$dest'.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU07}  & \texttt{\footnotesize File '\$srcFile' to be filtered cannot be read.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  WORKAROUND for \texttt{inkscape}
+  filtering \texttt{eps\_tex}-file into \texttt{ptx} file:
+  The former is not a readable regular file. 
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU08}  & \texttt{\footnotesize Destination file '\$destFile' for filtering cannot be written.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+ WORKAROUND for \texttt{inkscape}
+  filtering \texttt{eps\_tex}-file into \texttt{ptx} file:
+  The latter is not a writable regular file. 
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU09}  & \texttt{\footnotesize Cannot filter file '\$srcFile' into '\$destFile'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+ WORKAROUND for \texttt{inkscape}
+  filtering \texttt{eps\_tex}-file into \texttt{ptx} file:
+  Either reading a line or writing a line failed. 
+\end{minipage}
+} \\
+\end{longtable}
+
+TBD: check whether workaround still necessary. 
+TBD: complete list
+TBD: add missing lists 
+
 
 \section{Exceptions}\label{sec:exception}
 

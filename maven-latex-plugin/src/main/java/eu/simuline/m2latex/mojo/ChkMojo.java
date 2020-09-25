@@ -52,6 +52,7 @@ public class ChkMojo extends AbstractLatexMojo {
      * <li> WFU01: Cannot read directory...
      * <li> WFU03: cannot close tex file 
      * <li> EFU05: Failed to delete file 
+     * <li> EFU07, EFU08, EFU09: if filtering a file fails. 
      * </ul>
      *
      * @throws BuildFailureException 
@@ -63,6 +64,7 @@ public class ChkMojo extends AbstractLatexMojo {
 	try {
 	    // may throw BuildFailureException TSS02 
 	    // may log warnings WPP02, WFU01, WFU03, EFU05 
+	    // EFU07, EFU08, EFU09: if filtering a file fails. 
 	    this.latexProcessor.checkAll();
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());

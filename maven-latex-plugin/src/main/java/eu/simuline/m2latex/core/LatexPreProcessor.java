@@ -51,11 +51,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     } // static 
 
  
-    // used in preprocessing only 
-    private final static String SUFFIX_TEX = ".tex";
+    // used in preprocessing only and in TexFileUtils for a workaround 
+    final static String SUFFIX_TEX = ".tex";
 
     // home-brewed ending to represent tex including postscript 
-    private final static String SUFFIX_PTX = ".ptx";
+    final static String SUFFIX_PTX = ".ptx";
     // the next two for preprocessing and in LatexDev only 
     final static String SUFFIX_PDFTEX = ".pdf_tex";
     final static String SUFFIX_EPSTEX = ".eps_tex";
@@ -195,7 +195,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // converts an svg-file into pdf and ptx 
 	    // invoking {@link #runFig2Dev(File, LatexDev)}
 	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
-	    // EFU06 if moving a file fails. 
+	    // EFU07, EFU08, EFU09 if filtering a file fails. 
 	    void procSrc(File file, LatexPreProcessor proc) 
 		throws BuildFailureException {
 		proc.runSvg2Dev(file);
@@ -214,7 +214,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	},
 	/**
 	 * Handler for .jpg-files representing a format 
-	 * definde by the Joint Photographic Experts Group (jp(e)g). 
+	 * defined by the Joint Photographic Experts Group (jp(e)g). 
 	 */
 	jpg {
 	    void procSrc(File file, LatexPreProcessor proc) 
@@ -339,8 +339,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	/**
 	 * Typically, .i.e. for {@link #fig}-,  {@link #gp}-,  {@link #mp}- 
 
-
-
 	 * and associates <code>file</code> 
 	 * Does the transformation of the file <code>file</code> 
 	 * using <code>proc</code> immediately, except for 
@@ -366,7 +364,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <li> WPP02: tex file may be latex main file 
 	 * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
 	 * if applications for preprocessing graphic files failed. 
-	 * <li> EFU06: if moving a file fails. 
+	 * <li> EFU07, EFU08, EFU09 if filtering a file fails. 
 	 * </ul>
 	 *
 	 * @param file
@@ -1001,7 +999,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <ul>
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if running the ptx/pdf-conversion built-in in svg2dev fails. 
-     * <li> EFU06 if moving a file fails. 
+     * <li> EFU07, EFU08, EFU09 if filtering a file fails. 
      * </ul>
      *
      * @param svgFile 
@@ -1015,32 +1013,35 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void runSvg2Dev(File svgFile) throws BuildFailureException {
 	this.log.info("Processing svg-file '" + svgFile + "'. ");
 	// both may throw BuildFailureException TEX01, 
-	// and  may log EEX01, EEX02, EEX03, WEX04, WEX05 
+	// and  may log EEX01, EEX02, EEX03, WEX04, WEX05
+	// EFU07, EFU08, EFU09
 	runSvg2Dev(svgFile, LatexDev.pdf,   false);
-	// FIXME: avoiding may be wrong 
- 	runSvg2Dev(svgFile, LatexDev.dvips, true);// that way page=1 is avoided
+ 	runSvg2Dev(svgFile, LatexDev.dvips, true);
     }
 
     // FIXME: still the included pdf/eps-file does not occur 
     // with full path in ptx-file 
     // may throw BuildFailureException TEX01, 
-    // may log EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
+    // may log EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09
     private void runSvg2Dev(File svgFile, 
 			    LatexDev dev, 
-			    boolean renameTex) throws BuildFailureException {
+			    boolean filterTex) throws BuildFailureException {
+	// current:
+	// inkscape --export-filename=F4_07someSvg     -D F4_07someSvg.svg
+	//                                              --export-type=pdf,eps
+	// inkscape --export-filename=F4_07someSvg.pdf -D F4_07someSvg.svg
+	//
+	// --export-pdf-version=1.4 may be nice 
 	String command = this.settings.getSvg2devCommand();
 
-	// full path without suffix 
-	File grpFile = this.fileUtils.replaceSuffix(svgFile, SUFFIX_VOID);
-	
-	// FIXME: eliminate literal: comes from .pdf_tex and .eps_tex 
-	// dropping .pdf and .eps, respectively 
-	File texFile = this.fileUtils.replaceSuffix(svgFile, "_tex");
+	File grpFile = this.fileUtils.replaceSuffix(svgFile,
+						    dev.getGraphicsInTexSuffix());
+	File texFile = this.fileUtils.replaceSuffix(svgFile,
+						    dev.getInkscapeTexSuffix());
 
-	String[] args = buildNullArguments(this.settings.getSvg2devOptions(), 
-					   svgFile);
-	args[0] = dev.getSvgExportOption() + grpFile.getName();
-
+	String[] args = buildArgumentsInkscp(grpFile,
+					     this.settings.getSvg2devOptions(), 
+					     svgFile);
 	this.log.debug("Running " + command + 
 		       " on '" + svgFile.getName() + "'. ");
 	// may throw BuildFailureException TEX01, 
@@ -1052,18 +1053,29 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      grpFile,
 			      texFile);
 
-	// rename grpFile and texFile 
-	// may log EFU06: cannot move file 
-	this.fileUtils.moveOrError(grpFile, 
-				   this.fileUtils.replaceSuffix
-				   (svgFile, dev.getGraphicsInTexSuffix()));
-	if (renameTex) {
-	    // may log EFU06: cannot move file 
-	    this.fileUtils.moveOrError(texFile, 
-				       this.fileUtils.replaceSuffix
-				       (svgFile, SUFFIX_PTX));
+	if (filterTex) {
+	    // may log EFU07, EFU08, EFU09: cannot fiter
+	    // for eps only 
+	    this.fileUtils.filterInkscapeIncludeFile(texFile);
 	}
+	this.fileUtils.deleteOrError(texFile);
     }
+
+    protected static String[] buildArgumentsInkscp(File grpFile,
+						   String options,
+						   File file) {
+	String optExp = "--export-filename=" + grpFile.getName();
+    	if (options.isEmpty()) {
+    	    return new String[] {optExp, file.getName()};
+    	}
+        String[] optionsArr = options.split(" ");
+	String[] args = new String[optionsArr.length+2];
+        System.arraycopy(optionsArr, 0, args, 1, optionsArr.length);
+        args[args.length-1] = file.getName();
+	args[0            ] = optExp;
+   	return args;
+     }
+  
 
     // Additional research: 
     // Documentation says, that this is needed for interface eps, 
@@ -1250,12 +1262,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     }
 
     /**
-     * Detects files in the directory represented by <code>texNode</code> 
+     * Detects files in the directory represented by <code>node</code> 
      * and in subdirectories recursively: 
      * <ul>
      * <li>
      * those which are in various graphic formats incompatible with LaTeX 
-     * are converted into formats which can be inputted or included directly 
+     * are converted into formats which can be inputed or included directly 
      * into a latex file. 
      * <li>
      * returns the set of latex main files. 
@@ -1268,7 +1280,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      if running graphic processors failed. 
-     * <li> EFU06: if moving a file fails. 
+     * <li> EFU07, EFU08, EFU079: if filtering a file fails. 
      * </ul>
      *
      * @param dir
@@ -1297,7 +1309,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	} else {
 	    // may throw BuildFailureException TEX01, 
 	    // may log EEX01, EEX02, EEX03, 
-	    // WEX04, WEX05, WFU03, WPP02, EFU06 
+	    // WEX04, WEX05, WFU03, WPP02, EFU07, EFU08, EFU09 
 	    processGraphicsSelectMain   (dir, node, skipped, latexMainFiles);
 	}
 
@@ -1314,7 +1326,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * Logging: 
      * <ul>
      * <li> WFU03: cannot close file 
-     * <li> EFU06: Cannot move file 
+     * <li> EFU07, EFU08, EFU09: if filtering of a file fails (svg)
      * <li> WPP02: tex file may be latex main file 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      * if applications for preprocessing graphic files failed. 
@@ -1416,14 +1428,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	for (Map.Entry<File, SuffixHandler> entry : file2handler.entrySet()) {
 	    // procSrc may throw BuildFailureException TEX01
 	    // and may log WFU03, WPP02, 
-	    // EEX01, EEX02, EEX03, WEX04, WEX05 and EFU06 
+	    // EEX01, EEX02, EEX03, WEX04, WEX05 and EFU07, EFU08, EFU09 
 	    entry.getValue().procSrc(entry.getKey(), this);
 	}
     }
 
     /**
      * Like 
-     * {@link #processGraphicsSelectMainRec(File,DirNode,Collection,Collection)}
+     * {@link #processGraphicsSelectMain(File,DirNode,Collection,Collection)}
      * but with recursion to subdirectories. 
      */
     private void processGraphicsSelectMainRec(File dir, 

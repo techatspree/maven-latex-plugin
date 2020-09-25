@@ -523,8 +523,6 @@ public class Settings {
      * <p>
      * The following options are mandatory: 
      * <ul>
-     * <li><code>-z</code> or <code>--without-gui</code> 
-     * process files from console. 
      * <li><code>-D</code> or <code>--export-area-drawing</code> 
      * Export the drawing (not the page)
      * <li><code>--export-latex</code> 
@@ -538,19 +536,18 @@ public class Settings {
      * </ul>
      * <p>
      * The following options are prohibited, 
-     * because they are automatically added by the software: 
+     * because they are automatically added by the software 
+     * or are in conflict with automatically added options: 
      * <ul>
-     * <li><code>-A=FILENAME</code> or <code>--export-pdf=FILENAME</code> 
-     * Export document to a  PDF file. 
-     * <li><code>-E=FILENAME</code> or <code>--export-eps=FILENAME</code> 
-     * Export document to an EPS file. 
+     * <li><code>--export-filename==FILENAME</code>
+     * <li><code>--export-tyoe=type</code> 
      * <ul>
      *
      * The default value is the minimal value, 
-     * <code>-z -D --export-latex</code>. 
+     * <code>-D --export-latex</code>. 
      */
-   @Parameter(name = "svg2devOptions", defaultValue = "-z -D --export-latex")
-   private String svg2devOptions = "-z -D --export-latex";
+   @Parameter(name = "svg2devOptions", defaultValue = "-D --export-latex")
+   private String svg2devOptions = "-D --export-latex";
 
     /**
      * The command to create bounding box information 

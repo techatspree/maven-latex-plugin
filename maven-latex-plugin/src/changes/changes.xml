@@ -44,6 +44,30 @@
        <!-- further actions are given in the Readme.md -->
        <!-- TBD: include also hints in the manual. -->
        <!-- update to newer java version. e.g. define modules, packagedocs -->
+       <!-- on site http://www.simuline.eu/LatexMavenPlugin 
+	    set up a download area. 
+	    Some of them are written by myself as xfig and dvi. 
+	    For these the reference howpublished in lit.bib must be updated. 
+       -->
+       <!-- manual on dvi file format requires rework: 
+	    no word about version and no word about dvitype program. 
+	    Partially german english. -->
+       <!-- test pandoc - -bibliography - -toc -s -R
+	    s stands for standalone 
+	    R stands for resolve, also try without 
+	    and try to find a solution for indices and glossaries 
+	    seemingly, currently not supported, anyway 
+	    Try formulae with mathml and with mathjax 
+	    What about tables, listings, figures?
+       -->
+       <!-- test latexml
+	    $ latexml --dest beispiel.xml beispiel.tex
+	    $ latexmlpost --format=html4 --mathimages -dest=bsp.html bsp.xml
+       -->
+       <!-- evaluate biblatex to replace bibtex. 
+	    This also offers entry type @standard and rework bibliography -->
+       <!-- support epub -->
+       <!-- work through pdf: eine texnische kommödie --> 
      </release>
     <!-- TBD: added older changes -->
   </body>

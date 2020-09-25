@@ -201,7 +201,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li> WFU01: Cannot read directory... 
      * <li> WFU03: cannot close file 
      * <li> EFU05: Cannot delete file 
-     * <li> EFU06: Cannot move file 
+     * <li> EFU07, EFU08, EFU09: if filtering a file fails. 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -254,7 +254,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // process graphics and determine latexMainFiles 
 	    // may throw BuildFailureException TEX01, 
 	    // log warning WFU03, WPP02, WPP03, 
-	    // EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
+	    // EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09: if filtering a file fails. 
 	    Collection<File> latexMainFiles = this.preProc
 		.processGraphicsSelectMain(texProcDir, node);
 
@@ -297,7 +297,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     /**
      * Defines check goal of the maven plugin in {@link ChkMojo}. 
      * This includes also creation of graphic files. 
-     *
+     * <p>
+     * TBD: logging
      *
      * @throws BuildFailureException
      *    <ul>
@@ -328,7 +329,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	try {
 	    // may throw BuildFailureException TEX01, 
 	    // log warning WFU03, WPP02, WPP03, 
-	    // EEX01, EEX02, EEX03, WEX04, WEX05, EFU06 
+	    // EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09 
 	    Collection<File> latexMainFiles = this.preProc
 		.processGraphicsSelectMain(texProcDir, node);
 
@@ -351,7 +352,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <ul>
      * <li> WFU01: Cannot read directory 
      * <li> WFU03: cannot close file 
-     * <li> EFU06: Cannot move file 
+     * <li> EFU07, EFU08, EFU09: if filtering a file fails. 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -378,7 +379,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		DirNode node = new DirNode(texProcDir, this.fileUtils);
 		// may throw BuildFailureException TEX01,
 		// log warning WFU03, WPP02, WPP03,
-		// EEX01, EEX02, EEX03, WEX04, WEX05, EFU06
+		// EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09
 		this.preProc.processGraphicsSelectMain(texProcDir, node);
     }
 

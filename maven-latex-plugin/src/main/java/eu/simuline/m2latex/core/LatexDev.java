@@ -3,8 +3,8 @@ package eu.simuline.m2latex.core;
 import java.io.File;
 
 /**
- * Enumeration of the backends of latex. 
- * Currently, there are two, <code>pdf</code> and <code>dvips</code> 
+ * Enumeration of the (conversion of latex to a) target format, called a 'device'. 
+ * Currently, there are two, <code>pdf</code> and <code>dvips</code>, 
  * the latter representing <code>dvi</code> 
  * but <code>html</code> and <code>odt</code> are also desirable. 
  * The backend also affects the natural graphic formats: 
@@ -27,8 +27,8 @@ public enum LatexDev {
 	String getGnuplotInTexLanguage() {
 	    return "pdf";
 	}
-	String getSvgExportOption() {
-	    return "-A="; // --export-pdf=FILENAME
+	String getInkscapeTexSuffix() {
+	    return LatexPreProcessor.SUFFIX_PDFTEX;
 	}
 	String getGraphicsInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_PDF;
@@ -51,8 +51,8 @@ public enum LatexDev {
 	String getGnuplotInTexLanguage() {
 	    return "eps";
 	}
-	String getSvgExportOption() {
-	    return "-E="; // --export-eps=FILENAME
+	String getInkscapeTexSuffix() {
+	    return LatexPreProcessor.SUFFIX_EPSTEX;
 	}
 	String getGraphicsInTexSuffix() {
 	    return LatexPreProcessor.SUFFIX_EPS;
@@ -91,13 +91,10 @@ public enum LatexDev {
     abstract String getGnuplotInTexLanguage();
 
     /**
-     * Returns the export option 
-     * used by the command {@link Settings#getSvg2devCommand()} 
-     * which determines the export format. 
-     * In fact, there is a file of that format 
-     * to be embedded with <code>\includegraphics</code> in latex-code. 
+     * Returns file suffix for the tex part of the svg export 
+     * created by the command {@link Settings#getSvg2devCommand()}.  
      */
-    abstract String getSvgExportOption();
+     abstract String getInkscapeTexSuffix();
 
     /**
      * Returns the suffix of the file to be 

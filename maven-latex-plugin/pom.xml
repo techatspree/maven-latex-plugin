@@ -669,8 +669,6 @@ zzT$T\.e?ps|
 		 for exporting svg-figures into latex compatible files. 
 		 
 		 The following options are mandatory: 
-		 o '-z' or '- -without-gui' 
-		 process files from console. 
 		 o '-D' or '- -export-area-drawing' 
 		 Export the drawing (not the page)
 		 o '- -export-latex' 
@@ -684,14 +682,13 @@ zzT$T\.e?ps|
 		 
 		 The following options are prohibited, 
 		 because they are automatically added by the software: 
-		 o '-A=FILENAME' or '- -export-pdf=FILENAME' 
-		 Export document to a  PDF file. 
-		 o '-E=FILENAME' or '- -export-eps=FILENAME' 
-		 Export document to an EPS file. 
+		 '- -export-filename=FILENAME' 
+		 The ending of the filename, which is either eps or pdf 
+		 determines the file type. 
 		 
 		 The default value is the minimal value, 
-		 '-z -D - -export-latex'. -->
-	    <svg2devOptions>-z -D --export-latex</svg2devOptions>
+		 '-D - -export-latex'. -->
+	    <svg2devOptions>-D --export-latex</svg2devOptions>
 
 	    <!-- The command to create bounding box information 
 		 from jpg-files and from png-files. 

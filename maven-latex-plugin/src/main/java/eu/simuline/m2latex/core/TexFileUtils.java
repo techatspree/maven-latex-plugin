@@ -19,9 +19,11 @@
 package eu.simuline.m2latex.core;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FileFilter;
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -43,6 +45,7 @@ import java.util.regex.Matcher;
 
 /**
  * Sole interface to <code>org.apache.commons.io.</code>. 
+ * A collection of utility methods for file manipulation. 
  */
 class TexFileUtils {
 
@@ -433,6 +436,124 @@ class TexFileUtils {
          }
     }
 
+    // TBD: move elsewhere because this is specific for inkscape
+    // TBD: better even to eliminate. 
+    /**
+     * The new preamble of the tex file originally created by inkscape 
+     * with ending <code>eps_tex</code>.
+     * FIXME: version to be included. 
+     */
+    private final static String INKSCAPE_PREAMBLE =
+       "%% LatexMavenPlugin (version unknown) modified " +
+       "two of the following lines\n";
+
+    /**
+     * This is just a workaround because of inkscape's current flaw. 
+     * It reads file <code>srcFile</code> 
+     * which is expected to have name with ending <code>eps_tex</code> 
+     * and writes a file with same name 
+     * replacing ending by <code>tex</code> with following modifications: 
+     * <ul>
+     * <li>Adds line {@link #INKSCAPE_PREAMBLE} atop </li>
+     *    <li>Replaces line '%%Accompanies ...' by 
+     *     '%% Accompanies image files 'xxx.pdf/eps/ps'</li>
+     *    <li>Replaces line 
+     *     '... \includegraphics[width=\\unitlength]{xxx.eps}...' 
+     *     by 
+     *     '... \includegraphics[width=\\unitlength]{xxx}...'</li>
+     * </ul>
+     * <p>
+     * Logging: 
+     * EFU07, EFU08, EFU09: cannot fiter
+     *
+     * @param srcFile
+     *    A file created by inkscape with ending <code>eps_tex</code> 
+     *    containing a lines 
+     *    <code>
+     *    %% Accompanies image file 'xxx.eps' (pdf, eps, ps)</code> and 
+     *    <code>\put(0,0){\includegraphics[width=\\unitlength]{xxx.eps}}</code>
+     *    with variable <code>xxx</code> and leading blanks\
+     */
+    public void filterInkscapeIncludeFile(File srcFile) {
+	assert LatexPreProcessor.SUFFIX_EPSTEX.equals(getSuffix(srcFile))
+	    : "Expected suffix '" + LatexPreProcessor.SUFFIX_EPSTEX +
+	    "' found '" + getSuffix(srcFile) + "'";
+	File destFile = replaceSuffix(srcFile, LatexPreProcessor.SUFFIX_PTX);
+	File bareFile = replaceSuffix(srcFile, LatexPreProcessor.SUFFIX_VOID);
+	//FileReader reader = null;
+	BufferedReader bufferedReader = null;
+	FileWriter writer = null;
+	try {
+	    // may throw FileNotFoundException < IOExcption 
+	    FileReader reader = new FileReader(srcFile);
+	    // BufferedReader for perfromance and to be able to read a line
+	    bufferedReader = new BufferedReader(reader);
+
+	    // may throw IOExcption 
+	    writer = new FileWriter(destFile);
+	    //BufferedWriter bufferedWriter = new BufferedWriter(writer);
+	    String line;
+	    // write preamble
+	    // readLine may throw IOException 
+	    writer.write(INKSCAPE_PREAMBLE);
+	    // first two lines: write as read 
+	    line = bufferedReader.readLine();
+	    writer.write(line + "\n");
+	    line = bufferedReader.readLine();
+	    writer.write(line + "\n");
+
+	    // third line must be changed. 
+	    line = bufferedReader.readLine();
+	    line = line.replace(bareFile.getName()
+				+ LatexPreProcessor.SUFFIX_EPS
+				+ "' (pdf, eps, ps)",
+				bareFile.getName() + ".pdf/eps/ps'\n");
+	    writer.write(line);
+
+	    // readLine may throw IOException
+	    // TBD: eliminate magic numbers 
+	    for (int idx = 4; idx < 56; idx++) {
+		line = bufferedReader.readLine();
+		writer.write(line + "\n");
+	    }
+
+	    // readLine may throw IOException 
+	    line = bufferedReader.readLine();
+	    line = line.replace(bareFile.getName()
+				+ LatexPreProcessor.SUFFIX_EPS
+				+ "}}%",
+				bareFile.getName() + "}}%\n");
+	    writer.write(line);
+
+	    line = bufferedReader.readLine();
+	    do {
+		writer.write(line + "\n");
+		 // readLine may thr. IOException
+		line = bufferedReader.readLine();
+	    } while(line != null);
+	} catch (IOException e) {
+	    if (bufferedReader == null) {
+		// Here, FileNotFoundException on srcFile
+		this.log.error("EFU07: File '" + srcFile +
+			       "' to be filtered cannot be read. ");
+		return;
+	    }
+	    if (writer == null) {
+		this.log.error("EFU08: Destination file '" + destFile +
+			       "' for filtering cannot be written. ");
+		return;
+	    }
+	    this.log.error("EFU09: Cannot filter file '" + srcFile +
+			   "' into '" + destFile + "'. ");
+	} finally {
+	    // Here, an IOException may have occurred 
+	    // may log warning WFU03
+	    // TBD: what if null? 
+	    closeQuietly(bufferedReader);
+	    closeQuietly(writer);
+	}
+    }
+
     /**
      * Return the name of the given file without the suffix. 
      * If the suffix is empty, this is just the name of that file. 
@@ -507,7 +628,7 @@ class TexFileUtils {
 	try {
 	    // may throw FileNotFoundException < IOExcption 
 	    FileReader fileReader = new FileReader(file);
-	    // BufferedReader for perfromance 
+	    // BufferedReader for perfromance and to be able to read a line
 	    BufferedReader bufferedReader = new BufferedReader(fileReader);
 	    //CharBuffer chars = CharBuffer.allocate(1000);
 	    try {

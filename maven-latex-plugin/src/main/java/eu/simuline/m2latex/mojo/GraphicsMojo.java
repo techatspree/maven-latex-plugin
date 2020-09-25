@@ -49,7 +49,7 @@ public class GraphicsMojo extends AbstractLatexMojo {
      * <ul>
      * <li> WFU01: Cannot read directory 
      * <li> WFU03: cannot close file 
-     * <li> EFU06: Cannot move file 
+     * <li> EFU07, EFU08, EFU09: if filtering a file fails. 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -70,7 +70,7 @@ public class GraphicsMojo extends AbstractLatexMojo {
 	try {
 	    // may throw BuildFailureException TSS02, TEX01 
 	    // may log warnings WFU01, WFU03, WPP02, WPP03, 
-	    // EEX01, EEX02, EEX03, WEX04, WEX05: 
+	    // EEX01, EEX02, EEX03, WEX04, WEX05: EFU07, EFU08, EFU09
 	    this.latexProcessor.processGraphics();
 	} catch (BuildFailureException e) {
 	    throw new MojoFailureException(e.getMessage(), e.getCause());

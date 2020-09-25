@@ -23,6 +23,7 @@ public class LatexCfgTask extends AbstractLatexTask {
      * <ul>
      * <li> WFU01: Cannot read directory... 
      * <li> WFU03: cannot close 
+     * <li> EFU07, EFU08, EFU09: if filtering a file fails. 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
@@ -55,7 +56,7 @@ public class LatexCfgTask extends AbstractLatexTask {
 	try {
 	    // may throw BuildFailureException 
 	    // TSS01, TSS02, TSS03, TEX01, TFU01, TFU03, TFU04, TFU05, TFU06 
-	    // may log WFU01, WFU03, EFU05, EFU06, 
+	    // may log WFU01, WFU03, EFU05, EFU07, EFU08, EFU09
 	    // WPP02, WPP03, 
 	    // EEX01, EEX02, EEX03, WEX04, WEX05 
 	    this.latexProcessor.create();
