@@ -7,13 +7,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.1"
-   width="64mm"
-   height="52mm"
-   onload="loaded()"
+   viewBox="0 0 226.77165 184.25197"
+   sodipodi:docname="F4_07someSvg.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    id="svg2"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="08someSvg.svg">
+   onload="loaded()"
+   height="52mm"
+   width="64mm"
+   version="1.1">
   <metadata
      id="metadata16">
     <rdf:RDF>
@@ -29,43 +30,46 @@
   <defs
      id="defs14" />
   <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10000"
-     gridtolerance="10000"
-     guidetolerance="10000"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1105"
-     inkscape:window-height="802"
-     id="namedview12"
-     showgrid="true"
-     showguides="true"
-     inkscape:zoom="2.2250293"
-     inkscape:cx="132.71002"
-     inkscape:cy="61.388492"
-     inkscape:window-x="26"
-     inkscape:window-y="133"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2"
-     units="mm"
-     height="296mm"
-     inkscape:showpageshadow="false"
-     inkscape:snap-perpendicular="true"
-     inkscape:snap-tangential="false"
+     inkscape:document-rotation="0"
+     inkscape:snap-path-mask="true"
      inkscape:snap-path-clip="true"
-     inkscape:snap-path-mask="true">
+     inkscape:snap-tangential="false"
+     inkscape:snap-perpendicular="true"
+     inkscape:showpageshadow="false"
+     height="296mm"
+     units="mm"
+     inkscape:current-layer="svg2"
+     inkscape:window-maximized="0"
+     inkscape:window-y="133"
+     inkscape:window-x="26"
+     inkscape:cy="61.388492"
+     inkscape:cx="132.71002"
+     inkscape:zoom="2.2250293"
+     showguides="true"
+     showgrid="true"
+     id="namedview12"
+     inkscape:window-height="802"
+     inkscape:window-width="1105"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10000"
+     gridtolerance="10000"
+     objecttolerance="10000"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff">
     <inkscape:grid
-       type="xygrid"
-       id="grid3344"
-       units="mm"
+       originy="0"
+       originx="0"
+       spacingy="0.70866142"
        spacingx="0.70866142"
-       spacingy="0.70866142" />
+       units="mm"
+       id="grid3344"
+       type="xygrid" />
   </sodipodi:namedview>
   <script
-     type="text/javascript"
-     id="script4"><![CDATA[
+     id="script4"
+     type="text/javascript"><![CDATA[
       function loaded() {
         // change onloadFunc to point to your real onload function that you
         // want called when the page is truly ready
@@ -90,22 +94,24 @@
      }
   ]]></script>
   <g
-     id="myGroup"
+     transform="matrix(1.1485394,0,0,1.0237035,-4.6940592,-9.3407203)"
      style="font-size:18px;font-family:serif;text-anchor:middle;fill:#0000ff"
-     transform="matrix(1.1485394,0,0,1.0237035,-4.6940592,-9.3407203)">
+     id="myGroup">
     <circle
-       id="myCircle"
-       cx="100"
-       cy="75"
+       style="stroke:#b22222;stroke-width:3"
        r="50"
-       style="stroke:#b22222;stroke-width:3" />
+       cy="75"
+       cx="100"
+       id="myCircle" />
     <text
-       x="100"
+       style="line-height:0%"
+       id="text8"
        y="155"
-       id="text8">Hello World</text>
+       x="100">Hello World</text>
     <text
-       x="100"
+       style="line-height:0%"
+       id="text10"
        y="175"
-       id="text10">From An SVG File!</text>
+       x="100">From An SVG File!</text>
   </g>
 </svg>
