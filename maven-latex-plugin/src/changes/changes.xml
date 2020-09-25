@@ -75,6 +75,12 @@
 	    Try formulae with mathml and with mathjax 
 	    What about tables, listings, figures?
        -->
+       <!-- take texnische komoedie into account 
+	    to evaluate the ways html export can be done -->
+       <!-- latexml is interesting not only for html export 
+	    but also for further analysis of tex files. 
+	    Desirable: a SAX like interface. 
+	    This could be intersting for all kinds of latex converters. -->
        <!-- test latexml
 	    $ latexml --dest beispiel.xml beispiel.tex
 	    $ latexmlpost --format=html4 --mathimages -dest=bsp.html bsp.xml
