@@ -8,6 +8,13 @@
 
 \input{header.tex}
 
+% TBD: integrate that into git 
+\newcommand{\groupId}{\texttt{eu.simuline.m2latex}}
+\newcommand{\artifactId}{\texttt{latex-maven-plugin}}
+\newcommand{\versionID}{\texttt{1.5-SNAPSHOT}}
+\newcommand{\repo}{\texttt{ftp://www.simuline.eu/public\_html/RepositoryMaven}}
+\newcommand{\devSite}{\texttt{https://github.com/Reissner/maven-latex-plugin}}
+
 \ifthenelse{\boolean{texFhtLoaded}}{%
   % no glossaries and no index with tex4ht 
   \newcommand{\gls}[1]{#1}
@@ -81,8 +88,8 @@ glossary file containing sorted, unified and formatted glossary entries}
 \endgroup}
 %and to number the Listof heading do:
 \renewcommand{\lstlistoflistings}{\begingroup
-\tocsection
-\tocchapter
+%\tocsection
+%\tocchapter
 \tocfile{List of \lstlistingname{}s}{lol}
 \endgroup}
 
@@ -92,7 +99,7 @@ glossary file containing sorted, unified and formatted glossary entries}
 % does not work 
 %\setindexpreamble[pkg]{This index comprises all the latex packages used. }
 
-\title{Manual for the latex-maven-plugin and for an according ant-task }
+\title{Manual for the \artifactId{} and for an according ant-task }
 \author{Ernst Reissner (rei3ner@arcor.de)}
 
 
@@ -144,7 +151,8 @@ and still creation of external formats like \gls{html},
 It is much more lightweight than pdf specified in~\cite{Pdf1}, \cite{Pdf2}
 and in~\cite{Pdf3}.
 % strange: no mention of other formats
-% epub for example, html and office formats 
+% epub for example, htm, xhtml and office formats also rtf
+% manpages, javahelp
 
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from \LaTeX-files 
@@ -447,7 +455,8 @@ to insert hypertext marks, which i do not want to miss in larger documents.
 %\iflatextortf\else\end{appendix}\fi
 \item
 \pkg{srcltx} described in \cite{SrcLtxP} 
-which allows to jump from the DVI file to the .tex source and back. 
+which allows to jump from the DVI file to the .tex source and back.
+% TBD: indicate as deprecated. 
 \item
 \pkg{showframe} 
 if \pkg{geometry} is not used with option \pkg{showframe}. 
@@ -554,17 +563,38 @@ The according entry to be added to the \texttt{pom.xml}
 is then just the one given in Listing~\ref{lst:coords}. 
 %
 %\lstset{language=xml, basicstyle=\small}
-\begin{lstlisting}[language=xml, basicstyle=\small,
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+escapechar=|,
 float, captionpos=b, label={lst:coords}, 
 caption={The coordinates of this plugin}]
 <!-- create html and pdf and other formats from latex -->
 <plugin>
-  <groupId>de.akquinet.jbosscc.latex</groupId>
-  <artifactId>latex-maven-plugin</artifactId>
-  <version>1.3-SNAPSHOT</version><!--uptodate?-->
-  <!--artifactId>maven-latex-plugin</artifactId>
-      <version>1.2</version--><!--uptodate?-->
+  <groupId>|\groupId|</groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\versionID|</version>
 </plugin>
+\end{lstlisting}
+%
+% TBD: add the plugin to mavencentral
+Unfortunately, this plugin did not yet make it into maven central.
+Thus one has to add the providers repository to the pom
+as shown in Listing~\ref{lst:srcRepo}. 
+
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=b, label={lst:srcRepo}, 
+caption={The source repository for this plugin}]
+<project ...>
+  ...
+  <repositories>
+    <repository>
+      <id>publicRepoAtSimuline</id>
+      <name>repo at simuline</name>
+      <url>|\repo|</url>
+    </repository>
+  </repositories>
+  ...
+</project>
 \end{lstlisting}
 
 Likewise to install the ant-task within an ant-project, 
@@ -580,9 +610,21 @@ where a deviation from the default requires to do so.
 
 
 
-\section{Completing the Installation}\label{sec:instComplete}
+\section{Installation from source}\label{sec:instSrc}
 
-To install the maven-plugin, just type \texttt{mvn clean install}. 
+To install from source, just clone from the repository by
+%
+\begin{Verbatim}[commandchars=\\\{\}]
+git clone \devSite{}
+\end{Verbatim}
+%
+of course assuming that \texttt{git} has been installed.
+Then to install the maven-plugin, just type 
+%
+\begin{Verbatim}
+mvn clean install
+\end{Verbatim}
+%
 To install the ant-task, one has first to comment out in \texttt{build.xml} 
 the task definition \texttt{latex} and the target \texttt{latex:cfg}. 
 One may also adapt the lib-folder of the ant-installation, 
@@ -609,10 +651,36 @@ One may always recover by just creating with maven.
 
 \chapter{Usage of Plugin and Task}\label{chap:usage}
 
+% TBD: in the long run: plugin, task and standalone, or as a dependency
+This software offers both, a maven plugin and an according ant task
+but the emphasis is on the maven plugin.
+Thus all sections of this chapter are either general
+or apply to the maven plugin.
+Only Section~\ref{sec:usageAntTask} specifically refer to the ant task. 
+Usage presupposes installation as described in Chapter~\ref{chap:install}
+including settings in \texttt{pom.xml}
+as described in Section~\ref{sec:sgml}.
+
 This plugin may be used both if the \LaTeX-sources are finished 
 to create the output described by them 
 and also to support development of the \LaTeX{} sources. 
-Accordingly, this section has two subsections. 
+Accordingly, this chapter has Section~\ref{sec:sources}
+devoted to the form of the sources, including directory structure,
+\LaTeX-files and others, mainly graphic files included
+and a section, \ref{sec:stableUsage} on exporting into various formats.
+
+There is a very special usage, called information development,
+which means while the document is under construction.
+The features and goals tied to this phase
+are collected in Section~\ref{sec:devel}.
+
+In contrast, Section~\ref{sec:usageLifecycle}
+is on usage of the maven plugin within the lifecycles.
+This can be used during information development
+but is more appropriate for small changes
+or when development finished at a stage. 
+
+
 
 \section{The source files}\label{sec:sources}
 
@@ -629,7 +697,8 @@ As an example,
 in the {\em tex-source directory\/} of this software, 
 \texttt{manualLatexMavenPlugin.tex} is a \LaTeX{} main file, 
 whereas the file \texttt{header.tex} is not although also a \LaTeX-file. 
-% identification of the latex main file? 
+% identification of the latex main file?
+\LaTeX{} main files are detected automatically. 
 \index{latex main file}
 
 The included files may be again \LaTeX-files but also graphic files 
@@ -700,10 +769,11 @@ because of the lack of flexibility and further advantages.
 The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
 are assumed to be in one single folder. 
 If one file is included by two different main files, 
-a link shall be used. 
+a link shall be used.
+%TBC: True???
 
 Note that unlike former version, 
-the current version of this software does create a working directory 
+the current version of this software does not create a working directory 
 by cloning the tex-source directory. 
 Instead it operates directly on the tex-source directory 
 also creating intermediate files. 
@@ -716,13 +786,19 @@ i.e.~of types~\ref{it:transExp} or~\ref{it:transImp} above,
 additional files are created with the same name up to the suffix. 
 Thus for these graphic files no file with the same name 
 up to the ending is allowed. 
-The same is true for the \LaTeX{} main files. 
+The same is true for the \LaTeX{} main files.
+
+Besides the \LaTeX-files and the graphics files
+there is a third kind of file supported:
+Bibliographies in bib-files.
+This software treats them automatically. 
 
 
-\section{Exporting in various formats}\label{chap:stableUsage}
+\section{Exporting in various formats}\label{sec:stableUsage}
 
 
-After having added the configuration of the plugin to the \texttt{pom.xml}, 
+After having added the configuration of the plugin to the \texttt{pom.xml},
+minimally the one given in Section~\ref{sec:sgml},
 it can be used directly invoking maven through 
 \texttt{mvn latex:cfg}. 
 Here \texttt{latex} is the (short) name of the plugin 
@@ -731,8 +807,6 @@ It can also be interpreted as \texttt{mvn $<$source$>$:$<$target$>$}:
 The source files are in \texttt{latex}-format and the target-formats 
 are read from the {\em configuration\/} in the pom 
 ({\em configuration\/} is what \texttt{cfg} stands for). 
-The goal \texttt{cfg} 
-is executed in maven's \texttt{site} life-cycle by default. 
 
 By default, the target formats are \texttt{pdf} and \texttt{html}. 
 The following Listing~\ref{lst:targetsAll} shows a configuration 
@@ -745,15 +819,14 @@ but may also be configured to produce the old fashioned \gls{doc} format.
 %
 %\lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}[language=xml, basicstyle=\small,
+escapechar=|,
 float, captionpos=b, label={lst:targetsAll}, 
 caption={Configuration with full range output formats}]
 <!-- create html and pdf and other formats from latex -->
 <plugin>
-  <groupId>de.akquinet.jbosscc.latex</groupId>
-  <artifactId>latex-maven-plugin</artifactId>
-  <version>1.3-SNAPSHOT</version><!--uptodate?-->
-  <!--artifactId>maven-latex-plugin</artifactId>
-      <version>1.2</version--><!--uptodate?-->
+  <groupId>|\groupId|/groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\versionID|</version>
 	
   <configuration>
     <settings>
@@ -786,13 +859,6 @@ from within a development environment.
 Thus the goal {\em graphics\/} is thus a vital feature 
 for information development. 
 
-Another goal useful for information development is {\em check\/} 
-invoked by \texttt{mvn latex:chk}, 
-which essentially runs the checker \texttt{chktex} on the latex main files 
-after creating graphic files as for goal {\em graphics}. 
-Again, no output is created in the site directory. 
-Only a check report is created and if the report is not empty, 
-an according message is logged. 
 
 Finally, there is another target for clearing the tex-source directory 
 recursively, invoked by \texttt{mvn latex:clr}. 
@@ -911,15 +977,14 @@ For the ant-task likewise.
 %
 %\lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}[language=xml, basicstyle=\small,
+escapechar=|,
 float, captionpos=b, label={lst:noCleanup},
 caption={Configuration without cleanup}]
 <!-- create html and pdf and other formats from latex -->
 <plugin>
-  <groupId>de.akquinet.jbosscc.latex</groupId>
-  <artifactId>latex-maven-plugin</artifactId>
-  <version>1.3-SNAPSHOT</version><!--uptodate?-->
-  <!--artifactId>maven-latex-plugin</artifactId>
-      <version>1.2</version--><!--uptodate?-->
+  <groupId>|\groupId|</groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\versionID|</version>
 	
   <configuration>
     <settings>
@@ -934,7 +999,8 @@ caption={Configuration without cleanup}]
 But how can one get rid of all these newly created files? 
 That is what is the goal \texttt{latex:clr} is for: 
 It removes all created graphic files 
-and for each latex main file, it removes all files with ``similar'' names. 
+and for each latex main file, it removes all files with ``similar'' names
+including log files, index files and that like. 
 Typically, this suffices, to remove all files created. 
 If not, 
 try to modify parameter \texttt{\$patternCreatedFromLatexMain} 
@@ -942,7 +1008,10 @@ in the pom accordingly.
 If this does not help either, please inform the developer of this software. 
 Of course, if further software is used which creates additional files, 
 like Emacs creates a folder \texttt{auto}, 
-these files cannot be removed by this maven-plugin or this ant-task. 
+these files cannot be removed by this maven-plugin or this ant-task.
+Note that \texttt{latex:clr}
+also removes exported files as listed in Section~\ref{sec:stableUsage}
+from the target folder. 
 
 During development of a \LaTeX-main file, 
 it is often more convenient to compile from within an editor like Emacs. 
@@ -994,6 +1063,35 @@ described in~\cite{BooktP}.
 % rasterizer -m application/pdf file.svgz -d file.pdf
 % cairosvg in.svg -o out.pdf
 % yyy
+
+\section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
+
+The goal \texttt{latex:cfg} exporting in the formats configured
+is tied to the lifecycle phase \texttt{site} so is invoked
+when commanding
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+mvn site
+\end{Verbatim}
+%
+or subsequent phase.
+
+Also the goal \texttt{latex:clr} cleaning created files
+both from source directory and from target directory
+is tied to phase \texttt{clear} so is invoked
+when commanding
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+mvn clear
+\end{Verbatim}
+
+% TBD: maybe vrs or sth is tied to phase validate
+
+\section{The ant-tasks}\label{sec:usageAntTask}
+
+This section is missing.
+What has to be described are the two tasks. 
+
 
 \chapter{Graphical Preprocessing}\label{chap:GraphConversions}
 
@@ -1412,7 +1510,7 @@ To export a file \texttt{xxx.gp} into several external formats,
 it uses \texttt{gnuplot} itself. 
 According to the manual~\cite{GnuPlot}, Part IV, 
 \texttt{gnuplot} supports output formats through so called {\em terminals}. 
-Among those are several ones intended for inclusion into latex-files, 
+Among those are several ones intended for inclusion into \LaTeX-files, 
 like \texttt{Cairolatex}, \texttt{Eepic}, \texttt{Epslatex}, 
 \texttt{Latex}, \texttt{Lua}, 
 \texttt{Mf}, \texttt{Mp}, \texttt{Postscript}, \texttt{Ps(la)tex}, % chktex 36
@@ -1689,7 +1787,7 @@ in the course of a \LaTeX-run
 creating files \texttt{xxx.pdf} and \texttt{xxx.pdf\_tex}. 
 As described for fig-files in Section~\ref{sec:fig2dev} 
 and for gnuplot-files in Section~\ref{sec:gnuplot2dev}: 
-The latter is a latex-file containing text 
+The latter is a \LaTeX-file containing text 
 and including the former. 
 To include \texttt{xxx.pdf} 
 of course the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx} 
@@ -1733,7 +1831,7 @@ inkscape -D --export-filename=xxx.pdf --export-latex xxx.svg
 \end{Verbatim}
 %
 \texttt{inkscape} creates a file \texttt{xxx.pdf}
-containing all graphics but text and a file \texttt{xxx.pdf\_tex}
+containing all graphics but text and another file \texttt{xxx.pdf\_tex}
 containing text and including \texttt{xxx.pdf}.
 The file \texttt{xxx.pdf\_tex}
 can be be integrated into the latex document as
@@ -1763,8 +1861,8 @@ inkscape -D --export-filename=xxx.eps --export-latex xxx.svg
 exports files \texttt{xxx.eps\_tex} and \texttt{xxx.eps}.
 
 In older versions of \texttt{inkscape},
-there was a configuration which made \texttt{xxx.eps\_tex}
-able to include uniformly both \texttt{xxx.pdf} and \texttt{xxx.eps}.
+there was a configuration allowing \texttt{xxx.eps\_tex}
+to include uniformly both \texttt{xxx.pdf} and \texttt{xxx.eps}.
 Thus \texttt{xxx.pdf\_tex} could be deleted
 and \texttt{xxx.eps\_tex} moved to \texttt{xxx.ptx}
 which in turn could be included into the main document.
@@ -1891,7 +1989,7 @@ as described in Section~\ref{sec:tex2txt}.
 
 
 
-\section{Transforming latex-files into pdf-files}\label{sec:tex2pdf}
+\section{Transforming \LaTeX-files into pdf-files}\label{sec:tex2pdf}
 
 The next step is to create a pdf-file from the tex-files. 
 \LaTeX{} distinguishes master tex-files from tex-files intended to be inputted
@@ -3559,7 +3657,7 @@ rerun \LaTeX{} and have a look at the log-file.
 \texttt{pdfViaDvi}    & \texttt{false}          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Whether creation of pdf-files from latex-files 
+Whether creation of pdf-files from \LaTeX-files 
 goes via dvi-files. 
 
 If \texttt{\$pdfViaDvi} is set 
@@ -3570,7 +3668,7 @@ invoking the command \texttt{\$dvi2pdfCommand}
 If \texttt{\$pdfViaDvi} is not set, 
 latex is directly converted into pdf. 
 
-Currently, not only conversion of latex-files is affected, 
+Currently, not only conversion of \LaTeX-files is affected, 
 but also conversion of graphic files 
 into graphic formats which allow inclusion in the tex-file. 
 If it goes via latex, 
@@ -5100,7 +5198,7 @@ given by Listing~\ref{lst:fullConfig}.
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[language=xml, basicstyle=\scriptsize,
 firstline=220, lastline=1108,
-breaklines,
+breaklines, showstringspaces=false,
 %float,
 captionpos=b, label={lst:fullConfig},
 caption={The full configuration of this maven plugin}]
