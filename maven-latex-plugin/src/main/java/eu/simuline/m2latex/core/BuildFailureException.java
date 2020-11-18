@@ -28,7 +28,7 @@ package eu.simuline.m2latex.core;
  * @author <a href="mailto:rei3ner@arcor.de">Ernst Reissner</a>
  * @version 1.0
  */
-public class BuildFailureException extends MyBuildException {
+public class BuildFailureException extends AbstractBuildException {
 
     public BuildFailureException(String message) {
 	super(message);

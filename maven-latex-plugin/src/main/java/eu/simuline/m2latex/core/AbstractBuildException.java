@@ -13,13 +13,13 @@ package eu.simuline.m2latex.core;
  * @author <a href="mailto:rei3ner@arcor.de">Ernst Reissner</a>
  * @version 1.0
  */
-class MyBuildException extends Exception {
+class AbstractBuildException extends Exception {
 
-   protected MyBuildException(String message) {
+   protected AbstractBuildException(String message) {
        super(message);
     }
 
-    protected MyBuildException(String message, Throwable cause) {
+    protected AbstractBuildException(String message, Throwable cause) {
 	super(message, cause);
     }
 }
