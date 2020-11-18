@@ -390,41 +390,66 @@ Tikz/pgf provide a superset of the features of xfig.
 
 Goals `cfg` to create, `clr` to cleanup as described 
 in [Section 'Cleanup after creation'](sss:featuresCleanup). 
+Invocation is e.g. as 
+```
+mvn latex:cfg
+```
 These goals are in a one-to-one relation 
 to an according ant task 
 described in [Section 'The latex ant tasks'](ss:antTasks).
 
 The other goals of the maven plugin go beyond ant functionality. 
-First of all, there are separate goals 
-	`pdf`, `dvi`, `docx`, `rtf`, `odt`, `html` and `txt` 
-	to create artifacts in a specific format. 
-Important also goal `chk` for a stylecheck on the sources. 
-There is another goal, `grp`, to build the graphic files only. 
-
-
-
-Maven coordinates:
-
-```
-<dependency>
-   <groupId>eu.simuline.m2latex</groupId>
-   <artifactId>latex-maven-plugin</artifactId>
-   <version>1.5-SNAPSHOT</version> 
-</dependency>
-```
-
+- there are separate goals to create artifacts in a specific format
+	`pdf`, `dvi`, `docx`, `rtf`, `odt`, `html` and `txt`. 
+- goal `chk` for a stylecheck on the sources. 
+  This is advisable at the end of development but also 
+  as sporadic intermediate step. 
+- There is another goal, `grp`, to build the graphic files only. 
+  This is used mainly during development of the documents: 
+  If all graphics is present, one can go on with an IDE 
+  without this plugin. 
+<!-- - goal `vrs` checks the versions -->
 
 A maven plugin is just an interface between maven 
 and the application(s) doing all the work. 
+We refer the reader to [Section 'Installation'](ss:installation) 
+for preparatory installations. 
 
-In this case, needed are 
-- a derivative of latex, as latex, pdflatex or something 
-- something like bibtex 
-- something like makeindex 
-- tex4ht for creation of all but rtf, pdf and dvi 
-  including html, odt and doc 
-- latex2rtf for creation of rtf 
-- odt2doc for creation of doc and docx 
+Unfortunately, this plugin did not yet make it into maven central. 
+Thus one has to add the providers repository to the pom: 
+
+```
+<project ...>
+  ...
+  <repositories>
+    <repository>
+      <id>publicRepoAtSimuline</id>
+      <name>repo at simuline</name>
+      <url>ftp://www.simuline.eu/public_html/RepositoryMaven</url>
+    </repository>
+  </repositories>
+  ...
+</project>
+```
+
+Then it can be used within a build just with coordinates 
+and in many cases without configuration. 
+
+```
+<project ...>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>eu.simuline.m2latex</groupId>
+        <artifactId>latex-maven-plugin</artifactId>
+        <version>1.5-SNAPSHOT</version> 
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
+```
 
 
 The following code snippet shows all possible configuration settings with
