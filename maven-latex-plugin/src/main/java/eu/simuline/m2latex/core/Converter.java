@@ -354,6 +354,7 @@ enum Converter {
 	String getVersionPattern() {
 	    return X_X_X;
 	}
+	// TBD: sometimes the pango line '    Pango version: 1.46.2' comes first. 
 	String getVersionEnvironment() {
 	    return "^Inkscape %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
 	}

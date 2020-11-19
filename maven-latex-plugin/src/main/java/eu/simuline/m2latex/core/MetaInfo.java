@@ -546,6 +546,14 @@ public class MetaInfo {
 		"command:", "actual version", "expected version"));
 
 	Properties versionProperties = getProperties(VERSION_PROPS_FILE);
+	if (versionProperties.size() > Converter.values().length) {
+	    // Relation < need not be checked since all converters are checked below 
+	    throw new IllegalStateException("Number of version properites " + 
+	            versionProperties.size() +
+		    " does not fit number of converters " + 
+	            Converter.values().length + ". ");
+	}
+	
 	//System.out.println("version props"+versionProperties);
 	String cmd, line, actVersion, expVersion, logMsg;
 	Matcher matcher;
