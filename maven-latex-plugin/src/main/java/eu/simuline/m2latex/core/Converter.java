@@ -12,7 +12,7 @@ enum Converter {
 	   return "([0-9\\.-]*)";
 	}
 	String getVersionEnvironment() {
-	    return "^pdfTeX %s\\(TeX Live";
+	    return "^pdfTeX %s \\(TeX Live";
 	}
     },
     LuaLatex {
