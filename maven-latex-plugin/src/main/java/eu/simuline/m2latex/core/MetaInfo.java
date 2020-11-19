@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.jar.Attributes;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -556,7 +557,7 @@ public class MetaInfo {
 		    cmd, new String[] {
 		    conv.getVersionOption()});
 	    //this.log.info(line);
-	    matcher = conv.getVersionPattern().matcher(line);
+	    matcher = Pattern.compile(conv.getVersionPattern()).matcher(line);
 	    if (matcher.find()) {
 		actVersion = matcher.group(1);
 	    } else {
