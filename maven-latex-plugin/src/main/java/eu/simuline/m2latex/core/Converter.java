@@ -146,19 +146,42 @@ enum Converter {
 	String getCommand() {
 	    return "bibtexu";
 	}
+
+	/**
+	 * Returns the pattern for the version string. 
+	 * Note that <code>bibtexu -v</code> yields three versions, 
+	 * the version of bibtex (something like 0.99d) 
+	 * which is something like the specification version, 
+	 * the ICU version and the release version (and date). 
+	 * What is returned is the latter version.  
+	 * 
+	 * @return
+	 *    the pattern for the version string. 
+	 */
 	Pattern getVersionPattern() {
-	    return Pattern.compile("^This is BibTeXu: a UTF-8 Big BibTeX " + 
-	"version ([0-9\\.]*[a-z])\n");
+	    return Pattern.compile("^[^\n]*\n[^\n]*\n" +
+	"Release version: ([0-9\\.]+) \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n");
 	}
     },
     Bibtex8 {
 	String getCommand() {
 	    return "bibtex8";
 	}
-	// TBC: not clear whether this is the significant version 
+
+	/**
+	 * Returns the pattern for the version string. 
+	 * Note that <code>bibtex8 -v</code> yields three versions, 
+	 * the version of bibtex (something like 0.99d) 
+	 * which is something like the specification version, 
+	 * the ICU version and the release version (and date). 
+	 * What is returned is the latter version.  
+	 * 
+	 * @return
+	 *    the pattern for the version string. 
+	 */
 	Pattern getVersionPattern() {
-	    return Pattern.compile("^This is 8-bit Big BibTeX " + 
-	"version ([0-9\\.]*[a-z])\n");
+	    return Pattern.compile("^[^\n]*\n[^\n]*\n" +
+	"Release version: ([0-9\\.]+) \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n");
 	}
     },
 //    Makeindex {
@@ -238,7 +261,7 @@ enum Converter {
 	}
 	// 2nd line 
 	Pattern getVersionPattern() {
-	    return Pattern.compile("^.*\nThis is ebb Version ([0-9]+)\n");
+	    return Pattern.compile("^[^\n]*\nThis is ebb Version ([0-9]+)\n");
 	}
     },
     Gnuplot {
