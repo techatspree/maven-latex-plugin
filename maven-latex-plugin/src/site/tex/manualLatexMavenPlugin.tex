@@ -597,6 +597,27 @@ caption={The source repository for this plugin}]
 </project>
 \end{lstlisting}
 
+To check whether the installation of the plugin succeeded,
+in the directory of the pom command
+%
+\begin{Verbatim}
+mvn latex:vrs
+\end{Verbatim}
+%
+which shall return meta info, above all the version of the plugin,
+which is
+% 
+\begin{Verbatim}
+\versionID,
+\end{Verbatim}
+%
+and a list all converters needed
+together with the actual versions and the expected versions.
+Note that not all converters need to be installed.
+For details see Section~\ref{sec:devel}.
+%TBD: maybe better split that section accordig to goals. 
+
+
 Likewise to install the ant-task within an ant-project, 
 the listing of a build file entry given in Chapter~\ref{chap:settings} 
 has to be added to the \texttt{build.xml}. 
@@ -998,9 +1019,14 @@ caption={Configuration without cleanup}]
 
 But how can one get rid of all these newly created files? 
 That is what is the goal \texttt{latex:clr} is for: 
-It removes all created graphic files 
+% 
+\begin{Verbatim}
+mvn latex:clr
+\end{Verbatim}
+%
+removes all created graphic files 
 and for each latex main file, it removes all files with ``similar'' names
-including log files, index files and that like. 
+including log files, index files and that like.
 Typically, this suffices, to remove all files created. 
 If not, 
 try to modify parameter \texttt{\$patternCreatedFromLatexMain} 
@@ -1017,7 +1043,12 @@ During development of a \LaTeX-main file,
 it is often more convenient to compile from within an editor like Emacs. 
 The problem is, that compilation fails if the graphic files are missing. 
 This is what the goal {\em graphics\/} accessible via 
-\texttt{mvn latex:grp} is for: 
+% 
+\begin{Verbatim}
+mvn latex:grp
+\end{Verbatim}
+%
+is for: 
 It creates all graphic files required to compile the \LaTeX-main files. 
 
 Still this does not create a bibliography, an index or a glossary. 
@@ -1043,8 +1074,13 @@ where \texttt{xxx} is
 \texttt{ilg} for \texttt{makeindex}. 
 \end{itemize}
 
-The last goal supporting information development is {\em check}. 
-It is invoked via \texttt{mvn latex:chk} 
+The last goal regularly used for information development is {\em check}. 
+It is invoked via 
+% 
+\begin{Verbatim}
+mvn latex:chk
+\end{Verbatim}
+%
 and runs \texttt{chktex}, described in~\cite{ChkTeX}, 
 on each latex main file 
 after having created graphic files as for goal {\em graphics}. 
@@ -1063,6 +1099,74 @@ described in~\cite{BooktP}.
 % rasterizer -m application/pdf file.svgz -d file.pdf
 % cairosvg in.svg -o out.pdf
 % yyy
+
+Finally, we have the goal \texttt{latex:vrs}
+to display meta information, above all version information:
+% 
+\begin{Verbatim}
+mvn latex:vrs
+\end{Verbatim}
+%
+displays something like what is displayed in Listing~\ref{lst:vrsOut}.
+As one can see, there are several converters with inapropriate versions.
+% TBC
+Note that \texttt{makeindex} is not in the list.
+This is because it is not possible
+to regularly check the version of that application.
+It may be an option to use \texttt{upmendex} instead,
+although in beta state at time of this writing
+and not completely compatible.
+According to \cite{UpMendex}, \cite{MkIdxMoe}
+and further research,
+\texttt{upmendex} does not support options \texttt{-T} and \texttt{-L}
+and does interprete \texttt{-g} differently,
+namely as japanese instead of german. 
+
+
+\begin{lstlisting}[basicstyle=\small,
+float, captionpos=b, label={lst:vrsOut}, 
+caption={Output of goal \texttt{latex:vrs}}]
+[INFO] Manifest properties: 
+[INFO] MANIFEST: (1.0)
+[INFO] Implementation-Version: '1.5-SNAPSHOT'
+[INFO] Implementation-Version: '1.5-SNAPSHOT'
+[INFO] pom properties:
+[INFO] coordinate.groupId:    'eu.simuline.m2latex'
+[INFO] coordinate.artifactId: 'latex-maven-plugin'
+[INFO] coordinate.version:    '1.5-SNAPSHOT'
+[INFO] git properties: 
+[INFO] build version:  '1.5-SNAPSHOT'
+[INFO] commit id desc: 'latex-maven-plugin-1.4-49-g479b11e-dirty'
+[INFO] buildTime:      '2020-11-18T23:32:59+0100'
+[INFO] tool versions: 
+[INFO] command:        'actual version'/'expected version'
+[INFO] pdflatex:       '3.14159265-2.6-1.40.21'/'3.14159265-2.6-1.40.21'
+[INFO] lualatex:       '1.12.0'/'1.12.0'
+[INFO] xelatex:        '3.14159265-2.6-0.999992'/'3.14159265-2.6-0.999992'
+[WARNING] WMI02: Conflict latex2rtf:      '2.3.18 r1267'/'2.3.16 r1254'
+[WARNING] WMI02: Conflict odt2doc:        '0.9.0'/'0.9.9'
+[WARNING] WMI02: Conflict pdftotext:      '20.10.0'/'0.90.0'
+[INFO] dvips:          '2020.1'/'2020.1'
+[INFO] dvipdfm:        '20200315'/'20200315'
+[INFO] dvipdfmx:       '20200315'/'20200315'
+[INFO] xdvipdfmx:      '20200315'/'20200315'
+[INFO] dvipdft:        '20090604.0046'/'20090604.0046'
+[WARNING] WMI02: Conflict gs:             '9.53.3'/'9.52'
+[INFO] chktex:         '1.7.6'/'1.7.6'
+[INFO] bibtex:         '0.99d'/'0.99d'
+[WARNING] WMI02: Conflict bibtexu:        '0.99d'/'3.71'
+[WARNING] WMI02: Conflict bibtex8:        '0.99d'/'3.71'
+[INFO] upmendex:       '0.54'/'0.54'
+[INFO] splitindex:     '0.1'/'0.1'
+[INFO] xindy:          '2.5.1'/'2.5.1'
+[INFO] makeglossaries: '4.45'/'4.45'
+[INFO] mpost:          '2.00'/'2.00'
+[INFO] ebb:            '20200315'/'20200315'
+[INFO] gnuplot:        '5.4'/'5.4'
+[INFO] inkscape:       '1.0.1'/'1.0.1'
+[INFO] fig2dev:        '3.2.7b'/'3.2.7b'
+\end{lstlisting}
+
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
 
@@ -4643,10 +4747,45 @@ conversion into various output formats.
 \item[SS] Settings: A container holding the values of all parameters. 
 These are either default or read from the configuration 
 in the pom for the maven plugin and in the build file for the ant task. 
+\item[MI] MetaInfo: offering meta information
+  as expected and actual versions of converters. 
 \item[FU] TexFileUtilsImpl: a class providing access to files. 
 \end{itemize}
 %
 Finally, \texttt{DD} is a two digit number enumerating the messages.
+
+
+\begin{longtable}{|ll|}
+\toprule
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:LogMI} The logging for MetaInfo   }
+\endlastfoot%
+\texttt{\footnotesize WMI01} 
+& \texttt{\footnotesize Version string '\$line'     } \\
+& \texttt{\footnotesize from converter \$conv did not match expected form. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  Indicates whtat the version string coming from the converter \$conv
+  is not as expected.
+  Programming error excluded, this means that the version does not fit. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WMI02} 
+& \texttt{\footnotesize Conflict \$conv '\$actVersion'/'\$expVersion'} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  Indicates that the version of converter \$conv can be detected
+  and is \$actVersion but does not fit the expectation which is \$expVersion.g 
+\end{minipage}
+}
+\end{longtable}
+
+
 
 
 \begin{longtable}{|ll|}
@@ -4718,7 +4857,6 @@ TBD
 \end{minipage}
 } \\
 \end{longtable}
-
 TBD: check whether workaround still necessary. 
 TBD: complete list
 TBD: add missing lists 
@@ -4734,7 +4872,47 @@ that the underlying system does not work properly,
 as if the tex source directory or a sub-directory is not readable 
 or if execution of an external program fails. 
 The latter does not mean that the program returns with an error code, 
-but it means that execution from within java fails. 
+but it means that execution from within java fails.
+
+\begin{longtable}{|ll|}
+\toprule
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:TEX} The BuildFailureException of the internal class
+  CommandExecutorImpl }
+\endlastfoot%
+\texttt{\footnotesize TEX01} & \texttt{\footnotesize Error running \$command. }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Compare with EEX01 in Table~\ref{tab:WarnCEI}: 
+Error execution means 
+%
+\begin{itemize}
+\item
+the file expected to be the working directory 
+does not exist or is not a directory. 
+\item
+method \texttt{Runtime.exec(String, String[], File)} fails % chktex 36
+throwing an \texttt{IOException}. 
+\item
+an error inside systemOut parser occurs 
+\item
+an error inside systemErr parser occurs 
+\item
+Wrapping an \texttt{InterruptedException} 
+on the process to be executed thrown by \texttt{Proces.waitFor()}. % chktex 36
+\end{itemize}
+%
+whereas for EEX01 just a failure code is returned. 
+\end{minipage}
+} \\
+\end{longtable}
+
+
 
 \begin{longtable}{|ll|}
 \toprule
@@ -4784,45 +4962,44 @@ but if it exists and is a regular file, it cannot be created any more.
 \end{longtable}
 
 
+
+
 \begin{longtable}{|ll|}
 \toprule
-Identifier        & Message  \\
+Id.        & Message  \\
 \multicolumn2{|l|}{Explanation }  \\
 \midrule
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:TEX} The BuildFailureException of class
-  CommandExecutorImpl }
+\caption{\label{tab:BFExc} The BuildFailureExceptions of MetaInfo  }
 \endlastfoot%
-\texttt{\footnotesize TEX01} & \texttt{\footnotesize Error running \$command. }  \\
+\texttt{\footnotesize TMI01} 
+& \texttt{\footnotesize Cannot get stream to file '\$fileName'. }  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Compare with EEX01 in Table~\ref{tab:WarnCEI}: 
-Error execution means 
-%
-\begin{itemize}
-\item
-the file expected to be the working directory 
-does not exist or is not a directory. 
-\item
-method \texttt{Runtime.exec(String, String[], File)} fails % chktex 36
-throwing an \texttt{IOException}. 
-\item
-an error inside systemOut parser occurs 
-\item
-an error inside systemErr parser occurs 
-\item
-Wrapping an \texttt{InterruptedException} 
-on the process to be executed thrown by \texttt{Proces.waitFor()}. % chktex 36
-\end{itemize}
-%
-whereas for EEX01 just a failure code is returned. 
+  Stream to file within jar.
+  This may be the manifest file, pom.properties or git.properties. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TMI02} 
+& \texttt{\footnotesize Cannot load properties from file '\$fileName'.  }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  Provided the stream to the file is ok,
+  could not load property.
+  This may occur for pom.properties or git.properties. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TMI03} 
+& \texttt
+{\footnotesize IOException reading manifest. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Provided the stream to the manifest file is ok, could not read completely.
 \end{minipage}
 } \\
 \end{longtable}
-
-
 
 \begin{longtable}{|ll|}
 \toprule

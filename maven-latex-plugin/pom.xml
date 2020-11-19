@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+			     http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!-- coordinates for model and artifact xxx -->
   <modelVersion>4.0.0</modelVersion>
   
-  <!--parent>
+
+  <!-- The Basics -->
+  <groupId>eu.simuline.m2latex</groupId>
+  <artifactId>latex-maven-plugin</artifactId>
+  <version>1.5-SNAPSHOT</version>
+  <packaging>maven-plugin</packaging>
+
+    <!--parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent-->
 
-  <!-- The Basics -->
-  <groupId>eu.simuline.m2latex</groupId>
-  <artifactId>latex-maven-plugin</artifactId>
-  <packaging>maven-plugin</packaging>
-  <version>1.5-SNAPSHOT</version>
 
 
   <!-- information for generating a site -->
   <name>Maven LaTeX Plugin</name>
-  <!--url>http://akquinet.github.com/latex-maven-plugin/</url-->
   <description>
     Automatically create pdf, doc, odt, txt or html documents 
     from LaTeX sources during the Maven site phase
@@ -29,7 +33,7 @@
     and also check for rerun, warnings and under/overfull boxes. 
   </description>
 
-  <url>https://github.com/Reissner/maven-latex-plugin</url>
+  <url>https://github.com/Reissner/maven-latex-plugin/</url>
   <inceptionYear>2016</inceptionYear>
   <licenses>
     <license>
@@ -154,8 +158,16 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>3.6.3</version>
+      <version>${versionMvn}</version>
     </dependency>
+
+    <!-- for a trial in MetaInfo class -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${versionMvn}</version>
+    </dependency>
+
     
     <!-- dependencies to annotations -->
     <dependency>
@@ -231,7 +243,12 @@
       </extension>
     </extensions>
 
-
+	<resources>
+		<resource>
+			<directory>src/main/resources</directory>
+			<filtering>true</filtering>
+		</resource>
+	</resources>
 
 
     <plugins>
@@ -267,6 +284,80 @@
         </executions>
       </plugin>
 
+      <!-- information about a project or the system -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-help-plugin</artifactId>
+        <version>3.2.0</version>
+      </plugin>
+
+      <!-- read/write property values -->
+      <!-- in this case, this plugin also exposes profile properties from settings.xml
+      related with gpg: gpg.executable and gpg.passwprase. 
+      This makes it unuseable. 
+      What would be needed is make it configurable to include/exclude properites. 
+      On the other hand, development shows low level of activity, 
+      feature requests are not worked on, 
+      but pull requests are done. 
+      So if i want to do it myself, i can. Well... 
+      For the moment, I decided to drop this and go with resources plugin.  -->
+      <!--  
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>write-project-properties</goal>
+            </goals>
+            <configuration>
+              <outputFile>
+                ${project.build.outputDirectory}/mvn.properties
+              </outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+-->
+
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-resources-plugin</artifactId>
+		<version>3.2.0</version>
+		<configuration>
+			<propertiesEncoding>UTF-8</propertiesEncoding>
+		</configuration>
+	</plugin>
+
+	  <plugin>
+		<groupId>pl.project13.maven</groupId>
+		<artifactId>git-commit-id-plugin</artifactId>
+		<version>4.0.0</version>
+		<executions>
+			<execution>
+				<id>get-the-git-infos</id>
+				<goals>
+					<goal>revision</goal>
+				</goals>
+				<phase>initialize</phase>
+			</execution>
+		</executions>
+		<configuration>
+			<generateGitPropertiesFile>true</generateGitPropertiesFile>
+			<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+			</generateGitPropertiesFilename>
+			<!--  includeOnlyProperties>
+				<includeOnlyProperty>^git.build.(time|version)$
+				</includeOnlyProperty>
+				<includeOnlyProperty>^git.commit.id.(abbrev|full)$
+				</includeOnlyProperty>
+			</includeOnlyProperties-->
+			<commitIdGenerationMode>full</commitIdGenerationMode>
+		</configuration>
+	  </plugin>
+
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -295,6 +386,25 @@
         <artifactId>maven-clean-plugin</artifactId>
         <version>3.1.0</version>
       </plugin>
+
+            <!-- This plugin will write properties values 
+	   using dependency information into classpath.txt-->
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<version>3.0.2</version>
+	<executions>
+	  <execution>
+	    <goals>
+	      <goal>build-classpath</goal>
+	    </goals>
+	  </execution>
+	</executions>
+	<configuration>
+	  <outputFile>${project.build.directory}/classpath.txt</outputFile>
+	</configuration>
+      </plugin>
+
 
       <!-- creates HelpMojo 
 	   Still there is a problem with detail=true. 
@@ -345,11 +455,15 @@
         </configuration>
       </plugin>
 
-
+      <!-- maybe three jars even: one each for 
+	   - maven plugin 
+	   - ant task
+	   - standalone application 
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.2.0</version>
         <!--version>3.0.2</version-->
 	<executions>
 	  <execution>
@@ -360,7 +474,8 @@
             <configuration>
               <classifier>antTask</classifier>
               <includes>
-		<include>**/antTask/*</include>
+		<include>**/antTask/*</include><!-- this is added to the name
+		of the jar file-->
 		<include>**/core/*</include>
 		<include>org/apache/maven/plugin/*Exception*</include>
 		<include>org/apache/commons/io/*</include>
@@ -369,10 +484,50 @@
 		<include>org/codehaus/plexus/util/*</include>
  		<include>org/codehaus/plexus/util/cli/*</include>
  		<include>org/codehaus/plexus/util/cli/shell/*</include>
+ 		<include>*.properties</include>
                </includes>
             </configuration>
 	  </execution>
 	</executions>
+	<!-- refers to all jars -->
+	<configuration>
+          <archive>
+          <!-- name of jar and list of folders if set true -->
+<!-- index>true</index-->
+            <manifest>
+	      <!-- adds all 'Implementation-xxx' 
+		   but "Implementation-Vendor-Id' -->
+              <addDefaultImplementationEntries>true
+	      </addDefaultImplementationEntries>
+	      <!-- adds all 'Specification-xxx' 
+		   but "Implementation-Vendor-Id' -->
+              <addDefaultSpecificationEntries>true
+	      </addDefaultSpecificationEntries>
+	      <!-- make jar executable for standalone application -->
+	      <!--addClasspath>true</addClasspath-->
+              <!--classpathPrefix>lib/</classpathPrefix-->
+	      <!--classpathLayoutType>repository</classpathLayoutType-->
+              <!--customClasspathLayout>WEB-INF/lib/$${artifact.groupIdPath}/$${artifact.artifactId}-$${artifact.version}$${dashClassifier?}.$${artifact.extension}</customClasspathLayout-->
+
+	      <!--mainClass>the main class</mainClass-->
+            </manifest>
+	    <!-- 'sealed' means all packages are complete in this jar-->
+	<manifestEntries>
+		<Sealed>true</Sealed>
+		<url>${project.url}</url>
+	</manifestEntries>
+	<manifestSections>
+		<manifestSection>
+			<name>eu/simuline/m2latex/core/</name>
+			<manifestEntries>
+				<Implementation-Version>${project.version}</Implementation-Version>
+				<url>${project.url}</url>
+			</manifestEntries>
+		</manifestSection>
+	</manifestSections>
+          </archive>
+	</configuration>
+
       </plugin>
 
       <!-- javadoc plugin -->

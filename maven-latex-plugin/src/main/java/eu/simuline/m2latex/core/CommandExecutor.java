@@ -40,25 +40,28 @@ class CommandExecutor {
 
 
     /**
-     * Executes <code>command</code> in <code>workingDir</code> 
+     * Executes <code>command</code> in <code>workingDir</code>
      * with list of arguments given by <code>args</code> 
      * and logs if one of the expected target files 
      * given by <code>resFile</code> is not newly created, 
      * i.e. if it does not exist or is not updated. 
      * Logging: 
      * <ul>
-     * <li> EEX01: return code other than 0. 
-     * <li> EEX02: no target file 
-     * <li> EEX03: target file not updated 
-     * <li> WEX04: cannot read target file 
+     * <li> EEX01: return code other than 0.
+     * <li> EEX02: no target file
+     * <li> EEX03: target file not updated
+     * <li> WEX04: cannot read target file
      * <li> WEX05: may emit false warnings
      * </ul>
      *
      * @param workingDir
-     *    the working directory. 
+     *    the working directory or <code>null</code>. 
      *    The shell changes to that directory 
      *    before invoking <code>command</code> 
-     *    with arguments <code>args</code>. 
+     *    with arguments <code>args</code> if this is not <code>null</code>. 
+     *    Argument <code>null</code> is allowed only 
+     *    if no result files are given by <code>resFile</code>. 
+     *    Essentially this is just needed to determine the version. 
      * @param pathToExecutable
      *    the path to the executable <code>command</code>. 
      *    This may be <code>null</code> if <code>command</code> 
@@ -107,6 +110,11 @@ class CommandExecutor {
 	    }
 	}
 
+	if (workingDir == null && resFile.length != 0) {
+	    throw new IllegalStateException
+	    ("Working directory shall be determined but was null. ");
+	}
+
 	// Proper execution 
 	// may throw BuildFailureException TEX01, log warning EEX01 
 	String res = execute(workingDir, pathToExecutable, command, args);
@@ -119,7 +127,6 @@ class CommandExecutor {
 
 	return res;
     }
-
 
     // returns whether this method logged a warning 
     // FIXME: return value nowhere used 
@@ -179,10 +186,10 @@ class CommandExecutor {
      * EEX01 for return code other than 0. 
      *
      * @param workingDir
-     *    the working directory. 
+     *    the working directory or <code>null</code>.
      *    The shell changes to that directory 
      *    before invoking <code>command</code> 
-     *    with arguments <code>args</code>. 
+     *    with arguments <code>args</code> if this is not <code>null</code>.
      * @param pathToExecutable
      *    the path to the executable <code>command</code>. 
      *    This may be <code>null</code> if <code>command</code> 
@@ -211,17 +218,19 @@ class CommandExecutor {
      *    on the process to be executed thrown by {@link Process#waitFor()}. 
      *    </ul>
      */
-    private String execute(File workingDir, 
-			   File pathToExecutable, 
-			   String command, 
-			   String[] args) throws BuildFailureException {
+    private String execute(File workingDir,
+	    File pathToExecutable,
+	    String command,
+	    String[] args) throws BuildFailureException {
 
 	// prepare execution 
 	String executable = new File(pathToExecutable, command).getPath();
 	Commandline cl = new Commandline(executable);
 	cl.getShell().setQuotedArgumentsEnabled(true);
 	cl.addArguments(args);
-	cl.setWorkingDirectory(workingDir.getPath());
+	if (workingDir != null) {
+	    cl.setWorkingDirectory(workingDir.getPath());
+	}
 	StringStreamConsumer output = new StringStreamConsumer();
 	log.debug("Executing: " + cl + " in: " + workingDir + ". ");
 

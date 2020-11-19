@@ -147,7 +147,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     private final ParameterAdapter paramAdapt;
 
+    /**
+     * The graphics preprocessor used by this processor. 
+     */
     private final LatexPreProcessor preProc;
+
+    /**
+     * The meta info provider used by this processor. 
+     */
+    private final MetaInfo metaInfo;
 
     // also for tests 
     LatexProcessor(Settings settings, 
@@ -159,6 +167,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.paramAdapt = paramAdapt;
 	this.preProc = new LatexPreProcessor
 	    (this.settings, this.executor, this.log, this.fileUtils);
+	this.metaInfo = new MetaInfo(this.executor, this.log);
     }
 
     /**
@@ -1163,6 +1172,28 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// may throw BuildFailureException TEX01, 
 	// log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	runPdf2txt      (texFile);
+    }
+
+
+    /**
+     * Prints meta information, mainly version information 
+     * on this software and on the converters used. 
+     * <p>
+     * WMI01: If the version string of a converter cannot be read. 
+     * WMI02: If the version of a converter is not as expected. 
+     * @return
+     *    whether a warning has been issued. 
+     * @throws BuildFailureException
+     *    <ul>
+     *    <li>TMI01: if the stream to either the manifest file 
+     *        or to a property file, either {@LINK #VERSION_PROPS_FILE} 
+     *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
+     *    <li>TMI02: if the properties could not be read 
+     *        from one of the two property files mentioned above. </li>
+     *    </ul>
+     */
+    public boolean printMetaInfo() throws BuildFailureException {
+	return this.metaInfo.printMetaInfo();
     }
 
     /**

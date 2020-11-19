@@ -13,6 +13,29 @@
     <author email="reissner@simuline.eu">Ernst Reissner</author>
   </properties>
   <body>
+    <!-- Release plan: 
+	 For 1.6: 
+	 - further output formats: xml from latexml, epub. 
+	   in manual: flow oriented vs page oriented. 
+	   Flow oriented: html, ... epub, ... 
+	   Page oriented: pdf, latex (dvi), office (odt, xdoc, ...)
+	 - Further exporters with config to access them 
+	   besides latex2ht also latexml, pandoc 
+	   Have a look at texnische komoedie, pdf checked in. 
+	 For 1.5: 
+	 - meta info for this software including own version 
+	   git interface 
+	 - awareness of version of converters, both expected and actual 
+	   Add also according testcases 
+	 - this software offered also as a standalone application 
+	   and as an api to integrate everywhere. 
+	 - also for documentation, meta information 
+	   like version but also author email and so on are vital. 
+	   To that end, either git checkout script is needed 
+	   or maybe latex git package. 
+	   Note that there may be documentation not created through latex 
+	   and so git package may not be a generic solution. 
+    -->
     
     <!-- TBD: release cannot be snapshot, release date must be adapted -->
      <release version="1.5-snapshot" 
@@ -50,14 +73,21 @@
        <action dev="reissner" type="add">
          added docs for various packages. 
        </action>
-
+       <action dev="reissner" type="add">
+         added goal vrs displaying versions also of the converters. 
+       </action>
 
        
 
        <!-- in manual fix underfull boxes and pdf version -->
-       
+       <!-- change name of plugin: latex-maven-plugin
+	    This is not completed. Shall be set up both in folder structure 
+	    and in github url given by pom.       -->
        <!-- further actions are given in the Readme.md -->
        <!-- TBD: include also hints in the manual. -->
+       <!-- to offer standalone application: 
+	    have a look at maven-jar-plugin documentation 
+	    still commented out to make the jar executable. -->
        <!-- update to newer java version. e.g. define modules, packagedocs -->
        <!-- on site http://www.simuline.eu/LatexMavenPlugin 
 	    set up a download area. 
@@ -80,15 +110,63 @@
        <!-- latexml is interesting not only for html export 
 	    but also for further analysis of tex files. 
 	    Desirable: a SAX like interface. 
-	    This could be intersting for all kinds of latex converters. -->
+	    This could be interesting for all kinds of latex converters. -->
        <!-- test latexml
-	    $ latexml --dest beispiel.xml beispiel.tex
-	    $ latexmlpost --format=html4 --mathimages -dest=bsp.html bsp.xml
+	    $ latexml -{}-dest beispiel.xml beispiel.tex
+	    $ latexmlpost -{}-format=html4 -{}-mathimages -dest=bsp.html bsp.xml
        -->
        <!-- evaluate biblatex to replace bibtex. 
 	    This also offers entry type @standard and rework bibliography -->
        <!-- support epub -->
        <!-- work through pdf: eine texnische kommödie --> 
+       <!--  sources in package org.codehaus.plexus.util and subpackage 
+       are given explicitly. 
+       Maybe this shall be a dependency instead. 
+       On the other hand, for standalone application, 
+       this shall be included in the jar. 
+       But if another version of these sources come on the classpath, 
+       there is a version clash. 
+       TBD: research how this can be avoided.  -->
+       <!-- versions better in pom properties 
+       than in separate file i feel. 
+       But this would require improved maven-properties-plugin 
+       so this kind of solution is deferred but shall be resumed asap.  -->
+       <!-- TBD: update the site created by mvn site-deploy. 
+	    There are even still parts referring to acquinet. -->
+       <!-- TBD: the site docs is partially in apt 
+	    which seems close to markdown. 
+	    Maybe we can replace. 
+	    What is needed is an evaluation of the formats: 
+	    docbook, apt, xdoc, markdown. 
+	    Partially apt seems superior to markdown. 
+	    On the other hand, unification is necessary. 
+	    Also important: does the site plugin support markdown? -->
+       <!-- TBD: complete rework for ant users: 
+	    starting from how to google and how to find sites. 
+	    Are all references present? 
+	    Does the software work properly? -->
+       <!-- TBD: add this plugin to mavencentral 
+	    This allows some simplification, also to documentation -->
+       <!-- TBD: collect Todos given in manual -->
+       <!-- TBD: eliminate underfull \vbox es in manual -->
+       <!-- TBD: eliminate warning: pdflatex found version 1.7 
+	    allowed 1.5 only -->
+       <!-- TBD: goal vrs can give more than versioning info, 
+	    as e.g. vendor and things like that. -->
+       <!-- TBD: vrs may be tied to lifecycle phase 
+	    validate or better pre-site. 
+	    but then it must be possible to choose the converters active. -->
+       <!-- TBD: if the active converters are configurable, 
+	    then one has to ensure that only the configured are used. -->
+       <!-- TBD: fill in the gap given by tool makeindex: 
+	    does not allow to get its version without breaking it 
+	    or applying it on a file. 
+	    Maybe the solution is to replace it by upmendex -->
+       <!-- change versioning of bibtexu and of bigtex8: 
+	    not the version of bibtex, which is currently 0.99d is relevant 
+	    because this is the specification version: 
+	    shall behave like bibtex 0.99d, 
+	    but the implementation version 3.71 -->
      </release>
 
 

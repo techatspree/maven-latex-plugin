@@ -14,9 +14,13 @@
  * may include any subset of (creational) targets, depending on the configuration. 
  * On the other hand, the goals defined by 
  * {@link eu.simuline.m2latex.mojo.ClearMojo}, 
- * {@link eu.simuline.m2latex.mojo.ChkMojo} (just checkstyle) and  
- * {@link eu.simuline.m2latex.mojo.GraphicsMojo} performing preprocessing of graphics 
- * without deliverable, do not correspond with any creational target. 
+ * {@link eu.simuline.m2latex.mojo.ChkMojo} (just checkstyle) 
+ * {@link eu.simuline.m2latex.mojo.GraphicsMojo} 
+ * performing preprocessing of graphics without deliverable, and 
+ * {@link eu.simuline.m2latex.mojo.VersionMojo} 
+ * which displays versions of the applications 
+ * this software relies on and whether these versions are valid, 
+ * do not correspond with any creational target. 
  * On the other hand, e.g. {@link eu.simuline.m2latex.mojo.ChkMojo} 
  * corresponds with target {@link Target#pdf}. 
  * <p>
@@ -34,7 +38,7 @@
  * which may be maven or ant. 
  * If either the build step or whole build must be aborted, 
  * {@link BuildFailureException} and {@link BuildExecutionException}, respectively 
- * must be thrown, both subclasses of {@link MyBuildException}. 
+ * must be thrown, both subclasses of {@link AbstractBuildException}. 
  * <p>
  * The rest of this package are auxiliary classes: 
  * {@link DirNode} represents the contents of a directory, 
