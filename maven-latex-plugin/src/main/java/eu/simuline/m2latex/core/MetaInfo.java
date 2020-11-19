@@ -556,8 +556,9 @@ public class MetaInfo {
 	    line = this.executor.execute(null, null, 
 		    cmd, new String[] {
 		    conv.getVersionOption()});
-	    //this.log.info(line);
-	    matcher = Pattern.compile(conv.getVersionPattern()).matcher(line);
+	    matcher = Pattern.compile(String.format(conv.getVersionEnvironment(), 
+		                                    conv.getVersionPattern()))
+		    .matcher(line);
 	    if (matcher.find()) {
 		actVersion = matcher.group(1);
 	    } else {

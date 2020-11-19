@@ -9,7 +9,10 @@ enum Converter {
 	    return "pdflatex";
 	}
 	String getVersionPattern() {
-	   return "^pdfTeX ([0-9\\.-]*) \\(TeX Live";
+	   return "([0-9\\.-]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^pdfTeX %s\\(TeX Live";
 	}
     },
     LuaLatex {
@@ -17,7 +20,10 @@ enum Converter {
 	    return "lualatex";
 	}
 	String getVersionPattern() {
-	    return "^This is LuaHBTeX, Version ([0-9\\.]*) \\(TeX Live";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^This is LuaHBTeX, Version %s \\(TeX Live";
 	}
     },
     XeLatex {
@@ -25,7 +31,10 @@ enum Converter {
 	    return "xelatex";
 	}
 	String getVersionPattern() {
-	    return "^XeTeX ([0-9\\.-]*) \\(TeX Live";
+	    return "([0-9\\.-]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^XeTeX %s \\(TeX Live";
 	}
     },
     Latex2rtf {
@@ -33,7 +42,10 @@ enum Converter {
 	    return "latex2rtf";
 	}
 	String getVersionPattern() {
-	    return "^latex2rtf ([0-9\\.]* r[0-9]+) \\(released";
+	    return "([0-9\\.]* r[0-9]+)";
+	}
+	String getVersionEnvironment() {
+	    return "^latex2rtf %s \\(released";
 	}
     },
     Odt2doc {
@@ -45,7 +57,10 @@ enum Converter {
 	}
 	// TBC: not clear whether this is the significant version 
 	String getVersionPattern() {
-	    return "^unoconv ([0-9\\.]*)\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^unoconv %s\n";
 	}
     },
     Pdf2txt {
@@ -53,7 +68,10 @@ enum Converter {
 	    return "pdftotext";
 	}
 	String getVersionPattern() {
-	    return "^pdftotext version ([0-9\\.]*)\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^pdftotext version %s\n";
 	}
     },
     Dvips {
@@ -61,8 +79,11 @@ enum Converter {
 	    return "dvips";
 	}
 	String getVersionPattern() {
-	    return "^This is dvips\\(k\\) ([0-9\\.]*) " + 
-	"Copyright [0-9]+ Radical Eye Software \\(www\\.radicaleye\\.com\\)\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^This is dvips\\(k\\) %s " + 
+		    "Copyright [0-9]+ Radical Eye Software \\(www\\.radicaleye\\.com\\)\n";
 	}
     },
     Dvipdfm {
@@ -73,10 +94,13 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "^This is xdvipdfmx Version ([0-9]{8}) " + 
+	    return "([0-9]{8})";
+	}
+	String getVersionEnvironment() {
+	    return "^This is xdvipdfmx Version %s " + 
 	"by the DVIPDFMx project team,\n";
 	}
-    },
+   },
     Dvipdfmx {
 	String getCommand() {
 	    return "dvipdfmx";
@@ -85,8 +109,11 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "^This is dvipdfmx Version ([0-9]{8}) " + 
-	    	"by the DVIPDFMx project team,\n";
+	    return "([0-9]{8})";
+	}
+	String getVersionEnvironment() {
+	    return "^This is dvipdfmx Version %s " + 
+	"by the DVIPDFMx project team,\n";
 	}
     },
     XDvipdfmx {
@@ -97,8 +124,11 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "^This is xdvipdfmx Version ([0-9]{8}) " + 
-	    	"by the DVIPDFMx project team,\n";
+	    return "([0-9]{8})";
+	}
+	String getVersionEnvironment() {
+	    return "^This is xdvipdfmx Version %s " + 
+	"by the DVIPDFMx project team,\n";
 	}
     },
     Dvipdft {
@@ -109,7 +139,10 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "^dvipdft version ([0-9\\.]*) by Thomas Esser and others\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^dvipdft version %s by Thomas Esser and others\n";
 	}
     },
     GS {
@@ -117,8 +150,10 @@ enum Converter {
 	    return "gs";
 	}
 	String getVersionPattern() {
-	    return "^GPL Ghostscript ([0-9\\.]*) " + 
-	"\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
 	}
     },
     Chktex {
@@ -129,8 +164,11 @@ enum Converter {
 	    return "-W";
 	}
 	String getVersionPattern() {
-	    return "^ChkTeX v([0-9\\.]*) - " + 
-	"Copyright [0-9]{4}-[0-9]{2} Jens T. Berger Thielemann.\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^ChkTeX v%s - " + 
+		    "Copyright [0-9]{4}-[0-9]{2} Jens T. Berger Thielemann.\n";
 	}
     },
     Bibtex {
@@ -138,7 +176,10 @@ enum Converter {
 	    return "bibtex";
 	}
 	String getVersionPattern() {
-	    return "^BibTeX ([0-9\\.]*[a-z]) \\(TeX Live ";
+	    return "([0-9\\.]*[a-z])";
+	}
+	String getVersionEnvironment() {
+	    return "^BibTeX %s \\(TeX Live ";
 	}
     },
     Bibtexu {
@@ -158,8 +199,11 @@ enum Converter {
 	 *    the pattern for the version string. 
 	 */
 	String getVersionPattern() {
+	    return "([0-9\\.]+)";
+	}
+	String getVersionEnvironment() {
 	    return "^[^\n]*\n[^\n]*\n" +
-	"Release version: ([0-9\\.]+) \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
+	"Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
 	}
     },
     Bibtex8 {
@@ -179,8 +223,11 @@ enum Converter {
 	 *    the pattern for the version string. 
 	 */
 	String getVersionPattern() {
+	    return "([0-9\\.]+)";
+	}
+	String getVersionEnvironment() {
 	    return "^[^\n]*\n[^\n]*\n" +
-	"Release version: ([0-9\\.]+) \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
+			"Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
 	}
     },
 //    Makeindex {
@@ -203,7 +250,10 @@ enum Converter {
 	    return "-h";
 	}
 	String getVersionPattern() {
-	    return "^upmendex - index processor, version ([0-9\\.]*) " + 
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^upmendex - index processor, version %s " + 
 	"\\(TeX Live [0-9]{4}\\).\n";
 	}
   },
@@ -215,7 +265,10 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "^splitindex.pl ([0-9\\.]*)\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^splitindex.pl %s\n";
 	}
     },
     // TBC: which of the versions is the relevant one? 
@@ -228,7 +281,10 @@ enum Converter {
 	}
 	// TBC: not clear whether this is the significant version 
 	String getVersionPattern() {
-	    return "^xindy release: ([0-9\\.]*)\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^xindy release: %s\n";
 	}
     },
     Makeglossaries {
@@ -239,7 +295,10 @@ enum Converter {
 	    return "--help";
 	}
 	String getVersionPattern() {
-	    return "^Makeglossaries Version ([0-9\\.]*) " +
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^Makeglossaries Version %s " +
 	"\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)(.*)\n";
 	}
     },
@@ -248,6 +307,9 @@ enum Converter {
 	    return "mpost";
 	}
 	String getVersionPattern() {
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
 	    return "^MetaPost ([0-9\\.]*) \\(TeX Live ";
 	}
     },
@@ -260,7 +322,10 @@ enum Converter {
 	}
 	// 2nd line 
 	String getVersionPattern() {
-	    return "^[^\n]*\nThis is ebb Version ([0-9]+)\n";
+	    return "([0-9]+)";
+	}
+	String getVersionEnvironment() {
+	    return "^[^\n]*\nThis is ebb Version %s\n";
 	}
     },
     Gnuplot {
@@ -272,7 +337,10 @@ enum Converter {
 	}
 	// TBC: we allow here patchlevel 0 only. Is this appropriate? 
 	String getVersionPattern() {
-	    return "^gnuplot ([0-9\\.]*) patchlevel 0\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^gnuplot %s patchlevel 0\n";
 	}
     },
     Inkscape {
@@ -283,8 +351,10 @@ enum Converter {
 	    return "-V";
 	}
 	String getVersionPattern() {
-	    return "^Inkscape ([0-9\\.]*) " +
-	"\\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+	    return "([0-9\\.]*)";
+	}
+	String getVersionEnvironment() {
+	    return "^Inkscape %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
 	}
     },
 
@@ -296,7 +366,10 @@ enum Converter {
 	    return "-V";
 	}
 	String getVersionPattern() {
-	    return "^fig2dev Version ([0-9\\.]*[a-z])\n";
+	    return "([0-9\\.]*[a-z])";
+	}
+	String getVersionEnvironment() {
+	    return "^fig2dev Version %s\n";
 	}
 
     };
@@ -315,7 +388,7 @@ enum Converter {
     String getVersionOption() {
 	return "-v";
     }
-    
     abstract String getVersionPattern();
+    abstract String getVersionEnvironment();
     
 }
