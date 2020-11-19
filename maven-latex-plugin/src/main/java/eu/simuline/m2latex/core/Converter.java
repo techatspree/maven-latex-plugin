@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 enum Converter {
+    
     PdfLatex {
 	String getCommand() {
 	    return "pdflatex";
 	}
 	String getVersionPattern() {
-	   return "([0-9\\.-]*)";
+	   return "((3\\.[0-9]*)-([0-9]+\\.[0-9]+)-([0-9]+\\.[0-9]+\\.[0-9]+))";
 	}
 	String getVersionEnvironment() {
 	    return "^pdfTeX %s \\(TeX Live";
@@ -20,7 +21,7 @@ enum Converter {
 	    return "lualatex";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]*\\.[0-9]*\\.[0-9]*)";
 	}
 	String getVersionEnvironment() {
 	    return "^This is LuaHBTeX, Version %s \\(TeX Live";
@@ -31,7 +32,7 @@ enum Converter {
 	    return "xelatex";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.-]*)";
+	    return "((3\\.[0-9]*)-([0-9]+\\.[0-9]+)-(0\\.[0-9]*))";
 	}
 	String getVersionEnvironment() {
 	    return "^XeTeX %s \\(TeX Live";
@@ -42,7 +43,7 @@ enum Converter {
 	    return "latex2rtf";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]* r[0-9]+)";
+	    return "([0-9]+\\.[0-9]+\\.[0-9]+ r[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^latex2rtf %s \\(released";
@@ -57,7 +58,7 @@ enum Converter {
 	}
 	// TBC: not clear whether this is the significant version 
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]*\\.[0-9]*\\.[0-9]*)";
 	}
 	String getVersionEnvironment() {
 	    return "^unoconv %s\n";
@@ -68,7 +69,7 @@ enum Converter {
 	    return "pdftotext";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]*\\.[0-9]*\\.[0-9]*)";
 	}
 	String getVersionEnvironment() {
 	    return "^pdftotext version %s\n";
@@ -79,7 +80,7 @@ enum Converter {
 	    return "dvips";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9\\.]{4}\\.[0-9])";
 	}
 	String getVersionEnvironment() {
 	    return "^This is dvips\\(k\\) %s " + 
@@ -94,7 +95,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "([0-9]{8})";
+	    return "([0-9]{4}[0-9]{2}[0-9]{2})";
 	}
 	String getVersionEnvironment() {
 	    return "^This is xdvipdfmx Version %s " + 
@@ -109,7 +110,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "([0-9]{8})";
+	    return "([0-9]{4}[0-9]{2}[0-9]{2})";
 	}
 	String getVersionEnvironment() {
 	    return "^This is dvipdfmx Version %s " + 
@@ -124,7 +125,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "([0-9]{8})";
+	    return "([0-9]{4}[0-9]{2}[0-9]{2})";
 	}
 	String getVersionEnvironment() {
 	    return "^This is xdvipdfmx Version %s " + 
@@ -139,7 +140,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]{4}[0-9]{2}[0-9]{2}\\.[0-9]{4})";
 	}
 	String getVersionEnvironment() {
 	    return "^dvipdft version %s by Thomas Esser and others\n";
@@ -150,7 +151,7 @@ enum Converter {
 	    return "gs";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]*\\.[0-9]*(\\.[0-9]*)?)";
 	}
 	String getVersionEnvironment() {
 	    return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
@@ -164,7 +165,7 @@ enum Converter {
 	    return "-W";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]*\\.[0-9]*\\.[0-9]*)";
 	}
 	String getVersionEnvironment() {
 	    return "^ChkTeX v%s - " + 
@@ -176,7 +177,7 @@ enum Converter {
 	    return "bibtex";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*[a-z])";
+	    return "((0\\.[0-9]*)([a-z]))";
 	}
 	String getVersionEnvironment() {
 	    return "^BibTeX %s \\(TeX Live ";
@@ -199,7 +200,7 @@ enum Converter {
 	 *    the pattern for the version string. 
 	 */
 	String getVersionPattern() {
-	    return "([0-9\\.]+)";
+	    return "([0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^[^\n]*\n[^\n]*\n" +
@@ -223,7 +224,7 @@ enum Converter {
 	 *    the pattern for the version string. 
 	 */
 	String getVersionPattern() {
-	    return "([0-9\\.]+)";
+	    return "([0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^[^\n]*\n[^\n]*\n" +
@@ -250,7 +251,7 @@ enum Converter {
 	    return "-h";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^upmendex - index processor, version %s " + 
@@ -265,7 +266,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^splitindex.pl %s\n";
@@ -281,7 +282,7 @@ enum Converter {
 	}
 	// TBC: not clear whether this is the significant version 
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]+\\.[0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^xindy release: %s\n";
@@ -295,7 +296,7 @@ enum Converter {
 	    return "--help";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^Makeglossaries Version %s " +
@@ -307,7 +308,7 @@ enum Converter {
 	    return "mpost";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^MetaPost ([0-9\\.]*) \\(TeX Live ";
@@ -322,7 +323,7 @@ enum Converter {
 	}
 	// 2nd line 
 	String getVersionPattern() {
-	    return "([0-9]+)";
+	    return "([0-9]{4}[0-9]{2}[0-9]{2})";
 	}
 	String getVersionEnvironment() {
 	    return "^[^\n]*\nThis is ebb Version %s\n";
@@ -337,7 +338,7 @@ enum Converter {
 	}
 	// TBC: we allow here patchlevel 0 only. Is this appropriate? 
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^gnuplot %s patchlevel 0\n";
@@ -351,7 +352,7 @@ enum Converter {
 	    return "-V";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*)";
+	    return "([0-9]+\\.[0-9]+\\.[0-9]+)";
 	}
 	String getVersionEnvironment() {
 	    return "^Inkscape %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
@@ -366,7 +367,7 @@ enum Converter {
 	    return "-V";
 	}
 	String getVersionPattern() {
-	    return "([0-9\\.]*[a-z])";
+	    return "([0-9]+\\.[0-9]+\\.[0-9]+[a-z])";
 	}
 	String getVersionEnvironment() {
 	    return "^fig2dev Version %s\n";
@@ -374,6 +375,8 @@ enum Converter {
 
     };
     
+    private final static String X_X_X = "([0-9]*\\.[0-9]*\\.[0-9]*)";
+
     // TBC: needed? 
     final static Map<String, Converter> cmd2conv;
     static {
