@@ -429,7 +429,25 @@ public class MetaInfo {
     } // class GitProperties
 
     static class Version {
-	
+
+	Matcher matcher;
+	String versionStr;
+
+	Version(String env, String pattern, String text) {
+	    this.matcher = Pattern.compile(String.format(env, pattern))
+		    .matcher(text);
+	    this.versionStr = this.matcher.find()
+		    ? this.matcher.group(1) : null;
+	}
+
+	boolean isMatching() {
+	    return this.versionStr != null;
+	}
+
+	String getString() {
+	    return this.versionStr;
+	}
+
     } // class Version 
     
     /**
@@ -559,7 +577,7 @@ public class MetaInfo {
 
 	//System.out.println("version props"+versionProperties);
 	String cmd, line, actVersion, expVersion, logMsg;
-	Matcher matcher;
+	Version actVersionObj, expVersionObj;
 	boolean doWarn, doWarnAny = false;
 	for (Converter conv : Converter.values()) {
 	    doWarn = false;
@@ -568,11 +586,10 @@ public class MetaInfo {
 		    cmd, new String[] {
 		    conv.getVersionOption()});
 
-	    matcher = Pattern.compile(String.format(conv.getVersionEnvironment(), 
-		                                    conv.getVersionPattern()))
-		    .matcher(line);
-	    if (matcher.find()) {
-		actVersion = matcher.group(1);
+	    actVersionObj = new Version(conv.getVersionEnvironment(), 
+		    conv.getVersionPattern(), line);
+	    if (actVersionObj.isMatching()) {
+		actVersion = actVersionObj.getString();
 	    } else {
 		doWarnAny = doWarn = true;
 		this.log.warn("WMI01: Version string '" + line + 
@@ -587,19 +604,18 @@ public class MetaInfo {
 	    }
 
 
-	    matcher = Pattern.compile(String.format("^%s$",
-                                                    conv.getVersionPattern()))
-		    .matcher(expVersion);
-	    if (!matcher.find()) {
+	    expVersionObj = new Version("^%s$", conv.getVersionPattern(), expVersion);
+	    
+	    if (!expVersionObj.isMatching()) {
 		throw new IllegalStateException
 		(String.format("Expected version '%s' does not match expression '%s'. ",
-			expVersion, conv.getVersionPattern());
+			expVersion, conv.getVersionPattern()));
 	    }
 
-	    if (!expVersion.equals(matcher.group(1))) {
+	    if (!expVersion.equals(expVersionObj.getString())) {
 		throw new IllegalStateException
 		(String.format("Expected version '%s' reconstructed as '%s'. ",
-			expVersion, matcher.group(1)));
+			expVersion, expVersionObj.getString()));
 	    }
 
 	    if (!expVersion.equals(actVersion)) {
