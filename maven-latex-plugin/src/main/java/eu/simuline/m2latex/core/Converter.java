@@ -30,7 +30,7 @@ enum Converter {
 	String getVersionPattern() {
 	    // 3.1415926-2.3-1.40.12
 	    // 3.14159265-2.6-1.40.21
-	   return "(([0-9]+)\\.([0-9]+)\\.([0-9]+))";
+	   return X_X_X;
 	}
 	
 	/**
@@ -75,7 +75,7 @@ enum Converter {
 	 * @see #getVersionEnvironment()
 	 */
 	String getVersionPattern() {
-	    return "(0\\.[0-9]*)";
+	    return "((0\\.[0-9]*))";
 	}
 
 	/**
@@ -199,7 +199,7 @@ enum Converter {
 	    return "gs";
 	}
 	String getVersionPattern() {
-	    return "(([0-9]*)\\.([0-9]*)(\\.([0-9]*))?)";
+	    return "(([0-9]+)\\.([0-9]+)(?:\\.([0-9]+))?)";
 	}
 	String getVersionEnvironment() {
 	    return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
