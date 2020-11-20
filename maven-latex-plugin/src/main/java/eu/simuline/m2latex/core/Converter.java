@@ -4,16 +4,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 enum Converter {
-    
+
     PdfLatex {
 	String getCommand() {
 	    return "pdflatex";
 	}
+
+	/**
+	 * The version pattern at a first sight consists of three parts: 
+	 * <ul>
+	 * <li>the tex version which is an approximation of pi 
+	 * and which will be frozen as Donald Knuth will die at $\pi$ 
+	 * (meant maybe in double precision)</li>
+	 * <li>the etex version which is a two integer version. 
+	 * It has to be clarified, whether there is a new release to be expected. </li>
+	 * <li>the pdftex version. </li>
+	 * </ul>
+	 * It is quite sure from the examples found, 
+	 * that the latter does not start from the beginning 
+	 * when the former is increased. 
+	 * This means that the first of the two version numbers are informative only
+	 * and must thus be included in the environment. 
+	 * @see #getVersionEnvironment()
+	 */
 	String getVersionPattern() {
-	   return "((3\\.[0-9]*)-([0-9]+\\.[0-9]+)-([0-9]+\\.[0-9]+\\.[0-9]+))";
+	    // 3.1415926-2.3-1.40.12
+	    // 3.14159265-2.6-1.40.21
+	   return "(([0-9]+)\\.([0-9]+)\\.([0-9]+))";
 	}
+	
+	/**
+	 * For an explanation why part of the version string is in the environment, 
+	 * see {@link #getVersionPattern()}. 
+	 */
 	String getVersionEnvironment() {
-	    return "^pdfTeX %s \\(TeX Live";
+	    return "^pdfTeX 3\\.[0-9]*-[0-9]+\\.[0-9]+-%s \\(TeX Live";
 	}
     },
     LuaLatex {
@@ -31,11 +56,34 @@ enum Converter {
 	String getCommand() {
 	    return "xelatex";
 	}
+
+	/**
+	 * The version pattern at a first sight consists of three parts: 
+	 * <ul>
+	 * <li>the tex version which is an approximation of pi 
+	 * and which will be frozen as Donald Knuth will die at $\pi$ 
+	 * (meant maybe in double precision)</li>
+	 * <li>the etex version which is a two integer version. 
+	 * It has to be clarified, whether there is a new release to be expected. </li>
+	 * <li>the xetex version. </li>
+	 * </ul>
+	 * It is quite sure from the examples found, 
+	 * that the latter does not start from the beginning 
+	 * when the former is increased. 
+	 * This means that the first of the two version numbers are informative only
+	 * and must thus be included in the environment. 
+	 * @see #getVersionEnvironment()
+	 */
 	String getVersionPattern() {
-	    return "((3\\.[0-9]*)-([0-9]+\\.[0-9]+)-(0\\.[0-9]*))";
+	    return "(0\\.[0-9]*)";
 	}
+
+	/**
+	 * For an explanation why part of the version string is in the environment, 
+	 * see {@link #getVersionPattern()}. 
+	 */
 	String getVersionEnvironment() {
-	    return "^XeTeX %s \\(TeX Live";
+	    return "^XeTeX 3\\.[0-9]*-[0-9]+\\.[0-9]+-%s \\(TeX Live";
 	}
     },
     Latex2rtf {
@@ -359,7 +407,6 @@ enum Converter {
 	    return "^Inkscape %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
 	}
     },
-
     Fig2Dev {
 	String getCommand() {
 	    return "fig2dev";
