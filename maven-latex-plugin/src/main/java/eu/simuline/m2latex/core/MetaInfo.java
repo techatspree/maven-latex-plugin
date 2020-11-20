@@ -428,6 +428,9 @@ public class MetaInfo {
 
     } // class GitProperties
 
+    static class Version {
+	
+    } // class Version 
     
     /**
      * Executor to find the version string.  
@@ -520,7 +523,7 @@ public class MetaInfo {
 //	MavenXpp3Reader reader = new MavenXpp3Reader();
 //	Model model = reader.read(new InputStreamReader(url.openStream()));
 	
-	
+
 	GitProperties gitProperties = new GitProperties();
 	this.log.info("git properties: ");
 	gitProperties.log();
@@ -553,7 +556,7 @@ public class MetaInfo {
 		    " does not fit number of converters " + 
 	            Converter.values().length + ". ");
 	}
-	
+
 	//System.out.println("version props"+versionProperties);
 	String cmd, line, actVersion, expVersion, logMsg;
 	Matcher matcher;
@@ -564,6 +567,7 @@ public class MetaInfo {
 	    line = this.executor.execute(null, null, 
 		    cmd, new String[] {
 		    conv.getVersionOption()});
+
 	    matcher = Pattern.compile(String.format(conv.getVersionEnvironment(), 
 		                                    conv.getVersionPattern()))
 		    .matcher(line);
@@ -575,12 +579,29 @@ public class MetaInfo {
 			"' from converter " + conv + " did not match expected form. ");
 		actVersion = "????";
 	    }
-	    
+
 	    expVersion = versionProperties.getProperty(cmd);
 	    if (expVersion == null) {
-		throw new IllegalStateException("Found no expected version for converter" + 
-	    conv + ". "	);
+		throw new IllegalStateException
+		("Found no expected version for converter " + conv + ". ");
 	    }
+
+
+	    matcher = Pattern.compile(String.format("^%s$",
+                                                    conv.getVersionPattern()))
+		    .matcher(expVersion);
+	    if (!matcher.find()) {
+		throw new IllegalStateException
+		(String.format("Expected version '%s' does not match expression '%s'. ",
+			expVersion, conv.getVersionPattern());
+	    }
+
+	    if (!expVersion.equals(matcher.group(1))) {
+		throw new IllegalStateException
+		(String.format("Expected version '%s' reconstructed as '%s'. ",
+			expVersion, matcher.group(1)));
+	    }
+
 	    if (!expVersion.equals(actVersion)) {
 		doWarnAny = doWarn = true;
 	    }
