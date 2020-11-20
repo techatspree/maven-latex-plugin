@@ -432,12 +432,21 @@ public class MetaInfo {
 
 	Matcher matcher;
 	String versionStr;
+	List<String> segments;
 
 	Version(String env, String pattern, String text) {
 	    this.matcher = Pattern.compile(String.format(env, pattern))
 		    .matcher(text);
-	    this.versionStr = this.matcher.find()
-		    ? this.matcher.group(1) : null;
+	    if (!this.matcher.find()) {
+		this.versionStr = null;
+		this.segments = null;
+		return;
+	    }
+	    this.versionStr = this.matcher.group(1);
+	    this.segments = new ArrayList<String>(this.matcher.groupCount());
+	    for (int idx = 2; idx <= this.matcher.groupCount(); idx++) {
+		this.segments.add(this.matcher.group(idx));
+	    }
 	}
 
 	boolean isMatching() {
@@ -446,6 +455,10 @@ public class MetaInfo {
 
 	String getString() {
 	    return this.versionStr;
+	}
+
+	List<String> getSegments() {
+	    return this.segments;
 	}
 
     } // class Version 
@@ -623,12 +636,15 @@ public class MetaInfo {
 	    }
 
 	    logMsg = String.format(TOOL_VERSION_FORMAT, cmd+":", actVersion, expVersion);
+	    //this.log.info("actVersion: "+actVersionObj.getSegments());
+	    //this.log.info("expVersion: "+expVersionObj.getSegments());
 	    if (doWarn) {
 		this.log.warn("WMI02: Conflict " + logMsg);
 	    } else {
 		this.log.info(logMsg);
 	    }
 	}
+	// TBD: extend also so that it works for version of GS
 	return doWarnAny;
     }
 }
