@@ -270,8 +270,8 @@ public class MetaInfo {
 	    
 	    return new String[] {
 		    "MANIFEST: ("+ getManifestVersion() + ")",
-		    "Implementation-Version: '" + getImplVersion() + "'",
-		    "Implementation-Version: '" + getPackageImplVersion() + "'"
+		    "       Implementation-Version: '" + getImplVersion() + "'",
+		    "PackageImplementation-Version: '" + getPackageImplVersion() + "'"
 			    //"creator: '" + getCreatedBy() + "'",
 		    //"version jdk: '" + getBuildJdkSpec() + "'"
 	    };
