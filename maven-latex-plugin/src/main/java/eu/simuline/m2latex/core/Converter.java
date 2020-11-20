@@ -300,7 +300,7 @@ enum Converter {
 	}
 	String getVersionEnvironment() {
 	    return "^Makeglossaries Version %s " +
-	"\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)(.*)\n";
+	"\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
 	}
     },
     Mpost {
