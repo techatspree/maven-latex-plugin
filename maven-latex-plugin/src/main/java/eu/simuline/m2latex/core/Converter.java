@@ -359,7 +359,7 @@ enum Converter {
 	    return X_X;
 	}
 	String getVersionEnvironment() {
-	    return "^MetaPost ([0-9\\.]*) \\(TeX Live ";
+	    return "^MetaPost %s \\(TeX Live ";
 	}
     },
     Ebb {
