@@ -428,7 +428,7 @@ public class MetaInfo {
 
     } // class GitProperties
 
-    static class Version {
+    static class Version implements Comparable<Version> {
 
 	Matcher matcher;
 	String versionStr;
@@ -490,6 +490,28 @@ public class MetaInfo {
 		    res.add(str);
 	    }
 	    return res;
+	}
+
+	public int compareTo(Version other) {
+	    int idxMax = Math.max(getSegments().size(), other.getSegments().size());
+	    int sign;
+	    for (int idx = 0; idx < idxMax; idx++) {
+		// TBD: eliminate hack 
+		sign = (int)Math.signum(getSegments().get(idx).doubleValue()
+			-         other.getSegments().get(idx).doubleValue());
+		    switch (sign) {
+		    case  0:
+			continue;
+		    case -1:
+			// fall through 
+		    case +1:
+			return sign;
+			default:
+			    throw new IllegalStateException
+			    ("Found unexpected signum. ");
+		    }
+	    }
+	  return getSegments().size() - other.getSegments().size();
 	}
 
     } // class Version 
@@ -671,6 +693,7 @@ public class MetaInfo {
 //	    this.log.info("expVersion: "+expVersionObj.getSegments());
 //	    this.log.info("actVersion: "+actVersionObj.getSegmentsAsStrings());
 //	    this.log.info("expVersion: "+expVersionObj.getSegmentsAsStrings());
+	    this.log.info("actVersion?expVersion: "+actVersionObj.compareTo(expVersionObj));
 	    if (doWarn) {
 		this.log.warn("WMI02: Conflict " + logMsg);
 	    } else {
