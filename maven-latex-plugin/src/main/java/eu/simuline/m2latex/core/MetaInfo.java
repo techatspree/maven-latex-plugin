@@ -432,7 +432,7 @@ public class MetaInfo {
 
 	Matcher matcher;
 	String versionStr;
-	List<String> segments;
+	List<Number> segments;
 
 	Version(String env, String pattern, String text) {
 	    this.matcher = Pattern.compile(String.format(env, pattern))
@@ -443,9 +443,28 @@ public class MetaInfo {
 		return;
 	    }
 	    this.versionStr = this.matcher.group(1);
-	    this.segments = new ArrayList<String>(this.matcher.groupCount());
+	    this.segments = new ArrayList<Number>(this.matcher.groupCount());
+	    String segment;
+	    Number num;
 	    for (int idx = 2; idx <= this.matcher.groupCount(); idx++) {
-		this.segments.add(this.matcher.group(idx));
+		segment = this.matcher.group(idx);
+		if (segment == null) {
+		    break;
+		}
+		if (Pattern.matches("[a-z]", segment)) {
+		    num = Byte.valueOf((byte)segment.codePointAt(0));
+		} else {
+		    // TBC: why works the 2nd version, but the 1st does not? 
+//		    num = segment.indexOf('.') == -1
+//			    ? Integer.valueOf(segment)
+//		            : Double .valueOf(segment);
+		    if (segment.indexOf('.') == -1) {
+			num = Integer.valueOf(segment);
+		    } else {
+			num = Double.valueOf(segment);
+		    }
+		}
+		this.segments.add(num);
 	    }
 	}
 
@@ -457,8 +476,20 @@ public class MetaInfo {
 	    return this.versionStr;
 	}
 
-	List<String> getSegments() {
+	List<Number> getSegments() {
 	    return this.segments;
+	}
+
+	List<String> getSegmentsAsStrings() {
+	    List<String> res = new ArrayList<String>(this.segments.size());
+	    String str;
+	    for (Number num : this.segments) {
+		str = (num instanceof Byte)
+			? Character.toString(num.byteValue())
+		        : num.toString();
+		    res.add(str);
+	    }
+	    return res;
 	}
 
     } // class Version 
@@ -636,8 +667,10 @@ public class MetaInfo {
 	    }
 
 	    logMsg = String.format(TOOL_VERSION_FORMAT, cmd+":", actVersion, expVersion);
-	    //this.log.info("actVersion: "+actVersionObj.getSegments());
-	    //this.log.info("expVersion: "+expVersionObj.getSegments());
+//	    this.log.info("actVersion: "+actVersionObj.getSegments());
+//	    this.log.info("expVersion: "+expVersionObj.getSegments());
+//	    this.log.info("actVersion: "+actVersionObj.getSegmentsAsStrings());
+//	    this.log.info("expVersion: "+expVersionObj.getSegmentsAsStrings());
 	    if (doWarn) {
 		this.log.warn("WMI02: Conflict " + logMsg);
 	    } else {
