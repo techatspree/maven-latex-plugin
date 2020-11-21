@@ -670,7 +670,7 @@ public class MetaInfo {
 	    }
 
 
-	    expVersionObj = new Version("^%s$", conv.getVersionPattern(), expVersion);
+	    expVersionObj = new Version("^\\[%s\\]$", conv.getVersionPattern(), expVersion);
 	    
 	    if (!expVersionObj.isMatching()) {
 		throw new IllegalStateException
@@ -678,13 +678,13 @@ public class MetaInfo {
 			expVersion, conv.getVersionPattern()));
 	    }
 
-	    if (!expVersion.equals(expVersionObj.getString())) {
+	    if (!expVersion.equals("["+expVersionObj.getString()+"]")) {
 		throw new IllegalStateException
 		(String.format("Expected version '%s' reconstructed as '%s'. ",
 			expVersion, expVersionObj.getString()));
 	    }
 
-	    if (!expVersion.equals(actVersion)) {
+	    if (expVersionObj.compareTo(actVersionObj) != 0) {
 		doWarnAny = doWarn = true;
 	    }
 
@@ -693,7 +693,7 @@ public class MetaInfo {
 //	    this.log.info("expVersion: "+expVersionObj.getSegments());
 //	    this.log.info("actVersion: "+actVersionObj.getSegmentsAsStrings());
 //	    this.log.info("expVersion: "+expVersionObj.getSegmentsAsStrings());
-	    this.log.info("actVersion?expVersion: "+actVersionObj.compareTo(expVersionObj));
+	    //this.log.info("actVersion?expVersion: "+actVersionObj.compareTo(expVersionObj));
 	    if (doWarn) {
 		this.log.warn("WMI02: Conflict " + logMsg);
 	    } else {
