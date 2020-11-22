@@ -585,14 +585,18 @@ public class MetaInfo {
 	private final Version max;
 
 	/**
-	 * Creates a version interval from the 
-	 * @param pattern
-	 *    the pattern for the version. 
+	 * Creates a version interval from the converter and from the text string 
+	 * read from the version properties file. 
+	 * 
+	 * @param conv
+	 *    the converter for which to create the version interval. 
+	 *    This is used mostly to determine {@link Converter#getVersionPattern()}.
 	 * @param text
 	 *    the text representation for the interval to be created 
 	 *    which is as described for {@link #toString()}. 
 	 */
-	VersionInterval(String pattern, String text) {
+	VersionInterval(Converter conv, String text) {
+	    String pattern = conv.getVersionPattern();
 	    if (text.indexOf(SEP) == -1) {
 		// Here, we have an interval [element]
 		this.min = new Version(ENV_PATTERN1, pattern, text);
@@ -813,7 +817,7 @@ public class MetaInfo {
 		("Found no expected version for converter " + conv + ". ");
 	    }
 
-	    expVersionItv = new VersionInterval(conv.getVersionPattern(), expVersion);
+	    expVersionItv = new VersionInterval(conv, expVersion);
 
 	    if (!expVersionItv.contains(actVersionObj)) {
 		doWarnAny = doWarn = true;
