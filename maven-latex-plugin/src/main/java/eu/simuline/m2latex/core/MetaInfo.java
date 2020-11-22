@@ -433,19 +433,58 @@ public class MetaInfo {
 
     static class Version implements Comparable<Version> {
 
-	Matcher matcher;
-	String versionStr;
-	List<Number> segments;
+	private final static String VERSION_UNKNOWN = "????";
 
-	Version(Converter conv, String text) {
-	    this(conv.getVersionEnvironment(), conv.getVersionPattern(), text);
+	private final String text;
+	private final Matcher matcher;
+	private final String versionStr;
+	private final List<Number> segments;
+
+	/**
+	 * Create a version for a converter <code>conv</code> 
+	 * invoking it with the proper option using <code>executor</code>
+	 * 
+	 * @param conv
+	 *    a converter.
+	 * @param executor
+	 *    an executor to execute the command of the converter 
+	 *    to obtain a feedback containing the version. 
+	 * @throws BuildFailureException
+	 *    TEX01 if invocation of <code>command</code> fails very basically.
+	 */
+	Version(Converter conv, CommandExecutor executor)
+		throws BuildFailureException {
+	    this(conv.getVersionEnvironment(),
+		 conv.getVersionPattern(),
+		 // may throw BuildFailureException
+		 executor.execute(null, null,
+			 conv.getCommand(), new String[] {
+			    conv.getVersionOption()}));
 	}
 
-	Version(String env, String pattern, String text) {
-	    this.matcher = Pattern.compile(String.format(env, pattern))
+	/**
+	 * Create a version from given pattern 
+	 * @param patternEnv
+	 *    the regex pattern <code>text</code> shall match. 
+	 *    The literal <code>%s</code> of this format string 
+	 *    indicates the location of the version pattern <code>patternVrs</code>.
+	 * @param patternVrs
+	 *    the regex pattern expected for this version. 
+	 *    This is in a form 
+	 *    as returned by {@link Converter#getVersionPattern()}.
+	 * @param text
+	 *    some text containing (among other things)
+	 *    version information described by <code>patternVrs</code> 
+	 *    and conforming to <code>patternEnv</code>. 
+	 *    The origin of that text may be output of invocation of a converter 
+	 *    or a property file with allowed versions (as version intervals)
+	 */
+	Version(String patternEnv, String patternVrs, String text) {
+	    this.text = text;
+	    this.matcher = Pattern.compile(String.format(patternEnv, patternVrs))
 		    .matcher(text);
 	    if (!this.matcher.find()) {
-		this.versionStr = "????";// TBD: eliminate literal 
+		this.versionStr = VERSION_UNKNOWN;
 		this.segments = null;
 		return;
 	    }
@@ -477,6 +516,10 @@ public class MetaInfo {
 
 	boolean isMatching() {
 	    return this.segments != null;
+	}
+
+	String getText() {
+	    return this.text;
 	}
 
 	String getString() {
@@ -798,14 +841,10 @@ public class MetaInfo {
 	for (Converter conv : Converter.values()) {
 	    doWarn = false;
 	    cmd = conv.getCommand();
-	    line = this.executor.execute(null, null, 
-		    cmd, new String[] {
-		    conv.getVersionOption()});
-
-	    actVersionObj = new Version(conv, line);
+	    actVersionObj = new Version(conv, this.executor);
 	    if (!actVersionObj.isMatching()) {
 		doWarnAny = doWarn = true;
-		this.log.warn("WMI01: Version string '" + line + 
+		this.log.warn("WMI01: Version string '" + actVersionObj.getText() +
 			"' from converter " + conv + " did not match expected form. ");
 	    }
 	    // This is ???? or sth. if unknown 
