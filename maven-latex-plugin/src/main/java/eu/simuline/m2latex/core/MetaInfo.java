@@ -614,6 +614,13 @@ public class MetaInfo {
 			    text, pattern,SEP,pattern));
 		}
 	    }
+	    String expVersionItvStr = toString();
+	    if (!text.equals(expVersionItvStr)) {
+		throw new IllegalStateException
+		(String.format("Expected version '%s' reconstructed as '%s'. ",
+			text, expVersionItvStr));
+	    }
+
 	}
 
 	/**
@@ -778,7 +785,6 @@ public class MetaInfo {
 	            Converter.values().length + ". ");
 	}
 
-	//System.out.println("version props"+versionProperties);
 	String cmd, line, actVersion, expVersion, logMsg;
 	Version actVersionObj;
 	VersionInterval expVersionItv;
@@ -808,13 +814,6 @@ public class MetaInfo {
 	    }
 
 	    expVersionItv = new VersionInterval(conv.getVersionPattern(), expVersion);
-
-	    String expVersionItvStr = expVersionItv.toString();
-	    if (!expVersion.equals(expVersionItvStr)) {
-		throw new IllegalStateException
-		(String.format("Expected version '%s' reconstructed as '%s'. ",
-			expVersion, expVersionItvStr));
-	    }
 
 	    if (!expVersionItv.contains(actVersionObj)) {
 		doWarnAny = doWarn = true;
