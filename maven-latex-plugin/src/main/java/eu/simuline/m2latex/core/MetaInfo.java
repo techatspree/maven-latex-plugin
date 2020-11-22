@@ -511,30 +511,51 @@ public class MetaInfo {
 			    ("Found unexpected signum. ");
 		    }
 	    }
+	    // TBD: unoconv is an example where 0.9 and 0.9.0 occur, 
+	    // in different distributions but both versions identical 
+	    // This must be taken into account 
 	  return getSegments().size() - other.getSegments().size();
 	}
 
     } // class Version 
     
     static class VersionInterval {
-	Version element;
+	private final static char SEP = ';';
+	private final Version min;
+	private final Version max;
 
 	VersionInterval(String pattern, String text) {
-	    this.element = new Version("^\\[%s\\]$", pattern, text);
-	    if (!this.element.isMatching()) {
-		throw new IllegalStateException
-		(String.format("Expected version '%s' does not match expression '%s'. ",
-			text, pattern));
-	    }
+	    if (text.indexOf(SEP) == -1) {
+		this.min = new Version("^\\[%s\\]$", pattern, text);
+		this.max = this.min;
+		if (!this.min.isMatching()) {
+		    throw new IllegalStateException
+		    (String.format("Expected version interval '%s' " +
+			    "does not match expression '^\\[%s\\]$'. ",
+			    text, pattern));
+		}
+	    } else {
+		    this.min = new Version("^\\[%s"+SEP+".*\\]$", pattern, text);
+		    this.max = new Version("^\\[.*"+SEP+"%s\\]$", pattern, text);
+		    if (!(this.min.isMatching() && this.max.isMatching())) {
+			throw new IllegalStateException
+			(String.format("Expected version interval '%s' " +
+			"does not match expression '^\\[%s%c%s\\]$'. ",
+				text, pattern,SEP,pattern));
+		    }
 
+	    }
 	}
 
 	boolean contains(Version version) {
-	    return this.element.compareTo(version) == 0;
+	    return this.min.compareTo(version) <= 0
+		&& this.max.compareTo(version) >= 0;
 	}
-	
+
 	String getString() {
-	    return "["+this.element.getString()+"]";
+	    return this.min == this.max
+		    ? "["+this.min.getString()+"]"
+	            : "["+this.min.getString()+SEP+this.max.getString()+"]";
 	}
     } // class VersionInterval
 
@@ -697,7 +718,7 @@ public class MetaInfo {
 	    if (!expVersion.equals(expVersionItv.getString())) {
 		throw new IllegalStateException
 		(String.format("Expected version '%s' reconstructed as '%s'. ",
-			expVersion, expVersionItv.element.getString()));
+			expVersion, expVersionItv.getString()));
 	    }
 
 	    if (!expVersionItv.contains(actVersionObj)) {
