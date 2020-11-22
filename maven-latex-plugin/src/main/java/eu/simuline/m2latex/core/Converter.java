@@ -435,13 +435,51 @@ enum Converter {
 	    cmd2conv.put(conv.getCommand(), conv);
 	}
     }
-    
+
+    /**
+     * Returns the command which which to invoke this converter. 
+     * 
+     * @return
+     *    the command of this converter. 
+     */
     abstract String getCommand();
-    
+
+    /**
+     * Returns the option which just displays information 
+     * given by {@link #getVersionEnvironment()} and among that version information 
+     * as descried by {@link #getVersionPattern()}. 
+     * 
+     * @return
+     *    the option to display (a string containing) version information. 
+     *    As a default, this is <code>-v</code> which is the most common such option.
+     */
     String getVersionOption() {
 	return "-v";
     }
+
+    /**
+     * Returns the pattern of the version for this converter as a regular expression. 
+     * All is enclosed by brackets indicating a capturing group. 
+     * Non capturing groups may occur without restriction 
+     * but capturing groups except the outermost one must come sequential. 
+     * This patters is part of the converters output 
+     * as indicated by {@link #getVersionEnvironment()}. 
+     * 
+     * @return
+     *    the pattern of the version for this converter. 
+     */
     abstract String getVersionPattern();
+
+    /**
+     * Returns the pattern of the output of this converter 
+     * if invoked with command {@link #getCommand()} and option {@link #getVersionOption()}. 
+     * Here, the literal <code>%s</code> indicates the location 
+     * of the proper version pattern given by {@link #getVersionPattern()}.
+     * If this is included a regular expression emerges. 
+     * 
+     * @return
+     *    the pattern of the output of this converter containing its version. 
+     */
     abstract String getVersionEnvironment();
     
 }
