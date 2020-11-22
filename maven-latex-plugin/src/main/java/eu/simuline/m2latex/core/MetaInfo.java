@@ -36,7 +36,7 @@ public class MetaInfo {
      * <ul>
      * <li>the folder <code>maven</code> created by maven and containing information 
      * like pom properties and pom itself which we currently do not consider</li>
-     * <li>the manifest file named {@link #MANIFEST_FILE}.</li>
+     * <li>the manifest file named {@link MetaInfo.ManifestInfo#MANIFEST_FILE}.</li>
      * </ul>
      */
     private final static String META_FOLDER = "META-INF/";
