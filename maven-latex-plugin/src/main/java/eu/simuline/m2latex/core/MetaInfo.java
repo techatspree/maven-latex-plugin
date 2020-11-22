@@ -516,6 +516,28 @@ public class MetaInfo {
 
     } // class Version 
     
+    static class VersionInterval {
+	Version element;
+
+	VersionInterval(String pattern, String text) {
+	    this.element = new Version("^\\[%s\\]$", pattern, text);
+	    if (!this.element.isMatching()) {
+		throw new IllegalStateException
+		(String.format("Expected version '%s' does not match expression '%s'. ",
+			text, pattern));
+	    }
+
+	}
+
+	boolean contains(Version version) {
+	    return this.element.compareTo(version) == 0;
+	}
+	
+	String getString() {
+	    return "["+this.element.getString()+"]";
+	}
+    } // class VersionInterval
+
     /**
      * Executor to find the version string.  
      */
@@ -643,7 +665,8 @@ public class MetaInfo {
 
 	//System.out.println("version props"+versionProperties);
 	String cmd, line, actVersion, expVersion, logMsg;
-	Version actVersionObj, expVersionObj;
+	Version actVersionObj;
+	VersionInterval expVersionItv;
 	boolean doWarn, doWarnAny = false;
 	for (Converter conv : Converter.values()) {
 	    doWarn = false;
@@ -669,22 +692,15 @@ public class MetaInfo {
 		("Found no expected version for converter " + conv + ". ");
 	    }
 
+	    expVersionItv = new VersionInterval(conv.getVersionPattern(), expVersion);
 
-	    expVersionObj = new Version("^\\[%s\\]$", conv.getVersionPattern(), expVersion);
-	    
-	    if (!expVersionObj.isMatching()) {
-		throw new IllegalStateException
-		(String.format("Expected version '%s' does not match expression '%s'. ",
-			expVersion, conv.getVersionPattern()));
-	    }
-
-	    if (!expVersion.equals("["+expVersionObj.getString()+"]")) {
+	    if (!expVersion.equals(expVersionItv.getString())) {
 		throw new IllegalStateException
 		(String.format("Expected version '%s' reconstructed as '%s'. ",
-			expVersion, expVersionObj.getString()));
+			expVersion, expVersionItv.element.getString()));
 	    }
 
-	    if (expVersionObj.compareTo(actVersionObj) != 0) {
+	    if (!expVersionItv.contains(actVersionObj)) {
 		doWarnAny = doWarn = true;
 	    }
 
