@@ -594,30 +594,30 @@ public class MetaInfo {
 	 *    does not have the representation given by <code>text</code>.
 	 */
 	VersionInterval(Converter conv, String text) {
-	    String pattern = conv.getVersionPattern();
+	    String patternVrs = conv.getVersionPattern();
 	    if (text == null) {
 		throw new IllegalStateException
 		("Found no expected version for converter " + conv + ". ");
 	    }
 	    if (text.indexOf(SEP) == -1) {
 		// Here, we have an interval [element]
-		this.min = new Version(ENV_PATTERN1, pattern, text);
+		this.min = new Version(ENV_PATTERN1, patternVrs, text);
 		this.max = this.min;
 		if (!this.min.isMatching()) {
 		    throw new IllegalStateException
 		    (String.format("Expected version interval '%s' " +
 			    "does not match expression '^\\[%s\\]$'. ",
-			    text, pattern));
+			    text, patternVrs));
 		}
 	    } else {
 		// Here, we have an interval [min;max]
-		this.min = new Version(ENV_PATTERN2LOW, pattern, text);
-		this.max = new Version(ENV_PATTERN2HIG, pattern, text);
+		this.min = new Version(ENV_PATTERN2LOW, patternVrs, text);
+		this.max = new Version(ENV_PATTERN2HIG, patternVrs, text);
 		if (!(this.min.isMatching() && this.max.isMatching())) {
 		    throw new IllegalStateException
 		    (String.format("Expected version interval '%s' " +
 			    "does not match expression '^\\[%s%c%s\\]$'. ",
-			    text, pattern,SEP,pattern));
+			    text, patternVrs, SEP, patternVrs));
 		}
 	    }
 	    String expVersionItvStr = toString();
