@@ -518,15 +518,81 @@ public class MetaInfo {
 	}
 
     } // class Version 
-    
+
+    /**
+     * An interval of versions, representing intervals 
+     * between the boundaries {@link #min} and {@link #min} 
+     * which offers a containment predicate {@link #contains(Version)}. 
+     * <p>
+     * Tied to this is a string representation given by {@link #toString()} 
+     * and also used by the constructor {@link #VersionInterval(String, String)}.
+     */
     static class VersionInterval {
+
+	/**
+	 * Separator between minimum version and maximum version in string representation. 
+	 * This must be a character not occurring within a version string. 
+	 * We have a piece of software, see {@link Converter#Latex2rtf} 
+	 * which has a blank in the version string and as a consequence, 
+	 * we cannot use a blank here.  
+	 */
 	private final static char SEP = ';';
+
+	/**
+	 * The pattern for a one point interval, essentially the version within brackets. 
+	 * Note that the version string is represented as the formatter <code>%s</code>.
+	 * 
+	 * @see #ENV_PATTERN2LOW
+	 * @see #ENV_PATTERN2HIG
+	 */
+	private final static String ENV_PATTERN1 = "^\\[%s\\]$";
+
+	/**
+	 * The pattern for a non-degenerate interval, 
+	 * minimum and maximum version separated by {@link #SEP} 
+	 * and enclosed within brackets. 
+	 * The minimum version string is represented as the formatter <code>%s</code> 
+	 * whereas the maximum version string is represented by the general pattern. 
+	 * 
+	 * @see #ENV_PATTERN1
+	 * @see #ENV_PATTERN2HIG
+	 */
+	private final static String ENV_PATTERN2LOW = "^\\[%s"+SEP+".*\\]$";
+
+	/**
+	 * The pattern for a non-degenerate interval, 
+	 * minimum and maximum version separated by {@link #SEP} 
+	 * and enclosed within brackets. 
+	 * The maximum version string is represented as the formatter <code>%s</code> 
+	 * whereas the minimum version string is represented by the general pattern. 
+	 * 
+	 * @see #ENV_PATTERN1
+	 * @see #ENV_PATTERN2LOW
+	 */
+	private final static String ENV_PATTERN2HIG = "^\\[.*"+SEP+"%s\\]$";
+
+	/**
+	 * The minimum version (inclusive) contained in this interval. 
+	 */
 	private final Version min;
+
+	/**
+	 * The maximum version (inclusive) contained in this interval. 
+	 */
 	private final Version max;
 
+	/**
+	 * Creates a version interval from the 
+	 * @param pattern
+	 *    the pattern for the version. 
+	 * @param text
+	 *    the text representation for the interval to be created 
+	 *    which is as described for {@link #toString()}. 
+	 */
 	VersionInterval(String pattern, String text) {
 	    if (text.indexOf(SEP) == -1) {
-		this.min = new Version("^\\[%s\\]$", pattern, text);
+		// Here, we have an interval [element]
+		this.min = new Version(ENV_PATTERN1, pattern, text);
 		this.max = this.min;
 		if (!this.min.isMatching()) {
 		    throw new IllegalStateException
@@ -535,27 +601,52 @@ public class MetaInfo {
 			    text, pattern));
 		}
 	    } else {
-		    this.min = new Version("^\\[%s"+SEP+".*\\]$", pattern, text);
-		    this.max = new Version("^\\[.*"+SEP+"%s\\]$", pattern, text);
-		    if (!(this.min.isMatching() && this.max.isMatching())) {
-			throw new IllegalStateException
-			(String.format("Expected version interval '%s' " +
-			"does not match expression '^\\[%s%c%s\\]$'. ",
-				text, pattern,SEP,pattern));
-		    }
-
+		// Here, we have an interval [min;max]
+		this.min = new Version(ENV_PATTERN2LOW, pattern, text);
+		this.max = new Version(ENV_PATTERN2HIG, pattern, text);
+		if (!(this.min.isMatching() && this.max.isMatching())) {
+		    throw new IllegalStateException
+		    (String.format("Expected version interval '%s' " +
+			    "does not match expression '^\\[%s%c%s\\]$'. ",
+			    text, pattern,SEP,pattern));
+		}
 	    }
 	}
 
+	/**
+	 * Returns whether <code>version</code> is contained in this interval. 
+	 * 
+	 * @param version
+	 *    some version. 
+	 * @return
+	 *    whether <code>version</code> is contained in this interval. 
+	 */
 	boolean contains(Version version) {
 	    return this.min.compareTo(version) <= 0
 		&& this.max.compareTo(version) >= 0;
 	}
 
-	String getString() {
-	    return this.min == this.max
-		    ? "["+this.min.getString()+"]"
-	            : "["+this.min.getString()+SEP+this.max.getString()+"]";
+	/**
+	 * Returns a representation inspired by math and used in version property file. 
+	 * It is just the format 
+	 * which is read by the constructor {@link #VersionInterval(String, String)}.
+	 * @return
+	 *    string representation of the form <code>[min;max]</code> 
+	 *    except if <code>min</code> and <code>max</code> coincide, 
+	 *    then it is just <code>[min]</code>.
+	 */
+	@Override
+	public String toString() {
+	    StringBuilder res = new StringBuilder();
+	    res.append('[');
+	    res.append(this.min.getString());
+
+	    if (this.min != this.max) {
+		res.append(SEP);
+		res.append(this.max.getString());
+	    }
+	    res.append(']');
+	    return res.toString();
 	}
     } // class VersionInterval
 
@@ -715,10 +806,11 @@ public class MetaInfo {
 
 	    expVersionItv = new VersionInterval(conv.getVersionPattern(), expVersion);
 
-	    if (!expVersion.equals(expVersionItv.getString())) {
+	    String expVersionItvStr = expVersionItv.toString();
+	    if (!expVersion.equals(expVersionItvStr)) {
 		throw new IllegalStateException
 		(String.format("Expected version '%s' reconstructed as '%s'. ",
-			expVersion, expVersionItv.getString()));
+			expVersion, expVersionItvStr));
 	    }
 
 	    if (!expVersionItv.contains(actVersionObj)) {
