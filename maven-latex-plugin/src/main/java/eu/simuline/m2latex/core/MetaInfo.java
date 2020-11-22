@@ -520,7 +520,7 @@ public class MetaInfo {
      * which offers a containment predicate {@link #contains(Version)}. 
      * <p>
      * Tied to this is a string representation given by {@link #toString()} 
-     * and also used by the constructor {@link #VersionInterval(String, String)}.
+     * and also used by the constructor {@link #VersionInterval(Converter, String)}.
      */
     static class VersionInterval {
 
@@ -644,7 +644,8 @@ public class MetaInfo {
 	/**
 	 * Returns a representation inspired by math and used in version property file. 
 	 * It is just the format 
-	 * which is read by the constructor {@link #VersionInterval(String, String)}.
+	 * which is read by the constructor {@link #VersionInterval(Converter, String)}.
+	 * 
 	 * @return
 	 *    string representation of the form <code>[min;max]</code> 
 	 *    except if <code>min</code> and <code>max</code> coincide, 
