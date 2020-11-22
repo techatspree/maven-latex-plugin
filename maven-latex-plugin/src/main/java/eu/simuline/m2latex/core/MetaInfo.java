@@ -594,9 +594,19 @@ public class MetaInfo {
 	 * @param text
 	 *    the text representation for the interval to be created 
 	 *    which is as described for {@link #toString()}. 
+	 *    This may well be <code>null</code>.
+	 * @throws IllegalStateException
+	 *    if either <code>text</code> is <code>null</code>
+	 *    which means that there is no version for <code>conv</code>
+	 *    or if this created version interval
+	 *    does not have the representation given by <code>text</code>.
 	 */
 	VersionInterval(Converter conv, String text) {
 	    String pattern = conv.getVersionPattern();
+	    if (text == null) {
+		throw new IllegalStateException
+		("Found no expected version for converter " + conv + ". ");
+	    }
 	    if (text.indexOf(SEP) == -1) {
 		// Here, we have an interval [element]
 		this.min = new Version(ENV_PATTERN1, pattern, text);
@@ -624,7 +634,6 @@ public class MetaInfo {
 		(String.format("Expected version '%s' reconstructed as '%s'. ",
 			text, expVersionItvStr));
 	    }
-
 	}
 
 	/**
@@ -812,10 +821,6 @@ public class MetaInfo {
 	    }
 
 	    expVersion = versionProperties.getProperty(cmd);
-	    if (expVersion == null) {
-		throw new IllegalStateException
-		("Found no expected version for converter " + conv + ". ");
-	    }
 
 	    expVersionItv = new VersionInterval(conv, expVersion);
 
