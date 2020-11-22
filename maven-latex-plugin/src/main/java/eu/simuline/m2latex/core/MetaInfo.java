@@ -247,7 +247,9 @@ public class MetaInfo {
 	protected String getPackageImplVersion() {
 	    return this.getClass().getPackage().getImplementationVersion();
 	}
+
 	// TBD: tie names to values. 
+	@Override
 	public String toString() {
 	    StringBuilder stb = new StringBuilder();
 	    for (String line : toStringArr()) {
@@ -411,7 +413,8 @@ public class MetaInfo {
 	String getBuildTime() {
 	    return getAttrValue(GIT_BUILD_TIME);
 	}
-	
+
+	@Override
 	public String toString() {
 	    StringBuilder stb = new StringBuilder();
 	    stb.append("build version:  '" + getBuildVersion()     + "'\n");
