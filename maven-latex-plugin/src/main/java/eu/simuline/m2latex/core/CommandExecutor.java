@@ -77,7 +77,23 @@ class CommandExecutor {
      * @return
      *    The output of execution on stdio/errio (TBC). 
      *    This is used in tests only. 
-     */
+     * @throws BuildFailureException
+     *    TEX01 if invocation of <code>command</code> fails very basically: 
+     *    <ul>
+     *    <li><!-- see Commandline.execute() -->
+     *    the file expected to be the working directory 
+     *    does not exist or is not a directory. 
+     *    <li><!-- see Commandline.execute() -->
+     *    {@link Runtime#exec(String, String[], File)} fails 
+     *    throwing an {@link java.io.IOException}. 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemOut parser occurs 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemErr parser occurs 
+     *    <li> Wrapping an {@link InterruptedException} 
+     *    on the process to be executed thrown by {@link Process#waitFor()}. 
+     *    </ul>
+       */
     String execute(File workingDir, 
 		   File pathToExecutable, 
 		   String command, 
