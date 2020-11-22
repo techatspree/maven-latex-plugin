@@ -823,7 +823,7 @@ public class MetaInfo {
 	// headlines 
 	this.log.info("tool versions: ");
 	this.log.info(String.format(TOOL_VERSION_FORMAT, 
-		"?warn?    ", "command:", "actual version", "not(in)", "[expected version interval]"));
+		"?warn?    ", "command:", "actual version", "(not)in", "[expected version interval]"));
 
 	Properties versionProperties = getProperties(VERSION_PROPS_FILE);
 	if (versionProperties.size() > Converter.values().length) {
@@ -849,12 +849,10 @@ public class MetaInfo {
 	    incl = "in";
 	    if (!actVersionObj.isMatching()) {
 		doWarn = true;
-//		this.log.warn("WMI01: Version string '" + actVersionObj.getText() +
-//			"' from converter " + conv + " did not match expected form. ");
 		this.log.warn("WMI01: Version string from converter " + conv + 
 			" did not match expected form: \n"+actVersionObj.getText());
 		incl = "not?in";
-		warn = "       ";
+		warn = "       ";// mo warning number, still the above is valid
 	    } else {
 		doWarn = !expVersionItv.contains(actVersionObj);
 		if (doWarn) {
@@ -862,8 +860,6 @@ public class MetaInfo {
 		    warn = "WMI02: ";
 		}
 	    }
-
-
 
 	    logMsg = String.format(TOOL_VERSION_FORMAT,
 		    warn, cmd+":", actVersionObj.getString(), incl, expVersion);
@@ -879,7 +875,7 @@ public class MetaInfo {
 	    }
 	    doWarnAny |= doWarn;
 	} // for 
-	// TBD: extend also so that it works for version of GS
+	// TBD: try to work for makeindex also
 	return doWarnAny;
     }
 }

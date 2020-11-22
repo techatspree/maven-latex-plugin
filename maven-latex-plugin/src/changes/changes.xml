@@ -74,7 +74,8 @@
          added docs for various packages. 
        </action>
        <action dev="reissner" type="add">
-         added goal vrs displaying versions also of the converters. 
+         added goal vrs displaying versions also of the converters 
+         and whether they are valid. 
        </action>
 
        
@@ -162,11 +163,11 @@
 	    does not allow to get its version without breaking it 
 	    or applying it on a file. 
 	    Maybe the solution is to replace it by upmendex -->
-       <!-- change versioning of bibtexu and of bigtex8: 
-	    not the version of bibtex, which is currently 0.99d is relevant 
-	    because this is the specification version: 
-	    shall behave like bibtex 0.99d, 
-	    but the implementation version 3.71 -->
+	    <!-- TBD: goal latex:vrs 
+	    shall work even if not all converters are installed. 
+	    Problem: MetaInfo.Version constructor: 
+	    executor then throws BuildFailureException -->
+	    <!-- TBD: maybe vrs shall be included in phase validate. -->
      </release>
 
 
