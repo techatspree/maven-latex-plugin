@@ -433,7 +433,7 @@ public class MetaInfo {
 
     static class Version implements Comparable<Version> {
 
-	private final static String VERSION_UNKNOWN = "????";
+	private final static String VERSION_UNKNOWN = "version";
 
 	private final String text;
 	private final Matcher matcher;
@@ -730,7 +730,7 @@ public class MetaInfo {
     }
     
     private final static String VERSION_PROPS_FILE = "version.properties";
-    private final static String TOOL_VERSION_FORMAT = "%-15s '%s'/'%s'";
+    private final static String TOOL_VERSION_FORMAT = "%s%-15s '%s'%s%s";
 
     // CAUTION, depends on the maven-jar-plugin and its version 
     /**
@@ -823,7 +823,7 @@ public class MetaInfo {
 	// headlines 
 	this.log.info("tool versions: ");
 	this.log.info(String.format(TOOL_VERSION_FORMAT, 
-		"command:", "actual version", "expected version"));
+		"?warn?    ", "command:", "actual version", "not(in)", "[expected version interval]"));
 
 	Properties versionProperties = getProperties(VERSION_PROPS_FILE);
 	if (versionProperties.size() > Converter.values().length) {
@@ -834,7 +834,7 @@ public class MetaInfo {
 	            Converter.values().length + ". ");
 	}
 
-	String cmd, line, actVersion, expVersion, logMsg;
+	String cmd, expVersion, logMsg, warn, incl;
 	Version actVersionObj;
 	VersionInterval expVersionItv;
 	boolean doWarn, doWarnAny = false;
@@ -842,34 +842,43 @@ public class MetaInfo {
 	    doWarn = false;
 	    cmd = conv.getCommand();
 	    actVersionObj = new Version(conv, this.executor);
-	    if (!actVersionObj.isMatching()) {
-		doWarnAny = doWarn = true;
-		this.log.warn("WMI01: Version string '" + actVersionObj.getText() +
-			"' from converter " + conv + " did not match expected form. ");
-	    }
-	    // This is ???? or sth. if unknown 
-	    actVersion = actVersionObj.getString();
-
 	    expVersion = versionProperties.getProperty(cmd);
 	    expVersionItv = new VersionInterval(conv, expVersion);
 
-//	    if (!(doWarn || expVersionItv.contains(actVersionObj))) {
-//		doWarnAny = doWarn = true;
-//	    }
-	    doWarnAny = doWarn = doWarn || !expVersionItv.contains(actVersionObj);
+	    warn = "          ";
+	    incl = "in";
+	    if (!actVersionObj.isMatching()) {
+		doWarn = true;
+//		this.log.warn("WMI01: Version string '" + actVersionObj.getText() +
+//			"' from converter " + conv + " did not match expected form. ");
+		this.log.warn("WMI01: Version string from converter " + conv + 
+			" did not match expected form: \n"+actVersionObj.getText());
+		incl = "not?in";
+		warn = "       ";
+	    } else {
+		doWarn = !expVersionItv.contains(actVersionObj);
+		if (doWarn) {
+		    incl = "not in";
+		    warn = "WMI02: ";
+		}
+	    }
 
-	    logMsg = String.format(TOOL_VERSION_FORMAT, cmd+":", actVersion, expVersion);
+
+
+	    logMsg = String.format(TOOL_VERSION_FORMAT,
+		    warn, cmd+":", actVersionObj.getString(), incl, expVersion);
 //	    this.log.info("actVersion: "+actVersionObj.getSegments());
 //	    this.log.info("expVersion: "+expVersionObj.getSegments());
 //	    this.log.info("actVersion: "+actVersionObj.getSegmentsAsStrings());
 //	    this.log.info("expVersion: "+expVersionObj.getSegmentsAsStrings());
 	    //this.log.info("actVersion?expVersion: "+actVersionObj.compareTo(expVersionObj));
 	    if (doWarn) {
-		this.log.warn("WMI02: Conflict " + logMsg);
+		this.log.warn(logMsg);
 	    } else {
 		this.log.info(logMsg);
 	    }
-	}
+	    doWarnAny |= doWarn;
+	} // for 
 	// TBD: extend also so that it works for version of GS
 	return doWarnAny;
     }

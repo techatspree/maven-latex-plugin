@@ -1128,43 +1128,52 @@ float, captionpos=b, label={lst:vrsOut},
 caption={Output of goal \texttt{latex:vrs}}]
 [INFO] Manifest properties: 
 [INFO] MANIFEST: (1.0)
-[INFO] Implementation-Version: '1.5-SNAPSHOT'
-[INFO] Implementation-Version: '1.5-SNAPSHOT'
+[INFO]        Implementation-Version: '1.5-SNAPSHOT'
+[INFO] PackageImplementation-Version: '1.5-SNAPSHOT'
 [INFO] pom properties:
 [INFO] coordinate.groupId:    'eu.simuline.m2latex'
 [INFO] coordinate.artifactId: 'latex-maven-plugin'
 [INFO] coordinate.version:    '1.5-SNAPSHOT'
 [INFO] git properties: 
 [INFO] build version:  '1.5-SNAPSHOT'
-[INFO] commit id desc: 'latex-maven-plugin-1.4-49-g479b11e-dirty'
-[INFO] buildTime:      '2020-11-18T23:32:59+0100'
+[INFO] commit id desc: 'latex-maven-plugin-1.4-87-g525b344-dirty'
+[INFO] buildTime:      '2020-11-23T00:11:01+0100'
 [INFO] tool versions: 
-[INFO] command:        'actual version'/'expected version'
-[INFO] pdflatex:       '3.14159265-2.6-1.40.21'/'3.14159265-2.6-1.40.21'
-[INFO] lualatex:       '1.12.0'/'1.12.0'
-[INFO] xelatex:        '3.14159265-2.6-0.999992'/'3.14159265-2.6-0.999992'
-[WARNING] WMI02: Conflict latex2rtf:      '2.3.18 r1267'/'2.3.16 r1254'
-[WARNING] WMI02: Conflict odt2doc:        '0.9.0'/'0.9.9'
-[WARNING] WMI02: Conflict pdftotext:      '20.10.0'/'0.90.0'
-[INFO] dvips:          '2020.1'/'2020.1'
-[INFO] dvipdfm:        '20200315'/'20200315'
-[INFO] dvipdfmx:       '20200315'/'20200315'
-[INFO] xdvipdfmx:      '20200315'/'20200315'
-[INFO] dvipdft:        '20090604.0046'/'20090604.0046'
-[WARNING] WMI02: Conflict gs:             '9.53.3'/'9.52'
-[INFO] chktex:         '1.7.6'/'1.7.6'
-[INFO] bibtex:         '0.99d'/'0.99d'
-[INFO] bibtexu:        '3.71'/'3.71'
-[INFO] bibtex8:        '3.71'/'3.71'
-[INFO] upmendex:       '0.54'/'0.54'
-[INFO] splitindex:     '0.1'/'0.1'
-[INFO] xindy:          '2.5.1'/'2.5.1'
-[INFO] makeglossaries: '4.45'/'4.45'
-[INFO] mpost:          '2.00'/'2.00'
-[INFO] ebb:            '20200315'/'20200315'
-[INFO] gnuplot:        '5.4'/'5.4'
-[INFO] inkscape:       '1.0.1'/'1.0.1'
-[INFO] fig2dev:        '3.2.7b'/'3.2.7b'
+[INFO] ?warn?    command:        'actual version'not(in)[expected version interval]
+[INFO]           pdflatex:       '1.40.21'in[1.40.21]
+[INFO]           lualatex:       '1.12.0'in[1.12.0]
+[INFO]           xelatex:        '0.999992'in[0.999992]
+[INFO]           latex2rtf:      '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
+[WARNING] WMI01: Version string from converter Odt2doc did not match expected form: 
+unoconv 0.9.0
+Written by Dag Wieers <dag@wieers.com>
+Homepage at http://dag.wieers.com/home-made/unoconv/
+
+platform posix/linux
+python 3.8.6 (default, Nov 09 2020, 12:09:06) [GCC]
+LibreOffice 7.0.3.1
+
+[WARNING]        odt2doc:        'version'not?in[0.9.0]
+[INFO]           pdftotext:      '20.10.0'in[0.90.0;20.10.0]
+[INFO]           dvips:          '2020.1'in[2020.1]
+[INFO]           dvipdfm:        '20200315'in[20200315]
+[INFO]           dvipdfmx:       '20200315'in[20200315]
+[INFO]           xdvipdfmx:      '20200315'in[20200315]
+[INFO]           dvipdft:        '20090604.0046'in[20090604.0046]
+[INFO]           gs:             '9.53.3'in[9.52;9.53.3]
+[INFO]           chktex:         '1.7.6'in[1.7.6]
+[WARNING] WMI02: bibtex:         '0.99d'not in[0.99c]
+[INFO]           bibtexu:        '3.71'in[3.71]
+[INFO]           bibtex8:        '3.71'in[3.71]
+[INFO]           upmendex:       '0.54'in[0.54]
+[INFO]           splitindex:     '0.1'in[0.1]
+[INFO]           xindy:          '2.5.1'in[2.5.1]
+[INFO]           makeglossaries: '4.45'in[4.45]
+[INFO]           mpost:          '2.00'in[2.00]
+[INFO]           ebb:            '20200315'in[20200315]
+[INFO]           gnuplot:        '5.4'in[5.4]
+[INFO]           inkscape:       '1.0.1'in[1.0.1]
+[INFO]           fig2dev:        '3.2.7b'in[3.2.7b]
 \end{lstlisting}
 
 
@@ -4766,21 +4775,22 @@ Identifier        & Message  \\
 \caption{\label{tab:LogMI} The logging for MetaInfo   }
 \endlastfoot%
 \texttt{\footnotesize WMI01} 
-& \texttt{\footnotesize Version string '\$line'     } \\
-& \texttt{\footnotesize from converter \$conv did not match expected form. } \\
+& \texttt{\footnotesize Version string from converter \$conv did not match expected form:      } \\
+& \texttt{\footnotesize \$conv: 'version'not?in\$interv } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-  Indicates whtat the version string coming from the converter \$conv
+  Indicates that the version string coming from the converter \$conv
   is not as expected.
-  Programming error excluded, this means that the version does not fit. 
+  Programming error excluded, this means that the version does not fit,
+  i.e. is not in \texttt{\$interv}.
 \end{minipage}
 } \\
 \texttt{\footnotesize WMI02} 
-& \texttt{\footnotesize Conflict \$conv '\$actVersion'/'\$expVersion'} \\
+& \texttt{\footnotesize \$conv: '\$actVersion'not in\$interv} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
   Indicates that the version of converter \$conv can be detected
-  and is \$actVersion but does not fit the expectation which is \$expVersion.g 
+  and is \$actVersion but does not fit the expectation which is \$expVersion. 
 \end{minipage}
 }
 \end{longtable}
