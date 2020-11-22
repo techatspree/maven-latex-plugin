@@ -802,22 +802,21 @@ public class MetaInfo {
 		    conv.getVersionOption()});
 
 	    actVersionObj = new Version(conv, line);
-	    if (actVersionObj.isMatching()) {
-		//actVersion = actVersionObj.getString();
-	    } else {
+	    if (!actVersionObj.isMatching()) {
 		doWarnAny = doWarn = true;
 		this.log.warn("WMI01: Version string '" + line + 
 			"' from converter " + conv + " did not match expected form. ");
-		//actVersion = "????";
 	    }
+	    // This is ???? or sth. if unknown 
 	    actVersion = actVersionObj.getString();
 
 	    expVersion = versionProperties.getProperty(cmd);
 	    expVersionItv = new VersionInterval(conv, expVersion);
 
-	    if (!doWarn && !expVersionItv.contains(actVersionObj)) {
-		doWarnAny = doWarn = true;
-	    }
+//	    if (!(doWarn || expVersionItv.contains(actVersionObj))) {
+//		doWarnAny = doWarn = true;
+//	    }
+	    doWarnAny = doWarn = doWarn || !expVersionItv.contains(actVersionObj);
 
 	    logMsg = String.format(TOOL_VERSION_FORMAT, cmd+":", actVersion, expVersion);
 //	    this.log.info("actVersion: "+actVersionObj.getSegments());
