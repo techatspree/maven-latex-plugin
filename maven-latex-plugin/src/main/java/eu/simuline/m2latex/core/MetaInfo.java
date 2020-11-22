@@ -437,11 +437,15 @@ public class MetaInfo {
 	String versionStr;
 	List<Number> segments;
 
+	Version(Converter conv, String text) {
+	    this(conv.getVersionEnvironment(), conv.getVersionPattern(), text);
+	}
+
 	Version(String env, String pattern, String text) {
 	    this.matcher = Pattern.compile(String.format(env, pattern))
 		    .matcher(text);
 	    if (!this.matcher.find()) {
-		this.versionStr = null;
+		this.versionStr = "????";// TBD: eliminate literal 
 		this.segments = null;
 		return;
 	    }
@@ -472,27 +476,15 @@ public class MetaInfo {
 	}
 
 	boolean isMatching() {
-	    return this.versionStr != null;
+	    return this.segments != null;
 	}
 
 	String getString() {
 	    return this.versionStr;
 	}
 
-	List<Number> getSegments() {
+	private List<Number> getSegments() {
 	    return this.segments;
-	}
-
-	List<String> getSegmentsAsStrings() {
-	    List<String> res = new ArrayList<String>(this.segments.size());
-	    String str;
-	    for (Number num : this.segments) {
-		str = (num instanceof Byte)
-			? Character.toString(num.byteValue())
-		        : num.toString();
-		    res.add(str);
-	    }
-	    return res;
 	}
 
 	public int compareTo(Version other) {
@@ -809,22 +801,21 @@ public class MetaInfo {
 		    cmd, new String[] {
 		    conv.getVersionOption()});
 
-	    actVersionObj = new Version(conv.getVersionEnvironment(), 
-		    conv.getVersionPattern(), line);
+	    actVersionObj = new Version(conv, line);
 	    if (actVersionObj.isMatching()) {
-		actVersion = actVersionObj.getString();
+		//actVersion = actVersionObj.getString();
 	    } else {
 		doWarnAny = doWarn = true;
 		this.log.warn("WMI01: Version string '" + line + 
 			"' from converter " + conv + " did not match expected form. ");
-		actVersion = "????";
+		//actVersion = "????";
 	    }
+	    actVersion = actVersionObj.getString();
 
 	    expVersion = versionProperties.getProperty(cmd);
-
 	    expVersionItv = new VersionInterval(conv, expVersion);
 
-	    if (!expVersionItv.contains(actVersionObj)) {
+	    if (!doWarn && !expVersionItv.contains(actVersionObj)) {
 		doWarnAny = doWarn = true;
 	    }
 
