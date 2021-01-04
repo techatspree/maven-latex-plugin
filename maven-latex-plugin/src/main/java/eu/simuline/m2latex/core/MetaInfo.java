@@ -6,6 +6,7 @@ package eu.simuline.m2latex.core;
 import java.io.InputStream;
 
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import java.util.Properties;
@@ -457,7 +458,7 @@ public class MetaInfo {
 	    this(conv.getVersionEnvironment(),
 		 conv.getVersionPattern(),
 		 // may throw BuildFailureException
-		 executor.execute(null, null,
+		 executor.execute(MetaInfo.EMPTY_IDX.getParentFile(), null,
 			 conv.getCommand(), new String[] {
 			    conv.getVersionOption()}));
 	}
@@ -729,8 +730,37 @@ public class MetaInfo {
 	this.log = log;
     }
     
+    /**
+     * The name of the file containing the version properties.
+     * For each {@link Converter}, the range of possible versions is given
+     * in a separate line of the form <code>command=[a;b]</code>
+     * or <code>command=[a]</code> for a=b. 
+     * Also comments starting with <code>#<\code> are allowed.
+     */
     private final static String VERSION_PROPS_FILE = "version.properties";
+
+    /**
+     * Format string used in {@link #printMetaInfo()} 
+     * to define a table of converters and their versions
+     * with rows (warning), converter, actual version and allowed version interval.  
+     */
     private final static String TOOL_VERSION_FORMAT = "%s%-15s '%s'%s%s";
+
+    // TBD: clarify whether this hack is really needed.
+    /**
+     * Temporarily generated file to be passed to {@link Converter#Makeindex}
+     * to allow to determine the version of the tool.
+     */
+    final static File EMPTY_IDX;
+    static {
+	try {
+	    EMPTY_IDX = File.createTempFile("forMakeindex", ".idx");
+	    EMPTY_IDX.deleteOnExit();
+	    //EMPTY_IDX.toString().replaceFirst("\\.idx$"
+	} catch(Exception e) {
+	    throw new IllegalStateException("Could not create temp file.");
+	}
+    }
 
     // CAUTION, depends on the maven-jar-plugin and its version 
     /**
@@ -838,8 +868,11 @@ public class MetaInfo {
 	Version actVersionObj;
 	VersionInterval expVersionItv;
 	boolean doWarn, doWarnAny = false;
+	// TBD: try to deal with makeindex using stdin instead of dummy file: 
+	// InputStream sysInBackup = System.in;
 	for (Converter conv : Converter.values()) {
 	    doWarn = false;
+	    //System.setIn(new ByteArrayInputStream("\u0004\n".getBytes()));
 	    cmd = conv.getCommand();
 	    actVersionObj = new Version(conv, this.executor);
 	    expVersion = versionProperties.getProperty(cmd);
@@ -852,7 +885,7 @@ public class MetaInfo {
 		this.log.warn("WMI01: Version string from converter " + conv + 
 			" did not match expected form: \n"+actVersionObj.getText());
 		incl = "not?in";
-		warn = "       ";// mo warning number, still the above is valid
+		warn = "       ";// no warning number, still the above is valid
 	    } else {
 		doWarn = !expVersionItv.contains(actVersionObj);
 		if (doWarn) {

@@ -252,14 +252,14 @@ enum Converter {
 	}
 	String getVersionEnvironment() {
 	    return "^[^\n]*\n[^\n]*\n" +
-	"Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
+		    "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
 	}
     },
     Bibtex8 {
 	String getCommand() {
 	    return "bibtex8";
 	}
-
+	// TBD: maybe the line endings are not plattform independent.
 	/**
 	 * Returns the pattern for the version string. 
 	 * Note that <code>bibtex8 -v</code> yields three versions, 
@@ -276,22 +276,26 @@ enum Converter {
 	}
 	String getVersionEnvironment() {
 	    return "^[^\n]*\n[^\n]*\n" +
-			"Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
+		    "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
 	}
     },
-//    Makeindex {
-//	String getCommand() {
-//	    return "makeindex";
-//	}
-//	String getVersionOption() {
-//	    return "-q";
-//	}
-//	String getVersionPattern() {
-//	    return "^(.*)\n";
-//	}
-//    },
+    Makeindex {
+	String getCommand() {
+	    return "makeindex";
+	}
+	String getVersionOption() {
+	    return MetaInfo.EMPTY_IDX.getName().toString();
+	}
+	String getVersionPattern() {
+	    return X_X;
+	}
+	String getVersionEnvironment() {
+	    return "^This is makeindex, version %s " +
+		    "\\[TeX Live 2020\\] \\(kpathsea \\+ Thai support\\).\n";
+	}
+    },
     // TBC: maybe this replaces makeindex 
-  Upmendex {
+    Upmendex {
 	String getCommand() {
 	    return "upmendex";
 	}

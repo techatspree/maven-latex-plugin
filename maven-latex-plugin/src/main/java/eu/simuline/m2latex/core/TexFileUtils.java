@@ -745,6 +745,7 @@ class TexFileUtils {
 
     // used in LatexPreProcessor and in LatexProcessor and in LatexDec
     // at numerous places 
+    // TBD: clarify what is wrong with mock that we cannot make this static
     File replaceSuffix(File file, String suffix) {
         return new File(file.getParentFile(),
 			getFileNameWithoutSuffix(file) + suffix);
