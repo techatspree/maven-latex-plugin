@@ -60,6 +60,8 @@ import org.junit.After;
 //import org.junit.BeforeClass;
 //import org.junit.AfterClass;
 
+import static org.junit.Assert.assertEquals;
+
 // FIXME: missing: test of logging 
 // FIXME: mocking and verification in parallel 
 // FIXME: rename: mock-->stub 
@@ -262,7 +264,7 @@ public class LatexProcessorTest {
 					boolean needMakeGlossary) 
 	throws BuildFailureException {
 
-	verifyConstrLatexMainDesc();
+	//verifyConstrLatexMainDesc();
 	assert !this.settings.getPdfViaDvi().isViaDvi();
 	// FIXME: here should be verifyProcessLatex2dev
 	verifyProcessLatex2devCore(needBibtex, needMakeIndex, needMakeGlossary);
@@ -288,7 +290,7 @@ public class LatexProcessorTest {
 					 boolean needMakeGlossary) 
 	throws BuildFailureException {
 
-	verifyConstrLatexMainDesc();
+	//verifyConstrLatexMainDesc();
 	verifyPreProcessLatex2dev(needBibtex, needMakeIndex, needMakeGlossary);
         verifyRunLatex2html();
     }
@@ -297,55 +299,45 @@ public class LatexProcessorTest {
 	//this.desc = this.processor.getLatexMainDesc(this.texFile);
 
 	File texFile = this.texFile;
-  	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID))
-	    .thenReturn(this.xxxFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_PDF))
-	    .thenReturn(this.pdfFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_DVI))
-	    .thenReturn(this.dviFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG))
-	    .thenReturn(this.logFile);
+  	assertEquals(this.xxxFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID));
+  	assertEquals(this.pdfFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_PDF));
+  	assertEquals(this.dviFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_DVI));
+  	assertEquals(this.logFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOG));
 
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX))
-	    .thenReturn(this.idxFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IND))
-	    .thenReturn(this.indFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG))
-	    .thenReturn(this.ilgFile);
+  	assertEquals(this.idxFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IDX));
+  	assertEquals(this.indFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_IND));
+  	assertEquals(this.ilgFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_ILG));
 
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS))
-	    .thenReturn(this.glsFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO))
-	    .thenReturn(this.gloFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLG))
-	    .thenReturn(this.glgFile);
+  	assertEquals(this.glsFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLS));
+  	assertEquals(this.gloFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLO));
+  	assertEquals(this.glgFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_GLG));
     }
 
-    private void verifyConstrLatexMainDesc() {
-	// FIXME: doubling from mockConstrLatexMainDesc()
-	String[] suffixes = new String[] {
-	    LatexProcessor.SUFFIX_VOID,
-	    LatexProcessor.SUFFIX_PDF,
-	    LatexProcessor.SUFFIX_DVI,
-	    LatexProcessor.SUFFIX_LOG,
-	    LatexProcessor.SUFFIX_IDX,
-	    LatexProcessor.SUFFIX_IND,
-	    LatexProcessor.SUFFIX_ILG,
-	    LatexProcessor.SUFFIX_GLS,
-	    LatexProcessor.SUFFIX_GLO,
-	    LatexProcessor.SUFFIX_GLG
-	};
-	for (int idx = 0; idx < suffixes.length; idx++) {
-	    // FIXME: should work also in order. 
-	    // FIXME: observation: in order works iff no atLeastOnce is required
-	    // On the other hand, I am not sure 
-	    // why I need this in the individual cases. 
-	    //this.inOrder.
-	    //if (idx == 1 ||idx == 2) {continue;}
-	    verify(this.fileUtils, atLeastOnce())
-		.replaceSuffix(this.texFile, suffixes[idx]);
-	}
-    }
+//    private void verifyConstrLatexMainDesc() {
+//	// FIXME: doubling from mockConstrLatexMainDesc()
+//	String[] suffixes = new String[] {
+//	    LatexProcessor.SUFFIX_VOID,
+//	    LatexProcessor.SUFFIX_PDF,
+//	    LatexProcessor.SUFFIX_DVI,
+//	    LatexProcessor.SUFFIX_LOG,
+//	    LatexProcessor.SUFFIX_IDX,
+//	    LatexProcessor.SUFFIX_IND,
+//	    LatexProcessor.SUFFIX_ILG,
+//	    LatexProcessor.SUFFIX_GLS,
+//	    LatexProcessor.SUFFIX_GLO,
+//	    LatexProcessor.SUFFIX_GLG
+//	};
+//	for (int idx = 0; idx < suffixes.length; idx++) {
+//	    // FIXME: should work also in order. 
+//	    // FIXME: observation: in order works iff no atLeastOnce is required
+//	    // On the other hand, I am not sure 
+//	    // why I need this in the individual cases. 
+//	    //this.inOrder.
+//	    //if (idx == 1 ||idx == 2) {continue;}
+//	    verify(this.fileUtils, atLeastOnce())
+//		.replaceSuffix(this.texFile, suffixes[idx]);
+//	}
+//    }
 
     // FIXME: pdf never via dvi 
     // FIXME: parametrization of needMakeIndex, needMakeGlossaries 
@@ -378,12 +370,9 @@ public class LatexProcessorTest {
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
 	File texFile = this.texFile;
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC))
-	    .thenReturn(this.tocFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOF))
-	    .thenReturn(this.lofFile);
-	when(this.fileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT))
-	    .thenReturn(this.lotFile);
+	assertEquals(this.tocFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_TOC));
+	assertEquals(this.lofFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOF));
+	assertEquals(this.lotFile, TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_LOT));
     }
 
     private void verifyPreProcessLatex2dev(boolean needBibtex,
@@ -412,17 +401,17 @@ public class LatexProcessorTest {
 	// determine from presence of toc, lof, lot (and idx and other criteria)
 	// whether to rerun latex: no 
 
-
-	// FIXME: duplicate 
-	String[] suffixes = new String[] {
-	    LatexProcessor.SUFFIX_TOC,
-	    LatexProcessor.SUFFIX_LOF,
-	    LatexProcessor.SUFFIX_LOT
-	};
-	for (int idx = 0; idx < suffixes.length; idx++) {
-	    this.inOrder.verify(this.fileUtils)
-		.replaceSuffix(this.texFile, suffixes[idx]);
-	}
+// TBD: replace tests, maybe also LOL
+//	// FIXME: duplicate 
+//	String[] suffixes = new String[] {
+//	    LatexProcessor.SUFFIX_TOC,
+//	    LatexProcessor.SUFFIX_LOF,
+//	    LatexProcessor.SUFFIX_LOT
+//	};
+//	for (int idx = 0; idx < suffixes.length; idx++) {
+//	    this.inOrder.verify(this.fileUtils)
+//		.replaceSuffix(this.texFile, suffixes[idx]);
+//	}
     }
 
     // FIXME: currently, neither toc nor lof nor lot exist 
@@ -527,9 +516,7 @@ public class LatexProcessorTest {
     private void mockRunBibtexByNeed(Boolean runBibtex) 
 	throws BuildFailureException {
 	
-	when(this.fileUtils.replaceSuffix
-	     (this.texFile, LatexProcessor.SUFFIX_AUX))
-	    .thenReturn(this.auxFile);
+	assertEquals(this.auxFile, TexFileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_AUX));
 	when(this.fileUtils.matchInFile
 	     (this.auxFile, LatexProcessor.PATTERN_NEED_BIBTEX_RUN))
 	    .thenReturn(runBibtex);
@@ -544,9 +531,8 @@ public class LatexProcessorTest {
 //	writer.write("\\bibdata % bibtex run"); 
 //	writer.flush();
 
-	when(this.fileUtils.replaceSuffix(this.texFile, 
-					  LatexProcessor.SUFFIX_BBL))
-	    .thenReturn(this.bblFile);
+	assertEquals(this.bblFile, 
+		this.fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL));
 
 	// when(this.executor.execute(texFile.getParentFile(),
 	// 			   this.settings.getTexPath(),
@@ -558,9 +544,8 @@ public class LatexProcessorTest {
 	//     .thenReturn("");
 
 	// log file 
-	when(this.fileUtils.replaceSuffix(this.texFile, 
-					  LatexProcessor.SUFFIX_BLG))
-	    .thenReturn(this.blgFile);
+	assertEquals(this.blgFile, 
+		this.fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG));
 	// logging errors and warnings 
 	when(this.fileUtils.matchInFile(this.blgFile, 
 					this.settings.getPatternErrBibtex()))
@@ -572,17 +557,18 @@ public class LatexProcessorTest {
 
     private void verifyRunBibtexByNeed(Boolean runBibtex) 
 	throws BuildFailureException {
-
-	this.inOrder.verify(this.fileUtils)
-	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_AUX);
+// TBD: replace this by a proper indication that aux-file was read. 
+//	this.inOrder.verify(this.fileUtils)
+//	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_AUX);
 	verifyNeedRun(this.auxFile,  LatexProcessor.PATTERN_NEED_BIBTEX_RUN);
 
 	if (!runBibtex) {
 	    return;
 	}
 
-	this.inOrder.verify(this.fileUtils)
-	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL);
+	// TBD: replace this by a proper indication that bbl-file was read. 
+//	this.inOrder.verify(this.fileUtils)
+//	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL);
 	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
@@ -591,9 +577,10 @@ public class LatexProcessorTest {
 			   (this.settings.getBibtexOptions(), this.auxFile)),
 		     eq(this.bblFile));
 
+	// TBD: replace this by a proper indication that blg-file was written. 
 	// log file 
-	this.inOrder.verify(this.fileUtils)
-	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG);
+//	this.inOrder.verify(this.fileUtils)
+//	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG);
 	// logging errors and warnings 
 	this.inOrder.verify(this.fileUtils)
 	    .matchInFile(this.blgFile, this.settings.getPatternErrBibtex());
@@ -754,9 +741,8 @@ public class LatexProcessorTest {
 
     private void mockRunLatex2html() throws BuildFailureException {
 	// html to verify whether execution created the expected html file 
-	when(this.fileUtils.replaceSuffix(this.texFile, 
-					  LatexProcessor.SUFFIX_HTML))
-	    .thenReturn(this.htmlFile);
+	assertEquals(this.htmlFile, 
+		TexFileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_HTML));
 
 	// when(this.executor.execute(this.texFile.getParentFile(),
 	// 			   this.settings.getTexPath(),
@@ -780,8 +766,9 @@ public class LatexProcessorTest {
     }
 
     private void verifyRunLatex2html() throws BuildFailureException {
-	this.inOrder.verify(this.fileUtils)
-	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_HTML);
+	// TBD: replace by according test
+//	this.inOrder.verify(this.fileUtils)
+//	    .replaceSuffix(this.texFile, LatexProcessor.SUFFIX_HTML);
 	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),

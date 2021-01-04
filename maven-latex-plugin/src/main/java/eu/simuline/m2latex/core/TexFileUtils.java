@@ -746,7 +746,7 @@ class TexFileUtils {
     // used in LatexPreProcessor and in LatexProcessor and in LatexDec
     // at numerous places 
     // TBD: clarify what is wrong with mock that we cannot make this static
-    File replaceSuffix(File file, String suffix) {
+    static File replaceSuffix(File file, String suffix) {
         return new File(file.getParentFile(),
 			getFileNameWithoutSuffix(file) + suffix);
     }
@@ -910,11 +910,25 @@ class TexFileUtils {
      * to allow to determine the version of the tool.
      */
     final static File EMPTY_IDX;
+    /**
+     * File created by {@link Converter#Makeindex} as a side effect
+     * when trying to determine its version.
+     */
+    final static File EMPTY_IND;
+    /**
+     * File created by {@link Converter#Makeindex} as a side effect
+     * when trying to determine its version.
+     */
+    final static File EMPTY_ILG;
+
     static {
 	try {
-	    EMPTY_IDX = File.createTempFile("forMakeindex", ".idx");
+	    EMPTY_IDX = File.createTempFile("forMakeindex", LatexProcessor.SUFFIX_IDX);
 	    EMPTY_IDX.deleteOnExit();
-	    //EMPTY_IDX.toString().replaceFirst("\\.idx$"
+	    EMPTY_IND = replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_IND);
+	    EMPTY_IND.deleteOnExit();
+	    EMPTY_ILG = replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_ILG);
+	    EMPTY_ILG.deleteOnExit();
 	} catch(Exception e) {
 	    throw new IllegalStateException("Could not create temp file.");
 	}
