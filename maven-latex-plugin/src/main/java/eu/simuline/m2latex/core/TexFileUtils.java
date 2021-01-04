@@ -904,6 +904,23 @@ class TexFileUtils {
     	}
     }
 
+    // TBD: clarify whether this hack is really needed.
+    /**
+     * Temporarily generated file to be passed to {@link Converter#Makeindex}
+     * to allow to determine the version of the tool.
+     */
+    final static File EMPTY_IDX;
+    static {
+	try {
+	    EMPTY_IDX = File.createTempFile("forMakeindex", ".idx");
+	    EMPTY_IDX.deleteOnExit();
+	    //EMPTY_IDX.toString().replaceFirst("\\.idx$"
+	} catch(Exception e) {
+	    throw new IllegalStateException("Could not create temp file.");
+	}
+    }
+
+
     public static void main(String[] args) {
 	String regex = args[0];
 	String text  = args[1];

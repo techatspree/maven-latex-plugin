@@ -458,7 +458,7 @@ public class MetaInfo {
 	    this(conv.getVersionEnvironment(),
 		 conv.getVersionPattern(),
 		 // may throw BuildFailureException
-		 executor.execute(MetaInfo.EMPTY_IDX.getParentFile(), null,
+		 executor.execute(TexFileUtils.EMPTY_IDX.getParentFile(), null,
 			 conv.getCommand(), new String[] {
 			    conv.getVersionOption()}));
 	}
@@ -746,21 +746,6 @@ public class MetaInfo {
      */
     private final static String TOOL_VERSION_FORMAT = "%s%-15s '%s'%s%s";
 
-    // TBD: clarify whether this hack is really needed.
-    /**
-     * Temporarily generated file to be passed to {@link Converter#Makeindex}
-     * to allow to determine the version of the tool.
-     */
-    final static File EMPTY_IDX;
-    static {
-	try {
-	    EMPTY_IDX = File.createTempFile("forMakeindex", ".idx");
-	    EMPTY_IDX.deleteOnExit();
-	    //EMPTY_IDX.toString().replaceFirst("\\.idx$"
-	} catch(Exception e) {
-	    throw new IllegalStateException("Could not create temp file.");
-	}
-    }
 
     // CAUTION, depends on the maven-jar-plugin and its version 
     /**

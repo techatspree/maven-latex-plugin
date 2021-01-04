@@ -284,7 +284,7 @@ enum Converter {
 	    return "makeindex";
 	}
 	String getVersionOption() {
-	    return MetaInfo.EMPTY_IDX.getName().toString();
+	    return TexFileUtils.EMPTY_IDX.getName().toString();
 	}
 	String getVersionPattern() {
 	    return X_X;
