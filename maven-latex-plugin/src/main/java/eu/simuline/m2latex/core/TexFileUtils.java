@@ -191,7 +191,7 @@ class TexFileUtils {
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
     // - LatexPreProcessor.clearTargetTex to clear also intermediate files. 
-    FileFilter getFileFilter(File texFile, String pattern) {
+    static FileFilter getFileFilter(File texFile, String pattern) {
 	final String patternAccept = pattern
 	    .replaceAll(PATTERN_INS_LATEX_MAIN, 
 			getFileNameWithoutSuffix(texFile));
@@ -560,7 +560,7 @@ class TexFileUtils {
      *
      * @see #getSuffix(File)
      */
-    String getFileNameWithoutSuffix(File file) {
+    static String getFileNameWithoutSuffix(File file) {
         String nameFile = file.getName();
 	int idxDot = nameFile.lastIndexOf(".");
 	return idxDot == -1
@@ -584,7 +584,7 @@ class TexFileUtils {
     // This is not appropriate. 
     // One may ensure that this does not happen via an assertion 
     // and by modifying getFilesRec in a way that hidden files are skipped 
-    String getSuffix(File file) {
+    static String getSuffix(File file) {
         String nameFile = file.getName();
 	int idxDot = nameFile.lastIndexOf(".");
 	return idxDot == -1 
@@ -628,7 +628,7 @@ class TexFileUtils {
 	try {
 	    // may throw FileNotFoundException < IOExcption 
 	    FileReader fileReader = new FileReader(file);
-	    // BufferedReader for perfromance and to be able to read a line
+	    // BufferedReader for performance and to be able to read a line
 	    BufferedReader bufferedReader = new BufferedReader(fileReader);
 	    //CharBuffer chars = CharBuffer.allocate(1000);
 	    try {
@@ -683,6 +683,11 @@ class TexFileUtils {
      * <p>
      * This is used only to collect the identifiers 
      * of explicitly given indices in an idx-file. 
+     * 
+     * <p>
+     * Logging:
+     * WFU03 cannot close <br>
+     * 
      * @param file
      *    an existing proper file, not a folder. 
      *    In practice this is an idx file. 
@@ -705,7 +710,7 @@ class TexFileUtils {
  	try {
 	    // may throw FileNotFoundException < IOExcption 
 	    FileReader fileReader = new FileReader(file);
-	    // BufferedReader for perfromance 
+	    // BufferedReader for performance 
 	    BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 	    try {
@@ -742,7 +747,7 @@ class TexFileUtils {
     // at numerous places 
     File replaceSuffix(File file, String suffix) {
         return new File(file.getParentFile(),
-			getFileNameWithoutSuffix(file) + suffix );
+			getFileNameWithoutSuffix(file) + suffix);
     }
 
     /**
