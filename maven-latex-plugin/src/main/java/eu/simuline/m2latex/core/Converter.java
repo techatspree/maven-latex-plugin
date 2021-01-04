@@ -1,5 +1,6 @@
 package eu.simuline.m2latex.core;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -484,5 +485,41 @@ enum Converter {
      *    the pattern of the output of this converter containing its version. 
      */
     abstract String getVersionEnvironment();
-    
+
+    /**
+     * Runs this converter in <code>executor</code> 
+     * to determine a string containing version information.
+     * 
+     * @param executor
+     *    the executor to run this converter with: 
+     *    The executable given by {@link #getCommand()} 
+     *    is passed options {@link #getVersionOption()} 
+     *    to get version option and run 
+     *    in the directory containing {@link TexFileUtil#EMPTY_IDX}. 
+     * @return
+     *    the output of the invocation 
+     *    which matches {@link #getVersionEnvironment()}. 
+     * @throws BuildFailureException
+     *    TEX01 if invocation of <code>command</code> fails very basically: 
+     *    <ul>
+     *    <li><!-- see Commandline.execute() -->
+     *    the file expected to be the working directory 
+     *    does not exist or is not a directory. 
+     *    <li><!-- see Commandline.execute() -->
+     *    {@link Runtime#exec(String, String[], File)} fails 
+     *    throwing an {@link java.io.IOException}. 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemOut parser occurs 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemErr parser occurs 
+     *    <li> Wrapping an {@link InterruptedException} 
+     *    on the process to be executed thrown by {@link Process#waitFor()}. 
+     *    </ul>
+     */
+    String getVersionInfo(CommandExecutor executor)
+		throws BuildFailureException {
+	return executor.execute(TexFileUtils.EMPTY_IDX.getParentFile(), null,
+		 getCommand(), new String[] {getVersionOption()});
+    }
+
 }

@@ -458,9 +458,7 @@ public class MetaInfo {
 	    this(conv.getVersionEnvironment(),
 		 conv.getVersionPattern(),
 		 // may throw BuildFailureException
-		 executor.execute(TexFileUtils.EMPTY_IDX.getParentFile(), null,
-			 conv.getCommand(), new String[] {
-			    conv.getVersionOption()}));
+		 conv.getVersionInfo(executor));
 	}
 
 	/**
