@@ -302,10 +302,9 @@ enum Converter {
 	    return X_X;
 	}
 	String getVersionEnvironment() {
-	    return "^upmendex - index processor, version %s " + 
-	"\\(TeX Live [0-9]{4}\\).\n";
+	    return "^upmendex - index processor, version %s \\(TeX Live [0-9]{4}\\).\n";
 	}
-  },
+    },
     Splitindex {
 	String getCommand() {
 	    return "splitindex";
