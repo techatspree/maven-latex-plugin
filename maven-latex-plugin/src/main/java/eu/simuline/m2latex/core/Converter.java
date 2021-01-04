@@ -384,12 +384,11 @@ enum Converter {
 	String getVersionOption() {
 	    return "-V";
 	}
-	// TBC: we allow here patchlevel 0 only. Is this appropriate? 
 	String getVersionPattern() {
-	    return X_X;
+	    return "(([0-9]+)\\.([0-9]+) patchlevel ([0-9]+))";
 	}
 	String getVersionEnvironment() {
-	    return "^gnuplot %s patchlevel 0\n";
+	    return "^gnuplot %s\n";
 	}
     },
     Inkscape {
