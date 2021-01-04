@@ -403,7 +403,8 @@ enum Converter {
 	}
 	// TBD: sometimes the pango line '    Pango version: 1.46.2' comes first. 
 	String getVersionEnvironment() {
-	    return "^Inkscape %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+	    return "^(?:[^\n]*\n)?" // eliminates pango version popping up sparsely
+	+ "Inkscape %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
 	}
     },
     Fig2Dev {
