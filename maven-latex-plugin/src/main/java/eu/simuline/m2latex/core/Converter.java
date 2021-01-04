@@ -285,7 +285,7 @@ enum Converter {
 	    return "makeindex";
 	}
 	String getVersionOption() {
-	    return TexFileUtils.EMPTY_IDX.getName().toString();
+	    return TexFileUtils.getEmptyIdx().getName().toString();
 	}
 	String getVersionPattern() {
 	    return X_X;
@@ -518,7 +518,7 @@ enum Converter {
      */
     String getVersionInfo(CommandExecutor executor)
 		throws BuildFailureException {
-	return executor.execute(TexFileUtils.EMPTY_IDX.getParentFile(), null,
+	return executor.execute(TexFileUtils.getEmptyIdx().getParentFile(), null,
 		 getCommand(), new String[] {getVersionOption()});
     }
 

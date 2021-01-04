@@ -909,19 +909,23 @@ class TexFileUtils {
      * Temporarily generated file to be passed to {@link Converter#Makeindex}
      * to allow to determine the version of the tool.
      */
-    final static File EMPTY_IDX;
+    static File EMPTY_IDX;
 
-    static {
-	try {
-	    EMPTY_IDX = File.createTempFile("forMakeindex", LatexProcessor.SUFFIX_IDX);
-	    EMPTY_IDX.deleteOnExit();
-	    replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_IND).deleteOnExit();
-	    replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_ILG).deleteOnExit();
-	} catch(Exception e) {
-	    // TBD: eliminate: shall be a warning or even less than that.
-	    // But to that end, this must not be static. 
-	    throw new IllegalStateException("Could not create temp file.");
+    static File getEmptyIdx() {
+	if (EMPTY_IDX == null) {
+	    try {
+		EMPTY_IDX = File.createTempFile("forMakeindex",
+			                        LatexProcessor.SUFFIX_IDX);
+		EMPTY_IDX.deleteOnExit();
+		replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_IND).deleteOnExit();
+		replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_ILG).deleteOnExit();
+	    } catch(Exception e) {
+		// TBD: eliminate: shall be a warning or even less than that.
+		// But to that end, this must not be static. 
+		throw new IllegalStateException("Could not create temp file.");
+	    }
 	}
+	return EMPTY_IDX;
     }
 
 
