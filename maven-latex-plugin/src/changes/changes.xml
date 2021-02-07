@@ -14,7 +14,7 @@
   </properties>
   <body>
     <!-- Release plan: 
-	 For 1.6: 
+	 For 1.7: 
 	 - further output formats: xml from latexml, epub. 
 	   in manual: flow oriented vs page oriented. 
 	   Flow oriented: html, ... epub, ... 
@@ -22,6 +22,28 @@
 	 - Further exporters with config to access them 
 	   besides latex2ht also latexml, pandoc 
 	   Have a look at texnische komoedie, pdf checked in. 
+	 For 1.6:
+	 - make capabilities inspired by latexmk: 
+	   If latex is invoked with option -recorder it creates a file .fls
+	   containing all the files read during its run. 
+	   If this software runs latex, after that it looks for an .fls file 
+	   and if found stores an .lmk file 
+	   containing hashs for the files mentioned in .fls. 
+	   These hashs indicate potential changes. 
+	   As a first step we may use modification time. 
+	   In the next run, before invoking latex, 
+	   this software checks whether the .lmk file is present. 
+	   If not, latex is invoked. 
+	   If it is present, then it is invoked only 
+	   if files is modified, including the source. 
+	   We need a mechanism to know whether invoked as a maven plugin, 
+	   ant task or standalone. 
+	   The latter stores command line file reflecting command line options. 
+	   Then also the config, e.g. pom.xml, build.xml or command line file 
+	   is taken into account to detect changes. 
+	   Hm, no. If something changes in pom, that is no indication. 
+	   There must be a file, maybe in ~/.lmk, 
+	   reflecting the options of the last run. 
 	 For 1.5: 
 	 - meta info for this software including own version 
 	   git interface 
