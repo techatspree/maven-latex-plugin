@@ -173,7 +173,7 @@ enum Converter {
 	    return YYYYMMDD;
 	}
 	String getVersionEnvironment() {
-	    return "^This is " + getCommand() + 
+	    return "^This is " + getCommand() +
 		    " Version %s by the DVIPDFMx project team,\n";
 	}
 	ConverterCategory getCategory() {
@@ -192,7 +192,7 @@ enum Converter {
 	    return YYYYMMDD;
 	}
 	String getVersionEnvironment() {
-	    return "^This is " + getCommand() + 
+	    return "^This is " + getCommand() +
 		    " Version %s by the DVIPDFMx project team,\n";
 	}
 	ConverterCategory getCategory() {
@@ -210,7 +210,7 @@ enum Converter {
 	    return YYYYMMDD;
 	}
 	String getVersionEnvironment() {
-	    return "^This is " + getCommand() + 
+	    return "^This is " + getCommand() +
 		    " Version %s by the DVIPDFMx project team,\n";
 	}
 	ConverterCategory getCategory() {
@@ -247,7 +247,6 @@ enum Converter {
 	ConverterCategory getCategory() {
 	    return ConverterCategory.Unspecific;
 	}
-
     },
     ChkTeX {
 	String getCommand() {
@@ -260,7 +259,7 @@ enum Converter {
 	    return X_X_X;
 	}
 	String getVersionEnvironment() {
-	    return "^" + ChkTeX + " v%s - " + 
+	    return "^" + ChkTeX + " v%s - " +
 		    "Copyright [0-9]{4}-[0-9]{2} Jens T. Berger Thielemann.\n";
 	}
 	ConverterCategory getCategory() {
@@ -301,7 +300,7 @@ enum Converter {
 	    return X_X;
 	}
 	String getVersionEnvironment() {
-	    return "^This is " + BibTeXu + ": a UTF-8 Big " + BibTeX + " version [^\n]*\n" + 
+	    return "^This is " + BibTeXu + ": a UTF-8 Big " + BibTeX + " version [^\n]*\n" +
 		    "Implementation: [^\n]*\n" +
 		    "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\) \\(TeX Live [0-9]{4}\\)\n";
 	}
@@ -329,7 +328,7 @@ enum Converter {
 	    return X_X;
 	}
 	String getVersionEnvironment() {
-	    return "^This is 8-bit Big " + BibTeX + " version [^\n]*\n" + 
+	    return "^This is 8-bit Big " + BibTeX + " version [^\n]*\n" +
 		    "Implementation: [^\n]*\n" +
 		    "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\) \\(TeX Live [0-9]{4}\\)\n";
 	}
@@ -528,7 +527,7 @@ enum Converter {
 	    cmd2conv.put(conv.getCommand(), conv);
 	}
     }
-    
+
     public static Converter cmd2Conv(String cmd, ConverterCategory cat) {
 	// TBD: check whether allowed 
 	Converter res = cmd2conv.get(cmd);

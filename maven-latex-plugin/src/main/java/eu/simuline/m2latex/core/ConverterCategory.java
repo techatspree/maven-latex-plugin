@@ -3,7 +3,7 @@ package eu.simuline.m2latex.core;
 // TBD: make complete
 // TBD: specify what a category is: options, invocation, file interface 
 enum ConverterCategory {
-    // TBD: clarify: why not LaTeX2Dev?
+    // LaTeX: mostly to pdf but also to dvi 
 LaTeX, Latex2Html, LaTeX2Odt, LaTeX2Rtf, 
 BibTeX, MakeIndex, MakeGlossaries, SplitIndex, 
 
