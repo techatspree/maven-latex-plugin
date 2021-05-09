@@ -737,13 +737,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// rerun latex by need patternRerunMakeIndex
 	boolean needMakeIndexReRun;
 	boolean needLatexReRun = (numLatexReRuns == 1)
-	    || needRun(true, "LaTeX", desc.logFile, 
+	    || needRun(true, ConverterCategory.LaTeX, desc.logFile,
 		       this.settings.getPatternReRunLatex());
 
 	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
 	    needMakeIndexReRun = 
-		needRun(true, "MakeIndex", desc.logFile, 
+		needRun(true, ConverterCategory.MakeIndex, desc.logFile,
 			this.settings.getPatternReRunMakeIndex());
 	    // FIXME: superfluous since pattern rerunfileckeck 
 	    // triggering makeindex also fits rerun of LaTeX 
@@ -764,7 +764,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
 	    // EAP01, EAP02, WAP04, WFU03
 	    runLatex2dev(desc, dev);
-	    needLatexReRun = needRun(true, "LaTeX", desc.logFile, 
+	    needLatexReRun = needRun(true, ConverterCategory.LaTeX, desc.logFile,
 				     this.settings.getPatternReRunLatex());
         }
 	this.log.warn("WLP01: LaTeX requires rerun but maximum number " + 
@@ -788,8 +788,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param another
      *    whether it is requested whether another run (a 'rerun') is required. 
      *    If false, just a run is required
-     * @param application
-     *    Determines the application to be rerun. 
+     * @param applicationCat
+     *    Determines the category of application to be rerun. 
      *    This may be <code>LaTeX</code>, <code>MakeIndex</code> 
      *    but also <code>BibTeX</code>. 
      * @param logFile
@@ -806,7 +806,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     // used in processLatex2devCore and in runBibtexByNeed only 
     private boolean needRun(boolean another, 
-			    String application, 
+			    ConverterCategory applicationCat,
 			    File logFile, 
 			    String pattern) {
 	// may log warning WFU03: cannot close 
@@ -814,7 +814,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	if (needRun == null) {
 	    this.log.warn("WLP02: Cannot read log file '" + 
 			  logFile.getName() + "'; " + 
-			  application + " may require " + 
+			  applicationCat + " may require " +
 			  (another ? "re" : "") + "run. ");
 	    return false;
 	}
@@ -1226,7 +1226,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
 	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
-	if (!needRun(false, "BibTeX", auxFile, PATTERN_NEED_BIBTEX_RUN)) {
+	if (!needRun(false, ConverterCategory.BibTeX, auxFile, PATTERN_NEED_BIBTEX_RUN)) {
 	    return false;
 	}
 
