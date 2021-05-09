@@ -58,6 +58,11 @@
 	   Note that there may be documentation not created through latex 
 	   and so git package may not be a generic solution. 
     -->
+
+    <!--  TBD: rework on Converter.cmd2conv: 
+    Check also call hierarchy 
+    also endow with appropriate failure handling  -->
+    <!--  TBD: rework on ConverterCategores -->
     
     <!-- TBD: release cannot be snapshot, release date must be adapted -->
      <release version="1.5-snapshot" 

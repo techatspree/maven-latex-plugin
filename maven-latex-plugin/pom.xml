@@ -86,6 +86,7 @@
     </developer>
   </developers>
 
+  <!-- mailingLists></mailingLists-->
 
   <!-- source repositories: at the moment not needed. -->
   <repositories>
@@ -243,12 +244,12 @@
       </extension>
     </extensions>
 
-	<resources>
-		<resource>
-			<directory>src/main/resources</directory>
-			<filtering>true</filtering>
-		</resource>
-	</resources>
+    <resources>
+      <resource>
+	<directory>src/main/resources</directory>
+	<filtering>true</filtering>
+      </resource>
+    </resources>
 
 
     <plugins>
@@ -654,7 +655,7 @@ NOT QUITE: to the beginning
 		Note that in the pom, <texPath /> 
 		and even <texPath>    </texPath> represent the null-File. 
 		The default value is null. -->
-            <texPath /> 
+            <texPath/>
 
             <!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 

@@ -528,6 +528,8 @@ enum Converter {
 	}
     }
 
+    // TBD: currently return value nowhere needed. 
+    // This may change in future. 
     public static Converter cmd2Conv(String cmd, ConverterCategory cat) {
 	// TBD: check whether allowed 
 	Converter res = cmd2conv.get(cmd);

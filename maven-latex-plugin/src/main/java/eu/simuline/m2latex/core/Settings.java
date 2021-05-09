@@ -1493,6 +1493,7 @@ public class Settings {
 
 
     public String getFig2devCommand() {
+	Converter conv = Converter.cmd2Conv(this.fig2devCommand, ConverterCategory.Fig2Dev);
         return  this.fig2devCommand;
     }
 
@@ -1509,6 +1510,7 @@ public class Settings {
     }
 
     public String getGnuplotCommand() {
+	Converter conv = Converter.cmd2Conv(this.gnuplotCommand, ConverterCategory.Gnuplot2Dev);
         return  this.gnuplotCommand;
     }
 
@@ -1517,6 +1519,7 @@ public class Settings {
     }
 
     public String getMetapostCommand() {
+	Converter conv = Converter.cmd2Conv(this.metapostCommand, ConverterCategory.MetaPost);
         return  this.metapostCommand;
     }
 
@@ -1525,6 +1528,7 @@ public class Settings {
     }
 
     public String getSvg2devCommand() {
+	Converter conv = Converter.cmd2Conv(this.svg2devCommand, ConverterCategory.Svg2Dev);
 	return  this.svg2devCommand;
     }
 
@@ -1533,6 +1537,7 @@ public class Settings {
     }
 
     public String getEbbCommand() {
+	Converter conv = Converter.cmd2Conv(this.ebbCommand, ConverterCategory.EbbCmd);
         return  this.ebbCommand;
     }
     public String getEbbOptions() {
@@ -1542,6 +1547,7 @@ public class Settings {
 
 // FIXME: to be renamed: latex2pdf-command 
     public String getLatex2pdfCommand() {
+	Converter conv = Converter.cmd2Conv(this.latex2pdfCommand, ConverterCategory.LaTeX);
         return  this.latex2pdfCommand;
     }
 
@@ -1576,6 +1582,7 @@ public class Settings {
     }
 
     public String getDvi2pdfCommand() {
+	Converter conv = Converter.cmd2Conv(this.dvi2pdfCommand, ConverterCategory.Dvi2Pdf);
 	return  this.dvi2pdfCommand;
     }
 
@@ -1591,8 +1598,9 @@ public class Settings {
 	return this.maxNumReRunsLatex;
     }
 
-
+// TBD: check category 
     public String getBibtexCommand() {
+	Converter conv = Converter.cmd2Conv(this.bibtexCommand, ConverterCategory.BibTeX);
         return  this.bibtexCommand;
     }
     public String getBibtexOptions() {
@@ -1608,7 +1616,9 @@ public class Settings {
     }
 
 
+ // TBD: check category 
     public String getMakeIndexCommand() {
+	Converter conv = Converter.cmd2Conv(this.makeIndexCommand, ConverterCategory.MakeIndex);
 	return  this.makeIndexCommand;
     }
 
@@ -1628,7 +1638,9 @@ public class Settings {
 	return this.patternReRunMakeIndex;
     }
 
+ // TBD: check category 
     public String getSplitIndexCommand() {
+	Converter conv = Converter.cmd2Conv(this.splitIndexCommand, ConverterCategory.SplitIndex);
 	return  this.splitIndexCommand;
     }
 
@@ -1636,7 +1648,9 @@ public class Settings {
 	return  this.splitIndexOptions;
     }
 
+ // TBD: check category 
     public String getMakeGlossariesCommand() {
+	Converter conv = Converter.cmd2Conv(this.makeGlossariesCommand, ConverterCategory.MakeGlossaries);
 	return  this.makeGlossariesCommand;
     }
 
@@ -1657,7 +1671,10 @@ public class Settings {
     }
 
 
+ // TBD: check category 
     public String getTex4htCommand() {
+	//Converter conv = Converter.cmd2Conv(this.tex4htCommand, ConverterCategory.LaTeX2Html);
+	// TBD: check: this has two categories: tex2html and tex2odt 
         return  this.tex4htCommand;
     }
 
@@ -1678,6 +1695,7 @@ public class Settings {
     }
 
     public String getLatex2rtfCommand() {
+	Converter conv = Converter.cmd2Conv(this.latex2rtfCommand, ConverterCategory.LaTeX2Rtf);
         return  this.latex2rtfCommand;
     }
 
@@ -1685,7 +1703,9 @@ public class Settings {
         return  this.latex2rtfOptions;
     }
 
+ // TBD: check category 
     public String getOdt2docCommand() {
+	Converter conv = Converter.cmd2Conv(this.odt2docCommand, ConverterCategory.Odt2Doc);
         return  this.odt2docCommand;
     }
 
@@ -1693,7 +1713,9 @@ public class Settings {
 	return  this.odt2docOptions;
     }
 
+ // TBD: check category 
     public String getPdf2txtCommand() {
+	Converter conv = Converter.cmd2Conv(this.pdf2txtCommand, ConverterCategory.Pdf2Txt);
         return  this.pdf2txtCommand;
     }
 
@@ -1701,7 +1723,9 @@ public class Settings {
         return  this.pdf2txtOptions;
     }
 
+ // TBD: check category 
     public String getChkTexCommand() {
+	Converter conv = Converter.cmd2Conv(this.chkTexCommand, ConverterCategory.LatexChk);
         return  this.chkTexCommand;
     }
 
