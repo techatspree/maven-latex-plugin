@@ -548,6 +548,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M1</version><!-- not up to date: gtM5 -->
         <configuration>
+          <trimStackTrace>false</trimStackTrace>
           <systemPropertyVariables>
             <!--testResourcesDir>${project.testResources}</testResourcesDir-->
             <testResourcesDir>src/test/resources/</testResourcesDir>
