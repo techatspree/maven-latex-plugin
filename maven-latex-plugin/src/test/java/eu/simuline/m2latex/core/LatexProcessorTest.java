@@ -126,8 +126,8 @@ public class LatexProcessorTest {
     private final LogWrapper log = 
 	spy(new MavenLogWrapper(new SystemStreamLog()));
 
-    private final LatexProcessor processor = new LatexProcessor
-	(this.settings, this.executor, this.log, this.fileUtils,new PdfMojo());
+    private LatexProcessor processor = new LatexProcessor
+	(this.settings, this.executor, this.log, this.fileUtils, new PdfMojo());
 
     // FIXME: eliminate all those files 
     // present in LatexMainDesc 
@@ -227,7 +227,7 @@ public class LatexProcessorTest {
 	//verifyNoMoreInteractions(this.log);
     }
 
-   //@Ignore 
+    //@Ignore 
     @Test public void testProcessLatex2html() throws BuildFailureException {
 
 	mockProcessLatex2html(false, false, false);
