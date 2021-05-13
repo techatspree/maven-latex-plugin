@@ -104,6 +104,9 @@
          added goal vrs displaying versions also of the converters 
          and whether they are valid. 
        </action>
+      <action dev="reissner" type="add">
+         added exception TSS04 checking validity of targets.
+       </action>
 
        
 

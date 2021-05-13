@@ -40,7 +40,7 @@ public class CfgLatexMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 
     // FIXME: not required by ClearMojo 
-    public SortedSet<Target> getTargetSet() {
+    public SortedSet<Target> getTargetSet() throws BuildFailureException {
 	return this.settings.getTargetSet();
     }
 

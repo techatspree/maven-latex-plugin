@@ -24,6 +24,7 @@ import java.io.File;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Arrays;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -1462,14 +1463,60 @@ public class Settings {
        return this.outputDirectoryFile;
     }
 
-    public SortedSet<Target> getTargetSet() {
-	String[] targetSeq = this.targets.split(" *, *");
+    /**
+     * Returns the set of targets. 
+     *
+     * @return
+     *     The set of targets. 
+     * @throws BuildFailureException 
+     *    TSS04 if the target set is not a subset of the set given by {@link Target}. 
+     */
+    public SortedSet<Target> getTargetSet() throws BuildFailureException {
 	// TreeSet is sorted. maybe this determines ordering of targets. 
 	SortedSet<Target> targetSet = new TreeSet<Target>();
+	if (this.targets.isEmpty()) {
+	    return targetSet;
+	}
+	String[] targetSeq = this.targets.split(" *, *");
+	Target target;
 	for (int idx = 0; idx < targetSeq.length; idx++) {
-	    targetSet.add(Target.valueOf(targetSeq[idx]));
+	    try {
+		assert targetSeq[idx] != null;
+		target = Target.valueOf(targetSeq[idx]);
+	    } catch (IllegalArgumentException ae) {
+		assert Target.class.isEnum();
+		// Here, targetSeq[idx] is no name in Target 
+		String setOfAllowedTargets = Arrays.asList(Target.values()).toString();
+		setOfAllowedTargets = setOfAllowedTargets.substring(1, setOfAllowedTargets.length()-1);
+		throw new BuildFailureException("TSS04: The target set '" +
+		this.targets + "' should be a subset of the registered targets '" +
+		setOfAllowedTargets + "', but is not. ");
+	    }
+	    targetSet.add(target);
 	}
 	return targetSet;
+    }
+
+//    // TBD: maybe better: store allowed converters. 
+//    public SortedSet<Converter> getConvertersExcluded() {
+//	SortedSet<Converter> convSet = new TreeSet<Converter>();
+//	if (this.texConvertersExcluded.isEmpty()) {
+//	    return convSet;
+//	}
+//	String[] convSeq = this.texConvertersExcluded.split(" *, *");
+//	for (int idx = 0; idx < convSeq.length; idx++) {
+//	    // TBD: handle illegalargument exception: unknown converter 
+//	    Converter conv = Converter.cmd2Conv(convSeq[idx]);
+//	    conv.getCommand();
+//	    convSet.add(conv);
+//	}
+//	return convSet;
+//    }
+
+    private void checkConverter(String cmd, ConverterCategory cat) {
+	Converter conv = Converter.cmd2Conv(cmd);
+	assert !getConvertersExcluded().contains(conv);
+	assert conv.getCategory() == cat;
     }
 
     public String getPatternLatexMainFile() {

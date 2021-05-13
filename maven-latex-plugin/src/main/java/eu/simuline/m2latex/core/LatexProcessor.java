@@ -229,6 +229,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    or is not a directory. 
      *    <li> TSS03 if 
      *    the output directory exists and is no directory. 
+     *    <li> TSS04 if
+     *    the target set is not a subset of the set given by {@link Target}.
      *    <li> TEX01 if 
      *    invocation of applications for preprocessing graphic files 
      *    or processing a latex main file fails 
@@ -279,6 +281,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		assert !targetDir.exists() || targetDir.isDirectory()
 		    : "Expected target folder "+targetDir+" folder if exists. ";
 
+		// may throw BuildFailureException TSS04 
 		for (Target target : this.paramAdapt.getTargetSet()) {
 		    // may throw BuildFailureException TEX01, 
 		    // log warning EEX01, EEX02, EEX03, WEX04, WEX05 

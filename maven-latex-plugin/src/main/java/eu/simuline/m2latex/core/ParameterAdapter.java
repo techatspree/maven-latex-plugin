@@ -35,6 +35,9 @@ public interface ParameterAdapter {
      * traverses the elements in their natural order 
      * (the order in which the enum constants are declared). 
      * TODO: generalize to more than one target. 
+     *
+     * @throws BuildFailureException
+     *    if the configuration does not provide a valid target set.
      */
-    SortedSet<Target> getTargetSet();
+    SortedSet<Target> getTargetSet() throws BuildFailureException;
 }

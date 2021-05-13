@@ -12,7 +12,7 @@ import java.util.SortedSet;
 public class LatexCfgTask extends AbstractLatexTask {
 
     // api-docs inherited from ParameterAdapter
-    public SortedSet<Target> getTargetSet() {
+    public SortedSet<Target> getTargetSet() throws BuildFailureException {
 	return this.settings.getTargetSet();
     }
 
