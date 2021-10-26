@@ -989,7 +989,6 @@ Then in the next run of this plugin,
 this pdf will be re-created, 
 that time complete with the graphics output. 
 That way, synchronization between \LaTeX- and pdf-files is possible. 
-
 Likewise, to keep the log-file or the aux-file, just touch it. 
 This technique is really valuable for debugging. 
 
@@ -997,11 +996,11 @@ To keep all created files after a run of this maven-plugin,
 set the parameter \texttt{cleanUp} in the pom 
 to \texttt{false} as illustrated in Listing~\ref{lst:noCleanup}. 
 For the ant-task likewise. 
-%
+
 %\lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}[language=xml, basicstyle=\small,
 escapechar=|,
-float, captionpos=b, label={lst:noCleanup},
+float=b, captionpos=b, label={lst:noCleanup},
 caption={Configuration without cleanup}]
 <!-- create html and pdf and other formats from latex -->
 <plugin>
@@ -1022,9 +1021,7 @@ caption={Configuration without cleanup}]
 But how can one get rid of all these newly created files? 
 That is what is the goal \texttt{latex:clr} is for: 
 % 
-\begin{Verbatim}
-mvn latex:clr
-\end{Verbatim}
+\texttt{mvn latex:clr}
 %
 removes all created graphic files 
 and for each latex main file, it removes all files with ``similar'' names
@@ -1125,9 +1122,10 @@ and does interprete \texttt{-g} differently,
 namely as japanese instead of german. 
 
 
-\begin{lstlisting}[basicstyle=\small,
+\begin{lstlisting}[basicstyle=\tiny,
 float, captionpos=b, label={lst:vrsOut}, 
 caption={Output of goal \texttt{latex:vrs}}]
+[INFO] --- latex-maven-plugin:1.5-SNAPSHOT:vrs (default-cli) @ latex-maven-plugin ---
 [INFO] Manifest properties: 
 [INFO] MANIFEST: (1.0)
 [INFO]        Implementation-Version: '1.5-SNAPSHOT'
@@ -1398,10 +1396,10 @@ For example,
 the fig-file \texttt{F4\_01fig2dev.fig} defining Figure~\ref{fig:fig2dev}, 
 is transformed into a file \texttt{F4\_01fig2dev.ptx} 
 in format \texttt{pdftex\_t} which starts as given by Listing~\ref{lst:ptx}. 
-%
+
 %\lstset{language=tex, breaklines, basicstyle=\footnotesize}
 % FIXME\@: nag complains for htlatex 
-\lstinputlisting[language=tex, basicstyle=\footnotesize,
+\lstinputlisting[language=tex, basicstyle=\tiny,
 breaklines, lastline=25,
 float, captionpos=b, label={lst:ptx}, 
 caption={The ptx-file for a fig-file}]{F4_01fig2dev.ptx}
@@ -2101,7 +2099,7 @@ Section~\ref{sec:tex2doc} creation of MS word formats like \gls{docx}.
 Finally, also pure text can be generated 
 as described in Section~\ref{sec:tex2txt}. 
 
-
+\newpage
 
 
 \section{Transforming \LaTeX-files into pdf-files}\label{sec:tex2pdf}
@@ -2789,6 +2787,8 @@ the \gls{png} files that should be created, CSS information,
 and user directives introduced 
 through the ``\cmd{Needs\{\ldots\}}'' command.
 
+\raggedbottom
+
 
 
 \begin{figure}[htb]
@@ -3026,6 +3026,7 @@ Example:
 --------------------------------------------------------------------
 \end{Verbatim}
 
+\flushbottom
 
 \section{Creating odt-files}\label{sec:tex2odt}
 
@@ -3102,7 +3103,7 @@ Aspects of figures kept are the captions of course but also the \LaTeX-texts.
 This is displayed line-wise. 
 What gets lost is the postscript/pdf-parts, i.e.~the plain graphics. 
 
-
+\raggedbottom
 
 
 \chapter{Parameters resp. Settings}\label{chap:settings}
@@ -4894,8 +4895,9 @@ Identifier        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:TEX} The BuildFailureException of the internal class
+\caption{\label{tab:TEX} The \texttt{BuildFailureException}s of the internal class
   CommandExecutorImpl }
+  % TBD: find out why the above texttt does not show up in the text. 
 \endlastfoot%
 \texttt{\footnotesize TEX01} & \texttt{\footnotesize Error running \$command. }  \\
 \multicolumn2{|l|}{
@@ -4934,7 +4936,7 @@ Identifier        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:WarnLP} The BuildFailureExceptions of Settings   }
+\caption{\label{tab:TSS} The \texttt{BuildFailureException}s of Settings   }
 \endlastfoot%
 \texttt{\footnotesize TSS01} 
 & \texttt{\footnotesize The tex source directory '\$texSrcDirectoryFile'} \\
@@ -4984,7 +4986,7 @@ Id.        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:BFExc} The BuildFailureExceptions of MetaInfo  }
+\caption{\label{tab:TMI} The \texttt{BuildFailureException}s of MetaInfo  }
 \endlastfoot%
 \texttt{\footnotesize TMI01} 
 & \texttt{\footnotesize Cannot get stream to file '\$fileName'. }  \\
@@ -5021,7 +5023,7 @@ Id.        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:BFExc} The BuildFailureExceptions of TexFileUtilsImpl  }
+\caption{\label{tab:TFU} The BuildFailureExceptions of TexFileUtilsImpl  }
 \endlastfoot%
 \texttt{\footnotesize TFU01} 
 & \texttt{\footnotesize Cannot create destination directory '\$targetDir'. }  \\
