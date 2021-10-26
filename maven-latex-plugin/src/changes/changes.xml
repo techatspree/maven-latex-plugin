@@ -58,17 +58,27 @@
 	   or maybe latex git package. 
 	   Note that there may be documentation not created through latex 
 	   and so git package may not be a generic solution. 
+	 - include docs in jar.
+	 - redesign: Target s are creational ones.
+	   In mojos we also have creational ones and others.
+	   The method AbstractLatexMojo.getTargetSet() is appropriate for creational targets only.
+	   Maybe rename Target-->CreationalTarget,
+	   and redesign: CreationalMojo.getTargetSet().
     -->
 
-    <!--  TBD: rework on Converter.cmd2conv: 
+    <!-- TBD: rework on Converter.cmd2conv: 
     Check also call hierarchy 
     also endow with appropriate failure handling  -->
-    <!--  TBD: rework on ConverterCategores -->
+    <!-- TBD: rework on ConverterCategores -->
+    <!-- TBD: allow to exclude files from being processed, even graphic files. -->
+    <!-- TBD: bugfix: readTexSrcProcDirRec=false not respected. -->
+    <!-- TBD: mention epsf like in my dissertation  -->
     
     <!-- TBD: release cannot be snapshot, release date must be adapted -->
      <release version="1.5-snapshot" 
 	     date="2020-01-01" 
-	     description="First release with change management">
+	     description="First release with change management 
+	     This includes version of this software but also of the converters used.">
        <action dev="reissner" type="add">
          Added rudimentary change management. 
        </action>
@@ -77,17 +87,18 @@
        </action>
        <action dev="reissner" type="update">
          Converter gnuplot from gp to pdf changed version
-	 and command line interface.
-	 Likewise for inkscape, the converter from svn to pdf.
-	 Added according manuals. 
+		 and command line interface.
+		 Likewise for inkscape, the converter from svn to pdf.
+		 Added according manuals. 
        </action>
        <action dev="reissner" type="fix">
          Aligned licenses: eliminated contradictions:
-	 License delivered is what is given top level on github. 
+		 License delivered is what is given top level on github. 
        </action>
        <action dev="reissner" type="add">
          Handling of versions: now in a separate resource file
-	 for access from markdown, latex and java (the latter to come). 
+		 for access from markdown, latex and java (the latter to come). 
+		 Also updated several times and proved for now that the format is useful.
        </action>
        <action dev="reissner" type="update">
          Updated a lot of versions in pom. 

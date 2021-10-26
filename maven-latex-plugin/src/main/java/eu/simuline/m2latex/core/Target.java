@@ -6,8 +6,10 @@ import java.io.File;
  * The enumeration of all supported (creational) targets. 
  * These are targets where tex files are converted into a target format 
  * and the resulting document is included in the target folder for delivery.  
- * Additional targets are <code>clr</code>, <code>grp</code> and <code>chk</code>. 
- * None of them are creational. 
+ * Additional targets are <code>clr</code>,
+ * <code>grp</code>, <code>chk</code> and <code>vrs</code>.
+ * None of them are creational,
+ * not even <code>grp</code> although graphic files are created.
  *
  *
  * Created: Fri Oct  7 13:32:21 2016
