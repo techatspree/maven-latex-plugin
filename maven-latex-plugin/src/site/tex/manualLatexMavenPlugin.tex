@@ -3250,6 +3250,17 @@ A comma separated list of targets to be stored in \texttt{\$targetSet}.
 %The default value is '\texttt{pdf, html}'. 
 \end{minipage}
 } \\
+\texttt{convertersExcluded}          & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+A comma separated list of excluded {@link Converter}s 
+given by their command. 
+Excluded converters need not be installed but their names must be known. 
+They don't show up in the version check of target 'vrs' 
+and of course they are not allowed to be used. 
+% By default, this list is empty. 
+\end{minipage}
+} \\
 \texttt{patternLatexMainFile} & see Section~\ref{subsec:patternLatexMainFile}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -4973,6 +4984,55 @@ If it does not yet exist, it is created
 but if it exists and is a regular file, it cannot be created any more. 
 \end{minipage}
 } \\
+\texttt{\footnotesize TSS04}  & \texttt{\footnotesize The target set '\$targets' } \\
+& \texttt{\footnotesize should be a subset of the registered targets '...', but is not. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The target set is given in the pom/build-file 
+with default value \texttt{pdf, html}. 
+A single target can be given on the command line
+as e.g.~via \texttt{mvn latex:pdf} and also in this case,
+the validity of the target is checked, so that e.g.~\texttt{mvn latex:invalid}
+throws an exception, but the mechanism relies directly on mavens ability
+to check the targets of this plugin. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS05}  & \texttt{\footnotesize The excluded converters '\$convertersExcluded' } \\
+& \texttt{\footnotesize should form a subset of the registered converters '...'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+From the possible ``registered'' converters the ones not used may be excluded
+to avoid that they cause errors when trying to check correctness of version in
+target \texttt{vrs} accessed via \texttt{mvn latex:vrs}.
+These converters may not even be installed. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS06}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
+& \texttt{\footnotesize although not among the registered converters '...' as expected. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Only registered converters may be used. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS07}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
+& \texttt{\footnotesize although among the excluded converters '...'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Among the registered converters only those may be used,
+which are not excluded, i.e. listed in configuration in section \texttt{convertersExcluded}.
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS08}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
+ & \texttt{\footnotesize in configuration '...' instead of configuration '...'. } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+   Each converter may occur in a specified configuration only.
+   So e.g. \texttt{pdflatex} is only allowed in configuration
+   '\texttt{latex2pdfCommand}'.
+   If used in configuration '\texttt{makeIndexCommand}' this causes this exception,
+   because in that configuration, e.g \texttt{makeindex} is allowed. 
+ \end{minipage}
+ } \\
 \end{longtable}
 
 

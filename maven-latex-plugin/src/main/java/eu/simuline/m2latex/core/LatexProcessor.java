@@ -167,7 +167,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	this.paramAdapt = paramAdapt;
 	this.preProc = new LatexPreProcessor
 	    (this.settings, this.executor, this.log, this.fileUtils);
-	this.metaInfo = new MetaInfo(this.executor, this.log);
+	this.metaInfo = new MetaInfo(this.settings, this.executor, this.log);
     }
 
     /**
@@ -721,13 +721,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// log warning WLP04, WLP05, EAP01, EAP02, WAP04, WLP02, WFU03, 
 	// EEX01, EEX02, EEX03, WEX04, WEX05 
  	int numLatexReRuns = preProcessLatex2dev(desc, dev);
+
+ 	String latexCmd = this.settings.getCommand(ConverterCategory.LaTeX);
 				      
 	assert numLatexReRuns == 0 
 	    || numLatexReRuns == 1 
 	    || numLatexReRuns == 2;
 	if (numLatexReRuns > 0) {
 	    // rerun LaTeX without makeindex and makeglossaries 
-	    this.log.debug("Rerun LaTeX to update table of contents, ... " + 
+	    this.log.debug("Rerun " + latexCmd +
+			   " to update table of contents, ... " +
 			   "bibliography, index, or that like. ");
 	    // may throw BuildFailureException TEX01 
 	    // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
@@ -740,13 +743,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// rerun latex by need patternRerunMakeIndex
 	boolean needMakeIndexReRun;
 	boolean needLatexReRun = (numLatexReRuns == 1)
-	    || needRun(true, ConverterCategory.LaTeX, desc.logFile,
+	    || needRun(true, latexCmd, desc.logFile,
 		       this.settings.getPatternReRunLatex());
 
 	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
 	    needMakeIndexReRun = 
-		needRun(true, ConverterCategory.MakeIndex, desc.logFile,
+		needRun(true, this.settings.getCommand(ConverterCategory.MakeIndex), desc.logFile,
 			this.settings.getPatternReRunMakeIndex());
 	    // FIXME: superfluous since pattern rerunfileckeck 
 	    // triggering makeindex also fits rerun of LaTeX 
@@ -767,7 +770,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	    // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05, 
 	    // EAP01, EAP02, WAP04, WFU03
 	    runLatex2dev(desc, dev);
-	    needLatexReRun = needRun(true, ConverterCategory.LaTeX, desc.logFile,
+	    needLatexReRun = needRun(true, latexCmd, desc.logFile,
 				     this.settings.getPatternReRunLatex());
         }
 	this.log.warn("WLP01: LaTeX requires rerun but maximum number " + 
@@ -782,7 +785,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Note that only <code>logFile</code> and <code>pattern</code> 
      * are required unless a warning needs to be issued. 
      * <p>
-     * Logging: 
+     * Logging:
      * <ul>
      * <li> WLP02: Cannot read log file: (re)run required? 
      * <li> WFU03: cannot close log file 
@@ -791,25 +794,28 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @param another
      *    whether it is requested whether another run (a 'rerun') is required. 
      *    If false, just a run is required
-     * @param applicationCat
-     *    Determines the category of application to be rerun. 
-     *    This may be <code>LaTeX</code>, <code>MakeIndex</code> 
-     *    but also <code>BibTeX</code>. 
+     * @param cmdStr
+     *    Determines the command string of the application to be rerun.
+     *    This may be of category {@link ConverterCategory#LaTeX},
+     *   {@link ConverterCategory#MakeIndex}
+     *    but also {@link ConverterCategory#BibTeX}.
      * @param logFile
      *    the log file which determines 
-     *    whether to rerun <code>application</code>. 
+     *    whether to rerun <code>cmdStr</code>.
      * @param pattern
-     *    the pattern in the <code>logFile</code> 
-     *    which determines whether to rerun . 
+     *    the pattern in the <code>logFile</code>
+     *    which determines whether to rerun <code>cmdStr</code>.
      * @return
-     *    whether <code>application</code> needs to be rerun 
+     *    whether <code>cmdStr</code> needs to be rerun
      *    based on a pattern <code>pattern</code> 
      *    matching in the log file <code>logFile</code>. 
      * @see TexFileUtils#matchInFile(File, String)
      */
     // used in processLatex2devCore and in runBibtexByNeed only 
+    // TBD: eliminate Converter again and replace by ConverterCategory 
+    // including also the rerun pattern. 
     private boolean needRun(boolean another, 
-			    ConverterCategory applicationCat,
+			    String cmdStr,
 			    File logFile, 
 			    String pattern) {
 	// may log warning WFU03: cannot close 
@@ -817,7 +823,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	if (needRun == null) {
 	    this.log.warn("WLP02: Cannot read log file '" + 
 			  logFile.getName() + "'; " + 
-			  applicationCat + " may require " +
+			  cmdStr + " may require " +
 			  (another ? "re" : "") + "run. ");
 	    return false;
 	}
@@ -869,7 +875,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// emit warnings (errors are emitted by runLatex2dev and that like.)
 	// may log warnings WFU03, WAP04, WLP03, WLP04 
-	logWarns(desc.logFile, this.settings.getLatex2pdfCommand());
+	logWarns(desc.logFile, this.settings.getCommand(ConverterCategory.LaTeX));
     }
 
     void processLatex2dvi(File texFile) throws BuildFailureException {
@@ -1193,6 +1199,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
      *    <li>TMI02: if the properties could not be read 
      *        from one of the two property files mentioned above. </li>
+     *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
      *    </ul>
      */
     public boolean printMetaInfo() throws BuildFailureException {
@@ -1229,11 +1236,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
 	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
-	if (!needRun(false, ConverterCategory.BibTeX, auxFile, PATTERN_NEED_BIBTEX_RUN)) {
+	String command = this.settings.getCommand(ConverterCategory.BibTeX);
+	if (!needRun(false, command, auxFile, PATTERN_NEED_BIBTEX_RUN)) {
 	    return false;
 	}
 
-	String command = this.settings.getBibtexCommand();
 	this.log.debug("Running " + command + 
 		       " on '" + auxFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getBibtexOptions(), 
@@ -1244,7 +1251,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      this.fileUtils.replaceSuffix(texFile,SUFFIX_BBL));
+			      this.fileUtils.replaceSuffix(texFile, SUFFIX_BBL));
 
 	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
 	// may log EAP01, EAP02, WAP04, WFU03
@@ -1423,7 +1430,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void runMakeIndex(LatexMainDesc desc) 
 	throws BuildFailureException {
 
-	String command = this.settings.getMakeIndexCommand();
+	String command = this.settings.getCommand(ConverterCategory.MakeIndex);
 	File idxFile = desc.idxFile;
 	this.log.debug("Running " + command  + 
 		       " on '" + idxFile.getName() + "'. ");
@@ -1509,13 +1516,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			       Collection<String> explIdxIdent) 
 	throws BuildFailureException {
 
-	String command = this.settings.getSplitIndexCommand();
+	String splitInxCmd = this.settings.getCommand(ConverterCategory.SplitIndex);
 	File idxFile = desc.idxFile;
-	this.log.debug("Running " + command  + 
+	this.log.debug("Running " + splitInxCmd  +
 		       " on '" + idxFile.getName() + "'. ");
 	//buildArguments(this.settings.getMakeIndexOptions(), idxFile);
 	String[] argsDefault = new String[] {
-	    "-m " + this.settings.getMakeIndexCommand(),
+	    "-m " + this.settings.getCommand(ConverterCategory.MakeIndex),
 	    // **** no splitindex.tlu 
 	    // This is hardcoded by splitidx when writing xxx.ind
 	    "-i " + IDX_EXPL,
@@ -1561,20 +1568,20 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// may log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 	this.executor.execute(idxFile.getParentFile(), //workingDir 
 			      this.settings.getTexPath(), 
-			      command, 
+			      splitInxCmd,
 			      args,
 			      indFiles);
 
 	// detect errors and warnings splitindex, 
 	// aka makeindex wrote into xxx.ilg 
 	File[] ilgFiles = files(filePrefix, explIdxIdent, SUFFIX_ILG);
-	command = this.settings.getMakeIndexCommand();
+	splitInxCmd = this.settings.getCommand(ConverterCategory.MakeIndex);
 	for (int idx = 0; idx < explIdxIdent.size(); idx++) {
 	    // may log EAP01, EAP02, WAP04, WFU03
-	    logErrs (ilgFiles[idx], command, 
+	    logErrs (ilgFiles[idx], splitInxCmd,
 		     this.settings.getPatternErrMakeIndex());
 	    // may log warnings WFU03, WAP03, WAP04
-	    logWarns(ilgFiles[idx], command, 
+	    logWarns(ilgFiles[idx], splitInxCmd,
 		     this.settings.getPatternWarnMakeIndex());
 	}
     }
@@ -1623,7 +1630,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	// file name without ending: parameter for makeglossaries 
 	File xxxFile = desc.xxxFile;
-	String command = this.settings.getMakeGlossariesCommand();
+	String command = this.settings.getCommand(ConverterCategory.MakeGlossaries);
 	this.log.debug("Running " + command + 
 		       " on '" + xxxFile.getName()+ "'. ");
 	String[] args = buildArguments(this.settings.getMakeGlossariesOptions(),
@@ -1687,7 +1694,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 	File texFile = desc.texFile;
 	// FIXME: wrong name; better is latex2dev
-	String command = this.settings.getLatex2pdfCommand();
+	String command = this.settings.getCommand(ConverterCategory.LaTeX);
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
 	String[] args = buildLatexArguments(this.settings, dev, texFile);
@@ -1740,7 +1747,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void runDvi2pdf(LatexMainDesc desc) throws BuildFailureException {
 	assert this.settings.getPdfViaDvi().isViaDvi();
 
-	String command = this.settings.getDvi2pdfCommand();
+	String command = this.settings.getCommand(ConverterCategory.Dvi2Pdf);
 	this.log.debug("Running " + command + 
 		       " on '" + desc.dviFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getDvi2pdfOptions(), 
@@ -1836,7 +1843,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    returned by {@link Settings#getLatex2rtfCommand()} failed. 
      */
     private void runLatex2rtf(File texFile) throws BuildFailureException {
-	String command = this.settings.getLatex2rtfCommand();
+	String command = this.settings.getCommand(ConverterCategory.LaTeX2Rtf);
         this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
         String[] args = buildArguments(this.settings.getLatex2rtfOptions(), 
@@ -1942,7 +1949,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     private void runOdt2doc(File texFile) throws BuildFailureException {
 	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
-	String command = this.settings.getOdt2docCommand();
+	String command = this.settings.getCommand(ConverterCategory.Odt2Doc);
 	this.log.debug("Running " + command + 
 		       " on '" + odtFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getOdt2docOptions(),
@@ -1989,7 +1996,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     private void runPdf2txt(File texFile) throws BuildFailureException {
 	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
-	String command = this.settings.getPdf2txtCommand();
+	String command = this.settings.getCommand(ConverterCategory.Pdf2Txt);
 	this.log.debug("Running " + command + 
 		       " on '" + pdfFile.getName() + "'. ");
 	String[] args = buildArguments(this.settings.getPdf2txtOptions(),
@@ -2027,7 +2034,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     private void runCheck(File texFile) throws BuildFailureException {
 	// 
 	File clgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_CLG);
-	String command = this.settings.getChkTexCommand();
+	String command = this.settings.getCommand(ConverterCategory.LatexChk);
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
 	String[] args = buildChkTexArguments(this.settings.getChkTexOptions(), 

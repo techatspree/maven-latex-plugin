@@ -1,8 +1,11 @@
 package eu.simuline.m2latex.core;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 enum Converter {
 
@@ -528,15 +531,45 @@ enum Converter {
 	}
     }
 
-    // TBD: currently return value nowhere needed. 
-    // This may change in future. 
-    public static Converter cmd2Conv(String cmd, ConverterCategory cat) {
-	// TBD: check whether allowed 
-	Converter res = cmd2conv.get(cmd);
-	// TBD: regular exception handling 
-	assert res.getCategory() == cat;
-	return res;
+    // CAUTION: this may return null also, 
+    // because the appropriate exception depends on the context. 
+    /**
+     * Given a command <code>cmd</code>, returns the according {@link Converter} 
+     * such that {$link {@link Converter#getCommand()} returns <code>cmd</code> again.
+     * @param cmd
+     *    a valid command string.
+     * @return
+     *    The converter tied to <code>cmd</code> or <code>null</code>.
+     */
+    public static Converter cmd2Conv(String cmd) {
+	return cmd2conv.get(cmd);
     }
+
+    /**
+     * Returns a comma separated list of command names of converters of <code>convs</code>,
+     * i.e. for all elements of <code>convs</code> 
+     * the according command is added to the string returned and the commands are separated 
+     * by comma plus blank.
+     *
+     * @param convs
+     *    a collection of converters.
+     * @return
+     *    a comma separated list of commands of the converters given.
+     */
+    static String toCommandsString(Collection<Converter> convs) {
+	return convs.stream().map(x->x.getCommand()).collect(Collectors.joining(", "));
+    }
+    
+    /**
+     * Returns a comma separated list of command names of alll converters.
+     * 
+     * @return
+     *    a comma separated list of commands of all converters.
+     */
+   static String toCommandsString() {
+	return toCommandsString(Arrays.asList(Converter.values()));
+    }
+
 
     /**
      * Returns the command which which to invoke this converter. 

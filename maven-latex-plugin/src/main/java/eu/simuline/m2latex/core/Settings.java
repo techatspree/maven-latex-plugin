@@ -157,6 +157,17 @@ public class Settings {
     @Parameter(name = "targets", defaultValue = "pdf, html")
     private String targets = "pdf, html";
 
+    /**
+     * A comma separated list of excluded {@link Converter}s 
+     * given by their command, i.e. by {@link Converter#getCommand()}
+     * returned as a set by {@link #getConvertersExcluded()}. 
+     * Excluded converters need not be installed but their names must be known. 
+     * They don't show up in the version check of target 'vrs' 
+     * and of course they are not allowed to be used. 
+     * By default, this list is empty. 
+     */
+    @Parameter(name = "convertersExcluded", defaultValue = "")
+    private String convertersExcluded = "";
 
     /**
      * The pattern to be applied to the beginning of the contents of tex-files 
@@ -1497,26 +1508,73 @@ public class Settings {
 	return targetSet;
     }
 
-//    // TBD: maybe better: store allowed converters. 
-//    public SortedSet<Converter> getConvertersExcluded() {
-//	SortedSet<Converter> convSet = new TreeSet<Converter>();
-//	if (this.texConvertersExcluded.isEmpty()) {
-//	    return convSet;
-//	}
-//	String[] convSeq = this.texConvertersExcluded.split(" *, *");
-//	for (int idx = 0; idx < convSeq.length; idx++) {
-//	    // TBD: handle illegalargument exception: unknown converter 
-//	    Converter conv = Converter.cmd2Conv(convSeq[idx]);
-//	    conv.getCommand();
-//	    convSet.add(conv);
-//	}
-//	return convSet;
-//    }
+    // TBD: maybe better: store allowed converters. 
+    // TBD: maybe better: cache converters read. 
+    /**
+     * Returns the set of converters excluded from usage. 
+     *
+     * @return
+     *     The set of converters excluded from usage. 
+     * @throws BuildFailureException 
+     *    TSS05 if set of converters excluded from usage 
+     *    is not a subset of the set given by {@link Converter}. 
+     */
+    public SortedSet<Converter> getConvertersExcluded() throws BuildFailureException {
+	SortedSet<Converter> convSet = new TreeSet<Converter>();
+	if (this.convertersExcluded.isEmpty()) {
+	    return convSet;
+	}
+	String[] convSeq = this.convertersExcluded.split(" *, *");
+	for (int idx = 0; idx < convSeq.length; idx++) {
+	    Converter conv = Converter.cmd2Conv(convSeq[idx]);
+	    if (conv == null) {
+		// Here, the converter given is unknown. 
+		throw new BuildFailureException("TSS05: The excluded converters '" +
+		this.convertersExcluded + "' should form a subset of the registered converters '" +
+		Converter.toCommandsString() + "'. ");
+	    }
+	    convSet.add(conv);
+	}
+	return convSet;
+    }
 
-    private void checkConverter(String cmd, ConverterCategory cat) {
-	Converter conv = Converter.cmd2Conv(cmd);
-	assert !getConvertersExcluded().contains(conv);
-	assert conv.getCategory() == cat;
+    /**
+     * throws an exception if the converter given by 
+     *
+     * @param convStr
+     *    the name of a converter as a string.  
+     * @throws BuildFailureException 
+     *    <ul>
+     *    <li>TSS06 if 
+     *    tried to use converter not registered. </li>
+     *    <li>TSS05 if 
+     *    set of converters excluded from usage 
+     *    is not a subset of the set given by {@link Converter}. </li>
+     *    <li>TSS07 if 
+     *    tried to use converter which is among the excluded ones. </li>
+      *    <li>TSS08 if 
+     *    tried to use converter within wrong category. </li>
+     *    </ul>
+     */
+    private void checkConverter(String convStr, ConverterCategory cat) throws BuildFailureException {
+	Converter conv = Converter.cmd2Conv(convStr);
+	if (conv == null) {
+	    throw new BuildFailureException("TSS06: Tried to use converter '" + convStr +
+		    "' although not among the registered converters '" + Converter.toCommandsString() + "' as expected. ");
+	}
+	// may throw BuildFailureException TSS05
+	SortedSet<Converter> convertersExcluded = getConvertersExcluded();
+	if (convertersExcluded.contains(conv)) {
+	    throw new BuildFailureException("TSS07: Tried to use converter '" + convStr +
+		    "' although among the excluded converters '" +
+		    Converter.toCommandsString(convertersExcluded) + "'. ");
+
+	}
+	if (conv.getCategory() != cat) {
+	    throw new BuildFailureException("TSS08: Tried to use converter '" + convStr +
+		    "' in configuration '" + cat.getFieldname() +
+		    "' instead of configuration '" + conv.getCategory().getFieldname() + "'. ");
+	}
     }
 
     public String getPatternLatexMainFile() {
@@ -1538,12 +1596,6 @@ public class Settings {
 	return  this.patternCreatedFromLatexMain;
     }
 
-
-    public String getFig2devCommand() {
-	Converter conv = Converter.cmd2Conv(this.fig2devCommand, ConverterCategory.Fig2Dev);
-        return  this.fig2devCommand;
-    }
-
     public String getFig2devGenOptions() {
         return  this.fig2devGenOptions;
     }
@@ -1556,47 +1608,22 @@ public class Settings {
         return  this.fig2devPdfEpsOptions;
     }
 
-    public String getGnuplotCommand() {
-	Converter conv = Converter.cmd2Conv(this.gnuplotCommand, ConverterCategory.Gnuplot2Dev);
-        return  this.gnuplotCommand;
-    }
-
     public String getGnuplotOptions() {
         return  this.gnuplotOptions;
-    }
-
-    public String getMetapostCommand() {
-	Converter conv = Converter.cmd2Conv(this.metapostCommand, ConverterCategory.MetaPost);
-        return  this.metapostCommand;
     }
 
     public String getMetapostOptions() {
         return  this.metapostOptions;
     }
 
-    public String getSvg2devCommand() {
-	Converter conv = Converter.cmd2Conv(this.svg2devCommand, ConverterCategory.Svg2Dev);
-	return  this.svg2devCommand;
-    }
-
     public String getSvg2devOptions() {
 	return  this.svg2devOptions;
     }
 
-    public String getEbbCommand() {
-	Converter conv = Converter.cmd2Conv(this.ebbCommand, ConverterCategory.EbbCmd);
-        return  this.ebbCommand;
-    }
     public String getEbbOptions() {
         return  this.ebbOptions;
     }
 
-
-// FIXME: to be renamed: latex2pdf-command 
-    public String getLatex2pdfCommand() {
-	Converter conv = Converter.cmd2Conv(this.latex2pdfCommand, ConverterCategory.LaTeX);
-        return  this.latex2pdfCommand;
-    }
 
     // FIXME: to be renamed: texOptions 
     public String getLatex2pdfOptions() {
@@ -1628,11 +1655,6 @@ public class Settings {
 	return LatexDev.   devViaDvi(this.pdfViaDvi);
     }
 
-    public String getDvi2pdfCommand() {
-	Converter conv = Converter.cmd2Conv(this.dvi2pdfCommand, ConverterCategory.Dvi2Pdf);
-	return  this.dvi2pdfCommand;
-    }
-
     public String getDvi2pdfOptions() {
 	return  this.dvi2pdfOptions;
     }
@@ -1646,10 +1668,42 @@ public class Settings {
     }
 
 // TBD: check category 
-    public String getBibtexCommand() {
-	Converter conv = Converter.cmd2Conv(this.bibtexCommand, ConverterCategory.BibTeX);
-        return  this.bibtexCommand;
+
+    // TBD: refer to annotation, not to field name. 
+    /**
+     * TBD: add docs 
+     *
+     * @throws BuildFailureException 
+     *    <ul>
+     *    <li>TSS06 if 
+     *    tried to use converter not registered. </li>
+     *    <li>TSS05 if 
+     *    set of converters excluded from usage 
+     *    is not a subset of the set given by {@link Converter}. </li>
+     *    <li>TSS07 if 
+     *    tried to use converter which is among the excluded ones. </li>
+     *    <li>TSS08 if 
+     *    tried to use converter within wrong category. </li>
+     *    </ul>
+     */
+    public String getCommand(ConverterCategory cat) throws BuildFailureException {
+	String cmdName;
+	try {
+	    cmdName = (String)this.getClass().getDeclaredField(cat.getFieldname()).get(this);
+	} catch (NoSuchFieldException nsfe) {
+	    throw new IllegalStateException
+	    ("Could not find field '" + cat.getFieldname() + "' in Settings. ");
+	} catch (IllegalAccessException iace) {
+	    throw new IllegalStateException
+	    ("Parameter '" + cat.getFieldname() + "' not readable. ");
+	} catch (IllegalArgumentException iage) {
+	    throw new IllegalStateException("Settings class mismatch. ");
+	}
+	// may throw BuildFailureException TSS05-08
+	checkConverter(cmdName, cat);
+	return cmdName;
     }
+
     public String getBibtexOptions() {
         return  this.bibtexOptions;
     }
@@ -1660,13 +1714,6 @@ public class Settings {
 
     public String getPatternWarnBibtex() {
 	return  this.patternWarnBibtex;
-    }
-
-
- // TBD: check category 
-    public String getMakeIndexCommand() {
-	Converter conv = Converter.cmd2Conv(this.makeIndexCommand, ConverterCategory.MakeIndex);
-	return  this.makeIndexCommand;
     }
 
     public String getMakeIndexOptions() {
@@ -1685,20 +1732,8 @@ public class Settings {
 	return this.patternReRunMakeIndex;
     }
 
- // TBD: check category 
-    public String getSplitIndexCommand() {
-	Converter conv = Converter.cmd2Conv(this.splitIndexCommand, ConverterCategory.SplitIndex);
-	return  this.splitIndexCommand;
-    }
-
     public String getSplitIndexOptions() {
 	return  this.splitIndexOptions;
-    }
-
- // TBD: check category 
-    public String getMakeGlossariesCommand() {
-	Converter conv = Converter.cmd2Conv(this.makeGlossariesCommand, ConverterCategory.MakeGlossaries);
-	return  this.makeGlossariesCommand;
     }
 
     public String getMakeGlossariesOptions() {
@@ -1741,45 +1776,21 @@ public class Settings {
 	return  this.patternT4htOutputFiles;
     }
 
-    public String getLatex2rtfCommand() {
-	Converter conv = Converter.cmd2Conv(this.latex2rtfCommand, ConverterCategory.LaTeX2Rtf);
-        return  this.latex2rtfCommand;
-    }
-
     public String getLatex2rtfOptions() {
         return  this.latex2rtfOptions;
-    }
-
- // TBD: check category 
-    public String getOdt2docCommand() {
-	Converter conv = Converter.cmd2Conv(this.odt2docCommand, ConverterCategory.Odt2Doc);
-        return  this.odt2docCommand;
     }
 
     public String getOdt2docOptions() {
 	return  this.odt2docOptions;
     }
 
- // TBD: check category 
-    public String getPdf2txtCommand() {
-	Converter conv = Converter.cmd2Conv(this.pdf2txtCommand, ConverterCategory.Pdf2Txt);
-        return  this.pdf2txtCommand;
-    }
-
     public String getPdf2txtOptions() {
         return  this.pdf2txtOptions;
-    }
-
- // TBD: check category 
-    public String getChkTexCommand() {
-	Converter conv = Converter.cmd2Conv(this.chkTexCommand, ConverterCategory.LatexChk);
-        return  this.chkTexCommand;
     }
 
     public String getChkTexOptions() {
         return  this.chkTexOptions;
     }
-
 
 
     // setter methods 

@@ -61,17 +61,18 @@ public class VersionMojo extends AbstractLatexMojo {
       *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
       *    <li>TMI02: if the properties could not be read 
       *        from one of the two property files mentioned above. </li>
+      *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
       *    </ul>
       */
-
     public void execute() throws MojoFailureException {
 	// TBD: redesign 
 	initialize();
 	try {
-	    // warnings: WMI01, WMI02
+	    // warnings: WMI01, WMI02, 
+	    // may throw build failure exception TSS05
 	    this.latexProcessor.printMetaInfo();
 	} catch (BuildFailureException e) {
-	    // may throw Exception TMI01, TMI02
+	    // may throw Exception TMI01, TMI02, TSS05
 	    throw new MojoFailureException(e.getMessage(), e.getCause());
 	}
     }

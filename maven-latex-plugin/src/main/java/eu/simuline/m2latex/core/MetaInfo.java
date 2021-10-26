@@ -10,13 +10,16 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import java.util.Properties;
+import java.util.SortedSet;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.jar.Attributes;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -722,8 +725,8 @@ public class MetaInfo {
      */
     private final LogWrapper log;
 
-    MetaInfo(CommandExecutor executor, 
-		   LogWrapper log) {
+    MetaInfo(Settings settings, CommandExecutor executor, LogWrapper log) {
+	this.settings = settings;
 	this.executor = executor;
 	this.log = log;
     }
@@ -744,6 +747,8 @@ public class MetaInfo {
      */
     private final static String TOOL_VERSION_FORMAT = "%s%-15s '%s'%s%s";
 
+    private final Settings settings;
+
 
     // CAUTION, depends on the maven-jar-plugin and its version 
     /**
@@ -761,6 +766,7 @@ public class MetaInfo {
      *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
      *    <li>TMI02: if the properties could not be read 
      *        from one of the two property files mentioned above. </li>
+     *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
      *    </ul>
      */
     public boolean printMetaInfo() throws BuildFailureException {
@@ -836,7 +842,7 @@ public class MetaInfo {
 	// headlines 
 	this.log.info("tool versions: ");
 	this.log.info(String.format(TOOL_VERSION_FORMAT, 
-		"?warn?    ", "command:", "actual version", "(not)in", "[expected version interval]"));
+		"?warn?    ", "command", "actual version", "(not)in", "[expected version interval]"));
 
 	Properties versionProperties = getProperties(VERSION_PROPS_FILE);
 	if (versionProperties.size() > Converter.values().length) {
@@ -851,9 +857,14 @@ public class MetaInfo {
 	Version actVersionObj;
 	VersionInterval expVersionItv;
 	boolean doWarn, doWarnAny = false;
+	// may throw BuildFailureException TSS05
+	SortedSet<Converter> convertersExcluded = this.settings.getConvertersExcluded();
 	// TBD: try to deal with makeindex using stdin instead of dummy file: 
 	// InputStream sysInBackup = System.in;
 	for (Converter conv : Converter.values()) {
+	    if (convertersExcluded.contains(conv)) {
+		continue;
+	    }
 	    doWarn = false;
 	    //System.setIn(new ByteArrayInputStream("\u0004\n".getBytes()));
 	    cmd = conv.getCommand();
@@ -891,7 +902,11 @@ public class MetaInfo {
 	    }
 	    doWarnAny |= doWarn;
 	} // for 
-	// TBD: try to work for makeindex also
+
+	if (!convertersExcluded.isEmpty()) {
+	    this.log.info("excluded tools: ");
+	    this.log.info(Converter.toCommandsString(convertersExcluded));
+	}
 	return doWarnAny;
     }
 }

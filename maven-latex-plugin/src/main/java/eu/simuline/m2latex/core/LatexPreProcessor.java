@@ -562,7 +562,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// Result file: either .pdf or .eps 
 	File figInTexFile = this.fileUtils
 	    .replaceSuffix(figFile, dev.getGraphicsInTexSuffix());
-	String command = this.settings.getFig2devCommand();
+	String command = this.settings.getCommand(ConverterCategory.Fig2Dev);
 
 	//if (update(figFile, pdfFile)) {
 	String[] args = 
@@ -730,7 +730,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	// result file: .ptx 
 	File ptxFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
-	String command = this.settings.getFig2devCommand();
+	String command = this.settings.getCommand(ConverterCategory.Fig2Dev);
 
 	//if (update(figFile, pdf_tFile)) {
 	String[] args = 
@@ -879,7 +879,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     private void runGnuplot2Dev(File gpFile, LatexDev dev) 
 	throws BuildFailureException {
 
-	String command = this.settings.getGnuplotCommand();
+	String command = this.settings.getCommand(ConverterCategory.Gnuplot2Dev);
 	File grpFile = this.fileUtils.replaceSuffix
 	    (gpFile, dev.getGraphicsInTexSuffix());
 	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
@@ -929,7 +929,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // used in mp.procSrc(File, LatexPreProcessor) only 
     private void runMetapost2mps(File mpFile) throws BuildFailureException {
 	this.log.info("Processing metapost-file '" + mpFile + "'. ");
-	String command = this.settings.getMetapostCommand();
+	String command = this.settings.getCommand(ConverterCategory.MetaPost);
 	File workingDir = mpFile.getParentFile();
 	// for more information just type mpost --help 
 	String[] args = buildArguments(this.settings.getMetapostOptions(), 
@@ -1032,7 +1032,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// inkscape --export-filename=F4_07someSvg.pdf -D F4_07someSvg.svg
 	//
 	// --export-pdf-version=1.4 may be nice 
-	String command = this.settings.getSvg2devCommand();
+	String command = this.settings.getCommand(ConverterCategory.Svg2Dev);
 
 	File grpFile = this.fileUtils.replaceSuffix(svgFile,
 						    dev.getGraphicsInTexSuffix());
@@ -1083,7 +1083,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // Experiments show, that we can do without it in any case. 
 
     private void runEbb(File file) throws BuildFailureException {
-	String command = this.settings.getEbbCommand();
+	String command = this.settings.getCommand(ConverterCategory.EbbCmd);
 	File workingDir = file.getParentFile();
 	String[] args = buildNullArguments(this.settings.getEbbOptions(), file);
 
