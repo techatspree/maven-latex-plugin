@@ -749,7 +749,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	int maxNumReruns = this.settings.getMaxNumReRunsLatex();
 	for (int num = 0; maxNumReruns == -1 || num < maxNumReruns; num++) {
 	    needMakeIndexReRun = 
-		needRun(true, this.settings.getCommand(ConverterCategory.MakeIndex), desc.logFile,
+		needRun(true,
+			this.settings.getCommand(ConverterCategory.MakeIndex),
+			desc.logFile,
 			this.settings.getPatternReRunMakeIndex());
 	    // FIXME: superfluous since pattern rerunfileckeck 
 	    // triggering makeindex also fits rerun of LaTeX 

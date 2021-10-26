@@ -24,6 +24,8 @@ import java.io.File;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.Arrays;
 
 import org.apache.maven.plugins.annotations.Parameter;
@@ -1497,8 +1499,10 @@ public class Settings {
 	    } catch (IllegalArgumentException ae) {
 		assert Target.class.isEnum();
 		// Here, targetSeq[idx] is no name in Target 
+		// TBD: find substring(1, and construct separate util method. 
 		String setOfAllowedTargets = Arrays.asList(Target.values()).toString();
 		setOfAllowedTargets = setOfAllowedTargets.substring(1, setOfAllowedTargets.length()-1);
+		// TBD: reformulate all 'but is not': the target set is expected to be a subset... but is ... 
 		throw new BuildFailureException("TSS04: The target set '" +
 		this.targets + "' should be a subset of the registered targets '" +
 		setOfAllowedTargets + "', but is not. ");
@@ -1753,7 +1757,7 @@ public class Settings {
     }
 
 
- // TBD: check category 
+ // TBD: check category . shall be replaced by getCommand(ConverterCategory)
     public String getTex4htCommand() {
 	//Converter conv = Converter.cmd2Conv(this.tex4htCommand, ConverterCategory.LaTeX2Html);
 	// TBD: check: this has two categories: tex2html and tex2odt 
@@ -1918,6 +1922,7 @@ public class Settings {
    	}
     }
 
+    // note: getter are checked whereas setters are not. 
     public void setFig2devCommand(String fig2devCommand) {
         this.fig2devCommand = fig2devCommand;
     }
