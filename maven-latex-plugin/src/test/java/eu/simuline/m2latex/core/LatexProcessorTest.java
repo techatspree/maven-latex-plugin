@@ -572,7 +572,7 @@ public class LatexProcessorTest {
 	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
-		     eq(this.settings.getBibtexCommand()),
+		     eq(this.settings.getCommand(ConverterCategory.BibTeX)),
 		     aryEq(LatexProcessor.buildArguments
 			   (this.settings.getBibtexOptions(), this.auxFile)),
 		     eq(this.bblFile));
@@ -645,7 +645,7 @@ public class LatexProcessorTest {
 	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
-		     eq(this.settings.getMakeIndexCommand()),
+		     eq(this.settings.getCommand(ConverterCategory.MakeIndex)),
 		     aryEq(LatexProcessor.buildArguments
 			   (this.settings.getMakeIndexOptions(), this.idxFile)),
 		     eq(this.indFile));
@@ -689,7 +689,7 @@ public class LatexProcessorTest {
 	this.inOrder.verify(this.executor)
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
-		     eq(this.settings.getMakeGlossariesCommand()),
+		     eq(this.settings.getCommand(ConverterCategory.MakeGlossaries)),
 		     aryEq(LatexProcessor.buildArguments
 			   (this.settings.getMakeGlossariesOptions(), 
 			    this.xxxFile)),
@@ -726,7 +726,7 @@ public class LatexProcessorTest {
 	verify(this.executor, atLeastOnce())
 	    .execute(eq(WORKING_DIR),
 		     isNull(),
-		     eq(this.settings.getLatex2pdfCommand()),
+		     eq(this.settings.getCommand(ConverterCategory.LaTeX)),
 		     aryEq(LatexProcessor.buildLatexArguments
 			(this.settings, 
 			 this.settings.getPdfViaDvi(), 
