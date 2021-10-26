@@ -798,9 +798,14 @@ a link shall be used.
 Note that unlike former version, 
 the current version of this software does not create a working directory 
 by cloning the tex-source directory. 
-Instead it operates directly on the tex-source directory 
-also creating intermediate files. 
-Thus a file residing in the tex-source directory 
+Instead, it operates directly on the tex-source directory 
+also creating intermediate files.
+The advantage of processing that way is,
+that this allows cooperation between this software
+and other toolchains which are better suited for developping latex files.
+Details are described in Section~\ref{sec:devel}.
+
+The downside is that a file residing in the tex-source directory 
 risks being overwritten by this software, 
 if it does not stick to the rules. 
 The rules are simple: 
@@ -867,7 +872,9 @@ Sometimes it is more convenient
 to specify the output formats not via the pom 
 but directly as a goal on the command line. 
 In particular, one may write \texttt{mvn latex:pdf} to create documentation 
-in pdf-format only. 
+in pdf-format only.
+Likewise command \texttt{mvn latex:dvi} to get good old dvi files
+or even \texttt{mvn latex:txt} for plain text, just as examples. 
 Note that the \texttt{-X} switch activates debugging 
 which results in a more verbose output. 
 Example: \texttt{mvn -X latex:cfg}. 
@@ -1107,19 +1114,27 @@ mvn latex:vrs
 \end{Verbatim}
 %
 displays something like what is displayed in Listing~\ref{lst:vrsOut}.
-As one can see, there are several converters with inapropriate versions.
-% TBC
-Note that \texttt{makeindex} is not in the list.
-This is because it is not possible
-to regularly check the version of that application.
-It may be an option to use \texttt{upmendex} instead,
-although in beta state at time of this writing
-and not completely compatible.
-According to \cite{UpMendex}, \cite{MkIdxMoe}
-and further research,
-\texttt{upmendex} does not support options \texttt{-T} and \texttt{-L}
-and does interprete \texttt{-g} differently,
-namely as japanese instead of german. 
+As one can see, there may be converters with inapropriate versions
+which is indicated by a warning WMI02 
+and there may be converters which are excluded
+according to the configuration \texttt{convertersExcluded}.
+
+Note that in the given version and in the installation of the author,
+of course, all converters are installed and are up to date
+to be able to check validity.
+The according messages are for illustration only. 
+% TBC: what is an interface of a converter?
+% Note that \texttt{makeindex} is not in the list.
+% This is because it is not possible
+% to regularly check the version of that application.
+% It may be an option to use \texttt{upmendex} instead,
+% although in beta state at time of this writing
+% and not completely compatible.
+% According to \cite{UpMendex}, \cite{MkIdxMoe}
+% and further research,
+% \texttt{upmendex} does not support options \texttt{-T} and \texttt{-L}
+% and does interprete \texttt{-g} differently,
+% namely as japanese instead of german. 
 
 
 \begin{lstlisting}[basicstyle=\tiny,
@@ -1136,44 +1151,37 @@ caption={Output of goal \texttt{latex:vrs}}]
 [INFO] coordinate.version:    '1.5-SNAPSHOT'
 [INFO] git properties: 
 [INFO] build version:  '1.5-SNAPSHOT'
-[INFO] commit id desc: 'latex-maven-plugin-1.4-87-g525b344-dirty'
-[INFO] buildTime:      '2020-11-23T00:11:01+0100'
+[INFO] commit id desc: 'latex-maven-plugin-1.4-114-g1c03bb0-dirty'
+[INFO] buildTime:      '2021-05-19T23:09:31+0200'
 [INFO] tool versions: 
-[INFO] ?warn?    command:        'actual version'not(in)[expected version interval]
-[INFO]           pdflatex:       '1.40.21'in[1.40.21]
-[INFO]           lualatex:       '1.12.0'in[1.12.0]
-[INFO]           xelatex:        '0.999992'in[0.999992]
+[INFO] ?warn?    command         'actual version'(not)in[expected version interval]
+[INFO]           pdflatex:       '1.40.22'in[1.40.21;1.40.22]
+[INFO]           lualatex:       '1.13.2'in[1.12.0;1.13.2]
+[INFO]           xelatex:        '0.999993'in[0.999992;0.999993]
 [INFO]           latex2rtf:      '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
-[WARNING] WMI01: Version string from converter Odt2doc did not match expected form: 
-unoconv 0.9.0
-Written by Dag Wieers <dag@wieers.com>
-Homepage at http://dag.wieers.com/home-made/unoconv/
-
-platform posix/linux
-python 3.8.6 (default, Nov 09 2020, 12:09:06) [GCC]
-LibreOffice 7.0.3.1
-
-[WARNING]        odt2doc:        'version'not?in[0.9.0]
-[INFO]           pdftotext:      '20.10.0'in[0.90.0;20.10.0]
-[INFO]           dvips:          '2020.1'in[2020.1]
-[INFO]           dvipdfm:        '20200315'in[20200315]
-[INFO]           dvipdfmx:       '20200315'in[20200315]
-[INFO]           xdvipdfmx:      '20200315'in[20200315]
+[INFO]           odt2doc:        '0.9.0'in[0.9.0]
+[INFO]           pdftotext:      '21.10.0'in[21.04.0;21.10.0]
+[INFO]           dvips:          '2021.1'in[2020.1;2021.1]
+[INFO]           dvipdfm:        '20210318'in[20210318]
+[INFO]           dvipdfmx:       '20210318'in[20200315;20210318]
+[INFO]           xdvipdfmx:      '20210318'in[20200315;20210318]
 [INFO]           dvipdft:        '20090604.0046'in[20090604.0046]
-[INFO]           gs:             '9.53.3'in[9.52;9.53.3]
+[INFO]           gs:             '9.54.0'in[9.52.0;9.54.0]
 [INFO]           chktex:         '1.7.6'in[1.7.6]
 [WARNING] WMI02: bibtex:         '0.99d'not in[0.99c]
 [INFO]           bibtexu:        '3.71'in[3.71]
 [INFO]           bibtex8:        '3.71'in[3.71]
-[INFO]           upmendex:       '0.54'in[0.54]
+[INFO]           makeindex:      '2.15'in[2.15]
 [INFO]           splitindex:     '0.1'in[0.1]
-[INFO]           xindy:          '2.5.1'in[2.5.1]
 [INFO]           makeglossaries: '4.45'in[4.45]
-[INFO]           mpost:          '2.00'in[2.00]
-[INFO]           ebb:            '20200315'in[20200315]
-[INFO]           gnuplot:        '5.4'in[5.4]
-[INFO]           inkscape:       '1.0.1'in[1.0.1]
-[INFO]           fig2dev:        '3.2.7b'in[3.2.7b]
+[INFO]           mpost:          '2.01'in[2.00;2.01]
+[INFO]           ebb:            '20210318'in[20200315;20210318]
+[INFO]           gnuplot:        '5.4 patchlevel 2'in[5.4 patchlevel 0;5.4 patchlevel 2]
+[INFO]           inkscape:       '1.1.1'in[1.0.2;1.1.1]
+[INFO]           fig2dev:        '3.2.8b'in[3.2.7b;3.2.8b]
+[INFO] excluded tools: 
+[INFO] upmendex, xindy
+[INFO] ------------------------------------------------------------------------
 \end{lstlisting}
 
 
@@ -2107,10 +2115,11 @@ as described in Section~\ref{sec:tex2txt}.
 The next step is to create a pdf-file from the tex-files. 
 \LaTeX{} distinguishes master tex-files from tex-files intended to be inputted
 from elsewhere. 
-Master tex-files have the form 
+Not tanking comments and that like into account, master tex-files have the form 
 %
 %\lstset{language=tex, basicstyle=\small}
 \begin{lstlisting}[language=tex, basicstyle=\small]
+\RequirePackage[l2tabu, orthodox]{nag} % optional 
 \documentclass{...}
 
 \begin{document}
@@ -5448,7 +5457,7 @@ given by Listing~\ref{lst:fullConfig}.
 %\lstset{language=xml, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[language=xml, basicstyle=\scriptsize,
-firstline=220, lastline=1108,
+firstline=569, lastline=1505,
 breaklines, showstringspaces=false,
 %float,
 captionpos=b, label={lst:fullConfig},
