@@ -58,12 +58,20 @@
 	   or maybe latex git package. 
 	   Note that there may be documentation not created through latex 
 	   and so git package may not be a generic solution. 
+	 - For tests we need a valid pdf.
+	   So for tests a pdf without version information and without date
+	   and without git info must be created.
 	 - include docs in jar.
 	 - redesign: Target s are creational ones.
 	   In mojos we also have creational ones and others.
-	   The method AbstractLatexMojo.getTargetSet() is appropriate for creational targets only.
-	   Maybe rename Target-->CreationalTarget,
+	   The method AbstractLatexMojo.getTargetSet()
+           is appropriate for creational targets only.
+	   Maybe rename Target-{}->CreationalTarget,
 	   and redesign: CreationalMojo.getTargetSet().
+	 - There must be a mojo for phase validate or initialize
+	   checking the most important things:
+	   - Whether the converters mentioned are registered.
+	     This refers to the commands to run and to the excluded converters.
     -->
 
     <!-- TBD: rework on Converter.cmd2conv: 
@@ -79,6 +87,15 @@
 	     date="2020-01-01" 
 	     description="First release with change management 
 	     This includes version of this software but also of the converters used.">
+       <action dev="reissner" type="add">
+         Added validity checks on converters: registered, in correct category.
+	 In the course of this, added a lot of exceptions:
+	 TSS05, TSS06, TSS07 and TSS08
+       </action>
+        <action dev="reissner" type="add">
+          Prepared for check in phase validate or initialize:
+	  Added a way to exclude converters.
+       </action>
        <action dev="reissner" type="add">
          Added rudimentary change management. 
        </action>
