@@ -19,6 +19,7 @@
 	   in manual: flow oriented vs page oriented. 
 	   Flow oriented: html, ... epub, ... 
 	   Page oriented: pdf, latex (dvi), office (odt, xdoc, ...)
+	   Take multipubguide.pdf into account.
 	 - Further exporters with config to access them 
 	   besides latex2ht also latexml, pandoc 
 	   Have a look at texnische komoedie, pdf checked in. 
