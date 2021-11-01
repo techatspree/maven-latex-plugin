@@ -105,6 +105,8 @@ After mvn clean ant build does not work.
 		readTexSrcProcDirRec='true'
 		outputDirectory="."
 		targets="pdf, html"
+		convertersExcluded=''
+		texPath=''
 		cleanUp='true'
 		fig2devCommand="fig2dev"
 		fig2devGenOptions=""
