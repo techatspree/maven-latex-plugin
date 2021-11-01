@@ -64,7 +64,7 @@ abstract class AbstractLatexMojo extends AbstractMojo
     protected File targetSiteDirectory;
 
     /**
-     * Comrpises all parameters for executing this maven plugin. 
+     * Comprises all parameters for executing this maven plugin. 
      * If not set in the pom prior to execution, 
      * is set in {@link #initialize()}. 
      */

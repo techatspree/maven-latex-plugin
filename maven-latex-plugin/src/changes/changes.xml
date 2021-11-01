@@ -222,11 +222,13 @@
 	    does not allow to get its version without breaking it 
 	    or applying it on a file. 
 	    Maybe the solution is to replace it by upmendex -->
-	    <!-- TBD: goal latex:vrs 
+       <!-- TBD: goal latex:vrs 
 	    shall work even if not all converters are installed. 
 	    Problem: MetaInfo.Version constructor: 
 	    executor then throws BuildFailureException -->
-	    <!-- TBD: maybe vrs shall be included in phase validate. -->
+       <!-- TBD: maybe vrs shall be included in phase validate. -->
+       <!-- TBD: ant-task: somehow synchronize coordinates with pom: 
+	    name, version -->
      </release>
 
 

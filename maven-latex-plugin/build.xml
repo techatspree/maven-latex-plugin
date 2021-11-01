@@ -1,7 +1,16 @@
-<project name="Main" default="pdf" basedir=".">
+<!-- CAUTION: currently, this has a problem with bootstrapping: 
+must be started with maven: mvn install first. 
+After mvn clean ant build does not work. 
+-->
+
+<project name="Main" default="jar" basedir=".">
   <property name="targetSiteDir"   value="${basedir}/target/site" />
   <property name="targetDir"       value="${basedir}/target" />
-
+  <property name="version"         value="1.5-SNAPSHOT" />
+  <!-- the following must be adapted to the local installation. -->
+  <property name="antJarDir"       value="/usr/share/ant/lib/" />
+  <property name="createdJar"
+	    value="latex-maven-plugin-${version}-antTask.jar" />
 
 
   <target 
@@ -13,13 +22,7 @@
     <property name="srcJavaDir"       value="src/main/java/" />
     <property name="compileClsPath"   value="${clsDir}:${tstClsDir}" />
     <property name="encoding"         value="ISO-8859-1"/>
-    <property name="javac"
-	      value="/usr/lib64/jvm/javaLatest/bin/javac" />
-    <property name="antJarDir"
-	      value="/usr/share/ant/lib/" />
-    <property name="createdJar"
-	      value="latex-maven-plugin-1.3-SNAPSHOT-antTask.jar" />
-
+ 
     <!-- ensure that all required directories are present. 
 	 these are removed by mvn only. -->
     <!--mkdir dir="${targetDir}"/-->
@@ -35,8 +38,8 @@
       <fileset dir="${targetDir}/**">
       </fileset>
     </delete>
-    <delete file="${antJarDir}${createdJar}" />
   </target>
+
 
   <target name="jar" 
 	  depends="init"
@@ -48,8 +51,7 @@
             encoding="${encoding}"
             debug="${javac.debug}"
 	    debuglevel="none"
-            executable="${javac}"
-	    excludes="org/m2latex/mojo/**"
+	    excludes="eu/simuline/m2latex/mojo/**"
             includeAntRuntime="false"
 	    compiler="modern"
             fork="yes">
@@ -62,23 +64,35 @@
   </target>
 
   <target name="install" 
-	  depends="jar"
 	  description="Copies the relevant jar-file defining the ant-task 
-		       to where ant finds it. ">
+		       to where ant finds it: 
+		       in the installation, not in the local environment. 
+		       This must be invoked as root. ">
      <copy file="${targetDir}/${createdJar}" 
 	   todir="${antJarDir}"/>
+  </target>
+  
+  <target name="uninstall" 
+	  depends="jar"
+	  description="Deletes the relevant jar-file defining the ant-task 
+		       where ant finds it: 
+		       in the installation, not in the local environment. 
+		       This must be invoked as root. ">
+       <delete file="${antJarDir}${createdJar}" />
+
   </target>
 
 
 
   <path id="latex.classpath">
-    <fileset dir="${basedir}/target"> 
-      <include name="latex-maven-plugin-1.3-SNAPSHOT-antTask.jar"/>
+    <!--fileset dir="${basedir}/target"--> 
+    <fileset dir="${antJarDir}"> 
+      <include name="latex-maven-plugin-${version}-antTask.jar"/>
     </fileset>
   </path>
 
   <taskdef name="latexCfg"
-	   classname="org.m2latex.antTask.LatexCfgTask"
+	   classname="eu.simuline.m2latex.antTask.LatexCfgTask"
 	   classpathref="latex.classpath"/>
 
   <target name="latex:cfg"
@@ -210,7 +224,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
   </target>
 
   <taskdef name="latexClr"
-	   classname="org.m2latex.antTask.LatexClrTask"
+	   classname="eu.simuline.m2latex.antTask.LatexClrTask"
 	   classpathref="latex.classpath"/>
 
   <!-- very bad: copied parameters -->
