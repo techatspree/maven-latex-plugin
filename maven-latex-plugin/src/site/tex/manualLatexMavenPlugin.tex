@@ -14,8 +14,10 @@
 \newcommand{\groupId}{\texttt{eu.simuline.m2latex}}
 \newcommand{\artifactId}{\texttt{latex-maven-plugin}}
 \newcommand{\versionID}{\texttt{1.5-SNAPSHOT}}
-\newcommand{\repo}{\texttt{ftp://www.simuline.eu/public\_html/RepositoryMaven}}
+\newcommand{\repo}{\texttt{https://www.simuline.eu/public\_html/RepositoryMaven}}
 \newcommand{\devSite}{\texttt{https://github.com/Reissner/maven-latex-plugin}}
+\newcommand{\antJarDir}{\texttt{/usr/share/ant/lib/}}
+\newcommand{\createdJar}{\texttt{latex-maven-plugin-\versionID-antTask.jar}}
 
 \ifthenelse{\boolean{texFhtLoaded}}{%
   % no glossaries and no index with tex4ht 
@@ -254,21 +256,21 @@ These prerequisites are collected in Section~\ref{sec:prerequisites}.
 The ant-task is tested with \index{ant}
 %
 \begin{verbatim}
-Apache Ant(TM) version 1.9.4 compiled on September 11 2015}
+Apache Ant(TM) version 1.10.10 compiled on December 22 1969}
 \end{verbatim}
 %
-and the maven-plugin with 
+(of course the year is not correct but this is the version string
+displayed by that release) and the maven-plugin with 
 %
 \index{maven}
 \begin{verbatim}
-Apache Maven 3.3.9 \
-(bb52d8502b132ec0a5a3f4c09453c07478323dc5; 
-2015-11-10T17:41:47+01:00)
+Apache Maven 3.8.1 
 \end{verbatim}
 %
 Both, ant and maven are written in java and require a java installation. 
 The java\index{java} version used for tests 
-is \texttt{1.8.0\_101, vendor: Oracle Corporation}. 
+is \texttt{11.0.13, vendor: Oracle Corporation}
+but java 8 seems sufficient. 
 
 
 So, a java installation is the base for running either the ant-task 
@@ -284,7 +286,7 @@ The core just invokes various programs to do the actual work.
 \index{ant-task}
 
 Besides plain building of documentation, 
-this software also supports documentation development. 
+this software also supports development of documents. 
 \LaTeX{} and related programs are based on text files mainly 
 and so a good editor is required for development. 
 The author recommends and uses good old 
@@ -577,7 +579,7 @@ caption={The coordinates of this plugin}]
 </plugin>
 \end{lstlisting}
 %
-% TBD: add the plugin to mavencentral
+% TBD: add the plugin to maven central
 Unfortunately, this plugin did not yet make it into maven central.
 Thus one has to add the providers repository to the pom
 as shown in Listing~\ref{lst:srcRepo}. 
@@ -607,25 +609,43 @@ mvn latex:vrs
 \end{Verbatim}
 %
 which shall return meta info, above all the version of the plugin,
-which is
-% 
-\begin{Verbatim}
-\versionID,
-\end{Verbatim}
-%
 and a list all converters needed
-together with the actual versions and the expected versions.
-Note that not all converters need to be installed.
+together with the actual versions and the expected versions
+as displayed in Listing~\ref{lst:vrsOut}.
+Note that not all converters need to be installed, only the needed ones.
 For details see Section~\ref{sec:devel}.
 %TBD: maybe better split that section accordig to goals. 
+\medskip
 
 
-Likewise to install the ant-task within an ant-project, 
-the listing of a build file entry given in Chapter~\ref{chap:settings} 
-has to be added to the \texttt{build.xml}. 
-Also working with an ant project 
-conforming with maven conventions, 
-no explicit configuration is needed. 
+As you can see, the \texttt{taskdef}'s refer to java classes.
+Unlike maven which loads jars with the classes inside automatically
+from
+% 
+\begin{Verbatim}[fontsize=\small, commandchars=\\\{\}]
+\repo,
+\end{Verbatim}
+%
+the jar for the tasks, \createdJar,
+must be downloaded manually from
+%
+\begin{Verbatim}[fontsize=\small, commandchars=\\\{\}]
+\repo/eu/simuline.m2latex
+\end{Verbatim}
+%
+Moreover, ant expects the jar files in an according folder
+to be found.
+In my installation it is \antJarDir;
+as can be seen in the ant documentation,
+in general it is in folder \texttt{lib} in ant's installation directory. 
+
+Then the declaration of the \texttt{path} 
+and the two \texttt{taskdef}'s and targets
+of a build file entry given in Listing~\ref{lst:fullConfigAnt}
+on page \pageref{lst:fullConfigAnt} 
+have to be added to the local \texttt{build.xml}.
+Moreover, the two properties \texttt{antJarDir} and \texttt{createdJar}
+must be adapted and added to the build file also. 
 \index{ant-task}
 
 In both cases, add configuration, 
@@ -692,14 +712,14 @@ devoted to the form of the sources, including directory structure,
 \LaTeX-files and others, mainly graphic files included
 and a section, \ref{sec:stableUsage} on exporting into various formats.
 
-There is a very special usage, called information development,
+There is a very special usage, called development of documents,
 which means while the document is under construction.
 The features and goals tied to this phase
 are collected in Section~\ref{sec:devel}.
 
 In contrast, Section~\ref{sec:usageLifecycle}
 is on usage of the maven plugin within the lifecycles.
-This can be used during information development
+This can be used during development of documents
 but is more appropriate for small changes
 or when development finished at a stage. 
 
@@ -887,7 +907,7 @@ with graphic files which can be directly included into the \LaTeX-file
 and so it allows to run the \LaTeX-compiler on the latex main files 
 from within a development environment. 
 Thus the goal {\em graphics\/} is thus a vital feature 
-for information development. 
+for development of documentation. 
 
 
 Finally, there is another target for clearing the tex-source directory 
@@ -938,7 +958,7 @@ the above configuration is sufficient.
 Otherwise, parameters have to be given explicitly 
 overwriting the default values. 
 
-\section{Information development }\label{sec:devel}
+\section{Development of Documentation}\label{sec:devel}
 
 During development, it is comfortable, 
 to have the log-file in the same directory as the \LaTeX{} main file. 
@@ -1080,7 +1100,7 @@ where \texttt{xxx} is
 \texttt{ilg} for \texttt{makeindex}. 
 \end{itemize}
 
-The last goal regularly used for information development is {\em check}. 
+The last goal regularly used for development of documentation is {\em check}. 
 It is invoked via 
 % 
 \begin{Verbatim}
@@ -3239,7 +3259,7 @@ The default value is ``\texttt{.}''.
 Whether the tex source directory \texttt{\$texSrcProcDirectory} 
 shall be read recursively, 
 i.e.~including the sub-directories recursively. 
-This is set to \texttt{false} only during information development. 
+This is set to \texttt{false} only during development of documentation. 
 %The default value is 'true'.
 \end{minipage}
 } \\
