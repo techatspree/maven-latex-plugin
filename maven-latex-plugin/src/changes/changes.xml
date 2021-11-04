@@ -70,8 +70,9 @@
 	   and redesign: CreationalMojo.getTargetSet().
 	 - There must be a mojo for phase validate or initialize
 	   checking the most important things:
-	   - Whether the converters mentioned are registered.
-	     This refers to the commands to run and to the excluded converters.
+	 - Whether the converters mentioned are registered.
+	   This refers to the commands to run and to the excluded converters.
+	 - make it into maven central. Adapt manual accordingly. 
     -->
 
     <!-- TBD: rework on Converter.cmd2conv: 
