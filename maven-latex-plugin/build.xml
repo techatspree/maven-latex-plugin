@@ -72,6 +72,15 @@ After mvn clean ant build does not work.
 	   todir="${antJarDir}"/>
   </target>
   
+  <target name="link" 
+	  description="Copies the relevant jar-file defining the ant-task 
+		       to where ant finds it: 
+		       in the installation, not in the local environment. 
+		       This must be invoked as root. ">
+    <symlink link="${antJarDir}/${createdJar}"
+	     resource="${targetDir}/${createdJar}"/>
+  </target>
+  
   <target name="uninstall" 
 	  depends="jar"
 	  description="Deletes the relevant jar-file defining the ant-task 
@@ -79,15 +88,14 @@ After mvn clean ant build does not work.
 		       in the installation, not in the local environment. 
 		       This must be invoked as root. ">
        <delete file="${antJarDir}${createdJar}" />
-
+       <symlink action="delete" link="${antJarDir}${createdJar}"/>
   </target>
 
 
 
   <path id="latex.classpath">
-    <!--fileset dir="${basedir}/target"--> 
     <fileset dir="${antJarDir}"> 
-      <include name="latex-maven-plugin-${version}-antTask.jar"/>
+      <include name="${createdJar}"/>
     </fileset>
   </path>
 
