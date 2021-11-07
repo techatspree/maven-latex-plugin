@@ -14,7 +14,7 @@
 \newcommand{\groupId}{\texttt{eu.simuline.m2latex}}
 \newcommand{\artifactId}{\texttt{latex-maven-plugin}}
 \newcommand{\versionID}{\texttt{1.5-SNAPSHOT}}
-\newcommand{\repo}{\texttt{https://www.simuline.eu/public\_html/RepositoryMaven}}
+\newcommand{\repo}{\texttt{https://www.simuline.eu/RepositoryMaven}}
 \newcommand{\devSite}{\texttt{https://github.com/Reissner/maven-latex-plugin}}
 \newcommand{\antJarDir}{\texttt{/usr/share/ant/lib/}}
 \newcommand{\createdJar}{\texttt{latex-maven-plugin-\versionID-antTask.jar}}
@@ -225,7 +225,7 @@ as described in Chapter~\ref{chap:exceptionLogging}.
 
 The configuration of the maven plugin and of the ant-task 
 are given in Chapter~\ref{chap:listings}
-in Listing~\ref{lst:fullConfig} and in Listing~\ref{lst:fullConfig},
+in Listing~\ref{lst:fullConfig} and in Listing~\ref{lst:fullConfigAnt},
 respectively. 
 
 The author found some gaps, i.e.~desirable features 
@@ -557,28 +557,10 @@ are to determine the tex-engine (regardless the output format).
 
 \section{Setting pom.xml and build.xml}\label{sec:sgml}
 
-To install the maven-plugin within a given maven project, 
-the listing of a pom entry given in Chapter~\ref{chap:settings} 
-can be added to \texttt{pom.xml} and modified accordingly. 
-In a default maven project, 
-the default configuration is usable which creates pdf-documents and
-\gls{html}-sites. 
-The according entry to be added to the \texttt{pom.xml}
-is then just the one given in Listing~\ref{lst:coords}. 
-%
-%\lstset{language=xml, basicstyle=\small}
-\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
-escapechar=|,
-float, captionpos=b, label={lst:coords}, 
-caption={The coordinates of this plugin}]
-<!-- create html and pdf and other formats from latex -->
-<plugin>
-  <groupId>|\groupId|</groupId>
-  <artifactId>|\artifactId|</artifactId>
-  <version>|\versionID|</version>
-</plugin>
-\end{lstlisting}
-%
+If this software is used as a maven plugin,
+it need not explicitly be installed, maven itself does this by need
+based on the entries of the pom.
+
 % TBD: add the plugin to maven central
 Unfortunately, this plugin did not yet make it into maven central.
 Thus one has to add the providers repository to the pom
@@ -601,6 +583,99 @@ caption={The source repository for this plugin}]
 </project>
 \end{lstlisting}
 
+Then it can be used from command line,
+e.g. to create pdfs as \texttt{mvn latex:pdf}
+or for cleanup \texttt{mvn latex:clr} with with default configuration
+just adding the coordinates in the builts-plugin section of the pom
+as shown in Listing~\ref{lst:coords}. 
+%
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=b, label={lst:coords}, 
+caption={The coordinates of this plugin}]
+<project ...>
+  ...
+  <build>
+    ...
+    <plugins>
+      ...
+      <!-- create html and pdf and other formats from latex -->
+      <plugin>
+        <groupId>|\groupId|</groupId>
+        <artifactId>|\artifactId|</artifactId>
+        <version>|\versionID|</version>
+      </plugin>
+     ...
+   </plugins>
+    ...
+  </build>
+  ...
+</project>
+\end{lstlisting}
+
+
+To make the plugin available within a build,
+one has to add executions, e.g. as shown in Listing~\ref{lst:executions}:
+Typically, this plugin is used in the \texttt{site} lifecycle phase 
+to process latex sources,
+but it must also be used to cleanup the source directory
+in phase \texttt{clean},
+because during document development that directory may be poluted.
+Finally, it is recommended to add a check of the converter versions
+right in the phase \texttt{validate}.
+Note that typically one will use goal \texttt{cfg}
+to create documentation because this allows to configure the output formats,
+but it may be also perfectly appropriate to stick to a single format
+as \texttt{pdf}.
+Cleanup is recommended to make the individual runs of this plugin independent.
+Finally, it is recommended to check the validity of the installed converters.
+Note the special configuration for that task
+which seems appropriate to skip info output on the console
+and have warinings if something goes wrong. 
+
+
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=hb, label={lst:executions}, 
+caption={The executions of this plugin}]
+<plugin>
+  <groupId>|\groupId|</groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\versionID|</version>
+  <configuration>
+  ...
+  </configuration>
+  <executions>
+    <execution>
+      <id>process-latex-sources</id>
+      <!-- grp, dvi, pdf, html, rtf, odt, docx, txt, chk -->
+      <goals><goal>cfg</goal></goals>
+    </execution>
+    <execution>
+      <id>clear-latex-sources</id>
+      <goals><goal>clr</goal></goals>
+    </execution>
+    <execution>
+      <id>validate-converters</id>
+      <goals><goal>vrs</goal></goals>
+      <configuration>
+        <versionsWarnOnly>true</versionsWarnOnly>
+       </configuration>
+    </execution>
+  </executions>
+</plugin>
+\end{lstlisting}
+
+Note the section \texttt{configuration} in Listing~\ref{lst:executions}
+which is empty and can be skipped in a default configuration
+creating pdf and hmtl documentation.
+however, Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}
+lists the full configuration with default values
+and executions.
+Chapter~\ref{chap:settings} describes the settings individually.
+
 To check whether the installation of the plugin succeeded,
 in the directory of the pom command
 %
@@ -614,7 +689,7 @@ together with the actual versions and the expected versions
 as displayed in Listing~\ref{lst:vrsOut}.
 Note that not all converters need to be installed, only the needed ones.
 For details see Section~\ref{sec:devel}.
-%TBD: maybe better split that section accordig to goals. 
+%TBD: maybe better split that section according to goals. 
 \medskip
 
 
@@ -623,74 +698,105 @@ Unlike maven which loads jars with the classes inside automatically
 from
 % 
 \begin{Verbatim}[fontsize=\small, commandchars=\\\{\}]
-\repo,
+\repo
 \end{Verbatim}
 %
 the jar for the tasks, \createdJar,
 must be downloaded manually from
 %
-\begin{Verbatim}[fontsize=\small, commandchars=\\\{\}]
-\repo/eu/simuline.m2latex
+\begin{Verbatim}[fontsize=\scriptsize, commandchars=\\\{\}]
+\repo/eu/simuline/m2latex/\artifactId/\versionID
 \end{Verbatim}
 %
-Moreover, ant expects the jar files in an according folder
-to be found.
+Moreover, ant expects to find the jar files in an according folder.
 In my installation it is \antJarDir;
 as can be seen in the ant documentation,
 in general it is in folder \texttt{lib} in ant's installation directory. 
 
-Then the declaration of the \texttt{path} 
-and the two \texttt{taskdef}'s and targets
-of a build file entry given in Listing~\ref{lst:fullConfigAnt}
-on page \pageref{lst:fullConfigAnt} 
-have to be added to the local \texttt{build.xml}.
-Moreover, the two properties \texttt{antJarDir} and \texttt{createdJar}
-must be adapted and added to the build file also. 
+The ant builtfile is given in Listing~\ref{lst:fullConfigAnt}
+on page \pageref{lst:fullConfigAnt}.
+From that, one has to copy the following
+into the \texttt{build.xml} file in the current project:
+%
+\begin{itemize}
+\item The properties \texttt{antJarDir} and \texttt{createdJar}, 
+\item The path element with the id \texttt{latex.classpath}
+\item The taskdefs \texttt{latexCfg}  and \texttt{latex:Clr}
+\item The  targets \texttt{latex:cfg} and \texttt{latex:clr}
+\end{itemize}
 \index{ant-task}
 
-In both cases, add configuration, 
+As for the maven plugin, for the ant task, add configuration, 
 where a deviation from the default requires to do so. 
 
 
 
 \section{Installation from source}\label{sec:instSrc}
 
-To install from source, just clone from the repository by
+The first step to install from source, is to clone from the repository by
 %
 \begin{Verbatim}[commandchars=\\\{\}]
 git clone \devSite{}
 \end{Verbatim}
 %
 of course assuming that \texttt{git} has been installed.
-Then to install the maven-plugin, just type 
+Then change into the root repository where \texttt{pom.xml}
+for maven and also \texttt{built.xml} for ant are located. 
+
+To install the maven-plugin, ensure that maven is installed. 
+One is tempted just to type 
 %
 \begin{Verbatim}
 mvn clean install
 \end{Verbatim}
 %
-To install the ant-task, one has first to comment out in \texttt{build.xml} 
-the task definition \texttt{latex} and the target \texttt{latex:cfg}. 
-One may also adapt the lib-folder of the ant-installation, 
-i.e.~the property \texttt{antJarDir} where \texttt{ant.jar} resides. 
-Then just type \texttt{ant clean jar} 
-which creates the jar-file (property \texttt{createdJar}) defining the ant-task. 
-After that one may copy the created jar into folder \texttt{antJarDir}, 
-where ant finds it typing \texttt{sudo ant install}. 
+but this does not work since the plugin needs itself to be installed
+to perform even \texttt{clean}.
+To solve that problem just comment out all its executions
+in the local \texttt{pom.xml} by enclosing them in \texttt{<!--...-->}.
+In fact this is a minor bug, since, to be strict, only
+the executions for verification and clearing must be deactivated.
+For processing, it would be sufficient to add
+\texttt{<phase>site</phase>} to execution \texttt{process-latex-sources}.
+\medskip
+
+
+Since the author develops with maven,
+including the development of the ant task,
+the maven built, creates the file \createdJar{}
+defining the ant task.
+To this end, also \texttt{mvn clean package} is sufficient.
+After that, installation proceeds like described in Section~\ref{sec:sgml}
+copying that jar file ant's lib-folder where ant can find it.
+
+With root access and after having checked the proper paths,
+the build file \texttt{build.xml} can be used 
+to perform copy task by \texttt{ant install},
+to insert an according link by \texttt{ant link}
+to remove it again with \texttt{ant uninstall}.
+The build file \texttt{build.xml} works only
+if \createdJar{} is placed where ant can find it
+or if the parts are deactivated below the line
+%
+\begin{Verbatim}
+<!-- deactivate the following unless the ant task is installed already -->
+\end{Verbatim}
+
+I feel building with maven and linking the jar created
+is a very good way to develop the ant task,
+because after changes the new ant task is available immediately.
+
+For typical changes in the sources,
+it is possible to recompile and package the ant task
+by \texttt{ant jar} also cleanup is possible with \texttt{ant clean}.
+Finally, the ant task can be tested with \texttt{ant latex:cfg}
+and \texttt{ant latex:clr}. 
+
+In the long run, it should be possible to build the ant task from sources
+with ant alone.
 \index{ant-task}
 
-Note that, if maven is installed, the command \texttt{mvn clean install} 
-also creates the jar-file \texttt{createdJar} defining the ant-task. 
-Also with this method, one has to copy the jar-file defining the ant-task 
-later into ant's lib-folder. 
 
-After having installed the ant-task, 
-reactivate the taskdef \texttt{latex} and the target \texttt{latex:cfg} 
-and run \texttt{ant latex:cfg} to create this manual. 
-
-Mixing ant and maven builds is not so good. 
-One may always recover by just creating with maven. 
-
-\subsection{Test}
 
 \chapter{Usage of Plugin and Task}\label{chap:usage}
 
@@ -5472,16 +5578,16 @@ In \texttt{pom.xml} only text elements occur.
 
 The maven-plugin described here, 
 requires the definition in \texttt{pom.xml}
-given by Listing~\ref{lst:fullConfig}. 
+given by Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}. 
 
 %\lstset{language=xml, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[language=xml, basicstyle=\scriptsize,
-firstline=569, lastline=1505,
+firstline=569, lastline=1477,
 breaklines, showstringspaces=false,
 %float,
 captionpos=b, label={lst:fullConfig},
-caption={The full configuration of this maven plugin}]
+caption={The full configuration and executions of this maven plugin}]
 {../../../pom.xml}% chktex 11 
 
 It has to be placed in the build element where below dots are given. 
