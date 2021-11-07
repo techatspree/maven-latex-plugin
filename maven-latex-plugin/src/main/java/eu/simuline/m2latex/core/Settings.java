@@ -222,7 +222,7 @@ public class Settings {
      * represent the <code>null</code>-File. 
      * The default value is <code>null</code>. 
      */
-    @Parameter(name = "texPath")//, defaultValue = null
+    @Parameter(name = "texPath", defaultValue = "null")
     private File texPath = null;
 
     /**
@@ -231,7 +231,7 @@ public class Settings {
      * The default value is <code>true</code>. 
      */
     @Parameter(name = "cleanUp", defaultValue = "true")
-    private boolean cleanUp;
+    private boolean cleanUp = true;
 
     /**
      * This pattern is applied to file names 
@@ -1458,7 +1458,7 @@ public class Settings {
     }
 
     public boolean getReadTexSrcProcDirRec() {
-	return   this.readTexSrcProcDirRec;
+	return this.readTexSrcProcDirRec;
     }
 
     /**
