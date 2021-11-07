@@ -1332,7 +1332,19 @@ when commanding
 mvn clear
 \end{Verbatim}
 
-% TBD: maybe vrs or sth is tied to phase validate
+Finally, the goal \texttt{latex:vrs} displaying versions of converters
+is tied to the phase \texttt{validate} is is invoked when commanding
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+mvn validate
+\end{Verbatim}
+%
+which is invoked not only in installation, but also by the site plugin.
+This ensures, that the converters are checked for correct version
+before being used.
+Note that by default, \texttt{mvn latex:vrs} displays complete version info,
+whereas \texttt{mvn validate} only displays warnings if appropriate. 
+
 
 \section{The ant-tasks}\label{sec:usageAntTask}
 
@@ -3335,6 +3347,29 @@ Parameter        & Default  \\
 \bottomrule
 \caption{\label{tab:paramGen} General parameters}
 \endlastfoot%
+\texttt{versionsWarnOnly}  & \texttt {false}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Indicates whether the \texttt{VersionMojo} displays warnings only 
+or also creates infos. 
+Infos refer to the version of this plugin and also on its git commit, 
+but also on the versions of the converters found 
+and lists the converters excluded, i.e. those not used
+and thus not tested on version.
+
+Warnings are emitted e.g. 
+if the version of a converter does not fit the expectations,
+the version of a converter could not be retrieved,
+e.g. because it is not installed 
+or if the converter specified is unknown altogether. 
+This defaults to \texttt{false} displaying also info.
+
+The latter is appropriate for using in command line 
+\texttt{mvn latex:vrs}, whereas in builds by default 
+the pom overwrites this to have output only 
+in case something goes wrong.
+\end{minipage}
+} \\
 \texttt{texSrcDirectory}  & \texttt {src/site/tex}  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
@@ -5583,7 +5618,7 @@ given by Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}.
 %\lstset{language=xml, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[language=xml, basicstyle=\scriptsize,
-firstline=569, lastline=1477,
+firstline=569, lastline=1499,
 breaklines, showstringspaces=false,
 %float,
 captionpos=b, label={lst:fullConfig},
@@ -5608,7 +5643,6 @@ given by Listing~\ref{lst:fullConfigAnt}.
 %\lstset{language=xml, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[language=xml, basicstyle=\scriptsize,
-firstline=74, lastline=238,
 breaklines,
 %float,
 captionpos=b, label={lst:fullConfigAnt},
