@@ -573,6 +573,26 @@
 	<version>1.5-SNAPSHOT</version><!--uptodate?-->
 	
 	<configuration>
+	      <!-- Indicates whether the `VersionMojo` displays warnings only 
+		   or also creates infos. 
+		   Infos refer to the version of this plugin 
+		   and also on its git commit, 
+		   but also on the versions of the converters found 
+		   and lists the converters excluded, i.e. those not used
+		   and thus not tested on version.
+		   
+		   Warnings are emitted e.g. 
+		   if the version of a converter does not fit the expectations,
+		   the version of a converter could not be retrieved,
+		   e.g. because it is not installed 
+		   or if the converter specified is unknown altogether. 
+		   This defaults to `false` displaying also info. 
+
+		   The latter is appropriate for using in command line 
+		   `mvn latex:vrs`, whereas in builds by default 
+		   the pom overwrites this to have output only 
+		   in case something goes wrong. -->
+	      <!--versionsWarnOnly>false</versionsWarnOnly-->
           <settings>
             <!-- The latex source directory as a string 
 		 relative to $baseDirectory, 
