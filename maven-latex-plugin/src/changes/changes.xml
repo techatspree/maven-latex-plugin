@@ -96,7 +96,11 @@
      <release version="1.5-snapshot" 
 	     date="2020-01-01" 
 	     description="First release with change management 
-	     This includes version of this software but also of the converters used.">
+			  This includes version of this software but also of the converters used.">
+       <action dev="reissner" type="add">
+	 Added VersionMojo to phase validate.
+	 To that end, added configuration versionsWarnOnly
+	 and convertersExcluded.
        <action dev="reissner" type="add">
          Added validity checks on converters: registered, in correct category.
 	 In the course of this, added a lot of exceptions:
