@@ -73,6 +73,15 @@
 	 - Whether the converters mentioned are registered.
 	   This refers to the commands to run and to the excluded converters.
 	 - make it into maven central. Adapt manual accordingly. 
+	   see https://maven.apache.org/repository/guide-central-repository-upload.html
+	 - have a look at https://github.com/apache/maven-clean-plugin/ 
+	   and adapt the own plugin: e.g. test harness. 
+	 - https://maven.apache.org/plugins/maven-docck-plugin/
+	 - The ant task cannot be created from source using ant alone, 
+	   still maven is needed. 
+	   One of the major problems is, that the class Settings 
+	   depends on maven annotations. 
+	 - bugfix: in ant task texPath cannot be used. 
     -->
 
     <!-- TBD: rework on Converter.cmd2conv: 
