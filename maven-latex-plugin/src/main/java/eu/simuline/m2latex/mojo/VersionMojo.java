@@ -34,10 +34,9 @@ import java.util.SortedSet;
  * Displays version info of this plugin but above all on all converters 
  * (except makeindex). 
  */
-@Mojo(name = "vrs")
+@Mojo(name = "vrs", defaultPhase = LifecyclePhase.VALIDATE)
 // TBD: maybe verify
 // in fact, Metainfo can give more info than just versioning 
-//, defaultPhase = LifecyclePhase.CLEAN
 public class VersionMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 
@@ -70,7 +69,7 @@ public class VersionMojo extends AbstractLatexMojo {
 	try {
 	    // warnings: WMI01, WMI02, 
 	    // may throw build failure exception TSS05
-	    this.latexProcessor.printMetaInfo();
+	    this.latexProcessor.printMetaInfo(!this.getVersionsWarnOnly());
 	} catch (BuildFailureException e) {
 	    // may throw Exception TMI01, TMI02, TSS05
 	    throw new MojoFailureException(e.getMessage(), e.getCause());

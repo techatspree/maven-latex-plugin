@@ -1192,20 +1192,25 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * WMI01: If the version string of a converter cannot be read. 
      * WMI02: If the version of a converter is not as expected. 
+     *
+     * @param includeVersionInfo
+     *    whether to include plain version info; else warnings only.
      * @return
      *    whether a warning has been issued. 
      * @throws BuildFailureException
      *    <ul>
      *    <li>TMI01: if the stream to either the manifest file 
      *        or to a property file, either {@LINK #VERSION_PROPS_FILE} 
-     *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
+     *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} 
+     *           could not be created. </li>
      *    <li>TMI02: if the properties could not be read 
      *        from one of the two property files mentioned above. </li>
      *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
      *    </ul>
      */
-    public boolean printMetaInfo() throws BuildFailureException {
-	return this.metaInfo.printMetaInfo();
+    public boolean printMetaInfo(boolean includeVersionInfo)
+	throws BuildFailureException {
+	return this.metaInfo.printMetaInfo(includeVersionInfo);
     }
 
     /**

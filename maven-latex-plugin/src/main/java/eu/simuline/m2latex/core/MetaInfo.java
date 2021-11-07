@@ -743,9 +743,10 @@ public class MetaInfo {
     /**
      * Format string used in {@link #printMetaInfo()} 
      * to define a table of converters and their versions
-     * with rows (warning), converter, actual version and allowed version interval.  
+     * with rows (warning), converter, version quote, 
+     * actual version and allowed version interval.  
      */
-    private final static String TOOL_VERSION_FORMAT = "%s%-15s '%s'%s%s";
+    private final static String TOOL_VERSION_FORMAT = "%s%-15s %s '%s'%s%s";
 
     private final Settings settings;
 
@@ -757,92 +758,112 @@ public class MetaInfo {
      * <p>
      * WMI01: If the version string of a converter cannot be read. 
      * WMI02: If the version of a converter is not as expected. 
+     *
+     * @param includeVersionInfo
+     *    whether to include plain version info; else warnings only.
      * @return
      *    whether a warning has been issued. 
      * @throws BuildFailureException
      *    <ul>
      *    <li>TMI01: if the stream to either the manifest file 
      *        or to a property file, either {@LINK #VERSION_PROPS_FILE} 
-     *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
+     *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} 
+     *           could not be created. </li>
      *    <li>TMI02: if the properties could not be read 
      *        from one of the two property files mentioned above. </li>
      *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
      *    </ul>
      */
-    public boolean printMetaInfo() throws BuildFailureException {
-	ManifestInfo manifestInfo = new ManifestInfo();
-	// TBC: how does maven determine that version?? 
-	//String versionMf = manifestInfo.getImplVersion();
-	//System.out.println("mf version: '" + versionMf + "'");
-	this.log.info("Manifest properties: ");
-	for (String line : manifestInfo.toStringArr()) {
-	    this.log.info(line);
+    public boolean printMetaInfo(boolean includeVersionInfo)
+	throws BuildFailureException {
+
+	String versionQuote = "";
+	if (includeVersionInfo) {
+	    ManifestInfo manifestInfo = new ManifestInfo();
+	    // TBC: how does maven determine that version?? 
+	    //String versionMf = manifestInfo.getImplVersion();
+	    //System.out.println("mf version: '" + versionMf + "'");
+	    this.log.info("Manifest properties: ");
+	    for (String line : manifestInfo.toStringArr()) {
+		this.log.info(line);
+	    }
+
+	    String mavenDir = META_FOLDER + "maven/";
+	    URL url = MetaInfo.class.getClassLoader().getResource(mavenDir);
+	    //	try {
+	    //	    //System.out.println("path: "+url);
+	    //	    //System.out.println("path: "+url.toURI());
+	    //	    //File[] files = new File(url.toURI()).listFiles();
+	    //	    //System.out.println("cd maven; ls: "+java.util.Arrays.asList(files));
+	    //	} catch (URISyntaxException e) {
+	    //	    // TODO Auto-generated catch block
+	    //	    throw new IllegalStateException("Found unexpected type of url: "+url);
+	    //	}
+	    String propertyFileName = META_FOLDER
+		+ "maven/"
+		+ "eu.simuline.m2latex/"
+		+ "latex-maven-plugin/"
+		+ "pom.properties";
+	    this.log.info("pom properties:");
+	    Properties properties = getProperties(propertyFileName);
+	    assert "[groupId, artifactId, version]"
+		.equals(properties.stringPropertyNames().toString())
+		: "Found unexpected properties ";
+	    String coordGroupId    = properties.getProperty("groupId");
+	    String coordArtifactId = properties.getProperty("artifactId");
+	    String coordVersion    = properties.getProperty("version");
+	
+	    this.log.info("coordinate.groupId:    '" + coordGroupId    + "'");
+	    this.log.info("coordinate.artifactId: '" + coordArtifactId + "'");
+	    this.log.info("coordinate.version:    '" + coordVersion    + "'");
+
+	    //	propertyFileName = "META-INF/"
+	    //	    + "maven/"
+	    //	    + "eu.simuline.m2latex/"
+	    //	    + "latex-maven-plugin/"
+	    //	    + "pom.xml";
+	    //	url = this.getClass().getClassLoader()
+	    //	    .getResource(propertyFileName);
+	    //	System.out.println("url:"+url);
+	    //	MavenXpp3Reader reader = new MavenXpp3Reader();
+	    //	Model model = reader.read(new InputStreamReader(url.openStream()));
+	
+
+	    GitProperties gitProperties = new GitProperties();
+	    this.log.info("git properties: ");
+	    gitProperties.log();
+	    String gitBuildVersion = gitProperties.getBuildVersion();
+	    //System.out.println("git.build.version: " + gitBuildVersion);
+	    assert gitBuildVersion.equals(manifestInfo.getImplVersion());
+
+	    //	String gitCommitIdDescribe = gitProperties.getCommitIdDescribe();
+	    //	System.out.println("git.commit.id.describe: " + gitCommitIdDescribe);
+	    //	String gitBuildTime = gitProperties.getBuildTime();
+	    //	System.out.println("git.build.time: " + gitBuildTime);
+
+	    // TBD: rework; this is just the beginning 
+	    //	System.out.println("version properties of converters: ");
+	    //	Properties properties = getProperties("version.properties");
+	    //
+	    //	System.out.println("version.makeindex:"
+	    //		   +properties.getProperty("version.makeindex"));
+
+
+	    
+	    // headlines 
+	    this.log.info("tool versions: ");
+	    this.log.info(String.format(TOOL_VERSION_FORMAT, 
+					"?warn?    ",
+					"command",
+					versionQuote,
+					"actual version",
+					"(not)in",
+					"[expected version interval]"));
+	} else {
+	    versionQuote = "version ";
 	}
 
-	String mavenDir = META_FOLDER + "maven/";
-	URL url = MetaInfo.class.getClassLoader().getResource(mavenDir);
-//	try {
-//	    //System.out.println("path: "+url);
-//	    //System.out.println("path: "+url.toURI());
-//	    //File[] files = new File(url.toURI()).listFiles();
-//	    //System.out.println("cd maven; ls: "+java.util.Arrays.asList(files));
-//	} catch (URISyntaxException e) {
-//	    // TODO Auto-generated catch block
-//	    throw new IllegalStateException("Found unexpected type of url: "+url);
-//	}
-	String propertyFileName = META_FOLDER
-	    + "maven/"
-	    + "eu.simuline.m2latex/"
-	    + "latex-maven-plugin/"
-	    + "pom.properties";
-	this.log.info("pom properties:");
-	Properties properties = getProperties(propertyFileName);
-	assert "[groupId, artifactId, version]"
-	    .equals(properties.stringPropertyNames().toString())
-	    : "Found unexpected properties ";
-	String coordGroupId    = properties.getProperty("groupId");
-	String coordArtifactId = properties.getProperty("artifactId");
-	String coordVersion    = properties.getProperty("version");
 	
-	this.log.info("coordinate.groupId:    '" + coordGroupId    + "'");
-	this.log.info("coordinate.artifactId: '" + coordArtifactId + "'");
-	this.log.info("coordinate.version:    '" + coordVersion    + "'");
-
-//	propertyFileName = "META-INF/"
-//	    + "maven/"
-//	    + "eu.simuline.m2latex/"
-//	    + "latex-maven-plugin/"
-//	    + "pom.xml";
-//	url = this.getClass().getClassLoader()
-//	    .getResource(propertyFileName);
-//	System.out.println("url:"+url);
-//	MavenXpp3Reader reader = new MavenXpp3Reader();
-//	Model model = reader.read(new InputStreamReader(url.openStream()));
-	
-
-	GitProperties gitProperties = new GitProperties();
-	this.log.info("git properties: ");
-	gitProperties.log();
-	String gitBuildVersion = gitProperties.getBuildVersion();
-	//System.out.println("git.build.version: " + gitBuildVersion);
-	assert gitBuildVersion.equals(manifestInfo.getImplVersion());
-
-//	String gitCommitIdDescribe = gitProperties.getCommitIdDescribe();
-//	System.out.println("git.commit.id.describe: " + gitCommitIdDescribe);
-//	String gitBuildTime = gitProperties.getBuildTime();
-//	System.out.println("git.build.time: " + gitBuildTime);
-
-// TBD: rework; this is just the beginning 
-//	System.out.println("version properties of converters: ");
-//	Properties properties = getProperties("version.properties");
-//
-//	System.out.println("version.makeindex:"
-//		   +properties.getProperty("version.makeindex"));
-
-	// headlines 
-	this.log.info("tool versions: ");
-	this.log.info(String.format(TOOL_VERSION_FORMAT, 
-		"?warn?    ", "command", "actual version", "(not)in", "[expected version interval]"));
 
 	Properties versionProperties = getProperties(VERSION_PROPS_FILE);
 	if (versionProperties.size() > Converter.values().length) {
@@ -889,7 +910,8 @@ public class MetaInfo {
 	    }
 
 	    logMsg = String.format(TOOL_VERSION_FORMAT,
-		    warn, cmd+":", actVersionObj.getString(), incl, expVersion);
+				   warn, cmd+":", versionQuote,
+				   actVersionObj.getString(), incl, expVersion);
 //	    this.log.info("actVersion: "+actVersionObj.getSegments());
 //	    this.log.info("expVersion: "+expVersionObj.getSegments());
 //	    this.log.info("actVersion: "+actVersionObj.getSegmentsAsStrings());
@@ -898,15 +920,17 @@ public class MetaInfo {
 	    if (doWarn) {
 		this.log.warn(logMsg);
 	    } else {
-		this.log.info(logMsg);
+		if (includeVersionInfo) {
+		    this.log.info(logMsg);
+		}
 	    }
 	    doWarnAny |= doWarn;
 	} // for 
 
-	if (!convertersExcluded.isEmpty()) {
+	if (includeVersionInfo && !convertersExcluded.isEmpty()) {
 	    this.log.info("excluded tools: ");
 	    this.log.info(Converter.toCommandsString(convertersExcluded));
 	}
 	return doWarnAny;
-    }
+   }
 }
