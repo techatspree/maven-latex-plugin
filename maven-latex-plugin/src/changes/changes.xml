@@ -82,6 +82,9 @@
 	   One of the major problems is, that the class Settings 
 	   depends on maven annotations. 
 	 - bugfix: in ant task texPath cannot be used. 
+	   The problem seems in Commandexecutor line 250 around: 
+	   fig2dev is invoked as /home/ernst/...../fig2dev with complete path 
+	   but in ant task only. 
     -->
 
     <!-- TBD: rework on Converter.cmd2conv: 
