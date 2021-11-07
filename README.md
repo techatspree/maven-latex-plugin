@@ -152,8 +152,8 @@ There is an according ant task and a maven goal.
 Analyzing the log file created by the converters, 
 the '**LaTeX builder**' displays errors and warnings, e.g. overfull boxes. 
 Also based on the log file, it reruns the latex converter by need. 
-So the aim is that if compilation is without error or warning, 
-the output is valid and perfect. 
+So the aim is
+that **if compilation is without error or warning, the output is valid and perfect.**
 
 Another aspect is check of sources which is available 
 through the maven goal chk. 
@@ -388,7 +388,7 @@ Tikz/pgf provide a superset of the features of xfig.
 
 
 
-## The latex-maven-plugin <a name='ss:mavenPlugin'>
+## How to use the latex-maven-plugin <a name='ss:mavenPlugin'>
 
 Goals `cfg` to create, `clr` to cleanup as described 
 in [Section 'Cleanup after creation'](sss:featuresCleanup). 
@@ -398,7 +398,7 @@ mvn latex:cfg
 ```
 These goals are in a one-to-one relation 
 to an according ant task 
-described in [Section 'The latex ant tasks'](ss:antTasks).
+described in [Section 'How to use the latex ant tasks'](ss:antTasks).
 
 The other goals of the maven plugin go beyond ant functionality. 
 - there are separate goals to create artifacts in a specific format
@@ -410,7 +410,7 @@ The other goals of the maven plugin go beyond ant functionality.
   This is used mainly during development of the documents: 
   If all graphics is present, one can go on with an IDE 
   without this plugin. 
-<!-- - goal `vrs` checks the versions -->
+- goal `vrs` checks the versions of the converters. 
 
 A maven plugin is just an interface between maven 
 and the application(s) doing all the work. 
@@ -427,46 +427,89 @@ Thus one has to add the providers repository to the pom:
     <repository>
       <id>publicRepoAtSimuline</id>
       <name>repo at simuline</name>
-      <url>ftp://www.simuline.eu/public_html/RepositoryMaven</url>
+      <url>https://www.simuline.eu/public_html/RepositoryMaven</url>
     </repository>
   </repositories>
   ...
 </project>
 ```
 
-Then it can be used within a build just with coordinates 
-and in many cases without configuration. 
+Then it can be used from command line,
+e.g. to create pdfs as `mvn latex:pdf`
+or for cleanup `mvn latex:clr` with with default configuration:
 
 ```
 <project ...>
   ...
   <build>
+    ...
     <plugins>
+      ...
       <plugin>
         <groupId>eu.simuline.m2latex</groupId>
         <artifactId>latex-maven-plugin</artifactId>
         <version>1.5-SNAPSHOT</version> 
       </plugin>
-    </plugins>
+      ...
+   </plugins>
+    ...
   </build>
   ...
 </project>
 ```
 
+To make the plugin available within a build,
+one has to add executions, e.g. as listed below.
+The execution
+- `process-latex-sources` is to process latex sources as with `mvn latex:cfg`,
+- `clear-latex-sources` is to clean input folders from created files
+  as with `mvn latex:clr`
+- `validate-converters` is recommended to ensure
+  that the converters used by the plugin are checked for their versions
+  as with `mvn latex:vrs`.
+
+Note that, in order to install the plugin from the sources
+for development of the plugin itself,
+the executions must be deactivated, because the plugin is invoked
+in several phases of the build. 
+
+```
+<plugin>
+  <groupId>|\groupId|</groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\versionID|</version>
+  <configuration>
+  ...
+  </configuration>
+  <executions>
+    <execution>
+      <id>process-latex-sources</id>
+      <!-- grp, dvi, pdf, html, rtf, odt, docx, txt, chk -->
+      <goals><goal>cfg</goal></goals>
+    </execution>
+    <execution>
+      <id>clear-latex-sources</id>
+      <goals><goal>clr</goal></goals>
+    </execution>
+    <execution>
+      <id>validate-converters</id>
+      <goals><goal>vrs</goal></goals>
+      <configuration>
+        <versionsWarnOnly>true</versionsWarnOnly>
+       </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
+
+In the above declaration, the section `configuration`
+is left empty and can be omitted completely.
+This may be appropriate for many use cases
+but in case of case the plugin is broadly configurable. 
 
 The following code snippet shows all possible configuration settings with
 their default values. 
-In most cases, the plugin is fine without explicit configuration. 
 
-Note that the tricky trick is only when developping this plugin. 
-<!--- 
-this shall be solved in another way. 
-Maybe by a lower version or sth. 
-
-Also very bad that this document depends on some other files 
-and so no single source principle realized. 
-
--->
 
 ```
       <!-- create html and pdf and other formats from latex -->
@@ -497,15 +540,15 @@ and so no single source principle realized.
 
 	    <!-- Whether the tex source directory $texSrcProcDirectory 
 		 shall be read recursively, 
-		 i.e. including the subdirectories recursively. 
+		 i.e. including the subdirectories. 
 		 This is set to 'false' only during information development. 
 		 The default value is 'true'. -->
-	    <readTexSrcProcDirRec>false</readTexSrcProcDirRec>
+	    <readTexSrcProcDirRec>true</readTexSrcProcDirRec>
 
            <!-- The artifacts generated by $latex2pdfCommand 
 		will be copied to this folder 
 		relative to $targetSiteDirectory 
-		 which is by default '$targetDirectory/site' on Unix systems. 
+		which is by default '$targetDirectory/site' on Unix systems. 
 		The default value is '.'.  -->
             <outputDirectory>.</outputDirectory>
 
@@ -514,6 +557,17 @@ and so no single source principle realized.
 		 Allowed values are pdf, html, txt, odt and docx. 
 		 The default value is 'pdf, html'. -->
 	    <targets>pdf</targets><!-- , html -->
+
+	    <!-- A comma separated list of excluded {@link Converter}s 
+		 given by their command, i.e. by {@link Converter#getCommand()}
+		 returned as a set by {@link #getConvertersExcluded()}. 
+		 Excluded converters need not be installed. 
+		 They don't show up in the version check of target 'vrs' 
+		 and of course they are not allowed to be used. 
+		 By default, this list is empty. -->
+	    <convertersExcluded></convertersExcluded>
+	    <!--convertersExcluded>xindy, upmendex</convertersExcluded-->
+
 
 	    <!-- The pattern to be applied to the contents of tex-files 
 
@@ -552,7 +606,7 @@ NOT QUITE: to the beginning
 		Note that in the pom, <texPath /> 
 		and even <texPath>    </texPath> represent the null-File. 
 		The default value is null. -->
-            <texPath /> 
+            <texPath/> 
 
             <!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
@@ -1392,15 +1446,33 @@ here is a bug affecting goal odt:
       </plugin>
 ```
 
-## The latex ant tasks <a name='ss:antTasks'>
-
-TBD
+## How to use the latex ant tasks <a name='ss:antTasks'>
 
 This software provides two ant tasks: one for creation of artifacts 
 and another one to clean them  up. 
 Note that the according maven plugin 
 described in [Section 'The latex-maven-plugin'](ss:mavenPlugin) 
-provides more functionality than this. 
+provides more functionality than this.
+
+Unlike the maven plugin, which is installed by maven automatically,
+the according ant plugin must be installed manually.
+One way is to download the jar file
+
+latex-maven-plugin-1.5.SNAPSHOT-antTask.jar,
+
+or whatever version from 
+
+https://www.simuline.eu/RepositoryMaven/eu/simuline/m2latex/latex-maven-plugin-1.5.SNAPSHOT
+
+or to download the soruces from
+
+https://github.com/Reissner/maven-latex-plugin,
+
+build with maven which creates the abovementioned jar file in the target folder.
+
+In any case, the installation is just by copying that jar file
+into the `lib` folder of the local ant installation.
+For details see ant's documentation. 
 
 
 
