@@ -1480,9 +1480,10 @@ public class Settings {
      * Returns the set of targets. 
      *
      * @return
-     *     The set of targets. 
-     * @throws BuildFailureException 
-     *    TSS04 if the target set is not a subset of the set given by {@link Target}. 
+     *     The set of targets.
+     * @throws BuildFailureException
+     *    TSS04 if the target set is not a subset
+     *    of the set given by {@link Target}.
      */
     public SortedSet<Target> getTargetSet() throws BuildFailureException {
 	// TreeSet is sorted. maybe this determines ordering of targets. 
@@ -1523,7 +1524,8 @@ public class Settings {
      *    TSS05 if set of converters excluded from usage 
      *    is not a subset of the set given by {@link Converter}. 
      */
-    public SortedSet<Converter> getConvertersExcluded() throws BuildFailureException {
+    public SortedSet<Converter> getConvertersExcluded()
+	throws BuildFailureException {
 	SortedSet<Converter> convSet = new TreeSet<Converter>();
 	if (this.convertersExcluded.isEmpty()) {
 	    return convSet;
@@ -1533,8 +1535,10 @@ public class Settings {
 	    Converter conv = Converter.cmd2Conv(convSeq[idx]);
 	    if (conv == null) {
 		// Here, the converter given is unknown. 
-		throw new BuildFailureException("TSS05: The excluded converters '" +
-		this.convertersExcluded + "' should form a subset of the registered converters '" +
+		throw new BuildFailureException
+		    ("TSS05: The excluded converters '" +
+		this.convertersExcluded +
+		     "' should form a subset of the registered converters '" +
 		Converter.toCommandsString() + "'. ");
 	    }
 	    convSet.add(conv);
@@ -1600,6 +1604,11 @@ public class Settings {
 	return  this.patternCreatedFromLatexMain;
     }
 
+    // for ant task only 
+    public String getFig2devCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.Fig2Dev);
+    }
+
     public String getFig2devGenOptions() {
         return  this.fig2devGenOptions;
     }
@@ -1612,22 +1621,46 @@ public class Settings {
         return  this.fig2devPdfEpsOptions;
     }
 
+    // for ant task only 
+    public String getGnuplotCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.Gnuplot2Dev);
+    }
+
     public String getGnuplotOptions() {
         return  this.gnuplotOptions;
+    }
+
+    // for ant task only 
+    public String getMetapostCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.MetaPost);
     }
 
     public String getMetapostOptions() {
         return  this.metapostOptions;
     }
 
+   // for ant task only 
+    public String getSvg2devCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.Svg2Dev);
+    }
+
     public String getSvg2devOptions() {
 	return  this.svg2devOptions;
+    }
+
+    // for ant task only 
+    public String getEbbCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.EbbCmd);
     }
 
     public String getEbbOptions() {
         return  this.ebbOptions;
     }
 
+    // for ant task only 
+    public String getLatex2pdfCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.LaTeX);
+    }
 
     // FIXME: to be renamed: texOptions 
     public String getLatex2pdfOptions() {
@@ -1657,6 +1690,11 @@ public class Settings {
 
     public     LatexDev getPdfViaDvi() {
 	return LatexDev.   devViaDvi(this.pdfViaDvi);
+    }
+
+    // for ant task only 
+    public String getDvi2pdfCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.Dvi2Pdf);
     }
 
     public String getDvi2pdfOptions() {
@@ -1708,6 +1746,11 @@ public class Settings {
 	return cmdName;
     }
 
+    // for ant task only 
+    public String getBibtexCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.BibTeX);
+    }
+
     public String getBibtexOptions() {
         return  this.bibtexOptions;
     }
@@ -1718,6 +1761,11 @@ public class Settings {
 
     public String getPatternWarnBibtex() {
 	return  this.patternWarnBibtex;
+    }
+
+    // for ant task only 
+    public String getMakeIndexCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.MakeIndex);
     }
 
     public String getMakeIndexOptions() {
@@ -1736,8 +1784,18 @@ public class Settings {
 	return this.patternReRunMakeIndex;
     }
 
+    // for ant task only 
+    public String getSplitIndexCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.SplitIndex);
+    }
+
     public String getSplitIndexOptions() {
 	return  this.splitIndexOptions;
+    }
+
+    // for ant task only 
+    public String getMakeGlossariesCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.MakeGlossaries);
     }
 
     public String getMakeGlossariesOptions() {
@@ -1780,16 +1838,35 @@ public class Settings {
 	return  this.patternT4htOutputFiles;
     }
 
+    // for ant task only 
+    public String getLatex2rtfCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.LaTeX2Rtf);
+    }
+
     public String getLatex2rtfOptions() {
         return  this.latex2rtfOptions;
+    }
+
+    public String getOdt2docCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.Odt2Doc);
     }
 
     public String getOdt2docOptions() {
 	return  this.odt2docOptions;
     }
 
+    // for ant task only 
+    public String gettPdf2txtCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.Pdf2Txt);
+    }
+
     public String getPdf2txtOptions() {
         return  this.pdf2txtOptions;
+    }
+
+     // for ant task only 
+   public String getChkTexCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.LatexChk);
     }
 
     public String getChkTexOptions() {
@@ -1867,6 +1944,10 @@ public class Settings {
 	this.targets = targets.trim();
     }
 
+    public void setConvertersExcluded(String convertersExcluded) {
+	this.convertersExcluded = convertersExcluded;
+    }
+
     // setter method for patternLatexMainFile in maven 
     // trims parameter before setting 
     public void setPatternLatexMainFile(String patternLatexMainFile) {
@@ -1922,7 +2003,7 @@ public class Settings {
    	}
     }
 
-    // note: getter are checked whereas setters are not. 
+    // note: setters are required for ant tasks 
     public void setFig2devCommand(String fig2devCommand) {
         this.fig2devCommand = fig2devCommand;
     }
@@ -2030,7 +2111,6 @@ public class Settings {
    	}
     }
 
- 
     // setter method for patternErrLatex in maven 
     public void setPatternErrLatex(String patternErrLatex) {
 	this.patternErrLatex = patternErrLatex;
@@ -2123,10 +2203,10 @@ public class Settings {
 	this.maxNumReRunsLatex = maxNumReRunsLatex;
     }
 
-
     public void setBibtexCommand(String bibtexCommand) {
         this.bibtexCommand = bibtexCommand;
     }
+
     public void setBibtexOptions(String bibtexOptions) {
         this.bibtexOptions = bibtexOptions
 	    .replaceAll("(\t|\n| )+", " ").trim();
@@ -2171,7 +2251,6 @@ public class Settings {
    	    Settings.this.setPatternWarnBibtex(pattern);
    	}
     }
-
 
     public void setMakeIndexCommand(String makeIndexCommand) {
         this.makeIndexCommand = makeIndexCommand;
@@ -2295,7 +2374,6 @@ public class Settings {
    	}
     }
 
- 
     public void setTex4htCommand(String tex4htCommand) {
         this.tex4htCommand = tex4htCommand;
     }
@@ -2303,7 +2381,7 @@ public class Settings {
     public void setTex4htStyOptions(String tex4htStyOptions) {
 	this.tex4htStyOptions = tex4htStyOptions
 	    .replaceAll("(\t|\n| )+", " ").trim();
-   }
+    }
 
     public void setTex4htOptions(String tex4htOptions) {
 	this.tex4htOptions = tex4htOptions
@@ -2348,17 +2426,18 @@ public class Settings {
 
     public void setOdt2docCommand(String odt2docCommand) {
         this.odt2docCommand = odt2docCommand;
-     }
+    }
 
     public void setOdt2docOptions(String odt2docOptions) {
         this.odt2docOptions = odt2docOptions
 	    .replaceAll("(\t|\n| )+", " ").trim();
-     }
+    }
 
     public void setPdf2txtCommand(String pdf2txtCommand) {
         this.pdf2txtCommand = pdf2txtCommand;
     }
 
+    // getter commands: for ant task only. 
     public void setPdf2txtOptions(String pdf2txtOptions) {
         this.pdf2txtOptions = pdf2txtOptions
 	    .replaceAll("(\t|\n| )+", " ").trim();
@@ -2373,7 +2452,6 @@ public class Settings {
 	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
-
     public String toString() {
         StringBuilder sb = new StringBuilder();
 	// directories and related 
@@ -2386,6 +2464,7 @@ public class Settings {
  	sb.append(", outputDirectory=")     .append(this.outputDirectory);
 	// general parameters
  	sb.append(", targets=")             .append(this.targets);
+ 	sb.append(", convertersExcluded=")  .append(this.convertersExcluded);
  	sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
         sb.append(", texPath=")             .append(this.texPath);
 	sb.append(", cleanUp=")             .append(this.cleanUp);
