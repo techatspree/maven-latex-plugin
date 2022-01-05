@@ -8,11 +8,11 @@ all LaTeX documents `*.tex` into desired output format.
 The maven plugin and the ant task, 
 both pieces of software share the same code base, 
 called the '**LaTeX builder**', 
-and provides its (common) features. 
+and provides its (common) features.
 Whereas the features implemented are outlined in the sequel 
-in [Section 'Features'](ss:features) 
+in [Section 'Features'](#ss:features)
 the features to come are collected in 
-[Section 'Feature Requests'](ss:featureRequests). 
+[Section 'Feature Requests'](#ss:featureRequests).
 
 
 Also note that the full manual of this software is written in LaTeX 
@@ -24,11 +24,11 @@ https://www.simuline.eu/LatexMavenPlugin/manualLatexMavenPlugin.pdf.
 and then linked also from this pla. -->
 
 For specific pieces of information on installation and usage, 
-we refer to ['The latex-maven-plugin' Section](ss:mavenPlugin) 
+we refer to ['The latex-maven-plugin' Section](#ss:mavenPlugin)
 for the maven plugin 
-and to ['The latex ant tasks' Section](ss:antTasks) for the ant tasks. 
+and to ['The latex ant tasks' Section](#ss:antTasks) for the ant tasks. 
 In addition, the [pom file](./maven-latex-plugin/pom.xml) 
-given in ['The latex-maven-plugin' Section](ss:mavenPlugin) 
+given in ['The latex-maven-plugin' Section](#ss:mavenPlugin)
 and the [build file](./maven-latex-plugin/build.xml) 
 illustrate installation and usage. 
 
@@ -51,13 +51,13 @@ Contribute: https://github.com/akquinet/maven-latex-plugin/wiki/Contribute
 -->
 
 
-Section [Features](ss:features) describes the features of the converter 
+Section [Features](#ss:features) describes the features of the converter 
 independently of context of maven or ant. 
 As the '**LaTeX builder**' is merely a bundle of converters 
 to offer an interface to maven and to ant, 
 it relies on several converters doing the proper work, 
 as e.g. `pdflatex` to convert latex into pdf. 
-Section [Installation](ss:installation) 
+Section [Installation](#ss:installation)
 is about installation of these converters. 
 
 ## Features <a name='ss:features'>
@@ -91,7 +91,7 @@ to provide good conversions in formats other than
 - ... 
 - log file with the result of stylecheck for latex sources. 
 
-For further plans see [here](ss:featureRequests). 
+For further plans see [here](#ss:featureRequests). 
 
 
 ### Support for development of sources <a name='sss:featuresDevSrc'>
@@ -114,7 +114,7 @@ The '**LaTeX builder**' can use these intermediate files
 as it creates these files also in the working directory 
 and can also perform a cleanup 
 needed in a build process as described in 
-[Section 'Cleanup after creation'](sss:featuresCleanup). 
+[Section 'Cleanup after creation'](#sss:featuresCleanup). 
 
 When starting development of a document with a lot of graphics 
 from a clean working directory 
@@ -135,7 +135,7 @@ both of maven and of ant,
 there is a maven goal and an ant task to remove the intermediate files 
 in the working directory which is the directory of the source documents. 
 For details see 
-[Section 'Support for development of sources'](sss:featuresDevSrc). 
+[Section 'Support for development of sources'](#sss:featuresDevSrc). 
 
 
 ### Inclusion of bibliographies, indices and similar content <a name='sss:featuresLists'>
@@ -180,7 +180,7 @@ Note that there is a maven goal `grp` to create the graphics files only.
 
 ## Feature Requests <a name='ss:featureRequests'>
 
-Beyond the features presented in [Section 'Features'](ss:features), 
+Beyond the features presented in [Section 'Features'](#ss:features), 
 further features are planned for future releases: 
 - Currently, this software consists of the core component **LaTeX builder**, 
   a maven plugin and an ant task. 
@@ -224,8 +224,8 @@ further features are planned for future releases:
 Of course, to run the maven plugin one does need maven 
 and accordingly for the ant task one needs ant. 
 The details of integration in maven and ant 
-are given in Sections [The latex-maven-plugin](ss:mavenPlugin) 
-and [The latex ant tasks](ss:antTasks) and their subsections. 
+are given in Sections [The latex-maven-plugin](#ss:mavenPlugin) 
+and [The latex ant tasks](#ss:antTasks) and their subsections. 
 
 This section is more about the converter used by the '**LaTeX builder**'. 
 We provide the executables and the packages with versions tested. 
@@ -391,14 +391,14 @@ Tikz/pgf provide a superset of the features of xfig.
 ## How to use the latex-maven-plugin <a name='ss:mavenPlugin'>
 
 Goals `cfg` to create, `clr` to cleanup as described 
-in [Section 'Cleanup after creation'](sss:featuresCleanup). 
+in [Section 'Cleanup after creation'](#sss:featuresCleanup). 
 Invocation is e.g. as 
 ```
 mvn latex:cfg
 ```
 These goals are in a one-to-one relation 
 to an according ant task 
-described in [Section 'How to use the latex ant tasks'](ss:antTasks).
+described in [Section 'How to use the latex ant tasks'](#ss:antTasks).
 
 The other goals of the maven plugin go beyond ant functionality. 
 - there are separate goals to create artifacts in a specific format
@@ -414,7 +414,7 @@ The other goals of the maven plugin go beyond ant functionality.
 
 A maven plugin is just an interface between maven 
 and the application(s) doing all the work. 
-We refer the reader to [Section 'Installation'](ss:installation) 
+We refer the reader to [Section 'Installation'](#ss:installation) 
 for preparatory installations. 
 
 Unfortunately, this plugin did not yet make it into maven central. 
@@ -1451,7 +1451,7 @@ here is a bug affecting goal odt:
 This software provides two ant tasks: one for creation of artifacts 
 and another one to clean them  up. 
 Note that the according maven plugin 
-described in [Section 'The latex-maven-plugin'](ss:mavenPlugin) 
+described in [Section 'The latex-maven-plugin'](#ss:mavenPlugin) 
 provides more functionality than this.
 
 Unlike the maven plugin, which is installed by maven automatically,
