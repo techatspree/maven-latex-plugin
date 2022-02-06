@@ -431,6 +431,42 @@ enum Converter {
 	    return ConverterCategory.MakeGlossaries;
 	}
     },
+    // TBD: add a category 
+   PythonTeX {
+	String getCommand() {
+	    return "pythontex";
+	}
+	String getVersionOption() {
+	    return "--version";
+	}
+	String getVersionPattern() {
+	    return X_X;
+	}
+	String getVersionEnvironment() {
+	    return "^" + PythonTeX + " %s\n";
+	}
+    // TBD: add a category 
+	ConverterCategory getCategory() {
+	    return ConverterCategory.MakeGlossaries;
+	}
+    },
+    // TBD: add a category 
+   Latexmk {
+	String getCommand() {
+	    return "latexmk";
+	}
+	String getVersionPattern() {
+	    return "(([0-9]+)\\.([0-9]+)([a-z]))";
+	}
+	String getVersionEnvironment() {
+	    return "^\n" + Latexmk +
+		", John Collins, .*[0-9]+ [A-Z][a-z]+ [0-9]+. Version %s\n";
+	}
+    // TBD: add a category 
+	ConverterCategory getCategory() {
+	    return ConverterCategory.MakeGlossaries;
+	}
+    },
     MetaPost {
 	String getCommand() {
 	    return "mpost";
