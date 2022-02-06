@@ -99,6 +99,10 @@
 	      <goal>html</goal>
 	    </goals>
 	  </execution>
+	  <execution>
+	    <id>clear-latex-sources</id>
+	    <goals><goal>clr</goal></goals>
+	  </execution>
 	</executions>
       </plugin>
     </plugins>
