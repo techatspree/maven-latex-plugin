@@ -127,6 +127,7 @@
 
     <repository>
       <id>publicRepoAtSimuline</id>
+      <uniqueVersion>false</uniqueVersion>
       <url>ftp://www.simuline.eu/public_html/RepositoryMaven</url>
     </repository>
   </distributionManagement>
