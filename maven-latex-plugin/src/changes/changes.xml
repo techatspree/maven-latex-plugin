@@ -23,6 +23,9 @@
 	 - Further exporters with config to access them 
 	   besides latex2ht also latexml, pandoc 
 	   Have a look at texnische komoedie, pdf checked in. 
+	 - take pylatex into account: can there be a relation.
+	 - take pythonlatex into account: 
+	   maybe according support in separate release
 	 For 1.6:
 	 - make capabilities inspired by latexmk: 
 	   If latex is invoked with option -recorder it creates a file .fls
@@ -85,6 +88,8 @@
 	   The problem seems in Commandexecutor line 250 around: 
 	   fig2dev is invoked as /home/ernst/...../fig2dev with complete path 
 	   but in ant task only. 
+	 - add latexmk to dependencies (because of cleaning)
+	 - clean goal based on (categories of) coverters.
     -->
 
     <!-- TBD: rework on Converter.cmd2conv: 
@@ -94,8 +99,6 @@
     <!-- TBD: allow to exclude files from being processed, even graphic files. -->
     <!-- TBD: bugfix: readTexSrcProcDirRec=false not respected. -->
     <!-- TBD: mention epsf like in my dissertation  -->
-    
-    <!-- TBD: release cannot be snapshot, release date must be adapted -->
      <release version="1.5-snapshot" 
 	     date="2020-01-01" 
 	     description="First release with change management 
