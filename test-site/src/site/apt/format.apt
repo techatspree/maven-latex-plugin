@@ -5,7 +5,7 @@ The APT format
   In the following section, boxes containing text in typewriter-like font are
   examples of APT source.
 
-* Document structure {document_structure}
+* {Document structure} 
 ~~~~~~~~~~~~~~~~~~~~
 
   A short APT document is contained in a single text file. A longer document
@@ -126,7 +126,7 @@ other lines of the paragraph.
 
   Paragraphs are indented.
   They have already been described in the
-  {{{document_structure}document structure}} section.
+  {{{Document structure}document structure}} section.
 
 *** Section
 ~~~~~~~~~~~
