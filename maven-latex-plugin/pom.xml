@@ -88,6 +88,19 @@
 
   <!-- mailingLists></mailingLists-->
 
+   <pluginRepositories>
+    <pluginRepository>
+      <id>latex-maven-plugin-repo</id>
+      <!--url>http://akquinet.github.com/maven-latex-plugin/maven2/</url-->
+      <url>https://www.simuline.eu/RepositoryMaven</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+
+
   <!-- source repositories: at the moment not needed. -->
   <repositories>
     <repository>
