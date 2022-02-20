@@ -4,7 +4,6 @@
 %\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
 %\RequirePackage{lmodern} % does not work with htlatex
 \documentclass[12pt]{book}
-\synctex=1
 \newif\iflatextortf % false for latex but set true for latex2rtf internally 
 \pdfminorversion=7
 
@@ -13,7 +12,9 @@
 % TBD: integrate that into git 
 \newcommand{\groupId}{\texttt{eu.simuline.m2latex}}
 \newcommand{\artifactId}{\texttt{latex-maven-plugin}}
-\newcommand{\versionID}{\texttt{1.5-SNAPSHOT}}
+\newcommand{\strippedVersionID}{1.5}
+\newcommand{\versionID}{\texttt{\strippedVersionID-SNAPSHOT}}
+\newcommand{\versionDate}{2022-02-02}
 \newcommand{\repo}{\texttt{https://www.simuline.eu/RepositoryMaven}}
 \newcommand{\devSite}{\texttt{https://github.com/Reissner/maven-latex-plugin}}
 \newcommand{\antJarDir}{\texttt{/usr/share/ant/lib/}}
@@ -103,9 +104,11 @@ glossary file containing sorted, unified and formatted glossary entries}
 % does not work 
 %\setindexpreamble[pkg]{This index comprises all the latex packages used. }
 
-\title{Manual for the \artifactId{} and for an according ant-task }
+\title{Manual for the \artifactId{} \protect\\
+  and for an according ant-task \protect\\
+Version \strippedVersionID}
 \author{Ernst Reissner (rei3ner@arcor.de)}
-
+\date{\versionDate}
 
 \begin{document}
 \maketitle
