@@ -345,6 +345,28 @@
 	<configuration>
 	  <propertiesEncoding>UTF-8</propertiesEncoding>
 	</configuration>
+	<executions>
+	  <execution>
+	    <id>filterTexProps</id>
+            <!-- here the phase you need -->
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+	    <configuration>
+	      <outputDirectory>${basedir}/src/site/tex</outputDirectory>
+	      <resources>
+                <resource>
+                  <directory>${basedir}/src/main/resources</directory>
+                  <includes>
+		    <include>buildParams.tex</include>
+		  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+	    </configuration>
+	  </execution>
+	</executions>
       </plugin>
 
       <plugin>
