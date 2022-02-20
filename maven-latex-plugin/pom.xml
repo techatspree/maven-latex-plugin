@@ -88,7 +88,8 @@
 
   <!-- mailingLists></mailingLists-->
 
-   <pluginRepositories>
+  <!-- this is a trial -->
+  <pluginRepositories>
     <pluginRepository>
       <id>latex-maven-plugin-repo</id>
       <!--url>http://akquinet.github.com/maven-latex-plugin/maven2/</url-->
