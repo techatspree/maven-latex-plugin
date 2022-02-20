@@ -14,7 +14,7 @@
   </properties>
   <body>
     <!-- Release plan: 
-	 For 1.7: 
+	 For 1.8: 
 	 - further output formats: xml from latexml, epub. 
 	   in manual: flow oriented vs page oriented. 
 	   Flow oriented: html, ... epub, ... 
@@ -29,6 +29,8 @@
 	   The converter is added already, 
 	   but there is no ConverterCategory yet. 
 	   Take also cleaning into account. 
+	 For 1.7: 
+	 - support for pythontex 
 	 For 1.6:
 	 - make capabilities inspired by latexmk: 
 	   If latex is invoked with option -recorder it creates a file .fls
