@@ -339,6 +339,20 @@
 -->
 
       <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>build-helper-maven-plugin</artifactId>
+	<version>1.8</version>
+	<executions>
+	  <execution>
+            <id>parse-version</id>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+	  </execution>
+	</executions>
+      </plugin>
+
+      <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-resources-plugin</artifactId>
 	<version>3.2.0</version>
@@ -423,6 +437,16 @@
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>3.1.0</version>
+	<configuration>
+	  <filesets>
+            <fileset>
+              <directory>src/site/tex</directory>
+              <includes>
+		<include>buildParams.tex</include>
+              </includes>
+            </fileset>
+	  </filesets>
+	</configuration>
       </plugin>
 
       <!-- This plugin will write properties values 
