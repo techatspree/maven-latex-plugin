@@ -577,34 +577,34 @@
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>3.1.0</version>
-	<configuration>
-	  <filesets>
+		<configuration>
+	  	  <filesets>
             <fileset>
               <directory>src/site/tex</directory>
               <includes>
-		<include>buildParams.tex</include>
+		        <include>buildParams.tex</include>
               </includes>
             </fileset>
-	  </filesets>
-	</configuration>
+	      </filesets>
+		</configuration>
       </plugin>
 
       <!-- This plugin will write properties values 
 	   using dependency information into classpath.txt-->
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-dependency-plugin</artifactId>
-	<version>3.0.2</version>
-	<executions>
-	  <execution>
-	    <goals>
-	      <goal>build-classpath</goal>
-	    </goals>
-	  </execution>
-	</executions>
-	<configuration>
-	  <outputFile>${project.build.directory}/classpath.txt</outputFile>
-	</configuration>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-dependency-plugin</artifactId>
+		<version>3.0.2</version>
+		<executions>
+	  	  <execution>
+	   	    <goals>
+	    	  <goal>build-classpath</goal>
+	    	</goals>
+	  	  </execution>
+		</executions>
+		<configuration>
+	  	  <outputFile>${project.build.directory}/classpath.txt</outputFile>
+		</configuration>
       </plugin>
 
 
@@ -617,7 +617,7 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <!--version>3.4</version-->
 	<!-- this is the first version with a NullPointerException -->
-        <!--version>3.6.0</version-->
+        <!--version>3.6.4</version-->
 	<!-- this is the current version at the time of this writing -->
         <version>3.3</version>
 	<!-- this version allows installation, but fails with javadoc -->
@@ -633,12 +633,13 @@
 	    </goals>
 	    <phase>process-classes</phase>
 	  </execution>
-          <execution>
+          <!--execution>
             <id>generated-helpmojo</id>
             <goals>
               <goal>helpmojo</goal>
             </goals>
-          </execution>
+ 	    <phase>process-classes</phase>
+         </execution-->
         </executions>
       </plugin>
 
@@ -1694,8 +1695,8 @@ LaTeX Warning: Etaremune labels have changed\.$|
 	       also the phase compile could be appropriate -->
  	  <execution>
 	    <id>process-latex-sources</id>
-            <goals><goal>cfg</goal></goals>
-          </execution>
+        <goals><goal>cfg</goal></goals>
+      </execution>
 	  <execution>
 	    <id>clear-latex-sources</id>
 	    <goals><goal>clr</goal></goals>
@@ -1703,6 +1704,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
 	  <execution>
 	    <id>validate-converters</id>
 	    <goals><goal>vrs</goal></goals>
+		<!--phase>validate</phase-->
 	    <configuration>
 	      <versionsWarnOnly>true</versionsWarnOnly>
 	    </configuration>
