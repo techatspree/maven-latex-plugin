@@ -19,7 +19,7 @@
 package eu.simuline.m2latex.core;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+//import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -33,7 +33,7 @@ import java.io.OutputStream;
 import java.io.IOException;
 
 import java.nio.file.Path;
-import java.nio.CharBuffer;
+//import java.nio.CharBuffer;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -49,7 +49,7 @@ import java.util.regex.Matcher;
  */
 class TexFileUtils {
 
-    private final static String PREFIX_HIDDEN = ".";
+    //private final static String PREFIX_HIDDEN = ".";
 
     private final static String PATTERN_INS_LATEX_MAIN = "T\\$T";
 

@@ -18,7 +18,7 @@ package org.codehaus.plexus.util.cli;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
+//import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;

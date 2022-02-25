@@ -287,7 +287,7 @@ public class StringUtils
         {
             return -1;
         }
-        int sz = searchStrs.length;
+        //int sz = searchStrs.length;
 
         // String's can't have a MAX_VALUEth index.
         int ret = Integer.MAX_VALUE;

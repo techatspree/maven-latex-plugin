@@ -24,8 +24,6 @@ import java.io.File;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.Arrays;
 
 import org.apache.maven.plugins.annotations.Parameter;
@@ -1901,8 +1899,8 @@ public class Settings {
      */
     public void setTargetSiteDirectory(File targetSiteDirectory) {
         this.targetSiteDirectory = targetSiteDirectory;
-	this.outputDirectoryFile = new File(this.targetSiteDirectory, 
-					    this.outputDirectory);
+        this.outputDirectoryFile = new File(this.targetSiteDirectory, 
+                                            this.outputDirectory);
     }
 
     /**

@@ -1,7 +1,6 @@
 package eu.simuline.m2latex.antTask;
 
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 
 import eu.simuline.m2latex.core.Settings;
 import eu.simuline.m2latex.core.LatexProcessor;

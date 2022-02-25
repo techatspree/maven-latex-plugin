@@ -2,7 +2,6 @@ package eu.simuline.m2latex.core;
 
 import java.io.File;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map;

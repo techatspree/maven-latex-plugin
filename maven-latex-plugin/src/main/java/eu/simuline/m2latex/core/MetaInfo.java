@@ -6,23 +6,15 @@ package eu.simuline.m2latex.core;
 import java.io.InputStream;
 
 import java.io.IOException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 
 import java.util.Properties;
 import java.util.SortedSet;
-import java.util.Map;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.jar.Attributes;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 // TBD: extract this class into a separate git repository 
 // and use it as a submodule. 
@@ -788,8 +780,8 @@ public class MetaInfo {
 		this.log.info(line);
 	    }
 
-	    String mavenDir = META_FOLDER + "maven/";
-	    URL url = MetaInfo.class.getClassLoader().getResource(mavenDir);
+	    //String mavenDir = META_FOLDER + "maven/";
+	    //URL url = MetaInfo.class.getClassLoader().getResource(mavenDir);
 	    //	try {
 	    //	    //System.out.println("path: "+url);
 	    //	    //System.out.println("path: "+url.toURI());
