@@ -43,8 +43,10 @@ public class PdfMojoTest extends AbstractMojoTestCase {
         assert res;
 
         // define the file to be created and the one to be compared with 
-        File act = new File(thisDir, "target/manualLatexMavenPlugin.pdf");
-        File cmp = new File(thisDir,    "cmp/manualLatexMavenPlugin.pdf");
+        //File act = new File(thisDir, "target/manualLatexMavenPlugin.pdf");
+        //File cmp = new File(thisDir,    "cmp/manualLatexMavenPlugin.pdf");
+        File act = new File(thisDir, "target/dvi/dviFormat.pdf");
+        File cmp = new File(thisDir,    "cmp/dvi/dviFormat.pdf");
 
         // run the pdf-goal in the pom 
 	    PdfMojo testMojo = (PdfMojo)lookupMojo("pdf", testPom);
