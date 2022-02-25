@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+			     http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- coordinates for model and artifact xxx -->
+  <modelVersion>4.0.0</modelVersion>
+  
+  <!-- The Basics -->
+  <groupId>eu.simuline.m2latex</groupId>
+  <artifactId>latex-maven-plugin-pdftest</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+  
+  <name>Maven LaTeX Plugin pdf text</name>
+  <description>
+    A plugin test which shall create the manual of the latex-maven-plugin
+  </description>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+	      <groupId>eu.simuline.m2latex</groupId>
+	      <artifactId>latex-maven-plugin</artifactId>
+	      <version>1.5-SNAPSHOT</version>
+	      <!--TBD: This must be updated with the resources plugin -->
+        <configuration>
+          <targetSiteDirectory>${basedir}/src/test/resources/integration/target</targetSiteDirectory>
+          <settings>
+          </settings>
+        </configuration>
+	      <executions>
+	        <execution>
+	          <id>process-latex-sources</id>
+	          <goals><goal>pdf</goal></goals>
+	        </execution>
+	      </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
