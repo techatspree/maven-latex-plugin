@@ -20,8 +20,8 @@ package eu.simuline.m2latex.core;
 
 import eu.simuline.m2latex.mojo.MavenLogWrapper;
 
-import eu.simuline.m2latex.core.BuildExecutionException;
-import eu.simuline.m2latex.core.BuildFailureException;
+//mport eu.simuline.m2latex.core.BuildExecutionException;
+//import eu.simuline.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
@@ -31,7 +31,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.After;
 

@@ -21,7 +21,7 @@ package eu.simuline.m2latex.core;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+//import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -56,9 +56,9 @@ public class SettingsTest {
     }
 
     public static void main(String[] args) throws Exception {
-	Class cls = SettingsTest.class
-	    .getMethod("testSettings")
-	    .getAnnotation(Test.class).getClass();
+	//Class<?> cls = SettingsTest.class
+	//    .getMethod("testSettings")
+	//    .getAnnotation(Test.class).getClass();
 	//System.out.println("cls: "+);
 	
     }

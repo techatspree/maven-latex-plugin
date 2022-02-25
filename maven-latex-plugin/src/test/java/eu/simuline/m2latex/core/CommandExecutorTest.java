@@ -22,14 +22,14 @@ import eu.simuline.m2latex.mojo.MavenLogWrapper;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestCase;
+//import junit.framework.TestCase;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
-import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.After;
 
