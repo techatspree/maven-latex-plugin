@@ -175,47 +175,135 @@
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
       <version>${versionMvn}</version>
+      <scope>provided</scope>
     </dependency>
+
+	<!-- TBD: lot of dependency convergence errors, 
+	mainly betwen maven-compat and maven-core. 	
+	I wrote already org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.5
+		to update dependency 
+		-org.codehaus.plexus:plexus-component-annotations:1.5.5->2.1.0
+		Then maven-compat can update to new sisu and a lot is resolved. 
+
+		- maven-compat may update maven-resolver-impl to obtain 
+		  org.slf4j:slf4j-api:1.7.30->1.7.32
+		- maven-compat shall fix double dependency plexus-utils 3.4.1 and 3.0.24 
+		  besides 3.3.0
+		
+-->
+
+	<dependency><!-- needed for integration test -->
+		<groupId>org.apache.maven</groupId>
+		<artifactId>maven-compat</artifactId>
+		<version>${versionMvn}</version>
+	</dependency>
+
+    <!-- needed for maven-plugin-plugin descriptor -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>${versionMvn}</version>
+      <scope>provided</scope>
+   </dependency>
+
+    <!--dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${versionMvn}</version>
+      <scope>provided</scope>
+    </dependency-->
+
+    <!-- maven-resolver-api. -->
+
 
     <!-- for a trial in MetaInfo class -->
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
       <version>${versionMvn}</version>
+      <scope>provided</scope>
     </dependency>
+
+    <dependency><!-- needed when running the integration test -->
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.32</version>
+	  <scope>test</scope>
+	</dependency>
 
     
     <!-- dependencies to annotations -->
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.6.0</version>
+      <version>3.6.4</version>
       <scope>provided</scope>
     </dependency>
 
     <!-- version maybe outdated -->
-    <dependency>
+    <!--dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-ant-tasks</artifactId>
       <version>2.1.3</version>
+      <scope>provided</scope>
+    </dependency-->
+
+	<!-- TBD: this is a bit too much, but works. surrogat of maven-ant-task -->
+	<dependency>
+		<groupId>org.apache.ant</groupId>
+		<artifactId>ant</artifactId>
+		<version>1.10.0</version>
+     <scope>provided</scope>
+	</dependency>
+
+   <!--dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-manager</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
     </dependency>
 
-    <!--dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>2.5</version>
-        </dependency-->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-repository-metadata</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-profile</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-registry</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency-->
+
+    
     <!--dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>3.4</version>
         </dependency-->
     <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
-    <dependency>
+    
+    <!--dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.2.0</version>
-    </dependency>
+      <version>3.3.0</version>
+    </dependency-->
 
     <dependency>
       <groupId>junit</groupId>
