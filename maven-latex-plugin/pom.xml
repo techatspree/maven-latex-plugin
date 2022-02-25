@@ -612,11 +612,22 @@
           <trimStackTrace>false</trimStackTrace>
           <systemPropertyVariables>
             <!--testResourcesDir>${project.testResources}</testResourcesDir-->
-            <testResourcesDir>src/test/resources/</testResourcesDir>
+            <unitTestResourcesDir>src/test/resources/units</unitTestResourcesDir>
             <buildDirectory>${project.build.directory}</buildDirectory>
           </systemPropertyVariables>
+	  	  <!--includes>
+			<include>LatexProcessorTest.java</include>
+			<include>CommandExecutorTest.java</include>
+			<include>TexFileUtilsTest.java</include>
+			<include>SettingsTest.java</include>
+			<include>PdfMojoTest.java</include>
+          </includes-->
+	  <!--excludes>
+            <exclude>PdfMojoTest.java</exclude>
+          </excludes-->
         </configuration>
       </plugin>
+  
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

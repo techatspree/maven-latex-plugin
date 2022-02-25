@@ -37,7 +37,7 @@ import org.junit.After;
 
 public class TexFileUtilsTest {
     private final static File WORKING_DIR = 
-	new File(System.getProperty("testResourcesDir"));
+	new File(System.getProperty("unitTestResourcesDir"));
 
     // FIXME: occurs also in other testclasses: 
     // to be unified. 

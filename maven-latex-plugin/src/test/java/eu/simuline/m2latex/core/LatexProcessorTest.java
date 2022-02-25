@@ -69,7 +69,7 @@ import static org.junit.Assert.assertEquals;
 public class LatexProcessorTest {
 
     private final static File WORKING_DIR = 
-	new File(System.getProperty("testResourcesDir"));
+	new File(System.getProperty("unitTestResourcesDir"));
 
     /**
      * Filter rejecting all files. 
