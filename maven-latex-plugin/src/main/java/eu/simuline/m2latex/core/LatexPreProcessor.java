@@ -560,7 +560,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	// Result file: either .pdf or .eps 
-	File figInTexFile = this.fileUtils
+	File figInTexFile = TexFileUtils
 	    .replaceSuffix(figFile, dev.getGraphicsInTexSuffix());
 	String command = this.settings.getCommand(ConverterCategory.Fig2Dev);
 
@@ -729,7 +729,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	// result file: .ptx 
-	File ptxFile = this.fileUtils.replaceSuffix(figFile, SUFFIX_PTX);
+	File ptxFile = TexFileUtils.replaceSuffix(figFile, SUFFIX_PTX);
 	String command = this.settings.getCommand(ConverterCategory.Fig2Dev);
 
 	//if (update(figFile, pdf_tFile)) {
@@ -815,7 +815,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// -p pdf/eps-file name in ptx-file without suffix 
 	args[2+lenSum] = "-p";
 	// full path without suffix 
-	args[3+lenSum] = this.fileUtils.replaceSuffix(figFile, SUFFIX_VOID)
+	args[3+lenSum] = TexFileUtils.replaceSuffix(figFile, SUFFIX_VOID)
 	    .getName();
 	// input: fig-file 
         args[4+lenSum] = figFile.getName();
@@ -880,9 +880,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	throws BuildFailureException {
 
 	String command = this.settings.getCommand(ConverterCategory.Gnuplot2Dev);
-	File grpFile = this.fileUtils.replaceSuffix
+	File grpFile = TexFileUtils.replaceSuffix
 	    (gpFile, dev.getGraphicsInTexSuffix());
-	File ptxFile = this.fileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
+	File ptxFile = TexFileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
 	String[] args = new String[] {
 	    "-e",   // run a command string "..." with commands separated by ';' 
@@ -945,12 +945,12 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), //**** 
 			      command, 
 			      args,
-			      this.fileUtils.replaceSuffix(mpFile, 
+			      TexFileUtils.replaceSuffix(mpFile, 
 							   "1"+SUFFIX_MPS));
 
 	// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx 
 	// FIXME: what is xxx.mpx for? 
-	File logFile = this.fileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
+	File logFile = TexFileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
 	// may log WFU03, EAP01, EAP02, WAP04
 	logErrs(logFile, command, this.settings.getPatternErrMPost());
 	// FIXME: what about warnings?
@@ -1034,9 +1034,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// --export-pdf-version=1.4 may be nice 
 	String command = this.settings.getCommand(ConverterCategory.Svg2Dev);
 
-	File grpFile = this.fileUtils.replaceSuffix(svgFile,
-						    dev.getGraphicsInTexSuffix());
-	File texFile = this.fileUtils.replaceSuffix(svgFile,
+	File grpFile = TexFileUtils.replaceSuffix(svgFile, 
+	                        dev.getGraphicsInTexSuffix());
+	File texFile = TexFileUtils.replaceSuffix(svgFile,
 						    dev.getInkscapeTexSuffix());
 
 	String[] args = buildArgumentsInkscp(grpFile,
@@ -1090,7 +1090,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// Creation of .xbb files for driver dvipdfmx
 	// FIXME: literal 
 	args[0] ="-x";
-	File resFile = this.fileUtils.replaceSuffix(file, SUFFIX_XBB);
+	File resFile = TexFileUtils.replaceSuffix(file, SUFFIX_XBB);
 
 	this.log.debug("Running " + command + 
 		       " twice on '" + file.getName() + "'. ");
@@ -1105,7 +1105,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// Creation of .bb files for driver dvipdfm
 	// FIXME: literal 
 	args[0] ="-m";
-	resFile = this.fileUtils.replaceSuffix(file, SUFFIX_BB);
+	resFile = TexFileUtils.replaceSuffix(file, SUFFIX_BB);
 
 	this.executor.execute(workingDir, 
 			      this.settings.getTexPath(), //**** 
@@ -1163,7 +1163,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * EFU05: Failed to delete file
      */
     private void deleteIfExists(File file, String suffix) {
-	File delFile = this.fileUtils.replaceSuffix(file, suffix);
+	File delFile = TexFileUtils.replaceSuffix(file, suffix);
 	if (!delFile.exists()) {
 	    return;
 	}
@@ -1255,7 +1255,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
 	this.log.info("Deleting targets of latex main file '" + 
 		      texFile + "'. ");
-	FileFilter filter = this.fileUtils.getFileFilter
+	FileFilter filter = TexFileUtils.getFileFilter
 	    (texFile, this.settings.getPatternCreatedFromLatexMain());
 	// may log WFU01, EFU05 
 	this.fileUtils.deleteX(texFile, filter);
@@ -1370,7 +1370,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    new TreeMap<File, SuffixHandler>();
    	for (String fileName : node.getRegularFileNames()) {
 	    file = new File(dir, fileName);
-    	    suffix = this.fileUtils.getSuffix(file);
+    	    suffix = TexFileUtils.getSuffix(file);
     	    handler = SUFFIX2HANDLER.get(suffix);
     	    if (handler == null) {
     		this.log.debug("Skipping processing of file '" + file + "'. ");
@@ -1398,7 +1398,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// if created by local latex main files 
 	FileFilter filter;
 	for (File lmFile : latexMainFilesLocal) {
-	    filter = this.fileUtils.getFileFilter
+	    filter = TexFileUtils.getFileFilter
 		(lmFile, this.settings.getPatternCreatedFromLatexMain());
 	    Iterator<File> iter = file2handler.keySet().iterator();
 	    File src;
@@ -1531,7 +1531,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    new TreeMap<File, SuffixHandler>();
    	for (String fileName : node.getRegularFileNames()) {
 	    file = new File(dir, fileName);
-	    handler = SUFFIX2HANDLER.get(this.fileUtils.getSuffix(file));
+	    handler = SUFFIX2HANDLER.get(TexFileUtils.getSuffix(file));
 	    if (handler != null) {
 		// either clear targets now or schedule for clearing 
 		// (in particular do nothing if no target)

@@ -286,7 +286,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 		    // may throw BuildFailureException TEX01, 
 		    // log warning EEX01, EEX02, EEX03, WEX04, WEX05 
 		    target.processSource(this, texFile);
-		    FileFilter fileFilter = this.fileUtils.getFileFilter
+		    FileFilter fileFilter = TexFileUtils.getFileFilter
 			(texFile, target.getPatternOutputFiles(this.settings));
 		    // may throw BuildFailureException 
 		    // TFU03, TFU04, TFU05, TFU06 
@@ -516,18 +516,18 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	LatexMainDesc(File texFile, TexFileUtils fileUtils, LatexDev dev) {
 	    this.texFile = texFile;
 	    // FIXME: easier to create xxxFile first 
-	    this.xxxFile = fileUtils.replaceSuffix(texFile, SUFFIX_VOID);
-	    this.pdfFile = fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
-	    this.dviFile = fileUtils.replaceSuffix(texFile, SUFFIX_DVI);
-	    this.logFile = fileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+	    this.xxxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_VOID);
+	    this.pdfFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_PDF);
+	    this.dviFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_DVI);
+	    this.logFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_LOG);
 
-	    this.idxFile = fileUtils.replaceSuffix(texFile, SUFFIX_IDX);
-	    this.indFile = fileUtils.replaceSuffix(texFile, SUFFIX_IND);
-	    this.ilgFile = fileUtils.replaceSuffix(texFile, SUFFIX_ILG);
+	    this.idxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_IDX);
+	    this.indFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_IND);
+	    this.ilgFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_ILG);
 
-	    this.glsFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLS);
-	    this.gloFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLO);
-	    this.glgFile = fileUtils.replaceSuffix(texFile, SUFFIX_GLG);
+	    this.glsFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_GLS);
+	    this.gloFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_GLO);
+	    this.glgFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_GLG);
 	}
     } // class LatexMainDesc 
 
@@ -643,7 +643,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	}
 
 	boolean hasToc = 
-	    this.fileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
+    TexFileUtils.replaceSuffix(texFile, SUFFIX_TOC)  .exists();
 	if (hasIdxGls) {
 	    // Here, an index or a glossary exists 
 	    // This requires at least one LaTeX run. 
@@ -657,8 +657,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	// depending on whether a toc, lof or lot exists 
 
 	boolean needLatexReRun = hasToc 
-	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
-	    || this.fileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
+	    || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
+	    || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
 
 	return needLatexReRun ? 1 : 0;
     }
@@ -1242,7 +1242,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    returned by {@link Settings#getBibtexCommand()} failed. 
      */
     private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
-	File auxFile    = this.fileUtils.replaceSuffix(texFile, SUFFIX_AUX);
+	File auxFile   = TexFileUtils.replaceSuffix(texFile, SUFFIX_AUX);
 	String command = this.settings.getCommand(ConverterCategory.BibTeX);
 	if (!needRun(false, command, auxFile, PATTERN_NEED_BIBTEX_RUN)) {
 	    return false;
@@ -1258,9 +1258,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      this.fileUtils.replaceSuffix(texFile, SUFFIX_BBL));
+			      TexFileUtils.replaceSuffix(texFile, SUFFIX_BBL));
 
-	File logFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_BLG);
+	File logFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_BLG);
 	// may log EAP01, EAP02, WAP04, WFU03
 	logErrs (logFile, command, this.settings.getPatternErrBibtex());
 	// may log warnings WFU03, WAP03, WAP04
@@ -1809,8 +1809,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      this.fileUtils.replaceSuffix(texFile, 
-							   SUFFIX_HTML));
+			      TexFileUtils.replaceSuffix(texFile, SUFFIX_HTML));
 
 	// logging errors and warnings 
 	// may log EAP01, EAP02, WAP04, WFU03
@@ -1861,7 +1860,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      this.fileUtils.replaceSuffix(texFile,SUFFIX_RTF));
+			      TexFileUtils.replaceSuffix(texFile,SUFFIX_RTF));
 
 	// FIXME: no check: just warning that no output has been created. 
 	// Warnings and error messages are output to stderr 
@@ -1919,7 +1918,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      this.fileUtils.replaceSuffix(texFile,SUFFIX_ODT));
+			      TexFileUtils.replaceSuffix(texFile,SUFFIX_ODT));
 
 	// FIXME: logging refers to latex only, not to tex4ht or t4ht script 
 	// may log EAP01, EAP02, WAP04, WFU03
@@ -1955,7 +1954,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    returned by {@link Settings#getOdt2docCommand()} failed. 
      */
     private void runOdt2doc(File texFile) throws BuildFailureException {
-	File odtFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_ODT);
+	File odtFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_ODT);
 	String command = this.settings.getCommand(ConverterCategory.Odt2Doc);
 	this.log.debug("Running " + command + 
 		       " on '" + odtFile.getName() + "'. ");
@@ -1977,7 +1976,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args,
-			      this.fileUtils.replaceSuffix(texFile, suffix));
+			      TexFileUtils.replaceSuffix(texFile, suffix));
  	// FIXME: what about error logging? 
 	// Seems not to create a log-file. 
      }
@@ -2002,7 +2001,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    returned by {@link Settings#getPdf2txtCommand()} failed. 
      */
     private void runPdf2txt(File texFile) throws BuildFailureException {
-	File pdfFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_PDF);
+	File pdfFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_PDF);
 	String command = this.settings.getCommand(ConverterCategory.Pdf2Txt);
 	this.log.debug("Running " + command + 
 		       " on '" + pdfFile.getName() + "'. ");
@@ -2014,7 +2013,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 			      this.settings.getTexPath(), 
 			      command, 
 			      args, 
-			      this.fileUtils.replaceSuffix(texFile,SUFFIX_TXT));
+			      TexFileUtils.replaceSuffix(texFile,SUFFIX_TXT));
 	// FIXME: what about error logging? 
 	// Seems not to create a log-file. 
     }
@@ -2040,7 +2039,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     private void runCheck(File texFile) throws BuildFailureException {
 	// 
-	File clgFile = this.fileUtils.replaceSuffix(texFile, SUFFIX_CLG);
+	File clgFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_CLG);
 	String command = this.settings.getCommand(ConverterCategory.LatexChk);
 	this.log.debug("Running " + command + 
 		       " on '" + texFile.getName() + "'. ");
