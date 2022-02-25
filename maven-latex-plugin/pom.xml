@@ -170,7 +170,7 @@
 
   <properties>
     <!-- checked during validation -->
-    <versionMvn>3.6.3</versionMvn>
+    <versionMvn>3.8.4</versionMvn><!-- 3.8.4 3.1.0-->
     <!-- Using platform encoding to copy filtered resources; 
     without project.build.sourceEncoding the build is platform dependent! -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
