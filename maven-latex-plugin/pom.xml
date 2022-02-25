@@ -418,26 +418,26 @@
         <executions>
           <execution>
             <id>enforce-maven</id>
-	    <phase>validate</phase>
+	    	<phase>validate</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
-            <configuration>
-              <rules>
-                <requireMavenVersion>
-                  <version>${versionMvn}</version>
-		  <message>
-		    Invalid Maven version. It should, at least, be ${versionMvn}
-		  </message>
-                </requireMavenVersion>
-		<requireJavaVersion>
-		  <version>11</version>
-		</requireJavaVersion>
-		<!--dependencyConvergence/--><!-- this fails because of plugin-api -->
-              </rules>    
-            </configuration>
-          </execution>
-        </executions>
+		  </execution>
+	    </executions>
+        <configuration>
+          <rules>
+            <requireMavenVersion>
+            	<version>${versionMvn}</version>
+			<message>
+		 		Invalid Maven version. It should, at least, be ${versionMvn}
+				</message>
+            </requireMavenVersion>
+			<requireJavaVersion>
+				<version>11</version>
+			</requireJavaVersion>
+			<!--dependencyConvergence/--><!-- this fails because of plugin-api -->
+          </rules>    
+        </configuration>
       </plugin>
 
       <!-- information about a project or the system -->
