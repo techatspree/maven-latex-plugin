@@ -54,6 +54,7 @@ public class PdfMojoTest extends AbstractMojoTestCase {
         testMojo.execute();
         // Here, according to pom2pdf.xml, the generated pdf is expected at 
         // ${basedir}/src/test/resources/integration/target/manualLatexMavenPlugin.pdf
+        assert act.exists() && cmp.exists();
 
         // check that the goal yielded the expected document. 
         assertTrue(IOUtils.contentEquals(new FileInputStream(cmp), new FileInputStream(act)));
