@@ -104,11 +104,17 @@
 
   <!-- source repositories: at the moment not needed. -->
   <repositories>
-    <repository>
+    <!--repository>
       <id>publicRepoAtSimuline</id>
       <url>https://www.simuline.eu/RepositoryMaven</url>
-    </repository>
+    </repository-->
+    <!--repository>
+		<id>springRepo</id>
+		<url>https://repo.spring.io/plugins-release/</url>
+	</repository-->
   </repositories>
+  <!-- https://mvnrepository.com/artifact/org.apache.ant/com.springsource.org.apache.tools.ant -->
+
 
 
   <!--scm>
