@@ -270,6 +270,9 @@
        <!-- TBD: maybe vrs shall be included in phase validate. -->
        <!-- TBD: ant-task: somehow synchronize coordinates with pom: 
 	    name, version -->
+
+		<!-- setting readTexSrcProcDirRec seems to refer to processing graphics only. 
+			Check whether this is appropriate. -->
        
      </release>
 
