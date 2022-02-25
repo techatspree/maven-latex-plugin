@@ -10,7 +10,29 @@
 \input{header.tex}
 
 \input{buildParams.tex}
-
+% not before pdfTeX 3.14159265-2.6-1.40.17
+%\pdfinfoomitdate=1
+%\pdftrailer
+%%\pdftrailerid{}
+%\pdfsuppressptexinfo = -1
+% 1 -> PTEX.Fullbanner
+% 2 -> PTEX.FileName
+% 4 -> PTEX.PageNumber
+% 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
+% The following is to control metadata: 
+% - erase docdata and set the ones needed thereafter
+% - erase trailer to make repreoducible 
+%   CAUTION: This is not recommended as the docs are no longer individual. 
+\usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
+\pdfinfo{
+   /Author (Ernst Reissner)
+   /Title  (Maven plugin and ant-task to process latex)
+%   /CreationDate (unknown)
+%   /ModDate (unknown)
+   /Subject (latex plugin for maven and latex task for ant)
+   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
+}
+% TBD: check of resulting pdf with exif unveils a warning duplicate author 
 
 \ifthenelse{\boolean{texFhtLoaded}}{%
   % no glossaries and no index with tex4ht 
