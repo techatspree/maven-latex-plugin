@@ -269,6 +269,64 @@ enum Converter {
 	    return ConverterCategory.LatexChk;
 	}
     },
+		DiffPdf {
+			String getCommand() {
+				return "diff-pdf";
+		}
+		// TBD: bugfix: this is just the help option. 
+		// -v is the verbose option 
+		String getVersionOption() {
+	    return "-h";
+	}
+	String getVersionPattern() {
+		return "(([0-9]+))";
+	}
+	String getVersionEnvironment() {
+		//return "default: %s";
+		return "^Usage: [^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n" + 
+		".*\\w*rasterization resolution \\(default: %s dpi\\)";
+	}
+	// TBD: make specific 
+	ConverterCategory getCategory() {
+		return ConverterCategory.Unspecific;
+	}
+		},
+		PdfInfo {
+			String getCommand() {
+				return "pdfinfo";
+		}
+		String getVersionOption() {
+	    return "-v";
+		}
+		String getVersionPattern() {
+			return X_X_X;
+		}
+		String getVersionEnvironment() {
+			return "^" + getCommand() +" version %s";
+		}
+			// TBD: make specific 
+	ConverterCategory getCategory() {
+		return ConverterCategory.Unspecific;
+	}
+		},
+		ExifTool {
+			String getCommand() {
+				return "exiftool";
+			}
+			String getVersionOption() {
+				return "-ver";
+			}
+			String getVersionPattern() {
+				return X_X;
+			}
+			String getVersionEnvironment() {
+				return "^%s";
+			}
+			// TBD: make specific 
+			ConverterCategory getCategory() {
+				return ConverterCategory.Unspecific;
+			}
+		},
     BibTeX {
 	String getCommand() {
 	    return "bibtex";

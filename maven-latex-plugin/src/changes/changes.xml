@@ -271,8 +271,10 @@
        <!-- TBD: ant-task: somehow synchronize coordinates with pom: 
 	    name, version -->
 
-		<!-- setting readTexSrcProcDirRec seems to refer to processing graphics only. 
-			Check whether this is appropriate. -->
+       <!-- setting readTexSrcProcDirRec seems to refer to processing graphics only. 
+	    Check whether this is appropriate. -->
+       <!-- TBD: rework on Converter.java: diff-pdf has pseudo version only. -->
+       <!-- TBD: Converter.java: there is an unspecific ConverterCategory: eliminate. -->
        
      </release>
 
