@@ -24,7 +24,8 @@ Download under
 <!-- TBD: this will be created also as html and deployed to the website 
 and then linked also from this pla. -->
 
-For specific pieces of information on installation and usage, 
+For pieces of information on installation and usage 
+specific for maven or for ant, 
 we refer to ['The latex-maven-plugin' Section](#ss:mavenPlugin)
 for the maven plugin 
 and to ['The latex ant tasks' Section](#ss:antTasks) for the ant tasks. 
@@ -68,7 +69,7 @@ to the targets folder by default to `$root/target/site/`.
 To that end, it applies a latex converter like `pdflatex` 
 to the top level sources ignoring `.tex` files which are just included. 
 
-### Output in various formats {#sss:featuresOutFormats}<!--a id='sss:featuresOutFormats'></a-->
+### Output in various formats <!--{#sss:featuresOutFormats}--><a id='sss:featuresOutFormats'></a>
 
 One aim is to convert latex files in printable formats 
 like pdf, formats in the office world like docx and browser formats 
@@ -93,15 +94,20 @@ For further plans see [here](#ss:featureRequests).
 ### Support for development of sources <a id='sss:featuresDevSrc'></a>
 
 The '**LaTeX builder**' is designed 
-to build artifacts for all source documents at once. 
+to build artifacts for all source documents at once 
+searching in a specified folder for the tex-files and related 
+as bib-files and graphic files. 
 
 This is appropriate for deployment 
 but not when changing and developing a single document. 
-For that scenario, it is better to use an editor and viewer 
+For that scenario, it is better to use an editor and viewer, 
+maybe a build tool like `latexmk` 
 synchronized and compile single files 
 with the various tools within the enclosing working directory. 
 
-This implies that intermediate files are created in the working directory. 
+To make the '**LaTeX builder**' compatible with development, 
+it has to create intermediate files and output files like pdf 
+in the working directory. 
 Intermediate files are needed for parts which need sorting 
 like bibliographies or indices but also for most kind of graphics 
 to be included into a LaTeX document. 
@@ -213,13 +219,13 @@ further features are planned for future releases:
 
 ## Installation <a id='ss:installation'></a>
 
-Of course, to run the maven plugin one does need maven 
-and accordingly for the ant task one needs ant. 
+Of course, to run the maven plugin one does need `maven` 
+and accordingly for the ant task one needs `ant`. 
 The details of integration in maven and ant 
 are given in Sections [The latex-maven-plugin](#ss:mavenPlugin) 
 and [The latex ant tasks](#ss:antTasks) and their subsections. 
 
-This section is more about the converter used by the '**LaTeX builder**'. 
+This section is more about the converters used by the '**LaTeX builder**'. 
 We provide the executables and the packages with versions tested. 
 The default values are emphasized. 
 Note that this software is designed only to run with the executables 
@@ -274,9 +280,19 @@ the following converters are used for the various *output* formats.
 | ps     |   (pdf2ps)             | ghostscript          |
 | *      |    gs                  | ghostscript          |
 | ---    | **chktex**             | texlive-chktex-bin   |
+| ---    | **diff-pdf**           | diff-pdf             |
+| ---    |   pdfinfo              | poppler-tools        |
+| ---    |   exiftool             | exiftool             |
+
 
 The program `chktex` just checks the style 
 but has no deliverable output. 
+Similarly, `pdfinfo` and `exiftool` collect information on pdf-files. 
+In future, these are intended to check meta-info. 
+The usage of `diff-pdf` is special: 
+We use this in the context of integration tests 
+to check that the pdf files created are 'visually equal' 
+to a checked version. 
 
 For some software (output) format `*` is given. 
 These programs are discussed below. 
@@ -334,6 +350,7 @@ If one needs split indices, use `splitindex` invoking `makeindex`.
 | **makeindex**  | texlive-makeindex-bin  |
 | **splitindex** | texlive-splitindex-bin |
 | xindy          | xindy                  |
+| upmendex       | texlive-uptex-bin      |
 
 Closely related to indices are glossaries created by `makeglossaries` 
 which can use `makeindex` or `xindy`. 
@@ -341,6 +358,33 @@ which can use `makeindex` or `xindy`.
 | executable         | package                    |
 |:------------------ |:---------------------------|
 | **makeglossaries** | texlive-makeglossaries-bin |
+
+A way to include programmatically computed results, 
+originally in python but in the meantime in other languages as well 
+as e.g. matlab (accessible through the matlab clone `octave`) 
+is offered by pythontex. 
+It has two converters, `pythontex` and `depythontex`, 
+which are spread over several packages. 
+
+| executable         | package               |
+|:------------------ |:----------------------|
+| **pythontex**      | texlive-pythontex-bin |
+|                    | texlive-pythontex-doc |
+|                    | texlive-pythontex     |
+
+More loosely coupled to the '**LaTeX builder**' 
+is a build tool to build from individual sources, `latexmk`. 
+Currently, it is not used by this software and maybe it never will. 
+On the other  hand, there are reasons to support interaction with that tool 
+in the course of [document development](#sss:featuresDevSrc). 
+Of course there are alternatives to `latexmk` 
+but we decided to concentrate on a single tool and we chose `latexmk`. 
+
+| executable       | package             |
+|:---------------- |:--------------------|
+| **latexmk**      | texlive-latexmk-bin |
+|                  | texlive-latexmk-doc |
+|                  | texlive-latexmk     |
 
 Next we talk about the graphic formats which can be included into tex. 
 
@@ -356,7 +400,7 @@ used for various graphic *input* formats
 | svg         | **inkscape**     | inkscape         |
 | xfig        | **fig2dev**      | transfig         |
 
-The easiest and still very strong graphic package is tikz/pgf. 
+The easiest to treat and still very strong graphic package is tikz/pgf. 
 It is included within tex 
 and although it creates intermediate pdf, 
 this **LaTeX builder** has nothing to do to make it work. 
