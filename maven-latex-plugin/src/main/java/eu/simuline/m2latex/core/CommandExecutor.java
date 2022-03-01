@@ -144,7 +144,7 @@ class CommandExecutor {
 	return res;
     }
 
-    // returns whether this method logged a warning 
+    // returns whether this method logged an error or a warning 
     // FIXME: return value nowhere used 
     /**
      * @param command
