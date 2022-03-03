@@ -66,7 +66,7 @@ public class CommandExecutorTest {
 					 null, 
 					 "touch", 
 					 new String[] {touchFile},
-					 new File(WORKING_DIR, touchFile));
+					 new File(WORKING_DIR, touchFile)).output;
         //assertEquals(echoText, output.subSequence(0, echoText.length()));
     }
 

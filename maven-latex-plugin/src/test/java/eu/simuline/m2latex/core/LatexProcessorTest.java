@@ -27,7 +27,7 @@ import java.io.FileFilter;
 // import java.io.Writer;
 import java.io.IOException;
 
-import org.apache.maven.plugin.logging.Log;
+//import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
 import static org.mockito.Mockito.mock;

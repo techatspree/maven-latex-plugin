@@ -36,8 +36,10 @@ import org.junit.Before;
 import org.junit.After;
 
 public class TexFileUtilsTest {
-    private final static File WORKING_DIR = 
+	private final static File WORKING_DIR = 
 	new File(System.getProperty("unitTestResourcesDir"));
+	//private final static File KEEP_ME = 
+	//new File(System.getProperty("keepMe"));
 
     // FIXME: occurs also in other testclasses: 
     // to be unified. 
@@ -47,23 +49,23 @@ public class TexFileUtilsTest {
 
     // does not work for hidden directories 
     private static void cleanDirRec(File dir) {
-	assert dir.isDirectory() : "Expected directory. ";
-	File[] files = dir.listFiles();
-	assert files != null : "Directory is not readable. ";
-	boolean proof;
-	for (File file : files) {
-	    assert file.exists();
-	    if (file.isDirectory()) {
-		assert !file.isHidden();
-		cleanDirRec(file);
-		assert file.listFiles().length == 0;
-	    }
-	    if (!file.isHidden()) {
-		proof = file.delete();
-		assert proof;
-	    }
-	}
-     }
+			assert dir.isDirectory() : "Expected directory. ";
+			File[] files = dir.listFiles();
+			assert files != null : "Directory is not readable. ";
+			boolean proof;
+			for (File file : files) {
+				assert file.exists();
+				if (file.isDirectory()) {
+					assert !file.isHidden();
+					cleanDirRec(file);
+					assert file.listFiles().length == 0;
+				}
+				if (!file.isHidden()) {
+					proof = file.delete();
+					assert proof;
+				}
+			}
+		}
 
     @Before public void setUp() throws IOException {
 	cleanWorkingDir();
