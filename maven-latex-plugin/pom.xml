@@ -7,7 +7,6 @@
 
   <!-- coordinates for model and artifact xxx -->
   <modelVersion>4.0.0</modelVersion>
-  
 
   <!-- The Basics -->
   <groupId>eu.simuline.m2latex</groupId>
@@ -15,13 +14,11 @@
   <version>1.5-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
-    <!--parent>
+  <!--parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent-->
-
-
 
   <!-- information for generating a site -->
   <name>Maven LaTeX Plugin</name>
@@ -50,7 +47,6 @@
     <url>http://www.simuline.eu</url>
   </organization>
 
- 
   <!--organization>
     <name>akquinet AG</name>
     <url>http://www.akquinet.de</url>
@@ -100,8 +96,6 @@
     </pluginRepository>
   </pluginRepositories>
 
-
-
   <!-- source repositories: at the moment not needed. -->
   <repositories>
     <!--repository>
@@ -114,8 +108,6 @@
 	</repository-->
   </repositories>
   <!-- https://mvnrepository.com/artifact/org.apache.ant/com.springsource.org.apache.tools.ant -->
-
-
 
   <!--scm>
     <connection>
@@ -169,11 +161,16 @@
     </issueManagement-->
 
   <properties>
-    <!-- checked during validation -->
-    <versionMvn>3.8.4</versionMvn><!-- 3.8.4 3.1.0-->
     <!-- Using platform encoding to copy filtered resources; 
     without project.build.sourceEncoding the build is platform dependent! -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- checked during validation -->
+    <versionMvn>3.8.4</versionMvn><!-- 3.8.4 3.1.0-->
+		<versionJunit5>5.8.2</versionJunit5>
+		<!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
+		<versionJunit4>4.12</versionJunit4>
+		<versionItf>0.11.0</versionItf>
+		<versionAnt>1.10.0</versionAnt>
   </properties>
 
   <dependencies>
@@ -202,6 +199,7 @@
 		<groupId>org.apache.maven</groupId>
 		<artifactId>maven-compat</artifactId>
 		<version>${versionMvn}</version>
+		<scope>provided</scope>
 	</dependency>
 
     <!-- needed for maven-plugin-plugin descriptor -->
@@ -258,7 +256,7 @@
 	<dependency>
 		<groupId>org.apache.ant</groupId>
 		<artifactId>ant</artifactId>
-		<version>1.10.0</version>
+		<version>${versionAnt}</version>
      <scope>provided</scope>
 	</dependency>
 
@@ -314,7 +312,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>${versionJunit4}</version>
       <scope>test</scope>
     </dependency>
 
@@ -340,36 +338,65 @@
       <scope>test</scope>
  	</dependency>
 
-	 <!--dependency>
-		<groupId>com.soebes.itf.jupiter.extension</groupId>
-		<artifactId>itf-extension-maven</artifactId>
-		<version>0.9.0</version>
-		<scope>test</scope>
-	  </dependency>
-	  <dependency>
+	<!--dependency>
 		<groupId>org.junit.jupiter</groupId>
 		<artifactId>junit-jupiter-engine</artifactId>
-		<version>5.6.2</version>
+		<version>${versionJunit5}</version>
 		<scope>test</scope>
-	  </dependency>
-	  <dependency>
+	</dependency-->
+
+	<!-- annotations and assertions -->
+	<!--dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-api</artifactId>
+		<version>${versionJunit5}</version>
+		<scope>test</scope>
+	</dependency-->
+
+	<!-- @suite support -->
+	<!--dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-params</artifactId>
+		<version>${versionJunit5}</version>
+		<scope>test</scope>
+	</dependency-->
+
+	<!-- support for parametrized tests -->
+	<!--dependency>
+		<groupId>org.junit.platform</groupId>
+		<artifactId>junit-platform-suite</artifactId>
+		<version>${versionJunit5Platform}</version>
+		<scope>test</scope>
+	</dependency-->
+
+	<!--dependency>
+		<groupId>com.soebes.itf.jupiter.extension</groupId>
+		<artifactId>itf-extension-maven</artifactId>
+		<version>${versionItf}</version>
+		<scope>test</scope>
+	  </dependency-->
+
+	<!--dependency>
 		<groupId>com.soebes.itf.jupiter.extension</groupId>
 		<artifactId>itf-assertj</artifactId>
-		<version>0.9.0</version>
+		<version>${versionItf}</version>
 		<scope>test</scope>
 	  </dependency>
+
 	  <dependency>
 		<groupId>com.soebes.itf.jupiter.extension</groupId>
 		<artifactId>itf-jupiter-extension</artifactId>
-		<version>0.9.0</version>
+		<version>${versionItf}</version>
 		<scope>test</scope>
 	  </dependency>
+
 	  <dependency>
 		<groupId>org.assertj</groupId>
 		<artifactId>assertj-core</artifactId>
 		<version>3.16.1</version>
 		<scope>test</scope>
 	  </dependency-->
+
 
     <!--dependency>
       <groupId>eu.simuline.m2latex</groupId>
