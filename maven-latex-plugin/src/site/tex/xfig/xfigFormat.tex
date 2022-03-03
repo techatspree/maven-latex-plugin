@@ -35,10 +35,25 @@
 \fi
 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
+%\pdfinfoomitdate1
+\pdfsuppressptexinfo-1
+\pdftrailerid{}
 
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={The xfig file format for xfig 3.2},
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Subject     ={xfig files},
+    Keywords    ={LaTeX;xfig}
+  }
+}
 %\usepackage{latex-bnf}
 \title{The xfig file format for xfig 3.2 }
 \author{Ernst Reissner (rei3ner@arcor.de)}
+\date{}
+
 \begin{document}
 
 \maketitle
