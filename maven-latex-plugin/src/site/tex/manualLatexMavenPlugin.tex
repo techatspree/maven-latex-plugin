@@ -5023,10 +5023,46 @@ so only the pdftrailerid has to be eliminated or fixed.
 \date{\versionDate}
 \end{lstlisting}
 
+
+
 If a user renounces independence of the engine and sticks to \texttt{pdflatex} only, 
 the package \texttt{hyperref} 
 could be replaced by specific commands. 
 For convenience also \texttt{pdfprivacy} described in \cite{PdfPriv} can be used. 
+\medskip
+
+
+Now that we have described how to create reproducible pdf artifacts, 
+we have to explain how to check that a newly created artifact 
+coincides with a blueprint provided a priori. 
+First of all, note that currently such a check is performed only if the result is in pdf format. 
+More formally, if the target 
+(which is in parameter \texttt{target} described in Table~\ref{tab:paramGen}) is \textt{pdf}. 
+% TBD: this may change. 
+
+But if so, the parameter \textt{chkDiff} 
+decides whether a check is performed at all. 
+Then a diffing tool given by \texttt{diffPdfCommand} 
+expects the blueprints in the directory \texttt{diffDirectory}. 
+All three parameters are described in Table~\ref{tab:paramDiffPdf}. 
+In contrast, the actual artifacts to be checked are in \texttt{outputDirectory}, 
+whereas the sources are in \texttt{texSrcDirectory} 
+both described in Table~\ref{tab:paramGen}. 
+
+The location of a source tex file relative to \texttt{texSrcDirectory} 
+is the location of the artifact relative to \texttt{outputDirectory}. 
+This path relative to \texttt{diffDirectory} is the location of the blueprint. 
+With the actual artifact in \texttt{outputDirectory} 
+and the blueprint in \texttt{diffDirectory} 
+the diff-tool determines whether the both are equivalent. 
+If so, equivalence is logged as an info, 
+else an exception described in Table~ref{tab:TLP} is thrown. 
+
+This is used as a mechanism to define integration test 
+but other use cases are conceivable also. 
+
+
+
 
 
 \begin{longtable}{|ll|}
@@ -5039,24 +5075,43 @@ For convenience also \texttt{pdfprivacy} described in \cite{PdfPriv} can be used
   \bottomrule
   \caption{\label{tab:paramDiffPdf} The parameters of the pdf differ }
   \endlastfoot%
-  \texttt{chkTexCommand}      & \texttt{chktex}        \\
+  \texttt{diffDirectory}      & \texttt{.}        \\
   \multicolumn2{|l|}{
   \begin{minipage}{0.95\linewidth}
-  The chktex-command for checking latex main files. 
-  %The default value is 'chktex'. 
+    Diff directory relative to \texttt{\$baseDirectory} 
+    used for diffing actually created artifact against prescribed one inthis directory. 
+    This is relevant only if \texttt{\$chkDiff} is set. 
+    The default value is \texttt..
   \end{minipage}
   } \\
-  \texttt{chkTexOptions}      & \texttt{-q -b}  \\
+  \texttt{chkDiff}      & \texttt{false}  \\
   \multicolumn2{|l|}{
   \begin{minipage}{0.95\linewidth}
-  The options of the command \texttt{\$chkTexCommand}, 
-  except ``\texttt{-o output-file}'' 
-  specifying the output file which is added automatically. 
-  For further details see the options below. 
-  %The default value is '\texttt{-q -b}'. 
+    Indicates whether after creating artifacts 
+		and copying them to the output directory \texttt{\$outputDirectory} 
+		the artifacts are checked by diffing them against preexisting artifacts 
+		in \texttt{\$diffDirectory} 
+		using the diff command given by \texttt{\$diffPdfCommand}. 
+		Note that currently, only pdf files are checkd. 
+		This is \texttt{false} by default and is set to \texttt{true} only 
+		in the context of tests. 
   \end{minipage}
   } \\
-\end{longtable}
+  \texttt{diffPdfCommand}      & \texttt{diff}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+    The diff-command for diffing pdf-files strictly or just visually 
+    to check that the created pdf files are equivalent with prescribed ones. 
+    CAUTION: there are two philsophies: 
+    Either the latex source files are created in a way that they reproduce strictly. 
+    Then a strict diff command like \texttt{diff} is appropriate. 
+    Else another diff command is required which checks for a kind of visual equality. 
+    The default value is a mere \texttt{diff}. 
+    Alternatives are \texttt{diff-pdf} and \texttt{diff-pdf-visually} 
+    both implementing a visual diff. 
+    Note that unlike for other tools, no options can be passed in this case explicitly. 
+  \end{minipage}
+  } \\\end{longtable}
 
 The options of \texttt{chktex} 
 are described in detail in~\cite{ChkTeX}, Section 6.1.2. 
@@ -5869,7 +5924,7 @@ given by Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}.
 %\lstset{language=xml, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[language=xml, basicstyle=\scriptsize,
-firstline=569, lastline=1499,
+firstline=824, lastline=1787, 
 breaklines, showstringspaces=false,
 %float,
 captionpos=b, label={lst:fullConfig},
