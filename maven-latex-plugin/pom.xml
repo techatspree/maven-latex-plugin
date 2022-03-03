@@ -867,7 +867,7 @@
             <texSrcProcDirectory>.</texSrcProcDirectory>
 
 	    <!-- Whether the tex source directory $texSrcProcDirectory 
-		 shall be read recursively, 
+		 shall be read recursively for creation of graphic files, 
 		 i.e. including the subdirectories. 
 		 This is set to 'false' only during information development. 
 		 The default value is 'true'. -->
@@ -879,6 +879,14 @@
 		which is by default '$targetDirectory/site' on Unix systems. 
 		The default value is '.'.  -->
             <outputDirectory>.</outputDirectory>
+
+
+						<!-- Diff directory relative to 'baseDirectory' 
+						used for diffing actually created artifact against prescribed one inthis directory. 
+						This is relevant only if 'chkDiff' is set. 
+						The according file is given by 'diffDirectoryFile'. 
+						The default value is <code>.</code>. -->
+						<diffDirectory>.</diffDirectory>;
 
 	    <!-- A comma separated list of targets 
 		 to be stored in $targetSet. 
@@ -934,6 +942,16 @@ NOT QUITE: to the beginning
 		and even <texPath>    </texPath> represent the null-File. 
 		The default value is null. -->
             <texPath/>
+
+						<!-- Indicates whether after creating artifacts 
+						 and copying them to the output directory {@link #outputDirectoryFile} 
+						 the artifacts are checked by diffing them against preexisting artifacts 
+						 in {@link #diffDirectoryFile} 
+						 using the diff command given by {@link #diffPdfCommand}. 
+						 Note that currently, only pdf files are checkd. 
+						 This is <code>false</code> by default and is set to <code>true</code> only 
+						 in the context of tests. -->
+					 <chkDiff>false</chkDiff>
 
             <!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
@@ -1725,7 +1743,20 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		The default value is '-q -b0' 
 		avoiding verbose output and backing up the output log-file. -->
            <chkTexOptions>-q -b0 -v1 -g0 -l ${basedir}/src/site/tex/chktexrc</chkTexOptions>
-  	  </settings>
+
+
+						<!-- The diff-command for diffing pdf-files strictly or just visually 
+						 to check that the created pdf files are equivalent with prescribed ones. 
+						 CAUTION: there are two philsophies: 
+						 Either the latex source files are created in a way that they reproduce strictly. 
+						 Then a strict diff command like 'diff' is appropriate. 
+						 Else another diff command is required which checks for a kind of visual equality. 
+						 The default value is a mere 'diff'. 
+						 Alternatives are 'diff-pdf' and 'diff-pdf-visually' 
+						 both implementing a visual diff. 
+						 Note that unlike for other tools, no options can be passed in this case explicitly. -->
+						 <diffPdfCommand>diff</diffPdfCommand>
+						</settings>
 	</configuration>
 
 	<executions>
