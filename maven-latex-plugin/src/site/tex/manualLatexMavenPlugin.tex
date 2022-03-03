@@ -11,10 +11,10 @@
 
 \input{buildParams.tex}
 % not before pdfTeX 3.14159265-2.6-1.40.17
-%\pdfinfoomitdate=1
-%\pdftrailer
-%%\pdftrailerid{}
-%\pdfsuppressptexinfo = -1
+\pdfinfoomitdate=1 % omit CreationDate and ModDate keys.
+%\pdftrailer=0 % no adding to the trailer dictionary.
+\pdftrailerid{}
+\pdfsuppressptexinfo=-1
 % 1 -> PTEX.Fullbanner
 % 2 -> PTEX.FileName
 % 4 -> PTEX.PageNumber
@@ -23,14 +23,26 @@
 % - erase docdata and set the ones needed thereafter
 % - erase trailer to make repreoducible 
 %   CAUTION: This is not recommended as the docs are no longer individual. 
-\usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
-\pdfinfo{
-   /Author (Ernst Reissner)
-   /Title  (Maven plugin and ant-task to process latex)
+
+
+%\pdfinfo{
+%   /Author (Ernst Reissner)
+%   /Title  (Maven plugin and ant-task to process latex)
 %   /CreationDate (unknown)
 %   /ModDate (unknown)
-   /Subject (latex plugin for maven and latex task for ant)
-   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
+%   /Subject (latex plugin for maven and latex task for ant)
+%   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
+%}
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Maven plugin and ant-task to process latex},
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Subject     ={latex plugin for maven and latex task for ant},
+    Keywords    ={svg;png;metapost;PDF;LaTeX;maven;ant}
+  }
 }
 % TBD: check of resulting pdf with exif unveils a warning duplicate author 
 
@@ -1298,34 +1310,41 @@ caption={Output of goal \texttt{latex:vrs}}]
 [INFO] coordinate.version:    '1.5-SNAPSHOT'
 [INFO] git properties: 
 [INFO] build version:  '1.5-SNAPSHOT'
-[INFO] commit id desc: 'latex-maven-plugin-1.4-114-g1c03bb0-dirty'
-[INFO] buildTime:      '2021-05-19T23:09:31+0200'
+[INFO] commit id desc: 'latex-maven-plugin-1.4-194-g5f46a4e-dirty'
+[INFO] buildTime:      '2022-03-02T22:12:59+0100'
 [INFO] tool versions: 
-[INFO] ?warn?    command         'actual version'(not)in[expected version interval]
-[INFO]           pdflatex:       '1.40.22'in[1.40.21;1.40.22]
-[INFO]           lualatex:       '1.13.2'in[1.12.0;1.13.2]
-[INFO]           xelatex:        '0.999993'in[0.999992;0.999993]
-[INFO]           latex2rtf:      '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
-[INFO]           odt2doc:        '0.9.0'in[0.9.0]
-[INFO]           pdftotext:      '21.10.0'in[21.04.0;21.10.0]
-[INFO]           dvips:          '2021.1'in[2020.1;2021.1]
-[INFO]           dvipdfm:        '20210318'in[20210318]
-[INFO]           dvipdfmx:       '20210318'in[20200315;20210318]
-[INFO]           xdvipdfmx:      '20210318'in[20200315;20210318]
-[INFO]           dvipdft:        '20090604.0046'in[20090604.0046]
-[INFO]           gs:             '9.54.0'in[9.52.0;9.54.0]
-[INFO]           chktex:         '1.7.6'in[1.7.6]
-[WARNING] WMI02: bibtex:         '0.99d'not in[0.99c]
-[INFO]           bibtexu:        '3.71'in[3.71]
-[INFO]           bibtex8:        '3.71'in[3.71]
-[INFO]           makeindex:      '2.15'in[2.15]
-[INFO]           splitindex:     '0.1'in[0.1]
-[INFO]           makeglossaries: '4.45'in[4.45]
-[INFO]           mpost:          '2.01'in[2.00;2.01]
-[INFO]           ebb:            '20210318'in[20200315;20210318]
-[INFO]           gnuplot:        '5.4 patchlevel 2'in[5.4 patchlevel 0;5.4 patchlevel 2]
-[INFO]           inkscape:       '1.1.1'in[1.0.2;1.1.1]
-[INFO]           fig2dev:        '3.2.8b'in[3.2.7b;3.2.8b]
+[INFO] ?warn?    command             'actual version'(not)in[expected version interval]
+[INFO]           pdflatex:           '1.40.22'in[1.40.21;1.40.22]
+[INFO]           lualatex:           '1.13.2'in[1.12.0;1.13.2]
+[INFO]           xelatex:            '0.999993'in[0.999992;0.999993]
+[INFO]           latex2rtf:          '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
+[INFO]           odt2doc:            '0.9.0'in[0.9.0]
+[INFO]           pdftotext:          '22.01.0'in[21.04.0;22.01.0]
+[INFO]           dvips:              '2021.1'in[2020.1;2021.1]
+[INFO]           dvipdfm:            '20210318'in[20210318]
+[INFO]           dvipdfmx:           '20210318'in[20200315;20210318]
+[INFO]           xdvipdfmx:          '20210318'in[20200315;20210318]
+[INFO]           dvipdft:            '20090604.0046'in[20090604.0046]
+[INFO]           gs:                 '9.54.0'in[9.52.0;9.54.0]
+[INFO]           chktex:             '1.7.6'in[1.7.6]
+[INFO]           diff-pdf-visually:  '0'in[0]
+[INFO]           diff-pdf:           '300'in[300]
+[INFO]           diff:               '3.8'in[3.8]
+[INFO]           pdfinfo:            '22.01.0'in[22.01.0]
+[INFO]           exiftool:           '12.39'in[12.39]
+[INFO]           bibtex:             '0.99d'in[0.99d]
+[INFO]           bibtexu:            '3.71'in[3.71]
+[INFO]           bibtex8:            '3.71'in[3.71]
+[INFO]           makeindex:          '2.15'in[2.15]
+[INFO]           splitindex:         '0.1'in[0.1]
+[INFO]           makeglossaries:     '4.45'in[4.45]
+[INFO]           pythontex:          '0.17'in[0.17]
+[INFO]           latexmk:            '4.70b'in[4.70b]
+[INFO]           mpost:              '2.01'in[2.00;2.01]
+[INFO]           ebb:                '20210318'in[20200315;20210318]
+[INFO]           gnuplot:            '5.4 patchlevel 3'in[5.4 patchlevel 0;5.4 patchlevel 3]
+[INFO]           inkscape:           '1.1.1'in[1.0.2;1.1.1]
+[INFO]           fig2dev:            '3.2.8b'in[3.2.7b;3.2.8b]
 [INFO] excluded tools: 
 [INFO] upmendex, xindy
 [INFO] ------------------------------------------------------------------------
@@ -1365,6 +1384,8 @@ This ensures, that the converters are checked for correct version
 before being used.
 Note that by default, \texttt{mvn latex:vrs} displays complete version info,
 whereas \texttt{mvn validate} only displays warnings if appropriate. 
+
+
 
 
 \section{The ant-tasks}\label{sec:usageAntTask}
@@ -3419,7 +3440,7 @@ The default value is ``\texttt{.}''.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Whether the tex source directory \texttt{\$texSrcProcDirectory} 
-shall be read recursively, 
+shall be read recursively for creation of graphic files, 
 i.e.~including the sub-directories recursively. 
 This is set to \texttt{false} only during development of documentation. 
 %The default value is 'true'.
@@ -4673,23 +4694,6 @@ The options of the command \texttt{\$pdf2txtCommand}.
 %The default value is the empty string. 
 \end{minipage}
 } \\
-\texttt{chkTexCommand}      & \texttt{chktex}        \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-The chktex-command for checking latex main files. 
-%The default value is 'chktex'. 
-\end{minipage}
-} \\
-\texttt{chkTexOptions}      & \texttt{-q -b}  \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-The options of the command \texttt{\$chkTexCommand}, 
-except ``\texttt{-o output-file}'' 
-specifying the output file which is added automatically. 
-For further details see Section~\ref{subsec:chkTexOptions}. 
-%The default value is '\texttt{-q -b}'. 
-\end{minipage}
-} \\
 \end{longtable}
 
 
@@ -4718,8 +4722,43 @@ What makes sense most is \texttt{UTF-8}.
 
 
 
-\subsection{The parameter \texttt{chkTexOptions}}
-\label{subsec:chkTexOptions}
+\section{The code checker \texttt{chktex}}\label{sec:chkTex}
+
+Among the applications used by this software, 
+the codechecker plays a special role: 
+it is not really a converter, 
+unless we interprete the log file as artifact. 
+Like for the most converters also for the codechecker 
+we can specify the command ant its options. 
+
+\begin{longtable}{|ll|}
+  \toprule
+  Parameter        & Default  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:paramChkTex} The parameters of the code checker }
+  \endlastfoot%
+  \texttt{chkTexCommand}      & \texttt{chktex}        \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The chktex-command for checking latex main files. 
+  %The default value is 'chktex'. 
+  \end{minipage}
+  } \\
+  \texttt{chkTexOptions}      & \texttt{-q -b}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The options of the command \texttt{\$chkTexCommand}, 
+  except ``\texttt{-o output-file}'' 
+  specifying the output file which is added automatically. 
+  For further details see the options below. 
+  %The default value is '\texttt{-q -b}'. 
+  \end{minipage}
+  } \\
+\end{longtable}
 
 The options of \texttt{chktex} 
 are described in detail in~\cite{ChkTeX}, Section 6.1.2. 
@@ -4863,6 +4902,164 @@ This could be used for emitting an error instead of a warning
 when processing goal {\em check}. 
 
 
+\section{Parameters for Ensuring Reproducibility}\label{sec:paramRepro}
+
+There are use cases, where on the one hand side we want to deliver the sources 
+but it is extremely important that the according artifacts are really reproducible. 
+One obvious case is to test this software by ensuring that the created artifacts 
+is equivalent with with a confirmed version. 
+
+Currently, this is done for pdf files only. 
+The problem with pdf files is, that besides visible contents 
+it contains also meta-data (see \cite{pdf17}, Section 14.3), 
+which depends on the run of the conversion. 
+For example the timestamp of conversion goes into and many more aspects. 
+
+There are two strategies to deal with the problem: 
+%
+\begin{itemize}
+  \item 
+  make the build process reproducible. 
+  This is possible with a fixed installation but tends to break with update of tools. 
+  Also at time of this writing, the different latex engines cannot be treated uniformly. 
+  \item 
+  use diff tools implementing a weaker notion of equivalence, 
+  in a sense visibility equivalence. 
+\end{itemize}
+
+We support both approaches. 
+The first one excludes that one displays a creation date changing each run. 
+Listing~\ref{lst:designMeta} lower part illustrates that: 
+We replaced the creation date by a ``version date''. 
+A date can be only date of checkin of a version control system or that like. 
+As an alternative, one could also refrain from using dates altogether
+
+But the visible date is not all we have to aviod. 
+Listing~\ref{lst:designMeta} shows how to eliminate metadata 
+and to replace by adequate one. 
+There is metadata which can be eliminated in a uniform way for all latex engines 
+using the package \texttt{hyperref} which the author generally advises. 
+Then with \texttt{\textbackslash hypersetup} one can set metadata 
+such as author, title, subject and keyword as described in \cite{HyperTextP}, Section 5.8. 
+On the other hand, one could eliminate \texttt{CreationDate} and \texttt{ModDate}. 
+For newer versions of \texttt{pdflatex} this can be done alternatively 
+with \texttt{\textbackslash pdfinfoomitdate1}. 
+
+The metadata which can be eliminated only in a engine specific way are the PTEX keys 
+including the banner, and the pdftrailerid. 
+Note that the latter is intentionally a unique identifier for the individual document 
+and so strictly speaking it is not advised to eliminate this 
+but eliminating is necessary because it is incompatible with reproducibility. 
+Note that xelatex seems not to write PTEX keys at all 
+so only the pdftrailerid has to be eliminated or fixed. 
+
+
+\begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\footnotesize,
+  escapechar=|,
+  float, captionpos=b, label={lst:designMeta}, 
+  caption={Specifying meta-data for pdf-files}]
+
+% for pdflatex
+\pdfsuppressptexinfo-1
+% pdfsuppressptexinfo-1 is the same as pdfsuppressptexinfo15
+% 1 -> PTEX.Fullbanner
+% 2 -> PTEX.FileName
+% 4 -> PTEX.PageNumber
+% 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
+\pdftrailerid{}
+
+% for lualatex: 
+%   1 -> PTEX.FullBanner
+%   2 -> PTEX.FileName
+%   4 -> PTEX.PageNumber
+%   8 -> PTEX.InfoDict
+%  16 -> Creator
+%  32 -> CreationDate
+%  64 -> ModDate
+% 128 -> Producer
+% 256 -> Trapped
+% 512 -> ID
+\pdfvariable suppressoptionalinfo \numexpr32+64+512\relax
+
+% for xelatex
+\special{pdf:trailerid [
+    <00112233445566778899aabbccddeeff>
+    <00112233445566778899aabbccddeeff>
+]}
+
+% general
+\usepackage{hyperref}
+...
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={The dvi-format and the program dvitype},
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Subject     ={dvi and dvitype},
+    Keywords    ={LaTeX;dvi;dvitype}
+  }
+}
+
+% alternative for pdftex only
+% \pdfinfoomitdate1
+% \pdfsuppressptexinfo-1
+% \pdftrailerid{}
+% \pdfinfo{
+%   /Author       (Ernst Reissner)
+%   /Title        (The dvi-format and the program dvitype)
+%   /CreationDate (unknown)
+%   /ModDate      (unknown)
+%   /Subject      (dvi and dvitype)
+%   /Keywords     (LaTeX;dvi;dvitype)
+%}
+% Replacing pdfinfoomitdate1 in conjunction with
+% usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
+% alternative 1 for pdftex only
+
+
+\title{The dvi-format and the program dvitype}
+\author{Ernst Reissner (rei3ner@arcor.de)}
+\date{\versionDate}
+\end{lstlisting}
+
+If a user renounces independence of the engine and sticks to \texttt{pdflatex} only, 
+the package \texttt{hyperref} 
+could be replaced by specific commands. 
+For convenience also \texttt{pdfprivacy} described in \cite{PdfPriv} can be used. 
+
+
+\begin{longtable}{|ll|}
+  \toprule
+  Parameter        & Default  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:paramDiffPdf} The parameters of the pdf differ }
+  \endlastfoot%
+  \texttt{chkTexCommand}      & \texttt{chktex}        \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The chktex-command for checking latex main files. 
+  %The default value is 'chktex'. 
+  \end{minipage}
+  } \\
+  \texttt{chkTexOptions}      & \texttt{-q -b}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The options of the command \texttt{\$chkTexCommand}, 
+  except ``\texttt{-o output-file}'' 
+  specifying the output file which is added automatically. 
+  For further details see the options below. 
+  %The default value is '\texttt{-q -b}'. 
+  \end{minipage}
+  } \\
+\end{longtable}
+
+The options of \texttt{chktex} 
+are described in detail in~\cite{ChkTeX}, Section 6.1.2. 
 
 \chapter{Exceptions and Logging}\label{chap:exceptionLogging}
 
@@ -5224,9 +5421,17 @@ which are not excluded, i.e. listed in configuration in section \texttt{converte
    because in that configuration, e.g \texttt{makeindex} is allowed. 
  \end{minipage}
  } \\
+ \texttt{\footnotesize TSS09}  & \texttt{\footnotesize The diff directory '\$diffDirectoryFile' } \\
+ & \texttt{\footnotesize should be a directory if it exists, but is not.  } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+   The \texttt{\$diffDirectoryFile} shall exist and be a directory. 
+   In it shall be stored the artifacts the actually created shall be compared with 
+   if \texttt{chkDiff} is set using the command \texttt{diffPdfCommand}. 
+   As the name suggests, currently only pdf files are compared. 
+ \end{minipage}
+ } \\
 \end{longtable}
-
-
 
 
 \begin{longtable}{|ll|}
@@ -5302,7 +5507,32 @@ This is mainly because of writing permissions.
 } \\
 \end{longtable}
 
-
+\begin{longtable}{|ll|}
+  \toprule
+  Id.        & Message  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:TLP} The BuildFailureExceptions of LatexProcessor  }
+  \endlastfoot%
+  \texttt{\footnotesize TLP01} 
+  & \texttt{\footnotesize Artifact '\$pdfFileAct' of '\$texFile' could not be reproduced. }  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  Processing \$texFile' yields \$pdfFileAct which is not ``alike'' the stored version. 
+  Currently, that kind of check can be performed for \texttt{pdf} files only. 
+  Also the diff check is executed only if parameter \$chkDiff is set. 
+  Then the diff command \$diffPdfCommand is performed to determine whether the artifacts are equivalent
+  in the sense given by the diff command. 
+  The concrete meaning of that equivalence 
+  may range from strict equivalence to some kind of visual equivalence. 
+  \end{minipage}
+  }
+  \end{longtable}
+  
+  
 
 
 
