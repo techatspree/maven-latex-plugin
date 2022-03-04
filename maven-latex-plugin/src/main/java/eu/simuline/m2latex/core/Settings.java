@@ -52,6 +52,10 @@ public class Settings {
 
     /**
      * The base directory of this maven project. 
+     * This shall be set only once through {@link #setBaseDirectory(File)} 
+     * in {@link eu.simuline.m2latex.mojo.AbstractLatexMojo#initialize()}. 
+     * TBD: clarify: what about ant task? 
+     * TBD: improve design here. 
      *
      * @see CfgLatexMojo#baseDirectory
      */
@@ -121,7 +125,7 @@ public class Settings {
 
     /**
      * Whether the tex source directory {@link #texSrcProcDirectory} 
-     * shall be read recursively, 
+     * shall be read recursively for creation of graphic files, 
      * i.e. including the subdirectories recursively. 
      * This is set to <code>false</code> only during information development. 
      * The default value is <code>true</code>. 
@@ -145,8 +149,24 @@ public class Settings {
     /**
      * File for {@link #outputDirectory} based on {@link #targetSiteDirectory}. 
      */
-    private File outputDirectoryFile = new File(this.targetSiteDirectory, 
-						this.outputDirectory);
+    private File outputDirectoryFile = 
+    new File(this.targetSiteDirectory, this.outputDirectory);
+
+    /**
+     * Diff directory relative to {@link #baseDirectory} 
+     * used for diffing actually created artifact against prescribed one inthis directory. 
+     * This is relevant only if {@link #chkDiff} is set. 
+     * The according file is given by {@link #diffDirectoryFile}. 
+     * The default value is <code>.</code>. 
+     */
+    @Parameter(name = "diffDirectory", defaultValue = ".")
+    private String diffDirectory = ".";
+
+    /**
+     * File for {@link #diffDirectory} based on @link #baseDirectory}. 
+     */
+    private File diffDirectoryFile = 
+    new File(this.baseDirectory, this.diffDirectory);
 
     /**
      * A comma separated list of targets 
@@ -222,6 +242,19 @@ public class Settings {
      */
     @Parameter(name = "texPath", defaultValue = "null")
     private File texPath = null;
+
+    /**
+     * Indicates whether after creating artifacts 
+     * and copying them to the output directory {@link #outputDirectoryFile} 
+     * the artifacts are checked by diffing them against preexisting artifacts 
+     * in {@link #diffDirectoryFile} 
+     * using the diff command given by {@link #diffPdfCommand}. 
+     * Note that currently, only pdf files are checkd. 
+     * This is <code>false</code> by default and is set to <code>true</code> only 
+     * in the context of tests. 
+     */
+    @Parameter(name = "chkDiff", defaultValue = "false")
+    private boolean chkDiff = false;
 
     /**
      * Clean up the working directory in the end? 
@@ -1393,6 +1426,25 @@ public class Settings {
     @Parameter(name = "chkTexOptions", defaultValue = "")
     private String chkTexOptions = "-q -b0";
 
+    /**
+     * The diff-command for diffing pdf-files strictly or just visually 
+     * to check that the created pdf files are equivalent with prescribed ones. 
+     * CAUTION: there are two philisophies: 
+     * Either the latex source files are created in a way that they reproduce strictly. 
+     * Then a strict diff command like <code>diff</code> is appropriate. 
+     * Else another diff command is required which checks for a kind of visual equality. 
+     * The default value is a mere <code>diff</code>. 
+     * Alternatives are <code>diff-pdf</code> and <code>diff-pdf-visually</code> 
+     * both implementing a visual diff. 
+     * Note that unlike for other tools, no options can be passed in this case explicitly. 
+     */
+    @Parameter(name = "diffPdfCommand", defaultValue = "diff")
+    private String diffPdfCommand = "diff";
+
+    //TBD: add options; 
+    // diff: no sensible options are available. 
+    // diff-pdf same
+    // diff-pdf-visually same
     // getter methods partially implementing default values. 
 
 
@@ -1464,15 +1516,31 @@ public class Settings {
      * @throws BuildFailureException 
      *    TSS03 if the output directory exists and is no directory. 
      */
-    public File   getOutputDirectoryFile() throws BuildFailureException {
-	if (/**/this.outputDirectoryFile.exists() && 
-	    !   this.outputDirectoryFile.isDirectory()) {
-	    throw new BuildFailureException
-		("TSS03: The output directory '" + this.outputDirectoryFile + 
-		 "' should be a directory if it exists, but is not. ");
-	}
-       return this.outputDirectoryFile;
+    public File getOutputDirectoryFile() throws BuildFailureException {
+        if (/**/this.outputDirectoryFile.exists() &&
+                !this.outputDirectoryFile.isDirectory()) {
+            throw new BuildFailureException("TSS03: The output directory '" + 
+                    this.outputDirectoryFile +
+                    "' should be a directory if it exists, but is not. ");
+        }
+        return this.outputDirectoryFile;
     }
+
+    /**
+     *
+     * @throws BuildFailureException 
+     *    TSS09 if the diff directory exists and is no directory. 
+     */
+    public File getDiffDirectoryFile() throws BuildFailureException {
+        if (/**/this.diffDirectoryFile.exists() &&
+                !this.diffDirectoryFile.isDirectory()) {
+            throw new BuildFailureException("TSS09: The diff directory '" + 
+                    this.diffDirectoryFile +
+                    "' should be a directory if it exists, but is not. ");
+        }
+        return this.diffDirectoryFile;
+    }
+
 
     /**
      * Returns the set of targets. 
@@ -1596,6 +1664,10 @@ public class Settings {
 
     public boolean isCleanUp() {
         return  this.cleanUp;
+    }
+
+    public boolean isChkDiff() {
+        return  this.chkDiff;
     }
 
     public String getPatternCreatedFromLatexMain() {
@@ -1740,6 +1812,7 @@ public class Settings {
 	    throw new IllegalStateException("Settings class mismatch. ");
 	}
 	// may throw BuildFailureException TSS05-08
+
 	checkConverter(cmdName, cat);
 	return cmdName;
     }
@@ -1854,7 +1927,7 @@ public class Settings {
     }
 
     // for ant task only 
-    public String gettPdf2txtCommand() throws BuildFailureException {
+    public String getPdf2txtCommand() throws BuildFailureException {
         return getCommand(ConverterCategory.Pdf2Txt);
     }
 
@@ -1863,7 +1936,7 @@ public class Settings {
     }
 
      // for ant task only 
-   public String getChkTexCommand() throws BuildFailureException {
+    public String getChkTexCommand() throws BuildFailureException {
         return getCommand(ConverterCategory.LatexChk);
     }
 
@@ -1871,6 +1944,10 @@ public class Settings {
         return  this.chkTexOptions;
     }
 
+    // for ant task only if needed TBD
+    public String getDiffPdfCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.DiffPdf);
+    }
 
     // setter methods 
 
@@ -1883,7 +1960,12 @@ public class Settings {
 	this.texSrcDirectoryFile     = new File(this.baseDirectory, 
 						this.texSrcDirectory);
 	this.texSrcProcDirectoryFile = new File(this.texSrcDirectoryFile,
-						this.texSrcProcDirectory);	
+						this.texSrcProcDirectory);
+    this.texSrcProcDirectoryFile = new File(this.texSrcDirectoryFile,
+						this.texSrcProcDirectory);
+    this.diffDirectoryFile = new File(this.baseDirectory, 
+                        this.diffDirectory);
+ 
     }
 
     /**
@@ -1909,10 +1991,10 @@ public class Settings {
      */
     public void setTexSrcDirectory(String texSrcDirectory) {
         this.texSrcDirectory = texSrcDirectory;
-	this.texSrcDirectoryFile     = new File(this.baseDirectory, 
-						this.texSrcDirectory);
-	this.texSrcProcDirectoryFile = new File(this.texSrcDirectoryFile,
-						this.texSrcProcDirectory);
+        this.texSrcDirectoryFile = new File(this.baseDirectory,
+                this.texSrcDirectory);
+        this.texSrcProcDirectoryFile = new File(this.texSrcDirectoryFile,
+                this.texSrcProcDirectory);
     }
 
     /**
@@ -1934,8 +2016,14 @@ public class Settings {
      */
     public void setOutputDirectory(String outputDirectory) {
         this.outputDirectory = outputDirectory;
-	this.outputDirectoryFile = new File(this.targetSiteDirectory, 
-					    this.outputDirectory);
+        this.outputDirectoryFile = new File(this.targetSiteDirectory,
+                this.outputDirectory);
+    }
+
+    public void setDiffDirectory(String diffDirectory) {
+        this.diffDirectory = diffDirectory;
+        this.diffDirectoryFile = new File(this.baseDirectory, 
+                this.diffDirectory);
     }
 
     public void setTargets(String targets) {
@@ -1974,6 +2062,10 @@ public class Settings {
 
     public void setCleanUp(boolean cleanUp) {
         this.cleanUp = cleanUp;
+    }
+
+    public void setChkDiff(boolean chkDiff) {
+        this.chkDiff = chkDiff;
     }
 
     // FIXME: as patternCreatedFromLatexMain 
@@ -2450,98 +2542,106 @@ public class Settings {
 	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
+    public void setDiffPdfCommand(String diffPdfCommand) {
+        this.diffPdfCommand = diffPdfCommand;
+    }
+
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
-	// directories and related 
-	sb.append("[ baseDirectory=")       .append(this.baseDirectory);
-	sb.append(", targetDirectory=")     .append(this.targetDirectory);
-	sb.append(", targetSiteDirectory=") .append(this.targetSiteDirectory);
-	sb.append(", texSrcDirectory=")     .append(this.texSrcDirectory);
-	sb.append(", texSrcProcDirectory=") .append(this.texSrcProcDirectory);
-	sb.append(", readTexSrcProcDirRec=").append(this.readTexSrcProcDirRec);
- 	sb.append(", outputDirectory=")     .append(this.outputDirectory);
-	// general parameters
- 	sb.append(", targets=")             .append(this.targets);
- 	sb.append(", convertersExcluded=")  .append(this.convertersExcluded);
- 	sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
-        sb.append(", texPath=")             .append(this.texPath);
-	sb.append(", cleanUp=")             .append(this.cleanUp);
-	sb.append(", patternCreatedFromLatexMain=")
-	    .append(this.patternCreatedFromLatexMain);
+        // directories and related
+        sb.append("[ baseDirectory=").append(this.baseDirectory);
+        sb.append(", targetDirectory=").append(this.targetDirectory);
+        sb.append(", targetSiteDirectory=").append(this.targetSiteDirectory);
+        sb.append(", texSrcDirectory=").append(this.texSrcDirectory);
+        sb.append(", texSrcProcDirectory=").append(this.texSrcProcDirectory);
+        sb.append(", readTexSrcProcDirRec=").append(this.readTexSrcProcDirRec);
+        sb.append(", outputDirectory=").append(this.outputDirectory);
+        sb.append(", diffDirectory=").append(this.diffDirectory);
+        // general parameters
+        sb.append(", targets=").append(this.targets);
+        sb.append(", convertersExcluded=").append(this.convertersExcluded);
+        sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
+        sb.append(", texPath=").append(this.texPath);
+        sb.append(", cleanUp=").append(this.cleanUp);
+        sb.append(", chkDiff=").append(this.chkDiff);
+        sb.append(", patternCreatedFromLatexMain=")
+                .append(this.patternCreatedFromLatexMain);
 
-	// parameters for graphical preprocessors 
-        sb.append(", fig2devCommand=")      .append(this.fig2devCommand);
-        sb.append(", fig2devGenOptions")    .append(this.fig2devGenOptions);
-        sb.append(", fig2devPtxOptions")    .append(this.fig2devPtxOptions);
-        sb.append(", fig2devPdfEpsOptions") .append(this.fig2devPdfEpsOptions);
-        sb.append(", gnuplotCommand=")      .append(this.gnuplotCommand);
-        sb.append(", gnuplotOptions=")      .append(this.gnuplotOptions);
-        sb.append(", metapostCommand=")     .append(this.metapostCommand);
-        sb.append(", metapostOptions=")     .append(this.metapostOptions);
-	sb.append(", svg2devCommand=")      .append(this.svg2devCommand);
-	sb.append(", svg2devOptions=")      .append(this.svg2devOptions);
-  
-	sb.append(", ebbCommand=")          .append(this.ebbCommand);
-        sb.append(", ebbOptions=")          .append(this.ebbOptions);
+        // parameters for graphical preprocessors
+        sb.append(", fig2devCommand=").append(this.fig2devCommand);
+        sb.append(", fig2devGenOptions").append(this.fig2devGenOptions);
+        sb.append(", fig2devPtxOptions").append(this.fig2devPtxOptions);
+        sb.append(", fig2devPdfEpsOptions").append(this.fig2devPdfEpsOptions);
+        sb.append(", gnuplotCommand=").append(this.gnuplotCommand);
+        sb.append(", gnuplotOptions=").append(this.gnuplotOptions);
+        sb.append(", metapostCommand=").append(this.metapostCommand);
+        sb.append(", metapostOptions=").append(this.metapostOptions);
+        sb.append(", svg2devCommand=").append(this.svg2devCommand);
+        sb.append(", svg2devOptions=").append(this.svg2devOptions);
 
-	// parameters for latex2pdf
-        sb.append(", latex2pdfCommand=")    .append(this.latex2pdfCommand);
-	sb.append(", latex2pdfOptions=")    .append(this.latex2pdfOptions);
-	sb.append(", patternErrLatex=")     .append(this.patternErrLatex);
-	sb.append(", patternWarnLatex=")    .append(this.patternWarnLatex);
- 	sb.append(", debugBadBoxes=")       .append(this.debugBadBoxes);
- 	sb.append(", debugWarnings=")       .append(this.debugWarnings);
- 	sb.append(", pdfViaDvi=")           .append(this.pdfViaDvi);
- 	sb.append(", dvi2pdfCommand=")      .append(this.dvi2pdfCommand);
- 	sb.append(", dvi2pdfOptions=")      .append(this.dvi2pdfOptions);
+        sb.append(", ebbCommand=").append(this.ebbCommand);
+        sb.append(", ebbOptions=").append(this.ebbOptions);
 
-	sb.append(", patternReRunLatex=")   .append(this.patternReRunLatex);
-	sb.append(", maxNumReRunsLatex=")   .append(this.maxNumReRunsLatex);
-	// parameters for BibTeX
-        sb.append(", bibtexCommand=")       .append(this.bibtexCommand);
-        sb.append(", bibtexOptions=")       .append(this.bibtexOptions);
-        sb.append(", patternErrBibtex=")    .append(this.patternErrBibtex);
-        sb.append(", patternWarnBibtex=")   .append(this.patternWarnBibtex);
-	// parameters for MakeIndex 
-        sb.append(", makeIndexCommand=")    .append(this.makeIndexCommand);
-        sb.append(", makeIndexOptions=")    .append(this.makeIndexOptions);
-        sb.append(", patternErrMakeIndex=") .append(this.patternErrMakeIndex);
+        // parameters for latex2pdf
+        sb.append(", latex2pdfCommand=").append(this.latex2pdfCommand);
+        sb.append(", latex2pdfOptions=").append(this.latex2pdfOptions);
+        sb.append(", patternErrLatex=").append(this.patternErrLatex);
+        sb.append(", patternWarnLatex=").append(this.patternWarnLatex);
+        sb.append(", debugBadBoxes=").append(this.debugBadBoxes);
+        sb.append(", debugWarnings=").append(this.debugWarnings);
+        sb.append(", pdfViaDvi=").append(this.pdfViaDvi);
+        sb.append(", dvi2pdfCommand=").append(this.dvi2pdfCommand);
+        sb.append(", dvi2pdfOptions=").append(this.dvi2pdfOptions);
+
+        sb.append(", patternReRunLatex=").append(this.patternReRunLatex);
+        sb.append(", maxNumReRunsLatex=").append(this.maxNumReRunsLatex);
+        // parameters for BibTeX
+        sb.append(", bibtexCommand=").append(this.bibtexCommand);
+        sb.append(", bibtexOptions=").append(this.bibtexOptions);
+        sb.append(", patternErrBibtex=").append(this.patternErrBibtex);
+        sb.append(", patternWarnBibtex=").append(this.patternWarnBibtex);
+        // parameters for MakeIndex
+        sb.append(", makeIndexCommand=").append(this.makeIndexCommand);
+        sb.append(", makeIndexOptions=").append(this.makeIndexOptions);
+        sb.append(", patternErrMakeIndex=").append(this.patternErrMakeIndex);
         sb.append(", patternWarnMakeIndex=").append(this.patternWarnMakeIndex);
         sb.append(", patternReRunMakeIndex=")
-	    .append(this.patternReRunMakeIndex);
-	sb.append(", splitIndexCommand=")    .append(this.splitIndexCommand);
-	sb.append(", splitIndexOptions=")    .append(this.splitIndexOptions);
- 	// parameters for MakeGlossaries
+                .append(this.patternReRunMakeIndex);
+        sb.append(", splitIndexCommand=").append(this.splitIndexCommand);
+        sb.append(", splitIndexOptions=").append(this.splitIndexOptions);
+        // parameters for MakeGlossaries
         sb.append(", makeGlossariesCommand=")
-	    .append(this.makeGlossariesCommand);
+                .append(this.makeGlossariesCommand);
         sb.append(", makeGlossariesOptions=")
-	    .append(this.makeGlossariesOptions);
-	sb.append(", patternErrMakeGlossaries=")
-	   .append(this.patternErrMakeGlossaries);
-	sb.append(", patternWarnXindy=").append(this.patternWarnXindy);
+                .append(this.makeGlossariesOptions);
+        sb.append(", patternErrMakeGlossaries=")
+                .append(this.patternErrMakeGlossaries);
+        sb.append(", patternWarnXindy=").append(this.patternWarnXindy);
         sb.append(", patternReRunMakeGlossaries=")
-	    .append(this.patternReRunMakeGlossaries);
-	// parameters for latex2html 
-        sb.append(", tex4htCommand=")       .append(this.tex4htCommand);
-        sb.append(", tex4htStyOptions=")    .append(this.tex4htStyOptions);
-        sb.append(", tex4htOptions=")       .append(this.tex4htOptions);
-	sb.append(", t4htOptions=")         .append(this.t4htOptions);
-	sb.append(", patternT4htOutputFiles=")
-	    .append(this.patternT4htOutputFiles);
-	// parameters for latex2rtf 
-        sb.append(", latex2rtfCommand=")    .append(this.latex2rtfCommand);
-        sb.append(", latex2rtfOptions=")    .append(this.latex2rtfOptions);
-	// parameters for odt2doc
-        sb.append(", odt2docCommand=")      .append(this.odt2docCommand);
-        sb.append(", odt2docOptions=")      .append(this.odt2docOptions);
-	// parameters for pdf2txt 
-        sb.append(", pdf2txtCommand=")      .append(this.pdf2txtCommand);
-        sb.append(", pdf2txtOptions=")      .append(this.pdf2txtOptions);
-	// parameters for chktex
-	sb.append(", chkTexCommand=")      .append(this.chkTexCommand);
-        sb.append(", chkTexOptions=")      .append(this.chkTexOptions);
-
-	sb.append(']');
+                .append(this.patternReRunMakeGlossaries);
+        // parameters for latex2html
+        sb.append(", tex4htCommand=").append(this.tex4htCommand);
+        sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
+        sb.append(", tex4htOptions=").append(this.tex4htOptions);
+        sb.append(", t4htOptions=").append(this.t4htOptions);
+        sb.append(", patternT4htOutputFiles=")
+                .append(this.patternT4htOutputFiles);
+        // parameters for latex2rtf
+        sb.append(", latex2rtfCommand=").append(this.latex2rtfCommand);
+        sb.append(", latex2rtfOptions=").append(this.latex2rtfOptions);
+        // parameters for odt2doc
+        sb.append(", odt2docCommand=").append(this.odt2docCommand);
+        sb.append(", odt2docOptions=").append(this.odt2docOptions);
+        // parameters for pdf2txt
+        sb.append(", pdf2txtCommand=").append(this.pdf2txtCommand);
+        sb.append(", pdf2txtOptions=").append(this.pdf2txtOptions);
+        // parameters for chktex
+        sb.append(", chkTexCommand=").append(this.chkTexCommand);
+        sb.append(", chkTexOptions=").append(this.chkTexOptions);
+        // parameters for diffing pdfs 
+        sb.append(", diffPdfCommand=").append(this.diffPdfCommand);
+        sb.append(']');
         return sb.toString();
     }
 
