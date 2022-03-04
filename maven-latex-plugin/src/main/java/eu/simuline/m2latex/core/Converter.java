@@ -268,7 +268,30 @@ enum Converter {
 	ConverterCategory getCategory() {
 	    return ConverterCategory.LatexChk;
 	}
-    },
+},
+	DiffPdfVisualLy {
+		String getCommand() {
+			return "diff-pdf-visually";
+	}
+	// TBD: bugfix: this is just the help option. 
+	// -v is the verbose option 
+	String getVersionOption() {
+		return "-h";
+}
+String getVersionPattern() {
+	return "(([0-9]+))";
+}
+// TBD: rework 
+String getVersionEnvironment() {
+	//return "default: %s";
+	return //"^usage: " + getCommand() + ".*\n"+
+	"Compare two PDFs visually. The exit code is %s ";
+}
+// TBD: make specific 
+ConverterCategory getCategory() {
+	return ConverterCategory.DiffPdf;
+}
+	},
 		DiffPdf {
 			String getCommand() {
 				return "diff-pdf";
@@ -288,7 +311,28 @@ enum Converter {
 	}
 	// TBD: make specific 
 	ConverterCategory getCategory() {
-		return ConverterCategory.Unspecific;
+		return ConverterCategory.DiffPdf;
+	}
+		},
+		Diff {
+			String getCommand() {
+				return "diff";
+		}
+		// TBD: bugfix: this is just the help option. 
+		// -v is the verbose option 
+		String getVersionOption() {
+	    return "-v";
+	}
+	String getVersionPattern() {
+		return X_X;
+	}
+	String getVersionEnvironment() {
+		//return "default: %s";
+		return "^" + getCommand() + " \\(GNU diffutils\\) %s";
+	}
+	// TBD: make specific 
+	ConverterCategory getCategory() {
+		return ConverterCategory.DiffPdf;
 	}
 		},
 		PdfInfo {
@@ -618,11 +662,11 @@ enum Converter {
     
     // TBC: needed? 
     private final static Map<String, Converter> cmd2conv;
-    static {
-	cmd2conv = new HashMap<String, Converter>();
-	for (Converter conv : Converter.values()) {
-	    cmd2conv.put(conv.getCommand(), conv);
-	}
+		static {
+			cmd2conv = new HashMap<String, Converter>();
+			for (Converter conv : Converter.values()) {
+				cmd2conv.put(conv.getCommand(), conv);
+			}
     }
 
     // CAUTION: this may return null also, 
@@ -636,8 +680,8 @@ enum Converter {
      *    The converter tied to <code>cmd</code> or <code>null</code>.
      */
     public static Converter cmd2Conv(String cmd) {
-	return cmd2conv.get(cmd);
-    }
+			return cmd2conv.get(cmd);
+		}
 
     /**
      * Returns a comma separated list of command names of converters of <code>convs</code>,
@@ -650,19 +694,19 @@ enum Converter {
      * @return
      *    a comma separated list of commands of the converters given.
      */
-    static String toCommandsString(Collection<Converter> convs) {
-	return convs.stream().map(x->x.getCommand()).collect(Collectors.joining(", "));
-    }
+  	static String toCommandsString(Collection<Converter> convs) {
+			return convs.stream().map(x -> x.getCommand()).collect(Collectors.joining(", "));
+		}
     
-    /**
-     * Returns a comma separated list of command names of alll converters.
-     * 
-     * @return
-     *    a comma separated list of commands of all converters.
-     */
-   static String toCommandsString() {
-	return toCommandsString(Arrays.asList(Converter.values()));
-    }
+		/**
+		 * Returns a comma separated list of command names of alll converters.
+		 * 
+		 * @return
+		 *         a comma separated list of commands of all converters.
+		 */
+		static String toCommandsString() {
+			return toCommandsString(Arrays.asList(Converter.values()));
+		}
 
 
     /**
@@ -682,9 +726,9 @@ enum Converter {
      *    the option to display (a string containing) version information. 
      *    As a default, this is <code>-v</code> which is the most common such option.
      */
-    String getVersionOption() {
-	return "-v";
-    }
+		String getVersionOption() {
+			return "-v";
+		}
 
     /**
      * Returns the pattern of the version for this converter as a regular expression. 
@@ -724,7 +768,7 @@ enum Converter {
      *    The executable given by {@link #getCommand()} 
      *    is passed options {@link #getVersionOption()} 
      *    to get version option and run 
-     *    in the directory containing {@link TexFileUtil#EMPTY_IDX}. 
+     *    in the directory containing {@link TexFileUtils#EMPTY_IDX}. 
      * @return
      *    the output of the invocation 
      *    which matches {@link #getVersionEnvironment()}. 
@@ -747,8 +791,8 @@ enum Converter {
      */
     String getVersionInfo(CommandExecutor executor)
 		throws BuildFailureException {
-	return executor.execute(TexFileUtils.getEmptyIdx().getParentFile(), null,
-		 getCommand(), new String[] {getVersionOption()});
-    }
+			return executor.execute(TexFileUtils.getEmptyIdx().getParentFile(), null,
+					getCommand(), new String[] { getVersionOption() }).output;
+		}
 
 }
