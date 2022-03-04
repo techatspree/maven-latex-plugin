@@ -517,7 +517,6 @@ public abstract class CommandLineUtils
      * or
      * {@link StringUtils#quoteAndEscape(String, char)} instead.
      */
-    @SuppressWarnings( { "JavaDoc", "deprecation" } )
     public static String quote( String argument )
         throws CommandLineException
     {
@@ -539,7 +538,6 @@ public abstract class CommandLineUtils
      * or
      * {@link StringUtils#quoteAndEscape(String, char)} instead.
      */
-    @SuppressWarnings( { "JavaDoc", "UnusedDeclaration", "deprecation" } )
     public static String quote( String argument, boolean wrapExistingQuotes )
         throws CommandLineException
     {
