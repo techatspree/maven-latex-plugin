@@ -32,6 +32,15 @@ import        org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer
  */
 class CommandExecutor {
 
+    static class CmdResult {
+        final String output;
+        final boolean success;
+        CmdResult(String output, boolean success) {
+            this.output = output;
+            this.success = success;
+        }
+    } // class CmdResult 
+
     private final LogWrapper log;
 
     CommandExecutor(LogWrapper log) {
@@ -47,7 +56,9 @@ class CommandExecutor {
      * i.e. if it does not exist or is not updated. 
      * Logging: 
      * <ul>
-     * <li> EEX01: return code other than 0.
+     * <li> EEX01: return code other than 0. Provided resFiles is not empty. 
+     * In fact, there are two use cases: either result is resFiles, 
+     * or, if this is empty, it is the return value. 
      * <li> EEX02: no target file
      * <li> EEX03: target file not updated
      * <li> WEX04: cannot read target file
@@ -71,12 +82,13 @@ class CommandExecutor {
      * @param args
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
-     * @param resFile
+     * @param resFiles
      *    optional result files, i.e. target files which shall be updated 
      *    by this command. 
      * @return
-     *    The output of execution on stdio/errio (TBC). 
-     *    This is used in tests only. 
+     *    the output of the command which comprises the output stream 
+     *    and whether the return code is nonzero, i.e. the command succeeded. 
+     *    The io stream is used in tests only whereas the return code is used for pdfdiffs. 
      * @throws BuildFailureException
      *    TEX01 if invocation of <code>command</code> fails very basically: 
      *    <ul>
@@ -94,20 +106,20 @@ class CommandExecutor {
      *    on the process to be executed thrown by {@link Process#waitFor()}. 
      *    </ul>
      */
-    String execute(File workingDir, 
+    CmdResult execute(File workingDir, 
 		   File pathToExecutable, 
 		   String command, 
 		   String[] args, 
-		   File... resFile) throws BuildFailureException {
+		   File... resFiles) throws BuildFailureException {
 	// analyze old result files 
-	assert resFile.length > 0;
-	boolean[] existsTarget = new boolean[resFile.length];
-	long[] lastModifiedTarget = new long[resFile.length];
+	//assert resFile.length > 0;
+	boolean[] existsTarget = new boolean[resFiles.length];
+	long[] lastModifiedTarget = new long[resFiles.length];
 	long currentTime = System.currentTimeMillis();
 	long minTimePast = Long.MAX_VALUE;
-	for (int idx = 0; idx < resFile.length; idx++) {
-	    existsTarget      [idx] = resFile[idx].exists();
-	    lastModifiedTarget[idx] = resFile[idx].lastModified();
+	for (int idx = 0; idx < resFiles.length; idx++) {
+	    existsTarget      [idx] = resFiles[idx].exists();
+	    lastModifiedTarget[idx] = resFiles[idx].lastModified();
 	    assert lastModifiedTarget[idx] <= currentTime;
 	    // correct even if lastModifiedTarget[idx]==0 
 	    minTimePast = Math.min(minTimePast, 
@@ -126,18 +138,18 @@ class CommandExecutor {
 	    }
 	}
 
-	if (workingDir == null && resFile.length != 0) {
+	if (workingDir == null && resFiles.length != 0) {
 	    throw new IllegalStateException
 	    ("Working directory shall be determined but was null. ");
 	}
 
 	// Proper execution 
 	// may throw BuildFailureException TEX01, log warning EEX01 
-	String res = execute(workingDir, pathToExecutable, command, args);
+	CmdResult res = execute(workingDir, pathToExecutable, command, resFiles.length > 0, args);
 
 	// may log EEX02, EEX03, WEX04 
-	for (int idx = 0; idx < resFile.length; idx++) {
-	    isUpdatedOrWarn(command, resFile[idx], 
+	for (int idx = 0; idx < resFiles.length; idx++) {
+	    isUpdatedOrWarn(command, resFiles[idx], 
 			    existsTarget[idx], lastModifiedTarget[idx]);
 	}
 
@@ -216,7 +228,8 @@ class CommandExecutor {
      *    the list of arguments, 
      *    each containing a blank enclosed in double quotes. 
      * @return
-     *    the output of the command. 
+     *    the output of the command which comprises the output stream 
+     *    and whether the return code is nonzero, i.e. the command succeeded. 
      * @throws BuildFailureException
      *    TEX01 if invocation of <code>command</code> fails very basically: 
      *    <ul>
@@ -234,9 +247,10 @@ class CommandExecutor {
      *    on the process to be executed thrown by {@link Process#waitFor()}. 
      *    </ul>
      */
-    private String execute(File workingDir,
+    private CmdResult execute(File workingDir,
 	    File pathToExecutable,
 	    String command,
+        boolean checkReturnCode,
 	    String[] args) throws BuildFailureException {
 
 	// prepare execution 
@@ -251,10 +265,11 @@ class CommandExecutor {
 	log.debug("Executing: " + cl + " in: " + workingDir + ". ");
 
 	// perform execution and collect results 
+    int returnCode = -1;
 	try {
 	    // may throw CommandLineException 
-	    int returnCode = executeCommandLine(cl, output, output);
-	    if (returnCode != 0) {
+	    returnCode = executeCommandLine(cl, output, output);
+	    if (returnCode != 0 && checkReturnCode) {
 		this.log.error("EEX01: Running " + command + 
 			       " failed with return code " + returnCode + ". ");
 	    }
@@ -264,6 +279,6 @@ class CommandExecutor {
         }
 
 	log.debug("Output:\n" + output.getOutput() + "\n");
-	return output.getOutput();
+	return new CmdResult(output.getOutput(), returnCode == 0);
     }
 }
