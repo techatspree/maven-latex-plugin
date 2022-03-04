@@ -728,17 +728,17 @@ public class MetaInfo {
      * For each {@link Converter}, the range of possible versions is given
      * in a separate line of the form <code>command=[a;b]</code>
      * or <code>command=[a]</code> for a=b. 
-     * Also comments starting with <code>#<\code> are allowed.
+     * Also comments starting with {@literal #} are allowed.
      */
     private final static String VERSION_PROPS_FILE = "version.properties";
 
     /**
-     * Format string used in {@link #printMetaInfo()} 
+     * Format string used in {@link #printMetaInfo(boolean)} 
      * to define a table of converters and their versions
      * with rows (warning), converter, version quote, 
      * actual version and allowed version interval.  
      */
-    private final static String TOOL_VERSION_FORMAT = "%s%-15s %s '%s'%s%s";
+    private final static String TOOL_VERSION_FORMAT = "%s%-18s %s '%s'%s%s";
 
     private final Settings settings;
 

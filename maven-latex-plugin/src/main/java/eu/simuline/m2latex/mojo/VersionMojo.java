@@ -20,7 +20,6 @@ package eu.simuline.m2latex.mojo;
 
 import eu.simuline.m2latex.core.Target;
 import eu.simuline.m2latex.core.BuildFailureException;
-import eu.simuline.m2latex.core.MetaInfo;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -51,13 +50,12 @@ public class VersionMojo extends AbstractLatexMojo {
       * <p>
       * WMI01: If the version string of a converter cannot be read. 
       * WMI02: If the version of a converter is not as expected. 
-      * @return
-      *    whether a warning has been issued. 
+      *
       * @throws MojoFailureException
       *    <ul>
       *    <li>TMI01: if the stream to either the manifest file 
       *        or to a property file, either {@LINK #VERSION_PROPS_FILE} 
-      *        or {@link MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
+      *        or {@link eu.simuline.m2latex.core.MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
       *    <li>TMI02: if the properties could not be read 
       *        from one of the two property files mentioned above. </li>
       *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
