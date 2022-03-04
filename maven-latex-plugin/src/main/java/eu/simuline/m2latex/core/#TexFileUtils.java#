@@ -163,27 +163,27 @@ class TexFileUtils {
     }
 
     /**
-     * Returns the pdf file which serves as a blue print for <code>pdfFileAct</code>. 
-     * The relative path of <code>pdfFileAct</code> to its ancestor <code>artifactBaseDir</code> 
-     * is the same as the blueprint to its ancestor <code>diffRootDir</code>. 
+     * Returns the artifact (pdf) file which serves as a blueprint 
+     * for the artifact 
      *
-     * @param pdfFileAct
+     * @param artifactFile
      *     the artifact to be checked agains a blueprint in <code>diffRootDir</code>. 
-     *     It must be contained in <code>artifactBaseDir</code>, immediately or not. 
      * @param artifactBaseDir
-     *     the base directory for all artifacts, in particular of <code>pdfFileAct</code>. 
-     * @param diffBaseDir
+     *     the base directory for all artifacts, in particular of <code>artifactFile</code>. 
+     * @param diffRootDir
      *     the root directory of all blue prints corresponding with <code>diffRootDir</code>. 
      */
-    static File getPdfFileDiff(File pdfFileAct, File artifactBaseDir, File diffBaseDir) {
-        Path pdfFileActPath   = pdfFileAct     .toPath();
-        Path artifactBasePath = artifactBaseDir.toPath();
+    static File getDiffArtifact(File artifactFile, File artifactBaseDir, File diffRootDir) {
+        Path artifactParentPath = artifactFile.getParentFile().toPath();
+        Path artifactBasePath   = artifactBaseDir             .toPath();
 
-        assert pdfFileActPath.startsWith(artifactBasePath);
-        pdfFileActPath = artifactBasePath.relativize(pdfFileActPath);
+        assert artifactParentPath.startsWith(artifactBasePath);
+        artifactParentPath = artifactBasePath.relativize(artifactParentPath);
 
         // this may exist but if so it is a directory because holds srcFile
-        return new File(diffBaseDir, pdfFileActPath.toString());
+        File targetDir = new File(diffRootDir, artifactParentPath.toString());
+        assert targetDir.isDirectory();
+        return new File(targetDir, artifactFile.getName());
     }
 
     /**
