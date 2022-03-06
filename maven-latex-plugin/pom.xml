@@ -396,13 +396,6 @@
 		<scope>test</scope>
 	</dependency-->
 
-
-		<!--dependency>
-      <groupId>eu.simuline.m2latex</groupId>
-      <artifactId>latex-maven-plugin</artifactId>
-      <version>1.4</version>
-    </dependency-->
-
 	</dependencies>
 
 	<build>
@@ -558,7 +551,7 @@
 							<outputDirectory>src/test/resources/integration</outputDirectory>
 						<resources>
 							<resource>
-								<directory>src/test/resources/integration/rawPom</directory>
+								<directory>src/main/resources/rawPoms</directory>
 								<includes>
 									<include>pom4pdf.xml</include>
 								</includes>
@@ -1770,24 +1763,27 @@ LaTeX Warning: Etaremune labels have changed\.$|
 	       may be sensible. -->
 					<!-- besides the default phase site, 
 	       also the phase compile could be appropriate -->
+
+					<!-- tied implicitly to phase site -->
 					<execution>
 						<id>process-latex-sources</id>
 						<goals>
 							<goal>cfg</goal>
 						</goals>
 					</execution>
+					<!-- tied implicitly to phase clean -->
 					<execution>
 						<id>clear-latex-sources</id>
 						<goals>
 							<goal>clr</goal>
 						</goals>
 					</execution>
+					<!-- tied implicitly to phase validate -->
 					<execution>
 						<id>validate-converters</id>
 						<goals>
 							<goal>vrs</goal>
 						</goals>
-						<!--phase>validate</phase-->
 						<configuration>
 							<versionsWarnOnly>true</versionsWarnOnly>
 						</configuration>
