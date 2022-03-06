@@ -2278,6 +2278,8 @@ are special in that they describe rerunning several programs,
 which may be necessary even if certain lists are present 
 like table of contents list of figures or list of tables. 
 
+Section~\ref{Psec:chkReprod} is special in that it is not related with conversion 
+but with checking reproducibility. 
 
 Besides the output formats traditional for \LaTeX, 
 \gls{pdf} and \gls{dvi} describing e.g.~books, 
@@ -2909,9 +2911,164 @@ Note that, if a package requires running other programs
 between two runs of \texttt{latex2pdf}, 
 this would require a change in this software. 
 
-\section{Checking reproducibility}\label{sec:reprod}
+\section{Checking reproducibility}\label{sec:chkReprod}
 
-After having created 
+There are use cases, where on the one hand side we want to deliver the sources 
+but it is extremely important that the according artifacts are really reproducible. 
+One obvious case is integration test for this software 
+by ensuring that the created artifacts 
+is equivalent with with a confirmed version. 
+
+
+Currently, this is done for pdf files only. 
+% TBD: change that 
+The problem with pdf files is, that besides visible contents 
+it contains also meta-data (see \cite{pdf17}, Section 14.3), 
+which depends on the run of the conversion. 
+For example the timestamp of conversion goes into and many more aspects. 
+
+There are two strategies to deal with the problem: 
+%
+\begin{itemize}
+  \item 
+  make the build process reproducible. 
+  The advantage of this is that diffing is quite simple, fast and reproducible: 
+  it is byte by byte. 
+  This is easily done with a fixed installation but tends to break with update of tools. 
+  % TBD: allow own version check. 
+  Also at time of this writing, the different latex engines cannot be treated uniformly. 
+  % TBD: a feature request to hyperref is already posted. 
+  % let us keep an eye on that. 
+  \item 
+  use diff tools implementing a weaker notion of equivalence, 
+  in a sense visibility equivalence of some degree. 
+\end{itemize}
+
+We support both approaches. 
+The first one imposes requirements on the tex source file. 
+It excludes that one displays a creation date changing each run. 
+Listing~\ref{lst:designMeta} lower part illustrates that: 
+We replaced the creation date by a ``version date''. 
+A date can be only date of checkin of a version control system or that like. 
+As an alternative, one could also refrain from using dates altogether. 
+In the \texttt{\textbackslash date} command 
+one could display also other pieces of information identifying the document. 
+
+But the visible date is not all we have to avoid. 
+Listing~\ref{lst:designMeta} shows how to eliminate metadata 
+and to replace with adequate one. 
+There is metadata which can be eliminated in a uniform way for all latex engines 
+using the package \texttt{hyperref} which the author generally advises. 
+Using\texttt{hyperref} with \texttt{\textbackslash hypersetup} 
+one can set metadata such as author, title, subject and keyword 
+as described in \cite{HyperTextP}, Section 5.8. 
+On the other hand, 
+one could eliminate \texttt{CreationDate} and \texttt{ModDate}. 
+For newer versions of \texttt{pdflatex} this can be done alternatively 
+with \texttt{\textbackslash pdfinfoomitdate1}. 
+
+The metadata which can be eliminated only in a engine specific way 
+are the PTEX keys including the banner, and the \texttt{pdftrailerid}. 
+Note that the latter is {\em intentionally} 
+a unique identifier for the individual document 
+and so strictly speaking it is not advised to eliminate this 
+but eliminating is necessary because it is incompatible with reproducibility. 
+Note that \texttt{xelatex} seems not to write PTEX keys at all 
+so only the \texttt{pdftrailerid} has to be eliminated or fixed. 
+
+
+\begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\footnotesize,
+  escapechar=|,
+  float, captionpos=b, label={lst:designMeta}, 
+  caption={Specifying meta-data for pdf-files}]
+
+% for pdflatex
+\pdfsuppressptexinfo-1
+% pdfsuppressptexinfo-1 is the same as pdfsuppressptexinfo15
+% 1 -> PTEX.Fullbanner
+% 2 -> PTEX.FileName
+% 4 -> PTEX.PageNumber
+% 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
+\pdftrailerid{}
+
+% for lualatex: 
+%   1 -> PTEX.FullBanner
+%   2 -> PTEX.FileName
+%   4 -> PTEX.PageNumber
+%   8 -> PTEX.InfoDict
+%  16 -> Creator
+%  32 -> CreationDate
+%  64 -> ModDate
+% 128 -> Producer
+% 256 -> Trapped
+% 512 -> ID
+\pdfvariable suppressoptionalinfo \numexpr32+64+512\relax
+
+% for xelatex
+\special{pdf:trailerid [
+    <00112233445566778899aabbccddeeff>
+    <00112233445566778899aabbccddeeff>
+]}
+
+% general
+\usepackage{hyperref}
+...
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={The dvi-format and the program dvitype},
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Subject     ={dvi and dvitype},
+    Keywords    ={LaTeX;dvi;dvitype}
+  }
+}
+
+% alternative for pdftex only
+% \pdfinfoomitdate1
+% \pdfsuppressptexinfo-1
+% \pdftrailerid{}
+% \pdfinfo{
+%   /Author       (Ernst Reissner)
+%   /Title        (The dvi-format and the program dvitype)
+%   /CreationDate (unknown)
+%   /ModDate      (unknown)
+%   /Subject      (dvi and dvitype)
+%   /Keywords     (LaTeX;dvi;dvitype)
+%}
+% Replacing pdfinfoomitdate1 in conjunction with
+% usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
+% alternative 1 for pdftex only
+
+
+\title{The dvi-format and the program dvitype}
+\author{Ernst Reissner (rei3ner@arcor.de)}
+\date{\versionDate}
+\end{lstlisting}
+
+
+
+If a user renounces independence of the engine and sticks to \texttt{pdflatex} only, 
+the package \texttt{hyperref} 
+could be replaced by specific commands. 
+For convenience also \texttt{pdfprivacy} described in \cite{PdfPriv} can be used. 
+\medskip
+
+
+Now that we have described how to ensure reproducible pdf artifacts, 
+just by designing the tex source appropriately, 
+we have to explain how to check that a newly created artifact 
+coincides with a blueprint provided a priori. 
+First of all, note that currently such a check is performed 
+only if the result is in pdf format. 
+Even then the check is performed only if configured so. 
+Then the actual artifacts are compared to predefined artifacts 
+using a diff-tool. 
+If the actual artifacts do not coincide with predefined ones 
+according to the chosen diff tool, 
+a build exception is thrown as specified in Table~\ref{tab:TLP}. 
+
+
 
 \section{Creating hypertext}\label{sec:tex2html}
 
@@ -4907,169 +5064,14 @@ when processing goal {\em check}.
 
 \section{Parameters for Ensuring Reproducibility}\label{sec:paramRepro}
 
-There are use cases, where on the one hand side we want to deliver the sources 
-but it is extremely important that the according artifacts are really reproducible. 
-One obvious case is integration test for this software 
-by ensuring that the created artifacts 
-is equivalent with with a confirmed version. 
-
-
-Currently, this is done for pdf files only. 
-% TBD: change that 
-The problem with pdf files is, that besides visible contents 
-it contains also meta-data (see \cite{pdf17}, Section 14.3), 
-which depends on the run of the conversion. 
-For example the timestamp of conversion goes into and many more aspects. 
-
-There are two strategies to deal with the problem: 
-%
-\begin{itemize}
-  \item 
-  make the build process reproducible. 
-  The advantage of this is that diffing is quite simple, fast and reproducible: 
-  it is byte by byte. 
-  This is easily done with a fixed installation but tends to break with update of tools. 
-  % TBD: allow own version check. 
-  Also at time of this writing, the different latex engines cannot be treated uniformly. 
-  % TBD: a feature request to hyperref is already posted. 
-  % let us keep an eye on that. 
-  \item 
-  use diff tools implementing a weaker notion of equivalence, 
-  in a sense visibility equivalence of some degree. 
-\end{itemize}
-
-We support both approaches. 
-The first one imposes requirements on the tex source file. 
-It excludes that one displays a creation date changing each run. 
-Listing~\ref{lst:designMeta} lower part illustrates that: 
-We replaced the creation date by a ``version date''. 
-A date can be only date of checkin of a version control system or that like. 
-As an alternative, one could also refrain from using dates altogether. 
-In the \texttt{\textbackslash date} command 
-one could display also other pieces of information identifying the document. 
-
-But the visible date is not all we have to avoid. 
-Listing~\ref{lst:designMeta} shows how to eliminate metadata 
-and to replace with adequate one. 
-There is metadata which can be eliminated in a uniform way for all latex engines 
-using the package \texttt{hyperref} which the author generally advises. 
-Using\texttt{hyperref} with \texttt{\textbackslash hypersetup} 
-one can set metadata such as author, title, subject and keyword 
-as described in \cite{HyperTextP}, Section 5.8. 
-On the other hand, 
-one could eliminate \texttt{CreationDate} and \texttt{ModDate}. 
-For newer versions of \texttt{pdflatex} this can be done alternatively 
-with \texttt{\textbackslash pdfinfoomitdate1}. 
-
-The metadata which can be eliminated only in a engine specific way 
-are the PTEX keys including the banner, and the \texttt{pdftrailerid}. 
-Note that the latter is {\em intentionally} 
-a unique identifier for the individual document 
-and so strictly speaking it is not advised to eliminate this 
-but eliminating is necessary because it is incompatible with reproducibility. 
-Note that \texttt{xelatex} seems not to write PTEX keys at all 
-so only the \texttt{pdftrailerid} has to be eliminated or fixed. 
-
-
-\begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\footnotesize,
-  escapechar=|,
-  float, captionpos=b, label={lst:designMeta}, 
-  caption={Specifying meta-data for pdf-files}]
-
-% for pdflatex
-\pdfsuppressptexinfo-1
-% pdfsuppressptexinfo-1 is the same as pdfsuppressptexinfo15
-% 1 -> PTEX.Fullbanner
-% 2 -> PTEX.FileName
-% 4 -> PTEX.PageNumber
-% 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
-\pdftrailerid{}
-
-% for lualatex: 
-%   1 -> PTEX.FullBanner
-%   2 -> PTEX.FileName
-%   4 -> PTEX.PageNumber
-%   8 -> PTEX.InfoDict
-%  16 -> Creator
-%  32 -> CreationDate
-%  64 -> ModDate
-% 128 -> Producer
-% 256 -> Trapped
-% 512 -> ID
-\pdfvariable suppressoptionalinfo \numexpr32+64+512\relax
-
-% for xelatex
-\special{pdf:trailerid [
-    <00112233445566778899aabbccddeeff>
-    <00112233445566778899aabbccddeeff>
-]}
-
-% general
-\usepackage{hyperref}
-...
-\hypersetup{
-  pdfinfo={
-    Author      ={Ernst Reissner},
-    Title       ={The dvi-format and the program dvitype},
-    CreationDate={unknown},
-    ModDate     ={unknown},
-    Subject     ={dvi and dvitype},
-    Keywords    ={LaTeX;dvi;dvitype}
-  }
-}
-
-% alternative for pdftex only
-% \pdfinfoomitdate1
-% \pdfsuppressptexinfo-1
-% \pdftrailerid{}
-% \pdfinfo{
-%   /Author       (Ernst Reissner)
-%   /Title        (The dvi-format and the program dvitype)
-%   /CreationDate (unknown)
-%   /ModDate      (unknown)
-%   /Subject      (dvi and dvitype)
-%   /Keywords     (LaTeX;dvi;dvitype)
-%}
-% Replacing pdfinfoomitdate1 in conjunction with
-% usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
-% alternative 1 for pdftex only
-
-
-\title{The dvi-format and the program dvitype}
-\author{Ernst Reissner (rei3ner@arcor.de)}
-\date{\versionDate}
-\end{lstlisting}
-
-
-
-If a user renounces independence of the engine and sticks to \texttt{pdflatex} only, 
-the package \texttt{hyperref} 
-could be replaced by specific commands. 
-For convenience also \texttt{pdfprivacy} described in \cite{PdfPriv} can be used. 
-\medskip
-
-
-Now that we have described how to ensure reproducible pdf artifacts, 
-just by designing the tex source appropriately, 
-we have to explain how to check that a newly created artifact 
-coincides with a blueprint provided a priori. 
-First of all, note that currently such a check is performed 
-only if the result is in pdf format. 
-Even then the check is performed only if configured so. 
-Then the actual artifacts are compared to predefined artifacts 
-using a diff-tool. 
-If the actual artifacts do not coincide with predefined ones 
-according to the chosen diff tool, 
-a build exception is thrown as specified in Table~\ref{tab:TLP}. 
-
 
 
 For a general description of the reproducibility check 
-see Section~\ref{sec:reprod}. 
+see Section~\ref{sec:chkReprod}. 
 Here we go into the details and identify the parameters 
 controlling the check 
 and specified in great detail in Table~\ref{tab:paramDiffPdf}. 
-As already mentioned in Section~\ref{sec:reprod}, 
+As already mentioned in Section~\ref{sec:chkReprod}, 
 currently, checks are performed for artifacts in pdf format only; 
 more formally, if the target 
 (which is in parameter \texttt{target} described in Table~\ref{tab:paramGen}) 
