@@ -105,11 +105,21 @@
 	 Check also call hierarchy
 	 also endow with appropriate failure handling  -->
     <!-- TBD: rework on ConverterCategories -->
-    <!-- TBD: allow to exclude files from being processed, even graphic files. -->
+    <!-- TBD: allow to exclude files from being processed, even graphic files. --> 
     <!-- TBD: bugfix: readTexSrcProcDirRec=false not respected. -->
     <!-- TBD: mention epsf like in my dissertation  -->
     <!-- TBD: Bugfix: superfluous comma in: 
 	 WPP03: Skipped processing of files with suffixes [, .el]. -->
+
+	 <!-- TBD: allow for more restrictions in versions of converters. 
+		An application would be to ensure strict reproducibility 
+		which requires certain diff tools but also certain versions of e.g. pdflatex. 
+		Another application is using pythontex which works together with latexmk only in later versions. 
+		This is also a reason why also software not invoked directly could be vresion checked. 
+		Other candidates could be vs code or emacs or octave or ocular. 
+		To that end, expect a file named .versions.properties in the tex source directory overriding the default. 
+		As info add the file versions are actually read from. 
+		The rest is as now. -->
 
     <!-- partially still in 
 	 https://www.simuline.eu/RepositoryMaven/
@@ -120,6 +130,12 @@
 	     description="First release with change management 
 			  This includes version of this software 
 			  but also of the converters used.">
+			 <action dev='reissner' type='add'>
+				 Added check for reproducibility. 
+				 This is a step towards a clean release management 
+				 as this shall remove the dependency of this plugin to itself, 
+				 potentially the same version. 
+			 </action>
        <action dev="reissner" type="add">
 	 Added VersionMojo to phase validate.
 	 To that end, added configuration versionsWarnOnly
