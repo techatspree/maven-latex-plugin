@@ -66,9 +66,6 @@
 	   or maybe latex git package. 
 	   Note that there may be documentation not created through latex 
 	   and so git package may not be a generic solution. 
-	 - For tests we need a valid pdf.
-	   So for tests a pdf without version information and without date
-	   and without git info must be created.
 	 - include docs in jar.
 	 - redesign: Target s are creational ones.
 	   In mojos we also have creational ones and others.
@@ -114,6 +111,9 @@
 	 <!-- TBD: allow for more restrictions in versions of converters. 
 		An application would be to ensure strict reproducibility 
 		which requires certain diff tools but also certain versions of e.g. pdflatex. 
+		Another application is that the version released by the author is not the one 
+		available to the user. 
+		Then (s)he should be able to use another version at own risk. 
 		Another application is using pythontex which works together with latexmk only in later versions. 
 		This is also a reason why also software not invoked directly could be vresion checked. 
 		Other candidates could be vs code or emacs or octave or ocular. 
@@ -292,6 +292,8 @@
        <!-- TBD: rework on Converter.java: diff-pdf has pseudo version only. -->
        <!-- TBD: Converter.java: there is an unspecific ConverterCategory: eliminate. -->
        
+			 <!-- TBD: reproducible runs: take other output formats into account also: 
+				at least html. -->
      </release>
 
 
