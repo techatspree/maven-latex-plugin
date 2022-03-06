@@ -47,6 +47,7 @@ public class PdfMojoTest extends AbstractMojoTestCase {
         File cmp = new File(thisDir,    "cmp/dvi/dviFormat.pdf");
 
         // run the pdf-goal in the pom 
+        // TBD: in othe framework: also check lifecycle phase like site and so 
 	    PdfMojo testMojo = (PdfMojo)lookupMojo("pdf", testPom);
 	    assertNotNull(testMojo);
         testMojo.execute();
@@ -55,8 +56,8 @@ public class PdfMojoTest extends AbstractMojoTestCase {
         assert act.exists() && cmp.exists();
 
         // check that the goal yielded the expected document. 
-        // This si no longer needed as that test is done by the plugin itself 
-        // and even in more generality: bitwise equality not required.
+        // This is no longer needed as that test is done by the plugin itself 
+        // and even more generally: bitwise equality not required.
         //assertTrue(IOUtils.contentEquals(new FileInputStream(cmp), new FileInputStream(act)));
 
         // cleanup
