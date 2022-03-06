@@ -29,7 +29,7 @@
     and also check for rerun, warnings and under/overfull boxes. 
 	</description>
 
-	<url>https://github.com/Reissner/maven-latex-plugin/</url>
+	<url>https://github.com/Reissner/latex-maven-plugin/</url>
 	<inceptionYear>2016</inceptionYear>
 	<licenses>
 		<license>
@@ -110,23 +110,23 @@
 
 	<!--scm>
     <connection>
-    scm:git:git://github.com/akquinet/maven-latex-plugin.git
+    scm:git:git://github.com/akquinet/latex-maven-plugin.git
     </connection>
-    <url>https://github.com/akquinet/maven-latex-plugin</url>
+    <url>https://github.com/akquinet/latex-maven-plugin</url>
     <developerConnection>
-    scm:git:git@github.com:akquinet/maven-latex-plugin.git
+    scm:git:git@github.com:akquinet/latex-maven-plugin.git
     </developerConnection>
     <tag>1.3</tag>
   </scm-->
 
 	<scm>
 		<connection>
-      scm:git:https://github.com/Reissner/maven-latex-plugin.git
+      scm:git:https://github.com/Reissner/latex-maven-plugin.git
 		</connection>
 		<developerConnection>
-      scm:git:https://github.com/Reissner/maven-latex-plugin.git
+      scm:git:https://github.com/Reissner/latex-maven-plugin.git
 		</developerConnection>
-		<url>https://github.com/Reissner/maven-latex-plugin</url>
+		<url>https://github.com/Reissner/latex-maven-plugin</url>
 		<tag>latex-maven-plugin-1.3</tag>
 	</scm>
 
@@ -146,17 +146,17 @@
 
 	<mailingLists>
 		<!--mailingList>
-      <name>maven-latex-plugin Users</name>
-      <archive>http://groups.google.com/group/maven-latex-plugin-users</archive>
-      <post>maven-latex-plugin-users@googlegroups.com</post>
-      <subscribe>maven-latex-plugin-users+subscribe@googlegroups.com</subscribe>
-      <unsubscribe>maven-latex-plugin-users+unsubscribe@googlegroups.com</unsubscribe>
+      <name>latex-maven-plugin Users</name>
+      <archive>http://groups.google.com/group/latex-maven-plugin-users</archive>
+      <post>latex-maven-plugin-users@googlegroups.com</post>
+      <subscribe>latex-maven-plugin-users+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>latex-maven-plugin-users+unsubscribe@googlegroups.com</unsubscribe>
     </mailingList-->
 	</mailingLists>
 
 	<!--issueManagement>
     <system>Github Issues</system>
-    <url>https://github.com/akquinet/maven-latex-plugin/issues</url>
+    <url>https://github.com/akquinet/latex-maven-plugin/issues</url>
     </issueManagement-->
 
 	<properties>
