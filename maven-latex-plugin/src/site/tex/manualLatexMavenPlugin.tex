@@ -652,9 +652,9 @@ To make the plugin available within a build,
 one has to add executions, e.g. as shown in Listing~\ref{lst:executions}:
 Typically, this plugin is used in the \texttt{site} lifecycle phase 
 to process latex sources,
-but it must also be used to cleanup the source directory
+but it must also be used to clean up the source directory
 in phase \texttt{clean},
-because during document development that directory may be poluted.
+because during document development that directory may be polluted.
 Finally, it is recommended to add a check of the converter versions
 right in the phase \texttt{validate}.
 Note that typically one will use goal \texttt{cfg}
@@ -665,7 +665,7 @@ Cleanup is recommended to make the individual runs of this plugin independent.
 Finally, it is recommended to check the validity of the installed converters.
 Note the special configuration for that task
 which seems appropriate to skip info output on the console
-and have warinings if something goes wrong. 
+and have warnings if something goes wrong. 
 
 
 %\lstset{language=xml, basicstyle=\small}
@@ -703,8 +703,8 @@ caption={The executions of this plugin}]
 
 Note the section \texttt{configuration} in Listing~\ref{lst:executions}
 which is empty and can be skipped in a default configuration
-creating pdf and hmtl documentation.
-however, Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}
+creating \texttt{pdf}- and \texttt{hmtl}-documentation.
+However, Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}
 lists the full configuration with default values
 and executions.
 Chapter~\ref{chap:settings} describes the settings individually.
@@ -746,7 +746,7 @@ In my installation it is \antJarDir;
 as can be seen in the ant documentation,
 in general it is in folder \texttt{lib} in ant's installation directory. 
 
-The ant builtfile is given in Listing~\ref{lst:fullConfigAnt}
+The ant buildfile is given in Listing~\ref{lst:fullConfigAnt}
 on page \pageref{lst:fullConfigAnt}.
 From that, one has to copy the following
 into the \texttt{build.xml} file in the current project:
@@ -1273,13 +1273,13 @@ mvn latex:vrs
 \end{Verbatim}
 %
 displays something like what is displayed in Listing~\ref{lst:vrsOut}.
-As one can see, there may be converters with inapropriate versions
+As one can see, there may be converters with inappropriate versions
 which is indicated by a warning WMI02 
 and there may be converters which are excluded
 according to the configuration \texttt{convertersExcluded}.
 
 Note that in the given version and in the installation of the author,
-of course, all converters are installed and are up to date
+of course, all converters are installed and are up-to-date
 to be able to check validity.
 The according messages are for illustration only. 
 % TBC: what is an interface of a converter?
@@ -1363,7 +1363,7 @@ mvn site
 %
 or subsequent phase.
 
-Also the goal \texttt{latex:clr} cleaning created files
+Also, the goal \texttt{latex:clr} cleaning created files
 both from source directory and from target directory
 is tied to phase \texttt{clean} so is invoked
 when commanding
@@ -1373,7 +1373,8 @@ mvn clean
 \end{Verbatim}
 
 Finally, the goal \texttt{latex:vrs} displaying versions of converters
-is tied to the phase \texttt{validate} is is invoked when commanding
+is tied to the phase \texttt{validate}. 
+Thus it is thus invoked when commanding
 %
 \begin{Verbatim}[fontsize=\scriptsize]
 mvn validate
@@ -1381,7 +1382,7 @@ mvn validate
 %
 which is invoked not only in installation, but also by the site plugin.
 This ensures, that the converters are checked for correct version
-before being used.
+before being used. 
 Note that by default, \texttt{mvn latex:vrs} displays complete version info,
 whereas \texttt{mvn validate} only displays warnings if appropriate. 
 
