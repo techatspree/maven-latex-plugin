@@ -33,7 +33,7 @@
       <plugin>
 	      <groupId>eu.simuline.m2latex</groupId>
 	      <artifactId>latex-maven-plugin</artifactId>
-	      <version>1.5-SNAPSHOT</version>
+	      <version>${project.version}</version>
 	      <!--TBD: This must be updated with the resources plugin -->
         <configuration>
           <targetSiteDirectory>${basedir}/src/test/resources/integration/target</targetSiteDirectory>

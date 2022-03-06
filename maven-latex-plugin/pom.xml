@@ -504,6 +504,7 @@
       </plugin>
 -->
 
+			<!-- used to create version without SNAPSHOT suffix for documentation -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -527,17 +528,17 @@
 				</configuration>
 				<executions>
 					<execution>
+						<!-- filter the build parameters for tex documents  -->
 						<id>filterTexProps</id>
-						<!-- here the phase you need -->
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/src/site/tex</outputDirectory>
+							<outputDirectory>src/site/tex</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/src/main/resources</directory>
+									<directory>src/main/resources</directory>
 									<includes>
 										<include>buildParams.tex</include>
 									</includes>
@@ -545,6 +546,26 @@
 								</resource>
 							</resources>
 						</configuration>
+					</execution>
+					<execution>
+						<!-- filter the pom for integration tests -->
+						<id>filterIntTestPoms</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/test/resources/integration</outputDirectory>
+						<resources>
+							<resource>
+								<directory>src/test/resources/integration/rawPom</directory>
+								<includes>
+									<include>pom4pdf.xml</include>
+								</includes>
+								<filtering>true</filtering>
+							</resource>
+						</resources>
+					</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -609,6 +630,12 @@
 							<directory>src/site/tex</directory>
 							<includes>
 								<include>buildParams.tex</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>src/test/resources/integration</directory>
+							<includes>
+								<include>pom4pdf.xml</include>
 							</includes>
 						</fileset>
 					</filesets>
