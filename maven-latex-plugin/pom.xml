@@ -1,115 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 			     http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <!-- coordinates for model and artifact xxx -->
-  <modelVersion>4.0.0</modelVersion>
+	<!-- coordinates for model and artifact xxx -->
+	<modelVersion>4.0.0</modelVersion>
 
-  <!-- The Basics -->
-  <groupId>eu.simuline.m2latex</groupId>
-  <artifactId>latex-maven-plugin</artifactId>
-  <version>1.5-SNAPSHOT</version>
-  <packaging>maven-plugin</packaging>
+	<!-- The Basics -->
+	<groupId>eu.simuline.m2latex</groupId>
+	<artifactId>latex-maven-plugin</artifactId>
+	<version>1.5-SNAPSHOT</version>
+	<packaging>maven-plugin</packaging>
 
-  <!--parent>
+	<!--parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent-->
 
-  <!-- information for generating a site -->
-  <name>Maven LaTeX Plugin</name>
-  <description>
+	<!-- information for generating a site -->
+	<name>Maven LaTeX Plugin</name>
+	<description>
     Automatically create pdf, doc, odt, txt or html documents 
     from LaTeX sources during the Maven site phase
     allowing typical graphic formats native to tex or to the package graphics.
     Also includes bibliography, index and glossary
     and also check for rerun, warnings and under/overfull boxes. 
-  </description>
+	</description>
 
-  <url>https://github.com/Reissner/maven-latex-plugin/</url>
-  <inceptionYear>2016</inceptionYear>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-      <comments>A business-friendly OSS license</comments>
-    </license>
-  </licenses>
+	<url>https://github.com/Reissner/maven-latex-plugin/</url>
+	<inceptionYear>2016</inceptionYear>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
 
 
-  <organization>
-    <name>Simuline Organization (l2r)</name>
-    <url>http://www.simuline.eu</url>
-  </organization>
+	<organization>
+		<name>Simuline Organization (l2r)</name>
+		<url>http://www.simuline.eu</url>
+	</organization>
 
-  <!--organization>
+	<!--organization>
     <name>akquinet AG</name>
     <url>http://www.akquinet.de</url>
   </organization-->
 
-  <developers>
-    <developer>
-      <id>cerker</id>
-      <name>Carsten Erker</name>
-      <email>carsten.erker at akquinet dot de</email>
-      <organization>akquinet tech@spree GmbH</organization>
-      <organizationUrl>http://www.akquinet.de</organizationUrl>
-    </developer>
+	<developers>
+		<developer>
+			<id>cerker</id>
+			<name>Carsten Erker</name>
+			<email>carsten.erker at akquinet dot de</email>
+			<organization>akquinet tech@spree GmbH</organization>
+			<organizationUrl>http://www.akquinet.de</organizationUrl>
+		</developer>
 
-    <developer>
-      <id>hwilming</id>
-      <name>Heinz Wilming</name>
-      <email>heinz.wilming at akquinet dot de</email>
-      <organization>akquinet tech@spree GmbH</organization>
-      <organizationUrl>http://www.akquinet.de</organizationUrl>
-    </developer>
+		<developer>
+			<id>hwilming</id>
+			<name>Heinz Wilming</name>
+			<email>heinz.wilming at akquinet dot de</email>
+			<organization>akquinet tech@spree GmbH</organization>
+			<organizationUrl>http://www.akquinet.de</organizationUrl>
+		</developer>
 
-    <developer>
-      <id>ereissner</id>
-      <name>Ernst Reissner</name>
-      <email>ernst.reissner at simuline dot eu</email>
-      <organization>l2r</organization>
-      <organizationUrl>https://www.simuline.eu</organizationUrl>
-      <timezone>Europe/Berlin</timezone>
-      <properties>
-        <picUrl>http://www.simuline.eu/Gluck_0001.gif</picUrl>
-      </properties>
-    </developer>
-  </developers>
+		<developer>
+			<id>ereissner</id>
+			<name>Ernst Reissner</name>
+			<email>ernst.reissner at simuline dot eu</email>
+			<organization>l2r</organization>
+			<organizationUrl>https://www.simuline.eu</organizationUrl>
+			<timezone>Europe/Berlin</timezone>
+			<properties>
+				<picUrl>http://www.simuline.eu/Gluck_0001.gif</picUrl>
+			</properties>
+		</developer>
+	</developers>
 
-  <!-- mailingLists></mailingLists-->
+	<!-- mailingLists></mailingLists-->
 
-  <!-- this is a trial -->
-  <pluginRepositories>
-    <pluginRepository>
-      <id>latex-maven-plugin-repo</id>
-      <!--url>http://akquinet.github.com/maven-latex-plugin/maven2/</url-->
-      <url>https://www.simuline.eu/RepositoryMaven</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
+	<!-- this is a trial -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>latex-maven-plugin-repo</id>
+			<!--url>http://akquinet.github.com/maven-latex-plugin/maven2/</url-->
+			<url>https://www.simuline.eu/RepositoryMaven</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
 
-  <!-- source repositories: at the moment not needed. -->
-  <repositories>
-    <!--repository>
+	<!-- source repositories: at the moment not needed. -->
+	<repositories>
+		<!--repository>
       <id>publicRepoAtSimuline</id>
       <url>https://www.simuline.eu/RepositoryMaven</url>
     </repository-->
-    <!--repository>
+		<!--repository>
 		<id>springRepo</id>
 		<url>https://repo.spring.io/plugins-release/</url>
 	</repository-->
-  </repositories>
-  <!-- https://mvnrepository.com/artifact/org.apache.ant/com.springsource.org.apache.tools.ant -->
+	</repositories>
+	<!-- https://mvnrepository.com/artifact/org.apache.ant/com.springsource.org.apache.tools.ant -->
 
-  <!--scm>
+	<!--scm>
     <connection>
     scm:git:git://github.com/akquinet/maven-latex-plugin.git
     </connection>
@@ -120,68 +119,68 @@
     <tag>1.3</tag>
   </scm-->
 
-  <scm>
-    <connection>
+	<scm>
+		<connection>
       scm:git:https://github.com/Reissner/maven-latex-plugin.git
-    </connection>
-    <developerConnection>
+		</connection>
+		<developerConnection>
       scm:git:https://github.com/Reissner/maven-latex-plugin.git
-    </developerConnection>
-    <url>https://github.com/Reissner/maven-latex-plugin</url>
-    <tag>latex-maven-plugin-1.3</tag>
-  </scm>
+		</developerConnection>
+		<url>https://github.com/Reissner/maven-latex-plugin</url>
+		<tag>latex-maven-plugin-1.3</tag>
+	</scm>
 
-  <distributionManagement><!-- For authentication see ~/.m2/settings.xml -->
-    <site>
-      <id>publicSiteAtSimuline</id>
-      <url>ftp://www.simuline.eu/public_html/LatexMavenPlugin</url>
-    </site>
+	<distributionManagement>		<!-- For authentication see ~/.m2/settings.xml -->
+		<site>
+			<id>publicSiteAtSimuline</id>
+			<url>ftp://www.simuline.eu/public_html/LatexMavenPlugin</url>
+		</site>
 
-    <repository>
-      <id>publicRepoAtSimuline</id>
-      <uniqueVersion>false</uniqueVersion>
-      <url>ftp://www.simuline.eu/public_html/RepositoryMaven</url>
-    </repository>
-  </distributionManagement>
+		<repository>
+			<id>publicRepoAtSimuline</id>
+			<uniqueVersion>false</uniqueVersion>
+			<url>ftp://www.simuline.eu/public_html/RepositoryMaven</url>
+		</repository>
+	</distributionManagement>
 
 
-  <mailingLists>
-    <!--mailingList>
+	<mailingLists>
+		<!--mailingList>
       <name>maven-latex-plugin Users</name>
       <archive>http://groups.google.com/group/maven-latex-plugin-users</archive>
       <post>maven-latex-plugin-users@googlegroups.com</post>
       <subscribe>maven-latex-plugin-users+subscribe@googlegroups.com</subscribe>
       <unsubscribe>maven-latex-plugin-users+unsubscribe@googlegroups.com</unsubscribe>
     </mailingList-->
-  </mailingLists>
+	</mailingLists>
 
-  <!--issueManagement>
+	<!--issueManagement>
     <system>Github Issues</system>
     <url>https://github.com/akquinet/maven-latex-plugin/issues</url>
     </issueManagement-->
 
-  <properties>
-    <!-- Using platform encoding to copy filtered resources; 
+	<properties>
+		<!-- Using platform encoding to copy filtered resources; 
     without project.build.sourceEncoding the build is platform dependent! -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- checked during validation -->
-    <versionMvn>3.8.4</versionMvn><!-- 3.8.4 3.1.0-->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- checked during validation -->
+		<versionMvn>3.8.4</versionMvn>		<!-- 3.8.4 3.1.0-->
 		<versionJunit5>5.8.2</versionJunit5>
 		<!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
 		<versionJunit4>4.12</versionJunit4>
 		<versionItf>0.11.0</versionItf>
 		<versionAnt>1.10.0</versionAnt>
-  </properties>
+	</properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>${versionMvn}</version>
-      <scope>provided</scope>
-    </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>${versionMvn}</version>
+			<scope>provided</scope>
+		</dependency>
 
-	<!-- TBD: lot of dependency convergence errors, 
+		<!-- TBD: lot of dependency convergence errors, 
 	mainly betwen maven-compat and maven-core. 	
 	I wrote already org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.5
 		to update dependency 
@@ -195,72 +194,72 @@
 		
 -->
 
-	<dependency><!-- needed for integration test -->
-		<groupId>org.apache.maven</groupId>
-		<artifactId>maven-compat</artifactId>
-		<version>${versionMvn}</version>
-		<scope>provided</scope>
-	</dependency>
+		<dependency>			<!-- needed for integration test -->
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-compat</artifactId>
+			<version>${versionMvn}</version>
+			<scope>provided</scope>
+		</dependency>
 
-    <!-- needed for maven-plugin-plugin descriptor -->
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-      <version>${versionMvn}</version>
-      <scope>provided</scope>
-   </dependency>
+		<!-- needed for maven-plugin-plugin descriptor -->
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-core</artifactId>
+			<version>${versionMvn}</version>
+			<scope>provided</scope>
+		</dependency>
 
-    <!--dependency>
+		<!--dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
       <version>${versionMvn}</version>
       <scope>provided</scope>
     </dependency-->
 
-    <!-- maven-resolver-api. -->
+		<!-- maven-resolver-api. -->
 
 
-    <!-- for a trial in MetaInfo class -->
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-model</artifactId>
-      <version>${versionMvn}</version>
-      <scope>provided</scope>
-    </dependency>
+		<!-- for a trial in MetaInfo class -->
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-model</artifactId>
+			<version>${versionMvn}</version>
+			<scope>provided</scope>
+		</dependency>
 
-    <dependency><!-- needed when running the integration test -->
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>1.7.32</version>
-	  <scope>test</scope>
-	</dependency>
+		<dependency>			<!-- needed when running the integration test -->
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.32</version>
+			<scope>test</scope>
+		</dependency>
 
-    
-    <!-- dependencies to annotations -->
-    <dependency>
-      <groupId>org.apache.maven.plugin-tools</groupId>
-      <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.6.4</version>
-      <scope>provided</scope>
-    </dependency>
 
-    <!-- version maybe outdated -->
-    <!--dependency>
+		<!-- dependencies to annotations -->
+		<dependency>
+			<groupId>org.apache.maven.plugin-tools</groupId>
+			<artifactId>maven-plugin-annotations</artifactId>
+			<version>3.6.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- version maybe outdated -->
+		<!--dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-ant-tasks</artifactId>
       <version>2.1.3</version>
       <scope>provided</scope>
     </dependency-->
 
-	<!-- TBD: this is a bit too much, but works. surrogat of maven-ant-task -->
-	<dependency>
-		<groupId>org.apache.ant</groupId>
-		<artifactId>ant</artifactId>
-		<version>${versionAnt}</version>
-     <scope>provided</scope>
-	</dependency>
+		<!-- TBD: this is a bit too much, but works. surrogat of maven-ant-task -->
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>${versionAnt}</version>
+			<scope>provided</scope>
+		</dependency>
 
-   <!--dependency>
+		<!--dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact-manager</artifactId>
       <version>2.2.1</version>
@@ -295,102 +294,102 @@
       <scope>provided</scope>
     </dependency-->
 
-    
-    <!--dependency>
+
+		<!--dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>3.4</version>
         </dependency-->
-    <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
-    
-    <!--dependency>
+		<!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
+
+		<!--dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
       <version>3.3.0</version>
     </dependency-->
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${versionJunit4}</version>
-      <scope>test</scope>
-    </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${versionJunit4}</version>
+			<scope>test</scope>
+		</dependency>
 
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>2.3.0</version><!-- 2.3.0 works with plugin-plugin 3.3 -->
-      <!--version>4.3.1</version does not work with plugin-plugin -->
-    </dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.3.0</version>			<!-- 2.3.0 works with plugin-plugin 3.3 -->
+			<!--version>4.3.1</version does not work with plugin-plugin -->
+		</dependency>
 
-	<!-- maybe to be replaced by https://blog.soebes.de/blog/2020/08/18/itf-part-i/ -->
-    <dependency>
-      <groupId>org.apache.maven.plugin-testing</groupId>
-      <artifactId>maven-plugin-testing-harness</artifactId>
-      <version>3.3.0</version>
-      <scope>test</scope>
-	</dependency>
+		<!-- maybe to be replaced by https://blog.soebes.de/blog/2020/08/18/itf-part-i/ -->
+		<dependency>
+			<groupId>org.apache.maven.plugin-testing</groupId>
+			<artifactId>maven-plugin-testing-harness</artifactId>
+			<version>3.3.0</version>
+			<scope>test</scope>
+		</dependency>
 
-	<dependency><!-- TBD: eliminate in java12 -->
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.6</version>
-      <scope>test</scope>
- 	</dependency>
+		<dependency>			<!-- TBD: eliminate in java12 -->
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+			<scope>test</scope>
+		</dependency>
 
-	<!--dependency>
+		<!--dependency>
 		<groupId>org.junit.jupiter</groupId>
 		<artifactId>junit-jupiter-engine</artifactId>
 		<version>${versionJunit5}</version>
 		<scope>test</scope>
 	</dependency-->
 
-	<!-- annotations and assertions -->
-	<!--dependency>
+		<!-- annotations and assertions -->
+		<!--dependency>
 		<groupId>org.junit.jupiter</groupId>
 		<artifactId>junit-jupiter-api</artifactId>
 		<version>${versionJunit5}</version>
 		<scope>test</scope>
 	</dependency-->
 
-	<!-- @suite support -->
-	<!--dependency>
+		<!-- @suite support -->
+		<!--dependency>
 		<groupId>org.junit.jupiter</groupId>
 		<artifactId>junit-jupiter-params</artifactId>
 		<version>${versionJunit5}</version>
 		<scope>test</scope>
 	</dependency-->
 
-	<!-- support for parametrized tests -->
-	<!--dependency>
+		<!-- support for parametrized tests -->
+		<!--dependency>
 		<groupId>org.junit.platform</groupId>
 		<artifactId>junit-platform-suite</artifactId>
 		<version>${versionJunit5Platform}</version>
 		<scope>test</scope>
 	</dependency-->
 
-	<!--dependency>
+		<!--dependency>
 		<groupId>com.soebes.itf.jupiter.extension</groupId>
 		<artifactId>itf-extension-maven</artifactId>
 		<version>${versionItf}</version>
 		<scope>test</scope>
 	  </dependency-->
 
-	<!--dependency>
+		<!--dependency>
 		<groupId>com.soebes.itf.jupiter.extension</groupId>
 		<artifactId>itf-assertj</artifactId>
 		<version>${versionItf}</version>
 		<scope>test</scope>
 	</dependency-->
 
-	<!--dependency>
+		<!--dependency>
 		<groupId>com.soebes.itf.jupiter.extension</groupId>
 		<artifactId>itf-jupiter-extension</artifactId>
 		<version>${versionItf}</version>
 		<scope>test</scope>
 	</dependency-->
 
-	<!--dependency>
+		<!--dependency>
 		<groupId>org.assertj</groupId>
 		<artifactId>assertj-core</artifactId>
 		<version>3.16.1</version>
@@ -398,84 +397,84 @@
 	</dependency-->
 
 
-    <!--dependency>
+		<!--dependency>
       <groupId>eu.simuline.m2latex</groupId>
       <artifactId>latex-maven-plugin</artifactId>
       <version>1.4</version>
     </dependency-->
 
-  </dependencies>
+	</dependencies>
 
-  <build>
+	<build>
 
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-ftp</artifactId>
-         <version>3.3.2</version>
-      </extension>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-file</artifactId>
-         <version>3.3.2</version>
-      </extension>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-http</artifactId>
-         <version>3.3.2</version>
-      </extension>
-    </extensions>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>3.3.2</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-file</artifactId>
+				<version>3.3.2</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-http</artifactId>
+				<version>3.3.2</version>
+			</extension>
+		</extensions>
 
-    <resources>
-      <resource>
-	<directory>src/main/resources</directory>
-	<filtering>true</filtering>
-      </resource>
-    </resources>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 
 
-    <plugins>
-      <!-- at the moment just to enforce maven version
+		<plugins>
+			<!-- at the moment just to enforce maven version
 	   use as mvn validate not as mvn enforcer:enforce
 	   TBD: add a lot of tests -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
-        <executions>
-          <execution>
-            <id>enforce-maven</id>
-	    	<phase>validate</phase>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-		  </execution>
-	    </executions>
-        <configuration>
-          <rules>
-            <requireMavenVersion>
-            	<version>${versionMvn}</version>
-			<message>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M3</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<rules>
+						<requireMavenVersion>
+							<version>${versionMvn}</version>
+							<message>
 		 		Invalid Maven version. It should, at least, be ${versionMvn}
-				</message>
-            </requireMavenVersion>
-			<requireJavaVersion>
-				<version>11</version>
-			</requireJavaVersion>
-			<!--dependencyConvergence/--><!-- this fails because of plugin-api -->
-          </rules>    
-        </configuration>
-      </plugin>
+							</message>
+						</requireMavenVersion>
+						<requireJavaVersion>
+							<version>11</version>
+						</requireJavaVersion>
+						<!--dependencyConvergence/-->						<!-- this fails because of plugin-api -->
+					</rules>
+				</configuration>
+			</plugin>
 
-      <!-- information about a project or the system -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-help-plugin</artifactId>
-        <version>3.2.0</version>
-      </plugin>
+			<!-- information about a project or the system -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-help-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
 
-      <!-- read/write property values -->
-      <!-- in this case, this plugin also exposes profile properties from settings.xml
+			<!-- read/write property values -->
+			<!-- in this case, this plugin also exposes profile properties from settings.xml
       related with gpg: gpg.executable and gpg.passwprase. 
       This makes it unuseable. 
       What would be needed is make it configurable to include/exclude properites. 
@@ -484,7 +483,7 @@
       but pull requests are done. 
       So if i want to do it myself, i can. Well... 
       For the moment, I decided to drop this and go with resources plugin.  -->
-      <!--  
+			<!--  
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>properties-maven-plugin</artifactId>
@@ -505,86 +504,86 @@
       </plugin>
 -->
 
-      <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>build-helper-maven-plugin</artifactId>
-	<version>3.3.0</version>
-	<executions>
-	  <execution>
-            <id>parse-version</id>
-            <goals>
-              <goal>parse-version</goal>
-            </goals>
-	  </execution>
-	</executions>
-      </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-resources-plugin</artifactId>
-	<version>3.2.0</version>
-	<configuration>
-	  <propertiesEncoding>UTF-8</propertiesEncoding>
-	</configuration>
-	<executions>
-	  <execution>
-	    <id>filterTexProps</id>
-            <!-- here the phase you need -->
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
-					<outputDirectory>${basedir}/src/site/tex</outputDirectory>
-					<resources>
-						<resource>
-							<directory>${basedir}/src/main/resources</directory>
-							<includes>
-								<include>buildParams.tex</include>
-							</includes>
-							<filtering>true</filtering>
-						</resource>
-					</resources>
+					<propertiesEncoding>UTF-8</propertiesEncoding>
 				</configuration>
-	  </execution>
-	</executions>
-      </plugin>
+				<executions>
+					<execution>
+						<id>filterTexProps</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/src/site/tex</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources</directory>
+									<includes>
+										<include>buildParams.tex</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-      <plugin>
-	<groupId>pl.project13.maven</groupId>
-	<artifactId>git-commit-id-plugin</artifactId>
-	<version>4.0.3</version>
-	<executions>
-	  <execution>
-	    <id>get-the-git-infos</id>
-	    <goals>
-	      <goal>revision</goal>
-	    </goals>
-	    <phase>initialize</phase>
-	  </execution>
-	</executions>
-	<configuration>
-	  <generateGitPropertiesFile>true</generateGitPropertiesFile>
-	  <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
-	  </generateGitPropertiesFilename>
-	  <!--  includeOnlyProperties>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>4.0.3</version>
+				<executions>
+					<execution>
+						<id>get-the-git-infos</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+						<phase>initialize</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+					</generateGitPropertiesFilename>
+					<!--  includeOnlyProperties>
 	       <includeOnlyProperty>^git.build.(time|version)$
 	       </includeOnlyProperty>
 	       <includeOnlyProperty>^git.commit.id.(abbrev|full)$
 	       </includeOnlyProperty>
 	       </includeOnlyProperties-->
-	  <commitIdGenerationMode>full</commitIdGenerationMode>
-	</configuration>
-      </plugin>
-	  
+					<commitIdGenerationMode>full</commitIdGenerationMode>
+				</configuration>
+			</plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>3.0.0-M1</version>
-      </plugin>
 
-      <!--plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>3.0.0-M1</version>
+			</plugin>
+
+			<!--plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
         <version>2.12.1</version>
@@ -600,166 +599,166 @@
       </plugin-->
 
 
-      <!-- configuration for clean plugin -->
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>3.1.0</version>
-		<configuration>
-	  	  <filesets>
-            <fileset>
-              <directory>src/site/tex</directory>
-              <includes>
-		        <include>buildParams.tex</include>
-              </includes>
-            </fileset>
-	      </filesets>
-		</configuration>
-      </plugin>
+			<!-- configuration for clean plugin -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/site/tex</directory>
+							<includes>
+								<include>buildParams.tex</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 
-      <!-- This plugin will write properties values 
+			<!-- This plugin will write properties values 
 	   using dependency information into classpath.txt-->
-      <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-dependency-plugin</artifactId>
-		<version>3.1.2</version>
-		<executions>
-	  	  <execution>
-	   	    <goals>
-	    	  <goal>build-classpath</goal>
-	    	</goals>
-	  	  </execution>
-		</executions>
-		<configuration>
-	  	  <outputFile>${project.build.directory}/classpath.txt</outputFile>
-		</configuration>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build-classpath</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputFile>${project.build.directory}/classpath.txt</outputFile>
+				</configuration>
+			</plugin>
 
 
-      <!-- creates HelpMojo 
+			<!-- creates HelpMojo 
 	   Still there is a problem with detail=true. 
 	   Does not work with 3.4 or later versions! 
       -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <!--version>3.4</version-->
-	<!-- this is the first version with a NullPointerException -->
-        <!--version>3.6.4</version-->
-	<!-- this is the current version at the time of this writing -->
-        <version>3.3</version><!-- 3.3-->
-	<!-- this version allows installation, but fails with javadoc -->
-	<configuration>
-	  <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-	</configuration>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<!--version>3.4</version-->
+				<!-- this is the first version with a NullPointerException -->
+				<!--version>3.6.4</version-->
+				<!-- this is the current version at the time of this writing -->
+				<version>3.3</version>				<!-- 3.3-->
+				<!-- this version allows installation, but fails with javadoc -->
+				<configuration>
+					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+				</configuration>
 
-        <executions>
-	  <execution>
-	    <id>default-descriptor</id>
-	    <goals>
-	      <goal>descriptor</goal>
-	    </goals>
-	    <phase>process-classes</phase>
-	  </execution>
-          <!--execution>
+				<executions>
+					<execution>
+						<id>default-descriptor</id>
+						<goals>
+							<goal>descriptor</goal>
+						</goals>
+						<phase>process-classes</phase>
+					</execution>
+					<!--execution>
             <id>generated-helpmojo</id>
             <goals>
               <goal>helpmojo</goal>
             </goals>
  	    <phase>process-classes</phase>
          </execution-->
-        </executions>
-      </plugin>
+				</executions>
+			</plugin>
 
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-	<version>3.8.1</version>
-	<configuration>
- 	  <compilerArgs>
-	    <arg>-g</arg>
-  	    <arg>-Xlint:unchecked</arg>
-	  </compilerArgs>
-          <source>1.8</source>
-          <target>1.8</target>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<compilerArgs>
+						<arg>-g</arg>
+						<arg>-Xlint:unchecked</arg>
+					</compilerArgs>
+					<source>1.8</source>
+					<target>1.8</target>
 					<!--release>11</release-->
-        </configuration>
-      </plugin>
+				</configuration>
+			</plugin>
 
-      <!-- maybe three jars even: one each for 
+			<!-- maybe three jars even: one each for 
 	   - maven plugin 
 	   - ant task
 	   - standalone application 
       -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
-        <!--version>3.0.2</version-->
-	<executions>
-	  <execution>
-            <id>second-jar</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <classifier>antTask</classifier>
-              <includes>
-		<include>**/antTask/*</include><!-- this is added to the name
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<!--version>3.0.2</version-->
+				<executions>
+					<execution>
+						<id>second-jar</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classifier>antTask</classifier>
+							<includes>
+								<include>**/antTask/*</include>								<!-- this is added to the name
 		of the jar file-->
-		<include>**/core/*</include>
-		<include>org/apache/maven/plugin/*Exception*</include>
-		<include>org/apache/commons/io/*</include>
-		<include>org/apache/commons/io/output/*</include>
-		<include>org/apache/commons/io/filefilter/*</include>
-		<include>org/codehaus/plexus/util/*</include>
- 		<include>org/codehaus/plexus/util/cli/*</include>
- 		<include>org/codehaus/plexus/util/cli/shell/*</include>
- 		<include>*.properties</include>
-               </includes>
-            </configuration>
-	  </execution>
-	</executions>
-	<!-- refers to all jars -->
-	<configuration>
-          <archive>
-          <!-- name of jar and list of folders if set true -->
-<!-- index>true</index-->
-            <manifest>
-	      <!-- adds all 'Implementation-xxx' 
+								<include>**/core/*</include>
+								<include>org/apache/maven/plugin/*Exception*</include>
+								<include>org/apache/commons/io/*</include>
+								<include>org/apache/commons/io/output/*</include>
+								<include>org/apache/commons/io/filefilter/*</include>
+								<include>org/codehaus/plexus/util/*</include>
+								<include>org/codehaus/plexus/util/cli/*</include>
+								<include>org/codehaus/plexus/util/cli/shell/*</include>
+								<include>*.properties</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+				<!-- refers to all jars -->
+				<configuration>
+					<archive>
+						<!-- name of jar and list of folders if set true -->
+						<!-- index>true</index-->
+						<manifest>
+							<!-- adds all 'Implementation-xxx' 
 		   but "Implementation-Vendor-Id' -->
-              <addDefaultImplementationEntries>true
-	      </addDefaultImplementationEntries>
-	      <!-- adds all 'Specification-xxx' 
+							<addDefaultImplementationEntries>true
+							</addDefaultImplementationEntries>
+							<!-- adds all 'Specification-xxx' 
 		   but "Implementation-Vendor-Id' -->
-              <addDefaultSpecificationEntries>true
-	      </addDefaultSpecificationEntries>
-	      <!-- make jar executable for standalone application -->
-	      <!--addClasspath>true</addClasspath-->
-              <!--classpathPrefix>lib/</classpathPrefix-->
-	      <!--classpathLayoutType>repository</classpathLayoutType-->
-              <!--customClasspathLayout>WEB-INF/lib/$${artifact.groupIdPath}/$${artifact.artifactId}-$${artifact.version}$${dashClassifier?}.$${artifact.extension}</customClasspathLayout-->
+							<addDefaultSpecificationEntries>true
+							</addDefaultSpecificationEntries>
+							<!-- make jar executable for standalone application -->
+							<!--addClasspath>true</addClasspath-->
+							<!--classpathPrefix>lib/</classpathPrefix-->
+							<!--classpathLayoutType>repository</classpathLayoutType-->
+							<!--customClasspathLayout>WEB-INF/lib/$${artifact.groupIdPath}/$${artifact.artifactId}-$${artifact.version}$${dashClassifier?}.$${artifact.extension}</customClasspathLayout-->
 
-	      <!--mainClass>the main class</mainClass-->
-            </manifest>
-	    <!-- 'sealed' means all packages are complete in this jar-->
-	<manifestEntries>
-		<Sealed>true</Sealed>
-		<url>${project.url}</url>
-	</manifestEntries>
-	<manifestSections>
-		<manifestSection>
-			<name>eu/simuline/m2latex/core/</name>
-			<manifestEntries>
-				<Implementation-Version>${project.version}</Implementation-Version>
-				<url>${project.url}</url>
-			</manifestEntries>
-		</manifestSection>
-	</manifestSections>
-          </archive>
-	</configuration>
+							<!--mainClass>the main class</mainClass-->
+						</manifest>
+						<!-- 'sealed' means all packages are complete in this jar-->
+						<manifestEntries>
+							<Sealed>true</Sealed>
+							<url>${project.url}</url>
+						</manifestEntries>
+						<manifestSections>
+							<manifestSection>
+								<name>eu/simuline/m2latex/core/</name>
+								<manifestEntries>
+									<Implementation-Version>${project.version}</Implementation-Version>
+									<url>${project.url}</url>
+								</manifestEntries>
+							</manifestSection>
+						</manifestSections>
+					</archive>
+				</configuration>
 
-      </plugin>
+			</plugin>
 
 
 			<plugin>
@@ -775,60 +774,60 @@
 				<version>3.0.0-M2</version>
 			</plugin>
 
-      <!-- javadoc plugin -->
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-	  <breakiterator>true</breakiterator>
-	  <show>private</show>
-	  <source>11</source>
-	</configuration>
-      </plugin>
+			<!-- javadoc plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<breakiterator>true</breakiterator>
+					<show>private</show>
+					<source>11</source>
+				</configuration>
+			</plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
-        <configuration>
-          <trimStackTrace>false</trimStackTrace>
-          <systemPropertyVariables>
-            <!--testResourcesDir>${project.testResources}</testResourcesDir-->
-            <unitTestResourcesDir>src/test/resources/units</unitTestResourcesDir>
-            <buildDirectory>${project.build.directory}</buildDirectory>
-          </systemPropertyVariables>
-	  	  <!--includes>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<configuration>
+					<trimStackTrace>false</trimStackTrace>
+					<systemPropertyVariables>
+						<!--testResourcesDir>${project.testResources}</testResourcesDir-->
+						<unitTestResourcesDir>src/test/resources/units</unitTestResourcesDir>
+						<buildDirectory>${project.build.directory}</buildDirectory>
+					</systemPropertyVariables>
+					<!--includes>
 			<include>LatexProcessorTest.java</include>
 			<include>CommandExecutorTest.java</include>
 			<include>TexFileUtilsTest.java</include>
 			<include>SettingsTest.java</include>
 			<include>PdfMojoTest.java</include>
           </includes-->
-	  <!--excludes>
+					<!--excludes>
             <exclude>PdfMojoTest.java</exclude>
           </excludes-->
-        </configuration>
-      </plugin>
-  
+				</configuration>
+			</plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.7.1</version>
-        <configuration>
-          <locales>en</locales>
-        </configuration>
-      </plugin>
 
-      <!-- create html and pdf and other formats from latex -->
-      <plugin>
-	<groupId>eu.simuline.m2latex</groupId>
-	<artifactId>latex-maven-plugin</artifactId>
-	<version>1.5-SNAPSHOT</version><!--uptodate?-->
-	
-	<configuration>
-	      <!-- Indicates whether the `VersionMojo` displays warnings only 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.7.1</version>
+				<configuration>
+					<locales>en</locales>
+				</configuration>
+			</plugin>
+
+			<!-- create html and pdf and other formats from latex -->
+			<plugin>
+				<groupId>eu.simuline.m2latex</groupId>
+				<artifactId>latex-maven-plugin</artifactId>
+				<version>1.5-SNAPSHOT</version>				<!--uptodate?-->
+
+				<configuration>
+					<!-- Indicates whether the `VersionMojo` displays warnings only 
 		   or also creates infos. 
 		   Infos refer to the version of this plugin 
 		   and also on its git commit, 
@@ -847,17 +846,17 @@
 		   `mvn latex:vrs`, whereas in builds by default 
 		   the pom overwrites this to have output only 
 		   in case something goes wrong. -->
-	      <!--versionsWarnOnly>false</versionsWarnOnly-->
-          <settings>
-            <!-- The latex source directory as a string 
+					<!--versionsWarnOnly>false</versionsWarnOnly-->
+					<settings>
+						<!-- The latex source directory as a string 
 		 relative to $baseDirectory, 
 		 containing $texSrcProcDirectory. 
 		 This directory determines also the subdirectory of 
 		 $outputDirectory to lay down the generated artifacts. 
 		 The default value is 'src/site/tex' on Unix systems. -->
-            <texSrcDirectory>src/site/tex</texSrcDirectory>
+						<texSrcDirectory>src/site/tex</texSrcDirectory>
 
-	    <!-- The latex source processing directory as a string 
+						<!-- The latex source processing directory as a string 
 		 relative to $texSrcDirectory
 		 containing all tex main documents 
 		 and the graphic files to be processed 
@@ -865,21 +864,21 @@
 		 Whether this is done recursively in subfolders 
 		 is specified by $readTexSrcProcDirRec. 
 		 The default value is '.'. -->
-            <texSrcProcDirectory>.</texSrcProcDirectory>
+						<texSrcProcDirectory>.</texSrcProcDirectory>
 
-	    <!-- Whether the tex source directory $texSrcProcDirectory 
+						<!-- Whether the tex source directory $texSrcProcDirectory 
 		 shall be read recursively for creation of graphic files, 
 		 i.e. including the subdirectories. 
 		 This is set to 'false' only during information development. 
 		 The default value is 'true'. -->
-	    <readTexSrcProcDirRec>true</readTexSrcProcDirRec>
+						<readTexSrcProcDirRec>true</readTexSrcProcDirRec>
 
-           <!-- The artifacts generated by $latex2pdfCommand 
+						<!-- The artifacts generated by $latex2pdfCommand 
 		will be copied to this folder 
 		relative to $targetSiteDirectory 
 		which is by default '$targetDirectory/site' on Unix systems. 
 		The default value is '.'.  -->
-            <outputDirectory>.</outputDirectory>
+						<outputDirectory>.</outputDirectory>
 
 
 						<!-- Diff directory relative to 'baseDirectory' 
@@ -889,23 +888,23 @@
 						The default value is <code>.</code>. -->
 						<diffDirectory>.</diffDirectory>;
 
-	    <!-- A comma separated list of targets 
+	    						<!-- A comma separated list of targets 
 		 to be stored in $targetSet. 
 		 Allowed values are pdf, html, txt, odt and docx. 
 		 The default value is 'pdf, html'. -->
-	    <targets>pdf</targets><!-- , html -->
+						<targets>pdf</targets>						<!-- , html -->
 
-	    <!-- A comma separated list of excluded {@link Converter}s 
+						<!-- A comma separated list of excluded {@link Converter}s 
 		 given by their command, i.e. by {@link Converter#getCommand()}
 		 returned as a set by {@link #getConvertersExcluded()}. 
 		 Excluded converters need not be installed. 
 		 They don't show up in the version check of target 'vrs' 
 		 and of course they are not allowed to be used. 
 		 By default, this list is empty. -->
-	    <convertersExcluded></convertersExcluded>
-	    <!--convertersExcluded>xindy, upmendex</convertersExcluded-->
+						<convertersExcluded></convertersExcluded>
+						<!--convertersExcluded>xindy, upmendex</convertersExcluded-->
 
-	    <!-- The pattern to be applied to the contents of tex-files 
+						<!-- The pattern to be applied to the contents of tex-files 
 
 NOT QUITE: to the beginning 
 		 which identifies a latex main file. 
@@ -928,21 +927,21 @@ NOT QUITE: to the beginning
 		 If the current default value is not appropriate, 
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the deficiency. -->
-	    <patternLatexMainFile>
+						<patternLatexMainFile>
 \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
 %.*$|
 \\input\{[^{}]*\}|
 \s)*
 \\(documentstyle|documentclass)
-	    </patternLatexMainFile>
+						</patternLatexMainFile>
 
-           <!-- Path to the TeX scripts or null. 
+						<!-- Path to the TeX scripts or null. 
 		In the latter case, the scripts must be on the system path. 
 		Note that in the pom, <texPath /> 
 		and even <texPath>    </texPath> represent the null-File. 
 		The default value is null. -->
-            <texPath/>
+						<texPath/>
 
 						<!-- Indicates whether after creating artifacts 
 						 and copying them to the output directory {@link #outputDirectoryFile} 
@@ -952,14 +951,14 @@ NOT QUITE: to the beginning
 						 Note that currently, only pdf files are checkd. 
 						 This is <code>false</code> by default and is set to <code>true</code> only 
 						 in the context of tests. -->
-					 <chkDiff>false</chkDiff>
+						<chkDiff>false</chkDiff>
 
-            <!-- Clean up the working directory in the end? 
+						<!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
 		 The default value is 'true'. -->
-            <cleanUp>false</cleanUp>
+						<cleanUp>false</cleanUp>
 
-	    <!-- This pattern is applied to file names 
+						<!-- This pattern is applied to file names 
 		 and matching shall accept all the files 
 		 which were created from a latex main file 'xxx.tex'. 
 		 It is neither applied to directories 
@@ -1002,7 +1001,7 @@ NOT QUITE: to the beginning
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the deficiency. 
 		 The default value is given below. -->
-	    <patternCreatedFromLatexMain>
+						<patternCreatedFromLatexMain>
 ^(
 T$T(                        \.([^.]*|synctex\.gz|out\.ps)|
       (-|ch|se|su|ap|li)?\d+\.x?html?|
@@ -1013,15 +1012,15 @@ T$T(                        \.([^.]*|synctex\.gz|out\.ps)|
 zzT$T\.e?ps|
 (cmsy)\d+(-c)?-\d+c?\.png|
 (pdf)?latex\d+\.fls)$
-	    </patternCreatedFromLatexMain>
+						</patternCreatedFromLatexMain>
 
-	    <!-- The fig2dev command for conversion of fig-files 
+						<!-- The fig2dev command for conversion of fig-files 
 		 into various formats. 
 		 Currently only pdf combined with pdf_t is supported. 
 		 The default value is 'fig2dev'.  -->
-	    <fig2devCommand>fig2dev</fig2devCommand>
+						<fig2devCommand>fig2dev</fig2devCommand>
 
-	    <!-- The options for the command $fig2devCommand 
+						<!-- The options for the command $fig2devCommand 
 		 common to both output languages. 
 		 For the options specific for the two output langugages 
 		 'pdftex' and 'pdftex_t', 
@@ -1047,9 +1046,9 @@ zzT$T\.e?ps|
 		 Refers to the latex-fonts only. 
 		 o '-b width' 
 		 specify width of blank border around figure (1/72 inch). -->
- 	    <fig2devGenOptions />
+						<fig2devGenOptions />
 
-	    <!-- The options for the command $fig2devCommand 
+						<!-- The options for the command $fig2devCommand 
 		 specific for the output languages 'pdftex_t' 
 		 and 'pstex_t' which are the same. 
 		 Note that in addition to these options, 
@@ -1076,9 +1075,9 @@ zzT$T\.e?ps|
 		 Verbose mode.
   
 		 The default value for this option is the empty string. -->
-	    <fig2devPtxOptions />
+						<fig2devPtxOptions />
 
-	    <!-- The options for the command $fig2devCommand 
+						<!-- The options for the command $fig2devCommand 
 		 specific for the output language 'pdftex'. 
 		 Note that in addition to these option1s, 
 		 the option '-L pdftex' specifies the language and 
@@ -1086,45 +1085,43 @@ zzT$T\.e?ps|
 		 common for the two output langugages 
 		 'pdftex' and 'pdftex_t'. 
 		 The default value for this option is the empty string. -->
-	    <fig2devPdfEpsOptions />
+						<fig2devPdfEpsOptions />
 
-	    <!-- The command for conversion of gnuplot-files 
+						<!-- The command for conversion of gnuplot-files 
 		 into various formats. 
 		 Currently only pdf (graphics) 
 		 combined with pdf_t (latex-texts) is supported. 
 		 The default value is 'gnuplot'. -->
-	    <gnuplotCommand>gnuplot</gnuplotCommand>
+						<gnuplotCommand>gnuplot</gnuplotCommand>
 
-	    <!-- The options specific for $gnuplotCommand s
+						<!-- The options specific for $gnuplotCommand s
 		 output terminal 'cairolatex', 
 		 used for mixed latex/pdf-creation. 
 		 Note that the option 'pdf|eps' 
 		 of the terminal 'cairolatex' is not available, 
 		 because it is set internally. 
 		 The default option string is empty. -->
-	    <gnuplotOptions />
+						<gnuplotOptions />
 
-	    <!-- The command for conversion of gnuplot-files 
+						<!-- The command for conversion of gnuplot-files 
 		 into metapost`s postscript. 
 		 The default value is 'mpost'. -->
-	    <metapostCommand>mpost</metapostCommand>
+						<metapostCommand>mpost</metapostCommand>
 
-	    <!-- The options for the command $metapostCommand. 
+						<!-- The options for the command $metapostCommand. 
 		 Leading and trailing blanks are ignored. 
 		 A sequence of at least one blank separate the proper options. 
-		 The default value is 
-		 '-interaction=nonstopmode -recorder -s prologues=2'. 
+		 The default value is '-interaction=nonstopmode -recorder -s prologues=2'. 
 		 FIXME: does not work:'outputtemplate="%j_%c.mps"' -->
-	    <metapostOptions>
-	      -interaction=nonstopmode -recorder -s prologues=2 
-	    </metapostOptions>
+						<metapostOptions> -interaction=nonstopmode -recorder -s prologues=2 
+						</metapostOptions>
 
-	    <!-- The command for conversion of svg-files 
+						<!-- The command for conversion of svg-files 
 		 into a mixed format. 
 		 The default value is 'inkscape'. -->
-	    <svg2devCommand>inkscape</svg2devCommand>
+						<svg2devCommand>inkscape</svg2devCommand>
 
-	    <!-- The options for the command $svg2devCommand 
+						<!-- The options for the command $svg2devCommand 
 		 for exporting svg-figures into latex compatible files. 
 		 
 		 The following options are mandatory: 
@@ -1147,9 +1144,9 @@ zzT$T\.e?ps|
 		 
 		 The default value is the minimal value, 
 		 '-D - -export-latex'. -->
-	    <svg2devOptions>-D --export-latex</svg2devOptions>
+						<svg2devOptions>-D --export-latex</svg2devOptions>
 
-	    <!-- The command to create bounding box information 
+						<!-- The command to create bounding box information 
 		 from jpg-files and from png-files. 
 		 This is run twice: 
 		 once with parameter '-m' 
@@ -1157,35 +1154,33 @@ zzT$T\.e?ps|
 		 once with parameter '-x' 
 		 to create '.xbb'-files for driver 'dvipdfmx'. 
 		 The default value is 'ebb'. -->
-	    <ebbCommand>ebb</ebbCommand>
+						<ebbCommand>ebb</ebbCommand>
 
-	    <!-- The options for the command $ebbCommand 
+						<!-- The options for the command $ebbCommand 
 		 except '-m' and '-x' 
 		 which are added automatically. 
 		 The default value is '-v'. -->
-	    <ebbOptions>-v</ebbOptions>
+						<ebbOptions>-v</ebbOptions>
 
-            <!-- The LaTeX command to create a pdf-file. 
+						<!-- The LaTeX command to create a pdf-file. 
 		 Possible values are e.g. 
 		 'pdflatex', 'lualatex' and 'xelatex'. 
 		 The default value (for which this software is also tested) 
 		 is 'pdflatex'. -->
-            <latex2pdfCommand>pdflatex</latex2pdfCommand>
+						<latex2pdfCommand>pdflatex</latex2pdfCommand>
 
- <!-- occurs for xelatex but neither for pdflatex nor for lualatex: 
+						<!-- occurs for xelatex but neither for pdflatex nor for lualatex: 
       LaTeX Font Warning: Font shape 'OMS/cmtt/m/n' undefined
       (Font)              using 'OMS/cmsy/m/n' instead
       (Font)              for symbol 'textbackslash' on input line 371. -->
 
-             <!-- The options for the command $latex2pdfCommand. 
+						<!-- The options for the command $latex2pdfCommand. 
 		  Leading and trailing blanks are ignored. 
 		  A sequence of at least one blank 
 		  separates the proper options. 
 		  
-		  The default value  comprises the following options: 
-		  -interaction=nonstopmode 
-		  prevents latex from stopping at the first error. 
-		  -synctex=1
+		  The default value  comprises the following options: -interaction=nonstopmode 
+		  prevents latex from stopping at the first error. -synctex=1
 		  makes latex create a pdf file 
 		  which synchronizes with an editor supporting synchtex. 
 		  -src-specials 
@@ -1202,19 +1197,14 @@ but this can also be done via
 		  pdf-pictures in dvi-mode and pdf-pictures in pdf-mode. 
 		  In pdftex this must be specified explicitly as 
 		  Driver dvipdfmx is always used by xetex. 
-required: 
-
--interaction=STRING     set interaction mode (STRING=batchmode/nonstopmode/
+required: -interaction=STRING     set interaction mode (STRING=batchmode/nonstopmode/
                         scrollmode/errorstopmode)
 
 -ipc                    send DVI output to a socket as well as the usual
                         output file
 
 [-no]-shell-escape      disable/enable \write18{SHELL COMMAND}
--shell-restricted       enable restricted \write18
-
-
--translate-file=TCXNAME use the TCX file TCXNAME
+-shell-restricted       enable restricted \write18 -translate-file=TCXNAME use the TCX file TCXNAME
 -8bit                   make all characters printable by default
 
 
@@ -1224,50 +1214,38 @@ required:
 
 allowed: 
 -file-line-error-style  
--record-package-usages 
--include-directory=dir
+-record-package-usages -include-directory=dir
 -enable-write18 
 -enc                    enable encTeX extensions such as \mubyte
 -etex                   enable e-TeX extensions
 -halt-on-error          stop processing at the first error
--ipc-start              as -ipc, and also start the server at the other end
--mktex=FMT              disable/enable mktexFMT generation (FMT=tex/tfm/pk)
+-ipc-start              as -ipc, and also start the server at the other end -mktex=FMT              disable/enable mktexFMT generation (FMT=tex/tfm/pk)
 -mltex                  enable MLTeX extensions such as \charsubdef
 [-no]-parse-first-line  disable/enable parsing of first line of input file
--src-specials           insert source specials into the DVI file
--src-specials=WHERE     insert source specials in certain places of
+-src-specials           insert source specials into the DVI file -src-specials=WHERE     insert source specials in certain places of
                         the DVI file. WHERE is a comma-separated value
-                        list: cr display hbox math par parend vbox
--synctex=NUMBER         generate SyncTeX data for previewers if nonzero
+                        list: cr display hbox math par parend vbox -synctex=NUMBER         generate SyncTeX data for previewers if nonzero
 -ini                    be pdfinitex, for dumping formats; 
                         this is implicitly true 
                         if the program name is 'pdfinitex'
 not allowed: 
--draftmode              switch on draft mode (generates no output PDF)
--output-directory=dir   to specify the output dir 
--aux-directory=dir      to specify the output aux-dir 
--job-name=name          effectively changes the output file name 
+-draftmode              switch on draft mode (generates no output PDF) -output-directory=dir   to specify the output dir -aux-directory=dir      to specify the output aux-dir -job-name=name          effectively changes the output file name 
 -quiet                  makes the log quiet and 
                         so circumvents error and warning detection 
--no-file-line-error     disable/enable file:line:error style messages
--fmt=FMTNAME            use FMTNAME instead of program name or a %& line 
--output-format=FORMAT   use FORMAT for job output; FORMAT is `dvi' or `pdf'
-                        pdf is the only allowed...
--progname=STRING        set program (and fmt) name to STRING
+-no-file-line-error     disable/enable file:line:error style messages -fmt=FMTNAME            use FMTNAME instead of program name or a %& line -output-format=FORMAT   use FORMAT for job output; FORMAT is `dvi' or `pdf'
+                        pdf is the only allowed... -progname=STRING        set program (and fmt) name to STRING
                         only names also without -progname are possible 
 -help                   display this help and exit
 -version                output version information and exit
 
 -->
-            <latex2pdfOptions>
-	      -interaction=nonstopmode 
-	      -synctex=1 
+						<latex2pdfOptions> -interaction=nonstopmode -synctex=1 
 	      -src-specials 
 	      -recorder 
 	      -shell-escape 
-	    </latex2pdfOptions>
+						</latex2pdfOptions>
 
-	    <!-- The pattern is applied linewise to the log-file 
+						<!-- The pattern is applied linewise to the log-file 
 		 and matching indicates an error 
 		 emitted by the command $latex2pdfCommand. 
 
@@ -1282,9 +1260,9 @@ not allowed:
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the deficiency. 
 		 The default value is '(^! )' (note the space). -->
-	    <patternErrLatex>(^! )</patternErrLatex>
+						<patternErrLatex>(^! )</patternErrLatex>
 
-	    <!-- The pattern is applied linewise to the log-file 
+						<!-- The pattern is applied linewise to the log-file 
 		 and matching indicates a warning 
 		 emitted by the command $latex2pdfCommand, 
 		 disragarding warnings on bad boxes 
@@ -1301,7 +1279,7 @@ not allowed:
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the deficiency. 
 		 The default value is given below. -->
-	    <patternWarnLatex>
+						<patternWarnLatex>
 ^(LaTeX Warning: |
 LaTeX Font Warning: |
 (Package|Class) .+ Warning: |
@@ -1309,27 +1287,27 @@ pdfTeX warning( \((\d|\w)+\))?: |
 \* fontspec warning: |
 Missing character: There is no .* in font .*!$|
 A space is missing\. (No warning)\.)
-	    </patternWarnLatex>
+						</patternWarnLatex>
 
-	    <!-- Whether debugging of 
+						<!-- Whether debugging of 
 		 overfull/underfull hboxes/vboxes is on: 
 		 If so, a bad box occurs in the last LaTeX run, 
 		 a warning is displayed. 
 		 For details, set $cleanUp to false, 
 		 rerun LaTeX and have a look at the log-file.
 		 The default value is 'true'. -->
-	    <debugBadBoxes>true</debugBadBoxes>
+						<debugBadBoxes>true</debugBadBoxes>
 
-	    <!-- Whether debugging of warnings is on: 
+						<!-- Whether debugging of warnings is on: 
 		 If so, a warning in the last LaTeX run is displayed. 
 		 Note that warnings on boxes 
 		 is controlled separately via $debugBadBoxes. 
 		 For details, set $cleanUp to false, 
 		 rerun LaTeX and have a look at the log-file. 
 		 The default value is 'true'. -->
-	    <debugWarnings>true</debugWarnings>
+						<debugWarnings>true</debugWarnings>
 
-	    <!-- Whether creation of pdf-files from latex-files 
+						<!-- Whether creation of pdf-files from latex-files 
 		 goes via dvi-files. 
 		 
 		 If $pdfViaDvi is set 
@@ -1367,9 +1345,9 @@ A space is missing\. (No warning)\.)
 		 true:  22.449s-24.500s
 
 		 The default value is 'false'. -->
-	    <pdfViaDvi>false</pdfViaDvi>
+						<pdfViaDvi>false</pdfViaDvi>
 
-	    <!-- The driver to convert dvi into pdf-files. 
+						<!-- The driver to convert dvi into pdf-files. 
 		 Note that this must fit the options 
 		 of the packages 'xcolor' and 'graphicx'. 
 		 Sensible values are 
@@ -1377,13 +1355,13 @@ A space is missing\. (No warning)\.)
 		 and 'dvipdft' 
 		 (which is 'dvipdfm' with option '-t').  
 		 The default value is 'dvipdfmx'. -->
-	    <dvi2pdfCommand>dvipdfmx</dvi2pdfCommand>
+						<dvi2pdfCommand>dvipdfmx</dvi2pdfCommand>
 
-	    <!-- The options for the command $dvi2pdfCommand. 
+						<!-- The options for the command $dvi2pdfCommand. 
 		 The default value is the empty string. -->
- 	    <dvi2pdfOptions />
+						<dvi2pdfOptions />
 
-	    <!-- The pattern is applied linewise to the log-file 
+						<!-- The pattern is applied linewise to the log-file 
 		 and matching triggers rerunning $latex2pdfCommand 
 		 if $maxNumReRunsLatex is not yet reached 
 		 to ensure termination. 
@@ -1403,68 +1381,68 @@ A space is missing\. (No warning)\.)
 
 
 -->
-	    <patternReRunLatex>
+						<patternReRunLatex>
 ^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
 Package \w+ Warning: .*Rerun( .*|\.)$|
 Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
 LaTeX Warning: Etaremune labels have changed\.$|
 \(rerunfilecheck\)                Rerun to get outlines right$)
-	    </patternReRunLatex>
+						</patternReRunLatex>
 
-	    <!-- The maximal allowed number of reruns of $latex2pdfCommand. 
+						<!-- The maximal allowed number of reruns of $latex2pdfCommand. 
 		 This is to avoid endless repetitions. 
 		 The default value is 5. 
 		 This shall be non-negative 
 		 or -1 which signifies that there is no threshold. -->
-	    <maxNumReRunsLatex>-1</maxNumReRunsLatex>
+						<maxNumReRunsLatex>-1</maxNumReRunsLatex>
 
 
-            <!-- The BibTeX command to create a bbl-file 
+						<!-- The BibTeX command to create a bbl-file 
 		 from an aux-file and a bib-file 
 		 (using a bst-style file). 
 		 The default value is 'bibtex'. -->
-            <bibtexCommand>bibtex</bibtexCommand>
+						<bibtexCommand>bibtex</bibtexCommand>
 
-	    <!-- The options for the command $bibtexCommand. 
+						<!-- The options for the command $bibtexCommand. 
 		 The default value is the empty string. -->
-	    <bibtexOptions />
+						<bibtexOptions />
 
-	    <!-- The pattern is applied linewise to the blg-file 
+						<!-- The pattern is applied linewise to the blg-file 
 		 and matching indicates that $bibtexCommand failed. 
 		 The default value is chosen 
 		 according to the 'bibtex' documentation. -->
-	    <patternErrBibtex>error message</patternErrBibtex>
+						<patternErrBibtex>error message</patternErrBibtex>
 
-	    <!-- The pattern is applied linewise to the blg-file 
+						<!-- The pattern is applied linewise to the blg-file 
 		 and matching indicates a warning $bibtexCommand emitted. 
 		 The default value is chosen 
 		 according to the 'bibtex' documentation. -->
-	    <patternWarnBibtex>^Warning--</patternWarnBibtex>
+						<patternWarnBibtex>^Warning--</patternWarnBibtex>
 
-	    <!-- The MakeIndex command to create an ind-file 
+						<!-- The MakeIndex command to create an ind-file 
 		 from an idx-file logging on an ilg-file. 
 		 The default value is 'makeindex'. -->
-	    <makeIndexCommand>makeindex</makeIndexCommand>
+						<makeIndexCommand>makeindex</makeIndexCommand>
 
-	    <!-- The options for the command $makeIndexCommand. 
+						<!-- The options for the command $makeIndexCommand. 
 		 The default value is the empty string. -->
-	    <makeIndexOptions>-c</makeIndexOptions>
+						<makeIndexOptions>-c</makeIndexOptions>
 
-	    <!-- The pattern is applied linewise to the ilg-file 
+						<!-- The pattern is applied linewise to the ilg-file 
 		 and matching indicates that $makeIndexCommand failed. 
 		 The default value '(!! Input index error )' 
 		 is chosen according to the 'makeindex' documentation. -->
-	    <patternErrMakeIndex>
+						<patternErrMakeIndex>
 	    (!! Input index error )
-	    </patternErrMakeIndex>
+						</patternErrMakeIndex>
 
-	    <!-- The pattern is applied linewise to the ilg-file 
+						<!-- The pattern is applied linewise to the ilg-file 
 		 and matching indicates a warning $makeIndexCommand emitted. 
 		 The default value '(## Warning )' 
 		 is chosen according to the 'makeindex' documentation. -->
-	    <patternWarnMakeIndex>(## Warning )</patternWarnMakeIndex>
+						<patternWarnMakeIndex>(## Warning )</patternWarnMakeIndex>
 
-	    <!-- The pattern is applied linewise to the log-file 
+						<!-- The pattern is applied linewise to the log-file 
 		 and matching triggers rerunning $makeIndexCommand 
 		 followed by $latex2pdfCommand. 
 
@@ -1477,17 +1455,17 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 If the current default value is not appropriate, 
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the bug. -->
-	    <patternReRunMakeIndex>
+						<patternReRunMakeIndex>
 (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
-	    </patternReRunMakeIndex>
+						</patternReRunMakeIndex>
 
-	    <!-- The SplitIndex command to create ind-files 
+						<!-- The SplitIndex command to create ind-files 
                  from an idx-file logging on ilg-files. 
                  This command invokes $makeIndexCommand. 
                  The default value is 'splitindex'. -->
-	    <splitIndexCommand>splitindex</splitIndexCommand>
+						<splitIndexCommand>splitindex</splitIndexCommand>
 
-	    <!-- The options for $splitIndexCommand. 
+						<!-- The options for $splitIndexCommand. 
                  Here, one has to distinguish between the options 
                  processed by $splitIndexCommand 
                  and those passed to $makeIndexCommand. 
@@ -1505,16 +1483,16 @@ LaTeX Warning: Etaremune labels have changed\.$|
                  is '-V', the short cut for '- -verbose'. 
                  Do not use '- -verbose' either for sake of portability. 
                  The default value is '-V'; it could also be empty. -->
-	    <splitIndexOptions>-V</splitIndexOptions>
+						<splitIndexOptions>-V</splitIndexOptions>
 
-	    <!-- The MakeGlossaries command to create a gls-file 
+						<!-- The MakeGlossaries command to create a gls-file 
 		 from a glo-file (invoked without file ending) 
 		 also taking ist-file or xdy-file 
 		 into account logging on a glg-file. 
 		 The default value is 'makeglossaries'. -->
-	    <makeGlossariesCommand>makeglossaries</makeGlossariesCommand>
+						<makeGlossariesCommand>makeglossaries</makeGlossariesCommand>
 
-	    <!-- The options for the command $makeGlossariesCommand. 
+						<!-- The options for the command $makeGlossariesCommand. 
 		 These are the options for 'makeindex' 
 		 (not for $makeIndexCommand) 
 		 and for 'xindy' (also hardcoded). 
@@ -1526,9 +1504,9 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 'xindy -L english  -I xindy -M ...'. 
 		 With option '-L german', this is added. 
 		 Options '-M<' for 'xindy' '-s' for 'makeindex' and '-t' and '-o' for both, 'xindy' and 'makeindex'. -->
-	    <makeGlossariesOptions />
+						<makeGlossariesOptions />
 
-	    <!-- The pattern is applied linewise to the glg-file 
+						<!-- The pattern is applied linewise to the glg-file 
 		 and matching indicates that $makeGlossariesCommand failed. 
 		 The default value '(^\*\*\* unable to execute: )' 
 		 is chosen according to the 'makeindex' documentation. 
@@ -1536,20 +1514,20 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 If the current default value is not appropriate, 
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the bug. -->
-	    <patternErrMakeGlossaries>
+						<patternErrMakeGlossaries>
 	      (^\*\*\* unable to execute: )
-	    </patternErrMakeGlossaries>
+						</patternErrMakeGlossaries>
 
-	    <!-- The pattern in the glg-file 
+						<!-- The pattern in the glg-file 
 		 indicating an error when running 'xindy' 
 		 via $makeGlossariesCommand . 
 		 The default value is '(^ERROR: )' 
 		 (note the space and the brackets). 
 		 If this is not appropriate, please modify 
 		 and notify the developer of this plugin. -->
-	    <!--patternErrXindy>(^ERROR: )</patternErrXindy-->
- 
-	    <!-- The pattern is applied linewise to the glg-file 
+						<!--patternErrXindy>(^ERROR: )</patternErrXindy-->
+
+						<!-- The pattern is applied linewise to the glg-file 
 		 and matching indicates a warning when running 'xindy' 
 		 via $makeGlossariesCommand. 
 		 
@@ -1560,9 +1538,9 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 If the current default value is not appropriate, 
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the deficiency. -->
-	    <patternWarnXindy>(^WARNING: )</patternWarnXindy>
+						<patternWarnXindy>(^WARNING: )</patternWarnXindy>
 
-	    <!-- The pattern is applied linewise to the log-file 
+						<!-- The pattern is applied linewise to the log-file 
 		 and matching triggers rerunning $makeGlossariesCommand 
 		 followed by $latex2pdfCommand. 
 
@@ -1575,17 +1553,17 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 If the current default value is not appropriate, 
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the bug. -->
-	    <patternReRunMakeGlossaries>
+						<patternReRunMakeGlossaries>
 (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
-	    </patternReRunMakeGlossaries>
- 
-            <!-- The tex4ht command. 
+						</patternReRunMakeGlossaries>
+
+						<!-- The tex4ht command. 
 		 Possible values are e.g. 'htlatex' and 'htxelatex'. 
 		 The default value (for which this software is also tested) 
 		 is 'htlatex'. -->
-            <tex4htCommand>htlatex</tex4htCommand>
+						<tex4htCommand>htlatex</tex4htCommand>
 
-	    <!-- The options for the 'tex4ht'-style 
+						<!-- The options for the 'tex4ht'-style 
 		 which creates a dvi-file or a pdf-file 
 		 with information to create sgml, 
 		 e.g. html or odt or something like that. 
@@ -1598,8 +1576,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 
 		 options in [] are optional 
 		 DEFAULT: html,2 
-		 Available formats are html, xhtml, mathml, ooffice 
-		 index=2  index in 2 columns. 
+		 Available formats are html, xhtml, mathml, ooffice index=2  index in 2 columns. 
 		 depth is the depth of sectioning 
 		 to which separate files are created. 
 		 fn-in specifies inline footnotes 
@@ -1607,24 +1584,24 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 mathml specifies mathml 
 		 uni-html4 is used for unicode
 	    -->
-	    <!-- xhtml,uni-html4,0 mathml,
+						<!-- xhtml,uni-html4,0 mathml,
 ,uni-html4,2,svg-->
-            <tex4htStyOptions>
+						<tex4htStyOptions>
 	    xhtml,uni-html4,2,pic-tabular
-	    </tex4htStyOptions>
+						</tex4htStyOptions>
 
-	    <!-- options for tex4ht.c, default is empty -->
-	    <!-- ' -cunihtf' forces unicode -->
-            <tex4htOptions> -cunihtf -utf8</tex4htOptions>
+						<!-- options for tex4ht.c, default is empty -->
+						<!-- ' -cunihtf' forces unicode -->
+						<tex4htOptions> -cunihtf -utf8</tex4htOptions>
 
-	    <!-- The options for 't4ht' which converts idv-file and lg-file 
+						<!-- The options for 't4ht' which converts idv-file and lg-file 
 		 into css-files, tmp-file and, 
 		 by need and if configured accordingly into png files. 
 		 The value '-p' prevents creation of png-pictures.
 		 The default value is the empty string. -->
-            <t4htOptions>-cvalidate</t4htOptions>
+						<t4htOptions>-cvalidate</t4htOptions>
 
-	    <!-- The pattern is applied to file names 
+						<!-- The pattern is applied to file names 
 		 and matching shall accept 
 		 exactly the target files of goal 'html' 
 		 for a given latex main file 'xxx.tex'. 
@@ -1654,30 +1631,30 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 please overwrite it in the configuration 
 		 and notify the developer of this plugin of the bug. 
 		 The default value is given below. -->
-	    <patternT4htOutputFiles>
+						<patternT4htOutputFiles>
 	      ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
 	            \.css|
 		    \d+x\.x?bb|
 		    \d+x\.png|
 		    -\d+\.svg)|
 	           (cmsy)\d+(-c)?-\d+c?\.png)$
-	    </patternT4htOutputFiles>
+						</patternT4htOutputFiles>
 
-            <!-- The latex2rtf command to create rtf from latex directly. 
+						<!-- The latex2rtf command to create rtf from latex directly. 
 		 The default value is 'latex2rtf'. -->
-	    <latex2rtfCommand>latex2rtf</latex2rtfCommand>
+						<latex2rtfCommand>latex2rtf</latex2rtfCommand>
 
-            <!-- The options of the command $latex2rtfCommand. 
+						<!-- The options of the command $latex2rtfCommand. 
 		 The default value is the empty string. -->
-	    <latex2rtfOptions />
+						<latex2rtfOptions />
 
-            <!-- The odt2doc command 
+						<!-- The odt2doc command 
 		 to create MS word-formats from otd-files. 
 		 This command comes with package unoconv. 
 		 The default value is 'odt2doc'. -->
-	    <odt2docCommand>odt2doc</odt2docCommand>
+						<odt2docCommand>odt2doc</odt2docCommand>
 
- 	    <!-- The options of the command $odt2docCommand. 
+						<!-- The options of the command $odt2docCommand. 
 		 Above all specification of output format 
 		 via the option '-f'. 
 		 Invocation is 'odt2doc -f<format> <file>.odt'. 
@@ -1690,22 +1667,22 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		 to keep permissions and timestamp 
 		 of the original document. 
 		 The default value is '-fdocx'. -->
-	    <odt2docOptions>-fdocx</odt2docOptions>
+						<odt2docOptions>-fdocx</odt2docOptions>
 
-	    <!-- The pdf2txt-command for converting pdf-files 
+						<!-- The pdf2txt-command for converting pdf-files 
 		 into plain text files. 
 	    	 The default value is 'pdftotext'.  -->
-            <pdf2txtCommand>pdftotext</pdf2txtCommand>
+						<pdf2txtCommand>pdftotext</pdf2txtCommand>
 
-	    <!-- The options of the command $pdf2txtCommand. 
+						<!-- The options of the command $pdf2txtCommand. 
 		 The default value is the empty string. -->
-            <pdf2txtOptions />
+						<pdf2txtOptions />
 
-	    <!-- The chktex-command for checking latex main files. 
+						<!-- The chktex-command for checking latex main files. 
 		 The default value is 'chktex'. -->
-           <chkTexCommand>chktex</chkTexCommand>
+						<chkTexCommand>chktex</chkTexCommand>
 
-	   <!-- The options of the command $chkTexCommand, 
+						<!-- The options of the command $chkTexCommand, 
 		except '-o output-file' 
 		specifying the output file which is added automatically. 
 		
@@ -1743,7 +1720,7 @@ LaTeX Warning: Etaremune labels have changed\.$|
 		
 		The default value is '-q -b0' 
 		avoiding verbose output and backing up the output log-file. -->
-           <chkTexOptions>-q -b0 -v1 -g0 -l ${basedir}/src/site/tex/chktexrc</chkTexOptions>
+						<chkTexOptions>-q -b0 -v1 -g0 -l ${basedir}/src/site/tex/chktexrc</chkTexOptions>
 
 
 						<!-- The diff-command for diffing pdf-files strictly or just visually 
@@ -1756,106 +1733,112 @@ LaTeX Warning: Etaremune labels have changed\.$|
 						 Alternatives are 'diff-pdf' and 'diff-pdf-visually' 
 						 both implementing a visual diff. 
 						 Note that unlike for other tools, no options can be passed in this case explicitly. -->
-						 <diffPdfCommand>diff</diffPdfCommand>
-						</settings>
-	</configuration>
+						<diffPdfCommand>diff</diffPdfCommand>
+					</settings>
+				</configuration>
 
-	<executions>
- 	  <!-- For process-latex-sources 
+				<executions>
+					<!-- For process-latex-sources 
 	       also the goals grp, dvi, pdf, html, rtf, odt, docx, txt, chk 
 	       may be sensible. -->
-	  <!-- besides the default phase site, 
+					<!-- besides the default phase site, 
 	       also the phase compile could be appropriate -->
- 	  <execution>
-	    <id>process-latex-sources</id>
-        <goals><goal>cfg</goal></goals>
-      </execution>
-	  <execution>
-	    <id>clear-latex-sources</id>
-	    <goals><goal>clr</goal></goals>
-	  </execution>
-	  <execution>
-	    <id>validate-converters</id>
-	    <goals><goal>vrs</goal></goals>
-		<!--phase>validate</phase-->
-	    <configuration>
-	      <versionsWarnOnly>true</versionsWarnOnly>
-	    </configuration>
-	  </execution>
-	</executions>
-      </plugin>
-    </plugins>
-  </build>
+					<execution>
+						<id>process-latex-sources</id>
+						<goals>
+							<goal>cfg</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>clear-latex-sources</id>
+						<goals>
+							<goal>clr</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>validate-converters</id>
+						<goals>
+							<goal>vrs</goal>
+						</goals>
+						<!--phase>validate</phase-->
+						<configuration>
+							<versionsWarnOnly>true</versionsWarnOnly>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
-  <reporting>
-    <plugins>
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.2.2</version>
-        <configuration>
-          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-        </configuration>
-      </plugin>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.2.2</version>
+				<configuration>
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>
+			</plugin>
 
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-jxr-plugin</artifactId>
-	<version>3.1.1</version>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>3.1.1</version>
+			</plugin>
 
 
-            <!-- offers also command line analysis:
+			<!-- offers also command line analysis:
       mvn versions:display-plugin-updates
       mvn versions:display-dependency-updates
       mvn versions:display-property-updates
       -->
-      <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>versions-maven-plugin</artifactId>
-	<!-- TBD: uniform version -->
-	<version>2.9.0</version>
-	<reportSets>
-	  <reportSet>
-	    <reports>
-	      <report>dependency-updates-report</report>
-	      <report>plugin-updates-report</report>
-	      <report>property-updates-report</report>
-	    </reports>
-	  </reportSet>
-	</reportSets>
-      </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<!-- TBD: uniform version -->
+				<version>2.9.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependency-updates-report</report>
+							<report>plugin-updates-report</report>
+							<report>property-updates-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>3.0.0-M5</version>
-        <reportSets />
-      </plugin>
-      <!--plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<reportSets />
+			</plugin>
+			<!--plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>cobertura-maven-plugin</artifactId>
           <version>2.7</version>
           </plugin-->
 
-      <!-- changes plugin: src/changes/changes.xml -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-changes-plugin</artifactId>
-        <version>2.12.1</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>changes-report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-       </plugin>
+			<!-- changes plugin: src/changes/changes.xml -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<version>2.12.1</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 
 
-      
-    </plugins>
-  </reporting>
+
+		</plugins>
+	</reporting>
 
 </project>
