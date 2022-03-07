@@ -1345,6 +1345,7 @@ public class Settings {
      *
      * @see #pdf2txtCommand
      */
+    // TBD: check 
     @Parameter(name = "pdf2txtOptions", defaultValue = "-q")
     private String pdf2txtOptions = "-q";
 
