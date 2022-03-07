@@ -421,6 +421,10 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
+				<includes>
+					<include>COPYING</include>
+					<include>version.properties</include>
+				</includes>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
@@ -531,10 +535,13 @@
 							<outputDirectory>src/site/tex</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/main/resources</directory>
+									<directory>src/main/resources/buildParams4tex</directory>
 									<includes>
 										<include>buildParams.tex</include>
 									</includes>
+									<!--excludes>
+										<exclude>docsCmp/**/*.pdf</exclude>
+									</excludes-->
 									<filtering>true</filtering>
 								</resource>
 							</resources>

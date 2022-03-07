@@ -38,7 +38,7 @@
         <configuration>
           <targetSiteDirectory>${basedir}/src/test/resources/integration/target</targetSiteDirectory>
           <settings>
-            <diffDirectory>src/test/resources/integration/cmp</diffDirectory>
+            <diffDirectory>src/main/resources/docsCmp</diffDirectory>
             <!--convertersExcluded>diff</convertersExcluded-->
             <diffPdfCommand>diff</diffPdfCommand>
             <chkDiff>true</chkDiff>

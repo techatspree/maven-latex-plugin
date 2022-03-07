@@ -43,8 +43,8 @@ public class PdfMojoTest extends AbstractMojoTestCase {
         // define the file to be created and the one to be compared with 
         //File act = new File(thisDir, "target/manualLatexMavenPlugin.pdf");
         //File cmp = new File(thisDir,    "cmp/manualLatexMavenPlugin.pdf");
-        File act = new File(thisDir, "target/dvi/dviFormat.pdf");
-        File cmp = new File(thisDir,    "cmp/dvi/dviFormat.pdf");
+        //File act = new File(thisDir, "target/dvi/dviFormat.pdf");
+        //File cmp = new File(thisDir,    "cmp/dvi/dviFormat.pdf");
 
         // run the pdf-goal in the pom 
         // TBD: in othe framework: also check lifecycle phase like site and so 
@@ -53,7 +53,7 @@ public class PdfMojoTest extends AbstractMojoTestCase {
         testMojo.execute();
         // Here, according to pom2pdf.xml, the generated pdf is expected at 
         // ${basedir}/src/test/resources/integration/target/manualLatexMavenPlugin.pdf
-        assert act.exists() && cmp.exists();
+        //assert act.exists() && cmp.exists();
 
         // check that the goal yielded the expected document. 
         // This is no longer needed as that test is done by the plugin itself 
