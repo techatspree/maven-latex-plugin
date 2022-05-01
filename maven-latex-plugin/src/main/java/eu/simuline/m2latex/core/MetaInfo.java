@@ -457,11 +457,12 @@ public class MetaInfo {
 	}
 
 	/**
-	 * Create a version from given pattern 
+	 * Create a version from given pattern. 
+	 * 
 	 * @param patternEnv
-	 *    the regex pattern <code>text</code> shall match. 
-	 *    The literal <code>%s</code> of this format string 
-	 *    indicates the location of the version pattern <code>patternVrs</code>.
+	 *    The pattern <code>patternEnv</code> is a format string containing the literal <code>%s</code> 
+	 *    This literal indicates the location of the version pattern <code>patternVrs</code>.
+	 *    The regex pattern <code>text</code> shall match <code>patternEnv</code>. 
 	 * @param patternVrs
 	 *    the regex pattern expected for this version. 
 	 *    This is in a form 
@@ -474,38 +475,56 @@ public class MetaInfo {
 	 *    or a property file with allowed versions (as version intervals)
 	 */
 	Version(String patternEnv, String patternVrs, String text) {
-	    this.text = text;
-	    this.matcher = Pattern.compile(String.format(patternEnv, patternVrs))
-		    .matcher(text);
-	    if (!this.matcher.find()) {
-		this.versionStr = VERSION_UNKNOWN;
-		this.segments = null;
-		return;
-	    }
-	    this.versionStr = this.matcher.group(1);
-	    this.segments = new ArrayList<Number>(this.matcher.groupCount());
-	    String segment;
-	    Number num;
-	    for (int idx = 2; idx <= this.matcher.groupCount(); idx++) {
-		segment = this.matcher.group(idx);
-		if (segment == null) {
-		    break;
+		this.text = text;
+		this.matcher = Pattern.compile(String.format(patternEnv, patternVrs))
+				.matcher(text);
+		if (!this.matcher.find()) {
+			this.versionStr = VERSION_UNKNOWN;
+			this.segments = null;// TBD: eliminate 
+			return;
 		}
+		this.versionStr = this.matcher.group(1);
+		this.segments = new ArrayList<Number>(this.matcher.groupCount());
+		String segment;
+		Number num;
+		for (int idx = 2; idx <= this.matcher.groupCount(); idx++) {
+			segment = this.matcher.group(idx);
+			if (segment == null) {
+				break;
+			}
+
+
+			// if (Pattern.matches("[a-z]", segment)) {
+			// 	num = Byte.valueOf((byte) segment.codePointAt(0));
+			// } else {
+			// 	// TBC: why works the 2nd version, but the 1st does not?
+			// 	// num = segment.indexOf('.') == -1
+			// 	// ? Integer.valueOf(segment)
+			// 	// : Double .valueOf(segment);
+			// 	if (segment.indexOf('.') == -1) {
+			// 		num = Integer.valueOf(segment);
+			// 	} else {
+			// 		num = Double.valueOf(segment);
+			// 	}
+			// }
+			num  = segStr2Num(segment);
+			this.segments.add(num);
+		}
+	}
+
+	private static Number segStr2Num(String segment) {
 		if (Pattern.matches("[a-z]", segment)) {
-		    num = Byte.valueOf((byte)segment.codePointAt(0));
-		} else {
-		    // TBC: why works the 2nd version, but the 1st does not? 
-//		    num = segment.indexOf('.') == -1
-//			    ? Integer.valueOf(segment)
-//		            : Double .valueOf(segment);
-		    if (segment.indexOf('.') == -1) {
-			num = Integer.valueOf(segment);
-		    } else {
-			num = Double.valueOf(segment);
-		    }
+			return Byte.valueOf((byte) segment.codePointAt(0));
 		}
-		this.segments.add(num);
-	    }
+		// TBC: why works the 2nd version, but the 1st does not?
+		// num = segment.indexOf('.') == -1
+		// ? Integer.valueOf(segment)
+		// : Double .valueOf(segment);
+		if (segment.indexOf('.') == -1) {
+			return Integer.valueOf(segment);
+		} else {
+			return Double.valueOf(segment);
+		}
 	}
 
 	boolean isMatching() {
