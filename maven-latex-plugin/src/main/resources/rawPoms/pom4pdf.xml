@@ -940,7 +940,7 @@ avoiding verbose output and backing up the output log-file. -->
 
             <!-- The diff-command for diffing pdf-files strictly or just visually 
       to check that the created pdf files are equivalent with prescribed ones. 
-      CAUTION: there are two philsophies: 
+      CAUTION: there are two philosophies: 
       Either the latex source files are created in a way that they reproduce strictly. 
       Then a strict diff command like 'diff' is appropriate. 
       Else another diff command is required which checks for a kind of visual equality. 
@@ -956,36 +956,36 @@ avoiding verbose output and backing up the output log-file. -->
 
         <executions>
           <execution>
-            <id>process-latex-sources</id>
+            <id>process-latex-sources-pdf</id>
             <goals>
               <goal>pdf</goal>
             </goals>
           </execution>
 
-          					<!-- tied implicitly to phase site -->
-					<execution>
-						<id>process-latex-sources</id>
-						<goals>
-							<goal>cfg</goal>
-						</goals>
-					</execution>
-					<!-- tied implicitly to phase clean -->
-					<execution>
-						<id>clear-latex-sources</id>
-						<goals>
-							<goal>clr</goal>
-						</goals>
-					</execution>
-					<!-- tied implicitly to phase validate -->
-					<execution>
-						<id>validate-converters</id>
-						<goals>
-							<goal>vrs</goal>
-						</goals>
-						<configuration>
-							<versionsWarnOnly>true</versionsWarnOnly>
-						</configuration>
-					</execution>
+          <!-- tied implicitly to phase site -->
+          <execution>
+            <id>process-latex-sources</id>
+            <goals>
+              <goal>cfg</goal>
+            </goals>
+          </execution>
+          <!-- tied implicitly to phase clean -->
+          <execution>
+            <id>clear-latex-sources</id>
+            <goals>
+              <goal>clr</goal>
+            </goals>
+          </execution>
+          <!-- tied implicitly to phase validate -->
+          <execution>
+            <id>validate-converters</id>
+            <goals>
+              <goal>vrs</goal>
+            </goals>
+            <configuration>
+              <versionsWarnOnly>true</versionsWarnOnly>
+            </configuration>
+          </execution>
 
         </executions>
       </plugin>
