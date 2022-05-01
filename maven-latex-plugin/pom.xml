@@ -834,6 +834,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M5</version>
 				<configuration>
+					<argline>-X</argline>
 					<trimStackTrace>false</trimStackTrace>
 					<systemPropertyVariables>
 						<!--testResourcesDir>${project.testResources}</testResourcesDir-->
@@ -872,8 +873,40 @@
 
 				<configuration>
 					<settings>
-					</settings>
+					</settings>	
 				</configuration>
+				<executions>
+					<execution>
+						<id>process-latex-sources-pdf</id>
+						<goals>
+							<goal>pdf</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>process-latex-sources</id>
+						<goals>
+							<goal>cfg</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>clear-latex-sources</id>
+						<goals>
+							<goal>clr</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>validate-converters</id>
+						<goals>
+							<goal>vrs</goal>
+						</goals>
+						<configuration>
+							<versionsWarnOnly>true</versionsWarnOnly>
+						</configuration>
+					</execution>
+
+				</executions>
+
 			</plugin-->
 		</plugins>
 	</build>
