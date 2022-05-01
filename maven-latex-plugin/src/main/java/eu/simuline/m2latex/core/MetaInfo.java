@@ -492,27 +492,17 @@ public class MetaInfo {
 			if (segment == null) {
 				break;
 			}
-
-
-			// if (Pattern.matches("[a-z]", segment)) {
-			// 	num = Byte.valueOf((byte) segment.codePointAt(0));
-			// } else {
-			// 	// TBC: why works the 2nd version, but the 1st does not?
-			// 	// num = segment.indexOf('.') == -1
-			// 	// ? Integer.valueOf(segment)
-			// 	// : Double .valueOf(segment);
-			// 	if (segment.indexOf('.') == -1) {
-			// 		num = Integer.valueOf(segment);
-			// 	} else {
-			// 		num = Double.valueOf(segment);
-			// 	}
-			// }
 			num  = segStr2Num(segment);
 			this.segments.add(num);
 		}
 	}
 
 	private static Number segStr2Num(String segment) {
+		if (segment.isEmpty()) {
+			// TBD: very weak. 
+			// This is allowed only at last place with pattern [a-z]
+			return Byte.MAX_VALUE;
+		}
 		if (Pattern.matches("[a-z]", segment)) {
 			return Byte.valueOf((byte) segment.codePointAt(0));
 		}

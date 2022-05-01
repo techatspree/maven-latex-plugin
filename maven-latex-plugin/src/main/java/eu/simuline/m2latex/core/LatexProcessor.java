@@ -235,6 +235,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    copy of output files to target folder fails. 
      *    For details see 
      * {@link TexFileUtils#copyOutputToTargetFolder(File, FileFilter, File)}
+     *    <li>TLP01 if difference check is specified in settings and if 
+     *    the artifact could not be reproduced (currently for pdf only). 
      *    </ul>
      */
     public void create() throws BuildFailureException {

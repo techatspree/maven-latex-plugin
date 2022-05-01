@@ -83,7 +83,7 @@ public class CfgLatexMojo extends AbstractLatexMojo {
 	initialize();
 	try {
 	    // may throw BuildFailureException 
-	    // TSS01, TSS02, TSS03, TEX01, TFU01, TFU03, TFU04, TFU05, TFU06 
+	    // TSS01, TSS02, TSS03, TEX01, TFU01, TFU03, TFU04, TFU05, TFU06, TLP01 
 	    // may log WFU01, WFU03, EFU05, EFU07, EFU08, EFU09 
 	    // WPP02, WPP03, 
 	    // EEX01, EEX02, EEX03, WEX04, WEX05 

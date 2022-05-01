@@ -157,7 +157,7 @@ enum Converter {
 	    return "(([0-9\\.]{4})\\.([0-9]))";
 	}
 	String getVersionEnvironment() {
-	    return "^This is " + getCommand() + "\\(k\\) %s " +
+	    return "^This is " + getCommand() + "\\(k\\) %s " + "(?:\\(TeX Live [0-9]+\\)  )?" +
 		    "Copyright [0-9]+ Radical Eye Software \\(www\\.radicaleye\\.com\\)\n";
 	}
 	ConverterCategory getCategory() {
@@ -558,11 +558,11 @@ ConverterCategory getCategory() {
 	    return "latexmk";
 	}
 	String getVersionPattern() {
-	    return "(([0-9]+)\\.([0-9]+)([a-z]))";
+	    return "(([0-9]+)\\.([0-9]+)([a-z]?))";
 	}
 	String getVersionEnvironment() {
-	    return "^\n" + Latexmk +
-		", John Collins, .*[0-9]+ [A-Z][a-z]+ [0-9]+. Version %s\n";
+	    return "^\n?" + Latexmk +
+		", John Collins, .*[0-9]+ [A-Z][a-z]+\\.? [0-9]+. Version %s\n";
 	}
     // TBD: add a category 
 	ConverterCategory getCategory() {
