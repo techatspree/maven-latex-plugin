@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.inOrder;
 
-import static org.mockito.ArgumentMatchers.any;
+//import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.eq;
@@ -50,11 +50,11 @@ import static org.mockito.AdditionalMatchers.aryEq;
 
 import org.mockito.InOrder;
 
-import org.mockito.stubbing.Answer;
-import org.mockito.invocation.InvocationOnMock;
+//import org.mockito.stubbing.Answer;
+//import org.mockito.invocation.InvocationOnMock;
 
 import org.junit.Test;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.After;
 //import org.junit.BeforeClass;
@@ -531,8 +531,8 @@ public class LatexProcessorTest {
 //	writer.write("\\bibdata % bibtex run"); 
 //	writer.flush();
 
-	assertEquals(this.bblFile, 
-		this.fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL));
+	//assertEquals(this.bblFile, 
+	//	this.fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BBL));
 
 	// when(this.executor.execute(texFile.getParentFile(),
 	// 			   this.settings.getTexPath(),
@@ -544,8 +544,8 @@ public class LatexProcessorTest {
 	//     .thenReturn("");
 
 	// log file 
-	assertEquals(this.blgFile, 
-		this.fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG));
+	//assertEquals(this.blgFile, 
+	//	this.fileUtils.replaceSuffix(this.texFile, LatexProcessor.SUFFIX_BLG));
 	// logging errors and warnings 
 	when(this.fileUtils.matchInFile(this.blgFile, 
 					this.settings.getPatternErrBibtex()))
