@@ -2008,7 +2008,7 @@ public class Settings {
 						this.texSrcProcDirectory);
     }
 
-    public void setReadTexSrcProcDirRec(boolean readTexSrcDirProcRec) {
+    public void setReadTexSrcProcDirRec(boolean readTexSrcProcDirRec) {
 	this.readTexSrcProcDirRec = readTexSrcProcDirRec;
     }
 

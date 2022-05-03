@@ -318,8 +318,9 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.3.0</version>			<!-- 2.3.0 works with plugin-plugin 3.3 -->
-			<!--version>4.3.1</version does not work with plugin-plugin -->
+			<version>2.3.0 </version>			<!-- 2.3.0 works with plugin-plugin 3.3 -->
+			<!--version>4.5.1</version does not work with plugin-plugin -->
+			<!-- DANGEROUS: warning illegal reflective access caused by this old version -->
 		</dependency>
 
 		<!-- maybe to be replaced by https://blog.soebes.de/blog/2020/08/18/itf-part-i/ -->
@@ -639,7 +640,7 @@
 			<!-- configuration for clean plugin -->
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.2.0</version>
 				<configuration>
 					<filesets>
 						<fileset>
@@ -666,6 +667,7 @@
 				<version>3.1.2</version>
 				<executions>
 					<execution>
+						<?m2e execute onConfiguration,onIncremental?>
 						<goals>
 							<goal>build-classpath</goal>
 						</goals>
@@ -688,7 +690,7 @@
 				<!-- this is the first version with a NullPointerException -->
 				<!--version>3.6.4</version-->
 				<!-- this is the current version at the time of this writing -->
-				<version>3.3</version>				<!-- 3.3-->
+				<version>3.3</version>				<!-- 3.3 newest currently: 3.6.1-->
 				<!-- this version allows installation, but fails with javadoc -->
 				<configuration>
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
@@ -696,6 +698,7 @@
 
 				<executions>
 					<execution>
+						<?m2e execute onConfiguration,onIncremental?>
 						<id>default-descriptor</id>
 						<goals>
 							<goal>descriptor</goal>

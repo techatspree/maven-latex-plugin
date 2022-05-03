@@ -61,12 +61,12 @@ public class CommandExecutorTest {
     @Test public void testExecute() throws BuildFailureException {
         CommandExecutor executor = 
 	    new CommandExecutor(new MavenLogWrapper(new SystemStreamLog()));
-	String touchFile = "cmdLineExe.touch";
-	String output = executor.execute(WORKING_DIR, 
-					 null, 
-					 "touch", 
-					 new String[] {touchFile},
-					 new File(WORKING_DIR, touchFile)).output;
+	//String touchFile = "cmdLineExe.touch";
+	//String output = executor.execute(WORKING_DIR, 
+	//				 null, 
+	///				 "touch", 
+	//				 new String[] {touchFile},
+	//				 new File(WORKING_DIR, touchFile)).output;
         //assertEquals(echoText, output.subSequence(0, echoText.length()));
     }
 

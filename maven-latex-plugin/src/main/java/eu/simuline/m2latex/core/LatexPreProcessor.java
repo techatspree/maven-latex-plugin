@@ -1082,37 +1082,37 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // but not for interface pdf. 
     // Experiments show, that we can do without it in any case. 
 
-    private void runEbb(File file) throws BuildFailureException {
-	String command = this.settings.getCommand(ConverterCategory.EbbCmd);
-	File workingDir = file.getParentFile();
-	String[] args = buildNullArguments(this.settings.getEbbOptions(), file);
+  //   private void runEbb(File file) throws BuildFailureException {
+	// String command = this.settings.getCommand(ConverterCategory.EbbCmd);
+	// File workingDir = file.getParentFile();
+	// String[] args = buildNullArguments(this.settings.getEbbOptions(), file);
 
-	// Creation of .xbb files for driver dvipdfmx
-	// FIXME: literal 
-	args[0] ="-x";
-	File resFile = TexFileUtils.replaceSuffix(file, SUFFIX_XBB);
+	// // Creation of .xbb files for driver dvipdfmx
+	// // FIXME: literal 
+	// args[0] ="-x";
+	// File resFile = TexFileUtils.replaceSuffix(file, SUFFIX_XBB);
 
-	this.log.debug("Running " + command + 
-		       " twice on '" + file.getName() + "'. ");
-	// may throw BuildFailureException TEX01, 
-	// may log EEX01, EEX02, EEX03, WEX04, WEX05 
-	this.executor.execute(workingDir, 
-			      this.settings.getTexPath(), //**** 
-			      command, 
-			      args,
-			      resFile);
+	// this.log.debug("Running " + command + 
+	// 	       " twice on '" + file.getName() + "'. ");
+	// // may throw BuildFailureException TEX01, 
+	// // may log EEX01, EEX02, EEX03, WEX04, WEX05 
+	// this.executor.execute(workingDir, 
+	// 		      this.settings.getTexPath(), //**** 
+	// 		      command, 
+	// 		      args,
+	// 		      resFile);
 
-	// Creation of .bb files for driver dvipdfm
-	// FIXME: literal 
-	args[0] ="-m";
-	resFile = TexFileUtils.replaceSuffix(file, SUFFIX_BB);
+	// // Creation of .bb files for driver dvipdfm
+	// // FIXME: literal 
+	// args[0] ="-m";
+	// resFile = TexFileUtils.replaceSuffix(file, SUFFIX_BB);
 
-	this.executor.execute(workingDir, 
-			      this.settings.getTexPath(), //**** 
-			      command, 
-			      args,
-			      resFile);
-    }
+	// this.executor.execute(workingDir, 
+	// 		      this.settings.getTexPath(), //**** 
+	// 		      command, 
+	// 		      args,
+	// 		      resFile);
+  //   }
 
     /**
      * Returns an array of strings, 
