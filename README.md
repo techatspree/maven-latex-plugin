@@ -1669,3 +1669,11 @@ Finally, there are various problems with the plugin test harness.
 A completely different problem is introduced 
 by the fact, that with new test method based on diffing real `pdf`'s, 
 the tests become sensitive on the versions of `pdflatex`. 
+In particular, if the version of `pdflatex` changes, 
+the `pdf` files used for comparison must be changed also. 
+To that end, run a script copying the current `pdf`s overwriting the blueprints 
+from the base directory (this presupposes development in Linux):
+
+```[sh]
+src/main/resources/cpDiffPdf.sh
+```
