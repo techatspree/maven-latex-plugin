@@ -33,15 +33,15 @@ and the [build file](./maven-latex-plugin/build.xml)
 illustrate installation and usage. 
 
 The improvements the author plans 
-are unsortedly collected as [TODOs](#ss:todo). 
-The reader is encouraged to contribute to contiuous improvement 
+are collected as ['TO-DOs'](#ss:todo) without special ordering. 
+The reader is encouraged to contribute to continuous improvement 
 by [contacting me](mailto:rei3ner@arcor.de). 
 Both, new ideas and bare coding, both are welcome. 
 
 You can visit [the homepage](https://www.simuline.eu/LatexMavenPlugin/) or 
 the project hosted on [GitHub](https://github.com/Reissner/maven-latex-plugin) 
 forked from 
-[akquinet/maven-latex-plugin](https://github.com/akquinet/maven-latex-plugin). 
+[`akquinet/maven-latex-plugin`](https://github.com/akquinet/maven-latex-plugin). 
 
 <!---
 TBD: upgrade site 
@@ -57,7 +57,7 @@ independently of context of maven or ant.
 As the '**LaTeX builder**' is merely a bundle of converters 
 to offer an interface to maven and to ant, 
 it relies on several converters doing the proper work, 
-as e.g. `pdflatex` to convert latex into pdf. 
+as e.g. `pdflatex` to convert latex into PDF format. 
 Section [Installation](#ss:installation)
 is about installation of these converters. 
 
@@ -67,29 +67,29 @@ The main use of the '**LaTeX builder**' is to automatically convert
 all LaTeX documents `.tex` 
 which are by default in `$root/src/tex/` and subdirectories 
 into desired output format(s) and to push 
-to the targets folder by default to `$root/target/site/`. 
+to the targets' folder by default to `$root/target/site/`. 
 To that end, it applies a latex converter like `pdflatex` 
 to the top level sources ignoring `.tex` files which are just included. 
 
 ### Output in various formats <!--{#sss:featuresOutFormats}--><a id='sss:featuresOutFormats'></a>
 
 One aim is to convert latex files in printable formats 
-like pdf, formats in the office world like docx and browser formats 
-like html. 
+like `pdf`, formats in the office world like `docx` and browser formats 
+like `html`. 
 The following lists the supported output formats 
 together with the converters used by this plugin. 
 The author must admit that there is a lot to do still, 
 to provide good conversions in formats other than 
 `pdf`, `dvi` and `ps` and `txt`. 
 
-- pdf, dvi, ps (with converters pdflatex, xelatex or similar. )
-- html, xhtml (partially supported, 
-  the author is not content with `htlatex` for many reasons. 
-  It is in the package `texlive-tex4th`)
-- docx, rtf, odt (TBC)
-- txt 
+- `pdf`, `dvi`, `ps` (with converters `pdflatex`, `xelatex` or similar.)
+- `html`, `xhtml` (partially supported). 
+  The author is not content with `htlatex` for many reasons. 
+  It is in the package `texlive-tex4th`.
+- `docx`, `rtf`, `odt` (TBC)
+- `txt` 
 - ... 
-- log file with the result of stylecheck for latex sources. 
+- `log` file with the result of style check `chktex` for latex sources. 
 
 For further plans see [here](#ss:featureRequests). 
 
@@ -97,7 +97,7 @@ For further plans see [here](#ss:featureRequests).
 
 The '**LaTeX builder**' is designed 
 to build artifacts for all source documents at once 
-searching in a specified folder for the tex-files and related 
+searching in a specified folder for the `tex`-files and related 
 as bib-files and graphic files. 
 
 This is appropriate for deployment 
@@ -108,7 +108,7 @@ synchronized and compile single files
 with the various tools within the enclosing working directory. 
 
 To make the '**LaTeX builder**' compatible with development, 
-it has to create intermediate files and output files like pdf 
+it has to create intermediate files and output files like `pdf` 
 in the working directory. 
 Intermediate files are needed for parts which need sorting 
 like bibliographies or indices but also for most kind of graphics 
@@ -125,7 +125,7 @@ from a clean working directory
 it is quite cumbersome to create intermediate graphic files 
 includable in `.tex` files. 
 
-Thus '**LaTeX builder**' offers separate creation of these graphic files 
+Thus, '**LaTeX builder**' offers separate creation of these graphic files 
 through the maven goal `grp`. 
 
 ### Cleanup after creation <a id='sss:featuresCleanup'></a>
@@ -142,35 +142,35 @@ For details see
 ### Reproducibility and equality artifacts <a id='sss:repArts'></a>
 
 There are use cases, where one wants to check correctness of artifacts. 
-Thus a kind of reproducibility is needed. 
-In particular when creating pdf files, this is nontrivial, 
+Thus, a kind of reproducibility is needed. 
+In particular when creating `pdf` files, this is nontrivial, 
 because even if the source files don't change, 
-the resulting pdfs differ in general for each run. 
+the resulting `pdf`s differ in general for each run. 
 The reason is that by default, latex includes a lot of meta-data which changes. 
 Above all this is time and date stamp 
-but also the so called banner. 
+but also the so-called banner. 
 
 In the [manual](https://www.simuline.eu/LatexMavenPlugin/manualLatexMavenPlugin.pdf), 
 we show how to write latex sources in a way that the artifacts are reproducible. 
-In addition we present a weaker concept of equality, 
+In addition, we present a weaker concept of equality, 
 namely visual equality 
-which allows to check reproducibility if equality is not reachable. 
+which allows checking reproducibility if equality is not reachable. 
 
 The subject reproducibility is particularly vital 
 because the manual of the '**LaTeX builder**' 
 is created with '**LaTeX builder**'. 
 This document is also used to test correctness in a regression test. 
-Another aspect of reproducibility is when computations are performed the results of which are layed down in the artifact. 
+Another aspect of reproducibility is, when computations are performed the results of which are incorporated in the artifact. 
 This is not treated here 
 but in an item of [Section 'Feature Request'](#ss:featureRequests). 
 
 ### Inclusion of bibliographies, indices and similar content <a id='sss:featuresLists'></a>
 
-Also this '**LaTeX builder**' supports bibliographies, 
+Also, this '**LaTeX builder**' supports bibliographies, 
 indices (also split ones) and glossaries. 
 Support of table of contents, 
 list of figures, list of tables and list of listings 
-refers to cleanup only. 
+refers to clean up only. 
 There is an according ant task and a maven goal. 
 
 ### Check of sources and results, logging <a id='sss:featuresCheckLog'></a>
@@ -182,7 +182,7 @@ So the aim is
 that **if compilation is without error or warning, the output is valid and perfect.**
 
 Another aspect is check of sources which is available 
-through the maven goal chk. 
+through the maven goal `chk`. 
 
 ### Input of various graphics formats <a id='sss:featuresInputGrp'></a>
 
@@ -190,15 +190,16 @@ The last feature to point out is the support for various graphic formats
 including those provided by the package `texlive-graphix`. 
 The following graphic formats are supported: 
 
-- tikz/pgf is included by the tex converter 
+- `tikz`/`pgf` is included by the `tex` converter 
   and needs no action from the **LaTeX builder**. 
   Note that `tikzedt` is a good graphical editor for that. 
-- metapost `.mp` is a native format in tex. 
-- jpg, png and by need other pixel formats are via package graphix. 
-- gnuplot, `.gp` and SVG are converted into a tex file 
-  containing text and pdf/eps with the pure graphics. 
-- xfig, an old format which is somehow deprecated 
-  and can be replaced by tikz/pgf. 
+- metapost, `.mp` is a native format 
+  in used in the context of the `tex` format
+- `jpg`, `png` and by need other pixel formats are via package `graphix` 
+- gnuplot, `.gp` and SVG are converted into a `tex` file 
+  containing text and `pdf`/`eps` with the pure graphics. 
+- `xfig`, an old format which is somehow deprecated 
+  and can be replaced by `tikz`/`pgf`. 
   A graphical editor is `xfig`. 
   
 Note that there is a maven goal `grp` to create the graphics files only. 
@@ -227,38 +228,39 @@ further features are planned for future releases:
 
 - Currently, this software consists of the core component **LaTeX builder**, 
   a maven plugin and an ant task. 
-  It would be desireable to access the **LaTeX builder** 
+  It would be desirable to access the **LaTeX builder** 
   through an API, also to be described in the manual 
   and to provide it also as a standalone application as `latexmk`. 
 - Currently, a build is a complete build 
   also if only some artifacts are out of date. 
   A differential build is desirable 
   as done by `latexmk`. 
-- In general it was the aim to generate output in "all usual output formats". 
+- Initially, it was the aim to generate output in "all usual output formats". 
   Due to several problems with package tex4ht, 
   this aim was not reached. 
-  Also the aim is not defined precisely enough. 
+  Also, the aim is not defined precisely enough. 
   The new suggestion is that the **LaTeX builder** shall generate output 
   of the following categories: 
   - page oriented formats, 
     - from World of TeX (`dvi`) 
-    - from office universe (MSword (`docx`, `rtf`), 
-      openoffice (`odt` and maybe others; see 
-      [OpenDocument](https://en.wikipedia.org/wiki/OpenDocument))
-    - cross plattform (`pdf`, `ps`)
+    - from office universe 
+      - MS-word (`docx`, `rtf`), 
+      - open office `odt` and maybe others; see 
+        [`OpenDocument`](https://en.wikipedia.org/wiki/OpenDocument)
+    - cross-platform (`pdf`, `ps`)
   - floating formats comprising internet formats (`html`, `xhtml`, `md`, ...) 
-    and ebook formats (at least `epub`) 
+    and e-book formats (at least `epub`) 
   - Intermediate format written by `latexml` 
     which serves as a way to analyze a LaTeX source 
     without need to parse in its odd grammar. 
-  - plain text, e.g. for text analysis 
+  - Plain text, e.g. for text analysis 
 - Currently, one can specify output formats uniform for all LaTeX documents. 
   It may be desirable to be able to specify the output format 
   for any document specifically overriding the general specification. 
-- one may give `biblatex` a trial replacing `bibtex` as the default. 
-  Also more conservatively, use `bibtexu` or `bibtex8` instead of `bibtex`. 
+- One may give `biblatex` a trial replacing `bibtex` as the default. 
+  Also, more conservatively, use `bibtexu` or `bibtex8` instead of `bibtex`. 
 - `pythontex` is a great tool to perform computations 
-  in python and also other programming languages like matlab 
+  in python and also other programming languages like `matlab` 
   and to include the results in a latex file. 
   This shall be supported in future releases. 
 
@@ -270,10 +272,10 @@ The details of integration in maven and ant
 are given in Sections [The latex-maven-plugin](#ss:mavenPlugin) 
 and [The latex ant tasks](#ss:antTasks) and their subsections. 
 
-| executable | package          |
-|:-----------|:-----------------|
-| mvn        | maven, maven-lib |
-| ant        | ant              |
+| Executable   | package          |
+|:-------------|:-----------------|
+| `mvn`        | maven, maven-lib |
+| `ant`        | ant              |
 
 This section is more about the converters used by the '**LaTeX builder**'. 
 We provide the executables and the packages with versions tested. 
@@ -283,59 +285,59 @@ with the versions given in
 [VERSIONS](./maven-latex-plugin/src/main/resources/version.properties). 
 As you can see, the versions must be within an interval. 
 
-At first, converting LaTeX into pdf format choose one of the 
+At first, converting LaTeX into `pdf` format choose one of the 
 applications mentioned in the next table 
 
-| executable   | package               |
-|:-------------|:----------------------|
-| **pdflatex** | texlive-latex-bin-bin |
-| lualatex     | texlive-latex-bin-bin |
-| xelatex      | texlive-xetex-bin     |
+| executable     | package                 |
+|:---------------|:------------------------|
+| **`pdflatex`** | `texlive-latex-bin-bin` |
+|   `lualatex`   | `texlive-latex-bin-bin` |
+|   `xelatex`    | `texlive-xetex-bin`     |
 
-Besides pdf, also other output formats are supported. 
+Besides `pdf`, also other output formats are supported. 
 The aim is to create formats from the world of 
 
-- printable docs like pdf, 
-- internet like html 
-- microsoft and openoffice like docx and odt. 
-- simple text (txt-format) 
+- printable docs like `pdf`, 
+- internet like `html`, 
+- Microsoft and open office like `docx` and `odt`, 
+- simple text (`txt`-format) 
 
-In addition provide check of sources via `chktex`. 
+In addition, provide check of sources via `chktex`. 
 
-Currently, creation of output in format other than pdf, 
+Currently, creation of output in format other than `pdf`, 
 is not very mature. 
-Thus the following table lists in brackets also software which is not in use 
+Thus, the following table lists in brackets also software which is not in use 
 but worth to be evaluated. 
-the following converters are used for the various *output* formats. 
+The following converters are used for the various *output* formats. 
 
-| format | executable             | package              |
-|:-------|------------------------|:---------------------|
-| html   | **htlatex,...**        | tex2live-tex4ht      |
-| rtf    | **latex2rtf**          |         latex2rtf    |
-| png    |  (latex2png)           |         latex2rtf    |
-| html   |  (latex2html)          |         latex2html   |
-| man    |  (latex2man)           | texlive-latex2man    |
-| braile |  (latex2nemeth)        | texlive-latex2nemeth |
-| *      | **odt2doc**, (unoconv) | unoconv              |
-| *      | **(pandoc)**           | pandoc               |
-| txt    | **pdftotext**          | poppler-tools        |
-| html   |   (pdftohtml)          | poppler-tools        |
-| ps     |   (pdftops)            | poppler-tools        |
-| *      |   (pdftocairo)         | poppler-tools        |
-| ps     |    dvips               | texlive-dvips-bin    |
-| pdf    |    dvipdfm             | texlive-dvipdfmx-bin |
-| pdf    |  **dvipdfmx**          | texlive-dvipdfmx-bin |
-| pdf    |   xdvipdfmx            | texlive-dvipdfmx-bin |
-| pdf    |    dvipdft             | texlive-dvipdfmx-bin |
-| pdf    |   (dvipdf)             | ghostscript          |
-| ps     |   (pdf2ps)             | ghostscript          |
-| *      |    gs                  | ghostscript          |
-| ---    | **chktex**             | texlive-chktex-bin   |
-| ---    | **diff**               | difftuils            |
-| ---    |   diff-pdf             | diff-pdf             |
-| ---    |   diff-pdf-visually    | diff-pdf-visually*   |
-| ---    |   pdfinfo              | poppler-tools        |
-| ---    |   exiftool             | exiftool             |
+| Format   | executable                 | package                |
+|:---------|----------------------------|:-----------------------|
+| `html`   | **`htlatex`,...**          | `tex2live-tex4ht`      |
+| `rtf`    | **`latex2rtf`**            |         `latex2rtf`    |
+| `png`    |  (`latex2png`)             |         `latex2rtf`    |
+| `html`   |  (l`atex2html`)            |         `latex2html`   |
+| `man`    |  (`latex2man`)             | `texlive-latex2man`    |
+| `braile` |  (`latex2nemeth`)          | `texlive-latex2nemeth` |
+| `*`      | **`odt2doc`**, (`unoconv`) | `unoconv`              |
+| `*`      | **(`pandoc`)**             | `pandoc`               |
+| `txt`    | **`pdftotext`**            | `poppler-tools`        |
+| `html`   |   (`pdftohtml`)            | `poppler-tools`        |
+| `ps`     |   (`pdftops`)              | `poppler-tools`        |
+| `*`      |   (`pdftocairo`)           | `poppler-tools`        |
+| `ps`     |    `dvips`                 | `texlive-dvips-bin`    |
+| `pdf`    |    `dvipdfm`               | `texlive-dvipdfmx-bin` |
+| `pdf`    |  **`dvipdfmx`**          | `texlive-dvipdfmx-bin` |
+| `pdf`    |   `xdvipdfmx`              | `texlive-dvipdfmx-bin` |
+| `pdf`    |    `dvipdft`               | `texlive-dvipdfmx-bin` |
+| `pdf`    |   (`dvipdf`)               | `ghostscript`          |
+| `ps`     |   (`pdf2ps`)               | `ghostscript`          |
+| `*`      |    `gs`                    | `ghostscript`          |
+| ---      | **`chktex`**               | `texlive-chktex-bin`   |
+| ---      | **`diff`**                 | `difftuils`            |
+| ---      |   `diff-pdf`               | `diff-pdf`             |
+| ---      |   `diff-pdf-visually`      | `diff-pdf-visually`*   |
+| ---      |   `pdfinfo`                | `poppler-tools`        |
+| ---      |   `exiftool`               | `exiftool`             |
 
 The executable and package `diff-pdf-visually` is special 
 in that it is a python package to be installed via 
@@ -344,142 +346,142 @@ in that it is a python package to be installed via
 Some programs have no deliverable output (some write log files though):
 
 - `chktex` just checks the style. 
-- the diff-tools `diff`, `diff-pdf` and `diff-pdf-visually` 
-  are not used to create difference output but return a flag only indicating whether two pdf files coincide. 
+- The diff-tools `diff`, `diff-pdf` and `diff-pdf-visually` 
+  are not used to create difference output but return a flag only indicating whether two `pdf` files coincide. 
   We use this in the context of integration tests 
-  to check that the pdf files created are 'visually equal' 
+  to check that the `pdf` files created are 'visually equal' 
   to a checked version. 
-- Accordingly `pdfinfo` and `exiftool` 
-  collect information on pdf-files and display them at standard output. 
-  In future, these are intended to check meta-info. 
+- Accordingly, `pdfinfo` and `exiftool` 
+  collect information on `pdf`-files and display them at standard output. 
+  In the future, these are intended to check meta-info. 
 
 For some software (output) format `*` is given. 
 These programs are discussed below. 
 
 Note that `dvips` and `gs` play a special role: 
-even if not invoked directly as ps-format is not used, 
+even if not invoked directly as `ps`-format is not used, 
 converter like `dvipdf` or `dvipdft` 
-invoke them as a combination to create ps from dvi via `dvips` 
-and then apply `gs` to obtain pdf.
+invoke them as a combination to create `ps` from `dvi` via `dvips` 
+and then apply `gs` to obtain `pdf`.
 
 The structure of `dvipdf` allows to reconstruct its version 
 from that of `dvips` and of `gs`. 
 
 To check style of latex sources use `chktex`. 
-To convert to text, first convert to pdf and then to pdf 
+To convert to text, first convert to `pdf` and then to `pdf` 
 via `pdftotext`. 
 
-Currently, to create hmtl, 
+Currently, to create `hmtl`, 
 `htlatex`, `htxelatex` and related are used to create. 
 These come in package `texlife-tex4ht` which suffer several flaws. 
-E.g. CTAN does not hold the definitive sources. 
-Also there is no real versioning. 
-It depends on outdated dvi format, 
+E.g. `CTAN` does not hold the definitive sources. 
+Also, there is no real versioning. 
+It depends on outdated `dvi` format, 
 and does not work properly to convert the manual of this **LaTeX builder**. 
 
 These are the reasons why the author would like to ban this altogether. 
 
 Although not clearly documented, `unoconv` offers conversion 
-from html to office formats (not yet used) 
+from `html` to office formats (not yet used) 
 and conversion between various office formats. 
 In use is just `odt2doc`. 
-Also in use is `latex2rtf` which provides a bad conversion from latex to rtf 
+Also in use is `latex2rtf` which provides a bad conversion from latex to `rtf` 
 and insofar into the world of office formats. 
 
-Pancoc seems to be the future since it can create quite good html 
+Pandoc seems to be the future since it can create quite good `html` 
 and all office formats, maybe also text directly from latex. 
 
-The program `gs` can convert pdf formats of various versions. 
-This may be needed in future to include pictures into latex via pdf. 
+The program `gs` can convert `pdf` formats of various versions. 
+This may be needed in future to include pictures into latex via `pdf`. 
 
 To support bibliographies, traditionally a variant of `bibtex` is used. 
 
-| executable  | package               |
-|:------------|:----------------------|
-| **bibtex**  | texlive-latex-bin-bin |
-| bibtexu     | texlive-latex-bin-bin |
-| bibtex8     | texlive-xetex-bin     |
+| Executable   | package                 |
+|:-------------|:------------------------|
+| **`bibtex`** | `texlive-latex-bin-bin` |
+|   `bibtexu`  | `texlive-latex-bin-bin` |
+|   `bibtex8`  | `texlive-xetex-bin`     |
 
 Accordingly, traditionally `makeindex` creates indices; 
 a newer alternative is `xindy`. 
 If one needs split indices, use `splitindex` invoking `makeindex`. 
 
-| executable     | package                |
-|:-------------- |:---------------------- |
-| **makeindex**  | texlive-makeindex-bin  |
-| **splitindex** | texlive-splitindex-bin |
-| xindy          | xindy                  |
-| upmendex       | texlive-uptex-bin      |
+| Executable       | package                  |
+|:---------------- |:------------------------ |
+| **`makeindex`**  | `texlive-makeindex-bin`  |
+| **`splitindex`** | `texlive-splitindex-bin` |
+| `xindy`          | `xindy`                  |
+| `upmendex`       | `texlive-uptex-bin`      |
 
 Closely related to indices are glossaries created by `makeglossaries` 
 which can use `makeindex` or `xindy`. 
 
-| executable         | package                    |
-|:------------------ |:---------------------------|
-| **makeglossaries** | texlive-makeglossaries-bin |
+| Executable           | package                      |
+|:-------------------- |:-----------------------------|
+| **`makeglossaries`** | `texlive-makeglossaries-bin` |
 
 A way to include programmatically computed results, 
 originally in python but in the meantime in other languages as well 
-as e.g. matlab (accessible through the matlab clone `octave`) 
-is offered by pythontex. 
+as e.g. `matlab` (accessible through the `matlab` clone `octave`) 
+is offered by `pythontex`. 
 It has two converters, `pythontex` and `depythontex`, 
 which are spread over several packages. 
 
-| executable         | package               |
-|:------------------ |:----------------------|
-| **pythontex**      | texlive-pythontex-bin |
-|                    | texlive-pythontex-doc |
-|                    | texlive-pythontex     |
+| Executable         | package                 |
+|:------------------ |:------------------------|
+| **`pythontex`**    | `texlive-pythontex-bin` |
+|                    | `texlive-pythontex-doc` |
+|                    | `texlive-pythontex`     |
 
 More loosely coupled to the '**LaTeX builder**' 
 is a build tool to build from individual sources, `latexmk`. 
-Currently, it is not used by this software and maybe it never will. 
-On the other  hand, there are reasons to support interaction with that tool 
+Currently, it is not used by this software, and maybe it never will. 
+On the other hand, there are reasons to support interaction with that tool 
 in the course of [document development](#sss:featuresDevSrc). 
-Of course there are alternatives to `latexmk` 
-but we decided to concentrate on a single tool and we chose `latexmk`. 
+Of course there are alternatives to `latexmk`, 
+but we decided to concentrate on a single tool, and we chose `latexmk`. 
 
-| executable       | package             |
-|:---------------- |:--------------------|
-| **latexmk**      | texlive-latexmk-bin |
-|                  | texlive-latexmk-doc |
-|                  | texlive-latexmk     |
+| Executable    | package               |
+|:------------- |:----------------------|
+| **`latexmk`** | `texlive-latexmk-bin` |
+|               | `texlive-latexmk-doc` |
+|               | `texlive-latexmk`     |
 
-Next we talk about the graphic formats which can be included into tex. 
+Next we talk about the graphic formats which can be included into `tex` format. 
 
 The following table shows a list of converters 
 used for various graphic *input* formats 
 
-| format      | executable       | package          |
-|:------------|------------------|:-----------------|
-| tex         | ---              | texlive-pgf      |
-| mp          | **mpost**        | texlive-metapost |
-| jpg,png,... | **ebb**          | texlive-dvipdfmx |
-| gp          | **gnuplot**      | gnuplot          |
-| svg         | **inkscape**     | inkscape         |
-| xfig        | **fig2dev**      | transfig         |
+| format          | executable         | package            |
+|:----------------|--------------------|:-------------------|
+| `tex`           | ---                | `texlive-pgf`      |
+| `mp`            | **`mpost`**        | `texlive-metapost` |
+| `jpg`,`png`,... | **`ebb`**          | `texlive-dvipdfmx` |
+| `gp`            | **`gnuplot`**      | `gnuplot`          |
+| `svg`           | **`inkscape`**     | `inkscape`         |
+| `xfig`          | **`fig2dev`**      | `transfig`         |
 
-The easiest to treat and still very strong graphic package is tikz/pgf. 
-It is included within tex 
-and although it creates intermediate pdf, 
+The easiest to treat and still very strong graphic package is `tikz`/`pgf`. 
+It is included within `tex` 
+and although it creates intermediate `pdf`, 
 this **LaTeX builder** has nothing to do to make it work. 
 
-Almust as good is metapost (mp) which is supported natively, 
+Almost as good is `metapost` (`mp`) which is supported natively, 
 and the builder has only to run the converter. 
-The formats bb and xbb specify bounding boxes 
-and are to include jpg and png, also natively. 
+The formats `bb` and `xbb` specify bounding boxes 
+and are to include `jpg` and `png`, also natively. 
 So, in a sense, `ebb` is for these pixel formats. 
-Gnuplot (gp) and Scalable Vector Graphics (svg) 
-are external formats with converters creating tex for text 
-and pdf or eps (encapsulated postscript) 
+Gnuplot (`gp`) and Scalable Vector Graphics (`svg`) 
+are external formats with converters creating `tex` for text 
+and `pdf` or `eps` (encapsulated postscript) 
 for the graphic part. 
-Finally, xfig format is a bit deprecated. 
+Finally, `xfig` format is a bit deprecated. 
 It is not worth it to include when we want to implement incremental build. 
-Tikz/pgf provide a superset of the features of xfig. 
+The formats `tikz`/`pgf` provide a superset of the features of `xfig`. 
 
 ## How to use the latex-maven-plugin <a id='ss:mavenPlugin'></a>
 
-Goals `cfg` to create, `clr` to cleanup as described 
+Goals `cfg` to create, `clr` to clean up as described 
 in [Section 'Cleanup after creation'](#sss:featuresCleanup). 
 Invocation is e.g. as `mvn latex:cfg`. 
 
@@ -489,16 +491,16 @@ described in [Section 'How to use the latex ant tasks'](#ss:antTasks).
 
 The other goals of the maven plugin go beyond ant functionality. 
 
-- there are separate goals to create artifacts in a specific format
+- There are separate goals to create artifacts in a specific format
   `pdf`, `dvi`, `docx`, `rtf`, `odt`, `html` and `txt`. 
-- goal `chk` for a stylecheck on the sources. 
+- Goal `chk` for a style check on the sources. 
   This is advisable at the end of development but also 
   as sporadic intermediate step. 
 - There is another goal, `grp`, to build the graphic files only. 
   This is used mainly during development of the documents: 
   If all graphics is present, one can go on with an IDE 
   without this plugin. 
-- goal `vrs` checks the versions of the converters. 
+- Goal `vrs` checks the versions of the converters. 
 
 A maven plugin is just an interface between maven 
 and the application(s) doing all the work. 
@@ -506,7 +508,7 @@ We refer the reader to [Section 'Installation'](#ss:installation)
 for preparatory installations. 
 
 Unfortunately, this plugin did not yet make it into maven central. 
-Thus one has to add the providers repository to the pom: 
+Thus, one has to add the providers' repository to the pom: 
 
 ```xml
 <project ...>
@@ -523,8 +525,8 @@ Thus one has to add the providers repository to the pom:
 ```
 
 Then it can be used from command line,
-e.g. to create pdfs as `mvn latex:pdf`
-or for cleanup `mvn latex:clr` with with default configuration:
+e.g. to create `pdf`s as `mvn latex:pdf`
+or for cleanup `mvn latex:clr` with default configuration:
 
 ```xml
 <project ...>
@@ -1540,7 +1542,7 @@ here is a bug affecting goal odt:
 ## How to use the latex ant tasks <a name='ss:antTasks'>
 
 This software provides two ant tasks: one for creation of artifacts 
-and another one to clean them  up. 
+and another one to clean them up. 
 Note that the according maven plugin 
 described in [Section 'The latex-maven-plugin'](#ss:mavenPlugin) 
 provides more functionality than this.
@@ -1557,7 +1559,7 @@ or whatever version from
 
 or to download the sources from
 
-[github](https://github.com/Reissner/maven-latex-plugin),
+[GitHub](https://github.com/Reissner/maven-latex-plugin),
 
 build with maven which creates the abovementioned jar file in the target folder.
 
@@ -1565,30 +1567,30 @@ In any case, the installation is just by copying that jar file
 into the `lib` folder of the local ant installation.
 For details see ant's documentation. 
 
-## Todos <a id='ss:todo'></a>
+## To-dos <a id='ss:todo'></a>
 
-This section is just an unsorted collection of todos and needs rework. 
-This is itself a todo. 
+This section is just an unsorted collection of to-dos and needs rework. 
+This is itself a to-do. 
 
-- the code contains a lot of FIXME tags waiting to be resolved. 
-- evaluation of alternatives of `bibtex` 
-  like `bibtexu`, `bibtex8`, `biber`, `biblatex`
+- The code contains a lot of `FIXME` tags waiting to be resolved. 
+- Evaluation of 
+  - alternatives of `bibtex` 
+    like `bibtexu`, `bibtex8`, `biber`, `biblatex` required 
 
-- evaluation of alternatives of `makeindex` 
-  like `xindy`
+  - alternatives of `makeindex` like `xindy` required 
   
-- evaluation of make-tools like `latexmk`, `arara`, `rubber` and `cluttex`. 
+  - make-tools like `latexmk`, `arara`, `rubber` and `cluttex` required 
 
-- I would like to continue to support dvi-format. 
+- I would like to continue to support `dvi`-format. 
   But I must research how to create that one. 
   
-- translation of latex to html and to docx 
+- Translation of latex to `html` and to `docx` required
 
 - document the role of `mathjax`
 
-- the newest version of gnuplot introduce the problem 
-  that the pdf output verison is 1.7 whereas the one for pdflatex is 1.5. 
-  This yileds a warning. 
+- The newest version of gnuplot introduce the problem 
+  that the `pdf` output version is 1.7 whereas the one for `pdflatex` is 1.5. 
+  This yields a warning. 
   A way to resolve that problem is just downgrading by subsequent invocation
   of something like 
 
@@ -1596,9 +1598,9 @@ This is itself a todo.
   gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4  -o output.pdf input.pdf 
 ```
 
-- bugfix: pandoc missing end aligned at the beginning of manual. 
-- bugfix: pandoc seems to fail with floating objects 
-- evaluaton of pandoc. 
+- Bug-fix: `pandoc` missing end aligned at the beginning of manual. 
+- Bug-fix: `pandoc` seems to fail with floating objects 
+- evaluation of `pandoc`. 
   There is a manual. 
   First shot: got a good result with 
 
@@ -1607,9 +1609,9 @@ pandoc -t html -s --toc manualLatexMavenPlugin.tex -o manual.html
 pandoc -t odt  -s --toc manualLatexMavenPlugin.tex -o manual.odt
 ```
 
-one could also try with `--mathml`, `--mathjax` and with `--webtex` 
-which works well.. somehow. 
-See the pandoc manual for further ideas including gladtex
+One could also try with `--mathml`, `--mathjax` and with `--webtex` 
+which works well... somehow. 
+See the `pandoc` manual for further ideas including `gladtex`
   Here, `-t` or `--target` indicates the target format. 
   The list of available formats: 
 
@@ -1623,23 +1625,47 @@ shows
 - `docx`, `odt`, maybe making `unoconv` superfluous, 
 - `html`, `html4`, `html5` maybe substituting tex4ht 
 - `plain`, maybe text, then substituting 
-- `pdf` (maybe using pdflatex)
+- `pdf` (maybe using `pdflatex`)
   
 Pandoc shall be invoked with option `--verbose` 
 which seem to indicate the most important flaws. 
   
-- missings support for ps. 
+- Support for `ps` is missing. 
 
-- pdfinfo and other poppler tools to be evaluated. 
+- `pdfinfo` and other `poppler` tools to be evaluated. 
 
-- evaluation of unoconv: seems to offer also conversion from html to odt and
+- Evaluation of `unoconv`: seems to offer also conversion from `html` to `odt` and
   that like. 
   Very bad: no manual. I hate that. 
-  Maybe not needed if pandoc works fine. 
-  just type `unoconv -f odt manual.html`. 
+  Maybe not needed if `pandoc` works fine. 
+  Just type `unoconv -f odt manual.html`. 
 
-- evaluation of latex2png, latex2man, latex2nemeth, latex2html
+- Evaluation of latex2png, latex2man, latex2nemeth, latex2html
 
 - evaluation of `pstoedit`
 
-- new plugin based on texinfo 
+- It seems reasonable, to write a new plugin based on `texinfo`. 
+
+## To the (plugin) developer <a id='ss:devel'></a>
+
+`VS code` shows: 
+There are lots of `FIXME`'s and `TODO`'s to be eliminated. 
+
+In addition, there is some problem running `mvn deploy` 
+showing `An illegal reflective access operation` 
+which is currently just a warning 
+but which may in some next release be a showstopper.
+The core problem is with `mockito-core` which I cannot update. 
+The problem is that updating this requires update of java `1.8` to java `11`. 
+This in turn seems not compatible with `maven-plugin-plugin`. 
+The latter seems to be the core problem. 
+
+In addition, there is a strange problem with clean plugin. 
+Although it says that it deletes the requested files (`mvn clean -X`), 
+it does not. 
+
+Finally, there are various problems with the plugin test harness. 
+
+A completely different problem is introduced 
+by the fact, that with new test method based on diffing real `pdf`'s, 
+the tests become sensitive on the versions of `pdflatex`. 
