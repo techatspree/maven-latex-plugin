@@ -1,0 +1,78 @@
+ 
+/* start css.sty */
+.cmr-9{font-size:90%;}
+.cmr-7{font-size:70%;}
+.cmmi-10{font-style: italic;}
+.cmmi-7{font-size:70%;font-style: italic;}
+.cmbx-10{ font-weight: bold;}
+.cmbx-10{ font-weight: bold;}
+.cmbx-9{font-size:90%; font-weight: bold;}
+.cmbx-9{ font-weight: bold;}
+.cmtt-10{font-family: monospace;}
+.cmtt-10{font-family: monospace;}
+.cmtt-9{font-size:90%;font-family: monospace;}
+.cmtt-9{font-family: monospace;}
+.cmti-10{ font-style: italic;}
+p.noindent { text-indent: 0em }
+td p.noindent { text-indent: 0em; margin-top:0em; }
+p.nopar { text-indent: 0em; }
+p.indent{ text-indent: 1.5em }
+@media print {div.crosslinks {visibility:hidden;}}
+a img { border-top: 0; border-left: 0; border-right: 0; }
+center { margin-top:1em; margin-bottom:1em; }
+td center { margin-top:0em; margin-bottom:0em; }
+.Canvas { position:relative; }
+img.math{vertical-align:middle;}
+.obeylines-h,.obeylines-v {white-space: nowrap; }
+div.obeylines-v p { margin-top:0; margin-bottom:0; }
+.overline{ text-decoration:overline; }
+.overline img{ border-top: 1px solid black; }
+td.displaylines {text-align:center; white-space:nowrap;}
+.centerline {text-align:center;}
+.rightline {text-align:right;}
+span.TEX {letter-spacing: -0.125em; }
+span.TEX span.E{ position:relative;top:0.5ex;left:-0.0417em;}
+a span.TEX span.E {text-decoration: none; }
+.underline{ text-decoration:underline; }
+.underline img{ border-bottom: 1px solid black; margin-bottom:1pt; }
+div.proclaim { margin-top: 1em; margin-bottom: 1em; }
+p.item {text-indent:-2em; margin-left:2em;}
+p.itemitem {text-indent:-2em; margin-left:4em;}
+span.item, span.itemitem {width:2em; margin-right:0.4em;}
+td.eqalign3 { text-align:right; margin-left:10em;}
+.eqalign td { white-space: nowrap; }
+div.eqalign {text-align:center;}
+td.eqalignno3, td.leqalignno3 { text-align:right; margin-left:10em;}
+.leqalignno td, .eqalignno td { white-space: nowrap; }
+.leqalignno td.noalign, .eqalignno td.noalign { width:5%; white-space: normal; }
+table.leqalignno, table.eqalignno {width:100%;}
+img.cdots{vertical-align:middle;}
+div.pmatrix {text-align:center;}
+table.pmatrix {width:100%;}
+div.Draw{text-align:center}
+table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
+div.Verbatim { font-family: monospace; white-space: nowrap; }
+body .Verbatim { margin: 1em; }
+.IndexSec {margin-top:1em; margin-bottom:0.5em;}
+span.QAChapter{font-size: 125%;}
+h1, h2, h3 { font-family: comic; }
+body { background: white; }
+.SIGN{text-align:right;}
+.Template { margin-left:3em; }
+div.ShowCode{ font-family:monospace; white-space:nowrap; }
+span.showcode { color: green; }
+div.TableOfContents { margin-top: 1em; margin-right: 1em; margin-left:1em;}
+div.Warning{ margin-right: 8%; margin-left:8%; text-align:justify; }
+div.Warning div.Warning{ font-weight: bold; text-align:justify; border:solid 1px; color:red; }
+.tabular, div.output { background-color:#FFFFCC; }
+div.output { margin-left:3%; }
+.button-list P{ margin-top:0em; margin-bottom:0; }
+div.button-list { margin-left:3%; margin-right:3%; }
+div.ShowCode { margin-left:3%; margin-right:3%; border-top: solid #CCCCCC 1pt; border-bottom: solid #CCCCCC 1pt; }
+div.source { border-top: solid #CCCCCC 1pt; border-bottom: solid #CCCCCC 1pt;}
+div.TableOfContents div.DocPart{margin-top:1em; margin-bottom:1em; font-size:110%;}
+.bugfixes{background: yellow; font-style: italic; font-weight: bold; }
+.try{ border:solid 4px; }
+#TBL-14 td{font-size:75%;}
+/* end css.sty */
+

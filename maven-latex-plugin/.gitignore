@@ -1,0 +1,9 @@
+# emacs 
+*.xml~
+*.java~
+**/auto/*.el
+# dolphin
+.directory
+# TBD: eliminate this workaround 
+src/site/tex/buildParams.tex
+src/test/resources/integration/pom4pdf.xml

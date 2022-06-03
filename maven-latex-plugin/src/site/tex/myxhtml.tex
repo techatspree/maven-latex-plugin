@@ -1,0 +1,13 @@
+\Preamble{xhtml}
+%\makeatletter
+\Configure{graphics*}  
+  {pdf}  
+  {
+    \Needs{"convert      \csname Gin@base\endcsname.pdf %
+                         \csname Gin@base\endcsname.eps"}%  
+    \Picture[picture not present]      {\csname Gin@base\endcsname.eps}%  
+    \special{t4ht+@File: \csname Gin@base\endcsname.eps}
+  }
+\begin{document}
+\EndPreamble
+\input{myxhtml.cfg}

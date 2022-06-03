@@ -27,14 +27,14 @@ Configuration
             <!-- path to the TeX scripts, if none, it must be on the system path -->
             <texPath/>
             <!-- the latex command -->
-            <texCommand>pdflatex</texCommand>
+            <latex2pdfCommand>pdflatex</latex2pdfCommand>
             <!-- the bibtex command -->
             <bibtexCommand>bibtex</bibtexCommand>
             <!-- the arguments to use when calling latex -->
-            <texCommandArgs>
-                <texCommandArg>-interaction=nonstopmode</texCommandArg>
-                <texCommandArg>--src-specials</texCommandArg>
-            </texCommandArgs>
+            <latex2pdfOptions>
+                -interaction=nonstopmode
+                -src-specials
+            </latex2pdfOptions>
             <!-- the tex4ht command -->
             <tex4htCommand>htlatex</tex4htCommand>
             <!-- the argumants to use when calling tex4ht -->

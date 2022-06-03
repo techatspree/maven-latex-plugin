@@ -1,0 +1,334 @@
+%%
+%% This is file `leaflet-manual.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% leaflet.dtx  (with options: `manual')
+%% 
+%% Copyright (C) 2003, 2004
+%% Rolf Niepraschk, Rolf.Niepraschk@ptb.de
+%% Hubert Gaesslein, HubertJG@open.mind.de
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2003/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status "author-maintained".
+%% 
+\def\filename{leaflet-manual.tex}
+\def\fileversion{v1.0e}   % change this when leaflet-manual changed, too.
+\def\filedate{2013/11/06}
+\def\docdate {2013/11/06} % change this when leaflet-manual changed, too.
+\listfiles
+\errorcontextlines=99
+\documentclass[
+%%notumble,
+%%nofoldmark,
+%%dvipdfm,
+%%portrait,
+%%titlepage,
+%%nocombine,
+%%a3paper,
+%%debug,
+%%nospecialtricks,
+%%draft,
+]{leaflet}
+
+
+\renewcommand*\foldmarkrule{.3mm}
+\renewcommand*\foldmarklength{5mm}
+
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{mathptmx}
+\usepackage[scaled=0.9]{helvet}
+\makeatletter
+\def\ptmTeX{T\kern-.1667em\lower.5ex\hbox{E}\kern-.075emX\@}
+\DeclareRobustCommand{\ptmLaTeX}{L\kern-.3em
+        {\setbox0\hbox{T}%
+         %\vb@xt@ % :-)
+         \vbox to\ht0{\hbox{%
+                            \csname S@\f@size\endcsname
+                            \fontsize\sf@size\z@
+                            \math@fontsfalse\selectfont
+                            A}%
+                      \vss}%
+        }%
+        \kern-.12em
+        \ptmTeX}
+\makeatother
+\let\TeX=\ptmTeX
+\let\LaTeX=\ptmLaTeX
+\usepackage{shortvrb}
+\MakeShortVerb{\|}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage[dvipsnames,usenames]{color}
+\definecolor{LIGHTGRAY}{gray}{.9}
+
+%%%%\renewcommand{\descfont}{\normalfont}
+\newcommand\Lpack[1]{\textsf{#1}}
+\newcommand\Lclass[1]{\textsf{#1}}
+\newcommand\Lopt[1]{\texttt{#1}}
+\newcommand\Lprog[1]{\textit{#1}}
+
+\newcommand*\defaultmarker{\textsuperscript\textasteriskcentered}
+
+\title{The document class \Lclass{leaflet}}
+\author{%
+  Rolf Niepraschk\\
+  Walter Schmidt\\
+  Hubert G\"a\ss lein}
+\date{Last updated~\docdate\\printed \today}
+
+\CutLine*{1}% Dotted line without scissors
+\CutLine{6}%  Dotted line with scissors
+
+\AddToBackground{5}{%  Background of a small page
+  \put(0,0){\textcolor{Cerulean}{\rule{\paperwidth}{\paperheight}}}}
+
+\AddToBackground*{2}{% Background of a large page
+  \put(\LenToUnit{.5\paperwidth},\LenToUnit{.5\paperheight}){%
+    \makebox(0,0)[c]{%
+      \resizebox{.9\paperwidth}{!}{\rotatebox{35.26}{%
+        \textsf{\textbf{\textcolor{LIGHTGRAY}{BACKGROUND}}}}}}}}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+%%\LARGE
+
+%%\tableofcontents
+
+\section{Overview}
+
+The document class \Lclass{leaflet} creates a document of (up to) six
+small pages in portrait orientation, arranged physically on two
+``normal-size'' pages. The target page sizes supported by the standard
+\LaTeX{}  \Lclass{article} are available, plus |a3paper|. Printing these
+to both sides of a sheet and folding appropriately will yield a six-page
+leaflet.
+
+%% TEST: These commands are no longer disabled!
+\iffalse
+\reversemarginpar
+\marginpar[XXX]{YYY}
+\fi
+%% TEST: These commands are disabled!
+\onecolumn
+\twocolumn[WWW]
+%% end of TEST
+
+\section{Requirements}
+
+Using the \Lclass{leaflet} class requires that the final
+document is created in PostScript or PDF format, using
+\begin{itemize}
+  \item \TeX{} and \Lprog{dvips}, or
+  \item pdf\TeX{}, or
+  \item V\TeX{} in PS or PDF mode.
+\end{itemize}
+(Some other drivers supported by standard \LaTeX{} work as well.)
+
+The non-standard macro package \Lpack{everyshi} \cite{cit:everyshi} is
+used by the \Lclass{leaflet} class.
+
+\section{Features}
+
+Basically the \Lclass{leaflet} class provides the same features as the
+standard \Lclass{article} class. There are, however, a number of
+differences and restrictions, as well as some additional facilities and
+peculiarities:
+
+\begin{itemize}
+
+\item
+The sectioning level |\part| is not available.
+The other sectioning levels are not numbered by default.
+
+\item
+References to the page where floating objects are located may come out
+wrong (this includes |\pageref| as well as |\listof...| commends).
+
+\item
+Section headers are typeset in a smaller font size than in the
+standard classes.
+
+\item
+You may use list-like environments just as in the standard classes.
+The left margins have been adjusted to work well with the
+\Lopt{a4paper} and \Lopt{letterpaper} class options.
+With other target page sizes, you'll have to adjust them.
+
+Here's a small demo:
+\begin{description}
+\item[Uncle Meat] First entry in a description environment.
+\item[King Kong] Second entry.
+    \begin{itemize}
+    \item First entry in an itemize environment.
+        \begin{enumerate}
+        \item First entry in an enumerate environment.
+        \item Second entry.
+            \begin{enumerate}
+            \item First entry in an enumerate environment.
+                \begin{enumerate}
+                \item First entry in an enumerate environment.
+                \item Second entry.
+                \end{enumerate}
+            \item Second entry.
+                \begin{itemize}
+                \item First entry in an itemize environment.
+                \item Second entry.
+                \end{itemize}
+            \item Another entry.
+            \end{enumerate}
+        \item Another entry.
+        \end{enumerate}
+    \item Second entry.
+    \item Another entry.
+    \end{itemize}
+\item[Frunobulax] Another entry.
+\end{description}
+
+\item
+Marginal notes are pointless on the given page size and
+are disabled.
+
+\item
+Two-column typesetting is not supported for the same reason.
+
+\item
+By default, there are no page headers, page footers or page numbers,
+nor is there any space reserved for these.
+
+However, you can restore them, if you like.
+To do so, use |\pagestyle| as with the standard classes,
+and |\setlength| to adjust the corresponding parameters (like
+|\headheight|).
+At last, you have to call the new macro \par
+|  \setmargins{top}{bottom}{left}{right}|.
+
+\item
+Paragraphs are separated by vertical space; the first line
+of a paragraph is not indented by default.
+
+\item
+By default, all paragraphs are typeset as if you had
+specified |\sloppy| in the document preamble.
+
+\item
+A small folding mark is created between the second and the
+third page.
+
+\item
+The macro |\CutLine| draws a vertical dotted line with
+scissor symbols between the page indicated by its argument and the
+preceding one.
+The starred version omits the scissors symbols.
+
+\item
+In case the text does not fit on six pages, a warning (or error,
+depending on some class option, see below) will be issued.
+
+\item
+To add some background picture to individual pages, you can use
+|\AddToBackground| commands. Its first argument specifies the page,
+the second one the picture commands.
+The starred version puts the picture on the combined pages.
+
+\end{itemize}
+
+\section{Customization}
+
+The typeface to be used for the section headings is given by the macro
+|\sectfont|, and the typeface to be used for the labels of the
+|description| environment is given by |\descfont|.
+Both macros default to |\bfseries| and can be changed using
+|\renewcommand*|.
+
+The horizontal and vertical and margins of the (small) pages
+default to 8\,mm and 11\,mm, respectively, and can be changed
+using |\setmargins|, as explained above.
+This may be useful, if the printing engine exhibits larger unprintable
+margins.
+
+The macros |\foldmarkrule| and |\foldmarklength| determine the stroke
+width and the length of the fold mark, which is printed between the
+second and the third page.
+They default to 0.4\,pt and 2\,mm, respectively, and can be changed
+using |\renewcommand*| (\emph{not} |\setlength|!).
+See also the class options \Lopt{foldmark} and \Lopt{nofoldmark}.
+
+\section{Class options}
+
+Default options are marked with an asterisk:
+\begin{description}
+\item[\Lopt{tumble}{\defaultmarker}, \Lopt{notumble}]
+  By default, the contents of the back side of the final sheet is
+  printed upside down.
+  The option \Lopt{notumble} suppresses that.
+  Doing so may be necessary to suit the behavior of certain printing
+  engines.
+  Specifying \Lopt[notumble] may also be useful during the writing of
+  a document, to enable proof-reading on the screen.
+\item[\Lopt{frontside}, \Lopt{backside}, \Lopt{bothsides}{\defaultmarker}]
+  These options control whether only the front page, the back page or
+  both pages of the final sheet are to be be created.
+  Thus, you can create separate files for the front an back side of
+  the sheet.
+\item[\Lopt{foldmark}{\defaultmarker}, \Lopt{nofoldmark}]
+  These options specifiy whether or not a fold mark is to be printed.
+\item[\Lopt{combine}{\defaultmarker}, \Lopt{nocombine}]
+  These options specify whether the (small) pages should be output
+  combined on a (large) target page (\Lopt{combine}) or as individual
+  pages (\Lopt{nocombine}).
+
+  At the same time, the determine behaviour in case the text does not
+  fit on six (small) pages.
+  By default (\Lopt{combine}), an error is raised---and the surplus pages
+  will be gobbled.
+  Otherwise (\Lopt{nocombine}), just a warning will be issued;
+  shortening the text appropriately is left to the user.
+\item[\Lopt{twopart}, \Lopt{notwopart}{\defaultmarker}]
+  Allows the typesetting of a four page leaflet (first part) and a two page
+  detachable form (second part), for fill-in forms, questionnaires, applications,
+  etc.
+\end{description}
+
+Other options are passed to the \Lclass{article} class.
+
+\section{Changes over version 0.3}
+
+The present release of the \Lclass{leaflet} class differs basically
+from its predecessor, version~0.3, which had been developed originally
+by J\"urgen Schlegelmilch.
+
+The main change is, that no more post-processing is required to
+arrange the pages on the sheet.
+Furthermore, the overall layout has been changed slightly to suit the
+small page size better.
+In general, documents that were written for version~0.3 will exhibit
+different line and page breaks when typeset using the new version of
+this document class.
+
+\begin{thebibliography}{000}
+\bibitem{cit:latex-man}
+  \textsc{L.\,Lamport}: \LaTeX. A Document Preparation System.
+  \textit{User's Guide And Reference Manual.} Second Edition. 1994.
+\bibitem{cit:everyshi}
+  \textsc{M.\,Schr\"oder}: The \Lpack{everyshi} package. 2001.
+  CTAN: \url{macros/latex/contrib/ms/everyshi.dtx}
+\end{thebibliography}
+
+\loggingall
+\end{document}
+\endinput
+%%
+%% End of file `leaflet-manual.tex'.

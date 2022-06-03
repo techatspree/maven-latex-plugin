@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+			     http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- coordinates for model and artifact xxx -->
+  <modelVersion>4.0.0</modelVersion>
+  
+  <!-- The Basics -->
+  <groupId>eu.simuline.m2latex</groupId>
+  <artifactId>latex-maven-plugin-pdftest</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.soebes.itf.jupiter.extension</groupId>
+        <artifactId>itf-failure-plugin</artifactId>
+        <version>@project.version@</version>
+        <executions>
+          <execution>
+            <id>the_first_test_case</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>failure</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>

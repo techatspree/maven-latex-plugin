@@ -1,0 +1,115 @@
+\listfiles
+\synctex=1
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{textalpha}
+
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
+
+% only with pdflatex, warnings for xelatex and for lualatex 
+% ifxetex, ifluatex, ifpdf
+\usepackage{ifpdf,ifxetex,ifluatex}
+\ifpdf%
+\else
+\makeatletter
+\@ifpackageloaded{tex4ht}{%
+  \setboolean{texFhtLoaded}{true}
+}{%
+}% tex4ht not loaded 
+\makeatother
+\fi
+
+
+\usepackage[a4paper, showframe]{geometry}% option , showframe
+%\usepackage{showframe} as an alternative 
+\usepackage{microtype}
+%\usepackage{anyfontsize}
+%\usepackage{cleveref}
+
+
+% used by hyperref and also to update index and glossary 
+% to avoid clash because of loading with different options: 
+% declare first 
+\usepackage[aux]{rerunfilecheck}
+
+% graphics 
+
+\ifpdf%
+\usepackage{xcolor}  % [pdftex]  
+\usepackage{graphicx}% [pdftex] 
+\usepackage{hyperref}% driver [hpdftex] is autodetected 
+\usepackage{transparent}% sometimes comes in with svg import 
+% warning transparent package: loading aborted if not pdf-mode 
+\else
+\usepackage[dvipdfmx]{xcolor}
+\usepackage[dvipdfmx]{graphicx}
+\ifthenelse{\boolean{texFhtLoaded}}{%
+  % \usepackage[tex4ht]{hyperref}
+\newcommand{\url}[1]{\texttt{#1}}% not active, replacement for hyperref
+}{%
+  \usepackage[dvipdfmx]{hyperref}
+}% tex4ht not loaded 
+
+\usepackage{bmpsize}
+\fi
+
+% \@ifpackageloaded{tex4ht}{%
+% \usepackage[dvipdfmx]{xcolor}
+% \usepackage[dvipdfmx]{graphicx}
+% \usepackage[tex4ht]{hyperref}
+% \usepackage{bmpsize}
+% }{%
+% \usepackage{xcolor}  % [pdftex]  
+% \usepackage{graphicx}% [pdftex] 
+% \usepackage{hyperref}% driver [hpdftex] is autodetected 
+% }
+
+
+
+
+
+
+%\usepackage[clear,pdf,eps]{svg}
+
+\usepackage{import}
+\usepackage{amsmath}
+
+% synchronization between tex and pdf 
+%\usepackage[active]{srcltx}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{fancyvrb}
+
+
+% index and glossary
+\ifthenelse{\boolean{texFhtLoaded}}{%
+}{
+  \usepackage{splitidx}%[split]
+%  \usepackage{makeidx}
+%  \usepackage{showidx}
+  \makeindex
+  \usepackage[toc]{glossaries}%,automake
+  % , xindy or even [xindy={language=english,codepage=utf8}]
+  % mainly for index and glossaries 
+  \makeglossaries%
+}
+
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
+
+%\makeglossary% for rerunfilecheck 
+
+%\usepackage{etexcmds} %still later 
+
+
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
+\newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "manualLatexMavenPlugin"
+%%% End:

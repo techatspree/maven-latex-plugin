@@ -1,89 +1,123 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.akquinet.maven</groupId>
-	<artifactId>test-site</artifactId>
-	<version>1.0</version>
-	<name>Maven LaTeX Plugin - Test Site</name>
-   <properties>
-       <maven-latex-plugin.version>1.2</maven-latex-plugin.version>
-   </properties>
-	<pluginRepositories>
-        <pluginRepository>
-            <id>maven-latex-plugin-repo</id>
-            <url>http://akquinet.github.com/maven-latex-plugin/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-	</pluginRepositories>
-    <build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<locales>en,de</locales>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>de.akquinet.jbosscc.latex</groupId>
-				<artifactId>maven-latex-plugin</artifactId>
-				<version>${maven-latex-plugin.version}</version>
-				<configuration>
-					<settings>
-						<cleanUp>false</cleanUp>
-					</settings>
-				</configuration>
-				<executions>
-					<execution>
-						<configuration>
-							<settings>
-								<outputDirectory>pdf</outputDirectory>
-							</settings>
-						</configuration>
-						<phase>site</phase>
-						<goals>
-							<goal>latex</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>HTML multipage</id>
-						<configuration>
-							<settings>
-								<outputDirectory>html_multipage</outputDirectory>
-								<tex4htCommandArgs>
-									<tex4htCommandArg>tex4ht,2</tex4htCommandArg>
-									<tex4htCommandArg></tex4htCommandArg>
-									<tex4htCommandArg></tex4htCommandArg>
-									<tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
-								</tex4htCommandArgs>
-							</settings>
-						</configuration>
-						<phase>site</phase>
-						<goals>
-							<goal>tex4ht</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>HTML singlepage</id>
-						<configuration>
-							<settings>
-								<outputDirectory>html_singlepage</outputDirectory>
-								<tex4htCommandArgs>
-									<tex4htCommandArg>tex4ht,1</tex4htCommandArg>
-									<tex4htCommandArg></tex4htCommandArg>
-									<tex4htCommandArg></tex4htCommandArg>
-									<tex4htCommandArg>-interaction=nonstopmode --src-specials</tex4htCommandArg>
-								</tex4htCommandArgs>
-							</settings>
-						</configuration>
-						<phase>site</phase>
-						<goals>
-							<goal>tex4ht</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.akquinet.maven</groupId>
+  <artifactId>test-site</artifactId>
+  <version>1.0</version>
+  <name>Maven LaTeX Plugin - Test Site</name>
+  <!-- same as for the plugin to be tested. -->
+  <url>https://github.com/Reissner/maven-latex-plugin/</url>
+
+  <properties>
+    <latex-maven-plugin.version>1.4</latex-maven-plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>latex-maven-plugin-repo</id>
+      <!--url>http://akquinet.github.com/maven-latex-plugin/maven2/</url-->
+      <url>https://www.simuline.eu/RepositoryMaven</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-site-plugin</artifactId>
+	<version>3.7.1</version>
+ 	<configuration>
+	  <locales>en,de</locales>
+	</configuration>
+      </plugin>
+
+      <plugin>
+	<groupId>de.akquinet.jbosscc.latex</groupId>
+	<artifactId>latex-maven-plugin</artifactId>
+	<version>${latex-maven-plugin.version}</version>
+	<configuration>
+	  <settings>
+	    <cleanUp>false</cleanUp>
+	  </settings>
+	</configuration>
+	<executions>
+	  <execution>
+	    <configuration>
+	      <settings>
+		<outputDirectory>pdf</outputDirectory>
+	      </settings>
+	    </configuration>
+	    <phase>site</phase>
+	    <goals>
+	      <goal>pdf</goal>
+	      <goal>html</goal>
+	    </goals>
+	  </execution>
+	  <execution>
+	    <id>HTML multipage</id>
+	    <configuration>
+	      <settings>
+		<outputDirectory>html_multipage</outputDirectory>
+		<tex4htStyOptions>
+		  xhtml,2
+		</tex4htStyOptions>
+		<!--tex4htCommandArgs>
+		  <tex4htCommandArg>tex4ht,2</tex4htCommandArg>
+		  <tex4htCommandArg></tex4htCommandArg>
+		  <tex4htCommandArg></tex4htCommandArg>
+		  <tex4htCommandArg>-interaction=nonstopmode -{}-src-specials</tex4htCommandArg>
+		</tex4htCommandArgs-->
+	      </settings>
+	    </configuration>
+	    <phase>site</phase>
+	    <goals>
+	      <goal>html</goal>
+	    </goals>
+	  </execution>
+	  <execution>
+	    <id>HTML singlepage</id>
+	    <configuration>
+	      <settings>
+		<outputDirectory>html_singlepage</outputDirectory>
+		<tex4htStyOptions>
+		  xhtml,1
+		</tex4htStyOptions>
+		<!--tex4htCommandArgs>
+		  <tex4htCommandArg>tex4ht,1</tex4htCommandArg>
+		  <tex4htCommandArg></tex4htCommandArg>
+		  <tex4htCommandArg></tex4htCommandArg>
+		  <tex4htCommandArg>-interaction=nonstopmode -{}-src-specials</tex4htCommandArg>
+		</tex4htCommandArgs-->
+	      </settings>
+	    </configuration>
+	    <phase>site</phase>
+	    <goals>
+	      <goal>html</goal>
+	    </goals>
+	  </execution>
+	  <execution>
+	    <id>clear-latex-sources</id>
+	    <goals><goal>clr</goal></goals>
+	  </execution>
+	</executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

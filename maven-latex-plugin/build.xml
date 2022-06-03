@@ -1,0 +1,269 @@
+<!-- CAUTION: currently, this has a problem with bootstrapping: 
+must be started with maven: mvn install first. 
+After mvn clean ant build does not work. 
+-->
+
+<project name="Main" default="jar" basedir=".">
+  <property name="targetSiteDir"   value="${basedir}/target/site" />
+  <property name="targetDir"       value="${basedir}/target" />
+  <property name="version"         value="1.5-SNAPSHOT" />
+  <!-- the following must be adapted to the local installation. -->
+  <property name="antJarDir"       value="/usr/share/ant/lib/" />
+  <property name="createdJar"
+	    value="latex-maven-plugin-${version}-antTask.jar" />
+
+
+  <target 
+      name="init" 
+      description="Initializes all properties. ">
+    <property name="clsDir"           value="target/classes" />
+    <property name="tstClsDir"        value="target/test-classes/"/>
+    <!--property name="targetDir"        value="target" /-->
+    <property name="srcJavaDir"       value="src/main/java/" />
+    <property name="compileClsPath"   value="${clsDir}:${tstClsDir}" />
+    <property name="encoding"         value="ISO-8859-1"/>
+ 
+    <!-- ensure that all required directories are present. 
+	 these are removed by mvn only. -->
+    <!--mkdir dir="${targetDir}"/-->
+    <mkdir dir="${clsDir}"/>
+  </target>
+
+
+  <target name="clean" 
+	  depends="init"
+	  description="Delete all generated files 
+		       including tests and site. ">
+    <delete includeemptydirs="true" failonerror="false">
+      <fileset dir="${targetDir}/**">
+      </fileset>
+    </delete>
+  </target>
+
+
+  <target name="jar" 
+	  depends="init"
+	  description="Creates a jar-file defining the ant-task 
+		       and copies it where ant finds it. ">
+     <javac srcdir="${srcJavaDir}"
+            classpath="${antJarDir}ant.jar"
+            destdir="${clsDir}"
+            encoding="${encoding}"
+            debug="${javac.debug}"
+	    debuglevel="none"
+	    excludes="eu/simuline/m2latex/mojo/**"
+            includeAntRuntime="false"
+	    compiler="modern"
+            fork="yes">
+     </javac>
+     <jar
+	 destfile="${targetDir}/${createdJar}" 
+	 basedir="${clsDir}"
+	 includes="**/*.class" excludes="${createdJar}"> 
+     </jar>
+  </target>
+
+  <target name="install" 
+	  description="Copies the relevant jar-file defining the ant-task 
+		       to where ant finds it: 
+		       in the installation, not in the local environment. 
+		       This must be invoked as root. ">
+     <copy file="${targetDir}/${createdJar}" 
+	   todir="${antJarDir}"/>
+  </target>
+  
+  <target name="link" 
+	  description="Copies the relevant jar-file defining the ant-task 
+		       to where ant finds it: 
+		       in the installation, not in the local environment. 
+		       This must be invoked as root. ">
+    <symlink link="${antJarDir}/${createdJar}"
+	     resource="${targetDir}/${createdJar}"/>
+  </target>
+  
+  <target name="uninstall" 
+	  depends="jar"
+	  description="Deletes the relevant jar-file defining the ant-task 
+		       where ant finds it: 
+		       in the installation, not in the local environment. 
+		       This must be invoked as root. ">
+       <delete file="${antJarDir}${createdJar}" />
+       <symlink action="delete" link="${antJarDir}${createdJar}"/>
+  </target>
+
+ <!-- deactivate the following unless the ant task is installed already -->
+
+  <path id="latex.classpath">
+    <fileset dir="${antJarDir}"> 
+      <include name="${createdJar}"/>
+    </fileset>
+  </path>
+
+  <taskdef name="latexCfg"
+	   classname="eu.simuline.m2latex.antTask.LatexCfgTask"
+	   classpathref="latex.classpath"/>
+
+  <target name="latex:cfg"
+	  description="Create pdf, html and other formats from latex. ">
+    <latexCfg>
+	<!--patternErrXindy="(^ERROR: )" -->
+
+	<!-- 		texPath='' -->
+      <settings texSrcDirectory="src/site/tex"
+		texSrcProcDirectory='.'
+		readTexSrcProcDirRec='true'
+		outputDirectory="."
+		targets="pdf, html"
+		convertersExcluded=''
+		cleanUp='true'
+		fig2devCommand="fig2dev"
+		fig2devGenOptions=""
+		fig2devPtxOptions=""
+		fig2devPdfEpsOptions=""
+		gnuplotCommand="gnuplot"
+		gnuplotOptions=""
+		metapostCommand="mpost"
+		svg2devCommand='inkscape'
+		svg2devOptions='-z -D --export-latex'
+		ebbCommand='ebb'
+		ebbOptions='-v'
+		latex2pdfCommand="pdflatex"
+		debugBadBoxes='true'
+		debugWarnings='true'
+		pdfViaDvi='false'
+		dvi2pdfCommand='dvipdfmx'
+		dvi2pdfOptions=''
+		maxNumReRunsLatex='-1'
+		bibtexCommand="bibtex"
+		bibtexOptions=""
+		makeIndexCommand="makeindex"
+		makeIndexOptions="-c"
+		splitIndexCommand='splitindex'
+		splitIndexOptions="-V"
+		makeGlossariesCommand="makeglossaries" 
+		makeGlossariesOptions=""
+		patternErrMakeGlossaries="(^\*\*\* unable to execute: )"
+		patternWarnXindy="(^WARNING: )"
+		tex4htCommand="htlatex"
+		tex4htStyOptions="xhtml,uni-html4,2,svg,pic-tabular"
+		tex4htOptions=" -cunihtf -utf8"
+		t4htOptions="-cvalidate"
+		latex2rtfCommand="latex2rtf"
+		latex2rtfOptions=""
+		odt2docCommand="odt2doc"
+		odt2docOptions="-fdocx"
+		pdf2txtCommand="pdftotext"
+		pdf2txtOptions=""
+		chkTexCommand='chktex'
+		chkTexOptions='-q -b0'> 
+<!-- -v1 -g0 -l ${basedir}/src/site/tex/chktexrc nowhere used. -->
+	<patternLatexMainFile>
+^(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
+%.*$|
+\\input\{[^{}]*\}|
+\s)*
+\\(documentstyle|documentclass)
+	</patternLatexMainFile>
+
+	<patternCreatedFromLatexMain>
+^(
+T$T(                        \.([^.]*|synctex\.gz|out\.ps)|
+      (-|ch|se|su|ap|li)?\d+\.x?html?|
+                        \d+x\.x?bb|
+                       \d+x?\.png|
+                        -\d+\.svg|
+                         -.+\.(idx|ind|ilg))|
+zzT$T\.e?ps|
+(cmsy)\d+(-c)?-\d+c?\.png|
+(pdf)?latex\d+\.fls)$
+	</patternCreatedFromLatexMain>
+
+	<metapostOptions>
+	  -interaction=nonstopmode -recorder -s prologues=2
+	</metapostOptions>
+
+	<latex2pdfOptions>
+	  -interaction=nonstopmode
+	  -synctex=1 
+	  -src-specials 
+	  -recorder 
+	  -shell-escape
+	</latex2pdfOptions>
+	<patternErrLatex>(^! )</patternErrLatex>
+	<patternWarnLatex>
+^(LaTeX Warning: |
+LaTeX Font Warning: |
+(Package|Class) .+ Warning: |
+pdfTeX warning( \((\d|\w)+\))?: |
+\* fontspec warning: |
+Missing character: There is no .* in font .*!$|
+A space is missing\. (No warning)\.)
+	</patternWarnLatex>
+	<patternReRunLatex>
+^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
+Package \w+ Warning: .*Rerun( .*|\.)$|
+Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+LaTeX Warning: Etaremune labels have changed\.$|
+\(rerunfilecheck\)                Rerun to get outlines right$)
+	</patternReRunLatex>
+
+	<patternErrBibtex>error message</patternErrBibtex>
+	<patternWarnBibtex>^Warning--</patternWarnBibtex>
+
+	<patternErrMakeIndex>(!! Input index error )</patternErrMakeIndex>
+	<patternWarnMakeIndex>(## Warning )</patternWarnMakeIndex>
+	<patternReRunMakeIndex>
+	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
+	</patternReRunMakeIndex>
+
+	<patternReRunMakeGlossaries>
+	  (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
+	</patternReRunMakeGlossaries>
+
+	<patternT4htOutputFiles>
+	  ^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
+	        \.css|
+		\d+x\.x?bb|
+		\d+x\.png|
+		-\d+\.svg)|
+	  (cmsy)\d+(-c)?-\d+c?\.png)$
+	</patternT4htOutputFiles>
+      </settings>
+    </latexCfg>
+  </target>
+
+  <taskdef name="latexClr"
+	   classname="eu.simuline.m2latex.antTask.LatexClrTask"
+	   classpathref="latex.classpath"/>
+
+  <!-- very bad: copied parameters -->
+  <target name="latex:clr"
+	  description="Delete files created in latex source directory. ">
+    <latexClr>
+
+	<!--patternErrXindy="(^ERROR: )" -->
+
+      <settings texSrcDirectory="src/site/tex">
+	<patternLatexMainFile>
+	  \s*\\(documentstyle|documentclass).*
+	</patternLatexMainFile>
+
+	<patternCreatedFromLatexMain>
+^(
+T$T(                        \.([^.]*|synctex\.gz|out\.ps)|
+      (-|ch|se|su|ap|li)?\d+\.x?html?|
+                        \d+x\.x?bb|
+                       \d+x?\.png|
+                        -\d+\.svg|
+                         -.+\.(idx|ind|ilg))|
+zzT$T\.e?ps|
+(cmsy)\d+(-c)?-\d+c?\.png|
+(pdf)?latex\d+\.fls)$
+	</patternCreatedFromLatexMain>
+
+      </settings>
+    </latexClr>
+  </target>
+
+</project>
