@@ -121,13 +121,26 @@
 		As info add the file versions are actually read from. 
 		The rest is as now. -->
 
+		<!-- TBD: if mvn latex:vrs is commanded and there is one tool not installed, 
+			an error comes up. 
+			This is not very convenient. 
+			Instead, version shall be 'none'. -->
+
     <!-- partially still in 
 	 https://www.simuline.eu/RepositoryMaven/
 	 de/akquinet/jbosscc/latex/latex-maven-plugin/1.5-SNAPSHOT/ 
 	 all with time stamp 2018-07-xx -->
-    <release version="1.5-snapshot" 
-	     date="2020-01-01" 
-	     description="First release with change management 
+	  <release  version="1.6"
+		date="2022-01-01"
+		description="Main feature: pythontex.">
+			<action dev='reissner' type='add'>
+				added converter depythontex (pythontex was added already.)
+			</action>
+		</release>
+
+    <release version="1.5"
+	     date="2022-05-03"
+	     description="First release with change management. 
 			  This includes version of this software 
 			  but also of the converters used.">
 			 <action dev='reissner' type='add'>
