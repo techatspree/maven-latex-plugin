@@ -534,25 +534,44 @@ ConverterCategory getCategory() {
 	}
     },
     // TBD: add a category 
-   PythonTeX {
-	String getCommand() {
-	    return "pythontex";
-	}
-	String getVersionOption() {
-	    return "--version";
-	}
-	String getVersionPattern() {
-	    return X_X;
-	}
-	String getVersionEnvironment() {
-	    return "^" + PythonTeX + " %s\n";
-	}
-    // TBD: add a category 
-	ConverterCategory getCategory() {
-	    return ConverterCategory.MakeGlossaries;
-	}
-    },
-    // TBD: add a category 
+		PythonTeX {
+			String getCommand() {
+					return "pythontex";
+			}
+			String getVersionOption() {
+					return "--version";
+			}
+			String getVersionPattern() {
+					return X_X;
+			}
+			String getVersionEnvironment() {
+					return "^" + PythonTeX + " %s\n";
+			}
+				// TBD: add a category 
+			ConverterCategory getCategory() {
+					return ConverterCategory.Unspecific;
+			}
+				},
+   // TBD: add a category 
+   DePythonTeX {
+		String getCommand() {
+				return "depythontex";
+		}
+		String getVersionOption() {
+				return "--version";
+		}
+		String getVersionPattern() {
+				return X_X;
+		}
+		String getVersionEnvironment() {
+				return "^" + DePythonTeX + " %s\n";
+		}
+			// TBD: add a category 
+		ConverterCategory getCategory() {
+				return ConverterCategory.Unspecific;
+		}
+			},
+					// TBD: add a category 
    Latexmk {
 	String getCommand() {
 	    return "latexmk";
