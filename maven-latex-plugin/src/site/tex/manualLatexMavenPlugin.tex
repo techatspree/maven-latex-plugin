@@ -1296,59 +1296,66 @@ The according messages are for illustration only.
 % namely as japanese instead of german. 
 
 
+% TBD: make this listing dynamic 
+% TBD: this is almost duplicate of lst:versionsExec
+% maybe one shall be eliminated. 
 \begin{lstlisting}[basicstyle=\tiny,
 float, captionpos=b, label={lst:vrsOut}, 
 caption={Output of goal \texttt{latex:vrs}}]
-[INFO] --- latex-maven-plugin:1.5-SNAPSHOT:vrs (default-cli) @ latex-maven-plugin ---
+[INFO] --- latex-maven-plugin:1.6-SNAPSHOT:vrs (default-cli) @ latex-maven-plugin ---
 [INFO] Manifest properties: 
 [INFO] MANIFEST: (1.0)
-[INFO]        Implementation-Version: '1.5-SNAPSHOT'
-[INFO] PackageImplementation-Version: '1.5-SNAPSHOT'
+[INFO]        Implementation-Version: '1.6-SNAPSHOT'
+[INFO] PackageImplementation-Version: '1.6-SNAPSHOT'
 [INFO] pom properties:
 [INFO] coordinate.groupId:    'eu.simuline.m2latex'
 [INFO] coordinate.artifactId: 'latex-maven-plugin'
-[INFO] coordinate.version:    '1.5-SNAPSHOT'
+[INFO] coordinate.version:    '1.6-SNAPSHOT'
 [INFO] git properties: 
-[INFO] build version:  '1.5-SNAPSHOT'
-[INFO] commit id desc: 'latex-maven-plugin-1.4-194-g5f46a4e-dirty'
-[INFO] buildTime:      '2022-03-02T22:12:59+0100'
+[INFO] build version:  '1.6-SNAPSHOT'
+[INFO] commit id desc: 'latex-maven-plugin-1.5-1-g17f5fad-dirty'
+[INFO] buildTime:      '2022-06-07T16:51:25+0200'
 [INFO] tool versions: 
 [INFO] ?warn?    command             'actual version'(not)in[expected version interval]
-[INFO]           pdflatex:           '1.40.22'in[1.40.21;1.40.22]
-[INFO]           lualatex:           '1.13.2'in[1.12.0;1.13.2]
-[INFO]           xelatex:            '0.999993'in[0.999992;0.999993]
+[INFO]           pdflatex:           '1.40.24'in[1.40.21;1.40.24]
+[INFO]           lualatex:           '1.15.0'in[1.12.0;1.15.0]
+[INFO]           xelatex:            '0.999994'in[0.999992;0.999994]
 [INFO]           latex2rtf:          '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
 [INFO]           odt2doc:            '0.9.0'in[0.9.0]
-[INFO]           pdftotext:          '22.01.0'in[21.04.0;22.01.0]
-[INFO]           dvips:              '2021.1'in[2020.1;2021.1]
-[INFO]           dvipdfm:            '20210318'in[20210318]
-[INFO]           dvipdfmx:           '20210318'in[20200315;20210318]
-[INFO]           xdvipdfmx:          '20210318'in[20200315;20210318]
+[INFO]           pdftotext:          '22.05.0'in[21.04.0;22.05.0]
+[INFO]           dvips:              '2022.1'in[2020.1;2022.1]
+[INFO]           dvipdfm:            '20211117'in[20210318;20211117]
+[INFO]           dvipdfmx:           '20211117'in[20200315;20211117]
+[INFO]           xdvipdfmx:          '20211117'in[20200315;20211117]
 [INFO]           dvipdft:            '20090604.0046'in[20090604.0046]
 [INFO]           gs:                 '9.54.0'in[9.52.0;9.54.0]
 [INFO]           chktex:             '1.7.6'in[1.7.6]
 [INFO]           diff-pdf-visually:  '0'in[0]
 [INFO]           diff-pdf:           '300'in[300]
 [INFO]           diff:               '3.8'in[3.8]
-[INFO]           pdfinfo:            '22.01.0'in[22.01.0]
-[INFO]           exiftool:           '12.39'in[12.39]
+[INFO]           pdfinfo:            '22.05.0'in[22.01.0;22.05.0]
+[INFO]           exiftool:           '12.41'in[12.39;12.41]
 [INFO]           bibtex:             '0.99d'in[0.99d]
-[INFO]           bibtexu:            '3.71'in[3.71]
-[INFO]           bibtex8:            '3.71'in[3.71]
-[INFO]           makeindex:          '2.15'in[2.15]
+[INFO]           bibtexu:            '3.72'in[3.71;3.72]
+[INFO]           bibtex8:            '3.72in[3.71;3.72]
+[INFO]           makeindex:          '2.16'in[2.15;2.16]
 [INFO]           splitindex:         '0.1'in[0.1]
-[INFO]           makeglossaries:     '4.45'in[4.45]
-[INFO]           pythontex:          '0.17'in[0.17]
-[INFO]           latexmk:            '4.70b'in[4.70b]
-[INFO]           mpost:              '2.01'in[2.00;2.01]
-[INFO]           ebb:                '20210318'in[20200315;20210318]
+[INFO]           makeglossaries:     '4.49'in[4.45;4.49]
+[INFO]           pythontex:          '0.18'in[0.17;0.18]
+[INFO]           depythontex:        '0.18'in[0.17;0.18]
+[INFO]           latexmk:            '4.77'in[4.70b;4.77]
+[INFO]           mpost:              '2.02'in[2.00;2.02]
+[INFO]           ebb:                '20211117'in[20200315;20211117]
 [INFO]           gnuplot:            '5.4 patchlevel 3'in[5.4 patchlevel 0;5.4 patchlevel 3]
-[INFO]           inkscape:           '1.1.1'in[1.0.2;1.1.1]
+[INFO]           inkscape:           '1.1.2'in[1.0.2;1.1.2]
 [INFO]           fig2dev:            '3.2.8b'in[3.2.7b;3.2.8b]
 [INFO] excluded tools: 
 [INFO] upmendex, xindy
 [INFO] ------------------------------------------------------------------------
 \end{lstlisting}
+%[INFO]           upmendex:           '1.00'in[0.54;1.00]
+%[INFO]           xindy:              '2.5.1'in[2.5.1]
+
 
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
