@@ -1,0 +1,1700 @@
+% !TEX root = manualLatexMavenPlugin.tex
+
+\chapter{Parameters resp. Settings}\label{chap:settings}
+
+This section describes the parameters 
+of both the ant-task and the maven-plugin. 
+The parameters are listed 
+in Tables~\ref{tab:paramGen}~through~\ref{tab:paramExt} 
+with names, default values and short explanations. 
+Note that neither of the parameters is mandatory, 
+as there are always valid default values. 
+
+Each of the tables is described in a separate section. 
+Table~\ref{tab:paramGen} 
+shows parameter controlling the general conversion process 
+described in detail in Section~\ref{sec:settingsGen}. 
+These are directories with names \texttt{xxxDirectory} 
+and further parameters not following a naming convention. 
+The other tables show parameters after a certain naming scheme: 
+Command names have the form \texttt{xxxCommand} 
+and the parameter with the according options have the form \texttt{xxxOptions}. 
+Here \texttt{xxx} represents a certain converter. 
+This is one of 
+%
+\begin{itemize}
+\item[fig2dev]
+The converter of fig-files into mixed latex- and pdf-files. 
+\item[gnuplot]
+The converter of gnuplot-files into mixed latex- and pdf-files. 
+\item[metapost]
+The converter of metapost-files into mixed latex- and pdf-files.
+\item[latex2pdf]
+The converter of latex-files into pdf-files. 
+\item[bibtex]
+The creator of a bibliography from an aux-file.
+\item[MakeIndex]
+The makeindex utility creating an index. 
+\item[MakeGlossaries]
+The makeglossaries utility creating a glossary. 
+\item[tex4ht]
+The converter of latex into html and also into odt, 
+depending on the parameters. 
+\item[latex2rtf]
+The converter of latex-files into rtf-files. 
+\item[odt2doc]
+The converter of odt-files into doc(x)-files. % chktex 36
+\item[pdf2txt]
+The converter of pdf-files into txt-files. 
+\item[chktex]
+A code-checker converting in a sense a latex main file into a log-file 
+containing errors, warnings and further messages. 
+\end{itemize}
+
+It is a little more complicated 
+with the parameters in Section~\ref{sec:settingsLatex2Html}. 
+
+There are some parameters of the form \texttt{patternXxxYyy}, 
+referring to a pattern in the log-file of the converter \texttt{Xxx} 
+indicating an event \texttt{Yyy} which is one of the following: 
+%
+\begin{itemize}
+\item[ReRun]
+indicates that \texttt{Xxx} needs to be rerun.
+\item[Err]
+indicates that \texttt{Xxx} had an error. 
+\item[Warn]
+indicates that \texttt{Xxx} had a warning. 
+\end{itemize}
+
+Essentially, there are two kinds of parameters: 
+Most are just passed to the converters invoked by this software. 
+The parameters of this software 
+are so that the choice of the converter, i.e.~the name of the application 
+can be configured 
+and also each converter can be almost freely configured. 
+
+Parameters not passed to an application, 
+are either really crucial 
+or are included to allow also development of latex files. 
+
+
+\section{General Parameters}\label{sec:settingsGen}
+
+This section describes the parameters of Table~\ref{tab:paramGen}. 
+%TODO\@: do this. 
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramGen} General parameters}
+\endlastfoot%
+\texttt{versionsWarnOnly}  & \texttt {false}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Indicates whether the \texttt{VersionMojo} displays warnings only 
+or also creates infos. 
+Infos refer to the version of this plugin and also on its git commit, 
+but also on the versions of the converters found 
+and lists the converters excluded, i.e. those not used
+and thus not tested on version.
+
+Warnings are emitted e.g. 
+if the version of a converter does not fit the expectations,
+the version of a converter could not be retrieved,
+e.g. because it is not installed 
+or if the converter specified is unknown altogether. 
+This defaults to \texttt{false} displaying also info.
+
+The latter is appropriate for using in command line 
+\texttt{mvn latex:vrs}, whereas in builds by default 
+the pom overwrites this to have output only 
+in case something goes wrong.
+\end{minipage}
+} \\
+\texttt{texSrcDirectory}  & \texttt {src/site/tex}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The latex source directory as a string 
+relative to \texttt{\$baseDirectory}, 
+containing \texttt{\$texSrcProcDirectory}. 
+This directory determines also the sub-directory of 
+\texttt{\$outputDirectory} to lay down the generated artifacts. 
+The default value is ``\texttt{src/site/tex}'' on Unix systems. 
+\end{minipage}
+} \\
+\texttt{texSrcProcDirectory}  & \texttt {.}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The latex source processing directory as a string 
+relative to \texttt{\$texSrcDirectory}
+containing all tex main documents 
+and the graphic files to be processed 
+and also to be cleaned. 
+Whether this is done recursively in sub-folders 
+is specified by \texttt{\$readTexSrcProcDirRec}. 
+The default value is ``\texttt{.}''. 
+\end{minipage}
+} \\
+\texttt{readTexSrcProcDirRec}  & \texttt{true}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Whether the tex source directory \texttt{\$texSrcProcDirectory} 
+shall be read recursively for creation of graphic files, 
+i.e.~including the sub-directories recursively. 
+This is set to \texttt{false} only during development of documentation. 
+%The default value is 'true'.
+\end{minipage}
+} \\
+\texttt{outputDirectory}  & \texttt{.}             \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The generated artifacts will be copied to \texttt{outputDirectory}
+relative to \texttt{\$targetSiteDirectory} 
+which is by default '\texttt{\$targetDirectory/site}' on Unix systems. 
+%The default value is '\texttt{.}'.  
+\end{minipage}
+} \\
+\texttt{targets}          & \texttt{pdf, html}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+A comma separated list of targets to be stored in \texttt{\$targetSet}. 
+%The default value is '\texttt{pdf, html}'. 
+\end{minipage}
+} \\
+\texttt{convertersExcluded}          & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+A comma separated list of excluded {@link Converter}s 
+given by their command. 
+Excluded converters need not be installed but their names must be known. 
+They don't show up in the version check of target 'vrs' 
+and of course they are not allowed to be used. 
+% By default, this list is empty. 
+\end{minipage}
+} \\
+\texttt{patternLatexMainFile} & see Section~\ref{subsec:patternLatexMainFile}\\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern to be applied to the contents of tex-files 
+which identifies a \LaTeX{} main file. 
+Here we assume that the latex main file should contain 
+the declaration ``\cmd{documentclass}'' 
+or the old fashioned ``\cmd{documentstyle}'' 
+preceded by a few constructs. 
+Strictly speaking, this is not necessary. 
+For a more thorough discussion, 
+and for an alternative approach, consult the manual. 
+
+The default value is chosen to match quite exactly 
+the latex main files, no more no less. 
+Since the pattern is chosen 
+according to documentation collected from the internet, 
+one can never be sure whether the pattern is perfect. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+\end{minipage}
+} \\
+\texttt{texPath}          &  empty string        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Path to the TeX scripts or null. 
+In the latter case, the scripts must be on the system path. 
+Note that in the pom, \texttt{$<$texPath/$>$} 
+and even \texttt{$<$texPath$>$\ \ \ \ $<$/texPath$>$} represent the null-File. 
+The default value is null.
+\end{minipage}
+} \\
+\texttt{cleanUp}             & \texttt{true}             \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Clean up the working directory in the end? 
+May be used for debugging when setting \texttt{false}. 
+%The default value is '\texttt{true}'. 
+\end{minipage}
+} \\
+\texttt{patternCreatedFromLatexMain} & 
+see Section~\ref{subsec:patternCreatedFromLatexMain} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+This pattern is applied to file names 
+and matching shall accept all the files 
+which were created from a latex main file `\texttt{xxx.tex}'. 
+It is neither applied to directories 
+nor to `\texttt{xxx.tex}' itself. 
+It shall not comprise neither graphic files to be processed 
+nor files created from those graphic files. 
+
+This pattern is applied 
+in the course of processing graphic files 
+to decide which graphic files should be processed 
+(those rejected by this pattern) 
+and to log warnings if there is a risk, 
+that graphic files to be processed 
+are skipped or that processing a latex main file overwrites 
+the result of graphic preprocessing. 
+
+When clearing the tex source processing directory 
+\texttt{\$texSrcProcDirectory}, 
+i.e.~all generated files should be removed, 
+first those created from latex main files. 
+As an approximation, 
+those are removed which match this pattern. 
+
+The sequence `\texttt{T\$T}' 
+is replaced by the prefix `\texttt{xxx}'. 
+The sequence `\texttt{T\$T}' must always be replaced: 
+The symbol `\texttt{\$}' occurs as end-sign as `\texttt{)\$}' % chktex 9
+or as literal symbol as `\texttt{\$}'. 
+Thus `\texttt{T\$T}' is no regular occurrence 
+and must always be replaced with `\texttt{xxx}'. 
+		 
+Spaces and newlines are removed 
+from that pattern before matching. 
+
+This pattern may never be ensured to be complete, 
+because any package 
+may create files with names matching its own patterns 
+and so any new package may break completeness. 
+Nevertheless, the default value aims completeness 
+while be tight enough not to match names of files not created. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+\end{minipage}
+} \\ % chktex 10 (bug) 
+\end{longtable}
+
+
+\subsection{The parameter \texttt{patternLatexMainFile}}
+\label{subsec:patternLatexMainFile}
+
+The default pattern for identifying a \LaTeX{} main file is 
+%
+\begin{Verbatim}[fontsize=\footnotesize]
+\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+\\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
+%.*$|
+\\input\{[^{}]*\}|
+\s*)*
+\\(documentstyle|documentclass)
+\end{Verbatim}
+%
+This means that the latex main file is the one 
+containing \cmd{documentclass}{} for modern classes 
+and \cmd{documentstyle}{} for old fashioned ones. 
+This may be preceded only by 
+%
+\begin{itemize}
+\item
+the command \cmd{RequirePackage}, 
+\item
+the command \cmd{PassOptionsToPackage}, 
+\item
+by comment lines, 
+\item
+by \cmd{input}, and 
+\item
+by space. 
+\end{itemize}
+%
+Note that \cmd{A}{} represents the beginning of the stream. 
+
+Strictly speaking, also \cmd{(re)newcommands} % chktex 36
+and other constructs are possible but not allowed here. 
+Strictly speaking also \cmd{documentclass}{} is not required, 
+it could be hidden in some \cmd{input}-file. 
+If we stick to the wise convention to open and close the same environment 
+in the same file and to have \cmd{documentclass}, 
+\cmd{begin\{document\}}{} and \cmd{end\{document\}}{} 
+in the same file also, 
+then a latex main file without \cmd{documentclass}{} 
+cannot contain very much material. 
+
+So we ask the user to have \cmd{documentclass}{} 
+declared in the latex main file. 
+
+For users of Emacs with package auctex, there is a valuable alternative: 
+
+Latex main files are marked with an end section as this file: 
+%
+\begin{Verbatim}[fontsize=\footnotesize]
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-command-extra-options: "-src-specials -recorder -shell-escape" 
+%%% TeX-master: t
+%%% End: 
+\end{Verbatim}
+% 
+The vital line in this context is \texttt{\%\%\% TeX-master: t}. 
+In contrast to this, a non-master file 
+either has no end-section at all or has an end section 
+declaring the according master file (if it is unique) 
+explicitly as the following one from \texttt{header.tex}: 
+%
+\begin{verbatim}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "manualLatexMavenPlugin"
+%%% End:
+\end{verbatim}
+
+So a pattern for latex main files could also be 
+%
+\begin{verbatim}
+^%%% Local Variables: $
+^%%% TeX-master: t$
+^%%% End: ^
+\s*
+\end{verbatim}
+%
+The problem is only in case of exchange of the source 
+with a developer which does not use Emacs/auctex. 
+
+
+\subsection{The parameter \texttt{patternCreatedFromLatexMain}}
+\label{subsec:patternCreatedFromLatexMain}
+
+The files created from a latex main file 
+depend strongly on the compiler options 
+and on packages used in the latex main file 
+and in the tex files inputted. 
+The default value 
+`\texttt{\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
+is appropriate for most parameters and packages: 
+most packages create files with names only 
+which coincide with the name of the latex main file, except the suffix. 
+This is all sufficient even for programs doing postprocessing 
+such as \texttt{bibtex}, \texttt{makeindex}, \texttt{xindy} and 
+\texttt{makeglossaries}. 
+The only exception is \texttt{splitindex} 
+which requires in addition 
+`\texttt{\^{}T\$T\textbackslash-.+\.(idx|ind|ilg)}'. 
+
+Package `\pkg{srcltx}' requires in addition 
+`\texttt{\^{}T\$T\textbackslash.synctex\textbackslash.gz}' 
+and finally package `\pkg{tex4ht}' is for all the rest. 
+The pattern is designed 
+to match quite exactly the created files, 
+not much more and at any case not less. 
+In particular it has to comprise the files matching pattern 
+\texttt{\$patternT4htOutputFiles}. 
+Nevertheless, since any new package may break the pattern, 
+and not every package is well documented, 
+this pattern cannot be guaranteed to be final. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+
+The default value for this pattern is currently: 
+%
+\begin{verbatim}
+^(
+T$T             (\.([^.]*|synctex\.gz|out\.ps)|
+   (-|ch|se|su|ap|li)?\d+\.x?html?|
+             \d+x\.x?bb|
+             \d+x?\.png|
+             -\d+\.svg)|
+zzT$T\.e?ps|
+(cmsy)\d+(-c)?-\d+c?\.png|
+(pdf)?latex\d+\.fls)$
+\end{verbatim}
+
+
+\section{Parameters for graphical preprocessing}\label{sec:settingsGraph}
+
+This section describes the parameters for graphical preprocessing 
+given in Table~\ref{tab:paramGraphics}. 
+
+TODO\@: do this. 
+
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramGraphics} Parameters for graphics preprocessing}
+\endlastfoot%
+\texttt{fig2devCommand}   & \texttt{fig2dev}\index{fig2dev}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The fig2dev command for conversion of fig-files into various formats. 
+Currently only \texttt{pdf} combined with \texttt{ptx} is supported. 
+%The default value is '\texttt{fig2dev}'. 
+\end{minipage}
+} \\
+\texttt{fig2devGenOptions}   & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$fig2devCommand} 
+common to both output languages. 
+For the options specific for the two output languages 
+`\texttt{pdftex}' and `\texttt{pdftex\_t}', 
+see the explanation of the parameters 
+\texttt{\$fig2devPtxOptions} and \texttt{\$fig2devPdfEpsOptions}, 
+respectively. 
+% The default value is the empty string. 
+\end{minipage}
+} \\
+\texttt{fig2devPtxOptions}   & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$fig2devCommand} 
+specific for the output language `\texttt{pdftex\_t}'. 
+Note that in addition to these options, 
+the option `\texttt{-L pdftex\_t}' specifies the language, 
+\texttt{\$fig2devGenOptions} specifies the options 
+common for the two output languages 
+`\texttt{pdftex}' and `\texttt{pdftex\_t}' 
+and `\texttt{-p xxx.pdf}' specifies the pdf-file to be included. 
+% The default value for this option is the empty string. 
+\end{minipage}
+} \\
+\texttt{fig2devPdfEpsOptions}   & empty     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$fig2devCommand} 
+specific for the output language `\texttt{pdftex}'. 
+Note that in addition to these option1s, 
+the option `\texttt{-L pdftex}' specifies the language and 
+\texttt{\$fig2devGenOptions} specifies the options 
+common for the two output languages 
+`\texttt{pdftex}' and `\texttt{pdftex\_t}'. 
+% The default value for this option is the empty string. 
+\end{minipage}
+} \\
+\midrule
+\texttt{gnuplotCommand}   & \texttt{gnuplot}\index{gnuplot}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command for conversion of gnuplot-files 
+into various formats. 
+Currently only pdf (graphics) 
+combined with pdf\_t (latex-texts) is supported. 
+% The default value is 'gnuplot'. 
+\end{minipage}
+} \\
+\texttt{gnuplotOptions}   & empty    \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options specific for \texttt{\$gnuplotCommand}'s 
+output terminal ``cairolatex'', 
+used for mixed latex/pdf-creation. 
+Note that the option `\texttt{pdf|eps}' 
+of the terminal `\texttt{cairolatex}' is not available, 
+because it is set internally. 
+% The default option string is empty. 
+\end{minipage}
+} \\
+\midrule
+\texttt{metapostCommand} & \texttt{mpost}\index{metapost}\index{mpost}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command for conversion of gnuplot-files 
+into metapost's postscript. 
+% The default value is 'mpost'. 
+\end{minipage}
+} \\
+\texttt{metapostOptions} & see Section~\ref{subsec:metapostOptions} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$metapostCommand}.
+Leading and trailing blanks are ignored. 
+A sequence of at least one blank separate the proper options. 
+%The default value is 
+%'\texttt{-interaction=nonstopmode -recorder -s prologues=2}'. 
+\end{minipage}
+} \\
+\midrule
+\texttt{svg2devCommand} & \texttt{inkscape} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command for conversion of svg-files into a mixed format. 
+%The default value is 'inkscape'. 
+\end{minipage}
+} \\
+\texttt{svg2devOptions} & \texttt{-z -D --export-latex} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$svg2devCommand} 
+for exporting svg-figures into latex compatible files. 
+For more details see Section~\ref{subsec:svg2devOptions}. 
+\end{minipage}
+} \\
+\midrule
+\texttt{ebbCommand} & \texttt{ebb} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command to create bounding box information 
+from jpg-files and from png-files. 
+This is run twice: 
+once with parameter `\texttt{-m}' 
+to create `.bb'-files for driver `\texttt{dvipdfm}' and 
+once with parameter `\texttt{-x}' 
+to create `.xbb'-files for driver `\texttt{dvipdfmx}'. 
+% The default value is 'ebb'. 
+\end{minipage}
+} \\
+\texttt{ebbOptions} & \texttt{-v} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$ebbCommand} 
+except `\texttt{-m}' and `\texttt{-x}' 
+which are added automatically. 
+% The default value is `-v'. 
+\end{minipage}
+} \\
+\end{longtable}
+
+\subsection{The parameter \texttt{metapostOptions}}
+\label{subsec:metapostOptions}
+TODO\@: add 
+%%\texttt{\small -interaction=nonstopmode -recorder -s prologues=2}
+
+\subsection{The parameter \texttt{svg2devOptions}}
+\label{subsec:svg2devOptions}
+
+The following options are mandatory: 
+%
+\begin{itemize}
+\item `-z' or `--without-gui' 
+process files from console. 
+\item `-D' or `--export-area-drawing' 
+Export the drawing (not the page)
+\item `--export-latex' 
+Export into PDF/PS/EPS format without text. 
+Besides the PDF/PS/EPS files, a \LaTeX-file \texttt{latexfile.tex} is exported,
+putting the text on top of the PDF/PS/EPS file. 
+Include the result in LaTeX as: 
+\cmd{input\{latexfile.tex\}}. 
+
+Note that the latter option is necessary, 
+to create the expected files. 
+It is also conceivable to export text as pdf/eps 
+\end{itemize}
+
+\noindent
+The following options are prohibited, 
+because they are automatically added by the software: 
+\begin{itemize}
+\item `-A=FILENAME' or `--export-pdf=FILENAME' 
+Export document to a  PDF file. 
+\item `-E=FILENAME' or `--export-eps=FILENAME' 
+Export document to an EPS file. 		 
+\end{itemize}
+% The default value is the minimal value, `-z -D - -export-latex'. 
+
+
+\section{Parameters for the \LaTeX-to-pdf Conversion}
+\label{sec:settingsLatex2pdf}
+
+This section describes the parameters 
+of the \LaTeX-to-pdf converter 
+which are given in Table~\ref{tab:paramLatex2pdf}. 
+
+TODO\@: do this. 
+
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
+\endlastfoot%
+\texttt{latex2pdfCommand}       & \texttt{pdflatex}      \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The \LaTeX{} command to create a pdf-file with. 
+%The default value is '\texttt{pdflatex}'. 
+\end{minipage}
+} \\
+\texttt{latex2pdfOptions}   & see Section~\ref{subsec:latex2pdfOptions} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$latex2pdfCommand}.
+Leading and trailing blanks are ignored. 
+A sequence of at least one blank separate the proper options. 
+
+FIXME\@:  -output-format is not allowed because set automatically. 
+%The default value is 
+%'\texttt{-interaction=nonstopmode -src-specials}'. 
+\end{minipage}
+} \\
+\texttt{patternErrLatex} & \texttt{(\^{}!\ )} \\% chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the log-file 
+and matching indicating an error 
+emitted by the command \texttt{\$latex2pdfCommand}. 
+
+The default value is chosen to match quite exactly 
+the latex errors in the log file, no more no less. 
+Since no official documentation was found, 
+the default pattern may be incomplete. 
+In fact it presupposes, that \texttt{\$latex2pdfOptions} 
+does not contain ``\texttt{-file-line-error-style}''.   
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+\end{minipage}
+} \\
+\texttt{patternWarnLatex} & see Section~\ref{subsec:patternWarnLatex} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the log-file 
+and matching indicates a warning 
+emitted by the command \texttt{\$latex2pdfCommand}, 
+disregarding warnings on bad boxes 
+provided \texttt{\$debugWarnings} is set. 
+
+This pattern may never be ensured to be complete, 
+because any package may indicate a warning 
+with its own pattern any new package may break completeness. 
+Nevertheless, the default value aims completeness 
+while be restrictive enough 
+not to indicate a warning where none was emitted. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+% The default value is given below. 
+\end{minipage}
+} \\
+\texttt{debugBadBoxes}    & \texttt{true}          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Whether debugging of overfull/underfull hboxes/vboxes is on: 
+If so, a bad box occurs in the last \LaTeX{} run, a warning is displayed. 
+For details, set \texttt{\$cleanUp} to false, 
+rerun \LaTeX{} and have a look at the log-file.
+%The default value is '\texttt{true}'. 
+\end{minipage}
+} \\
+\texttt{debugWarnings}    & \texttt{true}          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Whether debugging of warnings is on: 
+If so, a warning in the last \LaTeX{} run is displayed. 
+For details, set \texttt{\$cleanUp} to false, 
+rerun \LaTeX{} and have a look at the log-file. 
+%The default value is '\texttt{true}'. 
+\end{minipage}
+} \\
+\texttt{pdfViaDvi}    & \texttt{false}          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Whether creation of pdf-files from \LaTeX-files 
+goes via dvi-files. 
+
+If \texttt{\$pdfViaDvi} is set 
+and the latex processor needs repetitions, 
+these are all done creating dvi 
+and then pdf is created in a final step 
+invoking the command \texttt{\$dvi2pdfCommand} 
+If \texttt{\$pdfViaDvi} is not set, 
+latex is directly converted into pdf. 
+
+Currently, not only conversion of \LaTeX-files is affected, 
+but also conversion of graphic files 
+into graphic formats which allow inclusion in the tex-file. 
+If it goes via latex, 
+then the formats are more based on (encapsulated) postscript; 
+else on pdf. 
+
+Of course, the target dvi is not affected: 
+This uses always the dvi-format. 
+What is also affected are the tasks 
+creating html, odt or docs: 
+Although these are based on htlatex which is always dvi-based, 
+the preprocessing is done in dvi or in pdf. 
+Also the task txt is affected. 
+
+%The default value is '\texttt{false}'. 
+\end{minipage}
+} \\
+\texttt{dvi2pdfCommand}   & \texttt{dvipdfmx}         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The driver to convert dvi into pdf-files. 
+Note that this must fit the options 
+of the packages `\pkg{xcolor}' and `\pkg{graphicx}'. 
+Sensible values are 
+`\texttt{dvipdf'}, `\texttt{dvipdfm'}, `\texttt{dvipdfmx}', 
+and `\texttt{dvipdft}' 
+(which is `\texttt{dvipdfm}' with option `\texttt{-t}').  
+%The default value is `dvipdfmx'. 
+\end{minipage}
+} \\
+\texttt{dvi2pdfOptions}   & the empty string          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$dvi2pdfCommand}. 
+%The default value is the empty string.
+\end{minipage}
+} \\
+\texttt{patternReRunLatex} &  see Section~\ref{subsec:patternReRunLatex} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the log file 
+and matching triggers rerunning \texttt{\$latex2pdfCommand} 
+if \texttt{\$maxNumReRunsLatex} is not yet reached 
+to ensure termination. 
+
+This pattern may never be ensured to be complete, 
+because any package 
+may indicate the need to rerun \texttt{\$latex2pdfCommand} 
+with its own pattern and so any new package may break completeness. 
+Nevertheless, the default value aims completeness 
+while be tight enough not to trigger a superfluous rerun. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+\end{minipage}
+} \\
+\texttt{maxNumRerunsLatex}        & \texttt{5}               \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The maximal allowed number of reruns of the \LaTeX{} process. 
+This is to avoid endless repetitions. 
+%The default value is 5. 
+This shall be non-negative 
+or -1 which signifies that there is no threshold. 
+\end{minipage}
+} \\
+\end{longtable}
+
+
+\subsection{The parameter \texttt{latex2pdfOptions}}
+\label{subsec:latex2pdfOptions}
+TODO\@: add 
+%-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
+
+
+\subsection{The parameter \texttt{patternWarnLatex}}
+\label{subsec:patternWarnLatex}
+
+The patterns given below are just by (unwritten) convention. 
+As a consequence, the pattern has a comprehensive default value 
+covering all warnings known to the author, 
+while not detecting a warning, where there is none. 
+To that end, the pattern requires 
+that the warning text starts with the line of the log file. 
+Still the pattern has to be configurable 
+to allow the user to overwrite the default value 
+not being forced to wait for the developer 
+to change it. 
+
+For the current default value, we distinguish 
+%
+\begin{itemize}
+\item
+\LaTeX-warnings emitted directly by \LaTeX 
+starting with \texttt{LaTeX Warning: }, 
+\item
+\LaTeX-font-warnings related with fonts/font selection 
+starting with \texttt{LaTeX Font Warning: }, 
+\item
+Package warnings emitted by a package. 
+By convention, a package emitting a warning identifies itself 
+by its name \texttt{<name>}
+emitting a warning starting with \texttt{Package <name> Warning: }, 
+\item
+Class warnings emitted by a package. 
+By convention, a class emitting a warning identifies itself 
+by its name \texttt{<name>}
+emitting a warning starting with \texttt{Class <name> Warning: }, 
+\item
+pdftex-warning 
+\item
+Fontspec warnings. Please note the leading character ``\texttt{*}''. 
+\item
+Further warnings not identifying themselves as warnings 
+as the word ``warning'' does not occur. 
+\end{itemize}
+
+The resulting default pattern is 
+%
+\begin{Verbatim}
+^(LaTeX Warning: |
+LaTeX Font Warning: |
+(Package|Class) .+ Warning: |
+pdfTeX warning( \((\d|\w)+\))?: |
+\* fontspec warning: |
+Missing character: There is no .* in font .*!$|
+A space is missing\. (No warning)\.)
+\end{Verbatim}
+%$ for emacs only 
+
+
+\subsection{The parameter \texttt{patternReRunLatex}}
+\label{subsec:patternReRunLatex}
+TODO\@: add 
+
+The pattern to 
+
+As a consequence, the pattern has a comprehensive default value 
+covering all warnings known to the author, 
+while not detecting a warning, where there is none. 
+To that end, the pattern requires 
+that the warning text starts with the line of the log file. 
+Still the pattern has to be configurable 
+to allow the user to overwrite the default value 
+not being forced to wait for the developer to change it. 
+
+For the current default value, we distinguish 
+
+The resulting default pattern is 
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
+Package \w+ Warning: .*Rerun( .*|\.)$|
+Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+LaTeX Warning: Etaremune labels have changed\.$|
+\(rerunfilecheck\)                Rerun to get outlines right$)
+\end{Verbatim}
+
+FIXME: There is a bug in this pattern. See Section~\ref{chap:bugs}. 
+
+
+\section{Parameters for Creation of the Bibliography}
+\label{sec:settingsBibTeX}
+
+This section describes the parameters 
+or creation of the bibliography
+which are given in Table~\ref{tab:paramBibTeX}. 
+
+TODO\@: do this. 
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramBibTeX} The BibTeX-utility }
+\endlastfoot%
+\texttt{bibtexCommand}    & \texttt{bibtex}        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The BibTeX command to create a bbl-file 
+from an aux-file and a bib-file (using a bst-style file). 
+%The default value is '\texttt{bibtex}'. 
+\end{minipage}
+} \\
+\texttt{bibtexOptions}    & empty        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$bibtexCommand}. 
+% The default value is the empty string.
+\end{minipage}
+} \\
+\texttt{patternErrBibtex}    & \texttt{error message}        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the blg-file 
+and matching indicates that \texttt{\$bibtexCommand} failed. 
+The default value is chosen 
+according to the `\texttt{bibtex}' documentation. 
+\end{minipage}
+
+} \\
+\texttt{patternWarnBibtex}    & \texttt{\^{}Warning-{}-}        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the blg-file 
+and matching indicates a warning \texttt{\$bibtexCommand} emitted. 
+The default value is chosen 
+according to the `\texttt{bibtex}' documentation. 
+\end{minipage}
+} \\
+\end{longtable}
+
+\section{Parameters for Creation of the Indices}
+\label{sec:settingsMakeIndex}
+
+This section describes the parameters 
+or creation of the indices
+which are given in Table~\ref{tab:paramMakeIndex}. 
+
+TODO\@: do this. 
+
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramMakeIndex} 
+The utilities MakeIndex and SplitIndex}
+\endlastfoot%
+\texttt{makeIndexCommand} & \texttt{makeindex}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The MakeIndex command to create an ind-file from an idx-file 
+logging on an ilg-file. 
+%The default value is '\texttt{makeindex}'. 
+\end{minipage}
+} \\
+\texttt{makeIndexOptions} & the empty string     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the MakeIndex command. 
+% The default value is the empty string. 
+\end{minipage}
+} \\
+\texttt{patternErrMakeIndex} 
+& \texttt{(!! Input index error\ )} \\% chktex 36 % chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the ilg-file 
+and matching indicates that \texttt{\$makeIndexCommand} failed. 
+The default value is chosen 
+according to the `\texttt{makeindex}' documentation.
+\end{minipage}
+} \\
+\texttt{patternWarnMakeIndex} & \texttt{(\#\# Warning )} \\% chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the ilg-file 
+and matching indicates a warning \texttt{\$makeIndexCommand} emitted. 
+The default value is chosen 
+according to the `\texttt{makeindex}' documentation.
+\end{minipage}
+} \\
+\texttt{patternReRunMakeIndex} & see Section~\ref{subsec:patternReRunMakeIndex} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the log-file 
+and matching triggers rerunning \texttt{\$makeIndexCommand} 
+followed by \texttt{\$latex2pdfCommand}. 
+
+This pattern only matches a warning 
+emitted by the package `\pkg{rerunfilecheck}' 
+e.g. used with option `\texttt{index}'. 
+The default value 
+is chosen according to the package documentation. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the bug. 
+\end{minipage}
+} \\
+\texttt{splitIndexCommand} & \texttt{splitindex}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The SplitIndex command to create ind-files 
+from an idx-file logging on ilg-files. 
+This command invokes \texttt{\$makeIndexCommand}. 
+%The default value is `splitindex'. 
+\end{minipage}
+} \\
+\texttt{splitIndexOptions} & \texttt{-V}     \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for \texttt{\$splitIndexCommand}. 
+Here, one has to distinguish between the options 
+processed by \texttt{\$splitIndexCommand} 
+and those passed to \texttt{\$makeIndexCommand}. 
+The second category cannot be specified here, 
+it is already given by \texttt{\$makeIndexOptions}. 
+In the first category is the option `\texttt{-m}' 
+to specify the \texttt{\$makeIndexCommand}. 
+This is used automatically and cannot be specified here. 
+Since \texttt{\$splitIndexCommand} is used 
+in conjunction with package `\texttt{splitidx}', 
+which hardcodes various parameters 
+which are the default values for \texttt{\$splitIndexCommand} 
+and because the option may not alter certain interfaces, 
+the only option which may be given explicitly 
+is `\texttt{-V}', the short cut for `\texttt{--verbose}'. 
+Do not use `\texttt{--verbose}' either for sake of portability. 
+%The default value is `-V'; it could also be empty. 
+\end{minipage}
+} \\
+\end{longtable}
+
+
+\subsection{The parameter \texttt{patternReRunMakeIndex}}
+\label{subsec:patternReRunMakeIndex}
+
+As shown in \cite{RerunFChkP}, Section 2.3, Listing line 166, 
+the pattern is 
+%
+\begin{Verbatim}
+(^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
+\end{Verbatim}
+%$ for emacs only 
+
+
+\section{Parameters for Creation of the Glossary}
+\label{sec:settingsMakeGlossaries}
+
+This section describes the parameters 
+or creation of the glossary
+which are given in Table~\ref{tab:paramMakeGlossaries}. 
+
+TODO\@: do this. 
+
+
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramMakeGlossaries} The MakeGlossaries-utility }
+\endlastfoot%
+\texttt{makeGlossariesCommand} & \texttt{makeglossaries}         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The MakeGlossaries command to create a gls-file 
+from a glo-file (invoked without file ending) 
+also taking ist-file or xdy-file 
+into account logging on a glg-file. 
+\end{minipage}
+} \\
+\texttt{makeGlossariesOptions} & the empty string          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the \texttt{\$makeGlossariesCommand}. 
+These are the options for `\texttt{makeindex}' (not for \texttt{\$makeIndexCommand}) 
+and for `\texttt{xindy}' (also hardcoded). 
+The aux-file decides on whether program is executed 
+and consequently which options are used. 
+		 
+The default value is the empty option string. 
+Nevertheless, `\texttt{xindy}' is invoked as `\texttt{xindy -L english  -I xindy -M\ldots}'. 
+With option `\texttt{-L german}', this is added. 
+Options `\texttt{-M<}' for `\texttt{xindy}' 
+`\texttt{-s}' for `\texttt{makeindex}' and `\texttt{-t}' and `\texttt{-o}' for both, 
+`\texttt{xindy}' and `\texttt{makeindex}'. 
+\end{minipage}
+} \\
+\texttt{patternErrMakeGlossaries} & 
+\texttt{(\^{}\textbackslash*\textbackslash*\textbackslash* unable to execute:\ )} \\% chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the `glg'-file 
+and matching indicates that \texttt{\$makeGlossariesCommand} failed. 
+The default value `\texttt{(\^\*\*\* unable to execute: )}' 
+is chosen according to the 'makeindex' documentation. 
+If the default value is not appropriate, please modify 
+and notify the developer of this plugin. 
+\end{minipage}
+} \\
+\texttt{patternErrXindy} & \texttt{(\^{}ERROR:\ )} \\% chktex 36 chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the `glg'-file 
+which indicates an error when running `\texttt{xindy}' 
+via \texttt{\$makeGlossariesCommand}. 
+If the default value is not appropriate, please modify 
+and notify the developer of this plugin. 
+\end{minipage}
+} \\
+\texttt{patternWarnXindy} & \texttt{(\^{}WARNING:\ )}         \\% chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the `glg'-file 
+and matching indicates a warning when running `\texttt{xindy}' 
+via \texttt{\$makeGlossariesCommand}. 
+
+The default value `\texttt{(\^{}WARNING: )}' 
+(note the space and the brackets) 
+is chosen according to the '\texttt{xindy}' documentation. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+\end{minipage}
+} \\
+\texttt{patternReRunMakeGlossaries}  
+& see Section~\ref{subsec:patternReRunMakeGlossaries}   \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line-wise to the log file 
+and matching triggers rerunning \texttt{\$makeGlossariesCommand} 
+followed by \texttt{\$latex2pdfCommand}. 
+
+This pattern only matches a warning 
+emitted by the package `\pkg{rerunfilecheck}' 
+e.g. used with option `\texttt{glossary}'. 
+The default value 
+is chosen according to the package documentation. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the bug. 
+\end{minipage}
+} \\
+\end{longtable}
+
+\subsection{The parameter \texttt{patternReRunMakeGlossaries}}
+\label{subsec:patternReRunMakeGlossaries}
+
+As shown in \cite{RerunFChkP}, Section 2.3, Listing line 210, 
+the pattern is 
+%
+\begin{Verbatim}
+(^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get index right\.$)
+\end{Verbatim}
+%$ for emacs only 
+
+This holds even if \texttt{splitindex} is used. 
+
+
+\section{Parameters for  Conversion \LaTeX{} to html}
+%\section{Parameters for the \LaTeX-to-html Conversion}
+\label{sec:settingsLatex2Html}
+
+This section describes the parameters 
+of the \LaTeX-to-html converter 
+which are given in Table~\ref{tab:paramLatex2Html}. 
+
+%TODO\@: do this. 
+
+
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramLatex2Html} The \LaTeX-to-html-converter }
+\endlastfoot%
+\texttt{tex4htCommand}       & \texttt{htlatex}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+\end{minipage}
+} \\
+\texttt{tex4htStyOptions}    & \texttt{xhtml,uni-html4,2,svg,pic-tabular}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+\end{minipage}
+} \\
+\texttt{tex4htOptions}       & \texttt{' -cunihtf -utf8'}         \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+\end{minipage}
+} \\
+\texttt{t4htOptions}         & the empty string              \\%-cvalidate
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for `\texttt{t4ht}' which converts idv-file and lg-file 
+into css-files, tmp-file and, 
+by need and if configured accordingly into \gls{png}-files. 
+The value `\texttt{-p}' prevents creation of \gls{png}-pictures.
+%The default value is the empty string. 
+\end{minipage}
+} \\
+\texttt{patternT4htOutputFiles} & 
+see Section~\ref{subsec:patternT4htOutputFiles}\\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied to file names 
+and matching shall accept 
+exactly the target files of goal `\texttt{html}' 
+for a given latex main file `\texttt{xxx.tex}'. 
+Matching triggers copying those files to \texttt{\$outputDirectory}. 
+
+The patterns for the other targets 
+are hardcoded and take the form 
+`\texttt{\^{}T\$T\textbackslash.yyy\$}', where `\texttt{yyy}' 
+may be an ending or an alternative of endings. 
+This pattern is neither applied to directories 
+nor to `\texttt{xxx.tex}' itself. 
+ 
+For an explanation of the pattern `\texttt{T\$T}' 
+see \texttt{\$patternCreatedFromLatexMain}. 
+Spaces and newlines are removed 
+from that pattern before processing. 
+
+The pattern is designed to match quite exactly 
+the files to be copied to \texttt{\$targetSiteDirectory}, 
+for the goal `\texttt{html}', 
+not much more and at any case not less. 
+since \texttt{\$tex2htCommand} is not well documented, 
+and still subject to development, 
+this pattern cannot be guaranteed to be final. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the bug. 
+\end{minipage}
+} \\
+\end{longtable}
+
+
+\subsection{The parameter \texttt{patternT4htOutputFiles}}
+\label{subsec:patternT4htOutputFiles}
+
+
+
+The default value has the following components: 
+%
+\begin{itemize}
+\item
+`\texttt{\^{}T\$T\textbackslash.x?html?\$}' is the main output file. 
+\item
+`\texttt{\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
+toc, lof, lot, indices, glossaries, NOT the bibliography. 
+\item
+'\texttt{\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
+are chapters, sections and subsections or below 
+and appendices. 
+\item
+`\texttt{\^{}T\$T\textbackslash d+\textbackslash.x?html?\$}' are footnotes. 
+\item
+`\texttt{\^{}T\$T\textbackslash.css\$}' are cascaded stylesheets. 
+\item
+`\texttt{\^{}T\$T-\textbackslash d+\textbackslash.svg\$}' and 
+`\texttt{\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
+are svg/png-files representing figures. 
+\item
+`\texttt{\^({}T\$T\textbackslash d+x\textbackslash.x?bb}' 
+are the bounding boxes 
+(suffix \texttt{.bb}  for \texttt{dvipdfm} and 
+ suffix \texttt{.xbb} for \texttt{dvipdfmx}). 
+\item
+`\texttt{\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
+represents special symbols. 
+\end{itemize}
+		 
+Note that the patterns for the html-files can be summarized as 
+%
+\begin{Verbatim}
+^T$T((ch|se|su|ap|li)?\d+)?\.x?html?\$
+\end{Verbatim}
+%$ for emacs 
+
+This altogether constitutes the default value for this pattern: 
+%
+\begin{verbatim}
+^(T$T(((ch|se|su|ap|li)?\d+)?\.x?html?|
+\.css|
+\d+x\.x?bb|
+\d+x\.png|
+-\d+\.svg)|
+(cmsy)\d+(-c)?-\d+c?\.png)$
+\end{verbatim}
+
+The pattern is designed to match quite exactly 
+the files to be copied to \texttt{\$targetSiteDirectory}, 
+for the goal ``html'', 
+not much more and at any case not less. 
+since \texttt{\$tex2htCommand} is not well documented, 
+and still subject to development, 
+this pattern cannot be guaranteed to be final. 
+
+
+\section{Parameters for further Conversions }
+\label{sec:settingsExt}
+
+This section describes the parameters 
+of the converter from and to further formats 
+which are given in Table~\ref{tab:paramExt}. 
+
+These converters convert latex into rtf directly, 
+they convert odt into doc-like documents and pdf into pure text. 
+A special case is the code-checker 
+in a sense converting latex into a log-file. 
+For each of them, the name of the command can be specified 
+and also the options. 
+Since neither of them, except the code checker, write a log-file, 
+there are no further parameters necessary. 
+
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramExt} The parameters of further converters }
+\endlastfoot%
+\texttt{latex2rtfCommand}    & \texttt{latex2rtf}        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The latex2rtf command to create rtf from latex directly. 
+%The default value is '\texttt{latex2rtf}'. 
+\end{minipage}
+} \\
+\texttt{latex2rtfOptions}    & the empty string        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options of the command \texttt{\$latex2rtfCommand}. 
+% The default value is the empty string. 
+\end{minipage}
+} \\
+\texttt{odt2docCommand}      & \texttt{odt2doc}          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The odt2doc command to create MS word-formats from otd-files. 
+%The default value is '\texttt{odt2doc}'. 
+\end{minipage}
+} \\
+\texttt{odt2docOptions}      & \texttt{-fdocx}          \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options of the command \texttt{\$odt2docCommand}. 
+Above all specification of output format 
+via the option '-f'. 
+Invocation is '\texttt{odt2doc -f$<$format$>$ $<$file$>$.odt}'. 
+All output formats are shown by `\texttt{odt2doc --show}' 
+but the formats interesting in this context 
+are the following: 
+\texttt{doc}, \texttt{doc6}, \texttt{doc95}, \texttt{docbook}, \texttt{docx}, 
+\texttt{docx7}, \texttt{ooxml} and \texttt{rtf}. 
+Interesting also the verbosity options 
+`\texttt{-v}', `\texttt{-vv}', `\texttt{-vvv}' 
+the timeout `\texttt{-T=secs}' and `\texttt{--preserve}' 
+to keep permissions and timestamp of the original document. 
+%The default value is '\texttt{-fdocx}'. 
+\end{minipage}
+} \\
+\texttt{pdf2txtCommand}      & \texttt{pdftotext}        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pdf2txt-command for converting pdf-files 
+into plain text files. 
+%The default value is '\texttt{pdftotext}'. 
+\end{minipage}
+} \\
+\texttt{pdf2txtOptions}      & the empty string  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options of the command \texttt{\$pdf2txtCommand}. 
+%The default value is the empty string. 
+\end{minipage}
+} \\
+\end{longtable}
+
+
+
+
+
+FIXME\@: 
+Note that \texttt{pdftotext -h} prints a usage message. 
+This is a way to obtain not the specified output. 
+It shows that \texttt{pdftotext -q} does not print any messages or errors. 
+This indicates that \texttt{pdftotext} normally does display error messages 
+on the standard output. 
+These may be led to a log file to indicate errors and warnings. 
+Here, further research is required. 
+
+The option \texttt{-htmlmeta} seems not approprate. 
+The option resolution \texttt{-r} seems sensible only in conjunction 
+with the crop area defined by \texttt{-x} and \texttt{-y} 
+which does not make sense in our context. 
+The same holds for specification of the first and the last page 
+via \texttt{-f} and \texttt{-l}. 
+What does make sense is specifying the encoding via \texttt{-enc} 
+with possible values given by \texttt{pdftotext -listenc}. 
+What makes sense most is \texttt{UTF-8}. 
+
+
+
+
+\section{The code checker \texttt{chktex}}\label{sec:chkTex}
+
+Among the applications used by this software, 
+the codechecker plays a special role: 
+it is not really a converter, 
+unless we interprete the log file as artifact. 
+Like for the most converters also for the codechecker 
+we can specify the command ant its options. 
+
+\begin{longtable}{|ll|}
+  \toprule
+  Parameter        & Default  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:paramChkTex} The parameters of the code checker }
+  \endlastfoot%
+  \texttt{chkTexCommand}      & \texttt{chktex}        \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The chktex-command for checking latex main files. 
+  %The default value is 'chktex'. 
+  \end{minipage}
+  } \\
+  \texttt{chkTexOptions}      & \texttt{-q -b}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The options of the command \texttt{\$chkTexCommand}, 
+  except ``\texttt{-o output-file}'' 
+  specifying the output file which is added automatically. 
+  For further details see the options below. 
+  %The default value is '\texttt{-q -b}'. 
+  \end{minipage}
+  } \\
+\end{longtable}
+
+The options of \texttt{chktex} 
+are described in detail in~\cite{ChkTeX}, Section 6.1.2. 
+
+Here is a list of options useful in this context. 
+The first group of these are muting options: 
+%
+\begin{itemize}
+\item '-w', '-e', '-m', 
+Make the message number passed as parameter 
+a warning/an error/a message and turns it on. 
+Messages are not counted. 
+\item '-n'
+Turns the warning/error number passed as a parameter off. 
+\item '-L'
+Turns off suppression of messages on a per line basis. 
+\end{itemize}
+
+The next group of interesting options are for output control: 
+%
+\begin{itemize}
+\item['-q']
+Shuts up about copyright information.
+\item['-o output-file']
+Specifies the output file. This is added automatically 
+and shall thus not be specified by the user. 
+\item['-b0/1']
+If you use the -o switch, and the named output-file exists,
+it will be renamed to `filename.bak' for option \texttt{-b1} 
+and not for \texttt{-b0}.
+\item['-f format']
+Specifies the format of the output 
+via a format similar to ``\texttt{printf()}'. %chktex 36
+For details consult the manual~\cite{ChkTeX}, Section 6.1.2. 
+The codes are listed below. 
+\item['-vd']
+Verbosity level followed by a number `d' 
+specifying the format of the output according to the listing below. 
+The verbosity number is resolved as a pattern 
+as if given by the option `-f format'. 
+Thus the option `-v' is ignored 
+if the option `-f format' is specified. 
+\end{itemize}
+
+The default value \texttt{-q -b0} 
+avoids verbose output and backing up the output log-file. 
+
+Code
+%
+\begin{itemize}
+\item[\%b]
+String to print between fields (from -s option).
+\item[\%c]
+Column position of error.
+\item[\%d]
+Length of error (digit).
+\item[\%f]
+Current file-name.
+\item[\%i]
+Turn on inverse printing mode.
+\item[\%I]
+Turn off inverse printing mode.
+\item[\%k]
+kind of error (warning, error, message).
+\item[\%l]
+line number of error.
+\item[\%m]
+Warning message.
+\item[\%n]
+Warning number.
+\item[\%u]
+An underlining line (like the one which appears when using '-v1').
+\item[\%r]
+Part of line in front of error ('S'-1).
+\item[\%s]
+Part of line which contains error (string).
+\item[\%t]
+Part of line after error ('S'+1).
+\end{itemize}
+
+
+
+FIXME\@: to be inserted. 
+From \texttt{chktexrc}: 
+\begin{verbatim}
+OutFormat
+{
+# -v0; silent mode
+%f%b%l%b%c%b%n%b%m!n
+
+# -v1; normal mode
+"%k %n in %f line %l: %m!n%r%s%t!n%u!n"
+
+# -v2; fancy mode
+"%k %n in %f line %l: %m!n%r%i%s%I%t!n!n"
+
+# -v3; lacheck mode
+"!"%f!", line %l: %m!n"
+
+# -v4; verbose lacheck mode
+"!"%f!", line %l: %m!n%r%s%t!n%u!n"
+
+# -v5; no line number, ease auto-test
+"%k %n in %f: %m!n%r%s%t!n%u!n"
+
+# -v6; emacs compilation mode
+"!"%f!", line %l.%c:(#%n) %m!n"
+}
+\end{verbatim}
+
+Note that ``\texttt!'' is to escape quotes and newline. 
+More than these can be added to \texttt{chktexrc}. 
+
+
+This document is checked with options deviating from the default value: 
+%
+\begin{verbatim}
+-q -b0 -v1 -g0 -l ${basedir}/src/site/tex/chktexrc
+\end{verbatim}
+%
+The default is \texttt{-q -b0}, 
+option \texttt{-g0} means that the global \texttt{chktexrc} is not used 
+and option 
+%
+\begin{verbatim}
+-l ${basedir}/src/site/tex/chktexrc
+\end{verbatim}
+%
+specifies a record file tailored to the needs of this project. 
+In particular, the pattern for \texttt{-v1} is slightly modified: 
+It is 
+%
+\begin{verbatim}
+# -v1; normal mode
+"%k %n in %f line %l: %m!n %r%s%t!n %u!n"
+\end{verbatim}
+%
+which adds a blank to all lines but the headlines. 
+That way, the kind of issue (\%k) is easily parsed. 
+This could be used for emitting an error instead of a warning 
+when processing goal {\em check}. 
+
+
+\section{Parameters for Ensuring Reproducibility}\label{sec:paramRepro}
+
+
+
+For a general description of the reproducibility check 
+see Section~\ref{sec:chkReprod}. 
+Here we go into the details and identify the parameters 
+controlling the check 
+and specified in great detail in Table~\ref{tab:paramDiffPdf}. 
+As already mentioned in Section~\ref{sec:chkReprod}, 
+currently, checks are performed for artifacts in pdf format only; 
+more formally, if the target 
+(which is in parameter \texttt{target} described in Table~\ref{tab:paramGen}) 
+is \texttt{pdf}. 
+% TBD: this may change. 
+
+But if so, the parameter \texttt{chkDiff} 
+decides whether a check is performed at all. 
+Note that checking is off by default. 
+Then a diffing tool given by \texttt{diffPdfCommand} 
+expects the blueprints in the directory \texttt{diffDirectory}. 
+In contrast, the actual artifacts to be checked are in \texttt{outputDirectory}, 
+whereas the sources are in \texttt{texSrcDirectory}. 
+
+The location of a source tex file relative to \texttt{texSrcDirectory} 
+is the location of the artifact relative to \texttt{outputDirectory}. 
+This path relative to \texttt{diffDirectory} is the location of the blueprint. 
+With the actual artifact in \texttt{outputDirectory} 
+and the blueprint in \texttt{diffDirectory} 
+the diff-tool determines whether the both are equivalent. 
+If so, equivalence is logged as an info, 
+else an exception described in Table~ref{tab:TLP} is thrown. 
+
+Note that the choiced of the diff tool \texttt{diffPdfCommand} 
+determines teh notion of equivalence of the pdf artifacts, 
+ranging from byte equivalence to some kind of visual equivalence. 
+
+
+
+
+
+\begin{longtable}{|ll|}
+  \toprule
+  Parameter        & Default  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:paramDiffPdf} The parameters of the pdf differ }
+  \endlastfoot%
+  \texttt{diffDirectory}      & \texttt{.}        \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+    Diff directory relative to \texttt{\$baseDirectory} 
+    used for diffing actually created artifact against prescribed one inthis directory. 
+    This is relevant only if \texttt{\$chkDiff} is set. 
+    The default value is \texttt..
+  \end{minipage}
+  } \\
+  \texttt{chkDiff}      & \texttt{false}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+    Indicates whether after creating artifacts 
+		and copying them to the output directory \texttt{\$outputDirectory} 
+		the artifacts are checked by diffing them against preexisting artifacts 
+		in \texttt{\$diffDirectory} 
+		using the diff command given by \texttt{\$diffPdfCommand}. 
+		Note that currently, only pdf files are checkd. 
+		This is \texttt{false} by default and is set to \texttt{true} only 
+		in the context of tests. 
+  \end{minipage}
+  } \\
+  \texttt{diffPdfCommand}      & \texttt{diff}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+    The diff-command for diffing pdf-files strictly or just visually 
+    to check that the created pdf files are equivalent with prescribed ones. 
+    CAUTION: there are two philsophies: 
+    Either the latex source files are created in a way that they reproduce strictly. 
+    Then a strict diff command like \texttt{diff} is appropriate. 
+    Else another diff command is required which checks for a kind of visual equality. 
+    The default value is a mere \texttt{diff}. 
+    Alternatives are \texttt{diff-pdf} and \texttt{diff-pdf-visually} 
+    both implementing a visual diff. 
+    Note that unlike for other tools, no options can be passed in this case explicitly. 
+  \end{minipage}
+  } \\\end{longtable}
+
+The options of \texttt{chktex} 
+are described in detail in~\cite{ChkTeX}, Section 6.1.2. 
