@@ -3,18 +3,28 @@
 %\PassOptionsToPackage{dvipdfmx}{xcolor} %or dvipdfm 
 %\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
 %\RequirePackage{lmodern} % does not work with htlatex
+%\directlua{pdf.setminorversion(7)}
 \documentclass[12pt]{book}
 \newif\iflatextortf % false for latex but set true for latex2rtf internally 
-\pdfminorversion=7
+
+%\pdfminorversion=7         % for pdflatex
+\pdfvariable minorversion=7 % for lualatex
 
 \input{header.tex}
 
 \input{buildParams.tex}
+% omit CreationDate and ModDate keys.
 % not before pdfTeX 3.14159265-2.6-1.40.17
-\pdfinfoomitdate=1 % omit CreationDate and ModDate keys.
-%\pdftrailer=0 % no adding to the trailer dictionary.
-\pdftrailerid{}
-\pdfsuppressptexinfo=-1
+%\pdfinfoomitdate=1                   % for pdflatex
+\pdfvariable suppressoptionalinfo 767 % for lualatex
+% no adding to the trailer dictionary.
+%\pdftrailer=0                        % for pdflatex
+%\pdftrailerid{}                      % for pdflatex
+\pdfvariable trailerid{}              % for lualatex
+
+%\pdfsuppressptexinfo=-1               % for pdflatex
+\pdfvariable suppressoptionalinfo -1  % for lualatex
+
 % 1 -> PTEX.Fullbanner
 % 2 -> PTEX.FileName
 % 4 -> PTEX.PageNumber
@@ -56,15 +66,15 @@
 \newacronym{pdf}{pdf}{portable document format}
 \newacronym{dvi}{dvi}{device independent file format}
 \newacronym{eps}{eps}{encapsulated postscript}
-\newacronym{tex}{tex}{tex the format, which may also be latex}
-\newacronym{html}{html}{hypertext markup language}
+\newacronym{tex}{tex}{\TeX{} the format, which may also be latex}
+\newacronym{html}{html}{HyperText Markup Language}
 \newacronym{xhtml}{xhtml}{extensible hypertext markup language}
 \newacronym{odt}{odt}{open document text}
 \newacronym{doc}{doc}{outdated document format for MS word }
 \newacronym{docx}{docx}{current document format for MS word }
 \newacronym{sgml}{sgml}{Standard generalized markup language }
 \newacronym{xml}{xml}{extensible markup language }
-\newacronym{ptx}{ptx}{pdf/postscript tex format }% home brewed 
+\newacronym{ptx}{ptx}{pdf/postscript \TeX{} format }% home brewed 
 
 \newacronym{fig}{fig}{native file format for xfig }
 \newacronym{gp}{gp}{Gnuplot file format}
