@@ -874,6 +874,8 @@
 
 				<configuration>
 					<settings>
+						<latex2pdfCommand>pdflatex</latex2pdfCommand>
+						<cleanUp>false</cleanUp>
 					</settings>	
 				</configuration>
 				<executions>
