@@ -130,6 +130,87 @@
 	 https://www.simuline.eu/RepositoryMaven/
 	 de/akquinet/jbosscc/latex/latex-maven-plugin/1.5-SNAPSHOT/ 
 	 all with time stamp 2018-07-xx -->
+
+	 <!-- "Bug report" on makeindex and xindy with consequences on makeglossaries: 
+		If a term is used in the glossary only, e.g. a term x is used in the text, 
+		but to explain x you need term u and this is used in the glossary only, 
+		e.g. to explain x, then the call sequence 
+			pdflatex, makeglossaries, pdflatex 
+		wont put y into the glossary. 
+		You have to use the sequence 
+			pdflatex, makeglossaries, pdflatex, makeglossaries, pdflatex 
+		in contrast would do. 
+		The task is to find out whether an additional `makeglossaries, pdflatex` 
+		is necessary and to it if needed only. 
+		Note that makeglossaries is based on makeindex or xindy. 
+		One has to check whether an according problem occurs with the index also. 
+		There is an email from Nicola Talbot, the author of makeglossaries 
+		which offers more detail information. 
+	 -->
+	 <!-- TBD: in particular in conjunction with pythontex, 
+		latex requires a lot of memory and runs out of memory quickly. 
+		So far we use pdflatex, because we are conservative. This is also the default. 
+		In the long run I would like to switch to lualatex. 
+		Note that certain packages are needed no longer or are even to be abandoned. 
+		As a frist step I would like to specify lualatex in all internal projects 
+		including phd thesis. 
+		Then, if all turns out to be still working change the default value in the lnext release. 
+	 -->
+	<!-- document development: I think, that newly created files are removed after the run is a good thing: 
+		That way, if all is clean at the beginning, at the end it is clean also without further cleaning up. 
+		Also during document development intermediate files remain where they are. 
+		
+		On the other hand, this behavior is not so easily understood. 
+		It looks as some files persist while others disappear quite randomly. 
+		Thus in the manual in section on document development, 
+		we need the advise to command `mvn latex:grp` if the graphics shall be needed for further development. 
+		This is the sole target without cleanup. 
+		This shall be done in particular when using vscode/latexworkshop 
+		because otherwise, the build process fails. 
+		Another option is to set in the settings <cleanUp>false</cleanUp>. 
+		Check whether cleanup is skipped if an error occurs. 
+		This would be fine, because it integrates with document development. 
+
+		Maybe more thoughts on how to work in document development. 
+		Use case: sth went wrong with the latex plugin. 
+		Then it shall be seemless to switch to document development, 
+		all created files still present. 
+		Use case: changing some file triggers automatic rebuild of document development tool. 
+		This is assumed to be latexmk, maybe triggered by vscode/latexworkshop. 
+		Advised to use .latexmkrc file with settings consistent with those for this latex plugin. 
+		
+		
+		. I suspect, that mvn latex:pdf really moves the pdf file to the target, 
+		rather than copying it. 
+		Well, all other created files, the auxiliary ones, 
+		are not cleared also. 
+		This makes sense for document development. 
+		But then also copying the pdf instead of moving it would be more consistent. 
+	-->
+	<!-- TBD: seemingly, created image files are removed after successful creation, 
+		whereas created auxiliary files created by latex remain in the working directory. 
+		This is highly inconsistent. 
+		For sake of document development, all files shall remain unchanged. 
+	-->
+	<!-- TBD: add support for \include: 
+		Include adds aux files which this plugin does not eliminate through mvn latex:clr. 
+	-->
+	<!-- Document development: latexmk cleans up files with following endings: 
+		 ’aux’, ’bcf’, ’fls’, ’idx’, ’ind’, ’lof’, ’lot’, ’out’, ’toc’, ’blg’, ’ilg’, ’log’, ’xdv’
+		 The following are cleaned up also by this plugin, 
+		’aux’, ’fls’, ’idx’, ’ind’, ’lof’, ’lot’, ’out’, ’toc’, ’blg’, ’ilg’, ’log’
+		whereas those are not: 
+		`bcf’, 
+		’xdv’: extended `dvi`, can be created by xelatex
+		TBD: check their meaning. 
+		TBD: also  fdb_latexmk is deleted and this plugin shall do this also. 
+	-->
+	<!-- TBD: clarify whether package hyperref shall be loaded for pdf output only: 
+		with dvi with option [dvipdfmx]. 
+		This must be done in all documents. 
+	--> 
+	<!-- TBD: eliminate letter size using package geometry (robustindex) -->
+	
 	  <release  version="1.6"
 		date="2022-01-01"
 		description="Main feature: pythontex.">
