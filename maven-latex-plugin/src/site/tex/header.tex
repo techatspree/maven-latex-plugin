@@ -1,17 +1,27 @@
+% !TEX root = manualLatexMavenPlugin.tex
 \listfiles
 \synctex=1
 
+
+% provdies \ifPDFTeX, \ifXeTeX and \ifLuaTeX. 
+% iftutex test is true for XeTeX and LuaTeX, 
+% and an ifpdf test is provided to test the PDF or DVI output mode.
+\usepackage{iftex}
+\usepackage{ifthen}
+
+\iftutex%
+\usepackage{fontspec}
+\else
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\fi
 %\usepackage{textalpha}
 
-\usepackage{ifthen}
 \newboolean{texFhtLoaded}
 \setboolean{texFhtLoaded}{false}
 
 % only with pdflatex, warnings for xelatex and for lualatex 
 % ifxetex, ifluatex, ifpdf
-\usepackage{ifpdf,ifxetex,ifluatex}
 \ifpdf%
 \else
 \makeatletter
@@ -53,7 +63,7 @@
   \usepackage[dvipdfmx]{hyperref}
 }% tex4ht not loaded 
 
-\usepackage{bmpsize}
+\usepackage{bmpsize}% not for xelatex 
 \fi
 
 % \@ifpackageloaded{tex4ht}{%
@@ -66,10 +76,6 @@
 % \usepackage{graphicx}% [pdftex] 
 % \usepackage{hyperref}% driver [hpdftex] is autodetected 
 % }
-
-
-
-
 
 
 %\usepackage[clear,pdf,eps]{svg}
@@ -109,7 +115,3 @@
 \newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
 \newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}}
 
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "manualLatexMavenPlugin"
-%%% End:

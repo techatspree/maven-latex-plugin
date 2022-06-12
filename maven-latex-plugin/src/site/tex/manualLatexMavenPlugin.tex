@@ -7,23 +7,41 @@
 \documentclass[12pt]{book}
 \newif\iflatextortf % false for latex but set true for latex2rtf internally 
 
-%\pdfminorversion=7         % for pdflatex
-\pdfvariable minorversion=7 % for lualatex
-
 \input{header.tex}
-
 \input{buildParams.tex}
+
+\ifpdf%
+\ifLuaTeX
+% for lualatex
+\pdfvariable minorversion=7
+% omit CreationDate and ModDate keys.
+\pdfvariable suppressoptionalinfo 767
+% no adding to the trailer dictionary.
+\pdfvariable trailerid{}
+\pdfvariable suppressoptionalinfo -1
+\else
+\ifXeTeX
+% for xelatex
+\special{pdf:minorversion 7}
+% TBD: find a way to express pdfinfoomitdate: necessary? 
+\special{pdf:trailerid []}
+\else
+\ifPDFTeX
+\pdfminorversion=7         % for pdflatex
 % omit CreationDate and ModDate keys.
 % not before pdfTeX 3.14159265-2.6-1.40.17
-%\pdfinfoomitdate=1                   % for pdflatex
-\pdfvariable suppressoptionalinfo 767 % for lualatex
+\pdfinfoomitdate=1                   % for pdflatex
 % no adding to the trailer dictionary.
 %\pdftrailer=0                        % for pdflatex
-%\pdftrailerid{}                      % for pdflatex
-\pdfvariable trailerid{}              % for lualatex
+\pdftrailerid{}                       % for pdflatex
+\pdfsuppressptexinfo=-1               % for pdflatex
+\else
+% Here, the tex processor is unknown. 
+\fi%pdftex
+\fi%xetex
+\fi%luatex
 
-%\pdfsuppressptexinfo=-1               % for pdflatex
-\pdfvariable suppressoptionalinfo -1  % for lualatex
+
 
 % 1 -> PTEX.Fullbanner
 % 2 -> PTEX.FileName
@@ -50,11 +68,14 @@
     Title       ={Maven plugin and ant-task to process latex},
     CreationDate={unknown},
     ModDate     ={unknown},
+    Producer    ={unknown},
     Subject     ={latex plugin for maven and latex task for ant},
     Keywords    ={svg;png;metapost;PDF;LaTeX;maven;ant}
   }
 }
 % TBD: check of resulting pdf with exif unveils a warning duplicate author 
+\else%ifpdf
+\fi%ifpdf
 
 \ifthenelse{\boolean{texFhtLoaded}}{%
   % no glossaries and no index with tex4ht 

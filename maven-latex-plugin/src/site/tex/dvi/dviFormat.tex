@@ -3,7 +3,40 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{fancyvrb}
+\usepackage{iftex}
+\ifpdf
 \usepackage{hyperref}
+
+
+\ifLuaTeX
+% for lualatex
+%\pdfvariable minorversion=7
+% omit CreationDate and ModDate keys.
+\pdfvariable suppressoptionalinfo 767
+% no adding to the trailer dictionary.
+\pdfvariable trailerid{}
+\pdfvariable suppressoptionalinfo -1
+\else
+\ifXeTeX
+% for xelatex
+%\special{pdf:minorversion 7}
+% TBD: find a way to express pdfinfoomitdate: necessary? 
+\special{pdf:trailerid []}
+\else
+\ifPDFTeX
+%\pdfminorversion=7         % for pdflatex
+% omit CreationDate and ModDate keys.
+% not before pdfTeX 3.14159265-2.6-1.40.17
+%\pdfinfoomitdate=1                   % for pdflatex
+% no adding to the trailer dictionary.
+%\pdftrailer=0                        % for pdflatex
+\pdftrailerid{}                       % for pdflatex
+\pdfsuppressptexinfo=-1               % for pdflatex
+\else
+% Here, the tex processor is unknown. 
+\fi%pdftex
+\fi%xetex
+\fi%luatex
 
 % removes the /CreationDate and /ModDate 
 % superfluous as we override anyway
@@ -16,9 +49,9 @@
 % The following is to control metadata: 
 % - erase docdata and set the ones needed thereafter
 % - erase trailer to make repreoducible 
-\pdfsuppressptexinfo-1
+%\pdfsuppressptexinfo-1
 % CAUTION: This is not recommended as the docs are no longer individual. 
-\pdftrailerid{}% removed by nopdftrailerid
+%\pdftrailerid{}% removed by nopdftrailerid
 
 \hypersetup{
   pdfinfo={
@@ -26,10 +59,13 @@
     Title       ={The dvi-format and the program dvitype},
     CreationDate={unknown},
     ModDate     ={unknown},
+    Producer    ={unknown},
     Subject     ={dvi and dvitype},
     Keywords    ={LaTeX;dvi;dvitype}
   }
 }
+\else
+\fi%ifpdf
 
 \title{The dvi-format and the program dvitype}
 \author{Ernst Reissner (rei3ner@arcor.de)}
