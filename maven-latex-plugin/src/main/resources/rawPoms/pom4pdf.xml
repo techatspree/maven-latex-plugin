@@ -139,8 +139,8 @@ If the current default value is not appropriate,
 please overwrite it in the configuration 
 and notify the developer of this plugin of the deficiency. -->
             <patternLatexMainFile>
-\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
-\\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
+\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
+\\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
 %.*$|
 \\input\{[^{}]*\}|
 \s)*

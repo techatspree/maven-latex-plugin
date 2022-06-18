@@ -211,11 +211,24 @@
 	--> 
 	<!-- TBD: eliminate letter size using package geometry (robustindex) -->
 	
+	 <!--
+here is a bug affecting goal odt: 
+/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
+89c89
+ \def\pgfsys@svg@newline{{?nl}} % replacement 
+- - -
+ \def\pgfsys@svg@newline{\Hnewline} % original 
+-->
+
 	  <release  version="1.6"
 		date="2022-01-01"
 		description="Main feature: pythontex.">
 			<action dev='reissner' type='add'>
 				added converter depythontex (pythontex was added already.)
+			</action>
+			<action dev='reissner' type='add'>
+				Generalized default value for patternLatexMainFile
+				taking package names into account which contain `-` in addition to letters.
 			</action>
 		</release>
 

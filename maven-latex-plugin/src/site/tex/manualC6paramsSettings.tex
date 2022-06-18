@@ -277,17 +277,25 @@ and notify the developer of this plugin of the deficiency.
 \subsection{The parameter \texttt{patternLatexMainFile}}
 \label{subsec:patternLatexMainFile}
 
-The default pattern for identifying a \LaTeX{} main file is 
-%
-\begin{Verbatim}[fontsize=\footnotesize]
-\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
-\\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
-%.*$|
-\\input\{[^{}]*\}|
-\s*)*
-\\(documentstyle|documentclass)
-\end{Verbatim}
-%
+The default pattern for identifying a \LaTeX{} main file is given by Listing~\ref{lst:patternLatexMainFile}.
+
+\lstinputlisting[language=xml, basicstyle=\footnotesize,
+firstline=141, lastline=148,
+breaklines,
+%float,
+captionpos=b, label={lst:patternLatexMainFile},
+caption={The default pattern of the latex main file in a form as in a pom configuration}]
+{../../main/resources/rawPoms/pom4pdf.xml}% chktex 11 
+
+% \begin{Verbatim}[fontsize=\footnotesize]
+% \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
+% \\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
+% %.*$|
+% \\input\{[^{}]*\}|
+% \s*)*
+% \\(documentstyle|documentclass)
+% \end{Verbatim}
+
 This means that the latex main file is the one 
 containing \cmd{documentclass}{} for modern classes 
 and \cmd{documentstyle}{} for old fashioned ones. 
@@ -355,9 +363,14 @@ So a pattern for latex main files could also be
 ^%%% End: ^
 \s*
 \end{verbatim}
-%
-The problem is only in case of exchange of the source 
-with a developer which does not use Emacs/auctex. 
+
+For users of visual code/latex workshop, there is another alternative: 
+Absence of first line \texttt{\% !TEX root}. 
+
+Also, if one wants to have a solution not relying on a tool-chain 
+not even on \LaTeX tools, 
+One could use a convention, e.g.~marking main files with first line \texttt{\% MAIN FILE}, 
+which makes parsing quite fast. 
 
 
 \subsection{The parameter \texttt{patternCreatedFromLatexMain}}

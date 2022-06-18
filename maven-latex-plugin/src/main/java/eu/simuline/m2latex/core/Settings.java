@@ -219,11 +219,11 @@ public class Settings {
     private String patternLatexMainFile = 
 	"\\A(\\\\RequirePackage\\s*" +           // RequirePackage 
 	/**/"(\\[(\\s|\\w|,)*\\])?\\s*" +    // [options]
-	/**/"\\{\\w+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}version
+	/**/"\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}version
 	"%.*$|" + // comments 
 	"\\\\PassOptionsToPackage\\s*" +     // PassOptionsToPackage
 	/**/"\\{\\w+\\}\\s*" +    // {options}
-	/**/"\\{\\w+\\}|" +       // {packagename}
+	/**/"\\{(\\w|-)\\}|" +       // {packagename}
 	"%.*$|" + // comments 
 	"\\\\input\\{[^{}]*\\}|" + // inputs 
 	"\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
@@ -2055,7 +2055,7 @@ public class Settings {
    	public void addText(String pattern) {
    	    Settings.this.setPatternLatexMainFile(pattern);
    	}
-    }
+    } // class PatternLatexMainFile
 
     public void setTexPath(File texPath) {
         this.texPath = texPath;
@@ -2092,7 +2092,7 @@ public class Settings {
    	public void addText(String pattern) {
    	    Settings.this.setPatternCreatedFromLatexMain(pattern);
    	}
-    }
+    } // class PatternCreatedFromLatexMain
 
     // note: setters are required for ant tasks 
     public void setFig2devCommand(String fig2devCommand) {

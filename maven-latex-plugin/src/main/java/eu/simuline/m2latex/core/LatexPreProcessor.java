@@ -37,18 +37,18 @@ import java.util.TreeMap;
  */
 public class LatexPreProcessor extends AbstractLatexProcessor {
 
-    /**
-     * Maps the suffix to the according handler. 
-     * If the handler is <code>null</code>, there is no handler. 
-     */
-    private final static Map<String, SuffixHandler> SUFFIX2HANDLER = 
-	new TreeMap<String, SuffixHandler>();
+	/**
+   * Maps the suffix to the according handler. 
+   * If the handler is <code>null</code>, there is no handler. 
+   */
+  private final static Map<String, SuffixHandler> SUFFIX2HANDLER =
+		new TreeMap<String, SuffixHandler>();
 
-    static {
-	for (SuffixHandler handler : SuffixHandler.values()) {
-	    SUFFIX2HANDLER.put(handler.getSuffix(), handler);
-	}
-    } // static 
+  static {
+		for (SuffixHandler handler : SuffixHandler.values()) {
+			SUFFIX2HANDLER.put(handler.getSuffix(), handler);
+		}
+  } // static 
 
  
     // used in preprocessing only and in TexFileUtils for a workaround 
@@ -1523,20 +1523,20 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    a node associated with <code>dir</code>. 
      */
     private void clearCreated(File dir, DirNode node) {
-	assert dir.isDirectory()
+			assert dir.isDirectory()
 	    : "Expected existing directory "+dir+" to be cleared. ";
-	File file;
-	SuffixHandler handler;
-	Map<File, SuffixHandler> file2handler = 
-	    new TreeMap<File, SuffixHandler>();
-   	for (String fileName : node.getRegularFileNames()) {
-	    file = new File(dir, fileName);
-	    handler = SUFFIX2HANDLER.get(TexFileUtils.getSuffix(file));
-	    if (handler != null) {
-		// either clear targets now or schedule for clearing 
-		// (in particular do nothing if no target)
-		// may log WPP02, WFU01, WFU03, EFU05 
-		handler.clearTarget(file, this, file2handler);
+			File file;
+			SuffixHandler handler;
+			Map<File, SuffixHandler> file2handler =
+				    new TreeMap<File, SuffixHandler>();
+   		for (String fileName : node.getRegularFileNames()) {
+				file = new File(dir, fileName);
+	    	handler = SUFFIX2HANDLER.get(TexFileUtils.getSuffix(file));
+	    	if (handler != null) {
+				// either clear targets now or schedule for clearing 
+				// (in particular do nothing if no target)
+				// may log WPP02, WFU01, WFU03, EFU05 
+				handler.clearTarget(file, this, file2handler);
 	    }
 	}
 	// clear targets of all still existing files 
