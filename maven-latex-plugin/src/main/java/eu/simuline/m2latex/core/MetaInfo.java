@@ -492,7 +492,7 @@ public class MetaInfo {
 			if (segment == null) {
 				break;
 			}
-			num  = segStr2Num(segment);
+			num = segStr2Num(segment);
 			this.segments.add(num);
 		}
 	}

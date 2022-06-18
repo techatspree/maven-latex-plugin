@@ -128,7 +128,9 @@ enum Converter {
 	    return X_X_X;
 	}
 	String getVersionEnvironment() {
-	    return "^unoconv %s\n";
+			// The optional first lines contains deprecation information 
+	    return "^(?:[^\n]*\n[^\n]*\n)?" +
+			"unoconv %s\n";
 	}
 	ConverterCategory getCategory() {
 	    return ConverterCategory.Odt2Doc;
