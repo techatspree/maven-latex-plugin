@@ -252,10 +252,22 @@ to control rerun latex and other applications.
 which provides the \texttt{ifthenelse}-command 
 which is needed to create both pdf and html and also to create rtf. 
 \item
-\pkg{ifpdf} described in \cite{IfPdfP} 
-which provides the \cmd{ifpdf}-command to detect pdf-mode. 
-This is required to distinguish creation of pdf and text 
-from html, odt, doc and others, based on dvi. 
+\pkg{iftex} described in \cite{IfTeXP} which has two functions: 
+\begin{itemize}
+  \item 
+  It provides the \cmd{ifpdf}-command to detect pdf-mode. 
+  This is required to distinguish creation of pdf and text 
+  from html, odt, doc and others, based on dvi. 
+  \item 
+  Also, it is able to detect a specific latex engine via commands 
+  like \cmd{ifluatex} or \cmd{ifpdftex} but also \cmd{iftutex} 
+  being true for \texttt{lualatex} and \texttt{xelatex} but not for \texttt{pdflatex}. 
+  This is used if a document shall work for more than one engine 
+  like this manual and is in particular used to create reproducible pdf files 
+  which is engine specific. 
+  Finally, there is a way to force an exception if the wrong engine is used, 
+  e.g.~by specifying \cmd{RequireLuaTeX}. 
+\end{itemize}
 \item
 The graphics packages described in \cite{GraX}, 
 in particular \pkg{graphicx}, \pkg{xcolor} and \pkg{transparent}, 
@@ -310,11 +322,6 @@ for long tables, i.e.~tables exceeding a page.
 \item
 \pkg{fancyvrb} described in \cite{FancyVerbP} 
 provides useful environments to mark verbatim text. 
-\item
-\pkg{ifxetex} described in \cite{IfXeTeXP} and 
-\pkg{ifluatex} described in \cite{IfLuaTeXP} 
-are to determine the tex-engine (regardless the output format). 
-
 \end{itemize}
 
 
