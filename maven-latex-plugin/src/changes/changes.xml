@@ -219,6 +219,7 @@ here is a bug affecting goal odt:
 - - -
  \def\pgfsys@svg@newline{\Hnewline} % original 
 -->
+<!-- Bugfix: WPP03: Skipped processing of files with suffixes [, .latexmkrc]. -->
 
 	  <release  version="1.6"
 		date="2022-01-01"
