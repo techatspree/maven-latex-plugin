@@ -178,7 +178,7 @@ Version \strippedVersionID}
 
 \chapter{Introduction}
 
-This document is created with \texttt{pdflatex} or that like 
+This document is created with \texttt{lualatex} or that like 
 with output format 
 \ifpdf%
 pdf%
@@ -662,7 +662,7 @@ which are not excluded, i.e. listed in configuration in section \texttt{converte
  \multicolumn2{|l|}{
  \begin{minipage}{0.95\linewidth}
    Each converter may occur in a specified configuration only.
-   So e.g. \texttt{pdflatex} is only allowed in configuration
+   So e.g. \texttt{lualatex} is only allowed in configuration
    '\texttt{latex2pdfCommand}'.
    If used in configuration '\texttt{makeIndexCommand}' this causes this exception,
    because in that configuration, e.g \texttt{makeindex} is allowed. 
@@ -835,7 +835,7 @@ If an application does not create the expected output file,
 this software logs an error. 
 This may be because of an internal error as described above, 
 but also because of wrong parameters. 
-So, e.g.~\texttt{pdflatex -v xxx.tex} does not create a pdf-file as expected. 
+So, e.g.~\texttt{lualatex -v xxx.tex} does not create a pdf-file as expected. 
 
 
 \begin{longtable}{|ll|}
@@ -1243,17 +1243,17 @@ consider also pdftocairo for creation of tiff and ps and many others.
 Seemingly, indices and glossaries based on page numbers 
 (there seems to be an alternative to this), 
 may be out of date with the current algorithm: 
-First \texttt{pdflatex} is run to create the raw index. 
+First \texttt{lualatex} (or some other converter) is run to create the raw index. 
 Then a sorting program like \texttt{makeindex} is called 
 which creates the sorted, collected and formatted index. 
-Then one \texttt{pdflatex} run is required to include this index 
+Then one \texttt{lualatex} run is required to include this index 
 into the created pdf-file. 
-A second \texttt{pdflatex} run is required 
+A second \texttt{lualatex} run is required 
 to write the index to the table of contents, as typically required. 
 The problem with this procedure is, 
-that the subsequent runs of \texttt{pdflatex} change the raw index 
+that the subsequent runs of \texttt{lualatex} change the raw index 
 which requires rerunning \texttt{makeindex} 
-and after that again \texttt{pdflatex}. 
+and after that again \texttt{lualatex}. 
 
 One way to solve that problem is to use the package \pkg{imakeidx} 
 (improved makeidx) instead of the traditional package \pkg{makeidx}. 
@@ -1368,7 +1368,7 @@ Maybe the best to ignore files like that.
 Target \texttt{txt}: seems as if index and glossary not up to date. 
 
 target \texttt{pdf}: Idea to run \texttt{makeglossaries} 
-always prior to pdflatex. 
+always prior to \texttt{lualatex}. 
 
 Maybe this is more a gap than a bug: 
 support for dvi-creation should be provided separately. 
@@ -1397,7 +1397,7 @@ via `\texttt{-g0 -l chktexrc.my}'.
 The problem is, 
 that the file is interpreted relative to the working directory. 
 
-The application chtex has an option \texttt{-I} to specify, 
+The application chktex has an option \texttt{-I} to specify, 
 whether input files shall be read. 
 If not, creation of graphics is immaterial. 
 I can also imagine, that one wants to configure, 
@@ -1414,7 +1414,7 @@ on a text starting with the word ``error''.
 
 Maybe this is not a bug 
 but an inconsistency between auctex and local config: 
-Running with the plugin, we obtain 
+Running with the plugin, e.g. with \texttt{pdflatex}, we obtain 
 %
 \begin{Verbatim}[fontsize=\tiny]
 This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.8.9)  30 JAN 2017 10:58

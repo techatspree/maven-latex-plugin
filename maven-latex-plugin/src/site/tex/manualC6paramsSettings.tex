@@ -631,11 +631,12 @@ Parameter        & Default  \\
 \bottomrule
 \caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
 \endlastfoot%
-\texttt{latex2pdfCommand}       & \texttt{pdflatex}      \\
+\texttt{latex2pdfCommand}       & \texttt{lualatex}      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The \LaTeX{} command to create a pdf-file with. 
-%The default value is '\texttt{pdflatex}'. 
+Expected values are \texttt{lualatex}, \texttt{xelatex} and \texttt{pdflatex}. 
+%The default value is '\texttt{lualatex}'. 
 \end{minipage}
 } \\
 \texttt{latex2pdfOptions}   & see Section~\ref{subsec:latex2pdfOptions} \\
@@ -661,7 +662,7 @@ The default value is chosen to match quite exactly
 the latex errors in the log file, no more no less. 
 Since no official documentation was found, 
 the default pattern may be incomplete. 
-In fact it presupposes, that \texttt{\$latex2pdfOptions} 
+In fact, it presupposes, that \texttt{\$latex2pdfOptions} 
 does not contain ``\texttt{-file-line-error-style}''.   
 
 If the current default value is not appropriate, 

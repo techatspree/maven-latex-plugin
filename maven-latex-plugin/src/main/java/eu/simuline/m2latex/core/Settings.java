@@ -621,14 +621,13 @@ public class Settings {
 
     /**
      * The LaTeX command to create a pdf-file or a dvi-file. 
-     * FIXME: documentation must be updated. 
      * Possible values are e.g. 
-     * <code>pdflatex</code>, <code>lualatex</code> and <code>xelatex</code>. 
+     * <code>lualatex</code> <code>xelatex</code>, and <code>pdflatex</code>. 
      * The default value (for which this software is also tested) 
-     * is <code>pdflatex</code>. 
+     * is <code>lualatex</code>.
      */
-    @Parameter(name = "latex2pdfCommand", defaultValue = "pdflatex")
-    private String latex2pdfCommand = "pdflatex";
+    @Parameter(name = "latex2pdfCommand", defaultValue = "lualatex")
+    private String latex2pdfCommand = "lualatex";
 
     /**
      * The options for the command {@link #latex2pdfCommand}. 

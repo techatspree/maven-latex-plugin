@@ -381,10 +381,10 @@ The default value is '-v'. -->
 
             <!-- The LaTeX command to create a pdf-file. 
 Possible values are e.g. 
-'pdflatex', 'lualatex' and 'xelatex'. 
+'lualatex' 'xelatex', and 'pdflatex'. 
 The default value (for which this software is also tested) 
-is 'pdflatex'. -->
-            <latex2pdfCommand>pdflatex</latex2pdfCommand>
+is 'lualatex'. -->
+            <latex2pdfCommand>lualatex</latex2pdfCommand>
 
             <!-- occurs for xelatex but neither for pdflatex nor for lualatex: 
 LaTeX Font Warning: Font shape 'OMS/cmtt/m/n' undefined
