@@ -585,9 +585,8 @@ ConverterCategory getCategory() {
 	    return "^\n?" + Latexmk +
 		", John Collins, .*[0-9]+ [A-Z][a-z]+\\.? [0-9]+. Version %s\n";
 	}
-    // TBD: add a category 
 	ConverterCategory getCategory() {
-	    return ConverterCategory.MakeGlossaries;
+	    return ConverterCategory.Unspecific;
 	}
     },
     MetaPost {

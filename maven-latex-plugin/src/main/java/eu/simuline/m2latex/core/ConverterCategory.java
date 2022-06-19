@@ -116,8 +116,11 @@ enum ConverterCategory {
 	// TBD: clarify: For latex to html/odt
 	// dvips: for conversion to ps??
 	// gs
+	// pdfinfo, exiftool
 	// upmendex: right interface?
 	// xindy
+	// pythontex, depythontex
+	// latexmk
 	Unspecific {
 		String getFieldname() {
 			throw new UnsupportedOperationException();
