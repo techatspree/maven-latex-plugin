@@ -226,9 +226,15 @@ here is a bug affecting goal odt:
 			<action dev='reissner' type='add'>
 				added converter depythontex (pythontex was added already.)
 			</action>
-			<action dev='reissner' type='add'>
+			<action dev='reissner' type='fix'>
 				Generalized default value for patternLatexMainFile
 				taking package names into account which contain `-` in addition to letters.
+			</action>
+			<action dev='reissner' type='update'>
+				Turned lualatex into the default.
+				This is a kind of update because the former default pdflatex starts to outdate.
+				Nevertheless, a strong motivation is pythontex:
+				I want to create figures without memory restrictions, which is offered by lualatex.
 			</action>
 		</release>
 
