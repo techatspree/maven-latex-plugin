@@ -175,7 +175,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return YYYYMMDD;
+	    return VYYYYMMDD;
 	}
 	String getVersionEnvironment() {
 	    return "^This is " + getCommand() +
@@ -194,7 +194,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return YYYYMMDD;
+	    return VYYYYMMDD;
 	}
 	String getVersionEnvironment() {
 	    return "^This is " + getCommand() +
@@ -212,7 +212,7 @@ enum Converter {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return YYYYMMDD;
+	    return VYYYYMMDD;
 	}
 	String getVersionEnvironment() {
 	    return "^This is " + getCommand() +
@@ -244,7 +244,7 @@ enum Converter {
 	    return "gs";
 	}
 	String getVersionPattern() {
-	    return "(([0-9]+)\\.([0-9]+)(?:\\.([0-9]+))?)";
+	    return VX_X__X;
 	}
 	String getVersionEnvironment() {
 	    return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
@@ -281,7 +281,7 @@ enum Converter {
 		return "-h";
 }
 String getVersionPattern() {
-	return "(([0-9]+))";
+	return VX;
 }
 // TBD: rework 
 String getVersionEnvironment() {
@@ -304,7 +304,7 @@ ConverterCategory getCategory() {
 	    return "-h";
 	}
 	String getVersionPattern() {
-		return "(([0-9]+))";
+		return VX;
 	}
 	String getVersionEnvironment() {
 		//return "default: %s";
@@ -326,7 +326,7 @@ ConverterCategory getCategory() {
 	    return "-v";
 	}
 	String getVersionPattern() {
-		return X_X;
+		return VX_X;
 	}
 	String getVersionEnvironment() {
 		//return "default: %s";
@@ -363,7 +363,7 @@ ConverterCategory getCategory() {
 				return "-ver";
 			}
 			String getVersionPattern() {
-				return X_X;
+				return VX_X;
 			}
 			String getVersionEnvironment() {
 				return "^%s";
@@ -404,7 +404,7 @@ ConverterCategory getCategory() {
 	 *    the pattern for the version string. 
 	 */
 	String getVersionPattern() {
-	    return X_X;
+	    return VX_X;
 	}
 	String getVersionEnvironment() {
 	    return "^This is " + BibTeXu + ": a UTF-8 Big " + BibTeX + " version [^\n]*\n" +
@@ -432,7 +432,7 @@ ConverterCategory getCategory() {
 	 *    the pattern for the version string. 
 	 */
 	String getVersionPattern() {
-	    return X_X;
+	    return VX_X;
 	}
 	String getVersionEnvironment() {
 	    return "^This is 8-bit Big " + BibTeX + " version [^\n]*\n" +
@@ -451,7 +451,7 @@ ConverterCategory getCategory() {
 	    return TexFileUtils.getEmptyIdx().getName().toString();
 	}
 	String getVersionPattern() {
-	    return X_X;
+	    return VX_X;
 	}
 	String getVersionEnvironment() {
 	    return "^This is " + getCommand() + ", version %s " +
@@ -471,7 +471,7 @@ ConverterCategory getCategory() {
 	    return "-h";
 	}
 	String getVersionPattern() {
-	    return X_X;
+	    return VX_X;
 	}
 	String getVersionEnvironment() {
 	    return "^" + getCommand() + " - index processor, version %s \\(TeX Live [0-9]{4}\\).\n";
@@ -489,7 +489,7 @@ ConverterCategory getCategory() {
 	    return "--version";
 	}
 	String getVersionPattern() {
-	    return X_X;
+	    return VX_X;
 	}
 	String getVersionEnvironment() {
 	    return "^" + getCommand() + ".pl %s\n";
@@ -525,7 +525,7 @@ ConverterCategory getCategory() {
 	    return "--help";
 	}
 	String getVersionPattern() {
-	    return X_X;
+	    return VX_X;
 	}
 	String getVersionEnvironment() {
 	    return "^" + Makeglossaries + " Version %s " +
@@ -544,14 +544,13 @@ ConverterCategory getCategory() {
 					return "--version";
 			}
 			String getVersionPattern() {
-					return X_X;
+					return VX_X;
 			}
 			String getVersionEnvironment() {
 					return "^" + PythonTeX + " %s\n";
 			}
-				// TBD: add a category 
 			ConverterCategory getCategory() {
-					return ConverterCategory.Unspecific;
+					return ConverterCategory.Pythontex;
 			}
 				},
    // TBD: add a category 
@@ -563,7 +562,7 @@ ConverterCategory getCategory() {
 				return "--version";
 		}
 		String getVersionPattern() {
-				return X_X;
+				return VX_X;
 		}
 		String getVersionEnvironment() {
 				return "^" + DePythonTeX + " %s\n";
@@ -594,7 +593,7 @@ ConverterCategory getCategory() {
 	    return "mpost";
 	}
 	String getVersionPattern() {
-	    return X_X;
+	    return VX_X;
 	}
 	String getVersionEnvironment() {
 	    return "^" + MetaPost + " %s \\(TeX Live [0-9]{4}/";
@@ -612,7 +611,7 @@ ConverterCategory getCategory() {
 	}
 	// 2nd line 
 	String getVersionPattern() {
-	    return YYYYMMDD;
+	    return VYYYYMMDD;
 	}
 	String getVersionEnvironment() {
 	    return "^[^\n]*\nThis is " + getCommand() + " Version %s\n";
@@ -646,7 +645,7 @@ ConverterCategory getCategory() {
 	    return "-V";
 	}
 	String getVersionPattern() {
-	    return X_X_X;
+	    return VX_X__X;
 	}
 	// TBD: sometimes the pango line '    Pango version: 1.46.2' comes first. 
 	String getVersionEnvironment() {
@@ -676,9 +675,30 @@ ConverterCategory getCategory() {
 
     };
     
-    private final static String X_X_X = "(([0-9]+)\\.([0-9]+)\\.([0-9]+))";
-    private final static String X_X   = "(([0-9]+)\\.([0-9]+))";
-    private final static String YYYYMMDD = "(([0-9]{4})([0-9]{2})([0-9]{2}))";
+		/**
+		 * Version pattern with major, minor and bugfix version. 
+		 */
+    private final static String X_X_X  = "(([0-9]+)\\.([0-9]+)\\.([0-9]+))";
+
+		/**
+		 * Version pattern with major, minor and optional bugfix version. 
+		 */
+		private final static String VX_X__X = "(([0-9]+)\\.([0-9]+)(?:\\.([0-9]+))?)";
+
+		/**
+		 * Version pattern with major, version and minor version. 
+		 */
+    private final static String VX_X    = "(([0-9]+)\\.([0-9]+))";
+
+		/**
+		 * Version pattern with major version only. 
+		 */
+    private final static String VX      = "(([0-9]+))";
+		
+		/**
+		 * Version signifying a date in standard ISO8601 but without hyphens. 
+		 */
+    private final static String VYYYYMMDD = "(([0-9]{4})([0-9]{2})([0-9]{2}))";
     
     // TBC: needed? 
     private final static Map<String, Converter> cmd2conv;
