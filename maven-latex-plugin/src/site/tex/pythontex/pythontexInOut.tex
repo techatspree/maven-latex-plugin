@@ -1,0 +1,268 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+\documentclass[10pt]{article}
+\synctex=1
+\usepackage{iftex}
+
+\iftutex%
+\usepackage{fontspec}
+\else
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fi
+\usepackage{fancyvrb}
+
+
+%%\pdfinfoomitdate1
+%\pdfsuppressptexinfo-1
+%\pdftrailerid{}
+
+
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
+
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
+
+\usepackage[a4paper]{geometry}
+\usepackage{listings}
+\usepackage[aux]{rerunfilecheck}
+
+% graphics 
+\makeatletter
+
+\ifpdf%
+\usepackage{xcolor}  % [pdftex]
+\usepackage{graphicx}% [pdftex] 
+\usepackage{hyperref}% driver [hpdftex] is autodetected 
+
+\ifLuaTeX
+% for lualatex
+\pdfvariable minorversion=7
+% omit CreationDate and ModDate keys.
+\pdfvariable suppressoptionalinfo 767
+% no adding to the trailer dictionary.
+\pdfvariable trailerid{}
+\pdfvariable suppressoptionalinfo -1
+\else
+\ifXeTeX
+% for xelatex
+\special{pdf:minorversion 7}
+% TBD: find a way to express pdfinfoomitdate: necessary? 
+\special{pdf:trailerid []}
+\else
+\ifPDFTeX
+\pdfminorversion=7         % for pdflatex
+% omit CreationDate and ModDate keys.
+% not before pdfTeX 3.14159265-2.6-1.40.17
+\pdfinfoomitdate=1                   % for pdflatex
+% no adding to the trailer dictionary.
+%\pdftrailer=0                        % for pdflatex
+\pdftrailerid{}                       % for pdflatex
+\pdfsuppressptexinfo=-1               % for pdflatex
+\else
+% Here, the tex processor is unknown. 
+\fi%pdftex
+\fi%xetex
+\fi%luatex
+
+
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Files, errors and warnings of pythontex },
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Producer    ={unknown},
+    Subject     ={pythontex},
+    Keywords    ={LaTeX;pythontex}
+  }
+}
+
+
+\else
+\usepackage[dvipdfmx]{xcolor}
+\usepackage[dvipdfmx]{graphicx}
+\@ifpackageloaded{tex4ht}{%
+  % \usepackage[tex4ht]{hyperref}
+  \setboolean{texFhtLoaded}{true}
+}{%
+%\usepackage[dvipdfmx]{hyperref}
+}
+\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
+\fi
+
+\usepackage{import}
+\usepackage[keeptemps, depythontex, rerun=always, fvextfile=55]{pythontex}%
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+
+%\usepackage{latex-bnf}
+\title{Files, Errors and Warnings of \texttt{pythontex} 0.18 }
+\author{Ernst Reissner (rei3ner@arcor.de)}
+\date{}
+
+\newcommand{\lualatex}{\texttt{lualatex}}
+\newcommand{\makeIndex}{\texttt{makeindex}}
+\newcommand{\pytex}{\texttt{pythontex}}
+\newcommand{\Ppytex}{package \texttt{pythontex}}
+\newcommand{\pytexP}{\texttt{pythontex} package}
+\newcommand{\dpytex}{\texttt{depythontex}}
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\listoffigures
+%\listoftables
+
+\section{Introduction}
+
+This document is created with \lualatex{} or that like 
+with output format 
+\ifpdf%
+pdf%
+\else
+dvi%
+\fi.
+The package \texttt{tex4ht} 
+is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
+
+The \pytexP{} together with the auxiliary program with the same name \pytex, 
+allows including code, e.g.~in Python into a \LaTeX{} document. 
+This document describes the input/output behavior of the auxiliary program \pytex, version 0.18
+which includes all files read and written and uses pythontex. 
+For example, \texttt{\pys[sname]{1+1=!{1+1}}} has been computed by python. 
+% \begin{pycode}
+% import sys
+% sys.stdout.write("bla") 
+% \end{pycode}
+
+Interaction of \pytex{} with a \LaTeX-to-pdf converter like \lualatex{} 
+is comparable to that of other auxiliary programs like \makeIndex: 
+A latex package makes the \LaTeX-to-pdf converter extract information for the auxiliary program 
+into a separate file or more. 
+Then the auxiliary program is run which creates further files 
+which the \LaTeX-to-pdf converter reads in a second run. 
+
+Both, the package \texttt{pythontex} and the auxiliary programs \pytex{} and \dpytex, 
+are described in~\cite{PythonTexP}. 
+Moreover, there is an introduction~\cite{PythonTexQ} and a gallery~\cite{PythonTexG}. 
+For background on the intentions of package \texttt{pythontex}, consult~\cite{PythonTexRepr}. 
+
+The integration of \texttt{pythontex} into the latex maven plugin in this project 
+is given in~\cite{LatexPlugin}, Section 5.5. 
+
+Another source of knowledge on pythontex is the source code hosted at 
+\url{https://github.com/gpoore/pythontex}. 
+
+At least the following properties are special to \Ppytex: 
+%
+\begin{itemize}
+  \item The number of files \pytex{} may create is variable 
+  and so by default they are put into a subfolder. 
+  \item The output files generated are highly configurable. 
+  \item There is more than one auxiliary program tied to the package, besides \pytex{} also \dpytex. 
+  \item The errors and warnings of a \pytex{} run and of a \dpytex{} run are not written into a log file. 
+\end{itemize}
+
+In~\cite{LatexPlugin}, Section 5.5 a wrapper for \pytex{} is suggested 
+writing the errors and warnings normally coming at standard output or error output into a log file \texttt{xxx.plg}. 
+Nevertheless, currently no log file is written. 
+
+The \Ppytex{} is highly configurable, 
+more than this software allows. 
+Thus, also in this document 
+we assume that neither \cmd{setpythontexoutputdir} setting the output directory 
+nor \cmd{setpythontexworkingdir} setting the working directory are used, 
+because this software assumes the default that the working directory is the directory 
+containing the \LaTeX{} main file \texttt{xxx.tex}
+and the output directory is in the working directory 
+and its name is \texttt{pythontex-files-xxx}. 
+
+
+\section{The converter \pytex}\label{sec:pytex}
+
+As already pointed out in the introduction, 
+we restrict ourselves to the default case 
+in which \pytex{} writes output files only in folder \texttt{pythontex-files-xxx}. 
+
+Under these assumptions, Figure~\ref{fig:py2dir} shows the input and output files of \pytex{}. 
+
+\begin{figure}[htb]
+  \centering
+  \ifthenelse{\boolean{texFhtLoaded}}{
+  should be a picture 
+  }{
+  \import{}{F5_07py2dir.ptx}
+  }
+  \caption{\label{fig:py2dir}Conversion of a \texttt{pytxcode}-file using \texttt{pythontex}}
+  \end{figure}
+
+  The input file is described in Section~\ref{subsec:pytexInFile} in full detail. 
+  Section~\ref{subsec:pytexOutFile} is devoted to the output files of \pytex{}. 
+  Note that unlike the wrapper \texttt{pythontexW}, the original \pytex{} 
+  just prints errors and warnings. 
+  These are all collected in Section~\ref{subsec:pytexErrWarn}. 
+  Finally, Section~\ref{subsec:pytexFCodes} is on the failure codes. 
+
+\subsection{The Input File \texttt{xxx.pytxcode}}\label{subsec:pytexInFile}
+
+\subsection{The Output Files}\label{subsec:pytexOutFile}
+
+  Figure~\ref{fig:py2dir} shows that the output files of \pytex{} 
+  are all in folder \texttt{pythontex-files-xxx}. 
+  Temporary files in dotted boxes, 
+  so these can be seen only if the \pytex{} run is interrupted, e.g. by failure. 
+  The other files are called {\em final}. 
+  The Figure also indicates, that the wrapper \texttt{pythontexW} writes a log file in addition. 
+  
+  Among the final files, there is \texttt{xxx.pytxmcr} 
+  which starts something like 
+
+\begin{lstlisting}
+  %Last time of file creation:  1656851667.5282867
+\end{lstlisting}
+
+and contains processed pygments code according to~\cite{PythonTexP}, page~107. 
+
+  Although indicates the time of the last \pytex{} wrote the file, 
+  seemingly, \pytex{} does not update if it is unchanged. 
+  So it does not indicate the last run. %run and is updated if it has been run. 
+
+
+\subsection{Errors and Warnings at standard/error output}\label{subsec:pytexErrWarn}
+
+\subsection{Failure codes}\label{subsec:pytexFCodes}
+
+\section{The converter \dpytex}\label{sec:dpytex}
+
+\begin{figure}[htb]
+  \centering
+  \ifthenelse{\boolean{texFhtLoaded}}{
+  should be a picture 
+  }{
+  \import{}{F5_08depy2out.ptx}
+  }
+  \caption{\label{fig:depy2out}Conversion of a \texttt{depytx}-file using \texttt{depythontex}}
+  \end{figure}
+
+
+\subsection{The Input File \texttt{xxx.dpytx}}\label{subsec:dpytexInFile}
+
+\subsection{The Output Files}\label{subsec:dpytexOutFile}
+
+\subsection{Errors and Warnings at standard/error output}\label{subsec:dpytexErrWarn}
+
+\subsection{Failure codes}\label{subsec:dpytexFCodes}
+
+
+\bibliographystyle{alpha}
+\bibliography{../lit}{}% chktex 11 
+
+
+\end{document}
+
+
