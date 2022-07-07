@@ -5,27 +5,27 @@
 While \LaTeX{} is really strong in text processing 
 and also in formula processing, 
 in itself it is weak in its graphical abilities. 
-To include graphics into a \LaTeX-document, 
-several \LaTeX-packages are required and must be installed: 
+Graphics in some formats can be included directly, 
+in some cases preprocessing is necessary to obtain includable graphics, 
+but in most cases, according \LaTeX-packages must be used: 
 %
 \begin{itemize}
 \item[graphicx]
 is the basic graphics package which provides the command 
 \cmd{includegraphics}{} 
-which allows to include graphics natively 
+which allows including graphics natively 
 in the formats pdf, eps, jpg and png at least. 
 For details see~\cite{GraX}. 
 \item[xcolor]
-allows to use colors in graphics. 
-Even if the author does not use graphics, 
+allows using colors in graphics. 
+Even if the author does not use colors in graphics, 
 several formats, like \gls{fig}, \gls{gp} and \gls{svg} 
 offer it and so the according converters 
 transforming them into the native formats 
-create color information and so the package must be installed 
-if using those formats. 
+create color information which can be rendered only via \texttt{xcolor}. 
 For details see~\cite{XColorP}. 
 \item[transparent]
-allows to specify transparency in graphics. 
+allows specifying transparency in graphics. 
 Here the same applies as for color: 
 Even if you do not use the feature, 
 some source formats do (in fact only \gls{svg}) does 
@@ -37,6 +37,11 @@ is needed for bitmap formats like \gls{jpg} and \gls{png} only.
 Used to extract resolution and bounding box. 
 FIXME\@: needed more information. 
 For details see~\cite{BmpP}. 
+\item[tikz]
+The tikz code described in \cite{TikzPGF} is just in \LaTeX{} format. 
+Thus, it can be included directly anddoes not require any preprocessing. 
+Still what is needed is a good graphical editor like \texttt{tikzedt} 
+with online manual \cite{TikzEdt}. 
 \item[import]
 is strictly speaking no graphics package. 
 According to its documentation~\cite{ImpoP}, 
