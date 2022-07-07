@@ -5,7 +5,7 @@
 Both the ant-task and the maven-plugin just direct parameters 
 from ant and from maven, respectively, 
 to the programs that do the proper work. 
-Thus installation of the ant-task and of the maven-plugin 
+Thus, installation of the ant-task and of the maven-plugin 
 requires that all needed programs are installed. 
 These prerequisites are collected in Section~\ref{sec:prerequisites}. 
 \index{ant-task}
@@ -15,15 +15,15 @@ These prerequisites are collected in Section~\ref{sec:prerequisites}.
 The ant-task is tested with \index{ant}
 %
 \begin{verbatim}
-Apache Ant(TM) version 1.10.10 compiled on December 22 1969}
+Apache Ant(TM) version 1.10.12 compiled on December 14 1969}
 \end{verbatim}
 %
-(of course the year is not correct but this is the version string
+(of course the year is not correct, but this is the version string
 displayed by that release) and the maven-plugin with 
 %
 \index{maven}
 \begin{verbatim}
-Apache Maven 3.8.1 
+Apache Maven 3.8.5 
 \end{verbatim}
 %
 Both, ant and maven are written in java and require a java installation. 
@@ -34,7 +34,7 @@ but java 8 seems sufficient.
 
 So, a java installation is the base for running either the ant-task 
 or the maven-plugin. 
-Also this plugin is written in java. 
+Also, this plugin is written in java. 
 To use the maven-plugin, of course maven must be installed 
 and to use the ant-task, ant must be installed. 
 
@@ -48,7 +48,11 @@ Besides plain building of documentation,
 this software also supports development of documents. 
 \LaTeX{} and related programs are based on text files mainly 
 and so a good editor is required for development. 
-The author recommends and uses good old 
+
+The author recommends and uses vs code, e.g. 1.68.1 
+in conjunction with package \LaTeX{} workshop and LTeX. 
+
+An alternative is good old 
 \texttt{GNU Emacs 24.3.1 (x86\_64-suse-linux-gnu, GTK+ Version 3.16.7)} 
 together with several packages to support 
 various file formats. 
@@ -107,7 +111,7 @@ It also serves to create and to edit svg-files.
 
 
 
-Currently for including pdf-files in both cases, 
+Currently, for including pdf-files in both cases, 
 the driver \texttt{dvipdfmx} must be installed. 
 Strictly speaking, this is required only for html-creation and related. 
 Note that if no pictures created by \texttt{fig2dev}, \texttt{gnuplot}, 
@@ -126,12 +130,13 @@ to be supported:
 %
 \begin{itemize}
 \item
-To create pdf-files from \LaTeX-files we use \texttt{pdflatex} 
+To create pdf-files from \LaTeX-files we use \texttt{lualatex} 
 or some other kind of \LaTeX{} creating pdf-files 
-like \texttt{xelatex} or \texttt{lualatex}. 
-\index{pdflatex}\index{xelatex}\index{lualatex} 
+like \texttt{xelatex} or \texttt{pdflatex}. 
+\index{lualatex}\index{xelatex}\index{pdflatex}
+
 \LaTeX{} uses several auxiliary programs. 
-Above all \texttt{bibtex} to create the bibliography 
+Above all \texttt{bibtex}, to create the bibliography 
 and \texttt{makeindex} and \texttt{splitindex} for the index 
 and \texttt{makeglossaries} for the glossary. 
 \index{bibtex}\index{makeindex}\index{splitindex}\index{makeglossaries}
@@ -186,7 +191,7 @@ pdf-files is required.
 \index{pdftotext}
 \item
 An application which does not create a target, 
-i.e. a file in the target directory is \texttt{chktex} 
+i.e.~a file in the target directory is \texttt{chktex} 
 which just checks the latex main files and associated files. 
 \end{itemize}
 
@@ -206,34 +211,34 @@ The recommended ones are
 %
 \begin{itemize}
 \item
-\pkg{geometry} described in \cite{GeomP} 
+\pkg{geometry} described in~\cite{GeomP} 
 to control page layout. 
 \item
-\pkg{microtype} described in \cite{MicroTyP} improve readability 
+\pkg{microtype} described in~\cite{MicroTyP} improve readability 
 and make the document look nicer. 
 It also helps to avoid bad boxes. 
 \item
-\pkg{hyperref} described in \cite{HyperTextP} 
-to insert hypertext marks, which i do not want to miss in larger documents. 
+\pkg{hyperref} described in~\cite{HyperTextP} 
+to insert hypertext marks, which I do not want to miss in larger documents. 
 % FIXME: with latex2rtf: 
 %\newif\iflatextortf% false for latex but set true for latex2rtf internally 
 %\iflatextortf\else\usepackage{hyperref}\fi % includes hyperrefss if not rtf
 %\iflatextortf\else\begin{appendix}\fi
 %\iflatextortf\else\end{appendix}\fi
 \item
-\pkg{srcltx} described in \cite{SrcLtxP} 
-which allows to jump from the DVI file to the .tex source and back.
+\pkg{srcltx} described in~\cite{SrcLtxP} 
+which allows to jump from the DVI file to the tex source and back.
 % TBD: indicate as deprecated. 
 \item
 \pkg{showframe} 
 if \pkg{geometry} is not used with option \pkg{showframe}. 
 There seems to be no package documentation for package \pkg{showframe}. 
 \item
-\pkg{booktabs} described in \cite{BooktP} 
+\pkg{booktabs} described in~\cite{BooktP} 
 
 \item
-\pkg{fix-cm} described in \cite{FixCmP} and 
-\pkg{anyfontsize} described in \cite{AnyfontsizeP} 
+\pkg{fix-cm} described in~\cite{FixCmP} and 
+\pkg{anyfontsize} described in~\cite{AnyfontsizeP} 
 to allow arbitrary font sizes, eliminating certain warnings. 
 \end{itemize}
 
@@ -242,17 +247,17 @@ Almost required are
 %
 \begin{itemize}
 \item
-\pkg{rerunfilecheck} described in \cite{RerunFChkP} 
+\pkg{rerunfilecheck} described in~\cite{RerunFChkP} 
 which writes additional rerun warnings to the log file 
 if some auxiliary files have changed. 
 This software relies on these warnings 
 to control rerun latex and other applications. 
 \item
-\pkg{ifthen} described in \cite{IfThenP} 
+\pkg{ifthen} described in~\cite{IfThenP} 
 which provides the \texttt{ifthenelse}-command 
 which is needed to create both pdf and html and also to create rtf. 
 \item
-\pkg{iftex} described in \cite{IfTeXP} which has two functions: 
+\pkg{iftex} described in~\cite{IfTeXP} which has two functions: 
 \begin{itemize}
   \item 
   It provides the \cmd{ifpdf}-command to detect pdf-mode. 
@@ -269,42 +274,42 @@ which is needed to create both pdf and html and also to create rtf.
   e.g.~by specifying \cmd{RequireLuaTeX}. 
 \end{itemize}
 \item
-The graphics packages described in \cite{GraX}, 
+The graphics packages described in~\cite{GraX}, 
 in particular \pkg{graphicx}, \pkg{xcolor} and \pkg{transparent}, 
-the latter two described in \cite{XColorP} and in \cite{TransP}, 
+the latter two described in~\cite{XColorP} and in~\cite{TransP}, 
 respectively. 
-Sometimes also \pkg{bmpsize} described in \cite{BmpP} 
+Sometimes also \pkg{bmpsize} described in~\cite{BmpP} 
 if pixel graphics is used. 
 \item
-\pkg{import} described in \cite{ImpoP} 
+\pkg{import} described in~\cite{ImpoP} 
 e.g.~to import nested graphic files from arbitrary directories. 
 \item
-\texttt{inputenc} described in \cite{InputencP} 
+\texttt{inputenc} described in~\cite{InputencP} 
 to select an input encoding 
 \texttt{fontenc} to select a font encoding. 
-\cite{FontSel} describes font selection in general, 
+Font selection is described in~\cite{FontSel} in general, 
 with Section 5 on font encoding and 
 Section 5.1 on the \texttt{fontenc} package. 
 This package is almost indispensable if you do not write English, 
 e.g.~to access German umlauts. 
-Note that \cite{FontEnc} describes font encoding in more detail. 
+Note that~\cite{FontEnc} describes font encoding in more detail. 
 \item 
-\pkg{makeidx} and \pkg{showidx} described in \cite{MkidxShIdxP} 
+\pkg{makeidx} and \pkg{showidx} described in`\cite{MkidxShIdxP} 
 or something comparable for creating indices. 
 \item 
-\pkg{glossaries} described in \cite{GloP} 
-with tutorial \cite{GloPGuide}
+\pkg{glossaries} described in~\cite{GloP} 
+with tutorial~\cite{GloPGuide}
 or something comparable for creating glossaries. 
 \item 
-\pkg{tocbibind} described in \cite{TocBibIndP} 
+\pkg{tocbibind} described in~\cite{TocBibIndP} 
 to include bibliography and index (what about glossaries?) 
 into the table of contents. 
 \item 
-\pkg{nag} described in \cite{NagP} 
+\pkg{nag} described in~\cite{NagP} 
 which performs certain checks unveiling deficiencies 
 not filtered by the compiler nor by another check tool. 
 \item 
-\pkg{babel} described in \cite{BabelP} for language support. 
+\pkg{babel} described in~\cite{BabelP} for language support. 
 This is not used by this manual, because it is in English. 
 \end{itemize}
 
@@ -315,12 +320,12 @@ Useful packages with which this software is tested:
 \item
 The ams-packages **** \pkg{amsmath}
 \item
-\pkg{longtable} described in \cite{LongTabP} 
+\pkg{longtable} described in~\cite{LongTabP} 
 for long tables, i.e.~tables exceeding a page. 
 \item
-\pkg{listings} described in \cite{ListingsP} for listings. 
+\pkg{listings} described in~\cite{ListingsP} for listings. 
 \item
-\pkg{fancyvrb} described in \cite{FancyVerbP} 
+\pkg{fancyvrb} described in~\cite{FancyVerbP} 
 provides useful environments to mark verbatim text. 
 \end{itemize}
 
@@ -354,7 +359,7 @@ caption={The source repository for this plugin}]
 \end{lstlisting}
 
 Then it can be used from command line,
-e.g. to create pdfs as \texttt{mvn latex:pdf}
+e.g.~to create pdfs as \texttt{mvn latex:pdf}
 or for cleanup \texttt{mvn latex:clr} with with default configuration
 just adding the coordinates in the builts-plugin section of the pom
 as shown in Listing~\ref{lst:coords}. 
@@ -386,7 +391,7 @@ caption={The coordinates of this plugin}]
 
 
 To make the plugin available within a build,
-one has to add executions, e.g. as shown in Listing~\ref{lst:executions}:
+one has to add executions, e.g.~as shown in Listing~\ref{lst:executions}:
 Typically, this plugin is used in the \texttt{site} lifecycle phase 
 to process latex sources,
 but it must also be used to clean up the source directory
@@ -484,7 +489,7 @@ as can be seen in the ant documentation,
 in general it is in folder \texttt{lib} in ant's installation directory. 
 
 The ant buildfile is given in Listing~\ref{lst:fullConfigAnt}
-on page \pageref{lst:fullConfigAnt}.
+on page~\pageref{lst:fullConfigAnt}.
 From that, one has to copy the following
 into the \texttt{build.xml} file in the current project:
 %
