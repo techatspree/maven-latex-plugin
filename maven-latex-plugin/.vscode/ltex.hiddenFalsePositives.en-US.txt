@@ -1,0 +1,4 @@
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QIf an application writes at least one error into the log file, this software logs an error.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QIf an application writes no error into the log file but at least one warning, principally this software logs a warning.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAlso commands setpythontexoutputdir setting the output directory and setpythontexworkingdir setting the working directory shall not be used, because this software assumes the default that the working directory is the directory containing the \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q main file xxx.tex and the output directory is in the working directory and its name is pythontex-files-xxx.\\E$"}
+{"rule":"SUBJECT_VERB_AGREEMENT_PLURAL","sentence":"^\\QTo perform sorting, formatting and typically also unification, the package glossaries allows three mechanisms.\\E$"}
