@@ -5,13 +5,13 @@
 %\RequirePackage{lmodern} % does not work with htlatex
 %\directlua{pdf.setminorversion(7)}
 \documentclass[12pt]{book}
-\newif\iflatextortf % false for latex but set true for latex2rtf internally 
+\newif\iflatextortf% false for latex but set true for latex2rtf internally 
 
 \input{header.tex}
 \input{buildParams.tex}
 
 \ifpdf%
-\ifLuaTeX
+\ifLuaTeX%
 % for lualatex
 \pdfvariable minorversion=7
 % omit CreationDate and ModDate keys.
@@ -212,7 +212,7 @@ In the past, normally \gls{dvi} (device independent)
 described in~\cite{DviF} has been used 
 and still creation of external formats like \gls{html}, 
 \gls{odt} and \gls{docx} are based on an intermediate \gls{dvi}-file.
-It is much more lightweight than pdf specified in~\cite{Pdf1}, \cite{Pdf2}
+It is much more lightweight than pdf specified in~\cite{Pdf1}, in~\cite{Pdf2}
 and in~\cite{Pdf3}.
 % strange: no mention of other formats
 % epub for example, htm, xhtml and office formats also rtf
@@ -220,7 +220,7 @@ and in~\cite{Pdf3}.
 
 This piece of software implements both an ant-task and a maven-plugin 
 generating documentation of various formats from \LaTeX-files 
-in an uniform way. 
+in a uniform way. 
 Chapter~\ref{chap:install} shows how to install both the maven-plugin 
 and the ant-task 
 and Chapter~\ref{chap:usage} describes the usage. 
@@ -255,8 +255,7 @@ used by this software are fully configurable via parameters,
 that aspects not completely specified can be handled flexibly, 
 there are parameters supporting information development 
 and that for the parameters are default values 
-which allow to do without explicit parametrization in most of the cases. 
-\index{ant-task}
+which allow doing without explicit parametrization in most of the cases.\index{ant-task}%
 Both, the ant-task and the maven-plugin rely on the same code base 
 which form the package \texttt{org.m2latex.core}. 
 The code specific for the ant-task is in \texttt{org.m2latex.antTask} 
@@ -345,7 +344,7 @@ without further distinction.
 
 This software provides both a maven plugin and an ant task 
 built on the same code base. 
-Thus the maven plugin throws a \texttt{MojoFailureException} 
+Thus, the maven plugin throws a \texttt{MojoFailureException} 
 if and only if the according ant-task throws an \texttt{BuildException} 
 in the same situation. 
 
@@ -425,13 +424,13 @@ Identifier        & Message  \\
 \endlastfoot%
 \texttt{\footnotesize WMI01} 
 & \texttt{\footnotesize Version string from converter \$conv did not match expected form:      } \\
-& \texttt{\footnotesize \$conv: 'version'not?in\$interv } \\
+& \texttt{\footnotesize \$conv: 'version'not?in\$interv } \\% chktex 32
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
   Indicates that the version string coming from the converter \$conv
   is not as expected.
   Programming error excluded, this means that the version does not fit,
-  i.e. is not in \texttt{\$interv}.
+  i.e.~is not in \texttt{\$interv}.
 \end{minipage}
 } \\
 \texttt{\footnotesize WMI02} 
@@ -462,7 +461,7 @@ Identifier        & Message  \\
 & \texttt{\footnotesize build may be incomplete. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-TBD. 
+TBD 
 \end{minipage}
 } \\
 \texttt{\footnotesize XFU02} 
@@ -516,9 +515,9 @@ TBD
 \end{minipage}
 } \\
 \end{longtable}
-TBD: check whether workaround still necessary. 
-TBD: complete list
-TBD: add missing lists 
+TBD\@: check whether workaround still necessary. 
+TBD\@: complete list
+TBD\@: add missing lists 
 
 
 \section{Exceptions}\label{sec:exception}
@@ -620,7 +619,7 @@ but if it exists and is a regular file, it cannot be created any more.
 \end{minipage}
 } \\
 \texttt{\footnotesize TSS04}  & \texttt{\footnotesize The target set '\$targets' } \\
-& \texttt{\footnotesize should be a subset of the registered targets '...', but is not. } \\
+& \texttt{\footnotesize should be a subset of the registered targets '\ldots', but is not. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The target set is given in the pom/build-file 
@@ -633,7 +632,7 @@ to check the targets of this plugin.
 \end{minipage}
 } \\
 \texttt{\footnotesize TSS05}  & \texttt{\footnotesize The excluded converters '\$convertersExcluded' } \\
-& \texttt{\footnotesize should form a subset of the registered converters '...'. } \\
+& \texttt{\footnotesize should form a subset of the registered converters '\ldots'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 From the possible ``registered'' converters the ones not used may be excluded
@@ -643,22 +642,22 @@ These converters may not even be installed.
 \end{minipage}
 } \\
 \texttt{\footnotesize TSS06}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
-& \texttt{\footnotesize although not among the registered converters '...' as expected. } \\
+& \texttt{\footnotesize although not among the registered converters '\ldots' as expected. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Only registered converters may be used. 
 \end{minipage}
 } \\
 \texttt{\footnotesize TSS07}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
-& \texttt{\footnotesize although among the excluded converters '...'. } \\
+& \texttt{\footnotesize although among the excluded converters '\ldots'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Among the registered converters only those may be used,
-which are not excluded, i.e. listed in configuration in section \texttt{convertersExcluded}.
+which are not excluded, i.e.~listed in configuration in section \texttt{convertersExcluded}.
 \end{minipage}
 } \\
 \texttt{\footnotesize TSS08}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
- & \texttt{\footnotesize in configuration '...' instead of configuration '...'. } \\
+ & \texttt{\footnotesize in configuration '\ldots' instead of configuration '\ldots'. } \\
  \multicolumn2{|l|}{
  \begin{minipage}{0.95\linewidth}
    Each converter may occur in a specified configuration only.
@@ -675,7 +674,7 @@ which are not excluded, i.e. listed in configuration in section \texttt{converte
    The \texttt{\$diffDirectoryFile} shall exist and be a directory. 
    In it shall be stored the artifacts the actually created shall be compared with 
    if \texttt{chkDiff} is set using the command \texttt{diffPdfCommand}. 
-   As the name suggests, currently only pdf files are compared. 
+   As the name suggests, currently only pdf-files are compared. 
  \end{minipage}
  } \\
 \end{longtable}
@@ -790,7 +789,7 @@ FIXME\@: to be added.
 
 The rules for logging warnings and errors is, 
 that the user must be notified, 
-if something went wrong but the run is not aborted, 
+if something went wrong, but the run is not aborted, 
 by a warning or an error. 
 It is not required that for each detail going wrong, 
 there is a separate notification, 
@@ -809,7 +808,7 @@ is left to that application:
 If the application returns an error code other than 0, 
 it is an error. 
 \item
-If the application is expected to write a log file 
+If the application is expected to write a log file, 
 but none is found, it is an error. 
 The applications used here, 
 return a nontrivial error code if no log file is written. 
@@ -835,7 +834,11 @@ If an application does not create the expected output file,
 this software logs an error. 
 This may be because of an internal error as described above, 
 but also because of wrong parameters. 
-So, e.g.~\texttt{lualatex -v xxx.tex} does not create a pdf-file as expected. 
+So, 
+% LTeX: enabled=false
+e.g.~\texttt{lualatex -v xxx.tex} 
+% LTeX: enabled=true
+does not create a pdf-file as expected. 
 
 
 \begin{longtable}{|ll|}
@@ -1414,7 +1417,7 @@ on a text starting with the word ``error''.
 
 Maybe this is not a bug 
 but an inconsistency between auctex and local config: 
-Running with the plugin, e.g. with \texttt{pdflatex}, we obtain 
+Running with the plugin, e.g.~with \texttt{pdflatex}, we obtain 
 %
 \begin{Verbatim}[fontsize=\tiny]
 This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.8.9)  30 JAN 2017 10:58
@@ -1435,7 +1438,7 @@ entering extended mode
 \end{Verbatim}
 %
 and also the behavior is slightly different, 
-e.g. on file 
+e.g.~on file 
 % TBD: clarify why this does not work with lstlisting...
 \begin{verbatim}
 \documentclass{article}
