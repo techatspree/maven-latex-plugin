@@ -107,7 +107,7 @@
 
 \section{Introduction}
 
-This document is created with pdflatex or that like 
+This document is created with \texttt{lualatex} or that like 
 with output format 
 \ifpdf%
 pdf%
@@ -117,7 +117,7 @@ dvi%
 The package \texttt{tex4ht} 
 is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
 
-This documents describes the grammar 
+This document describes the grammar 
 of the native file format of the xfig graphic program version 3.2. 
 It is based on xfig.3.2/Doc/FORMAT3.2 in xfig 3.2 source distribution. 
 The file extension is \texttt{.fig} and the file-format is human-readable. 
@@ -125,7 +125,7 @@ The file extension is \texttt{.fig} and the file-format is human-readable.
 If a line contains \texttt{\#}, 
 the rest of the line is ignored as regards the 
 Lines starting with \texttt{\#} are comment lines and are ignored. 
-Also xfig does not insert comments, 
+Also, xfig does not insert comments, 
 except the first line as described in Section~\ref{sec:header}. 
 On the other hand, if one writes comments, e.g.~with an editor, 
 these are essentially preserved when xfig reads the file and writes it 
@@ -134,12 +134,12 @@ a blank is added, but that is all what is changed).
 Note that xfig accepts lines with trailing comments, 
 but does not preserve these kinds of comments. 
 Also, comments with leading blanks are not allowed. 
-So comments occur linewise. 
+So comments occur line wise. 
 
 Although the format is human-readable, 
-it is not designed to make it easy to interprete the content 
+it is not designed to make it easy to interpret the content 
 and to obtain an overview. 
-Thus comments may be valuable aid to give a notion 
+Thus, comments may be valuable aid to give a notion 
 of the intent behind the various elements contained. 
 
 As comments, also empty lines are ignored, 
@@ -159,11 +159,11 @@ To avoid repetition in the description,
 these elements are described separately in Section~\ref{sec:param} 
 and referenced from within Section~\ref{sec:obj}. 
 
-Note that the header may be interpreted linewise 
+Note that the header may be interpreted line wise 
 and also both objects and their parameters are described as lines. 
 Apart from comment lines, the entries of each line are separated by blanks. 
 When reading a fig-file, 
-xfig interpretes a string of subsequent blanks like one blank, 
+xfig interprets a string of subsequent blanks like one blank, 
 except for text strings in text objects (see Section~\ref{subsec:text}). 
 Consequently, writing back, each such maximal sequence of blanks 
 is replaced by a single blank. 
@@ -171,7 +171,7 @@ Trailing blanks are not preserved.
 
 Leading blanks do not occur in the header. 
 Lines with leading blanks in the header are ignored. 
-Thus e.g.~the orientation line 
+Thus, e.g.~the orientation line 
 ``\texttt{\ \ \ Landscape}'' is replaced by ``\texttt{Portrait}'', 
 which demands the default orientation. 
 
@@ -200,7 +200,7 @@ which allows the user to mix interpolation and approximation
 points in a same curve. 
 More precisely, it means that an X-spline curve 
 is neither an interpolated spline nor an approximated one, 
-it is BOTH (the behaviour of each point 
+it is BOTH (the behavior of each point 
 is controlled by one single parameter called ``shape factor''). 
 For additional information about X-splines, see~\cite{XSpline}. 
 
@@ -264,7 +264,7 @@ int    & Resolution coord-system & Fig units/inch and coordinate system:\\
     Xfig will read the orientation string and change the canvas to match
     either the Landscape or Portrait mode of the figure file.
 
-    The units specification is self-explanatory.
+    The specification of the units is self-explanatory.
 
     The coordinate-system variable is ignored --- the origin is ALWAYS the
     upper-left corner.
@@ -400,7 +400,7 @@ The \texttt{Headline} following now is the sole line defining an ellipse. \\
 %
 \begin{tabular}{lll}
 \toprule
-type  & name                & Possible values or explanation \\
+Type  & name                & Possible values or explanation \\
 \midrule
 \midrule
 int   &  ObjectCode         & always 1 (see Section~\ref{sec:obj}) \\
@@ -650,11 +650,11 @@ The bits of the \texttt{FontFlags} field are defined as follows:
 \item[0]
 Rigid text: text doesn't scale when scaling compound objects
 \item
-Special text: interprete test as for \LaTeX-code. 
+Special text: interpret test as for \LaTeX-code. 
 If this is set, the following flag affects the view on the xfig GUI 
 but not external view, e.g.~when printing or exporting. 
 \item
-PostScript font: interprete \texttt{Font} above 
+PostScript font: interpret \texttt{Font} above 
 as Postscript font (otherwise as \LaTeX{}-font) 
 Details follow below. 
 \item
@@ -663,7 +663,7 @@ This does not affect the external view, e.g.~printing and export.
 \end{enumerate}
 
 The \texttt{Font} field is immaterial, if the Special flag above is set. 
-Otherwise its meaning depends on the PostScrpt/\LaTeX-flag 
+Otherwise, its meaning depends on the PostScrpt/\LaTeX-flag 
 described above: 
 
 For \texttt{FontFlags} bit 2 = 0, 
@@ -1111,7 +1111,7 @@ there are the following deviations:
 \begin{enumerate}
 \item[-1]    not filled
 \item[0]     white
-\item[1--19]  `shades' of grey, from lighter to darker.
+\item[1--19]  `shades' of gray, from lighter to darker.
 \item[20]    (full saturation of) black
 \item[21--40] not used. 
 \end{enumerate}
@@ -1122,7 +1122,7 @@ from standard colors:
 \begin{enumerate}
 \item[-1]    not filled
 \item[0]     black
-\item[1--19]  `shades' of grey, from darker to lighter.
+\item[1--19]  `shades' of gray, from darker to lighter.
 \item[20]    (full saturation of) white
 \item[21--40] not used. 
 \end{enumerate}
