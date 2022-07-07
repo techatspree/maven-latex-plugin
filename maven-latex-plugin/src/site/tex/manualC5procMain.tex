@@ -2,12 +2,12 @@
 % !TEX root = manualLatexMavenPlugin.tex
 \chapter{Processing of \LaTeX{} main files}\label{chap:latexMainConversions}
 
-Given graphics in formats includeable in tex-files, 
+Given graphics in formats includable in TEX files, 
 which may require preprocessing described in 
 Chapter~\ref{chap:GraphConversions}, 
 this section describes the conversions of latex main files 
 into target files in detail. 
-The most important target file formats is \gls{pdf}. 
+The most important target file format is \gls{pdf}. 
 Conversion in this format is described in Section~\ref{sec:tex2pdf}. 
 Note that \gls{pdf} also occurs as source format 
 for included pictures and as intermediate files. 
@@ -35,19 +35,19 @@ Besides the output formats traditional for \LaTeX,
 \gls{pdf} and \gls{dvi} describing e.g.~books, 
 Section~\ref{sec:tex2html} describes creation of 
 \gls{html}, Section~\ref{sec:tex2odt} the creation of \gls{odt} and 
-Section~\ref{sec:tex2doc} creation of MS word formats like \gls{docx}. 
+Section~\ref{sec:tex2doc} creation of MS Word formats like \gls{docx}. 
 Finally, also pure text can be generated 
 as described in Section~\ref{sec:tex2txt}. 
 
 \newpage
 
 
-\section{Transforming \LaTeX-files into pdf-files}\label{sec:tex2pdf}
+\section{Transforming \LaTeX{} files into PDF files}\label{sec:tex2pdf}
 
-The next step is to create a pdf-file from the tex-files. 
-\LaTeX{} distinguishes master tex-files from tex-files intended to be inputted
+The next step is to create a PDF file from the TEX files. 
+\LaTeX{} distinguishes master TEX files from TEX files intended to be inputted
 from elsewhere. 
-Not tanking comments and that like into account, master tex-files have the form 
+Not tanking comments and that like into account, master TEX files have the form 
 %
 %\lstset{language=tex, basicstyle=\small}
 \begin{lstlisting}[language=tex, basicstyle=\small]
@@ -61,7 +61,7 @@ Not tanking comments and that like into account, master tex-files have the form
 
 To satisfy this task,
 one may apply a \LaTeX{} to pdf converter \texttt{latex2pdf} 
-to a master tex-file \texttt{xxx.tex}. 
+to a master TEX file \texttt{xxx.tex}. 
 The \LaTeX-to-pdf converter \texttt{latex2pdf} 
 is configurable via the parameter \texttt{latex2pdfCommand}. 
 Possible values are \texttt{lualatex}, \texttt{xelatex} and \texttt{pdflatex}, 
@@ -71,7 +71,7 @@ It is also possible to pass parameters to the \LaTeX{} to pdf converter.
 In fact, the converter \texttt{latex2pdf} 
 does much more than converting tex to pdf. 
 Figure~\ref{fig:tex2pdf} shows for \texttt{latex2pdf} set to \texttt{lualatex}, 
-that besides the pdf-file also a log-file and an aux-file is created. 
+that besides the PDF file also a log-file and an aux-file is created. 
 The log-file contains logging information on the run of the conversion 
 and the aux-file transports information from one run to the next. 
 Thus, conversion goes without it, but it is read if present. 
@@ -87,18 +87,18 @@ because the entries must be retrieved from the bib-file,
 collected and sorted. 
 This is done by invoking \texttt{bibtex} between two \texttt{latex2pdf} runs. 
 Based on the aux-file, \texttt{bibtex} creates a bbl-file 
-containing the bibliography, which is read in in the next \texttt{latex2pdf} run. 
+containing the bibliography, which is read in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:bibtex}. 
 
 If an index is demanded, 
-in addition \texttt{latex2pdf} creates an \gls{idx}-file. 
+in addition \texttt{latex2pdf} creates a \gls{idx}-file. 
 As the citations, it cannot be used directly to create an index in
 the next \texttt{latex2pdf} run, 
 because the index entries must be collected and sorted before. 
 This is done by invoking \texttt{makeindex} 
 between the two \texttt{latex2pdf} runs. 
-Based on the idx-file, \texttt{makeindex} creates an \gls{ind}-file 
-containing the index, which is read in in the next \texttt{latex2pdf} run. 
+Based on the IDX file, \texttt{makeindex} creates a \gls{ind}-file 
+containing the index, which is read in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:indices}. 
 
 If a glossary is demanded, this can be read off the \gls{aux}-file 
@@ -130,10 +130,9 @@ If a table of contents and at the same time
 a bibliography, an index or a glossary is present, 
 even two further \LaTeX{} runs are required: 
 After the first one, the bibliography, the index or the glossary 
-occurs in the pdf-file but not yet in the table of contents. 
+occurs in the PDF file but not yet in the table of contents. 
 This happens after the second additional \LaTeX{} run. 
-As described in Sections~\ref{sec:rerunMakeIndexGlossaries} and 
-\ref{sec:rerunLatex}, 
+As described in Sections~\ref{sec:rerunMakeIndexGlossaries} and~\ref{sec:rerunLatex}, 
 further runs of \texttt{makeindex}, resp,~\texttt{splitindex}, 
 \texttt{makeglossaries} 
 and of the \LaTeX-processor \texttt{latex2pdf} may be necessary. 
@@ -145,26 +144,26 @@ should be a picture
 }{
 \import{}{F5_01tex2pdf.ptx}
 }
-\caption{\label{fig:tex2pdf}Conversion of a tex-file into a pdf-file 
+\caption{\label{fig:tex2pdf}Conversion of a TEX file into a PDF file 
 (accordingly into a dvi-file)}
 \end{figure}
 
 \section{Bibliographies}\label{sec:bibtex}
 
-In case the \LaTeX{} to pdf converter writes bibliographic information, 
+In case the \LaTeX{}-to-pdf converter writes bibliographic information, 
 into its aux-file, a bibliography must be generated. 
-For each ocurrence of a \cmd{cite}-command in the tex-file, 
+For each occurrence of a \cmd{cite}-command in the TEX file, 
 \texttt{latex2pdf} writes an according entry \cmd{citation}. 
-Moreover, a \cmd{bibliography}-command in the tex-file 
+Moreover, a \cmd{bibliography}-command in the TEX file 
 writes a link to the bib-file containing the bibliography data 
 into the aux-file as \cmd{bibdata}. 
-Optionally, a \cmd{bibliographystyle}-command in the tex-file 
+Optionally, a \cmd{bibliographystyle}-command in the TEX file 
 writes a link to the bibliography style file 
 into the aux-file as \cmd{bibstyle}. 
 
 To create a bibliography, 
 a \texttt{bibtexCommand} must be run after the \LaTeX{} run. 
-The default command is the traditional \texttt{bibtex} 
+The default command is the traditional \texttt{bibtex}, 
 but there are more modern alternatives 
 like \texttt{bibtexu} and \texttt{bibtex8} supporting utf8 encoding 
 and others. 
@@ -180,13 +179,12 @@ which can be included in the next run of \texttt{latex2pdf}.
 Note that after a \texttt{bibtex}-run, 
 two \LaTeX{} runs are required: 
 The first one just puts the bibliography found in the bbl-file 
-into the pdf-file and the labels of the citations into the aux-file 
+into the PDF file and the labels of the citations into the aux-file 
 as \cmd{bibcite}-commands. 
 The second run places the labels of the citations found in the aux-file 
 at the citations given by \cmd{cite}. 
 The package \pkg{tocbibind} described in~\cite{TocBibIndP}, 
-then writes the headline of the bibliography into the table of contents. 
-\index{table of contents}
+then writes the headline of the bibliography into the table of contents.\index{table of contents}
 The package \pkg{rerunfilecheck} described in~\cite{RerunFChkP}, 
 ensures that \texttt{latex2pdf} is rerun if needed, 
 provided loaded with option \texttt{aux}. 
@@ -212,22 +210,22 @@ Conversion of an aux-file into a bbl-file using a bibliography}
 
 Vital information on \texttt{bibtex} can be found in~\cite{BibPat} 
 and in~\cite{BibMar}. 
-Also Chapter 10 in~\cite{Gra} gives vital information on \texttt{bibtex}. 
+Also, Chapter 10 in~\cite{Gra} gives vital information on \texttt{bibtex}. 
 
 
 \section{Indices}\label{sec:indices}
 
 In case the \LaTeX{} to pdf converter writes index information, 
-into its idx-file, at least one index must be generated. 
-Since the idx-file contains nothing but index information, 
+into its IDX file, at least one index must be generated. 
+Since the IDX file contains nothing but index information, 
 an index is created if and only if the \gls{idx}-file is created. 
 % Well, this is not really the truth: it is needed only if ...
 Essentially, 
 the command \cmd{makeindex}{} tells \texttt{latex2pdf} 
-to open the idx-file for writing. 
+to open the IDX file for writing. 
 Then for each occurrence of the \cmd{index}-command 
-or similar (details see below) in the tex-file, 
-an entry is written sequentially to the idx-file as 
+or similar (details see below) in the TEX file, 
+an entry is written sequentially to the IDX file as 
 \cmd{indexentry}{} comprising the keyword given by the \cmd{index}-command 
 and the page number where the \cmd{index}-command occured. 
 For example \cmd{index\{ant-task\}}{} creates an entry 
@@ -238,19 +236,18 @@ For example \cmd{index\{ant-task\}}{} creates an entry
 %
 in \texttt{xxx.idx}. 
 
-Then the \texttt{makeindex}-command is applied to the idx-file 
+Then the \texttt{makeindex}-command is applied to the IDX file 
 which sorts keywords and for each keyword collects the according page numbers, 
-sorts it and and writes the result into an \gls{ind}-file. 
+sorts it and and writes the result into a \gls{ind}-file. 
 In the next run of \texttt{latex2pdf}, 
 the \cmd{prindindex}-command includes the index as a separate section; 
-typically at the end of the pdf-file. 
+typically at the end of the PDF file. 
 The most basic package to provide this command 
 is \pkg{makeidx} described in~\cite{MkidxShIdxP}. 
 In addition, \pkg{makeidx} provides the command \cmd{see}{} 
-which is for cross reference within an index. 
+which is for cross-reference within an index. 
 The package \pkg{tocbibind} described in~\cite{TocBibIndP}, 
-then writes the headline of the index into the table of contents. 
-\index{table of contents}
+then writes the headline of the index into the table of contents.\index{table of contents}
 The package \pkg{rerunfilecheck} described in~\cite{RerunFChkP}, 
 ensures that \texttt{latex2pdf} is rerun if needed, 
 provided loaded with option \texttt{aux}. 
@@ -264,7 +261,7 @@ This is for debugging only.
 
 The main restriction of the package \pkg{makeidx} is, 
 that only a single index can be created. 
-The reason is that, \texttt{latex2pdf} creates a single idx-file 
+The reason is that, \texttt{latex2pdf} creates a single IDX file 
 and, as illustrated in Figure~\ref{fig:idx2ind}, 
 \texttt{makeindex} creates a single ind-file from that, 
 representing a single index. 
@@ -272,7 +269,7 @@ representing a single index.
 To overcome this restriction, 
 replace package \pkg{makeidx} and \texttt{makeindex} 
 with package \pkg{splitidx} and \texttt{splitindex} 
-both described in \cite{SplitidxP}. 
+both described in~\cite{SplitidxP}. 
 
 The package \pkg{splitidx} is used 
 in conjunction with the program \texttt{splitindex}. 
@@ -280,9 +277,9 @@ It must be possible to create a single index
 without using \pkg{splitidx} and \texttt{splitindex}. **** 
 
 Package option \texttt{split} makes \texttt{latex2pdf} 
-creating idx-files \texttt{xxx-y.idx} directly. 
+creating IDX files \texttt{xxx-y.idx} directly. 
 Here \texttt{y} represents the identifier of an individual index. 
-These idx-files can be transformed individually with \texttt{makeindex} 
+These IDX files can be transformed individually with \texttt{makeindex} 
 into ind-files as illustrated in Figure~\ref{fig:idx2indMult}. 
 Since \texttt{latex2pdf} can keep open only up to 16 output streams, 
 not all of which can be used to create a file \texttt{xxx-y.idx}, 
@@ -295,8 +292,8 @@ This explains why option \texttt{split} is not allowed.
 % **** check? 
 
 Instead, without option \texttt{split}, 
-\texttt{latex2pdf} creates a single idx-file. 
-The program \texttt{splitindex} splits it up into several idx-files 
+\texttt{latex2pdf} creates a single IDX file. 
+The program \texttt{splitindex} splits it up into several IDX files 
 and applies \texttt{makeindex} to each of them separately 
 as illustrated in Figure~\ref{fig:idx2indSplit}. 
 
@@ -304,7 +301,7 @@ For usage of further packages supporting multiple indices
 which are not intended to be used with this software, 
 see Chapter~\ref{chap:gaps}. 
 
-This software presupposes, that \texttt{makeindex} converts the idx-file 
+This software presupposes, that \texttt{makeindex} converts the IDX file 
 into an ind-file containing the index 
 and creating also an ilg-file with logging output 
 as shown in Figure~\ref{fig:idx2ind}. 
@@ -318,7 +315,7 @@ should be a picture
 }{
 \import{}{F5_03idx2ind.ptx}
 }
-\caption{\label{fig:idx2ind}Conversion of an idx-file into an ind-file}
+\caption{\label{fig:idx2ind}Conversion of an IDX file into an ind-file}
 \end{figure}
 
 \begin{figure}[htb]
@@ -329,7 +326,7 @@ should be a picture
 \import{}{F5_04idx2indMult.ptx}
 }
 \caption{\label{fig:idx2indMult}
-Not supported: Conversion of idx-files into ind-files}
+Not supported: Conversion of IDX files into ind-files}
 \end{figure}
 
 \begin{figure}[htb]
@@ -339,7 +336,7 @@ should be a picture
 }{
 \import{}{F5_05idx2indSplit.ptx}
 }
-\caption{\label{fig:idx2indSplit}Conversion of an idx-file into ind-files}
+\caption{\label{fig:idx2indSplit}Conversion of an IDX file into ind-files}
 \end{figure}
 
 It is possible to configure the makeindex-command 
@@ -358,12 +355,12 @@ as described in Section~\ref{sec:glossaries}.
 
 Information on the makeindex program can be found in~\cite{MkIdxMoe} 
 and in~\cite{MkIdxLam}. 
-Also there is a site~\cite{MakeIdxOpts} 
+Also, there is a site~\cite{MakeIdxOpts} 
 describing all available options for \texttt{makeindex}. 
 
 As indicated above, the program \texttt{splitindex} 
 invokes \texttt{makeindex}. 
-Its options are described in \cite{SplitidxP}, Section~3.10. 
+Its options are described in~\cite{SplitidxP}, Section~3.10. 
 Since the long option names are not understood in all environments, 
 only the short options are recommended. 
 
@@ -373,14 +370,14 @@ the option \texttt{--help} and its shortcut \texttt{-h} are not allowed.
 Likewise for option \texttt{--version} and its shortcut \texttt{-V}. 
 The option \texttt{--makeindex <makeindex>}, resp.~\texttt{-m <makeindex>}, 
 is used with the \texttt{makeindex} command used for single indices. 
-Thus this may not be given explicitly but is specified implicitly. 
+Thus, this may not be given explicitly but is specified implicitly. 
 Also, the option \texttt{--identify <regex>}, resp.~\texttt{-i <regex>} 
 must be set implicitly because it must be the same expression 
 as used to ***** 
 Then splitindex.tlu is not allowed, 
 because this has another expression. 
 
-Only allowable seems \texttt{-V}, the short cut for \texttt{--verbose}. 
+Only allowable seems \texttt{-V}, the shortcut for \texttt{--verbose}. 
 
 Then comes the name of the index file to be processed 
 without suffix. 
@@ -395,8 +392,8 @@ indicates that all following options are passed to \texttt{makeindex}
 
 Creating glossaries 
 requires the package \pkg{glossaries} described in~\cite{GloP}. 
-Note that despite of the headline of this section, 
-an despite \pkg{glossaries} itself supports multiple glossaries, 
+Note that despite the headline of this section, 
+and despite \pkg{glossaries} itself supports multiple glossaries, 
 this software supports only a single glossary 
 and also sorting and unifying is done 
 either via \texttt{makeindex} as for indices or via \texttt{xindy}, 
@@ -407,14 +404,14 @@ is not supported by this software.
 For generalizations see Chapter~\ref{chap:gaps}. 
 
 As for creating indices there is a \LaTeX-command \cmd{makeindex}, 
-to create a glossary there is a \LaTeX-command \cmd{makeglossaries}{} 
-but the latter is not builtin as \cmd{makeindex} 
+to create a glossary there is a \LaTeX-command \cmd{makeglossaries}{}, 
+but the latter is not built-in as \cmd{makeindex} 
 but provided by the package \pkg{glossaries}. 
 If \texttt{xxx.tex} is the \LaTeX{} main file, 
 \cmd{makeglossaries}{} opens the glo-file \texttt{xxx.glo} 
 containing glossary entries for writing. 
-As the builtin command \cmd{index}{} 
-writes entries into the idx-file defining the index, 
+As the built-in command \cmd{index}{} 
+writes entries into the IDX file defining the index, 
 the command \cmd{gls}{} defined by the package \pkg{glossaries} 
 writes an entry into the glo-file. 
 Note that \texttt{xxx.glo} typically contains entries more than once 
@@ -451,7 +448,7 @@ whereas for option \texttt{xindy}, there are lines
 
 
 This software neither invokes \texttt{makeindex} nor \texttt{xindy} directly. 
-Instead it invokes the shell command \texttt{makeglossaries}
+Instead, it invokes the shell command \texttt{makeglossaries}
 invoked without file ending  
 which determines from the aux-file 
 whether to invoke \texttt{makeindex} nor \texttt{xindy}. 
@@ -551,8 +548,8 @@ In the next step the \LaTeX{} processor must read in the unified entries again.
 Whereas a \LaTeX-run does not affect the bibliography, 
 it may well invalidate the page numbers 
 of the entries of the index or of the glossary. 
-Thus the sorted index and glossary must be rebuild 
-before the next \LaTeX{} run makes them visible in the pdf-file. 
+Thus, the sorted index and glossary must be rebuild 
+before the next \LaTeX{} run makes them visible in the PDF file. 
 
 To that end, we use the package \pkg{rerunfilecheck}. 
 %
@@ -673,7 +670,7 @@ is equivalent with with a confirmed version.
 Currently, this is done for pdf files only. 
 % TBD: change that 
 The problem with pdf files is, that besides visible contents 
-it contains also meta-data (see \cite{pdf17}, Section 14.3), 
+it contains also meta-data (see~\cite{pdf17}, Section 14.3), 
 which depends on the run of the conversion. 
 For example the timestamp of conversion goes into and so do many more aspects. 
 
@@ -711,7 +708,7 @@ There is metadata which can be eliminated in a uniform way for all latex engines
 using the package \texttt{hyperref} which the author generally advises. 
 Using\texttt{hyperref} with \texttt{\textbackslash hypersetup} 
 one can set metadata such as author, title, subject and keyword 
-as described in \cite{HyperTextP}, Section 5.8. 
+as described in~\ cite{HyperTextP}, Section 5.8. 
 On the other hand, 
 one could eliminate \texttt{CreationDate} and \texttt{ModDate}. 
 For newer versions of \texttt{pdflatex} this can be done alternatively 
@@ -719,7 +716,7 @@ with \texttt{\textbackslash pdfinfoomitdate1}.
 
 The metadata which can be eliminated only in a engine specific way 
 are the PTEX keys including the banner, and the \texttt{pdftrailerid}. 
-Note that the latter is {\em intentionally} 
+Note that the latter is {\em intentionally\/} 
 a unique identifier for the individual document 
 and so strictly speaking it is not advised to eliminate this 
 but eliminating is necessary because it is incompatible with reproducibility. 
@@ -735,7 +732,7 @@ but support seems incomplete with \texttt{xelatex}.
 \begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\footnotesize,
   escapechar=|,
   float, captionpos=b, label={lst:designMeta}, 
-  caption={Specifying meta-data for pdf-files}]
+  caption={Specifying meta-data for PDF files}]
 
 % for pdflatex
 \pdfsuppressptexinfo-1
@@ -821,7 +818,7 @@ caption={Create reproducible pdf files for various engines}]%
 
 
 % TBD: insert listings how this document is made. 
-For convenience also \texttt{pdfprivacy} described in \cite{PdfPriv} can be used. 
+For convenience also \texttt{pdfprivacy} described in~\cite{PdfPriv} can be used. 
 \medskip
 
 
@@ -842,7 +839,7 @@ a build exception is thrown as specified in Table~\ref{tab:TLP}.
 
 \section{Creating hypertext}\label{sec:tex2html}
 
-To create html and xhtml from \LaTeX-files, 
+To create html and xhtml from TEX files (more precise from \LaTeX{} files), 
 a \texttt{tex4htCommand}-command is used 
 Together with its parameters, 
 it is described in Section!\ref{sec:settingsLatex2Html}. 
@@ -850,8 +847,8 @@ This may be \texttt{htlatex}, the default based on \texttt{latex}
 and \texttt{htxelatex} based on \texttt{xelatex}. 
 
 Figure~\ref{fig:tex2xml} shows the steps \texttt{htlatex} performs: 
-From the input \LaTeX-file \texttt{xxx.tex} 
-another \LaTeX-file \texttt{yyy.tex} is created 
+From the input \LaTeX{} file \texttt{xxx.tex} 
+another \LaTeX{} file \texttt{yyy.tex} is created 
 which arises from \texttt{xxx.tex} by adding 
 %FIXME\@: maybe instead: \RequirePackage which may be placed before documentclass
 \begin{lstlisting}[language=TeX]
@@ -906,8 +903,7 @@ the \gls{png} files that should be created, CSS information,
 and user directives introduced 
 through the ``\cmd{Needs\{\ldots\}}'' command.
 
-\raggedbottom
-
+\raggedbottom{}
 
 
 \begin{figure}[htb]
@@ -1090,6 +1086,7 @@ Note --- to ensure proper alignments use fixed size fonts (see listings.dtx
 )
 )
 \end{Verbatim}
+% LTeX: enabled=true
 
 \pkg{tex4ht} yields 
 
@@ -1151,7 +1148,7 @@ Example:
 
 \section{Creating MS word files}\label{sec:tex2doc}
 
-The best way to convert \LaTeX-files into MS word files is via odt files. 
+The best way to convert \LaTeX{} files into MS word files is via ODT files. 
 Conversion from \LaTeX{} to odt 
 is already described in Section~\ref{sec:tex2odt}. 
 The last step can be done by \texttt{odt2doc} which can create both 
@@ -1214,7 +1211,7 @@ Also symbols available in utf8 encoding are preserved.
 In contrast, heavily stacked formulae become unreadable, 
 because \texttt{pdftotext} displays them line by line 
 and drops fraction bars completely. 
-Also formulae with complex subformulae in a root operator  
+Also, formulae with complex subformulae in a root operator  
 become unreadable because the root operator becomes just a root symbol. 
 Likewise for integrals and that like. 
 
@@ -1222,5 +1219,5 @@ Aspects of figures kept are the captions of course but also the \LaTeX-texts.
 This is displayed line-wise. 
 What gets lost is the postscript/pdf-parts, i.e.~the plain graphics. 
 
-\raggedbottom
+\raggedbottom{}
 
