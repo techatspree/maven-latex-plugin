@@ -849,9 +849,9 @@
 			<include>SettingsTest.java</include>
 			<include>PdfMojoTest.java</include>
           </includes-->
-					<!--excludes>
-            <exclude>PdfMojoTest.java</exclude>
-          </excludes-->
+					<excludes>
+            <!--exclude>PdfMojoTest.java</exclude-->
+          </excludes>
 				</configuration>
 			</plugin>
 
