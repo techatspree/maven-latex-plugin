@@ -13,10 +13,10 @@ lualatex
 metapost
 bibtex
 splitindex
-IDX
 xindy
 Bezier
 xelatex
 pdflatex
 pdftotext
 subformulae
+Depythonization
