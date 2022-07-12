@@ -8,7 +8,7 @@ Chapter~\ref{chap:GraphConversions},
 this section describes the conversions of latex main files 
 into target files in detail. 
 The most important target file format is \gls{pdf}. 
-Conversion in this format is described in Section~\ref{sec:tex2pdf}. 
+Conversion into this format is described in Section~\ref{sec:tex2pdf}. 
 Note that \gls{pdf} also occurs as source format 
 for included pictures and as intermediate files. 
 Specific for \LaTeX{} is the \gls{dvi} format, 
@@ -47,7 +47,8 @@ as described in Section~\ref{sec:tex2txt}.
 The next step is to create a PDF file from the TEX files. 
 \LaTeX{} distinguishes master TEX files from TEX files intended to be inputted
 from elsewhere. 
-Not tanking comments and that like into account, master TEX files have the form 
+Not taking comments and that like into account, 
+master TEX files roughly have the form 
 %
 %\lstset{language=tex, basicstyle=\small}
 \begin{lstlisting}[language=tex, basicstyle=\small]
@@ -59,23 +60,37 @@ Not tanking comments and that like into account, master TEX files have the form
 \end{document}
 \end{lstlisting}
 
-To satisfy this task,
-one may apply a \LaTeX{} to pdf converter \texttt{latex2pdf} 
+The core of conversion of a TEX file into a PDF file 
+is running a \LaTeX{}-to-pdf converter \texttt{latex2pdf} 
 to a master TEX file \texttt{xxx.tex}. 
 The \LaTeX-to-pdf converter \texttt{latex2pdf} 
 is configurable via the parameter \texttt{latex2pdfCommand}. 
 Possible values are \texttt{lualatex}, \texttt{xelatex} and \texttt{pdflatex}, 
 where the first is the default for which this software is also tested. 
-It is also possible to pass parameters to the \LaTeX{} to pdf converter. 
+It is also possible to pass parameters to the \LaTeX{}-to-pdf converter. 
+Besides conversion into \gls{pdf} format, 
+all converters offer conversion to the older \gls{dvi} format 
+via option \texttt{-{}-output-format} as \texttt{lualatex} and \texttt{pdflatex}, 
+or the alternative \gls{xdv} generalizing \gls{dvi} 
+as \texttt{xelatex} does with the option \texttt{-{}-no-pdf}. 
 
 In fact, the converter \texttt{latex2pdf} 
-does much more than converting tex to pdf. 
-Figure~\ref{fig:tex2pdf} shows for \texttt{latex2pdf} set to \texttt{lualatex}, 
-that besides the PDF file also a log-file and an aux-file is created. 
-The log-file contains logging information on the run of the conversion 
-and the aux-file transports information from one run to the next. 
+does much more than converting TEX files to PDF files. 
+Figure~\ref{fig:tex2pdf} shows for \texttt{latex2pdf} set e.g.~to \texttt{lualatex}, 
+that besides the PDF file also a LOG file and an AUX file is created. 
+The LOG file contains logging information on the run of the conversion 
+and the aux-file transports information from one run to the next, 
+writing in one run and reading in the next run. 
 Thus, conversion goes without it, but it is read if present. 
 This is why it is depicted at input side in dashed lines. 
+
+Optionally, an FLS file is created containing paths to the files 
+the converted \LaTeX{} file depends on 
+and a file with ending \texttt{synctex.gz} 
+with information for mapping locations at the created PDF file 
+to the according input files. 
+This is to support backward search, meaning click on a place in the PDF viewer 
+opens an editor in the source file. 
 
 What is in fact in the aux-file depends on the package. 
 Among other information, 
@@ -83,12 +98,19 @@ also citations and the location of the bibliography file with ending bib
 are present. 
 This cannot be used directly in the next \texttt{latex2pdf} run 
 to create the bibliography, 
-because the entries must be retrieved from the bib-file, 
-collected and sorted. 
+because the entries referenced in the document must be extracted from the bib-file 
+and sorted. 
 This is done by invoking \texttt{bibtex} between two \texttt{latex2pdf} runs. 
 Based on the aux-file, \texttt{bibtex} creates a bbl-file 
 containing the bibliography, which is read in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:bibtex}. 
+
+Alternatively to \texttt{bibtex} a bibliography can be created 
+with the package \pkg{biblatex} in conjunction with the auxiliary program \texttt{biber}. 
+Running a \LaTeX-to-pdf converter with package \pkg{biblatex} loaded 
+creates a \gls{bcf}-file read by \texttt{biber}. 
+This software does not support that option. 
+Nevertheless, for sake of completeness we added this data path to Figure~\ref{fig:tex2pdf}. 
 
 If an index is demanded, 
 in addition \texttt{latex2pdf} creates a \gls{idx}-file. 
@@ -144,8 +166,7 @@ should be a picture
 }{
 \import{}{F5_01tex2pdf.ptx}
 }
-\caption{\label{fig:tex2pdf}Conversion of a TEX file into a PDF file 
-(accordingly into a dvi-file)}
+\caption{\label{fig:tex2pdf}Conversion of a TEX file into a PDF, DVI, XDV file }
 \end{figure}
 
 \section{Bibliographies}\label{sec:bibtex}

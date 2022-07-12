@@ -195,16 +195,7 @@
 	<!-- TBD: add support for \include: 
 		Include adds aux files which this plugin does not eliminate through mvn latex:clr. 
 	-->
-	<!-- Document development: latexmk cleans up files with following endings: 
-		 ’aux’, ’bcf’, ’fls’, ’idx’, ’ind’, ’lof’, ’lot’, ’out’, ’toc’, ’blg’, ’ilg’, ’log’, ’xdv’
-		 The following are cleaned up also by this plugin, 
-		’aux’, ’fls’, ’idx’, ’ind’, ’lof’, ’lot’, ’out’, ’toc’, ’blg’, ’ilg’, ’log’
-		whereas those are not: 
-		`bcf’, 
-		’xdv’: extended `dvi`, can be created by xelatex
-		TBD: check their meaning. 
-		TBD: also  fdb_latexmk is deleted and this plugin shall do this also. 
-	-->
+	<!-- TBD: also  fdb_latexmk is deleted and this plugin shall do this also. -->
 	<!-- TBD: clarify whether package hyperref shall be loaded for pdf output only: 
 		with dvi with option [dvipdfmx]. 
 		This must be done in all documents. 
