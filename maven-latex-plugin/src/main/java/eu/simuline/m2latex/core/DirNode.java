@@ -60,31 +60,33 @@ public class DirNode {
     // LatexProcessor.processGraphics()
     // LatexProcessor.clearAll()
     public DirNode(File dir, TexFileUtils fileUtils) {
-	assert dir.isDirectory() : "The file '" + dir + "' is no directory. ";
-	// may log WFU01 Cannot read directory 
-	File[] files = fileUtils.listFilesOrWarn(dir);
-	if (files == null) {
-	    // Here, this node is irregular 
-	    this.regularFileNames = null;
-	    this.name2node = null;
-	    return;
-	}
-	this.regularFileNames = new TreeSet<String>();
-	this.name2node = new TreeMap<String, DirNode>();
-	DirNode node;
-	for (File file : files) {
-	    assert file.exists() : "The file '" + file + "' does not exist. ";
-	    if (file.isDirectory()) {
-		// may log WFU01 Cannot read directory 
-		node = new DirNode(file, fileUtils);
-		if (node.isValid()) {
-		    this.name2node.put(file.getName(), node);
-		}
-	    } else {
-		// FIXME: skip hidden files 
-		this.regularFileNames.add(file.getName());
-	    }
-	}
+        assert dir.isDirectory() : "The file '" + dir + "' is no directory. ";
+        // may log WFU01 Cannot read directory
+        File[] files = fileUtils.listFilesOrWarn(dir);
+        if (files == null) {
+            // Here, this node is irregular
+            // TBD: clarify whether this may occur 
+            assert false;// should only be the case if dir is no directory 
+            this.regularFileNames = null;
+            this.name2node = null;
+            return;
+        }
+        this.regularFileNames = new TreeSet<String>();
+        this.name2node = new TreeMap<String, DirNode>();
+        DirNode node;
+        for (File file : files) {
+            assert file.exists() : "The file '" + file + "' does not exist. ";
+            if (file.isDirectory()) {
+                // may log WFU01 Cannot read directory
+                node = new DirNode(file, fileUtils);
+                if (node.isValid()) {
+                    this.name2node.put(file.getName(), node);
+                }
+            } else {
+                // FIXME: skip hidden files
+                this.regularFileNames.add(file.getName());
+            }
+        }
     }
 
     /**
