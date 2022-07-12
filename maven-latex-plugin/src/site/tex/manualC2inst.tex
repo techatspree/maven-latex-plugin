@@ -53,7 +53,11 @@ The author recommends and uses vs code, e.g. 1.68.1
 in conjunction with package \LaTeX{} workshop and LTeX. 
 
 An alternative is good old 
-\texttt{GNU Emacs 24.3.1 (x86\_64-suse-linux-gnu, GTK+ Version 3.16.7)} 
+%
+\begin{verbatim}
+  GNU Emacs 24.3.1 (x86\_64-suse-linux-gnu, GTK+ Version 3.16.7)
+\end{verbatim}
+%
 together with several packages to support 
 various file formats. 
 To list the available packages type 
@@ -149,6 +153,13 @@ Note that \texttt{makeglossaries} either invokes \texttt{makeindex}
 or \texttt{xindy}, depending on the parametrization of \pkg{glossaries}. 
 Both, \texttt{makeglossaries} and \texttt{xindy} are written in Perl, 
 which shall also be installed if a glossary is required. 
+
+To include program code in Python, octave and other language, 
+\texttt{pythontex} is needed; to eliminate that code creating an equivalent tex-file, 
+one has to combine it with \texttt{depythontex}. 
+\index{pythontex}\index{depythontex}
+Both are written in Python3 which shall be installed also as a dependency. 
+To use them, one also needs to install the package \pkg{pytontex}. 
 
 The package \pkg{rerunfilecheck} is in any standard \LaTeX-installation. 
 It is almost mandatory 
