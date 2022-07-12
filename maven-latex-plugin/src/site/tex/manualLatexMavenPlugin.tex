@@ -188,6 +188,7 @@ today mostly replaced by PDF}
 %A computer language for creating vector graphics. 
 %}}
 
+\usepackage[depythontex]{pythontex}% TBD: check whether appropriate 
 
 % how to number the glossary in the toc? seemingly a gap in tocbibind 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
@@ -310,6 +311,8 @@ and that specific for the maven-plugin is in \texttt{org.m2latex.mojo}.
 
 
 The creation process supports an index, a glossary and a bibliography. 
+In addition, code written in python and other languages can be included and executed 
+during creation of the document. 
 Again, further functionality can be added by demand. 
 
 The present manual is created by the maven-plugin or the ant-task 
@@ -574,7 +577,7 @@ this maven-goal or this ant-task may be completed
 as if the tex source directory does not exist or is no directory 
 or if a failure occurs which indicates 
 that the underlying system does not work properly, 
-as if the tex source directory or a sub-directory is not readable 
+as if the tex source directory or a subdirectory is not readable 
 or if execution of an external program fails. 
 The latter does not mean that the program returns with an error code, 
 but it means that execution from within java fails.

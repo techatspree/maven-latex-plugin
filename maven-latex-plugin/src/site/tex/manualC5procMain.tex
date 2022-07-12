@@ -22,9 +22,16 @@ done by several auxiliary programs.
 Bibliographies are described in Section~\ref{sec:bibtex}, 
 indices in Section~\ref{sec:indices} 
 and glossaries in Section~\ref{sec:glossaries}. 
+Only at the first sight different 
+but behind the scenes quite analogous 
+is inclusion of results of code evaluations, 
+code in python and other languages described in Section~\ref{sec:pythontex}. 
+Here, an auxiliary program essentially invokes the language interpreter. 
+
 Sections~\ref{sec:rerunMakeIndexGlossaries} 
 and~\ref{sec:rerunLatex} 
-are special in that they describe rerunning several programs, 
+are special in that they describe rerunning auxiliary programs 
+and the \LaTeX-to-pdf converter, 
 which may be necessary even if certain lists are present 
 like table of contents list of figures or list of tables. 
 
@@ -119,34 +126,68 @@ the next \texttt{latex2pdf} run,
 because the index entries must be collected and sorted before. 
 This is done by invoking \texttt{makeindex} 
 between the two \texttt{latex2pdf} runs. 
-Based on the IDX file, \texttt{makeindex} creates a \gls{ind}-file 
+Based on the \gls{idx}-file, \texttt{makeindex} creates a \gls{ind}-file 
 containing the index, which is read in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:indices}. 
 
+If more than one index is demanded, 
+we suggest using \texttt{splitindex} instead of \texttt{makeindex} 
+which creates one \gls{ind}-file per index. 
+
 If a glossary is demanded, this can be read off the \gls{aux}-file 
-and a \gls{glo}-file is created. 
-As the index, it cannot be used directly to create a glossary in
+and a \gls{glo}-file containing the index entries 
+is created and a file with style information. 
+Depending on the configuration, 
+this may be a \gls{ist}-file or a \gls{xdy}-file. 
+As for the index the \gls{idx}-file, 
+the \gls{glo}-file cannot be used directly to create a glossary in
 the next \texttt{latex2pdf} run, 
 because the glossary entries must be collected and sorted before. 
 This is done by invoking \texttt{makeglossaries} 
 between the two \texttt{latex2pdf} runs. 
-Based on the glo-file, \texttt{makeglossaries} creates a \gls{gls}-file 
-containing the glossary, which is read in in the next \texttt{latex2pdf} run. 
+Based on the \gls{glo}-file, \texttt{makeglossaries} creates a \gls{gls}-file 
+containing the glossary, which is read in the next \texttt{latex2pdf} run. 
 For details see Section~\ref{sec:glossaries}. 
 
+The package \pkg{pythontex} allows including python code or related 
+in the \gls{tex}-file and to evaluate it. 
+The first \texttt{latex2pdf} run creates a \gls{pytxcode}-file 
+which contains essentially the code parts of the \LaTeX-file. 
+Invoking \texttt{pythontex} creates by default 
+a folder \texttt{pythontex-files-xxx} 
+with material where code is already evaluated. 
+In the next \texttt{latex2pdf} run, this material is included in the document. 
+The \pkg{pythontex} comes with a second command line utility, 
+\texttt{depythontex}, eliminating all python code from the original tex-file. 
+Optionally, \texttt{latex2pdf} also creates a \gls{depytx}-file 
+with all information to replace python code in the original tex-file 
+with evaluated material from \texttt{pythontex-files-xxx}. 
+Replacement is done by \texttt{depythontex} 
+which by default, sends the result to stdout, 
+but there is an option to write into another \LaTeX-file. 
+Converting this new \LaTeX-file 
+yields the same result as converting the original one. 
+Depythonization is a feature needed e.g.~for papers 
+when the publisher does not accept included code. 
+For details see Section~\ref{sec:pythontex}. 
+
 In addition, if
-a table of contents, a list of figures, a list of tables or a list of listings is required, 
+a table of contents, a list of figures, a list of tables 
+or a list of listings is required, 
 also a toc-file, a lof-file, a lot-file and a lol-file is created,
 respectively, 
 collecting the according information. 
+Also, if hyper-references are built, an \gls{out}-file 
+containing bookmarks is created. 
 If such a file is present, it is read in and is used
 to create a table of contents, a list of figures, of tables and of listings 
-in the second run of \texttt{latex2pdf}. 
+or bookmarks in the second run of \texttt{latex2pdf}. 
 
 To summarize, 
-if a table of contents, a list of figures, a list of tables or 
+if a table of contents, a list of figures, a list of tables, a list of listings or 
 a bibliography, an index or a glossary is present, 
-a second \LaTeX{} run is required to make them appear in the pdf-output. 
+or if code must be replaced by their evaluation, 
+a second \LaTeX{} run is required to make that material appear in the pdf-output. 
 
 If a table of contents and at the same time 
 a bibliography, an index or a glossary is present, 
@@ -174,7 +215,7 @@ should be a picture
 In case the \LaTeX{}-to-pdf converter writes bibliographic information, 
 into its aux-file, a bibliography must be generated. 
 For each occurrence of a \cmd{cite}-command in the TEX file, 
-\texttt{latex2pdf} writes an according entry \cmd{citation}. 
+\texttt{latex2pdf} writes an according entry \cmd{citation} into the aux-file. 
 Moreover, a \cmd{bibliography}-command in the TEX file 
 writes a link to the bib-file containing the bibliography data 
 into the aux-file as \cmd{bibdata}. 
@@ -576,7 +617,220 @@ using \texttt{makeglossaries}}
 \end{figure}
 
 
-\section{Rerunning the index- and glossary processor}
+\section{Including code via \texttt{pythontex}}\label{sec:pythontex}
+
+The package \pkg{pythontex}, described in~\cite{PythonTexP} 
+originally allowed including Python code into a latex document. 
+Later on, further languages were added, most notably octave or Matlab, 
+and the user can easily extended it to further languages 
+as sketched in~\cite{PythonTexP}. Section 7. 
+Of course, to that end, the interpreter for the desired language must be installed.\index{pythontex}
+The meaning of the term "`including"' used above % chktex 18
+ranges from mere listing to pure execution and comprises also inserting results of execution. 
+A field of application is also creating figures. 
+
+Note that like the package \pkg{splitindex}, also \pkg{pythonindex} 
+comes with an according auxiliary program, 
+in this case, besides \texttt{pythontex} also \texttt{depythontex}. 
+Consequently,~\cite{PythonTexP} is not only on the package 
+but also on the corresponding command line tools. 
+Since~\cite{PythonTexP} is quite detailed, 
+there is an introduction~\cite{PythonTexQ} and a gallery~\cite{PythonTexG}. 
+For background on the intentions of package \pkg{pythontex}, consult~\cite{PythonTexRepr}. 
+Information required to integrate pythontex into this software 
+partially goes much beyond the official documentation and is collected in~\cite{PyTexInOut}. 
+It could also be interesting for the user for debugging. 
+
+Running the \LaTeX-to-pdf converter on a file \texttt{xxx.tex} with package \pkg{pythontex} loaded 
+yields a file \texttt{xxx.pytxcode} and if the package is loaded with option \texttt{depythontex} 
+also a file \texttt{xxx.depytx}.
+If the file \texttt{xxx.pytxcode} is present, 
+this software invokes the command line tool \texttt{pythontex} (same name as the according package) 
+to \texttt{xxx.pytxcode} (without ending) 
+which converts this into a variety of output files, 
+which are, without further configuration, all in the folder \texttt{pythontex-files-xxx}
+as shown in Figure~\ref{fig:py2dir}, which is described in more detail in~\cite{PyTexInOut}, Section~3. 
+
+% TBD: later on, if \texttt{xxx.depytx} after \texttt{pythontex} also \texttt{pythontex} is invoked, 
+% creating a tex file without python code. 
+% TBD: clarify what if input files or include files are present. 
+
+Running the \LaTeX-to-pdf converter again, 
+includes all the output files \texttt{*.stdout} 
+in the PDF file or whatever output file created. 
+
+% Note that if depythontex is invoked, it is immaterial whether the subsequent run of LaTeX-to-pdf converter 
+% is on the original tex file or on the tex file created by depythontex. 
+
+An important remark is that \texttt{lualatex} is the preferred converter, 
+because files \texttt{*.stdout} can impose heavy memory usage 
+and currently \texttt{lualatex} is the only converter allocating memory dynamically. 
+
+As one can see, \texttt{pythontex} cooperates with \texttt{lualatex} in a way 
+also \texttt{bibtex} or the other auxiliary programs do. 
+Although \texttt{pythontex}, at time of this writing in version 0.18, 
+is quite mature, it refrains from writing a log file and indicates errors and warnings 
+just on standard output or error output. 
+This is unlike all the other auxiliary programs in a line with \texttt{pythontex}. 
+As a consequence, in particular warnings are difficult to detect 
+and cannot be detected in a uniform way. 
+Thus, the author wrote a little wrapper, called \texttt{pythontexW} 
+%
+\begin{verbatim}
+  #! /bin/bash
+  # bash version >=3.0
+  pythontex $@ |& tee ${!#}.plg  
+\end{verbatim}
+%
+and place it where it can be found, e.g.~in the folder of \texttt{pythontex}. 
+Note that this is specific for unixoid operating systems but can be easily adapted to windows. 
+Accordingly, \texttt{depythontex} behaves in a non-standard way: 
+Firstly, by default, it does not output a result file but outputs on standard output. 
+This can be changed using the option \texttt{--output} or \texttt{-o} for short. 
+Also, \texttt{depythontex} changes into interactive mode if the output file is already present. 
+To avoid this, the option \texttt{--overwrite} is required. 
+Overwriting without asking is the standard behavior of all other auxiliary programs. 
+As \texttt{pythontex} also \texttt{depythontex} does not write a log file but just prints its errors and warnings. 
+Thus, the author wrote a little wrapper, called \texttt{pythontexW} 
+%
+\begin{verbatim}
+  #! /bin/bash
+  # bash version >=3.0
+  depythontex $@ |& tee ${!#}.dplg  
+\end{verbatim}
+%
+and place it where it can be found, e.g.~in the folder of \texttt{depythontex}. 
+% TBD: evaluate: maybe it is a better solution to enable this software itself to write the output to a log file. 
+\medskip
+
+
+The package \pkg{pythontex} and the according auxiliary programs are highly configurable, 
+more than this software allows. 
+
+In particular, in the \LaTeX{} document, 
+the commands \cmd{setpythontexoutputdir} setting the output directory 
+and \cmd{setpythontexworkingdir} setting the working directory shall not be used, 
+because this software assumes the default, that the working directory is the directory 
+containing the \LaTeX{} main file \texttt{xxx.tex}
+and the output directory is in the working directory 
+and its name is \texttt{pythontex-files-xxx}. 
+
+Further, the package \pkg{pythontex} can be configured with package options when loading the package. 
+Since this software is designed for reproducibility, 
+most appropriate would be to specify \texttt{runall=true} meaning that even if no python code is modified 
+the auxiliary program \texttt{pythontex} executes the python code in the document. 
+Also, it is appropriate to specify \texttt{rerun=always}. 
+Note that the defaults are \texttt{runall=false} and \texttt{rerun=errors}. 
+This behavior makes sense to speed up creation of the document, 
+but it differs from the behavior of all other auxiliary programs 
+and causes the check for update of output files to fail. 
+Moreover, reproducibility is not as easily shown. 
+
+The package documentation~\cite{PythonTexP} suggests, 
+that this makes a difference between \texttt{runall=true/false} 
+and \texttt{rerun=always/errors} if external sources are modified, 
+but as is proved in~\cite{PyTexInOut}, Section 2.1, 
+the package translates package option \texttt{runall=true/false} into key value pair \texttt{rerun=always/errors} 
+and this is the only information \texttt{pythontex} obtains from the package, 
+so there is no difference. 
+
+Also, the auxiliary program \texttt{pythontex} itself can be configured via command line arguments. 
+For the package options \texttt{runall} and \texttt{rerun}, 
+there are according command line options \texttt{-{}-runall} and \texttt{-{}-rerun} with the same scope. 
+Whereas the package merges options \texttt{runall} and \texttt{rerun} silently, 
+the auxiliary program \texttt{pythontex} emits an error, if both are combined. 
+Essentially one can forget about \texttt{runall} and stick to \texttt{rerun}. 
+
+Strange enough, according to~\cite{PythonTexP}, Section 4.1, package options overwrite command line options. 
+This software shall invoke \texttt{pythontex} 
+with the option \texttt{-{}-rerun=always} which is thus specified as the default. 
+To force unconditional update, this is not sufficient. 
+Instead, this software relies on an undocumented feature of auxiliary program \texttt{pythontex} 
+which is likely not to change: 
+If one of the expected output files is missing, it recreates all output files, independent of command line options and package options. 
+Thus, this software deletes one output file if present, before executing \texttt{pythontex}. 
+
+When this software invokes \texttt{pythontex} 
+the exit codes may not be changed via \texttt{-{}-error-exit-code}, 
+i.e.~if specified then with value \texttt{true}. 
+Neither the options \texttt{-{}-interactive}, \texttt{-h}, \texttt{-{}-help} or \texttt{-{}-version} are allowed. 
+Currently, this software does not check for options which are not allowed. 
+Fortunately, the latter two command line options have no counterpart in the package configuration. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+If we place some code, e.g.~python code as inline code using \cmd{pyc}
+%
+\begin{lstlisting}[basicstyle=\footnotesize]
+  \usepackage[depythontex]{pythontex}
+  ...
+  \pyc|print(rf'Python inside latex says: "Hello World; 1+1={1+1}"')|
+\end{lstlisting}
+%
+the code is really evaluated and the string result is included at proper place 
+as illustrated by the following text which is created by python: 
+%
+\begin{quote}
+  \texttt{\pyc|print(rf'Python inside latex says: "Hello World; 1+1={1+1}"')|}. % chktex 26  chktex 18 chktex 36
+\end{quote}
+%
+Note that the typewriter font is not created by python, 
+it is explicitly set to highlight the string created by python, 
+but it is python which evaluates the little computation 
+and which prints the string. 
+
+Since \texttt{pythontex} is written in python 
+including python code in the \LaTeX{} document 
+uses the python interpreter already installed as a prerequisite of \texttt{pythontex}. 
+To use another language, the according interpreter must be installed in addition to python. 
+
+
+
+% TBD: create a figure 
+
+
+% TBD: depythontex
+
+
+\begin{figure}[htb]
+  \centering
+  \ifthenelse{\boolean{texFhtLoaded}}{
+  should be a picture 
+  }{
+  \import{}{F5_07py2dir.ptx}
+  }
+  \caption{\label{fig:py2dir}Conversion of a \texttt{pytxcode}-file using \texttt{pythontex}}
+  \end{figure}
+
+
+  Figure~\ref{fig:depy2out} shows the files converted by \texttt{depythontex}. 
+
+
+  \begin{figure}[htb]
+    \centering
+    \ifthenelse{\boolean{texFhtLoaded}}{
+    should be a picture 
+    }{
+    \import{}{F5_08depy2out.ptx}
+    }
+    \caption{\label{fig:depy2out}Conversion of a \texttt{depytx}-file using \texttt{depythontex}}
+    \end{figure}
+  
+\section{Rerunning the index- and glossary processor}%
 \label{sec:rerunMakeIndexGlossaries}
 
 As described in Section~\ref{sec:tex2pdf}, 
@@ -588,9 +842,10 @@ sorting, unifying and formatting the entries.
 This is always done by an external program. 
 
 In the next step the \LaTeX{} processor must read in the unified entries again. 
-Whereas a \LaTeX-run does not affect the bibliography, 
+Whereas a \LaTeX-run does not affect neither the bibliography nor python code, 
 it may well invalidate the page numbers 
 of the entries of the index or of the glossary. 
+%Also within a glossary entry, further glossary entries may be included. 
 Thus, the sorted index and glossary must be rebuild 
 before the next \LaTeX{} run makes them visible in the PDF file. 
 
@@ -772,7 +1027,7 @@ In fact, it works best with \texttt{lualatex} and sufficiently for \texttt{pdfla
 but support seems incomplete with \texttt{xelatex}. 
 
 
-\begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\footnotesize,
+\begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\tiny,
   escapechar=|,
   float, captionpos=b, label={lst:designMeta}, 
   caption={Specifying meta-data for PDF files}]
@@ -954,11 +1209,12 @@ through the ``\cmd{Needs\{\ldots\}}'' command.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F5_07tex2xml.ptx}
+\import{}{F5_09tex2xml.ptx}
 }
-\caption{\label{fig:tex2xml}Conversion of a tex-file into an xml-file}
+\caption{\label{fig:tex2xml}Conversion of a TEX file into an xml-file}
 \end{figure}
 
+% LTeX: enabled=false
 \begin{Verbatim}[fontsize=\tiny]
 (/usr/local/texlive/2014/texmf-dist/tex/generic/tex4ht/tex4ht.4ht
 version 2009-01-07-07:11
@@ -1204,31 +1460,31 @@ which is illustrated in Figure~\ref{fig:tex2doc}.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F5_08tex2doc.ptx}
+\import{}{F5_10tex2doc.ptx}
 }
-\caption{\label{fig:tex2doc}Conversion of a tex-file into a docx-file}
+\caption{\label{fig:tex2doc}Conversion of a TEX file into a docx-file}
 \end{figure}
 
 
 
 \section{Creating plain text files}\label{sec:tex2txt}
 
-Why should one create plain text from \LaTeX-files? 
+Why should one create plain text from \LaTeX{} files? 
 Maybe this is the minimal format the receiver can work with. 
 Another common application is word-count, 
 in particular if writing a paper for a journal. 
 
-Plain text files can be created from \LaTeX-files 
+Plain text files can be created from \LaTeX{} files 
 just by stripping off the tex-commands. 
 The disadvantage is, 
 that references, bibliography, index, glossary, 
 table of contents, list of figures, list of tables, \dots 
 and symbols get lost. 
-Thus, the first step we take is complete creation of a pdf-file 
+Thus, the first step we take is complete creation of a PDF file 
 except display of warnings like bad boxes 
 as described in Section~\ref{sec:tex2pdf}. 
 This creates an appropriate pdf-file, 
-with correct numberings and links, 
+with correct numbering and links, 
 possibly with overfull boxes and that like. 
 As a final step, we convert the pdf-file into a text file 
 using, as a default \texttt{pdftotext} with ending \texttt{txt}. 
@@ -1239,9 +1495,9 @@ Figure~\ref{fig:tex2txt} illustrates the translation process.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\import{}{F5_09tex2txt.ptx}
+\import{}{F5_11tex2txt.ptx}
 }
-\caption{\label{fig:tex2txt}Conversion of a tex-file into an txt-file}
+\caption{\label{fig:tex2txt}Conversion of a TEX file into a txt-file}
 \end{figure}
 
 Note that \texttt{pdftotext} produces a text file with page numbers 
