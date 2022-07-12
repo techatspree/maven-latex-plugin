@@ -85,17 +85,18 @@
 \setacronymstyle{long-short}
 % file formats 
 \newacronym{pdf}{pdf}{portable document format}
-\newacronym{dvi}{dvi}{device independent file format}
+\newacronym{dvi}{dvi}{device independent; 
+traditional output format of tex processors, today widely replaced by PDF}
 \newacronym{eps}{eps}{encapsulated postscript}
 \newacronym{tex}{tex}{\TeX{} the format, which may also be latex}
 \newacronym{html}{html}{HyperText Markup Language}
 \newacronym{xhtml}{xhtml}{extensible hypertext markup language}
 \newacronym{odt}{odt}{open document text}
-\newacronym{doc}{doc}{outdated document format for MS word }
-\newacronym{docx}{docx}{current document format for MS word }
+\newacronym{doc}{doc}{outdated document format for MS Word }
+\newacronym{docx}{docx}{current document format for MS Word }
 \newacronym{sgml}{sgml}{Standard generalized markup language }
 \newacronym{xml}{xml}{extensible markup language }
-\newacronym{ptx}{ptx}{pdf/postscript \TeX{} format }% home brewed 
+\newacronym{ptx}{ptx}{pdf/postscript \TeX{} format; home-brewed }% home-brewed 
 
 \newacronym{fig}{fig}{native file format for xfig }
 \newacronym{gp}{gp}{Gnuplot file format}
@@ -104,23 +105,64 @@
 \newacronym{gif}{gif}{Graphics Interchange Format, allows also animations }
 \newacronym{svg}{svg}{Scalable Vector Graphics}
 % latex file endings 
-\newacronym{toc}{toc}{table of contents}
-\newacronym{lof}{lof}{list of figures}
-\newacronym{lot}{lot}{list of tables}
-\newacronym{lol}{lol}{list of listings}
-\newacronym{aux}{aux}{auxiliary file}
-\newacronym{log}{log}{logging file (for \LaTeX{} and mpost)}
-\newacronym{idx}{idx}{index file containing unsorted and multiple index entries}
+\newacronym{toc}{toc}{table of contents: input and output format of tex processors}
+\newacronym{lof}{lof}{list of figures: input and output format of tex processors}
+\newacronym{lot}{lot}{list of tables: input and input and output format of tex processors}
+\newacronym{lol}{lol}{list of listings: input and output format of tex processors 
+if used with package \texttt{listings}}
+\newacronym{out}{out}{contains bookmarks: input and output format of tex processors 
+if used with package \texttt{hyperref}, file ending seems naive}
+\newacronym{ist}{ist}{(make-)index style file: output format of tex processors 
+if used with package \texttt{glossaries} configured for \texttt{makeindex} }
+\newacronym{xdy}{xdy}{index style file for \texttt{xindy}: output format of tex processors 
+if used with package \texttt{glossaries} configured for \texttt{xindy} }
+
+
+\newacronym{log}{log}{logging file: for tex processors and \texttt{mpost}}
+\newacronym{aux}{aux}{auxiliary file: input and output file for tex processors; read also e.g. by \texttt{bibtex}}
+\newacronym{fls}{fls}{files dependencies: list of files the according tex file depends on; 
+output format of tex processors if used with option \texttt{-recorder}}
+\newacronym{synctex.gz}{synctex.gz}{fgzipped synchronization files 
+relating tex files and their according pdf files: 
+output format of tex processors if used with option \texttt{-synchtex=1}}
+
+% files in conjunction with bibliographies
+\newacronym{bib}{bib}{bibliography file: 
+In particular input file for the \texttt{bibtex} tool}
+\newacronym{bbl}{bbl}{bibliography for a latex document in latex format: 
+written by the \texttt{bibtex} tool and read by \LaTeX{} processors}
+
+% files in conjunction with indices 
+\newacronym{idx}{idx}{index file containing unsorted and multiple index entries; 
+output format of tex processors with package \texttt{makeindex} or similar}
 \newacronym{ind}{ind}{%
-index file containing sorted, unified and formatted index entries}
+index file containing sorted, unified and formatted index entries, 
+output format of \texttt{makeindex} and \texttt{xindy}}
+
+% files in conjunction with glossaries 
 \newacronym{glo}{glo}{%
-glossary file containing unsorted and multiple glossary entries}
+glossary file containing unsorted and multiple glossary entries; 
+output format of tex processors with package \texttt{makeglossaries}}
 \newacronym{gls}{gls}{%
-glossary file containing sorted, unified and formatted glossary entries}
+glossary file containing sorted, unified and formatted glossary entries;
+output format of the \texttt{makeglossaries} tool read by tex processors}
+% TBD: one could add is and xdy files. 
 
+% files in conjunction with pythontex
+\newacronym{pytxcode}{pytxcode}{%
+Code file consisting mainly of code snippets from the tex file; 
+output format of tex processors with package \texttt{pythontex}}
+\newacronym{depytx}{depytxc}{%
+File containing information to replace code snippets in the tex file 
+by the result of their evaluation;  
+output format of tex processors with package \texttt{pythontex} 
+if loaded with option \texttt{depythontex}
+}
 
-\newacronym{mp}{mp}{metapost}
-\newacronym{ps}{ps}{PostScript}
+\newacronym{mp}{mp}{metapost: input format for the graphic program \texttt{mpost}}
+\newacronym{ps}{ps}{PostScript: 
+programming language for printers and printable file format; 
+today mostly replaced by PDF}
 \newacronym{mps}{mps}{metapost's postscript like output including text}
 \newacronym{mpx}{mpx}{metapost tex output: texts }
 }
