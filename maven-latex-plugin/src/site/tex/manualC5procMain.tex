@@ -236,17 +236,17 @@ Also, Chapter 10 in~\cite{Gra} gives vital information on \texttt{bibtex}.
 
 \section{Indices}\label{sec:indices}
 
-In case the \LaTeX{} to pdf converter writes index information, 
-into its IDX file, at least one index must be generated. 
-Since the IDX file contains nothing but index information, 
+In case the \LaTeX{}-to-pdf converter writes index information, 
+into its \gls{idx}-file, at least one index must be generated. 
+Since the \gls{idx}-file contains nothing but index information, 
 an index is created if and only if the \gls{idx}-file is created. 
 % Well, this is not really the truth: it is needed only if ...
 Essentially, 
 the command \cmd{makeindex}{} tells \texttt{latex2pdf} 
-to open the IDX file for writing. 
+to open the \gls{idx}-file for writing. 
 Then for each occurrence of the \cmd{index}-command 
 or similar (details see below) in the TEX file, 
-an entry is written sequentially to the IDX file as 
+an entry is written sequentially to the \gls{idx}-file as 
 \cmd{indexentry}{} comprising the keyword given by the \cmd{index}-command 
 and the page number where the \cmd{index}-command occured. 
 For example \cmd{index\{ant-task\}}{} creates an entry 
@@ -257,7 +257,7 @@ For example \cmd{index\{ant-task\}}{} creates an entry
 %
 in \texttt{xxx.idx}. 
 
-Then the \texttt{makeindex}-command is applied to the IDX file 
+Then the \texttt{makeindex}-command is applied to the \gls{idx}-file 
 which sorts keywords and for each keyword collects the according page numbers, 
 sorts it and and writes the result into a \gls{ind}-file. 
 In the next run of \texttt{latex2pdf}, 
@@ -282,7 +282,7 @@ This is for debugging only.
 
 The main restriction of the package \pkg{makeidx} is, 
 that only a single index can be created. 
-The reason is that, \texttt{latex2pdf} creates a single IDX file 
+The reason is that, \texttt{latex2pdf} creates a single \gls{idx}-file 
 and, as illustrated in Figure~\ref{fig:idx2ind}, 
 \texttt{makeindex} creates a single ind-file from that, 
 representing a single index. 
@@ -298,9 +298,9 @@ It must be possible to create a single index
 without using \pkg{splitidx} and \texttt{splitindex}. **** 
 
 Package option \texttt{split} makes \texttt{latex2pdf} 
-creating IDX files \texttt{xxx-y.idx} directly. 
+creating \gls{idx}-files \texttt{xxx-y.idx} directly. 
 Here \texttt{y} represents the identifier of an individual index. 
-These IDX files can be transformed individually with \texttt{makeindex} 
+These \gls{idx}-files can be transformed individually with \texttt{makeindex} 
 into ind-files as illustrated in Figure~\ref{fig:idx2indMult}. 
 Since \texttt{latex2pdf} can keep open only up to 16 output streams, 
 not all of which can be used to create a file \texttt{xxx-y.idx}, 
@@ -313,8 +313,8 @@ This explains why option \texttt{split} is not allowed.
 % **** check? 
 
 Instead, without option \texttt{split}, 
-\texttt{latex2pdf} creates a single IDX file. 
-The program \texttt{splitindex} splits it up into several IDX files 
+\texttt{latex2pdf} creates a single \gls{idx}-file. 
+The program \texttt{splitindex} splits it up into several \gls{idx}-files 
 and applies \texttt{makeindex} to each of them separately 
 as illustrated in Figure~\ref{fig:idx2indSplit}. 
 
@@ -322,7 +322,7 @@ For usage of further packages supporting multiple indices
 which are not intended to be used with this software, 
 see Chapter~\ref{chap:gaps}. 
 
-This software presupposes, that \texttt{makeindex} converts the IDX file 
+This software presupposes, that \texttt{makeindex} converts the \gls{idx}-file 
 into an ind-file containing the index 
 and creating also an ilg-file with logging output 
 as shown in Figure~\ref{fig:idx2ind}. 
@@ -336,7 +336,7 @@ should be a picture
 }{
 \import{}{F5_03idx2ind.ptx}
 }
-\caption{\label{fig:idx2ind}Conversion of an IDX file into an ind-file}
+\caption{\label{fig:idx2ind}Conversion of an \gls{idx}-file into an ind-file}
 \end{figure}
 
 \begin{figure}[htb]
@@ -347,7 +347,7 @@ should be a picture
 \import{}{F5_04idx2indMult.ptx}
 }
 \caption{\label{fig:idx2indMult}
-Not supported: Conversion of IDX files into ind-files}
+Not supported: Conversion of \gls{idx}-files into ind-files}
 \end{figure}
 
 \begin{figure}[htb]
@@ -357,7 +357,7 @@ should be a picture
 }{
 \import{}{F5_05idx2indSplit.ptx}
 }
-\caption{\label{fig:idx2indSplit}Conversion of an IDX file into ind-files}
+\caption{\label{fig:idx2indSplit}Conversion of an \gls{idx}-file into ind-files}
 \end{figure}
 
 It is possible to configure the makeindex-command 
@@ -432,7 +432,7 @@ If \texttt{xxx.tex} is the \LaTeX{} main file,
 \cmd{makeglossaries}{} opens the glo-file \texttt{xxx.glo} 
 containing glossary entries for writing. 
 As the built-in command \cmd{index}{} 
-writes entries into the IDX file defining the index, 
+writes entries into the \gls{idx}-file defining the index, 
 the command \cmd{gls}{} defined by the package \pkg{glossaries} 
 writes an entry into the glo-file. 
 Note that \texttt{xxx.glo} typically contains entries more than once 
@@ -481,7 +481,7 @@ respectively.
 Seemingly, \texttt{makeglossaries} relies on the aux-file 
 to determine whether to invoke \texttt{makeindex} or \texttt{xindy} 
 for sorting and unification. 
-Then it invokes the according command and writes a log-file 
+Then it invokes the according command and writes a LOG file 
 with ending \texttt{glg}, 
 redirecting the logging output of \texttt{makeindex} or \texttt{xindy} 
 adding own output so that a glg-file may be written, 
@@ -528,7 +528,7 @@ respectively,
 which is the result of sorting, the output file, 
 and contains the entries of the glo-file 
 just sorted, formatted and unified.
-So for a tex main file \texttt{xxx.tex}
+So for a tex main file \texttt{xxx.tex} the program 
 \texttt{makeglossaries} invokes
 %
 \begin{verbatim}
@@ -608,7 +608,7 @@ Option clash for package rerunfilecheck
 
 Package \pkg{rerunfilecheck} detects almost safely 
 changes of the raw index file writing an according message 
-into the log-file. 
+into the LOG file. 
 That way, it can be determined whether it is necessary 
 to rerun \texttt{makeindex} and \texttt{makeglossaries}. 
 After that, of course \LaTeX{} must be rerun at least once. 
@@ -633,7 +633,7 @@ another run is needed to read in these files
 to create a table of contents, a list of figures or a list of tables, 
 respectively. 
 Note that for all these cases, 
-the log-file does not allow to detect that \texttt{latex2pdf} has to be rerun, 
+the LOG file does not allow to detect that \texttt{latex2pdf} has to be rerun, 
 by matching a fixed pattern. 
 
 After the second run of \texttt{latex2pdf}, 
@@ -658,7 +658,7 @@ may be required
 and these also require another run of \texttt{latex2pdf} 
 also to get the page numbers right. 
 The package \pkg{rerunfilecheck} allows to detect this need to rerun 
-by pattern matching on the log-file almost for sure: 
+by pattern matching on the LOG file almost for sure: 
 Still there is some chance 
 that the lengths and the md5-sum of all relevant files 
 remain the same, although there is a relevant change. 
@@ -670,7 +670,7 @@ Note that there are several packages which require additional runs,
 such as the longtable-package, 
 which may vary dimensions of tables. 
 This software presupposes, that all these reruns 
-may be detected by matching a fixed pattern in the log-file. 
+may be detected by matching a fixed pattern in the LOG file. 
 Since packages are frequently changed and new packages are written, 
 also the pattern cannot be fixed. 
 Thus it is configurable. 
