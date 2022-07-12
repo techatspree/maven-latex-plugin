@@ -1,5 +1,5 @@
 \RequirePackage[l2tabu, orthodox]{nag}
-\documentclass[10pt]{article}
+\documentclass{article}
 \synctex=1
 \usepackage{iftex}
 
@@ -9,7 +9,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \fi
-\usepackage{fancyvrb}
+%\usepackage{fancyvrb}
 
 
 %%\pdfinfoomitdate1
@@ -27,6 +27,10 @@
 
 \usepackage[a4paper]{geometry}
 \usepackage{listings}
+\usepackage{longtable}
+% used by hyperref and also to update index and glossary 
+% to avoid clash because of loading with different options: 
+% declare first 
 \usepackage[aux]{rerunfilecheck}
 
 % graphics 
@@ -95,7 +99,17 @@
 \fi
 
 \usepackage{import}
-\usepackage[keeptemps, depythontex, rerun=always, fvextfile=55]{pythontex}%
+\usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
+
+\renewcommand{\lstlistoflistings}{\begingroup
+\tocfile{\lstlistingname}{lol}
+\endgroup}
+%and to number the Listof heading do:
+\renewcommand{\lstlistoflistings}{\begingroup
+%\tocsection
+%\tocchapter
+\tocfile{List of \lstlistingname{}s}{lol}
+\endgroup}
 \usepackage[nottoc, numindex, numbib]{tocbibind}
 
 %\usepackage{latex-bnf}
@@ -116,7 +130,8 @@
 \maketitle
 \tableofcontents
 \listoffigures
-%\listoftables
+\listoftables
+\lstlistoflistings
 
 \section{Introduction}
 
@@ -182,6 +197,8 @@ containing the \LaTeX{} main file \texttt{xxx.tex}
 and the output directory is in the working directory 
 and its name is \texttt{pythontex-files-xxx}. 
 
+Note that we assume python 3.x is installed only. 
+
 
 \section{The converter \pytex}\label{sec:pytex}
 
@@ -210,6 +227,111 @@ Under these assumptions, Figure~\ref{fig:py2dir} shows the input and output file
 
 \subsection{The Input File \texttt{xxx.pytxcode}}\label{subsec:pytexInFile}
 
+
+If a file \texttt{xxx.tex} loading package \texttt{pythontex} is processed, 
+as is the case for this document, 
+a file \texttt{xxx.pytxcode} is created, 
+whether there is python code within \texttt{xxx.tex} or not. 
+This file contains a line 
+%
+\begin{verbatim}
+  =>PYTHONTEX:SETTINGS#
+\end{verbatim}
+%
+and below that are specified the package options in the form given by Listing~\ref{lst:pytxcodeSettings}. 
+
+
+
+\lstinputlisting%
+[basicstyle=\scriptsize,
+firstline=3, print=true,
+breaklines, showstringspaces=false,
+float,
+captionpos=b, label={lst:pytxcodeSettings},
+caption={The settings section of \texttt{pythontexInOut.pytxcode}}]
+{./pythontexInOut.pytxcode.cpy}
+
+
+% question: how is debug encoded? 
+
+There is one key which does not refer to a package option: it is \texttt{version} 
+which refers to the version of the \texttt{pythontex} package 
+which is also the expected version of \pytex. 
+If the versions deviate, running \pytex{} emits the fatal error with line number 491 in Table~\ref{tab:pytexFErr}. 
+
+Interesting: \texttt{runall} is a package option, but it is not a valid key in \texttt{xxx.pytxcode}: 
+instead, \texttt{runall=true/false} is converted into \texttt{rerun=always/default}. 
+Note that \texttt{pythontex} is not able to process the key \texttt{runall} 
+but emits a warning with line number 484 given in Table~\ref{tab:pytexWarn}. 
+This document is compiled with option \texttt{runall=false}. 
+
+For each python code in \texttt{xxx.tex}, there is a separate code section in \texttt{xxx.pytxcode}. 
+The code sections come in proper order and precede the settings section. 
+This document has a single section with pythoncode, right at the beginning of the introduction. 
+The code is 
+%
+\begin{verbatim}
+  \pys[sname]{1+1=!{1+1}}
+\end{verbatim}
+
+Listing~\ref{lst:pytxcodeCode1} shows the according section in \texttt{xxx.pytxcode}. 
+As always there is a headline starting with \texttt{=>PYTHONTEX} 
+then follow, separated by \texttt\# symbols 
+%
+\begin{itemize}
+  \item the family, i.e.~the interpreter, here \texttt{py} representing python, 
+  coming from the command \texttt{\textbackslash pys}; 
+  accordingly for environments, 
+  \item the session, here \texttt{sname}, 
+  which is the optional parameter of the command, 
+  \item next suspected the restart identifier, seemingly always \texttt{default}
+  \item the command, here \texttt{s}, 
+  also determined by the command \texttt{\textbackslash pys}, 
+  \item the context which is empty, % TBD: clarify 
+  \item arguments which are empty here, 
+  \item the number of the instance, which runs from 0 to the number of commands minus one 
+  \item and the line number which is the line in the \LaTeX{} file, 
+  where the command or the according environment starts. 
+\end{itemize}
+% the following is in the generated file xxx.py: 
+% pytex.id = 'py_sname_default'
+% pytex.family = 'py'
+% pytex.session = 'sname'
+% pytex.restart = 'default'
+
+% pytex.command = 's'
+% pytex.set_context('')
+% pytex.args = ''
+% pytex.instance = '0'
+% pytex.line = '152'
+
+
+\lstinputlisting%
+[basicstyle=\scriptsize,
+firstline=1, lastline=2, print=true,
+breaklines, showstringspaces=false,
+float,
+captionpos=b, label={lst:pytxcodeCode1},
+caption={The sole code section of \texttt{pythontexInOut.pytxcode}}]
+{./pythontexInOut.pytxcode.cpy}
+
+
+
+If running \texttt{pythontex} on the job \texttt{xxx}, 
+we obtain for this manual with a trailing empty line. 
+%
+\begin{verbatim}
+  This is PythonTeX 0.18
+
+  --------------------------------------------------
+  PythonTeX:  manualLatexMavenPlugin - 0 error(s), 0 warning(s)  
+\end{verbatim}
+
+The folder \texttt{pythontex-files-manualLatexMavenPlugin} is created 
+but may be empty because there is no code. %TBD: clarify whether this is true. 
+
+
+
 \subsection{The Output Files}\label{subsec:pytexOutFile}
 
   Figure~\ref{fig:py2dir} shows that the output files of \pytex{} 
@@ -234,6 +356,88 @@ and contains processed pygments code according to~\cite{PythonTexP}, page~107.
 
 
 \subsection{Errors and Warnings at standard/error output}\label{subsec:pytexErrWarn}
+
+\begin{longtable}{|rlll|}
+\toprule
+Line No       & * & Message & RC \\
+\endfirsthead
+\bottomrule
+\caption{\label{tab:pytexFErr} Fatal errors of \texttt{pythontex}  }
+\endlastfoot
+219 & - & \texttt{Invalid --interpreter argument} & 2 \\
+246 & y & \texttt{You have launched PythonTeX using pythontex2/3.py directly.}  & 2 \\
+271 & y & \texttt{You have launched PythonTeX using pythontex2/3.py directly.}  & 2 \\
+292 & y & \texttt{Code file xxx.pytxcode does not exist. Run LaTeX \dots }      & 1 \\
+327 & y & \texttt{Directory naming collision between the following files:\dots} & 1 \\
+362 & y & \texttt{Code file xxx.pytxcode does not exist.Run \LaTeX{} \dots }    & 1 \\
+370 & - & \texttt{The .pytxcode file appears to have an outdated format or be invalid  } & 1 \\
+    &   & \texttt{Run LaTeX to make sure the file is current }                  & \\
+406 & y & \texttt{Unable to parse package option fvextfile.  }                  & 1\\
+491 & y & \texttt{The version of the PythonTeX scripts does not match the last code }& 1 \\
+    &   & \texttt{saved by the document-{}-run LaTeX to create an updated version.} & \\
+2864 &  &                                                                       & 1 \\
+\end{longtable}
+
+% TBD: fatal errors with message but no error code. 
+Fatal errors are those which exit directly with an error code other than 0. 
+They cannot be suppressed via command line option \texttt{-{}-error-exit-code}; 
+this refers to the non-fatal errors only which cause error code 1 if the option is set to \texttt{true}. 
+If such a non-fatal error occurs, and 
+The proper error message always starts with \texttt{* PythonTeX error}. 
+
+\begin{longtable}{|rlll|}
+  \toprule
+  Line No       & * & Message & inc err  \\
+  \endfirsthead
+  \bottomrule
+  \caption{\label{tab:pytexNFErr} Non-fatal errors of \texttt{pythontex}  }
+  \endlastfoot
+   655 & y & Cannot find dependency \dots                                   & yes \\
+  1359 & y & Currently, non-Python consoles are not supported               & yes \\
+  1605 & y & Missing output file for \dots                                  & yes \\
+  1611 & y & Running code for Julia console failed                          & yes \\
+  1696 & y & Cannot find dependency. It belongs to \dots                    & yes \\
+  1765 & y & Missing stderr file for \dots                                  & yes \\
+  1960 & y & Line number xxx could not be synced with the document \dots    & yes \\
+  2343 & y & An error occurred but no error messages were identified. \dots & yes \\
+  2422 & y & Could not find external file xxx The file was not pygmentized  & no \\ % TBD: ask whether correct. 
+\end{longtable}
+
+
+The non fatal errors go into the error count displayed at the end of the log. 
+To this number also errors from the python run are added. 
+
+
+\begin{longtable}{|rlll|}
+  \toprule
+  Line No       & * & Message & inc warn \\
+  \endfirsthead
+  \bottomrule
+  \caption{\label{tab:pytexWarn} Warnings of \texttt{pythontex}  }
+  \endlastfoot
+   340 & y & Potential directory naming collision \dots  & yes \\
+   413 & y & Invalid value for package option fvextfile  & yes \\
+   484 & y & Unknown option \dots                        & yes \\
+   685 & y & Session xxx has rerun=never                 & yes \\
+       &   & But its code or dependencies have been modified & \\
+  1446 & y & The following have dependencies that have been modified & yes \\
+  1737 & y & Custom code for xxx attempted to print or write to stdout & yes \\
+   \end{longtable}
+
+
+   \begin{longtable}{|rll|}
+    \toprule
+    Line Number       & * & Message  \\
+    \endfirsthead
+    \bottomrule
+    \caption{\label{tab:pytexNotice} Notices of \texttt{pythontex}  }
+    \endlastfoot
+  2276 & y & Line number xxx could not be synced with the document \\
+  2336 & y & x message(s) could not be classified \\
+       &   & Interpreted as y, based on the return code(s) \\
+\end{longtable}
+
+  
 
 \subsection{Failure codes}\label{subsec:pytexFCodes}
 
