@@ -50,6 +50,26 @@ it allows an imported file to find its own inputs
 This is vital for the graphic formats for which a tex-file is imported 
 which itself imports a pdf/eps file located in the same folder 
 but not in the folder of the importing file. 
+It is advisable to combine the \texttt{import} package with other graphic packages 
+to include graphics in separate graphic files. 
+\item[pythontex]
+is strictly speaking no graphics package either but more general 
+a way to include and run code within a \LaTeX{} document 
+as described in~\cite{PythonTexP}. 
+Note that not only Python but also other languages can be used. 
+Most of them offer graphic capabilities 
+and so graphics can be included also via \pkg{pythontex}. 
+Nevertheless, we do not treat this technique in this chapter, 
+but separately in Section~\ref{sec:pythontex}. 
+This is because graphics is a side aspect of \pkg{pythontex} 
+and also because strictly speaking there is no preprocessing. 
+First a latex processor is run and the package extracts the code 
+into a separate file which is then further processed by an external tool. 
+This is more like running \cmd{bibtex} to extract a bibliography. 
+
+If using the package \texttt{pythontex} 
+a special processing interacting with the latex to pdf converter is required also, 
+but it is not preprocessing. 
 \end{itemize}
 
 We support figures created in the \gls{fig} by the program xfig, 

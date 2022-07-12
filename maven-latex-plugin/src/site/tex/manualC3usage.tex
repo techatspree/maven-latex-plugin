@@ -52,10 +52,13 @@ whereas the file \texttt{header.tex} is not although also a \LaTeX-file.
 \LaTeX{} main files are detected automatically. 
 \index{latex main file}
 
-The included files may be again \LaTeX-files but also graphic files 
-in various formats. 
-There are four kinds of graphic formats, 
-as regards the way their files are included in \LaTeX-files, 
+The included files may be again \LaTeX-files, but also bibliography files, 
+listings included by package \pkg{listing}, verbatim text included with \pkg{verbatim} 
+and maybe soon even code files to be executed via the package \pkg{pythontex}. 
+\index{pythontex}
+The great bulk of input files however, are graphic files in various formats. 
+As regards the way their files are included in \LaTeX-files, 
+there are the following kinds of graphic formats, 
 all included in the tex-source directory. 
 %
 \begin{enumerate}
@@ -112,9 +115,18 @@ by running \LaTeX.
 Essentially, each of the abovementioned type of format
 can be included that way but currently,
 this is done for the \gls{svg}-format only
-included by the package \pkg{svg} (see \cite{SvgP}).
+included by the package \pkg{svg} (see~\cite{SvgP}).
 The author personally refrains from using packages like that
-because of the lack of flexibility and further advantages. 
+because of the lack of flexibility and further drawbacks. 
+\item 
+Finally, there is a way to include graphics which is not really a graphic format: 
+In the course of running code, e.g.~by package \pkg{pythontex} in Python, 
+as described in Section~\ref{sec:pythontex}, 
+it is also possible to create computed graphics. 
+It may be advisable to separate code into special files to be included via \cmd{input}, 
+but it is not strictly required. 
+In the long run it seems a good idea, to extend \pkg{pythontex} 
+to read in code files, e.g.~in python directly. 
 \end{enumerate}
 
 The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
