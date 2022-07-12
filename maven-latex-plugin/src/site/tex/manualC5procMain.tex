@@ -411,6 +411,28 @@ indicates that all following options are passed to \texttt{makeindex}
 
 \section{Glossaries}\label{sec:glossaries}
 
+CAUTION\@: The method described here, 
+has at least two severe bugs: 
+The number of reruns of the \LaTeX-to-pdf converter and also of \texttt{makeglossaries} 
+is not guaranteed as a consequence of a bug in \pkg{rerunfilecheck} 
+and the fact, that it does not fit current versions of \pkg{makeglossaries}. 
+In addition, entries of the glossaries not mentioned directly in the document 
+but must be included because they are used in the explanation of entries to be included 
+are not treated properly. 
+
+As a consequence, this document, or to be more precise its glossary, 
+could not always be reproduced and so the author excluded the glossary until the problem is fixed. 
+
+In addition, it is a conceptual weakness that a glossary data base 
+shall be centralized and shall thus not be included in a \LaTeX{} document 
+and not even be written in \LaTeX. 
+All weaknesses, bugs and conceptual shortcomings are overcome 
+by the package \pkg{glossaries-extra} in conjunction with the auxiliary program \texttt{bib2gls} 
+which will replace \pkg{glossaries} and \texttt{makeglossaries}. 
+For the time being, use glossaries with caution. 
+\medskip
+
+
 Creating glossaries 
 requires the package \pkg{glossaries} described in~\cite{GloP}. 
 Note that despite the headline of this section, 
