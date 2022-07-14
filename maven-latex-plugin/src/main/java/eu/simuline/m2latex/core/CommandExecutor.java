@@ -54,11 +54,14 @@ class CommandExecutor {
      * and logs if one of the expected target files 
      * given by <code>resFile</code> is not newly created, 
      * i.e. if it does not exist or is not updated. 
+     * This is a convenience method of 
+     * {@link #execute(File, File, String, boolean, String[], File... )}, 
+     * where the boolean signifies whether the return code is checked. 
+     * This is set to <code>true</code> in this method. 
+     * 
      * Logging: 
      * <ul>
-     * <li> EEX01: return code other than 0. Provided resFiles is not empty. 
-     * In fact, there are two use cases: either result is resFiles, 
-     * or, if this is empty, it is the return value. 
+     * <li> EEX01: return code other than 0. 
      * <li> EEX02: no target file
      * <li> EEX03: target file not updated
      * <li> WEX04: cannot read target file
@@ -106,10 +109,80 @@ class CommandExecutor {
      *    on the process to be executed thrown by {@link Process#waitFor()}. 
      *    </ul>
      */
-    CmdResult execute(File workingDir, 
-		   File pathToExecutable, 
-		   String command, 
-		   String[] args, 
+    CmdResult execute(File workingDir,
+            File pathToExecutable,
+            String command,
+            String[] args,
+            File... resFiles) throws BuildFailureException {
+        return execute(workingDir, pathToExecutable, command,
+                true, args, resFiles);
+    }
+
+
+    /**
+     * Executes <code>command</code> in <code>workingDir</code>
+     * with list of arguments given by <code>args</code> 
+     * and logs if one of the expected target files 
+     * given by <code>resFile</code> is not newly created, 
+     * i.e. if it does not exist or is not updated. 
+     * Logging: 
+     * <ul>
+     * <li> EEX01: return code other than 0 and <code>checkReturnCode</code> is set. 
+     * <li> EEX02: no target file
+     * <li> EEX03: target file not updated
+     * <li> WEX04: cannot read target file
+     * <li> WEX05: may emit false warnings
+     * </ul>
+     *
+     * @param workingDir
+     *    the working directory or <code>null</code>. 
+     *    The shell changes to that directory 
+     *    before invoking <code>command</code> 
+     *    with arguments <code>args</code> if this is not <code>null</code>. 
+     *    Argument <code>null</code> is allowed only 
+     *    if no result files are given by <code>resFile</code>. 
+     *    Essentially this is just needed to determine the version. 
+     * @param pathToExecutable
+     *    the path to the executable <code>command</code>. 
+     *    This may be <code>null</code> if <code>command</code> 
+     *    is on the execution path 
+     * @param command
+     *    the name of the program to be executed 
+     * @param args
+     *    the list of arguments, 
+     *    each containing a blank enclosed in double quotes. 
+     * @param checkReturnCode
+     *    whether to check that the return code is zero. 
+     *    Else notify about the error. 
+     * @param resFiles
+     *    optional result files, i.e. target files which shall be updated 
+     *    by this command. 
+     * @return
+     *    the output of the command which comprises the output stream 
+     *    and whether the return code is nonzero, i.e. the command succeeded. 
+     *    The io stream is used in tests only whereas the return code is used for pdfdiffs. 
+     * @throws BuildFailureException
+     *    TEX01 if invocation of <code>command</code> fails very basically: 
+     *    <ul>
+     *    <li><!-- see Commandline.execute() -->
+     *    the file expected to be the working directory 
+     *    does not exist or is not a directory. 
+     *    <li><!-- see Commandline.execute() -->
+     *    {@link Runtime#exec(String, String[], File)} fails 
+     *    throwing an {@link java.io.IOException}. 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemOut parser occurs 
+     *    <li> <!-- see CommandLineCallable.call() -->
+     *    an error inside systemErr parser occurs 
+     *    <li> Wrapping an {@link InterruptedException} 
+     *    on the process to be executed thrown by {@link Process#waitFor()}. 
+     *    </ul>
+     */
+    CmdResult execute(File workingDir,
+		   File pathToExecutable,
+		   String command,
+           boolean checkReturnCode,
+		   String[] args,
 		   File... resFiles) throws BuildFailureException {
 	// analyze old result files 
 	//assert resFile.length > 0;
@@ -145,7 +218,7 @@ class CommandExecutor {
 
 	// Proper execution 
 	// may throw BuildFailureException TEX01, log warning EEX01 
-	CmdResult res = execute(workingDir, pathToExecutable, command, resFiles.length > 0, args);
+	CmdResult res = execute(workingDir, pathToExecutable, command, checkReturnCode, args);
 
 	// may log EEX02, EEX03, WEX04 
 	for (int idx = 0; idx < resFiles.length; idx++) {
@@ -155,6 +228,8 @@ class CommandExecutor {
 
 	return res;
     }
+
+
 
     // returns whether this method logged an error or a warning 
     // FIXME: return value nowhere used 
