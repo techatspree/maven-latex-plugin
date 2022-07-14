@@ -191,27 +191,29 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	/**
 	 * Handler for .svg-files representing scaleable vector graphics. 
 	 */
-	svg {
-	    // converts an svg-file into pdf and ptx 
-	    // invoking {@link #runFig2Dev(File, LatexDev)}
-	    // TEX01, EEX01, EEX02, EEX03, WEX04, WEX05 
-	    // EFU07, EFU08, EFU09 if filtering a file fails. 
-	    void procSrc(File file, LatexPreProcessor proc) 
-		throws BuildFailureException {
-		proc.runSvg2Dev(file);
-		// proc.log.info("Processing svg-file '" + file + 
-		//  	      "' deferred to LaTeX run by need. ");
-		// FIXME: this works for pdf but not for dvi: 
-		// even in the latter case, .pdf and .pdf_tex are created 
-	    }
-	    void clearTarget(File file, LatexPreProcessor proc) {
-		// may log EFU05 
-		proc.clearTargetPtxPdfEps(file);
-	    }
-	    String getSuffix() {
-		return LatexPreProcessor.SUFFIX_SVG;
-	    }
-	},
+			svg {
+				// converts an svg-file into pdf and ptx
+				// invoking {@link #runFig2Dev(File, LatexDev)}
+				// TEX01, EEX01, EEX02, EEX03, WEX04, WEX05
+				// EFU07, EFU08, EFU09 if filtering a file fails.
+				void procSrc(File file, LatexPreProcessor proc)
+						throws BuildFailureException {
+					proc.runSvg2Dev(file);
+					// proc.log.info("Processing svg-file '" + file +
+					// "' deferred to LaTeX run by need. ");
+					// FIXME: this works for pdf but not for dvi:
+					// even in the latter case, .pdf and .pdf_tex are created
+				}
+
+				void clearTarget(File file, LatexPreProcessor proc) {
+					// may log EFU05
+					proc.clearTargetPtxPdfEps(file);
+				}
+
+				String getSuffix() {
+					return LatexPreProcessor.SUFFIX_SVG;
+				}
+			},
 	/**
 	 * Handler for .jpg-files representing a format 
 	 * defined by the Joint Photographic Experts Group (jp(e)g). 
@@ -985,7 +987,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		}
 	    };
 	// may log WFU01, EFU05 
-	this.fileUtils.deleteX(mpFile, filter);
+	this.fileUtils.deleteX(mpFile, filter, false);
     }
 
      /**
@@ -1058,7 +1060,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    // for eps only 
 	    this.fileUtils.filterInkscapeIncludeFile(texFile);
 	}
-	this.fileUtils.deleteOrError(texFile);
+	this.fileUtils.deleteOrError(texFile, false);
     }
 
     protected static String[] buildArgumentsInkscp(File grpFile,
@@ -1168,7 +1170,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	    return;
 	}
 	// may log EFU05 
-	this.fileUtils.deleteOrError(delFile);
+	this.fileUtils.deleteOrError(delFile, false);
     }
 
     /**
@@ -1191,19 +1193,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // used 
     // by addIfLatexMain(File, Collection) and 
     // by clearTargetTexIfLatexMain(File) 
-    private boolean isLatexMainFile(File texFile) {
-	assert texFile.exists() && !texFile.isDirectory()
-	    : "Expected existing regular tex file "+texFile;
-	// may log WFU03 cannot close 
-	Boolean res = this.fileUtils.matchInFile
-	    (texFile, this.settings.getPatternLatexMainFile());
-	if (res == null) {
-	    this.log.warn("WPP02: Cannot read tex file '" + texFile + 
-			  "'; may bear latex main file. ");
-	    return false;
-	}
-	return res;
-    }
+ 		private boolean isLatexMainFile(File texFile) {
+			assert texFile.exists() && !texFile.isDirectory()
+					: "Expected existing regular tex file " + texFile;
+			// may log WFU03 cannot close
+			Boolean res = this.fileUtils.matchInFile(texFile, 
+																							 this.settings.getPatternLatexMainFile());
+			if (res == null) {
+				this.log.warn("WPP02: Cannot read tex file '" + texFile +
+						"'; may bear latex main file. ");
+				return false;
+			}
+			return res;
+		}
 
     /**
      * If the tex-file <code>texFile</code> is a latex main file, 
@@ -1247,19 +1249,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    the tex-file of which the created files shall be deleted 
      *    if it is a latex main file. 
      */
-    private void clearTargetTexIfLatexMain(File texFile) {
-	// exclude files which are no latex main files 
-	// may log WFU03, WPP02 
-	if (!isLatexMainFile(texFile)) {
-	    return;
-	}
-	this.log.info("Deleting targets of latex main file '" + 
-		      texFile + "'. ");
-	FileFilter filter = TexFileUtils.getFileFilter
-	    (texFile, this.settings.getPatternCreatedFromLatexMain());
-	// may log WFU01, EFU05 
-	this.fileUtils.deleteX(texFile, filter);
-    }
+		private void clearTargetTexIfLatexMain(File texFile) {
+			// exclude files which are no latex main files
+			// may log WFU03, WPP02
+			if (!isLatexMainFile(texFile)) {
+				return;
+			}
+			this.log.info("Deleting targets of latex main file '" +
+					texFile + "'. ");
+			boolean allowsDir = true;
+			FileFilter filter = TexFileUtils.getFileFilter(texFile, this.settings.getPatternCreatedFromLatexMain(), allowsDir);
+			// may log WFU01, EFU05
+			this.fileUtils.deleteX(texFile, filter, true);
+		}
 
     /**
      * Detects files in the directory represented by <code>node</code> 
@@ -1350,88 +1352,88 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      *    {@link LatexPreProcessor.SuffixHandler#mp} 
      *    because these invoke external programs. 
      */
-    private void processGraphicsSelectMain(File dir, 
-					   DirNode node, 
-    					   Collection<String> skipped, 
-    					   Collection<File> latexMainFiles) 
-    	throws BuildFailureException {
+ 		private void processGraphicsSelectMain(File dir,
+				DirNode node,
+				Collection<String> skipped,
+				Collection<File> latexMainFiles)
+				throws BuildFailureException {
 
-   	assert node.isValid();// i.e. node.regularFile != null
-	// FIXME: processing of the various graphic files 
-	// may lead to overwrite 
-	// FIXME: processing of the latex main files 
-	// may lead to overwrite of graphic files or their targets 
+			assert node.isValid();// i.e. node.regularFile != null
+			// FIXME: processing of the various graphic files
+			// may lead to overwrite
+			// FIXME: processing of the latex main files
+			// may lead to overwrite of graphic files or their targets
 
-	File file;
-    	String suffix;
-    	SuffixHandler handler;
-	Collection<File> latexMainFilesLocal = new TreeSet<File>();
-	Map<File, SuffixHandler> file2handler = 
-	    new TreeMap<File, SuffixHandler>();
-   	for (String fileName : node.getRegularFileNames()) {
-	    file = new File(dir, fileName);
-    	    suffix = TexFileUtils.getSuffix(file);
-    	    handler = SUFFIX2HANDLER.get(suffix);
-    	    if (handler == null) {
-    		this.log.debug("Skipping processing of file '" + file + "'. ");
-		// warning on skipped files even on hidden files. 
-    		skipped.add(suffix);
-    	    } else {
-		// Either performs transformation now 
-		// or schedule for later (latex main files) 
-		// or do nothing if no targets like bib-files 
-		// or tex-files to be inputted. 
+			File file;
+			String suffix;
+			SuffixHandler handler;
+			Collection<File> latexMainFilesLocal = new TreeSet<File>();
+			Map<File, SuffixHandler> file2handler = new TreeMap<File, SuffixHandler>();
+			for (String fileName : node.getRegularFileNames()) {
+				file = new File(dir, fileName);
+				suffix = TexFileUtils.getSuffix(file);
+				handler = SUFFIX2HANDLER.get(suffix);
+				if (handler == null) {
+					this.log.debug("Skipping processing of file '" + file + "'. ");
+					// warning on skipped files even on hidden files.
+					skipped.add(suffix);
+				} else {
+					// Either performs transformation now
+					// or schedule for later (latex main files)
+					// or do nothing if no targets like bib-files
+					// or tex-files to be inputted.
 
-    		// may throw BuildFailureException TEX01, 
-    		// may log EEX01, EEX02, EEX03, WEX04, WEX05 
-		// WFU03, WPP02 
-		if (!file.isHidden()) {
-		    handler.scheduleProcSrc(file, file2handler, 
-					    this, latexMainFilesLocal);
+					// may throw BuildFailureException TEX01,
+					// may log EEX01, EEX02, EEX03, WEX04, WEX05
+					// WFU03, WPP02
+					if (!file.isHidden()) {
+						handler.scheduleProcSrc(file, file2handler,
+								this, latexMainFilesLocal);
+					}
+				}
+			} // for
+
+			latexMainFiles.addAll(latexMainFilesLocal);
+
+			// remove sources from file2handler.keySet()
+			// if created by local latex main files
+			FileFilter filter;
+			for (File lmFile : latexMainFilesLocal) {
+				filter = TexFileUtils.getFileFilter(lmFile, 
+				this.settings.getPatternCreatedFromLatexMain(), 
+				false);
+				Iterator<File> iter = file2handler.keySet().iterator();
+				File src;
+				while (iter.hasNext()) {
+					src = iter.next();
+					if (filter.accept(src)) {
+						// FIXME: maybe this is too much:
+						// better just one warning per latex main file
+						// or just suffixes, i.e. handlers
+						this.log.warn("WPP04: Skip processing '" + src +
+								"': interpreted as target of '" +
+								lmFile + "'. ");
+						iter.remove();
+						continue;
+					}
+					// Here, src is not overwritten processing lmFile
+					// FIXME: to be checked, whether this is also true
+					// for targets of src
+				}
+			}
+
+			// Here process file, except tex (bib at least info)
+			// with associated handler
+			// FIXME: How to ensure, that nothing is overwritten?
+			// NO: if a file is overwritten, then it is no source
+			// and needs no processing
+			for (Map.Entry<File, SuffixHandler> entry : file2handler.entrySet()) {
+				// procSrc may throw BuildFailureException TEX01
+				// and may log WFU03, WPP02,
+				// EEX01, EEX02, EEX03, WEX04, WEX05 and EFU07, EFU08, EFU09
+				entry.getValue().procSrc(entry.getKey(), this);
+			}
 		}
-    	    }
-    	} // for 
-
-	latexMainFiles.addAll(latexMainFilesLocal);
-
-	// remove sources from file2handler.keySet() 
-	// if created by local latex main files 
-	FileFilter filter;
-	for (File lmFile : latexMainFilesLocal) {
-	    filter = TexFileUtils.getFileFilter
-		(lmFile, this.settings.getPatternCreatedFromLatexMain());
-	    Iterator<File> iter = file2handler.keySet().iterator();
-	    File src;
-	    while (iter.hasNext()) {
-		src = iter.next();
-		if (filter.accept(src)) {
-		    // FIXME: maybe this is too much: 
-		    // better just one warning per latex main file 
-		    // or just suffixes, i.e. handlers 
-		    this.log.warn("WPP04: Skip processing '" + src + 
-				  "': interpreted as target of '" + 
-				  lmFile + "'. ");
-		    iter.remove();
-		    continue;
-		}
-		// Here, src is not overwritten processing lmFile 
-		// FIXME: to be checked, whether this is also true 
-		// for targets of src 
-	    }
-	}
-
-	// Here process file, except tex (bib at least info) 
-	// with associated handler 
-	// FIXME: How to ensure, that nothing is overwritten? 
-	// NO: if a file is overwritten, then it is no source 
-	// and needs no processing 
-	for (Map.Entry<File, SuffixHandler> entry : file2handler.entrySet()) {
-	    // procSrc may throw BuildFailureException TEX01
-	    // and may log WFU03, WPP02, 
-	    // EEX01, EEX02, EEX03, WEX04, WEX05 and EFU07, EFU08, EFU09 
-	    entry.getValue().procSrc(entry.getKey(), this);
-	}
-    }
 
     /**
      * Like 
@@ -1477,7 +1479,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     // invoked in LatexProcessor.clearAll() only 
     void clearCreated(File texDir) {
-	clearCreated(texDir, new DirNode(texDir, this.fileUtils));
+			clearCreated(texDir, new DirNode(texDir, this.fileUtils));
     }
 
     /**
@@ -1522,37 +1524,36 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      * @param node
      *    a node associated with <code>dir</code>. 
      */
-    private void clearCreated(File dir, DirNode node) {
+   	private void clearCreated(File dir, DirNode node) {
 			assert dir.isDirectory()
-	    : "Expected existing directory "+dir+" to be cleared. ";
+					: "Expected existing directory " + dir + " to be cleared. ";
 			File file;
 			SuffixHandler handler;
-			Map<File, SuffixHandler> file2handler =
-				    new TreeMap<File, SuffixHandler>();
-   		for (String fileName : node.getRegularFileNames()) {
+			Map<File, SuffixHandler> file2handler = new TreeMap<File, SuffixHandler>();
+			for (String fileName : node.getRegularFileNames()) {
 				file = new File(dir, fileName);
-	    	handler = SUFFIX2HANDLER.get(TexFileUtils.getSuffix(file));
-	    	if (handler != null) {
-				// either clear targets now or schedule for clearing 
-				// (in particular do nothing if no target)
-				// may log WPP02, WFU01, WFU03, EFU05 
-				handler.clearTarget(file, this, file2handler);
-	    }
-	}
-	// clear targets of all still existing files 
-	// which just scheduled for clearing 
-  	for (Map.Entry<File,SuffixHandler> entry : file2handler.entrySet()) {
-	    file = entry.getKey();
-	    if (file.exists()) {
-		entry.getValue().clearTarget(file, this);
-	    }
-	}
+				handler = SUFFIX2HANDLER.get(TexFileUtils.getSuffix(file));
+				if (handler != null) {
+					// either clear targets now or schedule for clearing
+					// (in particular do nothing if no target)
+					// may log WPP02, WFU01, WFU03, EFU05
+					handler.clearTarget(file, this, file2handler);
+				}
+			}
+			// clear targets of all still existing files
+			// which just scheduled for clearing
+			for (Map.Entry<File, SuffixHandler> entry : file2handler.entrySet()) {
+				file = entry.getKey();
+				if (file.exists()) {
+					entry.getValue().clearTarget(file, this);
+				}
+			}
 
-    	for (Map.Entry<String,DirNode> entry : node.getSubdirs().entrySet()) {
-	    // may log WPP02, WFU01, WFU03, EFU05 
-    	    clearCreated(new File(dir, entry.getKey()), entry.getValue());
-    	}
-    }
+			for (Map.Entry<String, DirNode> entry : node.getSubdirs().entrySet()) {
+				// may log WPP02, WFU01, WFU03, EFU05
+				clearCreated(new File(dir, entry.getKey()), entry.getValue());
+			}
+		}
 
     // FIXME: suffix for tex files containing text and including pdf 
  }
