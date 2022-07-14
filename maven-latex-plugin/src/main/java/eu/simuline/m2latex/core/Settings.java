@@ -1175,6 +1175,98 @@ public class Settings {
 	"^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get glossary right\\.$";
 
 
+
+   // parameters for pythontex
+
+
+    /**
+     * The Pythontex command which creates a folder <code>pythontex-files-xxx</code> 
+     * with various files inside 
+     * from a pytxcode-file (invoked without file ending) 
+     * and logging in a plg-file. 
+     * The default value is <code>pythontex</code> 
+     * but as long as this does not write a log file this software really needs, 
+     * we have to configure it with <code>pythontexW</code> 
+     * which is a simple wrapper of <code>pythontex</code> writing a log file. 
+     */
+    @Parameter(name = "pythontexCommand", defaultValue = "pythontex")
+    private String pythontexCommand = "pythontex";
+
+    /**
+     * The options for the command {@link #pythontexCommand}. 
+     * <p> 
+     * For the possibilities see the manual of the pythontex package 
+     * or the help dialog of <code>pythontex</code>. 
+     * CAUTION: <code>--rerun</code> and <code>--runall</code> cannot be specified both in one invocation. 
+     * In the context of this software, the option
+     * <code>--interactive</code> is not appropriate. 
+     * CAUTION: For many options of the command line tool, 
+     * there is an according package option and the latter overrides the former. 
+     * CAUTION: This software overwrites settings <code>--rerun</code> and <code>--runall</code> anyway, 
+     * and forces setting <code>--rerun=always</code>. 
+     * The default value is <code>--rerun=always</code>. 
+     */
+    @Parameter(name = "pythontexOptions", defaultValue = "--rerun=always")
+    private String pythontexOptions = "--rerun=always";
+
+
+    /**
+     * The pattern in the plg-file 
+     * indicating that running <code>pythontex</code>, resp. <code>pythontexW</code> 
+     * via {@link #mpythontexCommand} failed. 
+     * The default value is essentially 
+     * <code>(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)</code> (note the spaces)
+     * but due to a bug in <code>pythontex</code> it is slightly more complicated. 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     */
+    @Parameter(name = "patternErrPyTex",
+               defaultValue =        "\\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)")
+    private String patternErrPyTex = "\\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)";
+
+    /**
+     * The pattern in the plg-file 
+     * indicating a warning when running <code>pythontex</code>, resp. <code>pythontexW</code> 
+     * via {@link #pythontexCommand}. 
+     * The default value is <code>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\\(s\\), [1-9][0-9]* warning\\(s\\)</code> 
+     * (note the space and the brackets). 
+     * If this is not appropriate, please modify 
+     * and notify the developer of this plugin. 
+     */
+    @Parameter(name = "patternWarnPyTex",
+               defaultValue =         "(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\\(s\\), [1-9][0-9]* warning\\(s\\)")
+    private String patternWarnPyTex = "(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\\(s\\), [1-9][0-9]* warning\\(s\\)";
+
+    /**
+     * The Depythontex command invoked with no file ending 
+     * to create a file <code>xxx.depytx.tex</code> file
+     * from a tex-file, a depytx-file taking the output of <code>pythontex</code> into account 
+     * and logging on a dplg-file. 
+     * The default value is <code>depythontex</code> 
+     * but as long as this does not write a log file this software really needs, 
+     * we have to configure it with <code>depythontexW</code> 
+     * which is a simple wrapper of <code>depythontex</code>writing a log file. 
+     */
+    @Parameter(name = "depythontexCommand", defaultValue = "depythontex")
+    private String depythontexCommand = "depythontex";
+
+    /**
+     * The additional options for the command {@link #depythontexCommand}. 
+     * To run <code>depythontex</code> in the context of this software, 
+     * the options <code>--overwrite --output file</code> are mandatory 
+     * to create an output file at all and to overwrite if it already exists 
+     * avoiding that <code>depythontex</code> enters interactive mode. 
+     * Thus these options are added silently. 
+     * This setting is the additional options. 
+     * <p>
+     * The default value is the empty option string. 
+     * For the possibilites see the manual of the pythontex package 
+     * or the help dialog of code>depythontex</code>. 
+     */
+    @Parameter(name = "depythontexOptions", defaultValue = "")
+    private String depythontexOptions = "";
+
+
    // parameters for latex2html-conversion 
 
     /**
