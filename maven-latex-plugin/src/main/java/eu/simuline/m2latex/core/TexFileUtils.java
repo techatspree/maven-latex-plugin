@@ -38,6 +38,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
+
 // FIXME: jdee bug: delete static imports: does not find superfluous 
 
 /**
@@ -200,6 +202,8 @@ class TexFileUtils {
      *    for which the special sequence {@link #PATTERN_INS_LATEX_MAIN} 
      *    is replaced by the prefix of <code>texFile</code> 
      *    before a file filter is created from it. 
+     * @param allowsDirs
+     *    Whether the filter returned accepts also directories. 
      * @return
      *    a non-null file filter matching neither directories 
      *    nor <code>texFile</code> 
@@ -210,7 +214,7 @@ class TexFileUtils {
     // used only: in methods 
     // - LatexProcessor.create on tex-file to determine output files. 
     // - LatexPreProcessor.clearTargetTex to clear also intermediate files. 
-    static FileFilter getFileFilter(File texFile, String pattern) {
+    static FileFilter getFileFilter(File texFile, String pattern, boolean allowsDirs) {
         final String patternAccept = pattern
                 .replaceAll(PATTERN_INS_LATEX_MAIN,
                         getFileNameWithoutSuffix(texFile));
@@ -218,7 +222,7 @@ class TexFileUtils {
             public boolean accept(File file) {
                 // the second is superfluous for copying
                 // and only needed for deletion.
-                if (file.isDirectory() || file.equals(texFile)) {
+                if ((file.isDirectory() && !allowsDirs) || file.equals(texFile)) {
                     return false;
                 }
                 return file.getName().matches(patternAccept);
@@ -773,6 +777,12 @@ class TexFileUtils {
 			getFileNameWithoutSuffix(file) + suffix);
     }
 
+    // is assumed to be without suffix
+    static File replacePrefix(String prefix, File file) {
+        return new File(file.getParentFile(),
+			prefix + file.getName());
+    }
+
     /**
      * Deletes all files in the same folder as <code>pFile</code> directly, 
      * i.e. not in subfolders, which are accepted by <code>filter</code>. 
@@ -789,10 +799,12 @@ class TexFileUtils {
      * @param filter
      *    a filter which decides which files 
      *    from the parent directory of <code>pFile</code> to delete. 
+     * @param allowsDirs
+     *    Whether deletion also allows directories. 
      */
     // used in LatexPreProcessor.clearTargetMp
     // used in LatexPreProcessor.clearTargetTex only 
-    void deleteX(File pFile, FileFilter filter) {
+    void deleteX(File pFile, FileFilter filter, boolean allowsDirs) {
 	// FIXME: not true for clear target. 
 	// Required: cleanup in order reverse to creation. 
 	assert pFile.exists() && !pFile.isDirectory()
@@ -809,10 +821,10 @@ class TexFileUtils {
 	    // Required: cleanup in order reverse to creation. 
 	    assert delFile.exists();
 	    if (filter.accept(delFile)) {
-		assert delFile.exists() && !delFile.isDirectory()
+		assert delFile.exists() && (!delFile.isDirectory() || allowsDirs)
 		    : "Expected existing (regular) file "+delFile;
 		// may log EFU05: failed to delete 
-		deleteOrError(delFile);
+		deleteOrError(delFile, allowsDirs);
 	    }
 	}
     }
@@ -826,14 +838,15 @@ class TexFileUtils {
      * @param delFile
      *    the existing file to be deleted. 
      *    This must not be a directory. 
+     * @param allowsDirs
+     *    Whether deletion also allows directories. 
      */
-    void deleteOrError(File delFile) {
-	assert delFile.exists() && !delFile.isDirectory()
-	    : "Expected existing (regular) file "+delFile;
-	if (!delFile.delete()) {
-	    this.log.error("EFU05: Cannot delete file '" + 
-			   delFile + "'. ");
-	}
+    void deleteOrError(File delFile, boolean allowsDirs) {
+        assert delFile.exists() && (!delFile.isDirectory() || allowsDirs)
+                : "Expected existing (regular) file " + delFile;
+        if (!FileUtils.deleteQuietly(delFile)) {
+            this.log.error("EFU05: Cannot delete file '" + delFile + "'. ");
+        }
     }
 
     /**
@@ -898,7 +911,9 @@ class TexFileUtils {
      * Logging: 
      * EFU05: Cannot delete... 
      *
-     * @param orgNode
+     * @param dir
+     *    the directory where to cleanup. 
+     * @param origNode
      *    the node representing the original files. 
      *    This is the latex source directory or a subdirectory. 
      * @param currNode
@@ -906,24 +921,34 @@ class TexFileUtils {
      *    This is the latex source directory or a subdirectory. 
      */
     // used in cleanUp only 
-    private void cleanUpRec(File dir, DirNode orgNode, DirNode currNode) {
-   	assert       orgNode.getSubdirs().keySet()
-	    .equals(currNode.getSubdirs().keySet());
-	File file;
-  	for (String key : orgNode.getSubdirs().keySet()) {
-	    file = new File(dir, key);
-	    cleanUpRec(file,
-		       orgNode .getSubdirs().get(key), 
-		       currNode.getSubdirs().get(key));
-    	}
-     	Collection<String> currFileNames = currNode.getRegularFileNames();
-    	currFileNames.removeAll(orgNode.getRegularFileNames());
+    private void cleanUpRec(File dir, DirNode origNode, DirNode currNode) {
+        Set<String> origSubdirs =                     origNode.getSubdirs().keySet();
+        Set<String> currSubdirs = new TreeSet<String>(currNode.getSubdirs().keySet());
+        boolean containsAll = currSubdirs.containsAll(origSubdirs);
+        assert containsAll;
+        currSubdirs.removeAll(origSubdirs);
+        Set<String> diffSet = currSubdirs;
+        String regex = LatexProcessor.PREFIX_PYTEX_OUT_FOLDER+".+";// represents file name
+        for (String name : diffSet) {
+            assert name.matches(regex);
+            System.out.println("del: "+new File(dir, name));
+            deleteOrError(new File(dir, name), true);
+        }
+        File file;
+        for (String key : origNode.getSubdirs().keySet()) {
+            file = new File(dir, key);
+            cleanUpRec(file,
+                    origNode.getSubdirs().get(key),
+                    currNode.getSubdirs().get(key));
+        }
+        Collection<String> currFileNames = currNode.getRegularFileNames();
+        currFileNames.removeAll(origNode.getRegularFileNames());
 
-   	for (String fileName : currFileNames) {
- 	    file = new File(dir, fileName);
-    	    // may log error EFU05: Cannot delete file
-    	    deleteOrError(file);
-    	}
+        for (String fileName : currFileNames) {
+            file = new File(dir, fileName);
+            // may log error EFU05: Cannot delete file
+            deleteOrError(file, false);
+        }
     }
 
     // TBD: clarify whether this hack is really needed.
