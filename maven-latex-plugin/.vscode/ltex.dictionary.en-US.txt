@@ -20,3 +20,13 @@ pdflatex
 pdftotext
 subformulae
 Depythonization
+PythonTeX
+pytxcode
+fvextfile
+texFhtLoaded
+ptx
+dpytx
+pygmentized
+pygments
+pythontexW
+pythontex-files-xxx
