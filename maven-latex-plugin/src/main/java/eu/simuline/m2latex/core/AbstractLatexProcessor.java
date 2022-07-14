@@ -136,16 +136,16 @@ abstract class AbstractLatexProcessor {
     // logErrs (File, String, String)
     // logWarns(File, String, String)
     protected boolean hasErrsWarns(File logFile, String pattern) {
-	assert logFile.exists() && !logFile.isDirectory()
-	    : "Expected existing (regular) log file "+logFile;
-	// may log warning WFU03 cannot close 
-	Boolean res = this.fileUtils.matchInFile(logFile, pattern);
-	if (res == null) {
-	    this.log.warn("WAP04: Cannot read log file '" + logFile.getName() + 
-			  "'; may hide warnings/errors. ");
-	    return false;
-	}
-	return res;
+        assert logFile.exists() && !logFile.isDirectory()
+                : "Expected existing (regular) log file " + logFile;
+        // may log warning WFU03 cannot close
+        Boolean res = this.fileUtils.matchInFile(logFile, pattern);
+        if (res == null) {
+            this.log.warn("WAP04: Cannot read log file '" + logFile.getName() +
+                    "'; may hide warnings/errors. ");
+            return false;
+        }
+        return res;
     }
 
     // for both LatexProcessor and LatexPreProcessor 
