@@ -773,15 +773,19 @@ class TexFileUtils {
     // at numerous places 
     // TBD: clarify what is wrong with mock that we cannot make this static
     static File replaceSuffix(File file, String suffix) {
-        return new File(file.getParentFile(),
-			getFileNameWithoutSuffix(file) + suffix);
+        return new File(file.getParentFile(), 
+                        getFileNameWithoutSuffix(file) + suffix);
     }
 
     // is assumed to be without suffix
     static File replacePrefix(String prefix, File file) {
-        return new File(file.getParentFile(),
-			prefix + file.getName());
+        return new File(file.getParentFile(), prefix + file.getName());
     }
+
+    static File appendSuffix(File file, String suffix) {
+        return new File(file.getParentFile(), file.getName() + suffix);
+    }
+
 
     /**
      * Deletes all files in the same folder as <code>pFile</code> directly, 

@@ -70,6 +70,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     final static String SUFFIX_TOC = ".toc";
     final static String SUFFIX_LOF = ".lof";
     final static String SUFFIX_LOT = ".lot";
+    final static String SUFFIX_LOL = ".lol";
+ 
     final static String SUFFIX_AUX = ".aux";
     final static String SUFFIX_DVI = ".dvi";
 
@@ -91,6 +93,21 @@ public class LatexProcessor extends AbstractLatexProcessor {
     final static String SUFFIX_GLS = ".gls";
     // logging file for makeindex used with glossaries
     final static String SUFFIX_GLG = ".glg";
+
+    // file created by package pythontex 
+    // containing code sections and settings 
+    final static String SUFFIX_PYC = ".pytxcode";
+    // logging file for pythontex written by pythontexW
+    final static String SUFFIX_PLG = ".plg";
+
+    // TBD: make configurable 
+    // folder created by auxiliary program pythontex 
+    // holding all its output files by default 
+    final static String PREFIX_PYTEX_OUT_FOLDER = "pythontex-files-";
+
+    // file in PREFIX_PYTEX_OUT_FOLDER 
+    // created by auxiliary program pythontex
+    private final static String SUFFIX_PYTXMCR = ".pytxmcr";
 
     // latex2rtf
     private final static String SUFFIX_RTF = ".rtf";
@@ -193,9 +210,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * via {@link LatexPreProcessor#processGraphicsSelectMain(File, DirNode)} 
      * and processing the tex main files 
      * via {@link Target#processSource(LatexProcessor, File)}. 
+     * If a diff-tool for the target format is available
+     * and if check by diff is specified, 
+     * the resulting file is checked to be equal to a specified file. 
+     * A {@link BuildFailureException} is thrown if the files are not equal according to the diff tool. 
      * The resulting files are identified by its suffixes 
-     * via  {@link Target#getPatternOutputFiles(Settings)} 
-     * and copied to the target folder. 
+     * via  {@link Target#getPatternOutputFiles(Settings)}. 
+     * If no exception occurs before, they are copied to the target folder. 
      * Finally, by default a cleanup is performed 
      * invoking {@link TexFileUtils#cleanUp(DirNode, File)}. 
      * <p>
@@ -234,7 +255,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    <li> TFU03, TFU04, TFU05, TFU06 if 
      *    copy of output files to target folder fails. 
      *    For details see 
-     * {@link TexFileUtils#copyOutputToTargetFolder(File, FileFilter, File)}
+     *    {@link TexFileUtils#copyOutputToTargetFolder(File, FileFilter, File)}
      *    <li>TLP01 if difference check is specified in settings and if 
      *    the artifact could not be reproduced (currently for pdf only). 
      *    </ul>
@@ -284,7 +305,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                     // log warning EEX01, EEX02, EEX03, WEX04, WEX05
                     target.processSource(this, texFile);
                     FileFilter fileFilter = TexFileUtils.getFileFilter(texFile,
-                            target.getPatternOutputFiles(this.settings));
+                            target.getPatternOutputFiles(this.settings), false);
                     // may throw BuildFailureException
                     // TFU03, TFU04, TFU05, TFU06
                     // may log warning WFU01 Cannot read directory
@@ -540,6 +561,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         private final File glsFile;
         private final File gloFile;
         private final File glgFile;
+
         private final File xxxFile;
 
         // TBC: does not depend on dev
@@ -660,16 +682,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // EAP01, EAP02, WLP04, WLP05, WAP03, WAP04, WFU03
         boolean hasIdxGls = runMakeIndexByNeed(desc)
                 | runMakeGlossaryByNeed(desc);
+        boolean hasPyCode = runPythontexByNeed(desc.xxxFile);
 
-        // rerun LaTeX at least once if bibtex or makeindex had been run
-        // or if a toc, a lof or a lot exists.
+        // rerun LaTeX at least once 
+        // if bibtex or makeindex or makeindex or pythontex had been run
+        // or if a toc, a lof, a lot, a lol or an out exists. 
         if (hasBib) {
             // one run to include the bibliography from xxx.bbl into the pdf
-            // and the lables into the aux file
+            // and the labels into the aux file
             // and another run to put the labels from the aux file
             // to the locations of the \cite commands.
 
             // This suffices also to include a bib in a toc
+            // Also the remaining cases don't need more than two runs. 
             return 2;
         }
 
@@ -679,16 +704,18 @@ public class LatexProcessor extends AbstractLatexProcessor {
             // This requires at least one LaTeX run.
 
             // if one of these has to be included in a toc,
-            // a second run is needed.
+            // a second run is needed. 
+            // Also the remaining cases don't need more than two runs. 
             return hasToc ? 2 : 1;
         }
         // Here, no bib, index or glossary exists.
         // The result is either 0 or 1,
         // depending on whether a toc, lof or lot exists
 
-        boolean needLatexReRun = hasToc
+        boolean needLatexReRun = hasToc || hasPyCode 
                 || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
-                || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists();
+                || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists()
+                || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOL).exists();
 
         return needLatexReRun ? 1 : 0;
     }
@@ -1066,7 +1093,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * after processing latex to set up the references,
      * bibliography, index and that like.
      * <p>
-     * Logging: FIXME: incomplete
+     * Logging: FIXME: incomplete 
      * <ul>
      * <li>EAP01: Running <code>command</code> failed. For details...
      * <li>EAP02: Running <code>command</code> failed. No log file
@@ -1274,14 +1301,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the latex main file BibTeX is to be processed for.
+     *     the latex main file BibTeX is to be processed for.
      * @return
-     *         whether BibTeX has been run.
-     *         Equivalently, whether LaTeX has to be rerun because of BibTeX.
+     *     whether BibTeX has been run.
+     *     Equivalently, whether LaTeX has to be rerun because of BibTeX.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the BibTeX command
-     *                               returned by {@link Settings#getBibtexCommand()}
-     *                               failed.
+     *     TEX01 if invocation of the BibTeX command
+     *     returned by {@link Settings#getBibtexCommand()} failed.
      */
     private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
         File auxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_AUX);
@@ -1351,9 +1377,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // Other methods accordingly.
     // maybe better: eliminate altogether
     private boolean runMakeIndexByNeed(LatexMainDesc desc)
-            throws BuildFailureException {
+    throws BuildFailureException {
 
-        // raw index file written by pdflatex
+        // raw index file written by latex2dev 
         boolean needRun = desc.idxFile.exists();
         this.log.debug("MakeIndex run required? " + needRun);
 
@@ -1375,31 +1401,30 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
         // package splitidx is used with option split
         // is in general not allowed. The criteria are:
+        // - if \jobname-xxx.idx exists for some xxx whereas \jobname.idx does not:
+        //   This occurs only for option split
+        //   and does not allow applying splitindex
+        //   as it is intended in this software.
+        //   This would require applying makeindex separately
+        //   to all \jobname-xxx.idx
         // - if \jobname-xxx.idx exists for some xxx
-        // whereas \jobname.idx does not:
-        // This occurs only for option split
-        // and does not allow applying splitindex
-        // as intended in this software.
-        // This would require applying makeindex separately
-        // to all \jobname-xxx.idx
-        // - if \jobname-xxx.idx exists for some xxx
-        // and also \jobname.idx exists but has no entry
-        // \indexentry[xxx]{...}{..}:
-        // This occurs only for option split
-        // and applying splitindex yields the wrong result.
-        // This would require applying makeindex separately
-        // to all \jobname-xxx.idx and to \jobname.idx
+        //   and also \jobname.idx exists but has no entry
+        //   \indexentry[xxx]{...}{..}:
+        //   This occurs only for option split
+        //   and applying splitindex yields the wrong result.
+        //   This would require applying makeindex separately
+        //   to all \jobname-xxx.idx and to \jobname.idx
         // - if \jobname-xxx.idx does not exist for any xxx
-        // then all is ok, whether \jobname.idx exists or not.
-        // If it exists, even splitidx with option split is ok.
+        //   then all is ok, whether \jobname.idx exists or not.
+        //   If it exists, even splitidx with option split is ok.
 
         // so algorithm:
         // determine list of these xxx for which \jobname-xxx.idx exists
         // if (\jobname-xxx.idx exists for some xxx) {
-        // if (!(\jobname.idx exists &&
-        // \jobname.idx matches some \indexentry[xxx]{...}{.. )) {
-        // log.error(cannot handle splitidx with option split)
-        // return false;
+        //   if (!(\jobname.idx exists &&
+        //         \jobname.idx matches some \indexentry[xxx]{...}{.. )) {
+        //      log.error(cannot handle splitidx with option split)
+        //      return false;
         // }
         // // For second condition,
         // // determine list of all yyy matching \indexentry[yyy]{...}{..}
@@ -1697,6 +1722,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 command,
                 args,
                 desc.glsFile);
+                // TBD: check whether more than one gls file is possible. 
 
         // detect errors and warnings makeglossaries wrote into xxx.glg
         File glgFile = desc.glgFile;
@@ -1707,6 +1733,85 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 + "|" + this.settings.getPatternWarnXindy());
         return true;
     }
+
+    /**
+     * Runs the PythonTeX command given by {@link Settings#getPythontexCommand()}
+     * on the pytxcode-file corresponding with <code>texFile</code>
+     * in the directory containing <code>texFile</code>, 
+     * provided the pytxcode-file exists.
+     * <p>
+     * Logging:
+     * <ul>
+     * <li>EAP01: Running <code>bibtex</code> failed. For details...
+     * <li>EAP02: Running <code>bibtex</code> failed. No log file
+     * <li>WAP03: Running <code>bibtex</code> emitted warnings.
+     * <li>WAP04: if <code>logFile</code> is not readable.
+     * <li>WLP02: Cannot read log file: run required?
+     * <li>WFU03: cannot close
+     * <li>EEX01, EEX02, EEX03, WEX04, WEX05:
+     * if running the BibTeX command failed.
+     * </ul>
+
+     * @param texFile
+     *     the latex main file PythonTeX is to be processed for.
+     * @param xxxFile
+     *     the file created from the latex main file by removing the ending.
+     * @return
+     *     Whether PythonTeX has been invoked
+     *     Equivalently, whether LaTeX has to be rerun because of PythonTeX.
+     * @throws BuildFailureException
+     *     TEX01 if invocation of the BibTeX command
+     *     returned by {@link Settings#getPythontexCommand()} failed.
+     */
+    private boolean runPythontexByNeed(File xxxFile) 
+        throws BuildFailureException {
+
+        // raw index file written by latex2dev 
+        File pycFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_PYC);
+        boolean needRun = pycFile.exists();
+        this.log.debug("Pythontex run required? " + needRun);
+        if (!needRun) {
+            return false;
+        }
+        String command = this.settings.getCommand(ConverterCategory.Pythontex);
+        this.log.debug("Running " + command +
+        " on '" + pycFile.getName() + "'. ");
+        String[] args = buildArguments(this.settings.getPythontexOptions(), xxxFile);
+
+        File outFolder = TexFileUtils.replacePrefix(PREFIX_PYTEX_OUT_FOLDER, xxxFile);
+        String repOutFileName = xxxFile.getName() + SUFFIX_PYTXMCR;
+        File repOutFile = new File(outFolder, repOutFileName);
+        if (repOutFile.exists()) {
+            // In the long run: eliminate options rerun and runall 
+            // from xxx.pytxcode; then rerun is controlled by command line options. 
+            boolean isDel = repOutFile.delete();
+            if (!isDel) {
+                this.log.warn("Preliminary warning: Could not delete '" + repOutFile + 
+                "'; this may cause further warnings/errors. ");
+            }
+        }
+        // TBD: repOutFile is not the only result file. 
+        // one has to add pytxpyg, pkl and the stdout files. 
+        // The precise names of the latter must be read from the pytxcode file. 
+
+        // may throw BuildFailureException TEX01,
+        // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
+        //CommandExecutor.CmdResult res = 
+        this.executor.execute(xxxFile.getParentFile(), // workingDir
+            this.settings.getTexPath(),
+            command,
+            //true, // This may change later, when rerun=never is taken into account. 
+            args,
+            repOutFile);
+
+        File logFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_PLG);
+        // may log EAP01, EAP02, WAP04, WFU03
+        logErrs(logFile, command, this.settings.getPatternErrPyTex());
+        // may log warnings WFU03, WAP03, WAP04
+        logWarns(logFile, command, this.settings.getPatternWarnPyTex());
+        return true;
+    } // runPythontexByNeed
+
 
     /**
      * Runs the LaTeX command given by {@link Settings#getLatex2pdfCommand()}
@@ -2202,6 +2307,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         return this.executor.execute(null, // texFile.getParentFile(),
                 this.settings.getTexPath(),
                 command,
+                false,
                 args).success;
     }
 
