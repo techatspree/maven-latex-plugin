@@ -1962,7 +1962,7 @@ public class Settings {
     }
 
     public String getMakeGlossariesOptions() {
-	return  this.makeGlossariesOptions;
+        return  this.makeGlossariesOptions;
     }
 
     public String getPatternErrMakeGlossaries() {
@@ -1973,10 +1973,27 @@ public class Settings {
 	return  this.patternWarnXindy;
     }
 
+    // TBD: clarify: never used. 
     public String getPatternReRunMakeGlossaries() {
 	return  this.patternReRunMakeGlossaries;
     }
 
+    // for ant task only 
+    public String getPythontexCommand() throws BuildFailureException {
+        return getCommand(ConverterCategory.Pythontex);
+    }
+
+    public String getPythontexOptions() {
+        return this.pythontexOptions;
+    }
+
+    public String getPatternErrPyTex() {
+        return this.patternErrPyTex;
+    }
+
+    public String getPatternWarnPyTex() {
+        return this.patternWarnPyTex;
+    }
 
  // TBD: check category . shall be replaced by getCommand(ConverterCategory)
     public String getTex4htCommand() {
@@ -2544,6 +2561,25 @@ public class Settings {
     // method introduces patternReRunMakeGlossaries in ant 
     public PatternReRunMakeGlossaries createPatternReRunMakeGlossaries() {
    	return new PatternReRunMakeGlossaries();
+    }
+
+    public void setPythontexCommand(String pythontexCommand) {
+        this.pythontexCommand = pythontexCommand;
+    }
+
+    public void setPythontexOptions(String pythontexOptions) {
+        this.pythontexOptions = pythontexOptions
+        .replaceAll("(\t|\n| )+", " ").trim();
+    }
+
+    public void setPatternErrPyTex(String patternErrPyTex) {
+        this.patternErrPyTex = patternErrPyTex
+        .replaceAll("(\t|\n| )+", " ").trim();
+    }
+
+    public void setPatternWarnPyTex(String patternWarnPyTex) {
+        this.patternWarnPyTex = patternWarnPyTex
+        .replaceAll("(\t|\n| )+", " ").trim();
     }
 
     // defines patternReRunMakeGlossaries element with text in ant 
