@@ -676,7 +676,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // may throw BuildFailureException TEX01
         // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05,
         // EAP01, EAP02, WAP03, WAP04, WLP02, WFU03
-        boolean hasBib = runBibtexByNeed(texFile);
+        boolean hasBib = runBibtexByNeed(desc.xxxFile);
         // may both throw BuildFailureException, both TEX01
         // may both log warnings EEX01, EEX02, EEX03, WEX04, WEX05,
         // EAP01, EAP02, WLP04, WLP05, WAP03, WAP04, WFU03
@@ -1301,7 +1301,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *     the latex main file BibTeX is to be processed for.
+     *     the latex main file BibTeX is to be processed for without ending.
      * @return
      *     whether BibTeX has been run.
      *     Equivalently, whether LaTeX has to be rerun because of BibTeX.
@@ -1309,8 +1309,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *     TEX01 if invocation of the BibTeX command
      *     returned by {@link Settings#getBibtexCommand()} failed.
      */
-    private boolean runBibtexByNeed(File texFile) throws BuildFailureException {
-        File auxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_AUX);
+    private boolean runBibtexByNeed(File xxxFile) throws BuildFailureException {
+        File auxFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_AUX);
         String command = this.settings.getCommand(ConverterCategory.BibTeX);
         if (!needRun(false, command, auxFile, PATTERN_NEED_BIBTEX_RUN)) {
             return false;
@@ -1322,13 +1322,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 auxFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(texFile.getParentFile(), // workingDir
+        this.executor.execute(xxxFile.getParentFile(), // workingDir
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.replaceSuffix(texFile, SUFFIX_BBL));
+                TexFileUtils.appendSuffix(xxxFile, SUFFIX_BBL));
 
-        File logFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_BLG);
+        File logFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_BLG);
         // may log EAP01, EAP02, WAP04, WFU03
         logErrs(logFile, command, this.settings.getPatternErrBibtex());
         // may log warnings WFU03, WAP03, WAP04
