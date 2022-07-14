@@ -772,6 +772,47 @@ and notify the developer of this plugin of the bug. -->
 (^\(rerunfilecheck\) +Rerun LaTeX/makeindex to get glossary right\.$)
             </patternReRunMakeGlossaries>
 
+            <!-- The Pythontex command which creates a folder 'pythontex-files-xxx' 
+              with various files inside 
+              from a 'pytxcode'-file (invoked without file ending) 
+              and logging in a 'plg'-file. 
+              The default value is pythontex' 
+              but as long as this does not write a log file this software really needs, 
+              we have to configure it with 'pythontexW' 
+              which is a simple wrapper of 'pythontex' writing a log file. -->
+            <pythontexCommand>pythontexW</pythontexCommand>
+
+            <!-- The options for the command '$pythontexCommand'. 
+              For the possibilities see the manual of the pythontex package 
+              or the help dialog of 'pythontex'. 
+              CAUTION: '- -rerun' and '- -runall' cannot be specified both in one invocation. 
+              In the context of this software, the option
+              '- -interactive' is not appropriate. 
+              CAUTION: For many options of the command line tool, 
+              there is an according package option and the latter overrides the former. 
+              CAUTION: This softwa're overwrites settings '- -rerun' and '- -runall' anyway, 
+              and forces setting '- -rerun=always'. 
+              The default value is '- -rerun=always'. -->
+            <pythontexOptions>--rerun=always</pythontexOptions>
+
+            <!-- The pattern in the plg-file 
+              indicating that running 'pythontex', resp. 'pythontexW' via $mpythontexCommand failed.
+              The default value is essentially
+                  '(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)' (note the spaces)
+              but due to a bug in 'pythontex' it is slightly more complicated.
+              If this is not appropriate, please modify and notify the developer of this plugin. -->
+            <patternErrPyTex>\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\(s\), [0-9]+ warning\(s\)</patternErrPyTex>
+
+            <!-- The pattern in the plg-file 
+              indicating a warning when running 'pythontex', resp. 'pythontexW' via $mpythontexCommand. 
+              The default value is '(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\\(s\\), [1-9][0-9]* warning\\(s\\)'
+              (note the space and the brackets).
+              If this is not appropriate, please modify and notify the developer of this plugin. -->
+            <patternWarnPyTex>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\(s\), [1-9][0-9]* warning\(s\)</patternWarnPyTex>
+
+            <depythontexCommand>depythontexW</depythontexCommand>
+
+
             <!-- The tex4ht command. 
 Possible values are e.g. 'htlatex' and 'htxelatex'. 
 The default value (for which this software is also tested) 

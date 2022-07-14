@@ -1183,8 +1183,123 @@ the pattern is
 
 This holds even if \texttt{splitindex} is used. 
 
+\section{Parameters for including Code with \texttt{pythontex}}
+\label{sec:settingsPythontex}
 
-\section{Parameters for  Conversion \LaTeX{} to html}
+This section describes the parameters for invoking both 
+\texttt{pythontex} and \texttt{depythontex} 
+which are given in Table~\ref{tab:paramPythontex} and in Table~\ref{tab:paramDePythontex}, 
+respectively. 
+
+
+\begin{longtable}{|ll|}
+\toprule
+Parameter        & Default  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:paramPythontex} Injecting output of code via \texttt{pythontex} }
+\endlastfoot%
+\texttt{pythontexCommand}       & \texttt{pythontex}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The PythonTeX command which creates a folder \texttt{pythontex-files-xxx} 
+with various files inside 
+from a \gls{pytxcode}-file (invoked without file ending) 
+and logging in a \gls{plg}-file. 
+The default value is \texttt{pythontex} 
+but as long as this does not write a log file this software really needs, 
+we have to configure it with \texttt{pythontexW} 
+which is a simple wrapper of \texttt{pythontex} writing a log file. 
+\end{minipage}
+} \\
+\texttt{pythontexOptions}    & \texttt{--rerun=always}  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The options for the command \texttt{\$pythontexCommand}. 
+
+For the possibilities see the manual of the pythontex package 
+or the help dialog of \texttt{pythontex}. 
+CAUTION\@: \texttt{-{}-rerun} and \texttt{-{}-runall} cannot be specified both in one invocation. 
+In the context of this software, the option
+\texttt{-{}-interactive} is not appropriate. 
+CAUTION\@: For many options of the command line tool, 
+there is an according package option and the latter overrides the former. 
+CAUTION\@: This software overwrites settings \texttt{-{}-rerun} and \texttt{-{}-runall} anyway, 
+and forces setting \texttt{-{}-rerun=always}. 
+The default value is \texttt{-{}-rerun=always}. 
+\end{minipage}
+} \\
+\texttt{patternErrPyTex}    & see Section~\ref{sec:settingsPythontex} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the \gls{plg}-file 
+indicating that running \texttt{pythontex}, resp. \texttt{pythontexW} via \texttt{\$pythontexCommand} failed.
+%The default value is essentially
+%
+%\begin{Verbatim}[showspaces=true, fontsize=\small, commentchar=!]
+%!(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)
+%\end{Verbatim}
+%
+%but due to a bug in \texttt{pythontex} it is slightly more complicated.
+The pattern would fit into a single line but because of a bug in \texttt{pythontex}, 
+it is a bit more complicated. 
+If this is not appropriate, please modify and notify the developer of this plugin. 
+\end{minipage}
+} \\
+\texttt{patternWarnPyTex}    & see Section~\ref{sec:settingsPythontex} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern in the \gls{plg}-file 
+indicating a warning when running \texttt{pythontex}, resp. \texttt{pythontexW} via \texttt{\$mpythontexCommand}.
+If this is not appropriate, please modify and notify the developer of this plugin. 
+\end{minipage}
+} \\
+\end{longtable}
+
+\begin{longtable}{|ll|}
+  \toprule
+  Parameter        & Default  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:paramDePythontex} Replacing code by its output via \texttt{depythontex} }
+  \endlastfoot%
+  \texttt{depythontexCommand}       & \texttt{depythontex}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  \end{minipage}
+  } \\
+  \texttt{depythontexOptions}    & the empty string  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  \end{minipage}
+  } \\
+  \end{longtable}
+
+The pattern \texttt{patternErrPyTex} is by default 
+%
+\begin{Verbatim}[showspaces=true, fontsize=\small]
+\* PythonTeX error|...
+\end{Verbatim}
+substituting the dots by 
+%
+\begin{Verbatim}[showspaces=true, fontsize=\footnotesize]
+(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\(s\), [0-9]+ warning\(s\)
+\end{Verbatim}
+
+Accordingly, the pattern texttt{patternWarnPyTex} is by default 
+%
+\begin{Verbatim}[showspaces=true, fontsize=\footnotesize]
+(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\\(s\), [1-9][0-9]* warning\(s\)
+\end{Verbatim}
+   
+
+\section{Parameters for Conversion \LaTeX{} to html}
 %\section{Parameters for the \LaTeX-to-html Conversion}
 \label{sec:settingsLatex2Html}
 
