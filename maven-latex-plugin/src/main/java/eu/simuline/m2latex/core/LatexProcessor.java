@@ -567,19 +567,18 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // TBC: does not depend on dev
         LatexMainDesc(File texFile, TexFileUtils fileUtils, LatexDev dev) {
             this.texFile = texFile;
-            // FIXME: easier to create xxxFile first
             this.xxxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_VOID);
-            this.pdfFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_PDF);
-            this.dviFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_DVI);
-            this.logFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_LOG);
+            this.pdfFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_PDF);
+            this.dviFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_DVI);
+            this.logFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_LOG);
 
-            this.idxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_IDX);
-            this.indFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_IND);
-            this.ilgFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_ILG);
+            this.idxFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_IDX);
+            this.indFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_IND);
+            this.ilgFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_ILG);
 
-            this.glsFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_GLS);
-            this.gloFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_GLO);
-            this.glgFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_GLG);
+            this.glsFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_GLS);
+            this.gloFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_GLO);
+            this.glgFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_GLG);
         }
     } // class LatexMainDesc
 
@@ -698,7 +697,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
             return 2;
         }
 
-        boolean hasToc = TexFileUtils.replaceSuffix(texFile, SUFFIX_TOC).exists();
+        boolean hasToc = TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_TOC).exists();
         if (hasIdxGls) {
             // Here, an index or a glossary exists
             // This requires at least one LaTeX run.
@@ -713,9 +712,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // depending on whether a toc, lof or lot exists
 
         boolean needLatexReRun = hasToc || hasPyCode 
-                || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOF).exists()
-                || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOT).exists()
-                || TexFileUtils.replaceSuffix(texFile, SUFFIX_LOL).exists();
+                || TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_LOF).exists()
+                || TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_LOT).exists()
+                || TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_LOL).exists();
 
         return needLatexReRun ? 1 : 0;
     }
@@ -1173,7 +1172,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         runLatex2odt(desc);
         // may throw BuildFailureException TEX01,
         // log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        runOdt2doc(texFile);
+        runOdt2doc(desc);
     }
 
     /**
@@ -1245,7 +1244,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // (errors are emitted by runLatex2dev and that like.)
         // may throw BuildFailureException TEX01,
         // log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        runPdf2txt(texFile);
+        runPdf2txt(desc);
     }
 
     /**
@@ -1742,18 +1741,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging:
      * <ul>
-     * <li>EAP01: Running <code>bibtex</code> failed. For details...
-     * <li>EAP02: Running <code>bibtex</code> failed. No log file
-     * <li>WAP03: Running <code>bibtex</code> emitted warnings.
+     * <li>EAP01: Running <code>pythontex</code> failed. For details...
+     * <li>EAP02: Running <code>pythontex</code> failed. No log file
+     * <li>WAP03: Running <code>pythontex</code> emitted warnings.
      * <li>WAP04: if <code>logFile</code> is not readable.
-     * <li>WLP02: Cannot read log file: run required?
+     * <li>WLP02: Cannot read plg file: run required?
      * <li>WFU03: cannot close
      * <li>EEX01, EEX02, EEX03, WEX04, WEX05:
-     * if running the BibTeX command failed.
+     * if running the PythonTeX command failed.
      * </ul>
-
-     * @param texFile
-     *     the latex main file PythonTeX is to be processed for.
+     *
      * @param xxxFile
      *     the file created from the latex main file by removing the ending.
      * @return
@@ -1966,7 +1963,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.replaceSuffix(texFile, SUFFIX_HTML));
+                TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_HTML));
 
         // logging errors and warnings
         // may log EAP01, EAP02, WAP04, WFU03
@@ -2077,7 +2074,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.replaceSuffix(texFile, SUFFIX_ODT));
+                TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_ODT));
 
         // FIXME: logging refers to latex only, not to tex4ht or t4ht script
         // may log EAP01, EAP02, WAP04, WFU03
@@ -2105,15 +2102,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the odt2doc command failed.
      * </ul>
      *
-     * @param texFile
-     *                the latex file to be processed.
+     * @param desc
+     *     the description of a latex main file <code>texFile</code>
+     *     to be processed.
      * @throws BuildFailureException
      *                               TEX01 if invocation of the odt2doc command
      *                               returned by
      *                               {@link Settings#getOdt2docCommand()} failed.
      */
-    private void runOdt2doc(File texFile) throws BuildFailureException {
-        File odtFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_ODT);
+    private void runOdt2doc(LatexMainDesc desc) throws BuildFailureException {
+        File odtFile = TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_ODT);
         String command = this.settings.getCommand(ConverterCategory.Odt2Doc);
         this.log.debug("Running " + command +
                 " on '" + odtFile.getName() + "'. ");
@@ -2131,11 +2129,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         assert suffix != null;
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(texFile.getParentFile(),
+        this.executor.execute(desc.texFile.getParentFile(),
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.replaceSuffix(texFile, suffix));
+                TexFileUtils.appendSuffix(desc.xxxFile, suffix));
         // FIXME: what about error logging?
         // Seems not to create a log-file.
     }
@@ -2153,15 +2151,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the pdf2txt command failed.
      * </ul>
      *
-     * @param texFile
-     *                the latex-file to be processed.
+     * @param desc
+     *     the description of a latex main file <code>texFile</code>
+     *     to be processed.
      * @throws BuildFailureException
      *                               TEX01 if invocation of the pdf2txt command
      *                               returned by
      *                               {@link Settings#getPdf2txtCommand()} failed.
      */
-    private void runPdf2txt(File texFile) throws BuildFailureException {
-        File pdfFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_PDF);
+    private void runPdf2txt(LatexMainDesc desc) throws BuildFailureException {
+        File pdfFile = TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_PDF);
         String command = this.settings.getCommand(ConverterCategory.Pdf2Txt);
         this.log.debug("Running " + command +
                 " on '" + pdfFile.getName() + "'. ");
@@ -2169,11 +2168,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 pdfFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(texFile.getParentFile(),
+        this.executor.execute(desc.texFile.getParentFile(),
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.replaceSuffix(texFile, SUFFIX_TXT));
+                TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_TXT));
         // FIXME: what about error logging?
         // Seems not to create a log-file.
     }
