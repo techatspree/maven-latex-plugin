@@ -564,21 +564,28 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
         private final File xxxFile;
 
+        final File parentDir;
+
         // TBC: does not depend on dev
         LatexMainDesc(File texFile, TexFileUtils fileUtils, LatexDev dev) {
             this.texFile = texFile;
             this.xxxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_VOID);
-            this.pdfFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_PDF);
-            this.dviFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_DVI);
-            this.logFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_LOG);
+            this.pdfFile = withSuffix(SUFFIX_PDF);
+            this.dviFile = withSuffix(SUFFIX_DVI);
+            this.logFile = withSuffix(SUFFIX_LOG);
 
-            this.idxFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_IDX);
-            this.indFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_IND);
-            this.ilgFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_ILG);
+            this.idxFile = withSuffix(SUFFIX_IDX);
+            this.indFile = withSuffix(SUFFIX_IND);
+            this.ilgFile = withSuffix(SUFFIX_ILG);
 
-            this.glsFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_GLS);
-            this.gloFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_GLO);
-            this.glgFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_GLG);
+            this.glsFile = withSuffix(SUFFIX_GLS);
+            this.gloFile = withSuffix(SUFFIX_GLO);
+            this.glgFile = withSuffix(SUFFIX_GLG);
+            this.parentDir = this.texFile.getParentFile();
+        }
+
+        File withSuffix(String suffix) {
+            return TexFileUtils.appendSuffix(this.xxxFile, suffix);
         }
     } // class LatexMainDesc
 
@@ -675,13 +682,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // may throw BuildFailureException TEX01
         // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05,
         // EAP01, EAP02, WAP03, WAP04, WLP02, WFU03
-        boolean hasBib = runBibtexByNeed(desc.xxxFile);
+        boolean hasBib = runBibtexByNeed(desc);
         // may both throw BuildFailureException, both TEX01
         // may both log warnings EEX01, EEX02, EEX03, WEX04, WEX05,
         // EAP01, EAP02, WLP04, WLP05, WAP03, WAP04, WFU03
         boolean hasIdxGls = runMakeIndexByNeed(desc)
                 | runMakeGlossaryByNeed(desc);
-        boolean hasPyCode = runPythontexByNeed(desc.xxxFile);
+        boolean hasPyCode = runPythontexByNeed(desc);
 
         // rerun LaTeX at least once 
         // if bibtex or makeindex or makeindex or pythontex had been run
@@ -697,7 +704,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
             return 2;
         }
 
-        boolean hasToc = TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_TOC).exists();
+        boolean hasToc = desc.withSuffix(SUFFIX_TOC).exists();
         if (hasIdxGls) {
             // Here, an index or a glossary exists
             // This requires at least one LaTeX run.
@@ -712,9 +719,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // depending on whether a toc, lof or lot exists
 
         boolean needLatexReRun = hasToc || hasPyCode 
-                || TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_LOF).exists()
-                || TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_LOT).exists()
-                || TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_LOL).exists();
+                || desc.withSuffix(SUFFIX_LOF).exists()
+                || desc.withSuffix(SUFFIX_LOT).exists()
+                || desc.withSuffix(SUFFIX_LOL).exists();
 
         return needLatexReRun ? 1 : 0;
     }
@@ -1299,8 +1306,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the BibTeX command failed.
      * </ul>
      *
-     * @param texFile
-     *     the latex main file BibTeX is to be processed for without ending.
+     * @param desc
+     *     the description of a latex main file <code>dviFile</code>
+     *     including the idx-file MakeIndex is to be run on.
      * @return
      *     whether BibTeX has been run.
      *     Equivalently, whether LaTeX has to be rerun because of BibTeX.
@@ -1308,8 +1316,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *     TEX01 if invocation of the BibTeX command
      *     returned by {@link Settings#getBibtexCommand()} failed.
      */
-    private boolean runBibtexByNeed(File xxxFile) throws BuildFailureException {
-        File auxFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_AUX);
+    private boolean runBibtexByNeed(LatexMainDesc desc) throws BuildFailureException {
+        File auxFile = desc.withSuffix(SUFFIX_AUX);
         String command = this.settings.getCommand(ConverterCategory.BibTeX);
         if (!needRun(false, command, auxFile, PATTERN_NEED_BIBTEX_RUN)) {
             return false;
@@ -1321,13 +1329,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 auxFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(xxxFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.appendSuffix(xxxFile, SUFFIX_BBL));
+                desc.withSuffix(SUFFIX_BBL));
 
-        File logFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_BLG);
+        File logFile = desc.withSuffix(SUFFIX_BLG);
         // may log EAP01, EAP02, WAP04, WFU03
         logErrs(logFile, command, this.settings.getPatternErrBibtex());
         // may log warnings WFU03, WAP03, WAP04
@@ -1361,8 +1369,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>dviFile</code>
-     *             including the idx-file MakeIndex is to be run on.
+     *        the description of a latex main file <code>dviFile</code>
+     *        including the idx-file MakeIndex is to be run on.
      * @return
      *         whether MakeIndex had been run.
      *         Equivalently, whether LaTeX has to be rerun because of MakeIndex.
@@ -1511,7 +1519,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 idxFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(idxFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 command,
                 args,
@@ -1642,7 +1650,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(idxFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 splitInxCmd,
                 args,
@@ -1684,8 +1692,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>texFile</code>
-     *             including the idx-file MakeGlossaries is to be run on.
+     *         the description of a latex main file <code>texFile</code>
+     *         including the idx-file MakeGlossaries is to be run on.
      * @return
      *         whether MakeGlossaries had been run.
      *         Equivalently,
@@ -1716,7 +1724,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 xxxFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(xxxFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 command,
                 args,
@@ -1751,8 +1759,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the PythonTeX command failed.
      * </ul>
      *
-     * @param xxxFile
-     *     the file created from the latex main file by removing the ending.
+     * @param desc
+     *     the description of a latex main file <code>texFile</code>
+     *     including the idx-file MakeGlossaries is to be run on.
      * @return
      *     Whether PythonTeX has been invoked
      *     Equivalently, whether LaTeX has to be rerun because of PythonTeX.
@@ -1760,11 +1769,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *     TEX01 if invocation of the BibTeX command
      *     returned by {@link Settings#getPythontexCommand()} failed.
      */
-    private boolean runPythontexByNeed(File xxxFile) 
+    private boolean runPythontexByNeed(LatexMainDesc desc) 
         throws BuildFailureException {
 
         // raw index file written by latex2dev 
-        File pycFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_PYC);
+        File pycFile = desc.withSuffix(SUFFIX_PYC);
         boolean needRun = pycFile.exists();
         this.log.debug("Pythontex run required? " + needRun);
         if (!needRun) {
@@ -1773,10 +1782,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
         String command = this.settings.getCommand(ConverterCategory.Pythontex);
         this.log.debug("Running " + command +
         " on '" + pycFile.getName() + "'. ");
-        String[] args = buildArguments(this.settings.getPythontexOptions(), xxxFile);
+        String[] args = buildArguments(this.settings.getPythontexOptions(), desc.xxxFile);
 
-        File outFolder = TexFileUtils.replacePrefix(PREFIX_PYTEX_OUT_FOLDER, xxxFile);
-        String repOutFileName = xxxFile.getName() + SUFFIX_PYTXMCR;
+        File outFolder = TexFileUtils.replacePrefix(PREFIX_PYTEX_OUT_FOLDER, desc.xxxFile);
+        String repOutFileName = desc.xxxFile.getName() + SUFFIX_PYTXMCR;
         File repOutFile = new File(outFolder, repOutFileName);
         if (repOutFile.exists()) {
             // In the long run: eliminate options rerun and runall 
@@ -1794,14 +1803,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
         //CommandExecutor.CmdResult res = 
-        this.executor.execute(xxxFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
             this.settings.getTexPath(),
             command,
             //true, // This may change later, when rerun=never is taken into account. 
             args,
             repOutFile);
 
-        File logFile = TexFileUtils.appendSuffix(xxxFile, SUFFIX_PLG);
+        File logFile = desc.withSuffix(SUFFIX_PLG);
         // may log EAP01, EAP02, WAP04, WFU03
         logErrs(logFile, command, this.settings.getPatternErrPyTex());
         // may log warnings WFU03, WAP03, WAP04
@@ -1859,7 +1868,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         String[] args = buildLatexArguments(this.settings, dev, texFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(texFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 command,
                 args,
@@ -1914,7 +1923,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 desc.dviFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(desc.texFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 command,
                 args,
@@ -1959,11 +1968,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         String[] args = buildHtlatexArguments(this.settings, texFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(texFile.getParentFile(), // workingDir
+        this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_HTML));
+                desc.withSuffix(SUFFIX_HTML));
 
         // logging errors and warnings
         // may log EAP01, EAP02, WAP04, WFU03
@@ -2070,11 +2079,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         };
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(texFile.getParentFile(),
+        this.executor.execute(desc.parentDir,
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_ODT));
+                desc.withSuffix(SUFFIX_ODT));
 
         // FIXME: logging refers to latex only, not to tex4ht or t4ht script
         // may log EAP01, EAP02, WAP04, WFU03
@@ -2111,7 +2120,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *                               {@link Settings#getOdt2docCommand()} failed.
      */
     private void runOdt2doc(LatexMainDesc desc) throws BuildFailureException {
-        File odtFile = TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_ODT);
+        File odtFile = desc.withSuffix(SUFFIX_ODT);
         String command = this.settings.getCommand(ConverterCategory.Odt2Doc);
         this.log.debug("Running " + command +
                 " on '" + odtFile.getName() + "'. ");
@@ -2129,11 +2138,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         assert suffix != null;
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(desc.texFile.getParentFile(),
+        this.executor.execute(desc.parentDir,
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.appendSuffix(desc.xxxFile, suffix));
+                desc.withSuffix(suffix));
         // FIXME: what about error logging?
         // Seems not to create a log-file.
     }
@@ -2160,7 +2169,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *                               {@link Settings#getPdf2txtCommand()} failed.
      */
     private void runPdf2txt(LatexMainDesc desc) throws BuildFailureException {
-        File pdfFile = TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_PDF);
+        File pdfFile = desc.withSuffix(SUFFIX_PDF);
         String command = this.settings.getCommand(ConverterCategory.Pdf2Txt);
         this.log.debug("Running " + command +
                 " on '" + pdfFile.getName() + "'. ");
@@ -2168,11 +2177,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 pdfFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(desc.texFile.getParentFile(),
+        this.executor.execute(desc.parentDir,
                 this.settings.getTexPath(),
                 command,
                 args,
-                TexFileUtils.appendSuffix(desc.xxxFile, SUFFIX_TXT));
+                desc.withSuffix(SUFFIX_TXT));
         // FIXME: what about error logging?
         // Seems not to create a log-file.
     }
