@@ -61,6 +61,11 @@ enum ConverterCategory {
 			return "splitIndexCommand";
 		}
 	},
+	Pythontex() {
+		String getFieldname() {
+			return "pythontexCommand";
+		}
+	},
 	LatexChk() {
 		String getFieldname() {
 			return "chkTexCommand";
