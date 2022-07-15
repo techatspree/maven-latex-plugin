@@ -303,7 +303,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 for (Target target : this.paramAdapt.getTargetSet()) {
                     // may throw BuildFailureException TEX01,
                     // log warning EEX01, EEX02, EEX03, WEX04, WEX05
-                    target.processSource(this, texFile);
+                    target.processSource(this, getLatexMainDesc(texFile));
                     FileFilter fileFilter = TexFileUtils.getFileFilter(texFile,
                             target.getPatternOutputFiles(this.settings), false);
                     // may throw BuildFailureException
@@ -566,8 +566,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
         final File parentDir;
 
-        // TBC: does not depend on dev
-        LatexMainDesc(File texFile, TexFileUtils fileUtils, LatexDev dev) {
+        LatexMainDesc(File texFile, TexFileUtils fileUtils) {
             this.texFile = texFile;
             this.xxxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_VOID);
             this.pdfFile = withSuffix(SUFFIX_PDF);
@@ -590,7 +589,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     } // class LatexMainDesc
 
     private LatexMainDesc getLatexMainDesc(File texFile) {
-        return new LatexMainDesc(texFile, this.fileUtils, this.settings.getPdfViaDvi());
+        return new LatexMainDesc(texFile, this.fileUtils);
     }
 
     /**
@@ -945,18 +944,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
         logWarns(desc.logFile, this.settings.getCommand(ConverterCategory.LaTeX));
     }
 
-    void processLatex2dvi(File texFile) throws BuildFailureException {
-        this.log.info("Converting into dvi:  LaTeX file '" + texFile + "'. ");
-        LatexMainDesc desc = getLatexMainDesc(texFile);
+    void processLatex2dvi(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Converting into dvi:  LaTeX file '" + desc.texFile + "'. ");
         // may throw BuildFailureException TEX01,
         // log warning EEX01, EEX02, EEX03, WEX04, WEX05
         // WFU03, WAP04, WLP03, WLP04
         processLatex2dev(desc, LatexDev.dvips);
     }
 
-    void processLatex2pdf(File texFile) throws BuildFailureException {
-        this.log.info("Converting into pdf:  LaTeX file '" + texFile + "'. ");
-        LatexMainDesc desc = getLatexMainDesc(texFile);
+    void processLatex2pdf(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Converting into pdf:  LaTeX file '" + desc.texFile + "'. ");
         LatexDev dev = this.settings.getPdfViaDvi();
 
         // may throw BuildFailureException TEX01,
@@ -1081,9 +1078,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #runLatex2html(LatexProcessor.LatexMainDesc)
      * @see Target#html
      */
-    void processLatex2html(File texFile) throws BuildFailureException {
-        this.log.info("Converting into html: LaTeX file '" + texFile + "'. ");
-        LatexMainDesc desc = getLatexMainDesc(texFile);
+    void processLatex2html(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Converting into html: LaTeX file '" + desc.texFile + "'. ");
         // may throw BuildFailureException TEX01,
         // log warning EAP01, EAP02, WLP04, WLP05, WAP04, WLP02, WFU03,
         // EEX01, EEX02, EEX03, WEX04, WEX05
@@ -1123,9 +1119,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #runLatex2odt(LatexProcessor.LatexMainDesc)
      * @see Target#odt
      */
-    void processLatex2odt(File texFile) throws BuildFailureException {
-        this.log.info("Converting into odt:  LaTeX file '" + texFile + "'. ");
-        LatexMainDesc desc = getLatexMainDesc(texFile);
+    void processLatex2odt(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Converting into odt:  LaTeX file '" + desc.texFile + "'. ");
         // may throw BuildFailureException TEX01,
         // log warning EAP01, EAP02, WAP04, WLP02, WFU03, WLP04, WLP05
         // EEX01, EEX02, EEX03, WEX04, WEX05
@@ -1167,9 +1162,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #runOdt2doc(File)
      * @see Target#docx
      */
-    void processLatex2docx(File texFile) throws BuildFailureException {
-        this.log.info("Converting into doc(x): LaTeX file '" + texFile + "'. ");
-        LatexMainDesc desc = getLatexMainDesc(texFile);
+    void processLatex2docx(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Converting into doc(x): LaTeX file '" + desc.texFile + "'. ");
         // may throw BuildFailureException TEX0,
         // log warning EAP01, EAP02, WAP04, WLP02, WFU03, WLP04, WLP05
         // EEX01, EEX02, EEX03, WEX04, WEX05
@@ -1204,11 +1198,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #runLatex2rtf(File)
      * @see Target#rtf
      */
-    void processLatex2rtf(File texFile) throws BuildFailureException {
-        this.log.info("Converting into rtf:  LaTeX file '" + texFile + "'. ");
+    void processLatex2rtf(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Converting into rtf:  LaTeX file '" + desc.texFile + "'. ");
         // may throw BuildFailureException TEX01,
         // log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        runLatex2rtf(texFile);
+        runLatex2rtf(desc.texFile);
     }
 
     /**
@@ -1232,9 +1226,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * @see #runPdf2txt(File)
      * @see Target#txt
      */
-    void processLatex2txt(File texFile) throws BuildFailureException {
-        this.log.info("Converting into txt:  LaTeX file '" + texFile + "'. ");
-        LatexMainDesc desc = getLatexMainDesc(texFile);
+    void processLatex2txt(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Converting into txt:  LaTeX file '" + desc.texFile + "'. ");
         LatexDev dev = this.settings.getPdfViaDvi();
 
         // may throw BuildFailureException TEX01,

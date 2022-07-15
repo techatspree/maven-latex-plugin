@@ -28,8 +28,8 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                File texFile) throws BuildFailureException {
-            latexProcessor.processLatex2rtf(texFile);
+                                  LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2rtf(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
@@ -46,8 +46,8 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                File texFile) throws BuildFailureException {
-            latexProcessor.processLatex2dvi(texFile);
+        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2dvi(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
@@ -62,8 +62,8 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                File texFile) throws BuildFailureException {
-            latexProcessor.processLatex2pdf(texFile);
+        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2pdf(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
@@ -81,8 +81,8 @@ public enum Target {
     html() {
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                File texFile) throws BuildFailureException {
-            latexProcessor.processLatex2html(texFile);
+        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2html(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
@@ -98,8 +98,8 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                File texFile) throws BuildFailureException {
-            latexProcessor.processLatex2odt(texFile);
+        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2odt(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
@@ -115,8 +115,8 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                File texFile) throws BuildFailureException {
-            latexProcessor.processLatex2docx(texFile);
+        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2docx(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
@@ -131,8 +131,8 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                File texFile) throws BuildFailureException {
-            latexProcessor.processLatex2txt(texFile);
+        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2txt(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
@@ -157,8 +157,7 @@ public enum Target {
      *                               TEX01 if invocation of a command
      *                               to transform <code>texFile</code> failed.
      */
-    public abstract void processSource(LatexProcessor latexProcessor,
-            File texFile)
+    public abstract void processSource(LatexProcessor latexProcessor, LatexProcessor.LatexMainDesc desc)
             throws BuildFailureException;
 
     /**
