@@ -321,7 +321,11 @@ public class Settings {
 	"\\d+x?\\.png|" + 
 	"-\\d+\\.svg|" + 
 	// by (splitidx and) splitindex 
-	"-.+\\.(idx|ind|ilg))|" + 
+	"-.+\\.(idx|ind|ilg)|" +
+    "\\.(pytxcode|plg|dplg|depytx(\\.tex)?)" + // regular files from package pythontex
+    ")|" + // end all patterns starting with T$T
+    // created by pythontex
+    "pythontex-files-T$T|" + // folders from package pythontex
 	// ... and xxT$T.eps... 
 	"zzT$T\\.e?ps|" + 
 	// ... and scripts cmsy....png 
