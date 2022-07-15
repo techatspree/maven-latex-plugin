@@ -133,7 +133,7 @@ public class LatexProcessorTest {
     // present in LatexMainDesc 
     // and even the others defining LatexMainDescExt including these also 
     private File texFile = new File(WORKING_DIR, "test.tex");// LatexMainDesc 
-		LatexProcessor.LatexMainDesc desc = new LatexProcessor.LatexMainDesc(texFile, this.fileUtils);
+		LatexMainDesc desc = new LatexMainDesc(texFile, this.fileUtils);
 
     // FIXME: used only once
     private File dviPdfFile = new File

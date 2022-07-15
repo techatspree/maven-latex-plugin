@@ -39,7 +39,7 @@ public enum LatexDev {
 	boolean isViaDvi() {
 	    return false;
 	}
-	File latexTargetFile(LatexProcessor.LatexMainDesc desc) {
+	File latexTargetFile(LatexMainDesc desc) {
 	    return desc.pdfFile;
 	}
     },
@@ -63,7 +63,7 @@ public enum LatexDev {
 	boolean isViaDvi() {
 	    return true;
 	}
-	File latexTargetFile(LatexProcessor.LatexMainDesc desc) {
+	File latexTargetFile(LatexMainDesc desc) {
 	    return desc.dviFile;
 	}
     };
@@ -123,7 +123,7 @@ public enum LatexDev {
      * Returns the target file of a LaTeX run. 
      * This has the suffix given by {@link #getLatexOutputFormat()}. 
      */
-    abstract File latexTargetFile(LatexProcessor.LatexMainDesc desc);
+    abstract File latexTargetFile(LatexMainDesc desc);
 
     static LatexDev devViaDvi(boolean pdfViaDvi) {
 	LatexDev res = pdfViaDvi ? LatexDev.dvips : LatexDev.pdf;

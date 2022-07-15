@@ -543,50 +543,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     // FIXME: determine whether to use latexmk makes sense
 
-    /**
-     * Container which comprises, besides the latex main file
-     * also several files creation of which shall be done once for ever.
-     */
-    static class LatexMainDesc {
-        private final File texFile;
-        final File pdfFile;
-        final File dviFile;
 
-        private final File logFile;
-
-        private final File idxFile;
-        private final File indFile;
-        private final File ilgFile;
-
-        private final File glsFile;
-        private final File gloFile;
-        private final File glgFile;
-
-        private final File xxxFile;
-
-        final File parentDir;
-
-        LatexMainDesc(File texFile, TexFileUtils fileUtils) {
-            this.texFile = texFile;
-            this.xxxFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_VOID);
-            this.pdfFile = withSuffix(SUFFIX_PDF);
-            this.dviFile = withSuffix(SUFFIX_DVI);
-            this.logFile = withSuffix(SUFFIX_LOG);
-
-            this.idxFile = withSuffix(SUFFIX_IDX);
-            this.indFile = withSuffix(SUFFIX_IND);
-            this.ilgFile = withSuffix(SUFFIX_ILG);
-
-            this.glsFile = withSuffix(SUFFIX_GLS);
-            this.gloFile = withSuffix(SUFFIX_GLO);
-            this.glgFile = withSuffix(SUFFIX_GLG);
-            this.parentDir = this.texFile.getParentFile();
-        }
-
-        File withSuffix(String suffix) {
-            return TexFileUtils.appendSuffix(this.xxxFile, suffix);
-        }
-    } // class LatexMainDesc
 
     private LatexMainDesc getLatexMainDesc(File texFile) {
         return new LatexMainDesc(texFile, this.fileUtils);
