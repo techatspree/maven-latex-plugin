@@ -28,7 +28,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-                                  LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+                                  LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2rtf(desc);
         }
 
@@ -46,7 +46,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+        LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2dvi(desc);
         }
 
@@ -62,7 +62,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+        LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2pdf(desc);
         }
 
@@ -81,7 +81,7 @@ public enum Target {
     html() {
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+        LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2html(desc);
         }
 
@@ -97,8 +97,8 @@ public enum Target {
         private final String OOFFICE_OUTPUT_FILES = "^T$T\\.(odt|fodt|uot|uot)$";
 
         // may throw BuildFailureException TEX01
-        public void processSource(LatexProcessor latexProcessor,
-        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+        public void processSource(LatexProcessor latexProcessor, 
+                                LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2odt(desc);
         }
 
@@ -115,7 +115,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+        LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2docx(desc);
         }
 
@@ -131,7 +131,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexProcessor.LatexMainDesc desc) throws BuildFailureException {
+        LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2txt(desc);
         }
 
@@ -157,7 +157,7 @@ public enum Target {
      *                               TEX01 if invocation of a command
      *                               to transform <code>texFile</code> failed.
      */
-    public abstract void processSource(LatexProcessor latexProcessor, LatexProcessor.LatexMainDesc desc)
+    public abstract void processSource(LatexProcessor latexProcessor, LatexMainDesc desc)
             throws BuildFailureException;
 
     /**
