@@ -569,7 +569,7 @@ ConverterCategory getCategory() {
 		}
 			// TBD: add a category 
 		ConverterCategory getCategory() {
-				return ConverterCategory.Unspecific;
+				return ConverterCategory.DePythontex;
 		}
 			},
 					// TBD: add a category 

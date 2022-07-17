@@ -19,14 +19,15 @@ package eu.simuline.m2latex.core;
 enum ConverterCategory {
 	// LaTeX: mostly to pdf but also to dvi
 	// This is slightly inconsistent.
+	// TBD: shall be Latex2dev
 	LaTeX() {
-		String getFieldname() {
-			return "latex2pdfCommand";
+		String getExtName() {
+			return "latex2pdf";// TBD: bad name because also dvi and xdv 
 		}
 	},
 	// TBD: clarify: not yet used really
 	Latex2Html() {
-		String getFieldname() {
+		String getExtName() {
 			throw new UnsupportedOperationException();
 		}
 	},
@@ -37,83 +38,88 @@ enum ConverterCategory {
 	// }
 	// },
 	LaTeX2Rtf() {
-		String getFieldname() {
-			return "latex2rtfCommand";
+		String getExtName() {
+			return "latex2rtf";
 		}
 	},
 	BibTeX() {
-		String getFieldname() {
-			return "bibtexCommand";
+		String getExtName() {
+			return "bibtex";
 		}
 	},
 	MakeIndex() {
-		String getFieldname() {
-			return "makeIndexCommand";
+		String getExtName() {
+			return "makeIndex";
 		}
 	},
 	MakeGlossaries() {
-		String getFieldname() {
-			return "makeGlossariesCommand";
+		String getExtName() {
+			return "makeGlossaries";
 		}
 	},
 	SplitIndex() {
-		String getFieldname() {
-			return "splitIndexCommand";
+		String getExtName() {
+			return "splitIndex";
 		}
 	},
 	Pythontex() {
-		String getFieldname() {
-			return "pythontexCommand";
+		String getExtName() {
+			return "pythontex";
 		}
 	},
-	LatexChk() {
-		String getFieldname() {
-			return "chkTexCommand";
+	DePythontex() {
+		String getExtName() {
+			return "depythontex";
+		}
+	},
+	LatexChk() {// TBD: eliminate inconsistency
+		String getExtName() {
+			return "chkTex";
 		}
 	},
 	DiffPdf() {
-		String getFieldname() {
-			return "diffPdfCommand";
+		String getExtName() {
+			return "diffPdf";
 		}
 	},
 	Dvi2Pdf() {
-		String getFieldname() {
-			return "dvi2pdfCommand";
+		String getExtName() {
+			return "dvi2pdf";
 		}
 	},
 	MetaPost() {
-		String getFieldname() {
-			return "metapostCommand";
+		String getExtName() {
+			return "metapost";
 		}
 	},
 	Svg2Dev() {
-		String getFieldname() {
-			return "svg2devCommand";
+		String getExtName() {
+			return "svg2dev";
 		}
 	},
 	Fig2Dev() {
-		String getFieldname() {
-			return "fig2devCommand";
+		String getExtName() {
+			return "fig2dev";
 		}
 	},
 	Gnuplot2Dev() {
-		String getFieldname() {
-			return "gnuplotCommand";
+		String getExtName() {
+			return "gnuplot";
 		}
 	},
 	Odt2Doc() {
-		String getFieldname() {
-			return "odt2docCommand";
+		String getExtName() {
+			return "odt2doc";
 		}
 	},
 	Pdf2Txt() {
-		String getFieldname() {
-			return "pdf2txtCommand";
+		String getExtName() {
+			return "pdf2txt";
 		}
 	},
 	EbbCmd() {
-		String getFieldname() {
-			return "ebbCommand";
+		String getExtName() {
+			return "ebb";
 		}
 	},
 
@@ -127,12 +133,17 @@ enum ConverterCategory {
 	// pythontex, depythontex
 	// latexmk
 	Unspecific {
-		String getFieldname() {
+		String getExtName() {
 			throw new UnsupportedOperationException();
 		}
 	};
 
 	// may throw UnsupportedOperationException
-	abstract String getFieldname();
+	String getFieldname() {
+		return this.getExtName() + "Command";
+	}
+
+	// may throw UnsupportedOperationException
+	abstract String getExtName();
 
 }

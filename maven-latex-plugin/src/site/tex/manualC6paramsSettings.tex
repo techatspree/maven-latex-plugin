@@ -4,6 +4,13 @@
 
 This section describes the parameters 
 of both the ant-task and the maven-plugin. 
+As this software mainly acts by invoking converters, 
+most parameters refer to commands and options for invocations, 
+but there are general aspects, treated in Section~\ref{sec:genOnSettings}, 
+but there are also parameters which cannot be associated to an individual converter. 
+These are collected in Section~\ref{sec:settingsGen}. 
+All the other sections refer to one or more converters. 
+
 The parameters are listed 
 in Tables~\ref{tab:paramGen}~through~\ref{tab:paramExt} 
 with names, default values and short explanations. 
@@ -37,6 +44,11 @@ The creator of a bibliography from an aux-file.
 The makeindex utility creating an index. 
 \item[MakeGlossaries]
 The makeglossaries utility creating a glossary. 
+\item[pythontex]
+The utility to invoke python and other languages from within \LaTeX{} 
+and to replace the code by its results dynamicallyt. 
+\item[depythontex]
+The utility to replace code finaly after a run of \texttt{pythontex}. 
 \item[tex4ht]
 The converter of latex into html and also into odt, 
 depending on the parameters. 
@@ -77,6 +89,66 @@ and also each converter can be almost freely configured.
 Parameters not passed to an application, 
 are either really crucial 
 or are included to allow also development of latex files. 
+
+\section{Generalities on Parameters}\label{sec:genOnSettings}
+
+As pointed out in the introduction of this chapter, 
+this software acts mainly by invoking various converters. 
+The converters are grouped in so-called {\em categories}. 
+The converters of a category have the same (file-)interface, %chktex 36
+means read and write the same files and, 
+mostly but not strictly necessarily, have the same options. 
+For each category there is an option \texttt{xxxCommand}, 
+where \texttt{xxx} is the name of the category in lowercase letters\footnote%
+{In fact there are exceptions to this rule: E.g.~for category \texttt{LaTeX} 
+the command is called \texttt{latex2pdf} referring to the common output format \gls{pdf}, 
+although also \gls{dvi} and \gls{xdv} are possible}. 
+The value of the option is the command to invoke the converter of the category. 
+Also, there is a default converter in each category, 
+and sometimes there is just a single converter possible. 
+For example, \texttt{lualatex} is the default converter in the category \texttt{latex}. 
+
+This software knows about converters and registers the ones approved for this software. 
+Among the advantages are, that it is ensured that the converter is really in that category 
+and that this software checks whether a converter used is in the right category, 
+and it checks whether it is installed in an approved version. 
+On the other hand, there are cases, where the user needs to invoke a custom converter. 
+In this case, the command name shall be given in the form 
+%
+\begin{verbatim}
+  <categoryCommand>commandName:category</categoryCommand>
+\end{verbatim}
+%
+to make sure, that the user is really aware that the converter (s)he uses 
+is in the correct category, i.e.~has the required interface. 
+Since neither of the registered converters has a \texttt{:} in its name, 
+This form is identified by the occurrence of a colon. 
+Since the categories neither have colons in their names, 
+separation of command name and category is by the last colon occurring. 
+That way, command names may contain colons also. 
+
+For most categories of converters, in fact at the time of this writing with a single exception, 
+one can specify command line options, specified in the form 
+%
+\begin{verbatim}
+  <categoryOptions></categoryOptions>
+\end{verbatim}
+%
+In fact, only for \texttt{diffPdfCommand} there is no option at all, 
+and for some converters with more complex options, the options are split over more than one setting, 
+e.g.~for converter category \texttt{fig2dev} converting \gls{fig}-files, 
+there are general settings given by \texttt{fig2devGenOptions}
+and settings specific for the output language: 
+\latex{} (\texttt{fig2devPtxOptions}) and \gls{eps} (\texttt{fig2devPdfEpsOptions}. 
+In any case, options are trimmed, i.e.~leading and trailing white spaces are removed 
+before being processed. 
+There are cases, where the options as given are not directly passed to the converter 
+but is further processed. 
+In this case, the processing is documented. 
+
+% log, patterns warn, err. 
+
+
 
 
 \section{General Parameters}\label{sec:settingsGen}
@@ -1213,6 +1285,8 @@ The default value is \texttt{pythontex}
 but as long as this does not write a log file this software really needs, 
 we have to configure it with \texttt{pythontexW} 
 which is a simple wrapper of \texttt{pythontex} writing a log file. 
+CAUTION\@: Since \texttt{pythontexW} is not registered with this software, 
+one has to specify it with its category as \texttt{pythontexW:pythontex}. 
 \end{minipage}
 } \\
 \texttt{pythontexOptions}    & \texttt{--rerun=always}  \\
@@ -1272,6 +1346,16 @@ If this is not appropriate, please modify and notify the developer of this plugi
   \texttt{depythontexCommand}       & \texttt{depythontex}  \\
   \multicolumn2{|l|}{
   \begin{minipage}{0.95\linewidth}
+    The Depythontex command invoked with no file ending 
+    to create a file \texttt{xxx.depytx.tex} filefrom a tex-file, 
+    a \gls{depytx}-file taking the output of \texttt{pythontex} into account 
+    and logging on a \gls{dplg}-file. 
+    The default value is \texttt{depythontex} 
+    but as long as this does not write a log file this software really needs, 
+    we have to configure it with \texttt{depythontexW} 
+    which is a simple wrapper of \texttt{depythontex} writing a log file. 
+    CAUTION\@: Since \texttt{depythontexW} is not registered with this software, 
+    one has to specify it with its category as \texttt{depythontexW:depythontex}. 
   \end{minipage}
   } \\
   \texttt{depythontexOptions}    & the empty string  \\

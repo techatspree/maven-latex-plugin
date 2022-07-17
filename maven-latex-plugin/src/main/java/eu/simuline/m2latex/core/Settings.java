@@ -17,16 +17,17 @@
  */
 
 package eu.simuline.m2latex.core;
-// is AbstractLatexMojo but not public 
-import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only 
-
 import java.io.File;
-
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.maven.plugins.annotations.Parameter;
+
+// is AbstractLatexMojo but not public 
+import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only 
 
 /**
  * The settings for a maven plugin and for an ant task. 
@@ -1192,6 +1193,8 @@ public class Settings {
      * but as long as this does not write a log file this software really needs, 
      * we have to configure it with <code>pythontexW</code> 
      * which is a simple wrapper of <code>pythontex</code> writing a log file. 
+     * CAUTION: Since <code>pythontexW</code> is not registered with this software, 
+     * one has to specify it with its category as <code>pythontexW:pythontex</code>. 
      */
     @Parameter(name = "pythontexCommand", defaultValue = "pythontex")
     private String pythontexCommand = "pythontex";
@@ -1217,7 +1220,7 @@ public class Settings {
     /**
      * The pattern in the plg-file 
      * indicating that running <code>pythontex</code>, resp. <code>pythontexW</code> 
-     * via {@link #mpythontexCommand} failed. 
+     * via {@link #pythontexCommand} failed. 
      * The default value is essentially 
      * <code>(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)</code> (note the spaces)
      * but due to a bug in <code>pythontex</code> it is slightly more complicated. 
@@ -1249,7 +1252,9 @@ public class Settings {
      * The default value is <code>depythontex</code> 
      * but as long as this does not write a log file this software really needs, 
      * we have to configure it with <code>depythontexW</code> 
-     * which is a simple wrapper of <code>depythontex</code>writing a log file. 
+     * which is a simple wrapper of <code>depythontex</code> writing a log file. 
+     * CAUTION: Since <code>depythontexW</code> is not registered with this software, 
+     * one has to specify it with its category as <code>depythontexW:depythontex</code>. 
      */
     @Parameter(name = "depythontexCommand", defaultValue = "depythontex")
     private String depythontexCommand = "depythontex";
@@ -1687,64 +1692,102 @@ public class Settings {
      *    is not a subset of the set given by {@link Converter}. 
      */
     public SortedSet<Converter> getConvertersExcluded()
-	throws BuildFailureException {
-	SortedSet<Converter> convSet = new TreeSet<Converter>();
-	if (this.convertersExcluded.isEmpty()) {
-	    return convSet;
-	}
-	String[] convSeq = this.convertersExcluded.split(" *, *");
-	for (int idx = 0; idx < convSeq.length; idx++) {
-	    Converter conv = Converter.cmd2Conv(convSeq[idx]);
-	    if (conv == null) {
-		// Here, the converter given is unknown. 
-		throw new BuildFailureException
-		    ("TSS05: The excluded converters '" +
-		this.convertersExcluded +
-		     "' should form a subset of the registered converters '" +
-		Converter.toCommandsString() + "'. ");
-	    }
-	    convSet.add(conv);
-	}
-	return convSet;
+            throws BuildFailureException {
+        SortedSet<Converter> convSet = new TreeSet<Converter>();
+        if (this.convertersExcluded.isEmpty()) {
+            return convSet;
+        }
+        String[] convSeq = this.convertersExcluded.split(" *, *");
+        for (int idx = 0; idx < convSeq.length; idx++) {
+            Converter conv = Converter.cmd2Conv(convSeq[idx]);
+            if (conv == null) {
+                // Here, the converter given is unknown.
+                throw new BuildFailureException("TSS05: The excluded converters '" +
+                        this.convertersExcluded +
+                        "' should form a subset of the registered converters '" +
+                        Converter.toCommandsString() + "'. ");
+            }
+            convSet.add(conv);
+        }
+        return convSet;
     }
 
     /**
-     * throws an exception if the converter given by 
+     * Returns the converter name which is typically <code>convStr</code> 
+     * and throws an exception if the converter given is invalid. 
      *
      * @param convStr
-     *    the name of a converter as a string.  
-     * @throws BuildFailureException 
+     *    the name of a converter as a string as given in the configuration. 
+     *    If this converter is registered with this software, 
+     *    i.e. if it corresponds with an instance of {@link Converter}, 
+     *    then it is given just by {@link Converter#getCommand()}. 
+     *    Else, it must be given in the form <code>commandName:category</code>, 
+     *    where <code>category</code> is given by <code>cat</code> 
+     *    via {@link ConverterCategory#getExtName()}. 
+     * @throws BuildFailureException
+     *    In case the converter is given directly, as if registered: 
      *    <ul>
      *    <li>TSS06 if 
      *    tried to use converter not registered. </li>
      *    <li>TSS05 if 
-     *    set of converters excluded from usage 
+     *    the set of converters excluded from usage 
      *    is not a subset of the set given by {@link Converter}. </li>
      *    <li>TSS07 if 
      *    tried to use converter which is among the excluded ones. </li>
-      *    <li>TSS08 if 
+     *    <li>TSS08 if 
+     *    tried to use converter within wrong category. </li>
+     *     <li>
      *    tried to use converter within wrong category. </li>
      *    </ul>
+     *    TSS10 if the converter is given in the form 
+     *    <code>&lt;cat1Command&gt;commandName:cat2&lt;/cat1Command&gt;</code> 
+     *    with <code>cat2</code> not coinciding with <code>cat1</code>. 
+     * @return
+     *    the proper name of the converter. 
+     *    If the converter is registered with this software, 
+     *    then just <code>convStr</code> is returned. 
+     *    Else <code>convStr</code> has the form <code>commandName:category</code> 
+     *    and what is returned is the proper name <code>commandName</code>. 
      */
-    private void checkConverter(String convStr, ConverterCategory cat) throws BuildFailureException {
-	Converter conv = Converter.cmd2Conv(convStr);
-	if (conv == null) {
-	    throw new BuildFailureException("TSS06: Tried to use converter '" + convStr +
-		    "' although not among the registered converters '" + Converter.toCommandsString() + "' as expected. ");
-	}
-	// may throw BuildFailureException TSS05
-	SortedSet<Converter> convertersExcluded = getConvertersExcluded();
-	if (convertersExcluded.contains(conv)) {
-	    throw new BuildFailureException("TSS07: Tried to use converter '" + convStr +
-		    "' although among the excluded converters '" +
-		    Converter.toCommandsString(convertersExcluded) + "'. ");
+    private String checkConverterName(String convStr, ConverterCategory cat) 
+    throws BuildFailureException {
+        int idxLastCol = convStr.lastIndexOf(':');
+        if (idxLastCol != -1) {
+            // Here, the converter is not registered 
+            // and so it is given in the form
+            // converterName:category
+            String catStr = convStr.substring(idxLastCol+1);
+            String convStrProper = convStr.substring(0, idxLastCol);
+            if (!cat.getExtName().equals(catStr)) {
+                throw new BuildFailureException
+                    ("TSS10: Specified unregistered converter '" + convStrProper +
+                        "' with invalid category '" + catStr +
+                        "'; should be '" + cat.getExtName() + "''. ");
+            }
+            return convStrProper;
+        }
 
-	}
-	if (conv.getCategory() != cat) {
-	    throw new BuildFailureException("TSS08: Tried to use converter '" + convStr +
-		    "' in configuration '" + cat.getFieldname() +
-		    "' instead of configuration '" + conv.getCategory().getFieldname() + "'. ");
-	}
+        // Here, no colon occurs and the converter is registered.
+
+        Converter conv = Converter.cmd2Conv(convStr);
+        if (conv == null) {
+            throw new BuildFailureException("TSS06: Tried to use converter '" + convStr +
+                    "' although not among the registered converters '" + Converter.toCommandsString()
+                    + "' as expected. ");
+        }
+        // may throw BuildFailureException TSS05
+        SortedSet<Converter> convertersExcluded = getConvertersExcluded();
+        if (convertersExcluded.contains(conv)) {
+            throw new BuildFailureException("TSS07: Tried to use converter '" + convStr +
+                    "' although among the excluded converters '" +
+                    Converter.toCommandsString(convertersExcluded) + "'. ");
+        }
+        if (conv.getCategory() != cat) {
+            throw new BuildFailureException("TSS08: Tried to use converter '" + convStr +
+                    "' in configuration '" + cat.getFieldname() +
+                    "' instead of configuration '" + conv.getCategory().getFieldname() + "'. ");
+        }
+        return convStr;
     }
 
     public String getPatternLatexMainFile() {
@@ -1895,22 +1938,21 @@ public class Settings {
      *    </ul>
      */
     public String getCommand(ConverterCategory cat) throws BuildFailureException {
-	String cmdName;
-	try {
-	    cmdName = (String)this.getClass().getDeclaredField(cat.getFieldname()).get(this);
-	} catch (NoSuchFieldException nsfe) {
-	    throw new IllegalStateException
-	    ("Could not find field '" + cat.getFieldname() + "' in Settings. ");
-	} catch (IllegalAccessException iace) {
-	    throw new IllegalStateException
-	    ("Parameter '" + cat.getFieldname() + "' not readable. ");
-	} catch (IllegalArgumentException iage) {
-	    throw new IllegalStateException("Settings class mismatch. ");
-	}
-	// may throw BuildFailureException TSS05-08
+        String cmdName;
+        try {
+            cmdName = (String) this.getClass().getDeclaredField(cat.getFieldname()).get(this);
+        } catch (NoSuchFieldException nsfe) {
+            throw new IllegalStateException("Could not find field '" + 
+                                            cat.getFieldname() + "' in Settings. ");
+        } catch (IllegalAccessException iace) {
+            throw new IllegalStateException("Parameter '" + cat.getFieldname() + "' not readable. ");
+        } catch (IllegalArgumentException iage) {
+            throw new IllegalStateException("Settings class mismatch. ");
+        }
+        // may throw BuildFailureException TSS05-08
 
-	checkConverter(cmdName, cat);
-	return cmdName;
+        cmdName = checkConverterName(cmdName, cat);// replace by checked cmdName
+        return cmdName;
     }
 
     // for ant task only 
@@ -2752,6 +2794,11 @@ public class Settings {
         sb.append(", patternWarnXindy=").append(this.patternWarnXindy);
         sb.append(", patternReRunMakeGlossaries=")
                 .append(this.patternReRunMakeGlossaries);
+        // parameters for pythontex
+        sb.append(", pythontexCommand=").append(this.pythontexCommand);
+        sb.append(", pythontexOptions=").append(this.pythontexOptions);
+        sb.append(", patternErrPyTex=").append(this.patternErrPyTex);
+        sb.append(", patternWarnPyTex=").append(this.patternWarnPyTex);
         // parameters for latex2html
         sb.append(", tex4htCommand=").append(this.tex4htCommand);
         sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);

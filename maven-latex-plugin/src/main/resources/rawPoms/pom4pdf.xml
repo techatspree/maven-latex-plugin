@@ -173,7 +173,7 @@ The default value is null. -->
             <!-- Clean up the working directory in the end? 
 		 May be used for debugging when setting false. 
 		 The default value is 'true'. -->
-            <cleanUp>true</cleanUp>
+            <cleanUp>false</cleanUp>
 
             <!-- This pattern is applied to file names 
 and matching shall accept all the files 
@@ -600,8 +600,17 @@ The default value is given below.
 Package \w+ Warning: .*Rerun( .*|\.)$|
 Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
 LaTeX Warning: Etaremune labels have changed\.$|
-\(rerunfilecheck\)                Rerun to get outlines right$)
+\(rerunfilecheck\)                Rerun to get outlines right$|
+\(rerunfilecheck\)                Rerun LaTeX)
             </patternReRunLatex>
+            <!-- 
+^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
+Package \w+ Warning: .*Rerun( .*|\.)$|
+Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+LaTeX Warning: Etaremune labels have changed\.$|
+\(rerunfilecheck\)                Rerun to get outlines right$)
+
+            -->
 
             <!-- The maximal allowed number of reruns of $latex2pdfCommand. 
 This is to avoid endless repetitions. 
@@ -779,8 +788,10 @@ and notify the developer of this plugin of the bug. -->
               The default value is pythontex' 
               but as long as this does not write a log file this software really needs, 
               we have to configure it with 'pythontexW' 
-              which is a simple wrapper of 'pythontex' writing a log file. -->
-            <pythontexCommand>pythontexW</pythontexCommand>
+              which is a simple wrapper of 'pythontex' writing a log file. 
+              CAUTION: Since 'pythontexW' is not registered with this software, 
+              one has to specify it with its category as 'pythontexW:pythontex'. -->
+            <pythontexCommand>pythontexW:pythontex</pythontexCommand>
 
             <!-- The options for the command '$pythontexCommand'. 
               For the possibilities see the manual of the pythontex package 
@@ -810,7 +821,31 @@ and notify the developer of this plugin of the bug. -->
               If this is not appropriate, please modify and notify the developer of this plugin. -->
             <patternWarnPyTex>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\(s\), [1-9][0-9]* warning\(s\)</patternWarnPyTex>
 
-            <depythontexCommand>depythontexW</depythontexCommand>
+            <!-- The Depythontex command invoked with no file ending 
+              to create a file 'xxx.depytx.tex' filefrom a tex-file, 
+              a depytx-file taking the output of 'pythontex' into account 
+              and logging on a dplg-file. 
+              The default value is 'depythontex' 
+              but as long as this does not write a log file this software really needs, 
+              we have to configure it with 'depythontexW' 
+              which is a simple wrapper of 'depythontex' writing a log file. 
+              CAUTION: Since 'depythontexW' is not registered with this software, 
+              one has to specify it with its category as 'depythontexW:depythontex'. -->
+            <depythontexCommand>depythontexW:depythontex</depythontexCommand>
+
+
+            <!-- The additional options for the command '$depythontexCommand'. 
+              To run 'depythontex' in the context of this software, 
+              the options '- -overwrite - -output file' are mandatory 
+              to create an output file at all and to overwrite if it already exists 
+              avoiding that 'depythontex' enters interactive mode. 
+              Thus these options are added silently. 
+              This setting is the additional options. 
+              
+              The default value is the empty option string. 
+              For the possibilites see the manual of the pythontex package 
+              or the help dialog of 'depythontex'. -->
+            <depythontexOptions></depythontexOptions>
 
 
             <!-- The tex4ht command. 

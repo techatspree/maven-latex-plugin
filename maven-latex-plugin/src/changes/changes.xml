@@ -212,9 +212,82 @@ here is a bug affecting goal odt:
 -->
 <!-- Bugfix: WPP03: Skipped processing of files with suffixes [, .latexmkrc]. -->
 
+<!-- gap: in pythontex package dont use \setpythontexoutputdir 
+	because this is not forseen in pattern patternCreatedFromLatexMain 
+also modification of working directory with \setpythontexworkingdir is not supported. 
+-->
+
+<!-- with pythontexW and depythontexW, we need unregistered converters, 
+	and this is true for other converters also. 
+	So Exception TSS06 in Settings.java is not appropriate. 
+	We need a way to register a converter for a ConverterCategory. 
+	I think, we shall copy technique of javaoctave. -->
+
+	<!-- add a way to include/exclude main files. 
+		This would also ease development of this software in particular, deactivating the whole manual -->
+
+	<!-- unlike othe converters, pythontex does not always update its result files. 
+		Normally, there is a check that the result files changed. 
+		It must be possible to pypass that. 
+		A hack is to check the plg file. 
+		Better would be some switch on activation of update check. 
+		Best: tied to option -{}-rerun=always or -{}runall=true. 
+		The problem is, that package options override command line options, 
+		which is a bad idea. 
+		To overcome, just eliminate one result file. 
+		This forces pythontex to update all: a not documented feature shihc may hardlcy change. 
+	-->
+	<!-- TBD: full check of output: 
+		This requires reading the pytxcode file to find out the names of the stdout files. -->
+	<!-- 	Maybe one can eliminate package options rerun and runall. from pytxcode file. 
+		That way, rerun can be controlled via command line option 
+		and thus by this software invoking pythontex. -->
+	<!-- TBD: use std/err output to detect rerun information, not log files: 
+		this is much faster. -->
+
+	<!-- TBD: rerunfilecheck and out files created by hyperref -->
+	<!-- TBD: fix [WARNING] WPP03: Skipped processing of files with suffixes [, .latexmkrc, .log]. -->
+	<!-- TBD: consider https://tex.stackexchange.com/questions/7770/file-extensions-related-to-latex-etc -->
+	<!-- TBD: rework on glossaries: use `glossaries-extra` in conjunction with `bib2gls`. 
+		This is because 
+		- rerunfilecheck does not work with the traditional workflow. 
+		- it is not easy to treat the case of cross references of glossary entries explaining one with the other term 
+		- it is difficult to extend to more than one glossary 
+		- ABOVE ALL: explanations and that like shall be in a separate file accessible from more than one tex file. 
+		  This is like bibliographies. 
+			Thus it is a good idea to have a similar workflow: lualatex, bib2gls transforming aux and bib to glotex
+			one has just to replace loading `glossaries` by `glossaries-extra` with package option `record`. 
+
+			have a look at the src/site/doc/glossary folder containing 
+			- glossaries-extra and bib2gls: An Introductory Guide 
+			  in particular Section 7
+			- other literature is in the same folder 
+			Please extend the bibliography 
+
+			All problems mentioned above are solved: 
+			- since with option `record` info is written in aux file, `rerunfilecheck` can detect changes 
+			- bib2gls includes all entries referenced in the tex-file and all depending on it: 
+			  so also those required for explanations, and for explanations of explanations and so on. 
+			- \GlsXtrLoadResources allows to load a bib-file with entries. 
+			  It is possible to load more than one resource, consult the above reference, sections 1.2 and 1.3. 
+				Even with more than one index, bib2glo is invoked the same way. 
+
+			The according section in Chapter 5 must be extended: a subsection on the new way, 
+			and a section on the old way with criticism. 
+			A switch legacyGlossaries which is false by default. 
+	-->
+	<!-- TBD: for xfig there is a way to convert to tikz. 
+		I think, this is a single target file only and has same quality at least as we have currently. 
+		I think it is worth moving from mixed tex-pdf to tikz in tex only. -->
+	<!-- TBD: rework on pythontexInOut.tex -->
+	<!-- .latexmkrc" 
+		https://mirror.las.iastate.edu/tex-archive/support/latexmk/example_rcfiles/mpost_latexmkrc -->
+		<!-- bib2gls: bib file shall start with line % Encoding: UTF-8 -->
+
+
 	  <release  version="1.6"
 		date="2022-01-01"
-		description="Main feature: pythontex.">
+		description="Main feature: minimum support for pythontex. Added support for unregistred converters">
 			<action dev='reissner' type='add'>
 				added converter depythontex (pythontex was added already.)
 			</action>
@@ -228,7 +301,14 @@ here is a bug affecting goal odt:
 				Nevertheless, a strong motivation is pythontex:
 				I want to create figures without memory restrictions, which is offered by lualatex.
 			</action>
-		</release>
+			<action dev='reissner' type='update'>
+				Updated version strings, also form e.g. inkscape.
+			</action>
+			<action dev='reissner' type='add'>
+				Added support for unregistered converters specifying theyr category for safety.
+				This is needed for the moment for (de-)pythontex.
+				Although removed in later releases is useful in its own right.
+			</action>		</release>
 
     <release version="1.5"
 	     date="2022-05-03"
