@@ -445,7 +445,9 @@ public class MetaInfo {
 
 		/**
 		 * Create a version for a converter <code>conv</code> 
-		 * invoking it with the proper option using <code>executor</code>
+		 * invoking it with the proper option using <code>executor</code>. 
+		 * This is used in {@link MetaInfo#printMetaInfo(boolean)} 
+		 * to create the version info of a converter. 
 		 * 
 		 * @param conv
 		 *    a converter.
@@ -464,6 +466,10 @@ public class MetaInfo {
 
 		/**
 		 * Create a version from given pattern. 
+		 * This is used in {@link Version(Converter, CommandExecutor)} 
+		 * to create the version info of a converter 
+		 * but also in {@link VersionInterval(Converter, String)} 
+		 * to get the minimum/maximum expected version of a converter. 
 		 * 
 		 * @param patternEnv
 		 *    The pattern <code>patternEnv</code> is a format string 
@@ -480,7 +486,7 @@ public class MetaInfo {
 		 *    version information described by <code>patternVrs</code> 
 		 *    and conforming to <code>patternEnv</code>. 
 		 *    The origin of that text may be output of invocation of a converter 
-		 *    or a property file with allowed versions (as version intervals)
+		 *    or a property file with allowed versions (as version intervals). 
 		 */
 		Version(String patternEnv, String patternVrs, String text) {
 			this.text = text;
@@ -542,12 +548,12 @@ public class MetaInfo {
 		}
 
 		public int compareTo(Version other) {
-			int idxMax = Math.max(getSegments().size(), other.getSegments().size());
+			int idxMin = Math.min(getSegments().size(), other.getSegments().size());
 			int sign;
-			for (int idx = 0; idx < idxMax; idx++) {
+			for (int idx = 0; idx < idxMin; idx++) {
 				// TBD: eliminate hack 
 				sign = (int) Math.signum(getSegments().get(idx).doubleValue()
-						- other.getSegments().get(idx).doubleValue());
+						-              other.getSegments().get(idx).doubleValue());
 				switch (sign) {
 					case 0:
 						continue;
@@ -738,6 +744,8 @@ public class MetaInfo {
 
 	/**
 	 * Only used to find the excluded converters. 
+	 * We use the full settings because we just read and reading may throw exception. 
+	 * This occurs in {@link #printMetaInfo(boolean)} only. 
 	 */
 	private final Settings settings;
 
@@ -795,7 +803,7 @@ public class MetaInfo {
 	 *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
 	 *    </ul>
 	 */
-	public boolean printMetaInfo(boolean includeVersionInfo)
+	public boolean printMetaInfo(final boolean includeVersionInfo)
 			throws BuildFailureException {
 
 		String versionQuote = "";
@@ -881,7 +889,7 @@ public class MetaInfo {
 		Properties versionProperties = getProperties(VERSION_PROPS_FILE);
 		if (versionProperties.size() > Converter.values().length) {
 			// Relation < need not be checked since all converters are checked below 
-			throw new IllegalStateException("Number of version properites "
+			throw new IllegalStateException("Number of version properties "
 					+ versionProperties.size() + " does not fit number of converters "
 					+ Converter.values().length + ". ");
 		}
