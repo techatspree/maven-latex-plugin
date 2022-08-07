@@ -19,9 +19,9 @@
 package eu.simuline.m2latex.core;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.maven.plugins.annotations.Parameter;
@@ -230,7 +230,52 @@ public class Settings {
 	"\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
 	"\\\\(documentstyle|documentclass)";
 
+    /**
+     * The list of names of latex main files 
+     * without extension <code>.tex</code> 
+     * separated by whitespace 
+     * which shall be included for creating targets, 
+     * except if this is empty in which cases all are included. 
+     * It is assumed that the names of the latex main files 
+     * do not contain whitespace. 
+     * Note that leading and trailing whitespace are trimmed. 
+     * Currently, 
+     * names of latex main files should better have pairwise different names, 
+     * even if in different directories. 
+     * <p>
+     * The empty string is the default, i.e. including all. 
+     * 
+     * @see #mainFilesExcluded
+     */
+    @Parameter(name = "mainFilesIncluded", defaultValue = "")
+    private String mainFilesIncluded = "";
 
+ 
+    /**
+     * The list of names of latex main files 
+     * without extension <code>.tex</code> 
+     * separated by whitespace 
+     * which shall be excluded for creating targets. 
+     * It is assumed that the names of the latex main files 
+     * do not contain whitespace. 
+     * Note that leading and trailing whitespace are trimmed. 
+     * Currently, 
+     * names of latex main files should better have pairwise different names, 
+     * even if in different directories. 
+     * <p>
+     * Together with {@link #mainFilesExcluded}, 
+     * this is used for document development 
+     * to build the pdf of a subset of documents 
+     * and e.g. because for a site one needs all documents, 
+     * but with the software only the manual is shipped. 
+     * The empty string is the default, i.e. excluding no file. 
+     * 
+     * @see #mainFilesIncluded
+     */
+    @Parameter(name = "mainFilesExcluded", defaultValue = "")
+    private String mainFilesExcluded = "";
+
+ 
     // texPath, commands and arguments 
 
     /**
@@ -1791,9 +1836,20 @@ public class Settings {
     }
 
     public String getPatternLatexMainFile() {
-	return  this.patternLatexMainFile;
+        return this.patternLatexMainFile;
     }
 
+    public Set<String> getMainFilesIncluded() {
+        return this.mainFilesIncluded.isEmpty() 
+        ? new HashSet<String>()
+        : new HashSet<String>(Arrays.asList(this.mainFilesIncluded.split(" ")));
+      }
+
+    public Set<String> getMainFilesExcluded() {
+        return this.mainFilesExcluded.isEmpty() 
+        ? new HashSet<String>()
+        : new HashSet<String>(Arrays.asList(this.mainFilesExcluded.split(" ")));
+    }
 
     // texPath, commands and arguments 
 
@@ -2192,8 +2248,8 @@ public class Settings {
     // setter method for patternLatexMainFile in maven 
     // trims parameter before setting 
     public void setPatternLatexMainFile(String patternLatexMainFile) {
-	this.patternLatexMainFile = patternLatexMainFile
-	    .replaceAll("(\t|\n)+", "").trim();
+        this.patternLatexMainFile = patternLatexMainFile
+                .replaceAll("(\t|\n)+", "").trim();
     }
 
     // method introduces patternLatexMainFile in ant 
@@ -2203,13 +2259,23 @@ public class Settings {
 
     // defines patternLatexMainFile element with text in ant 
     public class PatternLatexMainFile {
-	// FIXME: this is without property resolution. 
-	// to add this need  pattern = getProject().replaceProperties(pattern)
-	// with Task.getProject() 
-   	public void addText(String pattern) {
-   	    Settings.this.setPatternLatexMainFile(pattern);
-   	}
+        // FIXME: this is without property resolution.
+        // to add this need pattern = getProject().replaceProperties(pattern)
+        // with Task.getProject()
+        public void addText(String pattern) {
+            Settings.this.setPatternLatexMainFile(pattern);
+        }
     } // class PatternLatexMainFile
+
+    public void setMainFilesIncluded(String mainFilesIncluded) {
+        this.mainFilesIncluded = mainFilesIncluded
+                .replaceAll("(\t|\n| )+", " ").trim();
+    }
+
+    public void setMainFilesExcluded(String mainFilesExcluded) {
+        this.mainFilesExcluded = mainFilesExcluded
+                .replaceAll("(\t|\n| )+", " ").trim();
+    }
 
     public void setTexPath(File texPath) {
         this.texPath = texPath;
@@ -2736,6 +2802,8 @@ public class Settings {
         sb.append(", targets=").append(this.targets);
         sb.append(", convertersExcluded=").append(this.convertersExcluded);
         sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
+        sb.append(", mainFilesIncluded=").append(this.mainFilesIncluded);
+        sb.append(", mainFilesExcluded=").append(this.mainFilesExcluded);
         sb.append(", texPath=").append(this.texPath);
         sb.append(", cleanUp=").append(this.cleanUp);
         sb.append(", chkDiff=").append(this.chkDiff);

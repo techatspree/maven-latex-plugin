@@ -47,11 +47,14 @@ public class ChkMojo extends AbstractLatexMojo {
      * <p>
      * Logging: 
      * <ul>
-     * <li> WPP02: tex file may be latex main file 
-     * <li> WFU01: Cannot read directory...
-     * <li> WFU03: cannot close tex file 
-     * <li> EFU05: Failed to delete file 
-     * <li> EFU07, EFU08, EFU09: if filtering a file fails. 
+     * <li>WPP02: tex file may be latex main file 
+ 	 * <li>WPP05: Included tex files which are no latex main files 
+	 * <li>WPP06: Included tex files which are no latex main files 
+	 * <li>WPP07: inluded/excluded files not identified by their names.
+     * <li>WFU01: Cannot read directory...
+     * <li>WFU03: cannot close tex file 
+     * <li>EFU05: Failed to delete file 
+     * <li>EFU07, EFU08, EFU09: if filtering a file fails. 
      * </ul>
      *
      * @throws BuildFailureException 
@@ -62,7 +65,8 @@ public class ChkMojo extends AbstractLatexMojo {
 	initialize();
 	try {
 	    // may throw BuildFailureException TSS02 
-	    // may log warnings WPP02, WFU01, WFU03, EFU05 
+	    // may log warnings WPP02, WPP05, WPP06, WPP07, 
+        // WFU01, WFU03, EFU05 
 	    // EFU07, EFU08, EFU09: if filtering a file fails. 
 	    this.latexProcessor.checkAll();
 	} catch (BuildFailureException e) {

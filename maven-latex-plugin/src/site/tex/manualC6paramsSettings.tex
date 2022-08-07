@@ -139,7 +139,7 @@ and for some converters with more complex options, the options are split over mo
 e.g.~for converter category \texttt{fig2dev} converting \gls{fig}-files, 
 there are general settings given by \texttt{fig2devGenOptions}
 and settings specific for the output language: 
-\latex{} (\texttt{fig2devPtxOptions}) and \gls{eps} (\texttt{fig2devPdfEpsOptions}. 
+\LaTeX{} (\texttt{fig2devPtxOptions}) and \gls{eps} (\texttt{fig2devPdfEpsOptions}. 
 In any case, options are trimmed, i.e.~leading and trailing white spaces are removed 
 before being processed. 
 There are cases, where the options as given are not directly passed to the converter 
@@ -272,6 +272,45 @@ one can never be sure whether the pattern is perfect.
 If the current default value is not appropriate, 
 please overwrite it in the configuration 
 and notify the developer of this plugin of the deficiency. 
+\end{minipage}
+} \\
+\texttt{mainFilesIncluded}          &  empty string        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  The list of names of latex main files 
+  without extension \texttt{.tex} separated by whitespace 
+  which shall be included for creating targets, 
+  except if this is empty in which cases all are included. 
+  It is assumed that the names of the latex main files 
+  do not contain whitespace. 
+  Note that leading and trailing whitespace are trimmed. 
+  Currently, names of latex main files 
+  should better have pairwise different names, 
+  even if in different directories. 
+  The empty string is the default, i.e. including all. 
+  See parameter \texttt{mainFilesExcluded}. 
+\end{minipage}
+} \\
+\texttt{mainFilesExcluded}          &  empty string        \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  The list of names of latex main files 
+  without extension \texttt{.tex} 
+  separated by whitespace 
+  which shall be excluded for creating targets. 
+  It is assumed that the names of the latex main files 
+  do not contain whitespace. 
+  Note that leading and trailing whitespace are trimmed. 
+  Currently, names of latex main files 
+  should better have pairwise different names, 
+  even if in different directories. 
+  Together with \texttt{mainFilesExcluded}, 
+  this is used for document development 
+  to build the pdf of a subset of documents 
+  and e.g. because for a site one needs all documents, 
+  but with the software only the manual is shipped. 
+  The empty string is the default, i.e. excluding no file. 
+  See parameter \texttt{mainFilesIncluded}. 
 \end{minipage}
 } \\
 \texttt{texPath}          &  empty string        \\

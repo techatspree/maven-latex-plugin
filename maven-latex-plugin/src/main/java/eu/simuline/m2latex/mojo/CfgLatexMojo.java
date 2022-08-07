@@ -54,6 +54,9 @@ public class CfgLatexMojo extends AbstractLatexMojo {
      * <li> EFU07, EFU08, EFU09: if filtering a file fails. 
      * <li> WPP02: tex file may be latex main file 
      * <li> WPP03: Skipped processing of files with suffixes ... 
+	 * <li> WPP05: Included tex files which are no latex main files 
+	 * <li> WPP06: Included tex files which are no latex main files 
+	 * <li> WPP07: inluded/excluded files not identified by their names.
      * <li> EEX01, EEX02, EEX03, WEX04, WEX05: 
      *      applications for preprocessing graphic files 
      *      or processing a latex main file fails. 
@@ -85,7 +88,7 @@ public class CfgLatexMojo extends AbstractLatexMojo {
 	    // may throw BuildFailureException 
 	    // TSS01, TSS02, TSS03, TEX01, TFU01, TFU03, TFU04, TFU05, TFU06, TLP01 
 	    // may log WFU01, WFU03, EFU05, EFU07, EFU08, EFU09 
-	    // WPP02, WPP03, 
+	    // WPP02, WPP03, WPP05, WPP06, WPP07, 
 	    // EEX01, EEX02, EEX03, WEX04, WEX05 
 	    this.latexProcessor.create();
 	} catch (BuildFailureException e) {

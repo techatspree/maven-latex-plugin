@@ -186,11 +186,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * which logs onto <code>log</code> and used by <code>paramAdapt</code>.
      *
      * @param settings
-     *                   the settings controlling latex processing
+     *    the settings controlling latex processing
      * @param log
-     *                   the logger to write on events while processing
+     *    the logger to write on events while processing
      * @param paramAdapt
-     *                   the parameter adapter, refers to maven-plugin or ant-task.
+     *    the parameter adapter, refers to maven-plugin or ant-task.
      */
     public LatexProcessor(Settings settings,
             LogWrapper log,
@@ -258,6 +258,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    {@link TexFileUtils#copyOutputToTargetFolder(File, FileFilter, File)}
      *    <li>TLP01 if difference check is specified in settings and if 
      *    the artifact could not be reproduced (currently for pdf only). 
+     *    <li>WPP05: Included tex files which are no latex main files 
+	 *    <li>WPP06: Included tex files which are no latex main files 
+	 *    <li>WPP07: inluded/excluded files not identified by their names.
      *    </ul>
      */
     public void create() throws BuildFailureException {
@@ -360,7 +363,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * This includes also creation of graphic files.
      * <p>
      * TBD: logging
-     *
+     * <ul>
+     *    <li>WPP05: Included tex files which are no latex main files 
+	 *    <li>WPP06: Included tex files which are no latex main files 
+	 *    <li>WPP07: inluded/excluded files not identified by their names.
+     * </ul>
+     * 
      * @throws BuildFailureException
      *                               <ul>
      *                               <li>
@@ -389,6 +397,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         DirNode node = new DirNode(texProcDir, this.fileUtils);
 
         try {
+            // TBD: eliminate processing graphics. 
             // may throw BuildFailureException TEX01,
             // log warning WFU03, WPP02, WPP03,
             // EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09
@@ -419,17 +428,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li>WPP03: Skipped processing of files with suffixes ...
      * <li>EEX01, EEX02, EEX03, WEX04, WEX05:
      * if running graphic processors failed.
+     * <li>WPP05: Included tex files which are no latex main files 
+	 * <li>WPP06: Included tex files which are no latex main files 
+	 * <li>WPP07: inluded/excluded files not identified by their names.
      * </ul>
      *
      * @throws BuildFailureException
-     *                               <ul>
-     *                               <li>
-     *                               TSS02 if the tex source processing directory
-     *                               does either not exist
-     *                               or is not a directory.
-     *                               <li>
-     *                               TEX01 invoking FIXME
-     *                               </ul>
+     *    <ul>
+     *    <li>
+     *    TSS02 if the tex source processing directory
+     *    does either not exist or is not a directory.
+     *    <li>
+     *    TEX01 invoking FIXME
+     *    </ul>
      */
     // used in GraphicsMojo.execute() only
     public void processGraphics() throws BuildFailureException {
@@ -440,6 +451,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
         // constructor DirNode may log warning WFU01 Cannot read directory
         DirNode node = new DirNode(texProcDir, this.fileUtils);
+        // TBD: eliminate here selecting the main files. 
         // may throw BuildFailureException TEX01,
         // log warning WFU03, WPP02, WPP03,
         // EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09
@@ -471,9 +483,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @throws BuildFailureException
-     *                               TSS02 if the tex source processing directory
-     *                               does either not exist
-     *                               or is not a directory.
+     *    TSS02 if the tex source processing directory
+     *    does either not exist or is not a directory.
      */
     public void clearAll() throws BuildFailureException {
         this.paramAdapt.initialize();
@@ -582,43 +593,41 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>texFile</code>
-     *             to be processed.
+     *    the description of a latex main file <code>texFile</code>
+     *    to be processed.
      * @param dev
-     *             the device describing the output format which is either pdf or
-     *             dvi.
-     *             See {@link LatexDev#getLatexOutputFormat()}.
+     *    the device describing the output format which is either pdf or
+     *    dvi.
+     *    See {@link LatexDev#getLatexOutputFormat()}.
      * @return
-     *         the number of LaTeX runs required
-     *         because bibtex, makeindex or makeglossaries had been run
-     *         or to update a table of contents or a list figures or tables.
-     *         <ul>
-     *         <li>
-     *         If neither of these are present, no rerun is required.
-     *         <li>
-     *         If a bibliography, an index and a glossary is included
-     *         and a table of contents,
-     *         we assume that these are in the table of contents.
-     *         Thus two reruns are required:
-     *         one to include the bibliography or that like
-     *         and the second one to make it appear in the table of contents.
-     *         <li>
-     *         In all other cases, a single rerun suffices
-     *         </ul>
+     *    the number of LaTeX runs required
+     *    because bibtex, makeindex or makeglossaries had been run
+     *    or to update a table of contents or a list figures or tables.
+     *    <ul>
+     *    <li>
+     *    If neither of these are present, no rerun is required.
+     *    <li>
+     *    If a bibliography, an index and a glossary is included
+     *    and a table of contents,
+     *    we assume that these are in the table of contents.
+     *    Thus two reruns are required:
+     *    one to include the bibliography or that like
+     *    and the second one to make it appear in the table of contents.
+     *    <li>
+     *    In all other cases, a single rerun suffices
+     *    </ul>
      * @throws BuildFailureException
-     *                               TEX01 if invocation one of the following
-     *                               commands fails: the
-     *                               <ul>
-     *                               <li>latex2pdf command from
-     *                               {@link Settings#getLatex2pdfCommand()}
-     *                               <li>BibTeX command from
-     *                               {@link Settings#getBibtexCommand()}
-     *                               <li>makeindex command from
-     *                               {@link Settings#getMakeIndexCommand()}
-     *                               <li>makeglossaries command
-     *                               from
-     *                               {@link Settings#getMakeGlossariesCommand()}
-     *                               </ul>
+     *    TEX01 if invocation one of the following commands fails: the
+     *    <ul>
+     *    <li>latex2pdf command from
+     *    {@link Settings#getLatex2pdfCommand()}
+     *    <li>BibTeX command from
+     *    {@link Settings#getBibtexCommand()}
+     *    <li>makeindex command from
+     *    {@link Settings#getMakeIndexCommand()}
+     *    <li>makeglossaries command
+     *    from {@link Settings#getMakeGlossariesCommand()}
+     *    </ul>
      * @see #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)
      * @see #processLatex2html(File)
      * @see #processLatex2odt(File)
@@ -721,16 +730,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>texFile</code>
-     *             to be processed.
+     *    the description of a latex main file <code>texFile</code>
+     *    to be processed.
      * @param dev
-     *             the device describing the output format which is either pdf or
-     *             dvi.
-     *             See {@link LatexDev#getLatexOutputFormat()}.
+     *    the device describing the output format 
+     *    which is either pdf or dvi.
+     *    See {@link LatexDev#getLatexOutputFormat()}.
      * @throws BuildFailureException
-     *                               TEX01 as for
-     *                               {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
-     *                               maybe caused by subsequent runs.
+     *    TEX01 as for
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
+     *    maybe caused by subsequent runs.
      * @see #processLatex2dvi(File)
      * @see #processLatex2txt(File)
      */
@@ -1025,12 +1034,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the tex file to be processed.
+     *    the tex file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 as for
-     *                               {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
-     *                               but also as for
-     *                               {@link #runLatex2html(LatexProcessor.LatexMainDesc)}.
+     *    TEX01 as for
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
+     *    but also as for
+     *    {@link #runLatex2html(LatexProcessor.LatexMainDesc)}.
      * @see #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)
      * @see #runLatex2html(LatexProcessor.LatexMainDesc)
      * @see Target#html
@@ -1066,12 +1075,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the tex file to be processed.
+     *    the tex file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 as for
-     *                               {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
-     *                               but also as for
-     *                               {@link #runLatex2odt(LatexProcessor.LatexMainDesc)}.
+     *    TEX01 as for
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
+     *    but also as for
+     *    {@link #runLatex2odt(LatexProcessor.LatexMainDesc)}.
      * @see #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)
      * @see #runLatex2odt(LatexProcessor.LatexMainDesc)
      * @see Target#odt
@@ -1107,13 +1116,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the latex main file to be processed.
+     *    the latex main file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 as for
-     *                               {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
-     *                               but also as for
-     *                               {@link #runLatex2odt(LatexProcessor.LatexMainDesc)}
-     *                               and for {@link #runOdt2doc(File)}.
+     *    TEX01 as for
+     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
+     *    but also as for
+     *    {@link #runLatex2odt(LatexProcessor.LatexMainDesc)}
+     *    and for {@link #runOdt2doc(File)}.
      * @see #preProcessLatex2dev(LatexMainDesc, LatexDev)
      * @see #runLatex2odt(LatexProcessor.LatexMainDesc)
      * @see #runOdt2doc(File)
@@ -1147,11 +1156,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the tex file to be processed.
+     *    the tex file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 if running the latex2rtf command
-     *                               returned by
-     *                               {@link Settings#getLatex2rtfCommand()} failed.
+     *    TEX01 if running the latex2rtf command
+     *    returned by
+     *    {@link Settings#getLatex2rtfCommand()} failed.
      * @see #runLatex2rtf(File)
      * @see Target#rtf
      */
@@ -1174,11 +1183,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the tex file to be processed.
+     *    the tex file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 as for
-     *                               {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)}
-     *                               and for {@link #runPdf2txt(File)}.
+     *    TEX01 as for
+     *    {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)}
+     *    and for {@link #runPdf2txt(File)}.
      * @see #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)
      * @see #runPdf2txt(File)
      * @see Target#txt
@@ -1212,25 +1221,21 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * WMI02: If the version of a converter is not as expected.
      *
      * @param includeVersionInfo
-     *                           whether to include plain version info; else
-     *                           warnings only.
+     *     whether to include plain version info; else warnings only.
      * @return
-     *         whether a warning has been issued.
+     *    whether a warning has been issued.
      * @throws BuildFailureException
-     *                               <ul>
-     *                               <li>TMI01: if the stream to either the manifest
-     *                               file
-     *                               or to a property file, either
-     *                               {@LINK #VERSION_PROPS_FILE}
-     *                               or
-     *                               {@link MetaInfo.GitProperties#GIT_PROPS_FILE}
-     *                               could not be created.</li>
-     *                               <li>TMI02: if the properties could not be read
-     *                               from one of the two property files mentioned
-     *                               above.</li>
-     *                               <li>TSS05: if converters are excluded in the
-     *                               pom which are not known.</li>
-     *                               </ul>
+     *    <ul>
+     *    <li>TMI01: if the stream to either the manifest file
+     *    or to a property file, either
+     *    {@LINK #VERSION_PROPS_FILE} or
+     *    {@link MetaInfo.GitProperties#GIT_PROPS_FILE}
+     *    could not be created.</li>
+     *    <li>TMI02: if the properties could not be read
+     *    from one of the two property files mentioned above.</li>
+     *    <li>TSS05: if converters are excluded in the
+     *    pom which are not known.</li>
+     *    </ul>
      */
     public boolean printMetaInfo(boolean includeVersionInfo)
             throws BuildFailureException {
@@ -1319,15 +1324,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *        the description of a latex main file <code>dviFile</code>
-     *        including the idx-file MakeIndex is to be run on.
+     *     the description of a latex main file <code>dviFile</code>
+     *     including the idx-file MakeIndex is to be run on.
      * @return
-     *         whether MakeIndex had been run.
-     *         Equivalently, whether LaTeX has to be rerun because of MakeIndex.
+     *     whether MakeIndex had been run.
+     *     Equivalently, whether LaTeX has to be rerun because of MakeIndex.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the makeindex command
-     *                               returned by
-     *                               {@link Settings#getMakeIndexCommand()} failed.
+     *      TEX01 if invocation of the makeindex command
+     *      returned by
+     *      {@link Settings#getMakeIndexCommand()} failed.
      */
     // FIXME: bad name since now there are reruns.
     // Suggestion: runMakeIndexInitByNeed
@@ -1451,12 +1456,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>texFile</code>
-     *             including the idx-file MakeIndex is to be run on.
+     *     the description of a latex main file <code>texFile</code>
+     *     including the idx-file MakeIndex is to be run on.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the MakeIndex command
-     *                               returned by
-     *                               {@link Settings#getMakeIndexCommand()} failed.
+     *     TEX01 if invocation of the MakeIndex command
+     *     returned by
+     *     {@link Settings#getMakeIndexCommand()} failed.
      */
     private void runMakeIndex(LatexMainDesc desc)
             throws BuildFailureException {
@@ -1488,17 +1493,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * and of the suffix <code>suffix</code>.
      *
      * @param filePrefix
-     *                   prefix of file name; in practice of index file without
-     *                   suffix
+     *     prefix of file name; in practice of index file without suffix
      * @param variant
-     *                   collection of strings; in practice set of identifiers of
-     *                   indices
+     *     collection of strings; in practice set of identifiers of indices
      * @param suffix
-     *                   the suffix of a file; in practice {@link #SUFFIX_IDX}.
+     *     the suffix of a file; in practice {@link #SUFFIX_IDX}.
      * @return
-     *         an array of file names of the form
-     *         <code>&lt;filePrefix&gt;&lt;ident&gt;&lt;suffix&gt;</code>,
-     *         where <code>ident</code> runs in <code>variant</code>.
+     *     an array of file names of the form
+     *     <code>&lt;filePrefix&gt;&lt;ident&gt;&lt;suffix&gt;</code>,
+     *     where <code>ident</code> runs in <code>variant</code>.
      */
     private File[] files(String filePrefix,
             Collection<String> variant,
@@ -1536,15 +1539,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *                     the description of a latex main file <code>texFile</code>
-     *                     including the idx-file SplitIndex is to be run on.
+     *     the description of a latex main file <code>texFile</code>
+     *     including the idx-file SplitIndex is to be run on.
      * @param explIdxIdent
-     *                     the set of identifiers of indices,
-     *                     whether explicitly given or not in the idx file.
+     *     the set of identifiers of indices,
+     *     whether explicitly given or not in the idx file.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the SplitIndex command
-     *                               returned by
-     *                               {@link Settings#getSplitIndexCommand()} failed.
+     *     TEX01 if invocation of the SplitIndex command returned by
+     *     {@link Settings#getSplitIndexCommand()} failed.
      */
     private void runSplitIndex(LatexMainDesc desc,
             Collection<String> explIdxIdent)
@@ -1642,18 +1644,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *         the description of a latex main file <code>texFile</code>
-     *         including the idx-file MakeGlossaries is to be run on.
+     *     the description of a latex main file <code>texFile</code>
+     *     including the idx-file MakeGlossaries is to be run on.
      * @return
-     *         whether MakeGlossaries had been run.
-     *         Equivalently,
-     *         whether LaTeX has to be rerun because of MakeGlossaries.
+     *     whether MakeGlossaries had been run.
+     *     Equivalently,
+     *     whether LaTeX has to be rerun because of MakeGlossaries.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the makeglossaries
-     *                               command
-     *                               returned by
-     *                               {@link Settings#getMakeGlossariesCommand()}
-     *                               failed.
+     *     TEX01 if invocation of the makeglossaries command
+     *     returned by
+     *     {@link Settings#getMakeGlossariesCommand()} failed.
      */
     private boolean runMakeGlossaryByNeed(LatexMainDesc desc)
             throws BuildFailureException {
@@ -1796,16 +1796,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>texFile</code>
-     *             to be processed.
+     *     the description of a latex main file <code>texFile</code>
+     *     to be processed.
      * @param dev
-     *             the device describing the output format which is either pdf or
-     *             dvi.
-     *             See {@link LatexDev#getLatexOutputFormat()}.
+     *     the device describing the output format 
+     *     which is either pdf or dvi.
+     *     See {@link LatexDev#getLatexOutputFormat()}.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the latex2pdf command
-     *                               returned by
-     *                               {@link Settings#getLatex2pdfCommand()} failed.
+     *     TEX01 if invocation of the latex2pdf command returned by
+     *     {@link Settings#getLatex2pdfCommand()} failed.
      */
     private void runLatex2dev(LatexMainDesc desc, LatexDev dev)
             throws BuildFailureException {
@@ -1855,12 +1854,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>dviFile</code>
-     *             including the dvi-file dvi2pdf is to be run on.
+     *     the description of a latex main file <code>dviFile</code>
+     *     including the dvi-file dvi2pdf is to be run on.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the dvi2pdf command
-     *                               returned by
-     *                               {@link Settings#getDvi2pdfCommand()} failed.
+     *     TEX01 if invocation of the dvi2pdf command returned by
+     *     {@link Settings#getDvi2pdfCommand()} failed.
      */
     // used in processLatex2pdf(File) and processLatex2txt(File) only
     private void runDvi2pdf(LatexMainDesc desc) throws BuildFailureException {
@@ -1901,12 +1899,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the description of a latex main file <code>texFile</code>
-     *             to be processed.
+     *     the description of a latex main file <code>texFile</code>
+     *     to be processed.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the tex4ht command
-     *                               returned by {@link Settings#getTex4htCommand()}
-     *                               failed.
+     *     TEX01 if invocation of the tex4ht command
+     *      returned by {@link Settings#getTex4htCommand()} failed.
      */
     private void runLatex2html(LatexMainDesc desc)
             throws BuildFailureException {
@@ -1956,11 +1953,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the latex file to be processed.
+     *     the latex file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the latex2rtf command
-     *                               returned by
-     *                               {@link Settings#getLatex2rtfCommand()} failed.
+     *     TEX01 if invocation of the latex2rtf command
+     *     returned by
+     *     {@link Settings#getLatex2rtfCommand()} failed.
      */
     private void runLatex2rtf(File texFile) throws BuildFailureException {
         String command = this.settings.getCommand(ConverterCategory.LaTeX2Rtf);
@@ -2010,11 +2007,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param desc
-     *             the descriptor of the latex main file to be processed.
+     *     the descriptor of the latex main file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the tex4ht command
-     *                               returned by {@link Settings#getTex4htCommand()}
-     *                               failed.
+     *     TEX01 if invocation of the tex4ht command
+     *     returned by {@link Settings#getTex4htCommand()} failed.
      */
     private void runLatex2odt(LatexMainDesc desc) throws BuildFailureException {
         File texFile = desc.texFile;
@@ -2065,9 +2061,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *     the description of a latex main file <code>texFile</code>
      *     to be processed.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the odt2doc command
-     *                               returned by
-     *                               {@link Settings#getOdt2docCommand()} failed.
+     *     TEX01 if invocation of the odt2doc command returned by
+     *     {@link Settings#getOdt2docCommand()} failed.
      */
     private void runOdt2doc(LatexMainDesc desc) throws BuildFailureException {
         File odtFile = desc.withSuffix(SUFFIX_ODT);
@@ -2114,9 +2109,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *     the description of a latex main file <code>texFile</code>
      *     to be processed.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the pdf2txt command
-     *                               returned by
-     *                               {@link Settings#getPdf2txtCommand()} failed.
+     *     TEX01 if invocation of the pdf2txt command returned by
+     *     {@link Settings#getPdf2txtCommand()} failed.
      */
     private void runPdf2txt(LatexMainDesc desc) throws BuildFailureException {
         File pdfFile = desc.withSuffix(SUFFIX_PDF);
@@ -2150,11 +2144,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * @param texFile
-     *                the latex main file to be checked for.
+     *     the latex main file to be checked for.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the check command
-     *                               returned by {@link Settings#getChkTexCommand()}
-     *                               failed.
+     *     TEX01 if invocation of the check command
+     *     returned by {@link Settings#getChkTexCommand()} failed.
      */
     private void runCheck(File texFile) throws BuildFailureException {
         //
@@ -2192,19 +2185,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * except the last three which represent <code>-o clgFile texFile</code>.
      *
      * @param options
-     *                the options string. The individual options
-     *                are expected to be separated by a single blank.
+     *     the options string. The individual options
+     *     are expected to be separated by a single blank.
      * @param texFile
-     *                the latex main file to be checked.
+     *     the latex main file to be checked.
      * @param clgFile
-     *                the log-file with the result of the check of
-     *                <code>texFile</code>.
+     *     the log-file with the result of the check of
+     *     <code>texFile</code>.
      * @return
-     *         An array of strings:
-     *         If <code>options</code> is not empty,
-     *         the first entries are the options in <code>options</code>.
-     *         The last three entries are
-     *         <code>-o</code>, <code>clgFile</code> and <code>texFile</code>.
+     *     An array of strings:
+     *     If <code>options</code> is not empty,
+     *     the first entries are the options in <code>options</code>.
+     *     The last three entries are
+     *     <code>-o</code>, <code>clgFile</code> and <code>texFile</code>.
      */
     protected static String[] buildChkTexArguments(String options,
             File texFile,
@@ -2239,15 +2232,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * 
      * 
      * @param pdfFileCmp
-     *                   the pdf file for comparison
+     *     the pdf file for comparison
      * @param pdfFileAct
-     *                   the pdf file actually created.
+     *     the pdf file actually created.
      * @return
-     *         whether <code>pdfFileAct</code> coincides with
-     *         <code>pdfFileCmp</code>.
+     *     whether <code>pdfFileAct</code> coincides with
+     *     <code>pdfFileCmp</code>.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of the check command
-     *                               failed.
+     *      TEX01 if invocation of the check command failed.
      */
     boolean runDiffPdf(File pdfFileCmp, File pdfFileAct) throws BuildFailureException {
         //
