@@ -720,26 +720,6 @@ public class MetaInfo {
 	} // class VersionInterval
 
 	/**
-	 * Executor to find the version string.  
-	 */
-	private final CommandExecutor executor;
-
-
-	/**
-	 * Logs information on versions. 
-	 * Typically, just info are logged, 
-	 * but if a version could not be read or if a version is not as expected, 
-	 * also a warning is logged. 
-	 */
-	private final LogWrapper log;
-
-	MetaInfo(Settings settings, CommandExecutor executor, LogWrapper log) {
-		this.settings = settings;
-		this.executor = executor;
-		this.log = log;
-	}
-    
-	/**
 	 * The name of the file containing the version properties.
 	 * For each {@link Converter}, the range of possible versions is given
 	 * in a separate line of the form <code>command=[a;b]</code>
@@ -756,8 +736,41 @@ public class MetaInfo {
 	 */
 	private final static String TOOL_VERSION_FORMAT = "%s%-18s %s '%s'%s%s";
 
+	/**
+	 * Only used to find the excluded converters. 
+	 */
 	private final Settings settings;
 
+	/**
+	 * Executor to find the version string.  
+	 */
+	private final CommandExecutor executor;
+
+	/**
+	 * Logs information on versions. 
+	 * Typically, just info are logged, 
+	 * but if a version could not be read or if a version is not as expected, 
+	 * also a warning is logged. 
+	 */
+	private final LogWrapper log;
+
+	/**
+	 * Creates meta info from the settings, using an executor to find out the version 
+	 * and a logger to log warnings and infos, e.g. if a version does not fit the expectations. 
+	 * 
+	 * @param settings
+	 *    The settings which determine the converters
+	 * @param executor
+	 *    the executor to execute the converters to find out their version. 
+	 * @param log
+	 *    the logger to log info on versions. 
+	 */
+	MetaInfo(Settings settings, CommandExecutor executor, LogWrapper log) {
+		this.settings = settings;
+		this.executor = executor;
+		this.log = log;
+	}
+    
 
 	// CAUTION, depends on the maven-jar-plugin and its version 
 	/**
