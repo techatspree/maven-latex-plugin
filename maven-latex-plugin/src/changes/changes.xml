@@ -284,10 +284,20 @@ also modification of working directory with \setpythontexworkingdir is not suppo
 		https://mirror.las.iastate.edu/tex-archive/support/latexmk/example_rcfiles/mpost_latexmkrc -->
 		<!-- bib2gls: bib file shall start with line % Encoding: UTF-8 -->
 
+		<!-- TBD: if an error occurred (not for warning), skip cleanup, 
+			not so easy: typically more than one  latex main file -->
+		<!-- TBDL in manual: hint to check the latex main files recognized. 
+			It could be that due to a mistake in the regular expression 
+			used to determine the latex main files, not all are created. 
+		-->
+		<!-- TBD: in tables for parameters and warnings and so 
+			frequently horizontal lines are missing. -->
 
 	  <release  version="1.6"
 		date="2022-01-01"
-		description="Main feature: minimum support for pythontex. Added support for unregistred converters">
+		description="Main feature: minimum support for pythontex. 
+		Added support for unregistred converters. 
+		Added inclusion/exclusion of latex main files.">
 			<action dev='reissner' type='add'>
 				added converter depythontex (pythontex was added already.)
 			</action>
@@ -308,7 +318,12 @@ also modification of working directory with \setpythontexworkingdir is not suppo
 				Added support for unregistered converters specifying theyr category for safety.
 				This is needed for the moment for (de-)pythontex.
 				Although removed in later releases is useful in its own right.
-			</action>		</release>
+			</action>
+			<action dev='reissner' type='add'>
+				Added parameters 'mainFilesIncluded' and 'mainFilesExcluded' 
+				and added according warnings WPP05, WPP06 and WPP07. 
+			</action>
+		</release>
 
     <release version="1.5"
 	     date="2022-05-03"
