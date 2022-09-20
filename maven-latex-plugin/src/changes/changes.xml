@@ -292,6 +292,50 @@ also modification of working directory with \setpythontexworkingdir is not suppo
 		-->
 		<!-- TBD: in tables for parameters and warnings and so 
 			frequently horizontal lines are missing. -->
+		<!-- terms.bib: 
+% Encoding: UTF-8
+
+For that file a feature request to the author: shall be mentioned. 
+
+ @entry{ME-SYSTEM,
+    name={ME-System},
+    plural={ME-Systeme},
+    description={\cite{EN60601-1D}
+    Kombination von einzelnen Geräten, wie vom \gls{HERSTELLER} festgelegt, von denen mindestens eines ein
+\gls{ME-GERAET} sein muss und die durch eine \gls{FUNKTIONSVERBINDUNG}
+oder durch den Gebrauch einer Mehrfachsteckdose zusammengeschlossen sind}
+}
+% eliminate following warning:
+% warning  (pdf backend): ignoring duplicate destination with the name 'page.1'
+
+@acronym{ecgA,
+    short={ECG},
+    long={Electrocardiogram}
+}
+-->
+
+<!-- pythontex: improve error messages: 
+$ pythontex mainsFilterAndNorms |& tee mainsFilterAndNorms.plg
+
+This is PythonTeX 0.17
+ Messages for py:default:default  
+  Traceback (most recent call last):
+* PythonTeX stderr - error on line 249:
+    File "<outputdir>\py_default_default.py", line 61, in <module>
+      samplingDescMs = SamplingDesc.fromFreqHz(sampleFreqHz, TimeUnit.msec)# ms required to reneder 0.1s=100ms% chktex 36
+  NameError: name 'SamplingDesc' is not defined
+PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
+		-->
+
+		<!-- pythontex: name of folder seemingly lowercase. python with errors: folder written wit 2 ifles no stout files. -->
+
+		<!-- besides traditional bibliography allow for biblatex. 
+			In this context in a second step 
+			also allow biber which is the default and is better than bibtex. 
+			For details see biber.md. 
+		-->
+
+		<!-- referring to support of biblatex: mention \printbibliography[heading=bibintoc]% -->
 
 	  <release  version="1.6"
 		date="2022-01-01"
