@@ -348,7 +348,23 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
 		Added support for unregistred converters. 
 		Added inclusion/exclusion of latex main files.">
 			<action dev='reissner' type='add'>
-			added BuildFailureException TLP02
+			added document recorder.tex and its artifact. 
+			</action>
+			<action dev='reissner' type='add'>
+				added documentation for pythontex and depythontex 
+				going beyond the manual but needed for implementation of this software. 
+				Added references to original software by Poore
+				</action>
+				<action dev='reissner' type='add'>
+				added BuildFailureException TLP02
+			</action>
+			<action dev='reissner' type='add'>
+				added latexmkrc to support document development better. 
+			</action>
+			<action dev='reissner' type='add'>
+				added invocation of pythontex (depythontex not yet) 
+				including documentation. 
+				This is the core functionality for this release. 
 			</action>
 			<action dev='reissner' type='add'>
 				added converter depythontex (pythontex was added already.)
@@ -364,7 +380,7 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
 				I want to create figures without memory restrictions, which is offered by lualatex.
 			</action>
 			<action dev='reissner' type='update'>
-				Updated version strings, also form e.g. inkscape, pdftotext, pdfinfo, exiftool, gnuplot.
+				Updated version patterns and strings, also form e.g. inkscape, pdftotext, pdfinfo, exiftool, gnuplot.
 			</action>
 			<action dev='reissner' type='add'>
 				Added support for unregistered converters specifying their category for safety.
