@@ -1,0 +1,122 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+\documentclass[a4paper]{article}
+\synctex=1
+\usepackage{iftex}
+
+\iftutex%
+\usepackage{fontspec}
+\else
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fi
+
+\usepackage{hyperref}
+%\pdfinfoomitdate1
+%\pdfsuppressptexinfo-1
+%\pdftrailerid{}
+\ifpdf%
+\ifLuaTeX%
+% for lualatex
+\pdfvariable minorversion=7% chktex 1
+% omit CreationDate and ModDate keys.
+\pdfvariable suppressoptionalinfo 767% chktex 1
+% no adding to the trailer dictionary.
+\pdfvariable trailerid{}% chktex 1
+\pdfvariable suppressoptionalinfo -1% chktex 1
+\else
+\ifXeTeX%
+% for xelatex
+\special{pdf:minorversion 7}
+% TBD: find a way to express pdfinfoomitdate: necessary? 
+\special{pdf:trailerid []}
+\else
+\ifPDFTeX%
+\pdfminorversion=7         % for pdflatex
+% omit CreationDate and ModDate keys.
+% not before pdfTeX 3.14159265-2.6-1.40.17
+\pdfinfoomitdate=1                   % for pdflatex
+% no adding to the trailer dictionary.
+%\pdftrailer=0                        % for pdflatex
+\pdftrailerid{}                       % for pdflatex
+\pdfsuppressptexinfo=-1               % for pdflatex
+\else
+% Here, the tex processor is unknown. 
+\fi%pdftex
+\fi%xetex
+\fi%luatex
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={The recorder option for latex processors},
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Producer    ={unknown},
+    Subject     ={dependency management in latex documents},
+    Keywords    ={LaTeX;latexmk}
+  }
+}
+\else
+\fi%ifpdf
+
+\title{The recorder option for latex processors}
+
+\author{Ernst Reißner}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+This document is about the \texttt{recorder} option available for all modern \LaTeX{} processors, 
+among those also \texttt{lualatex}. 
+If the \LaTeX{} processor is applied to a file \texttt{xxx.tex} with this option set, 
+it writes a file \texttt{xxx.fls} in the FLS format which is described here. 
+Essentially, it contains dependency information for that file 
+which can be used to decide on rebuilding the document. 
+This is mostly to spare processing time 
+while still ensuring that the created documents are up-to-date. 
+Among others, \texttt{latexmk} uses this information. 
+The problem here is, 
+that no official information on the FLS format seems available 
+and so there is no way but reverse engineering. 
+
+The risk to have an incomplete specification is always present, 
+also that the format is updated and the reverse engineered specification is rendered invalid. 
+Thus, software based on this specification must be failure tolerant. 
+The goal that the result is perfect if no warning is displayed 
+forces 
+
+
+\section{The FLS format}
+
+The FLS format seems to be line based and so is the description. 
+The format is described in terms of the possible form of lines. 
+
+In addition, the form of a line is quite restricted. 
+It is of the form \texttt{type file}, consisting of line type and a file path. 
+The available \texttt{type}s are 
+%
+\begin{description}
+  \item[PWD] The working folder. 
+  Seemingly this is the folder containing the latex file \texttt{xxx.tex} to be processed. 
+  This type of line occurs once and is the first line. 
+  \item[INPUT] All input files. Among those \texttt{xxx.tex}, \texttt{xxx.aux}, 
+  Possibly graphic files and files related with fonts. 
+  \item[OUTPUT] Almost all output files. 
+  Among those \texttt{xxx.log}, \texttt{xxx.tex}, \texttt{xxx.pdf}
+  but also very strange cache files. 
+  Note that \texttt{xxx.fls} itself and also the file \texttt{xxx.synctex.gz} are not mentioned. 
+  Maybe there are more files not mentioned. 
+\end{description}
+
+The line \texttt{PWD} is first and there is a single one specifying the working folder. 
+Paths are not restricted to the local folder but may point also into the latex installation. 
+Paths may be absolute and relative. 
+Relative paths seem to be relative to the working folder. 
+TBD: do research on paths with blanks. 
+
+Note that a file may occur as input and output like \texttt{xxx.aux}. 
+
+\end{document}
