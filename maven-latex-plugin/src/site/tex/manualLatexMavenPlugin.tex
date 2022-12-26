@@ -789,7 +789,7 @@ Id.        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:TFU} The BuildFailureExceptions of TexFileUtilsImpl  }
+\caption{\label{tab:TFU} The \texttt{BuildFailureExceptions} of \texttt{TexFileUtilsImpl}  }
 \endlastfoot%
 \texttt{\footnotesize TFU01} 
 & \texttt{\footnotesize Cannot create destination directory '\$targetDir'. }  \\
@@ -825,22 +825,31 @@ This is mainly because of writing permissions.
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:TLP} The BuildFailureExceptions of LatexProcessor  }
+  \caption{\label{tab:TLP} The \texttt{BuildFailureExceptions} of \texttt{LatexProcessor}  }
   \endlastfoot%
   \texttt{\footnotesize TLP01} 
-  & \texttt{\footnotesize Artifact '\$pdfFileAct' of '\$texFile' could not be reproduced. }  \\
+  & \texttt{\footnotesize Artifact '\$pdfFileAct' from '\$texFile' could not be reproduced. }  \\
   \multicolumn2{|l|}{
   \begin{minipage}{0.95\linewidth}
   Processing \$texFile' yields \$pdfFileAct which is not ``alike'' the stored version. 
   Currently, that kind of check can be performed for \texttt{pdf} files only. 
-  Also the diff check is executed only if parameter \$chkDiff is set. 
+  Also the diff check is executed only if parameter \$chkDiff described in Section~\ref{sec:paramRepro} is set. 
   Then the diff command \$diffPdfCommand is performed to determine whether the artifacts are equivalent
   in the sense given by the diff command. 
   The concrete meaning of that equivalence 
   may range from strict equivalence to some kind of visual equivalence. 
   \end{minipage}
+  } \\
+  \texttt{\footnotesize TLP02} 
+  & \texttt{\footnotesize  No file '\$pdfFileCmp' to compare with artifact from '\$texFile'. }  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The PDF file '\$pdfFileCmp' expected for comparison with the PDF file created from '\$texFile' does not exist. 
+  It is expected only if a diff check is configured according to \$chkDiff described in Section~\ref{sec:paramRepro} . 
+  Currently, that kind of check can be performed for \texttt{pdf} files only. 
+  \end{minipage}
   }
-  \end{longtable}
+\end{longtable}
   
   
 

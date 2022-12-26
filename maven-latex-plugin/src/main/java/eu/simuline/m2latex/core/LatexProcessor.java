@@ -336,8 +336,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
                     this.log.debug(String.format("act file %s", pdfFileAct));
                     File pdfFileCmp = TexFileUtils.getPdfFileDiff(pdfFileAct, artifactBaseDir, diffRootDir);
                     this.log.debug(String.format("cmp file %s", pdfFileCmp));
+                    if (!pdfFileCmp.exists()) {
+                        throw new BuildFailureException
+                        ("TLP02: No file '" + pdfFileCmp +
+                        "' to compare with artifact from'" + texFile + "'. ");
+                    }
                     assert pdfFileCmp.exists();
-                    assert pdfFileAct.exists();
+                    assert pdfFileAct.exists();// TBD: ensure that this file really exists. 
+                    // but this shall be clear also above before trying to copy to target folder 
                     boolean coincide = runDiffPdf(pdfFileCmp, pdfFileAct);
                     if (coincide) {
                         this.log.info("checked: coincides with expected artifact. ");
@@ -345,7 +351,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                     }
                     throw new BuildFailureException
                         ("TLP01: Artifact '" + pdfFileAct.getName() + 
-                        "' of '" + texFile + "' could not be reproduced. ");
+                        "' from '" + texFile + "' could not be reproduced. ");
 
                 } // target
             } // texFile

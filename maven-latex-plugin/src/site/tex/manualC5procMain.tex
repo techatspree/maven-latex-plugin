@@ -1004,9 +1004,9 @@ Listing~\ref{lst:designMeta} shows how to eliminate metadata
 and to replace with adequate one. 
 There is metadata which can be eliminated in a uniform way for all latex engines 
 using the package \texttt{hyperref} which the author generally advises. 
-Using\texttt{hyperref} with \texttt{\textbackslash hypersetup} 
+Using \texttt{hyperref} with \texttt{\textbackslash hypersetup} 
 one can set metadata such as author, title, subject and keyword 
-as described in~\ cite{HyperTextP}, Section 5.8. 
+as described in~\cite{HyperTextP}, Section 5.8. 
 On the other hand, 
 one could eliminate \texttt{CreationDate} and \texttt{ModDate}. 
 For newer versions of \texttt{pdflatex} this can be done alternatively 
@@ -1128,10 +1128,11 @@ First of all, note that currently such a check is performed
 only if the result is in pdf format. 
 Even then the check is performed only if configured so. 
 Then the actual artifacts are compared to predefined artifacts 
-using a diff-tool. 
+using the configured diff-tool. 
 If the actual artifacts do not coincide with predefined ones 
 according to the chosen diff tool, 
 a build exception is thrown as specified in Table~\ref{tab:TLP}. 
+The configurations related with diff check are collected in Section~\ref{sec:paramRepro}. 
 
 
 
