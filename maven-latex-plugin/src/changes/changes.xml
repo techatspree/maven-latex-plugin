@@ -245,6 +245,11 @@ also modification of working directory with \setpythontexworkingdir is not suppo
 	<!-- TBD: use std/err output to detect rerun information, not log files: 
 		this is much faster. -->
 
+		<!-- After build with recorder is supported: 
+		a tex file shall either be a main file or shall occur in a fls file. 
+	If neither is the case, then most probably, the according file is a main file and is not recognized. 
+	In this case, a warning shall be issued. 
+Maybe it is a good idea to allow an exclusion list, or maybe it suffices to rename that file xx.tex->xx.tex.deact -->
 	<!-- TBD: rerunfilecheck and out files created by hyperref -->
 	<!-- TBD: fix [WARNING] WPP03: Skipped processing of files with suffixes [, .latexmkrc, .log]. -->
 	<!-- TBD: consider https://tex.stackexchange.com/questions/7770/file-extensions-related-to-latex-etc -->
@@ -343,6 +348,9 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
 		Added support for unregistred converters. 
 		Added inclusion/exclusion of latex main files.">
 			<action dev='reissner' type='add'>
+			added BuildFailureException TLP02
+			</action>
+			<action dev='reissner' type='add'>
 				added converter depythontex (pythontex was added already.)
 			</action>
 			<action dev='reissner' type='fix'>
@@ -356,10 +364,10 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
 				I want to create figures without memory restrictions, which is offered by lualatex.
 			</action>
 			<action dev='reissner' type='update'>
-				Updated version strings, also form e.g. inkscape.
+				Updated version strings, also form e.g. inkscape, pdftotext, pdfinfo, exiftool, gnuplot.
 			</action>
 			<action dev='reissner' type='add'>
-				Added support for unregistered converters specifying theyr category for safety.
+				Added support for unregistered converters specifying their category for safety.
 				This is needed for the moment for (de-)pythontex.
 				Although removed in later releases is useful in its own right.
 			</action>
@@ -438,8 +446,14 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
          added exception TSS04 checking validity of targets.
        </action>
 
-       
-
+      <!-- somehwere in the intro of tikz manual, it is said that metafont is now part of luatex. 
+				This may mean that no two compilation steps are required. 
+				Please check -->
+			 <!-- this package shall provide a default .latexmkrc file 
+			and also a default input file loading all required packages. 
+			Both shall be appropriate for the default config, i.e. using lualatex, biber... 
+			but also for all relevant documentclasses
+		See the twoPager in L2R for class leaflet: package geometry shall not be loaded. -->
        <!-- in manual fix underfull boxes and pdf version -->
        <!-- change name of plugin: latex-maven-plugin
 	    This is not completed. Shall be set up both in folder structure 
