@@ -403,9 +403,11 @@ Note that there seems no official file extension
 to identify gnuplot files. 
 From the most common extensions \texttt{.plt}, \texttt{.gpi} and \texttt{.gp} 
 we have chosen the one with the least collision 
-and supported by Emacs and by my file browser: \texttt{.gp}. 
+and supported by Emacs, vscode and by my file browser: \texttt{.gp}. 
 % FIXME\@: should be configurable.
 % FIXME\@: look at https://www.file-extensions.org/
+% FIXME\@: have a look in general on extensions for vscode 
+% and include them into this manual 
 
 The gnuplot format is a textual command language you can even program with 
 and may thus be created with any editor but
@@ -480,7 +482,7 @@ Unlike for fig-files,
 %
 \begin{verbatim}
 gnuplot -e "set terminal cairolatex pdf <gnuplotOptions>;
-            set output 'xxx';
+            set output 'xxx.ptx';
             load 'xxx.gp'"
 \end{verbatim}
 
@@ -489,12 +491,14 @@ Accordingly,
 %
 \begin{verbatim}
 gnuplot -e "set terminal cairolatex eps <gnuplotOptions>;
-            set output 'xxx';
+            set output 'xxx.ptx';
             load 'xxx.gp'"
 \end{verbatim}
 %
-Note that this writes another but identical file \texttt{xxx.ptx}. 
-Thus performance is not optimal, 
+Note that this writes another but identical file \texttt{xxx.ptx} 
+as no file endings are written 
+and so \texttt{xxx.ptx} can include both, \texttt{pdf} and \texttt{eps}. 
+When creating both performance is not optimal, 
 but \texttt{gnuplot} offers no way to avoid this. 
 If being strict, 
 \texttt{xxx.ptx} is perfectly correct only for output \texttt{eps},
