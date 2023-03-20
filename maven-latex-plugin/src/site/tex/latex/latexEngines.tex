@@ -330,15 +330,205 @@ option & explanation \\
 \end{longtable}
 }
 
-\section{To be clarified}
+\section{The options for miktex}
 
-Seemingly, \texttt{-shell-escape} in texlive corresponds with \texttt{-enable-write18} in miktex. 
-It must be clarified whether there are more deviations. 
-What has to be done is to add also the miktex specific switches. 
-Normally unknown switches are ignored, well but with warning. 
-A good solution is not present. 
+Well this section is preliminary only. 
+It turned out that Section{ref:options} is valid only for distribution texlive. 
+So in this section we venture to find out the options for the other big distribution, 
+miktex. 
+We shall also investigate whether there are further distributions. 
 
-Also, \xelatex{} works as the other engines for PDF, 
+Whereas the description~\cite{Texlive} seems not to mention the options explicitly, 
+the MiKTeX manual~\cite{MiKTeX} describes each program in section II, 6, 
+in particular also the tex converters. 
+This is the source of the following tables. 
+
+
+The first thing observed is that, for miktex all options start with two dashes, 
+whereas for texlive this is the case only for luatex. 
+One has to clarify, whether the maven latex plugin under consideration really works for miktex. 
+
+\begin{longtable}{|lll|}
+  \toprule
+  option & excluded & explanation \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:latexOptionsCommonMiktex} Common options, with up to one exception }
+  \endlastfoot%
+  \texttt{-{}-alias=name}            & ---         & Pretend to be program name, \dots\footnote%
+{Using this option is equivalent to copying the program file to name and invoking name.} \\
+\texttt{-{}-aux-directory=dir}       & ---         & 
+Set \texttt{dir} as the directory to write auxiliary files to. \\
+\texttt{-{}-buf-size=n}              & \lualatex{} & Set the the maximum number of characters \dots \\
+\texttt{-{}-c-style-errors}          & ---         & Change the way, error messages are printed. \\
+\texttt{-{}-disable-8bit-chars}      & \lualatex{} & Make only 7-bit characters printable. \\
+\texttt{-{}-disable/enable-installer} & ---         & Disable/Enable automatic installation of packages. \\
+\texttt{-{}-disable-write18}         & ---         & Disable the \texttt{\textbackslash{}write18\{command\}} construct.\\
+\texttt{-{}-enable-write18}          & ---         & Fully enable the \texttt{\textbackslash{}write18\{command\}} construct. \footnote%
+{Corresponds roughly to \texttt{(-)-shell-escape} in texlive. } \\
+\texttt{-{}-restrict-write18}        & ---         & Partially enable the \texttt{textbackslash{}write18{command}} construct. \\
+%\texttt{-{}-parse-first-line}   & \lualatex{} & Disable checking \dots the first line \dots \\
+\texttt{-{}-[dont-]parse-first-line}        & \lualatex{} & [Dont p|P]arse first line of input file under definite conditions\footnote%
+{Similar for texlive. Note that there is also a converse option. } \\
+\texttt{-{}-draftmode}               & \xelatex{}  & switch on draft mode (generates no output PDF)\footnote%
+{Some differences in formulation between the converter and also between distributions} \\
+\texttt{-{}-enable-8bit-chars}       & \lualatex{} & Make all characters printable. \\
+\texttt{-{}-enable-etex}             & \lualatex{} & Enable eTeX extensions. \\
+%\texttt{-{}-enable-installer}        & ---         & Enable automatic installation of packages. \\
+\texttt{-{}-enable-mltex}            & \lualatex{} & Enable MLTeX extensions such as \texttt{\textbackslash{}charsubdef}. \\
+\texttt{-{}-error-line=n}            & \lualatex{} & Set the width of context lines on \dots error messages. \\
+\texttt{-{}-extra-mem-bot=n}         & \lualatex{} & Set the extra size \dots{} for large data structures \dots \\
+\texttt{-{}-extra-mem-top=n}         & \lualatex{} & Set the extra size (in memory words) for chars, tokens, \dots. \\
+\texttt{-{}-font-max=n}              & \lualatex{} & Set the maximum internal font number. \\
+\texttt{-{}-font-mem-size=n}         & \lualatex{} & Set the size, in TeX memory words, of the font memory. \\
+\texttt{-{}-half-error-line=n}       & \lualatex{} & Set the width of first lines of contexts in terminal error messages. \\
+\texttt{-{}-halt-on-error}           & ---         & Quit after the first error. \\
+\texttt{-{}-hash-extra=n}            & \lualatex{} & Set the extra space for the hash table of control sequences \dots \\
+\texttt{-{}-help}                    & ---         & Give help and exitt\footnote%
+{The same as for texlive. }.. \\
+\texttt{-{}-hhelp}                   & \lualatex{} & manual page in an HTML Help window\footnote%
+{This option is only available on Windows systems.} \\
+\texttt{-{}-include-directory=dir}   & ---         & Add the directory \texttt{dir} to [those] to be searched for input files. \\
+\texttt{-{}-initialize}              & ---         & Become the INI variant of the program. \\
+\texttt{-{}-interaction=mode}        & ---         & Set the interaction mode. \\
+&& (\texttt{STRING=batchmode/nonstopmode/scrollmode/errorstopmode}) \\
+\texttt{-{}-job-name=name}           & ---         & Set the name of the job (\texttt{\textbackslash{}jobname}). \\
+\texttt{-{}-job-time=file}           & \lualatex{} & Set the time-stamp of all output files equal to file's time-stamp. \\
+\texttt{-{}-main-memory=n}           & \lualatex{} & Change the total size \dots{} of the main memory array. \\
+\texttt{-{}-max-in-open=n}           & \lualatex{} & Set the maximum number of input files \dots \\
+\texttt{-{}-max-print-line=n}        & \lualatex{} & Set the width of longest text lines output. \\
+\texttt{-{}-max-strings=n}           & \lualatex{} & Set the maximum number of strings. \\
+\texttt{-{}-nest-size=n}             & \lualatex{} & Set the maximum number of semantic levels simultaneously active. \\
+\texttt{-{}-no-c-style-errors}       & ---         & Don't change the way, error messages are printed. \\
+\texttt{-{}-output-directory=dir}    & ---         & Write output files in \texttt{dir}\footnote%
+{Similar as for texlive. }. \\
+\texttt{-{}-output-format=format}    & \xelatex{}  & Use format for job output (one of: dvi, pdf)\footnote%
+{\pdflatex{} and \lualatex{} differ a bit in text. Seems similar to texlive. }. \\
+\texttt{-{}-param-size=n}            & \lualatex{} & Set the the maximum number of simultaneous macro parameters. \\
+\texttt{-{}-pool-free=n}             & \lualatex{} & Set the minimum pool space left after loading the format. \\
+\texttt{-{}-pool-size=n}             & \lualatex{} & Set the maximum number of characters in strings, \dots \\
+\texttt{-{}-quiet}                   & \lualatex{} & Suppress all output, except errors. \\
+\texttt{-{}-record-package-usages=file} & \lualatex{} & Record all package usages and write them into \texttt{file}. \\
+\texttt{-{}-recorder}                & ---         & Enable the file name recorder\footnote%
+{The same as in texlive. }. \\
+\texttt{-{}-save-size=n}             & \lualatex{} & Set the the amount of space for saving values outside of current group. \\
+\texttt{-{}-src-specials}            & \lualatex{} & Embed source file information (source specials) in the DVI file\footnote%
+{Similar as in texlive. }. \\
+\texttt{-{}-stack-size=n}            & \lualatex{} & Set the maximum number of simultaneous input sources. \\
+\texttt{-{}-string-vacancies=n}      & \lualatex{} & Set the minimum number of characters \dots \\
+\texttt{-{}-synctex=n}               & ---         & Generate SyncTeX data for previewers\footnote%
+{Explanation with more detail than for texlive. } \\
+\texttt{-{}-time-statistics}         & \lualatex{} & Show processing time statistics. \\
+\texttt{-{}-trace[=tracestreams]}    & \lualatex{} & Enable trace messages. \\
+\texttt{-{}-trie-size=n}             & \lualatex{} & Set the amount of space for hyphenation patterns. \\
+\texttt{-{}-undump=name}             & ---         & Use name as the name of the format to be used, \dots \\
+\texttt{-{}-version}                 & ---         & Show version information and exit\footnote%
+{The same as for texlive. }. \\
+\end{longtable}
+
+Strange, there are \texttt{-{}-enable-etex} and \texttt{-{}-enable-mltex} 
+but no way to disable. 
+Maybe disable is the default. 
+
+\begin{verbatim}
+  miktex-pdftex [option...] [[file] | [\command...]]
+\end{verbatim}
+
+\begin{longtable}{|ll|}
+  \toprule
+  option & explanation \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:latexOptionsPdflatexMiktex} Options specific to \pdflatex{} }
+  \endlastfoot%
+  \texttt{--enable-enctex} & Enable encTeX extensions such as \texttt{\textbackslash{}mubyte}\footnote%
+  {Corresponds with \texttt{-enc} in texlive. }. \\
+  texttt{--tcx=tcxname}    & Use the tcxname translation table \dots \\
+  \end{longtable}
+
+
+
+
+\begin{verbatim}
+  miktex-luatex [option...] [[command...] | [file]]
+
+The following options are ignored:
+
+--8bit, --etex, --parse-first-line, --no-parse-first-line
+These are always on.
+
+--default-translate-file=tcxname, --translate-file=tcxname
+These are always off.
+\end{verbatim}
+
+\begin{longtable}{|ll|}
+  \toprule
+  option & explanation \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:latexOptionsLualatexMiktex} Options specific to \lualatex{} }
+  \endlastfoot%
+  \texttt{-{}-credits}                    & Display credits and exit. \footnote%
+  {The same as for texlive. }. \\
+  \texttt{-{}-debug-format}               & Enable format debugging\footnote%
+  {The same as for texlive. }. \\
+  % \texttt{-{}-[no-]file-line-error-style} & aliases of --[no-]file-line-error \\
+  \texttt{-{}-lua=FILE}                   & load and execute a lua initialization script\footnote%
+  {The same as for texlive. }.   \\
+  \texttt{-{}-nosocket}                   & Disable the Lua socket library. \\
+  \texttt{-{}-safer}                      & Disable easily exploitable Lua commands\footnote%
+  {The same as for texlive. }.   \\
+  \texttt{--utc}                          & Init time to UTC\footnote%
+  {The same as for texlive. }.  \\
+  \midrule
+  \texttt{-{}-[no-]mktex=fmt} & Enable/Disable \texttt{fmt} generation, where \texttt{fmt} must be either \texttt{tex} or \texttt{tfm}. \\
+  \texttt{-{}-output-comment=string} & Use \texttt{string} for DVI file comment instead of date. \\
+  \midrule
+  \texttt{--luaonly}                      & Start LuaTeX as a Lua interpreter\footnote%
+  {Could be the same as for texlive. }.  \\
+  \texttt{--luaconly}                     & byte-compile a lua file, then exit\footnote%
+  {Could be the same as for texlive. }. \\
+  % \texttt{--luahashchars}                 & the bits used by current Lua interpreter for strings hashing \\
+  \end{longtable}
+
+
+  
+  
+  
+
+\begin{verbatim}
+  miktex-xetex [option...] [[file] | [\command...]]
+\end{verbatim}
+
+
+
+\begin{longtable}{|ll|}
+  \toprule
+  option & explanation \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:latexOptionsXelatexMiktex} Options specific to \xelatex{} }
+  \endlastfoot%
+  % \texttt{-etex}                   & enable e-TeX extensions \\
+  \texttt{-output-driver=CMD}      & use CMD as the XDV-to-PDF driver instead of xdvipdfmx \\
+  \texttt{-no-pdf}                 & generate XDV (extended DVI) output rather than PDF \\
+  \texttt{-papersize=STRING}       & set PDF media size to STRING \\
+  \end{longtable}
+
+  Same options as for texlive, except \texttt{-etex} which is specific to texlive. 
+
+
+\section{To be clarified}\label{sec:TBC}
+
+Note that \xelatex{} works as the other engines for PDF, 
 whereas it has XDV instead of DVI as alternative format. 
 Thus the format DVI is ignored. 
 See the manual. 
