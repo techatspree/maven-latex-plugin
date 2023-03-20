@@ -76,7 +76,7 @@
 \hypersetup{
   pdfinfo={
     Author      ={Ernst Reissner},
-    Title       ={Files, errors and warnings of pythontex },
+    Title       ={Special and common aspects of pdf generators },
     CreationDate={unknown},
     ModDate     ={unknown},
     Producer    ={unknown},
@@ -211,7 +211,7 @@ option & excluded & explanation \\
 \texttt{(-)-output-directory=DIR}  & ---         & use existing DIR as the directory to write files in \\
 \texttt{(-)-output-format=FORMAT}     & \xelatex{}  & use FORMAT for job output; FORMAT is `dvi' or `pdf'\footnote%
 {\xelatex{} offers option \texttt{-no-pdf} instead. } \\
-\texttt{[-no]-parse-first-line}  & \lualatex{} & disable/enable parsing of first line of input file \\
+\texttt{[-no]-parse-first-line}    & \lualatex{} & disable/enable parsing of first line of input file \\
 \texttt{(-)-progname=STRING}       & ---         & set program (and fmt) name to STRING\footnote%
 {\lualatex{} does not mention \texttt{(and fmt)}} \\
 \texttt{(-)-recorder}              & ---         & enable filename recorder \\
@@ -278,7 +278,7 @@ Usage: pdftex [OPTION]... [TEXNAME[.tex]] [COMMANDS]
   \bottomrule
   \caption{\label{tab:latexOptionsPdflatex} Options specific to \pdflatex{} }
   \endlastfoot%
-  \texttt{-enc}                    & nable encTeX extensions such as \texttt{\textbackslash{}mubyte} \\
+  \texttt{-enc}                    & Enable encTeX extensions such as \texttt{\textbackslash{}mubyte} \\
   \texttt{-etex}                   & enable e-TeX extensions \\
   \texttt{-ipc}                    & send DVI output to a socket as well as the usual output file \\
   \texttt{-ipc-start}              & as \texttt{-ipc}, and also start the server at the other end \\
@@ -298,13 +298,13 @@ option & explanation \\
 \bottomrule
 \caption{\label{tab:latexOptionsLualatex} Options specific to \lualatex{} }
 \endlastfoot%
-\texttt{-{}-credits}                    & display credits and exit \\
+\texttt{-{}-credits}                    & Display credits and exit. \\
 \texttt{-{}-debug-format}               & enable format debugging \\
-\texttt{-{}-[no-]file-line-error-style} & aliases of --[no-]file-line-error \\
-\texttt{-{}-lua=FILE}                   & load and execute a lua initialization script \\
-\texttt{-{}-nosocket}                   & disable the lua socket library \\
-\texttt{-{}-safer}                      & disable easily exploitable lua commands \\
-\texttt{--utc}                          & init time to UTC \\
+\texttt{-{}-[no-]file-line-error-style} & aliases of \texttt{-{}-[no-]file-line-error} \\
+\texttt{-{}-lua=FILE}                   & Load and execute a lua initialization script. \\
+\texttt{-{}-nosocket}                   & Disable the Lua socket library. \\
+\texttt{-{}-safer}                      & Disable easily exploitable Lua commands. \\
+\texttt{--utc}                          & Init time to UTC \\
 \midrule
 \texttt{--luaonly}                      & run a lua file, then exit \\
 \texttt{--luaconly}                     & byte-compile a lua file, then exit \\
