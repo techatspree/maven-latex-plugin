@@ -114,6 +114,9 @@
 \newcommand{\xelatex}{\texttt{xelatex}}
 
 
+\newcommand{\texlive}{\TeX~Live}
+\newcommand{\miktex}{MiKTeX}
+
 \begin{document}
 
 \maketitle
@@ -138,14 +141,31 @@ This document is about features the three generators on latex,
 \pdflatex, \lualatex{} and \xelatex{} have in common 
 and discusses also aspects under which they are specific. 
 These programs are just underlying tex engines preloading the the \LaTeX{} format. 
-The names of the underlying engines just drop the inner sylable "`la"' 
-For PdfTeX there is a user manual~\cite{PdfTexUsr}, 
-for LuaTeX there is a reference manual~\cite{LuaTexRef} and 
-for XeTeX a reference guide~\cite{XeTexRef}. 
-Note that in fact we use a variant of luatex, called LuaHBTeX. 
+The names of the underlying engines just drop the inner sylable "`\texttt{la}"'. 
+For \texttt{pdftex} there is a user manual~\cite{PdfTexUsr}, 
+for \texttt{luatex} there is a reference manual~\cite{LuaTexRef} and 
+for \texttt{xetex} a reference guide~\cite{XeTexRef}. 
+
+The first aspect we cover are the options (among those to display the version). 
+It turns out, that the options are specific for the distribution. 
+Besides \texlive{} there is a second important distribution, \miktex, 
+which should also be treated. 
+
+
+
+
+
+We treat the options for \texlive{} in Section~\ref{sec:optionsTexlive} 
+and for \miktex{} in Section~\ref{sec:optionsMiktex}. 
+
+\section{The options for \texlive}\label{sec:optionsTexlive}
+
+
+Note that in fact we use a variant of \texttt{luatex}, called \texttt{luahbtex}. 
 
 This document is valid for versions of the underlying tex engine 
 as given in Table~ref{tab:versions}. 
+Moreover, our research refers to a specific distribution, \texlive. 
 
 
 \begin{longtable}{|ll|}
@@ -162,12 +182,9 @@ as given in Table~ref{tab:versions}.
   \lualatex{}  & LuaHBTeX, Version 1.15.0 \\
 \end{longtable}
 
-The first aspect we cover are the options (among those to display the version). 
-
-\section{The options}\label{sec:options}
 
 We start with a synopsis of the options. 
-Table~\ref{tab:latexOptionsCommon} shows options common to all, 
+Table~\ref{tab:latexOptionsCommonTexlive} shows options common to all, 
 or all but one of the converters under consideration. 
 Note that in contrast to the other converters, 
 \lualatex{} defines options starting with \texttt{-{}-} 
@@ -183,7 +200,7 @@ option & excluded & explanation \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:latexOptionsCommon} Common options, with up to one exception }
+\caption{\label{tab:latexOptionsCommonTexlive} Common options, with up to one exception }
 \endlastfoot%
 \texttt{(-)-cnf-line=STRING}       & ---         & parse STRING as a configuration file line \\
 \texttt{(-)-draftmode}             & \xelatex{}  & switch on draft mode (generates no output PDF) \\
@@ -233,14 +250,14 @@ option & excluded & explanation \\
 
 
 To ensure that a configuration works for all of these converters, 
-the options must be restricted to those listed in Table~~\ref{tab:latexOptionsCommon} 
+the options must be restricted to those listed in Table~~\ref{tab:latexOptionsCommonTexlive} 
 and not assigned a restriction. 
 
 If one really needs functionality special for a certain converter, 
 one has further options at disposal. 
-Table~\ref{tab:latexOptionsPdflatex} presents options specific to \pdflatex{}, 
-Table~\ref{tab:latexOptionsLualatex} Options specific to \lualatex{} and 
-Table~\ref{tab:latexOptionsXelatex} Options specific to \xelatex. 
+Table~\ref{tab:latexOptionsPdflatexTexlive} presents options specific to \pdflatex{}, 
+Table~\ref{tab:latexOptionsLualatexTexlive} Options specific to \lualatex{} and 
+Table~\ref{tab:latexOptionsXelatexTexlive} Options specific to \xelatex. 
 
 
 
@@ -276,7 +293,7 @@ Usage: pdftex [OPTION]... [TEXNAME[.tex]] [COMMANDS]
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:latexOptionsPdflatex} Options specific to \pdflatex{} }
+  \caption{\label{tab:latexOptionsPdflatexTexlive} Options specific to \pdflatex{} }
   \endlastfoot%
   \texttt{-enc}                    & Enable encTeX extensions such as \texttt{\textbackslash{}mubyte} \\
   \texttt{-etex}                   & enable e-TeX extensions \\
@@ -296,7 +313,7 @@ option & explanation \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:latexOptionsLualatex} Options specific to \lualatex{} }
+\caption{\label{tab:latexOptionsLualatexTexlive} Options specific to \lualatex{} }
 \endlastfoot%
 \texttt{-{}-credits}                    & Display credits and exit. \\
 \texttt{-{}-debug-format}               & enable format debugging \\
@@ -321,7 +338,7 @@ option & explanation \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:latexOptionsXelatex} Options specific to \xelatex{} }
+\caption{\label{tab:latexOptionsXelatexTexlive} Options specific to \xelatex{} }
 \endlastfoot%
 \texttt{-etex}                   & enable e-TeX extensions \\
 \texttt{-output-driver=CMD}      & use CMD as the XDV-to-PDF driver instead of xdvipdfmx \\
@@ -330,23 +347,28 @@ option & explanation \\
 \end{longtable}
 }
 
-\section{The options for miktex}
+\section{The options for \miktex}\label{sec:optionsMiktex}
+
+Since at the time of this writing, the author has no \miktex{} at hand, 
+the results for \miktex{} are based on documentation, rather than experimentation. 
+The three engines are a bit different, also in their names. 
+
 
 Well this section is preliminary only. 
-It turned out that Section{ref:options} is valid only for distribution texlive. 
+It turned out that Section{ref:options} is valid only for distribution \texlive. 
 So in this section we venture to find out the options for the other big distribution, 
-miktex. 
+\miktex. 
 We shall also investigate whether there are further distributions. 
 
 Whereas the description~\cite{Texlive} seems not to mention the options explicitly, 
-the MiKTeX manual~\cite{MiKTeX} describes each program in section II, 6, 
+the \miktex{} manual~\cite{MiKTeX} describes each program in section II, 6, 
 in particular also the tex converters. 
 This is the source of the following tables. 
 
 
-The first thing observed is that, for miktex all options start with two dashes, 
-whereas for texlive this is the case only for luatex. 
-One has to clarify, whether the maven latex plugin under consideration really works for miktex. 
+The first thing observed is that, for \miktex{} all options start with two dashes, 
+whereas for \texlive{} this is the case only for luatex. 
+One has to clarify, whether the maven latex plugin under consideration really works for \miktex. 
 
 \begin{longtable}{|lll|}
   \toprule
@@ -367,11 +389,11 @@ Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-disable/enable-installer} & ---         & Disable/Enable automatic installation of packages. \\
 \texttt{-{}-disable-write18}         & ---         & Disable the \texttt{\textbackslash{}write18\{command\}} construct.\\
 \texttt{-{}-enable-write18}          & ---         & Fully enable the \texttt{\textbackslash{}write18\{command\}} construct. \footnote%
-{Corresponds roughly to \texttt{(-)-shell-escape} in texlive. } \\
+{Corresponds roughly to \texttt{(-)-shell-escape} in \texlive. } \\
 \texttt{-{}-restrict-write18}        & ---         & Partially enable the \texttt{textbackslash{}write18{command}} construct. \\
 %\texttt{-{}-parse-first-line}   & \lualatex{} & Disable checking \dots the first line \dots \\
 \texttt{-{}-[dont-]parse-first-line}        & \lualatex{} & [Dont p|P]arse first line of input file under definite conditions\footnote%
-{Similar for texlive. Note that there is also a converse option. } \\
+{Similar for \texlive. Note that there is also a converse option. } \\
 \texttt{-{}-draftmode}               & \xelatex{}  & switch on draft mode (generates no output PDF)\footnote%
 {Some differences in formulation between the converter and also between distributions} \\
 \texttt{-{}-enable-8bit-chars}       & \lualatex{} & Make all characters printable. \\
@@ -387,7 +409,7 @@ Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-halt-on-error}           & ---         & Quit after the first error. \\
 \texttt{-{}-hash-extra=n}            & \lualatex{} & Set the extra space for the hash table of control sequences \dots \\
 \texttt{-{}-help}                    & ---         & Give help and exitt\footnote%
-{The same as for texlive. }.. \\
+{The same as for \texlive. }.. \\
 \texttt{-{}-hhelp}                   & \lualatex{} & manual page in an HTML Help window\footnote%
 {This option is only available on Windows systems.} \\
 \texttt{-{}-include-directory=dir}   & ---         & Add the directory \texttt{dir} to [those] to be searched for input files. \\
@@ -403,29 +425,29 @@ Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-nest-size=n}             & \lualatex{} & Set the maximum number of semantic levels simultaneously active. \\
 \texttt{-{}-no-c-style-errors}       & ---         & Don't change the way, error messages are printed. \\
 \texttt{-{}-output-directory=dir}    & ---         & Write output files in \texttt{dir}\footnote%
-{Similar as for texlive. }. \\
+{Similar as for \texlive. }. \\
 \texttt{-{}-output-format=format}    & \xelatex{}  & Use format for job output (one of: dvi, pdf)\footnote%
-{\pdflatex{} and \lualatex{} differ a bit in text. Seems similar to texlive. }. \\
+{\pdflatex{} and \lualatex{} differ a bit in text. Seems similar to \texlive. }. \\
 \texttt{-{}-param-size=n}            & \lualatex{} & Set the the maximum number of simultaneous macro parameters. \\
 \texttt{-{}-pool-free=n}             & \lualatex{} & Set the minimum pool space left after loading the format. \\
 \texttt{-{}-pool-size=n}             & \lualatex{} & Set the maximum number of characters in strings, \dots \\
 \texttt{-{}-quiet}                   & \lualatex{} & Suppress all output, except errors. \\
 \texttt{-{}-record-package-usages=file} & \lualatex{} & Record all package usages and write them into \texttt{file}. \\
 \texttt{-{}-recorder}                & ---         & Enable the file name recorder\footnote%
-{The same as in texlive. }. \\
+{The same as in \texlive. }. \\
 \texttt{-{}-save-size=n}             & \lualatex{} & Set the the amount of space for saving values outside of current group. \\
 \texttt{-{}-src-specials}            & \lualatex{} & Embed source file information (source specials) in the DVI file\footnote%
-{Similar as in texlive. }. \\
+{Similar as in \texlive. }. \\
 \texttt{-{}-stack-size=n}            & \lualatex{} & Set the maximum number of simultaneous input sources. \\
 \texttt{-{}-string-vacancies=n}      & \lualatex{} & Set the minimum number of characters \dots \\
 \texttt{-{}-synctex=n}               & ---         & Generate SyncTeX data for previewers\footnote%
-{Explanation with more detail than for texlive. } \\
+{Explanation with more detail than for \texlive. } \\
 \texttt{-{}-time-statistics}         & \lualatex{} & Show processing time statistics. \\
 \texttt{-{}-trace[=tracestreams]}    & \lualatex{} & Enable trace messages. \\
 \texttt{-{}-trie-size=n}             & \lualatex{} & Set the amount of space for hyphenation patterns. \\
 \texttt{-{}-undump=name}             & ---         & Use name as the name of the format to be used, \dots \\
 \texttt{-{}-version}                 & ---         & Show version information and exit\footnote%
-{The same as for texlive. }. \\
+{The same as for \texlive. }. \\
 \end{longtable}
 
 Strange, there are \texttt{-{}-enable-etex} and \texttt{-{}-enable-mltex} 
@@ -446,7 +468,7 @@ Maybe disable is the default.
   \caption{\label{tab:latexOptionsPdflatexMiktex} Options specific to \pdflatex{} }
   \endlastfoot%
   \texttt{--enable-enctex} & Enable encTeX extensions such as \texttt{\textbackslash{}mubyte}\footnote%
-  {Corresponds with \texttt{-enc} in texlive. }. \\
+  {Corresponds with \texttt{-enc} in \texlive. }. \\
   texttt{--tcx=tcxname}    & Use the tcxname translation table \dots \\
   \end{longtable}
 
@@ -475,25 +497,25 @@ These are always off.
   \caption{\label{tab:latexOptionsLualatexMiktex} Options specific to \lualatex{} }
   \endlastfoot%
   \texttt{-{}-credits}                    & Display credits and exit. \footnote%
-  {The same as for texlive. }. \\
+  {The same as for \texlive. }. \\
   \texttt{-{}-debug-format}               & Enable format debugging\footnote%
-  {The same as for texlive. }. \\
+  {The same as for \texlive. }. \\
   % \texttt{-{}-[no-]file-line-error-style} & aliases of --[no-]file-line-error \\
   \texttt{-{}-lua=FILE}                   & load and execute a lua initialization script\footnote%
-  {The same as for texlive. }.   \\
+  {The same as for \texlive. }.   \\
   \texttt{-{}-nosocket}                   & Disable the Lua socket library. \\
   \texttt{-{}-safer}                      & Disable easily exploitable Lua commands\footnote%
-  {The same as for texlive. }.   \\
+  {The same as for \texlive. }.   \\
   \texttt{--utc}                          & Init time to UTC\footnote%
-  {The same as for texlive. }.  \\
+  {The same as for \texlive. }.  \\
   \midrule
   \texttt{-{}-[no-]mktex=fmt} & Enable/Disable \texttt{fmt} generation, where \texttt{fmt} must be either \texttt{tex} or \texttt{tfm}. \\
   \texttt{-{}-output-comment=string} & Use \texttt{string} for DVI file comment instead of date. \\
   \midrule
   \texttt{--luaonly}                      & Start LuaTeX as a Lua interpreter\footnote%
-  {Could be the same as for texlive. }.  \\
+  {Could be the same as for \texlive. }.  \\
   \texttt{--luaconly}                     & byte-compile a lua file, then exit\footnote%
-  {Could be the same as for texlive. }. \\
+  {Could be the same as for \texlive. }. \\
   % \texttt{--luahashchars}                 & the bits used by current Lua interpreter for strings hashing \\
   \end{longtable}
 
@@ -523,7 +545,7 @@ These are always off.
   \texttt{-papersize=STRING}       & set PDF media size to STRING \\
   \end{longtable}
 
-  Same options as for texlive, except \texttt{-etex} which is specific to texlive. 
+  Same options as for \texlive, except \texttt{-etex} which is specific to \texlive. 
 
 
 \section{To be clarified}\label{sec:TBC}
