@@ -14,7 +14,66 @@
   </properties>
   <body>
     <!-- Release plan: 
-	 For 1.8: 
+  For 1.6: minimal support of pythontex 
+      - minimal documentation concerning xdv for xelatex. 
+      - minimal documentation for best tested configuration (in readme)
+      - in readme: shortcut for people which do not want to read all. 
+
+  For 1.7: 
+    - xdv support for xelatex, 
+      in the course of this: check of options. 
+    - rework on the readme: 
+      add a section on the configuration preferred: 
+      - suse tumbleweed linux
+      - TeX Live, at the moment the suse version, this shall change. 
+      - maven plugin, not ant task 
+      - config in the pom.xml
+      - only certain document classes (maybe we add some)
+      Details on xelatex: it works only for pdf created directly and this only 
+      because `-output-format=pdf` is not recognized and `-no-pdf` is not set. 
+      For dvi, it does not work for several reasons: 
+      - since `-output-format=dvi` is not recognized, a pdf is created. 
+        To overcome this, instead of `-output-format=dvi` the option `-no-pdf` must be issued. 
+      - if the correct option is given, then still the thing does not work, 
+        because instead of dvi an exteded file format, XDV is created. 
+        This is the extension which must be copied to the target folder. 
+      - If pdf shall be created via dvi, i.e. xdv, then the right converter must be chosen 
+        which can transform xdv into pdf. 
+
+  For 1.8: rework on mp: 
+    - more significant figure (state diagram)
+    - research on dependencies 
+    - integrated version with lualatex with package luamplib and advantages: 
+      use latex macros defined in the tex file 
+    - alternative tikz, in particular tikz-uml. 
+      Also: how is this installed. 
+    - there are significant problems with updating mp files input from within mp. 
+      In particular, direct in lualatex. 
+      Solution is either mp directly in the tex file or input tex file, 
+      but this looks bad in the editor because tex grammar expected. 
+      Here some research is required. 
+  For 2.0: document development 
+      take also configuration of vscode into account. 
+      This comprises support for source code and previewer. 
+      write a config file for latexmk with all installations which allows to compile all documents 
+      in this project, in particular the manual. 
+      This includes basic latex support but also support of all graphic source formats. 
+      These must be worked into the manual. 
+
+  For 2.1: bib2gls                      From here on one can compile at least the twopagers 
+                                        in some private project
+  For 2.2: bibtex and biber
+  For 2.3: xindy                        From here on, the build process is based on modern tools 
+  For 3.0: source distributions (for details see according folder)
+    - dependencies check, maybe based only on TeX Live 
+    - depythontex if parametrized accordingly  From here on one can compile for papers 
+                                               and also a certain paper the author nees 
+
+  For 4.x: 
+    Besides distribution TeX Live, also support MiKTeX
+    Maybe before try TeX Live with Windows. 
+    transfer into maven central. 
+	For 4.x: 
 	 - further output formats: xml from latexml, epub. 
 	   in manual: flow oriented vs page oriented. 
 	   Flow oriented: html, ... epub, ... 
@@ -29,9 +88,9 @@
 	   The converter is added already, 
 	   but there is no ConverterCategory yet. 
 	   Take also cleaning into account. 
-	 For 1.7: 
-	 - support for pythontex 
-	 For 1.6:
+	 For x.x: 
+	 - complete support for pythontex when pythontex is updated. 
+	 For 4.x:
 	 - make capabilities inspired by latexmk: 
 	   If latex is invoked with option -recorder it creates a file .fls
 	   containing all the files read during its run. 
@@ -53,7 +112,7 @@
 	   Hm, no. If something changes in pom, that is no indication. 
 	   There must be a file, maybe in ~/.lmk, 
 	   reflecting the options of the last run. 
-	 For 1.5: 
+	 For x.y: 
 	 - meta info for this software including own version 
 	   git interface 
 	 - awareness of version of converters, both expected and actual 
@@ -341,6 +400,33 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
 		-->
 
 		<!-- referring to support of biblatex: mention \printbibliography[heading=bibintoc]% -->
+
+
+
+    <!-- Bugfix for pythontex: if pythontex does not create plg file, 
+    this plugin does not recognize a problem. 
+    This can be done if we dont have python installed, just python3 as in modern distributions. 
+    Locally we need a link python->python3 -->
+
+    <!-- Bugfix: -shell-escape in texlive seems to be -enable-write18 in miktex. 
+      Question: are there further differences? 
+      If so this goes into various parts of the documentation 
+      and also the latex options must be adapted accordinly. 
+    -->
+
+
+    <!-- https://www.texifier.com/docs/tutorials/tex/advanced/tex-vs-latex -->
+    <!-- TBD: I feel I shall restrict myself to texlive distribution. 
+      Then one can use kpsewhich latex.ltex to locate the distribution. 
+      I suspect, that the result, in my case /usr/share/texmf/tex/latex/base/latex.ltx, 
+      indicates the base directory, here /usr/share/texmf. 
+      Note that also mktexlsr is available for texlive. 
+      versions can be found easily 
+      'kpsewhich -version' and 'mktexlsr -version'. 
+      First line of answer is 'kpathsea version 6.3.4'
+      and 'mktexlsr version revision 62699 (2022-03-14 10:53:53 +0100)'. 
+      Location of the distribution may help to check reproducible results. 
+    -->
 
 	  <release  version="1.6"
 		date="2022-01-01"
