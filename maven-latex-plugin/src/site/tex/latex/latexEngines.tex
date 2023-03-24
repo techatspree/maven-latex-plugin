@@ -200,7 +200,7 @@ option & excluded & explanation \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:latexOptionsCommonTexlive} Common options, with up to one exception }
+\caption{\label{tab:latexOptionsCommonTexlive} \texlive: Common options, with up to one exception }
 \endlastfoot%
 \texttt{(-)-cnf-line=STRING}       & ---         & parse STRING as a configuration file line \\
 \texttt{(-)-draftmode}             & \xelatex{}  & switch on draft mode (generates no output PDF) \\
@@ -293,7 +293,7 @@ Usage: pdftex [OPTION]... [TEXNAME[.tex]] [COMMANDS]
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:latexOptionsPdflatexTexlive} Options specific to \pdflatex{} }
+  \caption{\label{tab:latexOptionsPdflatexTexlive} \texlive: Options specific to \pdflatex{} }
   \endlastfoot%
   \texttt{-enc}                    & Enable encTeX extensions such as \texttt{\textbackslash{}mubyte} \\
   \texttt{-etex}                   & enable e-TeX extensions \\
@@ -313,7 +313,7 @@ option & explanation \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:latexOptionsLualatexTexlive} Options specific to \lualatex{} }
+\caption{\label{tab:latexOptionsLualatexTexlive} \texlive: Options specific to \lualatex{} }
 \endlastfoot%
 \texttt{-{}-credits}                    & Display credits and exit. \\
 \texttt{-{}-debug-format}               & enable format debugging \\
@@ -338,7 +338,7 @@ option & explanation \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:latexOptionsXelatexTexlive} Options specific to \xelatex{} }
+\caption{\label{tab:latexOptionsXelatexTexlive} \texlive: Options specific to \xelatex{} }
 \endlastfoot%
 \texttt{-etex}                   & enable e-TeX extensions \\
 \texttt{-output-driver=CMD}      & use CMD as the XDV-to-PDF driver instead of xdvipdfmx \\
@@ -355,21 +355,22 @@ The three engines are a bit different, also in their names.
 
 
 Well this section is preliminary only. 
-It turned out that Section{ref:options} is valid only for distribution \texlive. 
+It turned out that Section~\ref{ref:options} is valid only for distribution \texlive. 
 So in this section we venture to find out the options for the other big distribution, 
 \miktex. 
 We shall also investigate whether there are further distributions. 
 
 Whereas the description~\cite{Texlive} seems not to mention the options explicitly, 
-the \miktex{} manual~\cite{MiKTeX} describes each program in section II, 6, 
+the \miktex{} manual~\cite{MiKTeX} describes each program in Section II, 6, 
 in particular also the tex converters. 
 This is the source of the following tables. 
 
 
-The first thing observed is that, for \miktex{} all options start with two dashes, 
+The first observation is that, for \miktex{} all options start with two dashes, 
 whereas for \texlive{} this is the case only for luatex. 
 One has to clarify, whether the maven latex plugin under consideration really works for \miktex. 
 
+{\footnotesize
 \begin{longtable}{|lll|}
   \toprule
   option & excluded & explanation \\
@@ -377,7 +378,7 @@ One has to clarify, whether the maven latex plugin under consideration really wo
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:latexOptionsCommonMiktex} Common options, with up to one exception }
+  \caption{\label{tab:latexOptionsCommonMiktex} \miktex: Common options, with up to one exception }
   \endlastfoot%
   \texttt{-{}-alias=name}            & ---         & Pretend to be program name, \dots\footnote%
 {Using this option is equivalent to copying the program file to name and invoking name.} \\
@@ -494,7 +495,7 @@ These are always off.
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:latexOptionsLualatexMiktex} Options specific to \lualatex{} }
+  \caption{\label{tab:latexOptionsLualatexMiktex} \miktex: Options specific to \lualatex{} }
   \endlastfoot%
   \texttt{-{}-credits}                    & Display credits and exit. \footnote%
   {The same as for \texlive. }. \\
@@ -537,7 +538,7 @@ These are always off.
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:latexOptionsXelatexMiktex} Options specific to \xelatex{} }
+  \caption{\label{tab:latexOptionsXelatexMiktex} \miktex: Options specific to \xelatex{} }
   \endlastfoot%
   % \texttt{-etex}                   & enable e-TeX extensions \\
   \texttt{-output-driver=CMD}      & use CMD as the XDV-to-PDF driver instead of xdvipdfmx \\
