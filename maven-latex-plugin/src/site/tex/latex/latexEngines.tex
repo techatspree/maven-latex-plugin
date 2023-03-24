@@ -391,9 +391,10 @@ Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-disable-write18}         & ---         & Disable the \texttt{\textbackslash{}write18\{command\}} construct.\\
 \texttt{-{}-enable-write18}          & ---         & Fully enable the \texttt{\textbackslash{}write18\{command\}} construct. \footnote%
 {Corresponds roughly to \texttt{(-)-shell-escape} in \texlive. } \\
-\texttt{-{}-restrict-write18}        & ---         & Partially enable the \texttt{textbackslash{}write18{command}} construct. \\
+\texttt{-{}-restrict-write18}        & ---         & Partially enable the \texttt{\textbackslash{}write18{command}} construct. \\
 %\texttt{-{}-parse-first-line}   & \lualatex{} & Disable checking \dots the first line \dots \\
-\texttt{-{}-[dont-]parse-first-line}        & \lualatex{} & [Dont p|P]arse first line of input file under definite conditions\footnote%
+\texttt{-{}-[dont-]parse-first-line} & \lualatex{} & [Dont p|P]arse first line of input file \\
+                                     &             & under definite conditions\footnote%
 {Similar for \texlive. Note that there is also a converse option. } \\
 \texttt{-{}-draftmode}               & \xelatex{}  & switch on draft mode (generates no output PDF)\footnote%
 {Some differences in formulation between the converter and also between distributions} \\
@@ -406,38 +407,44 @@ Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-extra-mem-top=n}         & \lualatex{} & Set the extra size (in memory words) for chars, tokens, \dots. \\
 \texttt{-{}-font-max=n}              & \lualatex{} & Set the maximum internal font number. \\
 \texttt{-{}-font-mem-size=n}         & \lualatex{} & Set the size, in TeX memory words, of the font memory. \\
-\texttt{-{}-half-error-line=n}       & \lualatex{} & Set the width of first lines of contexts in terminal error messages. \\
+\texttt{-{}-half-error-line=n}       & \lualatex{} & Set the width of first lines of contexts \\
+                                     &             & in terminal error messages. \\
 \texttt{-{}-halt-on-error}           & ---         & Quit after the first error. \\
 \texttt{-{}-hash-extra=n}            & \lualatex{} & Set the extra space for the hash table of control sequences \dots \\
 \texttt{-{}-help}                    & ---         & Give help and exitt\footnote%
 {The same as for \texlive. }.. \\
 \texttt{-{}-hhelp}                   & \lualatex{} & manual page in an HTML Help window\footnote%
 {This option is only available on Windows systems.} \\
-\texttt{-{}-include-directory=dir}   & ---         & Add the directory \texttt{dir} to [those] to be searched for input files. \\
+\texttt{-{}-include-directory=dir}   & ---         & Add the directory \texttt{dir} to [those] \\
+                                     &             & to be searched for input files. \\
 \texttt{-{}-initialize}              & ---         & Become the INI variant of the program. \\
-\texttt{-{}-interaction=mode}        & ---         & Set the interaction mode. \\
-&& (\texttt{STRING=batchmode/nonstopmode/scrollmode/errorstopmode}) \\
+\texttt{-{}-interaction=mode}        & ---         & Set the interaction mode. (\texttt{mode=batchmode/nonstopmode/}\\
+&& \texttt{scrollmode/errorstopmode}) \\
 \texttt{-{}-job-name=name}           & ---         & Set the name of the job (\texttt{\textbackslash{}jobname}). \\
-\texttt{-{}-job-time=file}           & \lualatex{} & Set the time-stamp of all output files equal to file's time-stamp. \\
+\texttt{-{}-job-time=file}           & \lualatex{} & Set the time-stamp of all output files \\
+                                     &             & equal to file's time-stamp. \\
 \texttt{-{}-main-memory=n}           & \lualatex{} & Change the total size \dots{} of the main memory array. \\
 \texttt{-{}-max-in-open=n}           & \lualatex{} & Set the maximum number of input files \dots \\
 \texttt{-{}-max-print-line=n}        & \lualatex{} & Set the width of longest text lines output. \\
 \texttt{-{}-max-strings=n}           & \lualatex{} & Set the maximum number of strings. \\
-\texttt{-{}-nest-size=n}             & \lualatex{} & Set the maximum number of semantic levels simultaneously active. \\
+\texttt{-{}-nest-size=n}             & \lualatex{} & Set the maximum number of semantic levels \\
+                                     &             & simultaneously active. \\
 \texttt{-{}-no-c-style-errors}       & ---         & Don't change the way, error messages are printed. \\
 \texttt{-{}-output-directory=dir}    & ---         & Write output files in \texttt{dir}\footnote%
 {Similar as for \texlive. }. \\
 \texttt{-{}-output-format=format}    & \xelatex{}  & Use format for job output (one of: dvi, pdf)\footnote%
 {\pdflatex{} and \lualatex{} differ a bit in text. Seems similar to \texlive. }. \\
-\texttt{-{}-param-size=n}            & \lualatex{} & Set the the maximum number of simultaneous macro parameters. \\
+\texttt{-{}-param-size=n}            & \lualatex{} & Set the the maximum number \\
+                                     &             & of simultaneous macro parameters. \\
 \texttt{-{}-pool-free=n}             & \lualatex{} & Set the minimum pool space left after loading the format. \\
 \texttt{-{}-pool-size=n}             & \lualatex{} & Set the maximum number of characters in strings, \dots \\
 \texttt{-{}-quiet}                   & \lualatex{} & Suppress all output, except errors. \\
 \texttt{-{}-record-package-usages=file} & \lualatex{} & Record all package usages and write them into \texttt{file}. \\
 \texttt{-{}-recorder}                & ---         & Enable the file name recorder\footnote%
 {The same as in \texlive. }. \\
-\texttt{-{}-save-size=n}             & \lualatex{} & Set the the amount of space for saving values outside of current group. \\
-\texttt{-{}-src-specials}            & \lualatex{} & Embed source file information (source specials) in the DVI file\footnote%
+\texttt{-{}-save-size=n}             & \lualatex{} & Set the the amount of space for saving values \\
+                                     &             & outside of current group. \\
+\texttt{-{}-src-specials}            & \lualatex{} & Embed source file information in the DVI file\footnote%
 {Similar as in \texlive. }. \\
 \texttt{-{}-stack-size=n}            & \lualatex{} & Set the maximum number of simultaneous input sources. \\
 \texttt{-{}-string-vacancies=n}      & \lualatex{} & Set the minimum number of characters \dots \\
@@ -450,6 +457,7 @@ Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-version}                 & ---         & Show version information and exit\footnote%
 {The same as for \texlive. }. \\
 \end{longtable}
+}
 
 Strange, there are \texttt{-{}-enable-etex} and \texttt{-{}-enable-mltex} 
 but no way to disable. 
@@ -510,7 +518,8 @@ These are always off.
   \texttt{--utc}                          & Init time to UTC\footnote%
   {The same as for \texlive. }.  \\
   \midrule
-  \texttt{-{}-[no-]mktex=fmt} & Enable/Disable \texttt{fmt} generation, where \texttt{fmt} must be either \texttt{tex} or \texttt{tfm}. \\
+  \texttt{-{}-[no-]mktex=fmt} & Enable/Disable \texttt{fmt} generation, \\
+                              & where \texttt{fmt} must be either \texttt{tex} or \texttt{tfm}. \\
   \texttt{-{}-output-comment=string} & Use \texttt{string} for DVI file comment instead of date. \\
   \midrule
   \texttt{--luaonly}                      & Start LuaTeX as a Lua interpreter\footnote%
