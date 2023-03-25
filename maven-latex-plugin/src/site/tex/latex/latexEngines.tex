@@ -71,8 +71,6 @@
 \fi%xetex
 \fi%luatex
 
-
-
 \hypersetup{
   pdfinfo={
     Author      ={Ernst Reissner},
@@ -85,7 +83,6 @@
   }
 }
 
-
 \else
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
@@ -95,7 +92,7 @@
 }{%
 \usepackage{hyperref}%[dvipdfmx]
 }
-%\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
+\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
 \fi
 
 \usepackage{import}
