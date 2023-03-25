@@ -764,10 +764,6 @@ for \texttt{xelatex}.
 The options for the command \texttt{\$latex2pdfCommand}.
 Leading and trailing blanks are ignored. 
 A sequence of at least one blank separate the proper options. 
-
-FIXME\@:  -output-format is not allowed because set automatically. 
-%The default value is 
-%'\texttt{-interaction=nonstopmode -src-specials}'. 
 \end{minipage}
 } \\
 \texttt{patternErrLatex} & \texttt{(\^{}!\ )} \\% chktex 37
@@ -860,6 +856,11 @@ Although these are based on htlatex which is always dvi-based,
 the preprocessing is done in dvi or in pdf. 
 Also the task txt is affected. 
 
+As indicated in \texttt{\$latex2pdfCommand}, 
+the processor \texttt{xelatex} does not create \texttt{dvi} 
+but \texttt{xdi} files. 
+Thus, with \texttt{xelatex} the flag \texttt{\$pdfViaDvi} may not be set. 
+
 %The default value is '\texttt{false}'. 
 \end{minipage}
 } \\
@@ -918,8 +919,109 @@ or -1 which signifies that there is no threshold.
 
 \subsection{The parameter \texttt{latex2pdfOptions}}
 \label{subsec:latex2pdfOptions}
-TODO\@: add 
-%-interaction=nonstopmode -synctex=1 -src-specials -recorder -shell-escape 
+
+An overview over the options supported by the usual latex engines in distribution \texlive{} 
+is given in~\cite{LatexGen}, Section 2. 
+In particular, there is a table with the options occurring in any latex converter 
+and columns indicating for each option for which converters it is valid. 
+Note that unlike the other engines, \texttt{lualatex} defines options starting with \texttt{-{}-}, 
+it works on according options starting with single dash also. 
+To support all engines with the same parameters, 
+the default options are among the ones common to all supported converters: 
+%
+\begin{description}
+  \item[-interaction=nonstopmode] To avoid user interaction in case of an error 
+  This seems mandatory. 
+  \item[-synctex=1] to create \texttt{.synctex.gz} files needed for interaction between editor and viewer. 
+  \item[-src-specials] only important when creating dvi-files or (\texttt{xdv} files) 
+    to create more fancy graphics
+  \item[-recorder] Strictly speaking not necessary at the current stage, 
+    but for later versions of this software, to allows to track dependencies. 
+  \item[-shell-escape] allows the tex engine to access the shell to execute. 
+  This is needed for some reason for driver \texttt{dvipdfmx} 
+  which seems to be the sole one supporting 
+  pdf-pictures in dvi-mode and pdf-pictures in pdf-mode. 
+
+  An alternative would be \texttt{-shell-restricted}. 
+  CAUTION\@: In \miktex{} this is \texttt{--enable-write18} instead. 
+\end{description}
+
+% According to~\cite{LatexGen}, Section 3 with the exeption of \texttt{-shell-escape}, 
+% these options are also available in MiKTeX distribution, 
+% up to the fact that options start with \texttt{-{}-}. 
+% Instead of \texttt{-shell-escape}, one has to write \texttt{-{}-enable-write18}. 
+% Note that besides \texttt{-{}-enable-write18} and \texttt{-{}-disable-write18}, 
+% MiKTeX offers also \texttt{-{}-restrict-write18}. 
+% It must be clarified, how MiKTeX treats options starting with single dash. 
+
+Note that part of the default values is mandatory, in particular \texttt{nonstopmode}, 
+but there are also options which are not allowed. 
+In most of the cases, the problem is that the latex engine does not create an output 
+or does not create it in the expected location or in the expected form. 
+This may apply to the main artifact, i.e.\@ pdf or dvi or xdvi 
+but it may also apply to log files and other files. 
+
+The following list of prohibited options is illustrative but not complete: 
+%
+\begin{description}
+  \item[-draftmode] switch on draft mode (generates no output PDF which causes an error) 
+  \item[-output-directory=dir] to specify the output dir 
+  \item[-aux-directory=dir] to specify the output aux-dir 
+  \item[-job-name=name] effectively changes the output file name 
+  \item[-quiet] makes the log quiet and 
+      so circumvents error and warning detection 
+  \item[-fmt=FMTNAME] use FMTNAME instead of program name or a \%\& line 
+  \item[--luaonly] run a lua file, then exit 
+  \item[-output-format=FORMAT] use FORMAT for job output; FORMAT is `dvi' or `pdf'
+                   pdf is the only allowed \dots. 
+                   This is not supported by \xelatex. 
+  \item[-no-pdf] generate XDV (extended DVI) output rather than PDF. 
+   This is specific for \texttt{xelatex}. 
+  \item[-progname=STRING] set program (and fmt) name to STRING
+    only names also without -progname are possible 
+  \item[-help] display this help and exit
+  \item[-version] output version information and exit
+\end{description}
+
+Note that the default value of \texttt{\$patternErrLatex} 
+excludes option \texttt{-file-line-error-style} 
+and its synonym \texttt{--file-line-error-style}. 
+Nevertheless, these options can be used 
+if the pattern \texttt{\$patternErrLatex} is adapted. 
+
+Also option \texttt{-halt-on-error} is not strictly forbidden, but not recommended, 
+because it prevents operation as intended for this software. 
+
+
+Two options deserve particular notification, both specifying the output format: 
+%
+\begin{description}
+  \item[-no-pdf] which is specific to \xelatex, makes \xelatex{} create xdv files 
+  which currently cannot be further processed by this software. 
+  As soon as this software supports xdv files, this option is set by this software, 
+  not by the user. 
+  \item[-output-format=FORMAT], which this software uses to set the output format, 
+  either to \texttt{dvi} or to \texttt{pdf}. 
+  Strictly speaking, this option is supported by all converters, except for \xelatex. 
+  For \xelatex, this software only supports \texttt{pdf}, 
+  which \xelatex{} creates because \texttt{-no-pdf} is not given. 
+  The option \texttt{-output-format=pdf} does no harm, because it is ignored. 
+  As soon as this software supports xdv creation, 
+  it will no longer pass \texttt{-output-format} to \xelatex. 
+\end{description}
+
+
+In general, there are two forms of options, one starting with double dash, \texttt{-{}-}, 
+and the other form with single dash. 
+In \texlive, \pdflatex{} and \xelatex{} use single dash, 
+whereas \lualatex{} uses double dash accoding to the help text. 
+But using the single dash always is ok, 
+because \lualatex{} understands single dash also. 
+
+In \miktex, all options of all converters are double dash. 
+It must be clarified, whether they understand single dash. 
+If not one has to clarify whether in \texlive{} all converters understand double dash. 
+If so all must be changed into double dash. 
 
 
 \subsection{The parameter \texttt{patternWarnLatex}}
