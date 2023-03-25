@@ -1,10 +1,18 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[10pt, a4paper]{article}
 
-\usepackage[T1]{fontenc}
-\usepackage{fancyvrb}
 \usepackage{iftex}
-\ifpdf
+\iftutex%
+\usepackage{fontspec}
+\else
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fi
+
+
+\usepackage{fancyvrb}
+
+\ifpdf%
 \usepackage{hyperref}
 
 
