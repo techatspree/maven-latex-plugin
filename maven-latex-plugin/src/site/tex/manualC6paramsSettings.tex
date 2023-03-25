@@ -745,8 +745,16 @@ Parameter        & Default  \\
 \texttt{latex2pdfCommand}       & \texttt{lualatex}      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The \LaTeX{} command to create a pdf-file with. 
+The \LaTeX{} command to create above all a pdf-file with. 
+Further formats are dvi and xdv and also other formats based on these. 
 Expected values are \texttt{lualatex}, \texttt{xelatex} and \texttt{pdflatex}. 
+
+Note that for \texttt{xelatex} dvi mode 
+(creating xdv-files instead of dvi-files) is not supported, 
+even not creating pdf or other formats via xdv. 
+See also the according options \texttt{\$latex2pdfOptions} and \texttt{\$pdfViaDvi}. 
+In particular, this maven plugin does not allow goal \texttt{dvi} and related 
+for \texttt{xelatex}. 
 %The default value is '\texttt{lualatex}'. 
 \end{minipage}
 } \\

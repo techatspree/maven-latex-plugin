@@ -417,9 +417,16 @@ which are added automatically.
 The default value is '-v'. -->
             <ebbOptions>-v</ebbOptions>
 
-            <!-- The LaTeX command to create a pdf-file. 
-Possible values are e.g. 
-'lualatex' 'xelatex', and 'pdflatex'. 
+            <!-- The LaTeX command to create above all a pdf-file with. 
+Further formats are dvi and xdv and also other formats based on these. 
+Expected values are 'lualatex' 'xelatex', and 'pdflatex'. 
+
+Note that for 'xelatex' dvi mode 
+(creating xdv-files instead of dvi-files) is not supported, 
+even not creating pdf or other formats via xdv. 
+See also the according options '$latex2pdfOptions' and '$pdfViaDvi'. 
+In particular, this maven plugin does not allow goal 'dvi' and related 
+for 'xelatex'. 
 The default value (for which this software is also tested) 
 is 'lualatex'. -->
             <latex2pdfCommand>lualatex</latex2pdfCommand>
