@@ -441,65 +441,48 @@ Leading and trailing blanks are ignored.
 A sequence of at least one blank 
 separates the proper options. 
 
-The default value  comprises the following options: -interaction=nonstopmode 
-prevents latex from stopping at the first error. -synctex=1
-makes latex create a pdf file 
-which synchronizes with an editor supporting synchtex. 
--src-specials 
-includes source specials into the output. dvi only? 
--recorder
-makes latex create an fls-file 
-specifying all inputted files. 
--shell-escape enables \write18 
-but this can also be done via 
--shell-restricted       enable restricted \write18 and 
--enable-write18 
-which is needed for some reason for driver dvipdfmx 
+The default value  comprises the following options: 
+<ul>
+  <li>'-interaction=nonstopmode' 
+  prevents latex from stopping at the first error. </li>
+<li>-synctex=1'
+  makes latex create a pdf file 
+  which synchronizes with an editor supporting synchtex. </li>
+<li>'-src-specials' 
+  includes source specials into the output. dvi only? </li>
+<li>'-recorder'
+  makes latex create an fls-file specifying all inputted files. 
+  May be mandatory in later versions. </li>
+<li>'-shell-escape' allows the tex engine to access the shell to execute. 
+This is needed for some reason for driver 'dvipdfmx' 
 which seems to be the sole one supporting 
 pdf-pictures in dvi-mode and pdf-pictures in pdf-mode. 
-In pdftex this must be specified explicitly as 
-Driver dvipdfmx is always used by xetex. 
-required: -interaction=STRING     set interaction mode (STRING=batchmode/nonstopmode/
-                 scrollmode/errorstopmode)
 
--ipc                    send DVI output to a socket as well as the usual
-                 output file
+  An alternative would be \texttt{-shell-restricted}. 
+  CAUTION\@: In \miktex{} this is '- -enable-write18' instead. </li>
+</ul>
 
-[-no]-shell-escape      disable/enable \write18{SHELL COMMAND}
--shell-restricted       enable restricted \write18 -translate-file=TCXNAME use the TCX file TCXNAME
--8bit                   make all characters printable by default
-
-
-// maybe, this shall be mandatory 
--recorder               enable filename recorder
-
-
-allowed: 
--file-line-error-style  
--record-package-usages -include-directory=dir
--enable-write18 
--enc                    enable encTeX extensions such as \mubyte
--etex                   enable e-TeX extensions
--halt-on-error          stop processing at the first error
--ipc-start              as -ipc, and also start the server at the other end -mktex=FMT              disable/enable mktexFMT generation (FMT=tex/tfm/pk)
--mltex                  enable MLTeX extensions such as \charsubdef
-[-no]-parse-first-line  disable/enable parsing of first line of input file
--src-specials           insert source specials into the DVI file -src-specials=WHERE     insert source specials in certain places of
-                 the DVI file. WHERE is a comma-separated value
-                 list: cr display hbox math par parend vbox -synctex=NUMBER         generate SyncTeX data for previewers if nonzero
--ini                    be pdfinitex, for dumping formats; 
-                 this is implicitly true 
-                 if the program name is 'pdfinitex'
-not allowed: 
--draftmode              switch on draft mode (generates no output PDF) -output-directory=dir   to specify the output dir -aux-directory=dir      to specify the output aux-dir -job-name=name          effectively changes the output file name 
+Among the options which are not allowed are the following: 
+-draftmode              switch on draft mode (generates no output PDF) 
+-output-directory=dir   to specify the output dir 
+-aux-directory=dir      to specify the output aux-dir 
+-job-name=name          effectively changes the output file name 
 -quiet                  makes the log quiet and 
                  so circumvents error and warning detection 
--no-file-line-error     disable/enable file:line:error style messages -fmt=FMTNAME            use FMTNAME instead of program name or a %& line -output-format=FORMAT   use FORMAT for job output; FORMAT is `dvi' or `pdf'
-                 pdf is the only allowed... -progname=STRING        set program (and fmt) name to STRING
+-no-file-line-error     disable/enable file:line:error style messages 
+-fmt=FMTNAME            use FMTNAME instead of program name or a %& line 
+-progname=STRING        set program (and fmt) name to STRING
                  only names also without -progname are possible 
 -help                   display this help and exit
 -version                output version information and exit
 
+Also not allowed because format is determined by this software
+-output-format=FORMAT   use FORMAT for job output; FORMAT is `dvi' or `pdf'
+                 pdf is the only allowed... 
+-no-pdf          generate XDV (extended DVI) output rather than PDF
+                This is supported by 'xelatex' only. 
+
+For a more thorough discussion see the manual
 -->
             <latex2pdfOptions> -interaction=nonstopmode -synctex=1 
  -src-specials 
