@@ -80,8 +80,8 @@
     CreationDate={unknown},
     ModDate     ={unknown},
     Producer    ={unknown},
-    Subject     ={pdf generators},
-    Keywords    ={LaTeX;pdflatex; xelatex; lualatex}
+    Subject     ={pdf/dvi/xdvi generators},
+    Keywords    ={LaTeX;pdflatex;xelatex;lualatex}
   }
 }
 
@@ -93,9 +93,9 @@
   % \usepackage[tex4ht]{hyperref}
   \setboolean{texFhtLoaded}{true}%
 }{%
-%\usepackage[dvipdfmx]{hyperref}
+\usepackage{hyperref}%[dvipdfmx]
 }
-\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
+%\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
 \fi
 
 \usepackage{import}
@@ -164,7 +164,7 @@ and for \miktex{} in Section~\ref{sec:optionsMiktex}.
 Note that in fact we use a variant of \texttt{luatex}, called \texttt{luahbtex}. 
 
 This document is valid for versions of the underlying tex engine 
-as given in Table~ref{tab:versions}. 
+as given in Table~\ref{tab:versions}. 
 Moreover, our research refers to a specific distribution, \texlive. 
 
 
