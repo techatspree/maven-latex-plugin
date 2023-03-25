@@ -198,7 +198,7 @@ caption={Configuration with full range output formats}]
 	
   <configuration>
     <settings>
-      <targets>pdf, html, odt, docx, rtf, txt</targets>
+      <targets>pdf, dvi, html, odt, docx, rtf, txt</targets>
     </settings>
   </configuration>
 </plugin>
@@ -218,6 +218,11 @@ or even \texttt{mvn latex:txt} for plain text, just as examples.
 Note that the \texttt{-X} switch activates debugging 
 which results in a more verbose output. 
 Example: \texttt{mvn -X latex:cfg}. 
+
+CAUTION\@: The latex processor is \texttt{xelatex} 
+can only be used to create \texttt{pdf} files; 
+instead of the \texttt{dvi} format, it supports the \texttt{xdv} format, 
+which cannot be created with this software. 
 
 For creating the graphic files in the tex-source directory, 
 there is a goal {\em graphics}, invoked by \texttt{mvn latex:grp}. 
