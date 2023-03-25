@@ -82,13 +82,12 @@
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
 \markboth{Preface}{Preface}
-We will recall the purpose of  \verb|robustindex.sty| in appendix
-\ref{purpose}.
+We will recall the purpose of \verb|robustindex.sty| in Appendix~\ref{purpose}.
 
 Although this is not a book, we have chosen the book style for illustration.
 
 If you want to see how \verb|robustindex.sty| may be used, compare the file
-\verb|robustsample.tex| or appendix \ref{appendix} with the output.
+\verb|robustsample.tex| or Appendix~\ref{appendix} with the output.
 
 If you are interested in our usage of \verb|robustglossary.sty|, you must read
 the file \verb|robustsample.tex|.
@@ -101,8 +100,7 @@ This preface has an \emph{indexed term}.\index{indexed term}
 \chapter{Introduction}\sloppy
 \renewcommand\thepage{\arabic{page}}
 \addtocounter{page}{-2}% Just to get overlap in roman and arabic page numbers.
-This introduction has another indexed term
-\index{other term!cited twice on same page}
+This introduction has another indexed term\index{other term!cited twice on same page}
 as well as the old indexed term.\index{indexed term}
 The page number is again 5, but now in arabic.
 If you index the same term twice on the same page, then one simply gets
@@ -113,10 +111,10 @@ Indeed we had to disable the implicit page range formation of makeindex.
 %\glossary{$H^0(X,\mathcal L)$&the sections of the vector bundle
 %$\mathcal L|_X$ over $X$}
 
-Of course the index file {\it filename}.\texttt{ind}
+Of course the index file \textit{filename}.\texttt{ind}
 may be edited to remedy such flaws. Such editing will actually be the
 recommended way to achieve more complicated effects like the page ranges on
-page \pageref{range}, which also use several fonts in their page numbers.
+page~\pageref{range}, which also use several fonts in their page numbers.
 
 Traditionally page ranges and fonts for page numbers could be done with the
 encapsulating construction of makeindex, but that construction is broken by our
@@ -128,16 +126,16 @@ but our rules are more naive than those of makeindex.
 See the file \verb|robustsample.tex| for details.
 
 Subentries are still supported. We illustrate this in
-\verb|robustsample.tex| and appendix \ref{appendix} with alpha, beta and gamma.
-This also illustrates the use of \verb|\gobblepageref|.
-\index{alpha!see beta}
+\verb|robustsample.tex| and Appendix~\ref{appendix} with alpha, beta and gamma.
+This also illustrates the use of \verb|\gobblepageref|.%
+\index{alpha!see beta}%
 \index{alpha!see also gamma\gobblepageref}
 
-After running \LaTeX\ on {\it filename} one must run makeindex on {\it
-filename} to get the index entries in {\it filename}.\texttt{ind}.
+After running \LaTeX\ on \textit{filename\/} 
+one must run makeindex on \textit{filename\/} to get the index entries in \textit{filename}.\texttt{ind}.
 Before this there may be error messages about labels or names.
-Do not exclude any relevant files. For instance, do not use
-\verb|\includeonly|.
+Do not exclude any relevant files. 
+For instance, do not use \verb|\includeonly|.
 
 Say we wish the index to occur in the table of contents.
 We then give the command \verb|\indexincontents| before the index.
@@ -257,11 +255,9 @@ link that displays the word Index, one wants to end up in the index.
 % continuation of encapsulating
 %
 \index{page range|)textit}%
-\index{page range!risky@this $\vert$is$\vert$ complicated|texttt}
+\index{page range!risky@this $\vert$is$\vert$ complicated|texttt}%
 %
-\index{page range!with risky label\label{range}}
-%
-%
+\index{page range!with risky label\label{range}}%
 \index{simpler!page range|)}%
 \index{simplest page range|)}%
 % end of encapsulating
@@ -312,11 +308,7 @@ link that displays the word Index, one wants to end up in the index.
 
 % \end{theglossary}
 
-\indexincontents % always put this before the index.
+\indexincontents% always put this before the index.
 \printindex
 \end{document}
 
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: t
-%%% End:
