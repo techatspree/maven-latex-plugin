@@ -53,7 +53,16 @@
   }
 }
 \else
+\ifXeTeX%
+\usepackage[plainpages=false,hyperindex=false]{hyperref}
+\else
+\usepackage[dvipdfmx,plainpages=false,hyperindex=false]{hyperref}
+% lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+% pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+% with [dvipdfmx] all works fine 
+\fi%
 \fi%ifpdf
+
 \title{A latex file with robust index}
 
 \author{Wilberd van der Kallen\index{Wilberd}}

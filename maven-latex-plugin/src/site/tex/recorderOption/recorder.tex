@@ -10,11 +10,11 @@
 \usepackage[T1]{fontenc}
 \fi
 
-\usepackage{hyperref}
 %\pdfinfoomitdate1
 %\pdfsuppressptexinfo-1
 %\pdftrailerid{}
 \ifpdf%
+\usepackage{hyperref}
 \ifLuaTeX%
 % for lualatex
 \pdfvariable minorversion=7% chktex 1
@@ -57,6 +57,14 @@
   }
 }
 \else
+\ifXeTeX%
+\usepackage{hyperref}
+\else
+\usepackage[dvipdfmx]{hyperref}
+% lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+% pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+% with [dvipdfmx] all works fine 
+\fi%
 \fi%ifpdf
 
 \title{The recorder option for latex processors}
