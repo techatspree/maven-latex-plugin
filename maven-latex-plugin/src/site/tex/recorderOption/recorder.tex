@@ -75,6 +75,7 @@
 \begin{document}
 
 \maketitle
+\tableofcontents
 
 \section{Introduction}
 This document is about the \texttt{recorder} option available for all modern \LaTeX{} processors, 
@@ -110,6 +111,7 @@ The available \texttt{type}s are
   \item[PWD] The working folder. 
   Seemingly this is the folder containing the latex file \texttt{xxx.tex} to be processed. 
   This type of line occurs once and is the first line. 
+  We refer to it as the {\em current directory}. 
   \item[INPUT] All input files. Among those \texttt{xxx.tex}, \texttt{xxx.aux}, 
   Possibly graphic files and files related with fonts. 
   \item[OUTPUT] Almost all output files. 
@@ -123,8 +125,27 @@ The line \texttt{PWD} is first and there is a single one specifying the working 
 Paths are not restricted to the local folder but may point also into the latex installation. 
 Paths may be absolute and relative. 
 Relative paths seem to be relative to the working folder. 
-TBD: do research on paths with blanks. 
+TBD\@: do research on paths with blanks. 
 
 Note that a file may occur as input and output like \texttt{xxx.aux}. 
+
+The relative paths either start with \texttt{./} or with \texttt{../}. 
+In the first case, it seems that these paths refer to files in a subdirectory 
+of the current directory, not in the second. 
+
+The absolute paths either refer to the installation or to a cache. 
+In my linux box, the cache is at \texttt{/home/ernst/.cache/texmf/}, so it is in my home directory. 
+
+The installation directory of a \TeX{} Live installation, 
+is given by \texttt{kpsewhich latex.ltx}, 
+just eliminating three containment levels from the path. 
+
+The rest of the input lines of the fls files are the following on my linux box: 
+%
+\begin{verbatim}
+INPUT /var/lib/texmf/web2c/luahbtex/lualatex.fmt
+INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+INPUT /etc/texmf/web2c/mktex.cnf
+\end{verbatim}
 
 \end{document}
