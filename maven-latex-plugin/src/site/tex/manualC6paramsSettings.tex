@@ -848,18 +848,34 @@ If it goes via latex,
 then the formats are more based on (encapsulated) postscript; 
 else on pdf. 
 
+In the dvi-file for jpg, png and svg 
+only some space is visible and only in the final step 
+performed by \texttt{\$dvi2pdfCommand}, 
+the pictures are included using the bounding boxes 
+given by the \texttt{.bb} or the \texttt{.xbb}-file. 
+These are both created by \texttt{\$ebbCommand}. 
+
 Of course, the target dvi is not affected: 
 This uses always the dvi-format. 
 What is also affected are the tasks 
 creating html, odt or docs: 
-Although these are based on htlatex which is always dvi-based, 
+Although these are based on \texttt{htlatex} which is always dvi-based, 
 the preprocessing is done in dvi or in pdf. 
 Also the task txt is affected. 
 
 As indicated in \texttt{\$latex2pdfCommand}, 
-the processor \texttt{xelatex} does not create \texttt{dvi} 
-but \texttt{xdi} files. 
-Thus, with \texttt{xelatex} the flag \texttt{\$pdfViaDvi} may not be set. 
+the processor \xelatex{} does not create \texttt{dvi} 
+but \texttt{xdv} files. 
+In a sense, the \texttt{xdv} format is an extension of \texttt{dvi} 
+but as for he \texttt{xdv} format there is no viewer, 
+no way \texttt{htlatex} or other applications (except the \xelatex-internal \texttt{xdvidpfmx}) 
+and also no according mime type, 
+we refrained from subsumming this under ``kind of dvi''. 
+Thus, with \xelatex{} the flag \texttt{\$pdfViaDvi} may not be set. 
+
+%Note that \texttt{\$pdfViaDvi} cannot be set if \texttt{\$latex2pdfCommand} is \xelatex. 
+%This is because \xelatex{} does not create dvi but xdv. 
+For the latter there is no viewer and it is not even a mime type as x-dvi is. 
 
 %The default value is '\texttt{false}'. 
 \end{minipage}
@@ -869,11 +885,13 @@ Thus, with \texttt{xelatex} the flag \texttt{\$pdfViaDvi} may not be set.
 \begin{minipage}{0.95\linewidth}
 The driver to convert dvi into pdf-files. 
 Note that this must fit the options 
-of the packages `\pkg{xcolor}' and `\pkg{graphicx}'. 
-Sensible values are 
-`\texttt{dvipdf'}, `\texttt{dvipdfm'}, `\texttt{dvipdfmx}', 
+of the packages `\pkg{xcolor}', `\pkg{graphicx}' and, provided no autodetection, \pkg{hyperref}. 
+Sensible values are `\texttt{dvipdfm}', `\texttt{dvipdfmx}' and `\texttt{dvipdft}', 
+which are all the same in my implementation 
 and `\texttt{dvipdft}' 
-(which is `\texttt{dvipdfm}' with option `\texttt{-t}').  
+(which is roughly a wrapper around `\texttt{dvipdfm}' with option \texttt{-t} using `\texttt{gs}'). 
+Note that `\texttt{dvipdf}' is just a script around `\texttt{dvips}' using `\texttt{gs}', 
+but does not provide proper options; so not allowed. 
 %The default value is `dvipdfmx'. 
 \end{minipage}
 } \\
