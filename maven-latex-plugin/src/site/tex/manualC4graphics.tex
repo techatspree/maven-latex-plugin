@@ -594,8 +594,8 @@ in the first line of the mp-file
 solves the problem as~\cite{MPost}, Section~14.2.1 explains. 
 Then it can be viewed in ghostscript. 
 
-A much better alternative is to specify the the option 
-
+A much better alternative is 
+to specify the the option \texttt{-s prologues=2} for \texttt{mpost}. 
 
 Roughly speaking, the mpx-file contains text parts of the mp-file; 
 more knowledge is not necessary, as the texts are also in the mps-files 
@@ -688,6 +688,33 @@ mpost -s 'outputformat="svg"' -s 'outputtemplate:="%j%c.svg"' -s prologues=3 fil
 
 %FIXME\@: 
 Note that the output 
+
+% This example is simple but not very illustrative. 
+% In the long run we shall use a state diagram based on~\cite{MetaUml}. 
+
+% There must be also a section on installation of packages: 
+% in suse linux it is ready to go, but in general, it is not. 
+% kpsewhich metauml.mp
+% /usr/share/texmf/metapost/metauml/metauml.mp
+% shows the location. 
+% Put https://github.com/ogheorghies/MetaUML/ there 
+% and mktexlsr and then check again with kpsewhich. 
+% docs is in 
+% /usr/share/texmf/doc/metapost/metauml/README
+
+% What is interesting here also is, that mp can be included directly in lualatex. 
+% There shall be some illustration for this. 
+
+% Similarly one can install latex packages. 
+% Example: tikz-uml: 
+% kpsewhich tikz-uml.sty shows 
+% /usr/share/texmf/tex/latex/tikz-uml/tikz-uml.sty
+
+% ok download, move accordingly and also move the docs 
+% /usr/share/texmf/doc/amstex/base/README
+% /usr/share/texmf/doc/latex/geometry/README.md
+
+
 
 \section{Inclusion of svg-files}\label{sec:picSvg}
 
