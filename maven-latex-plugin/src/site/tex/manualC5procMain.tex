@@ -72,18 +72,18 @@ is running a \LaTeX{}-to-pdf converter \texttt{latex2pdf}
 to a master TEX file \texttt{xxx.tex}. 
 The \LaTeX-to-pdf converter \texttt{latex2pdf} 
 is configurable via the parameter \texttt{latex2pdfCommand}. 
-Possible values are \texttt{lualatex}, \texttt{xelatex} and \texttt{pdflatex}, 
+Possible values are \lualatex{}, \xelatex{} and \pdflatex, 
 where the first is the default for which this software is also tested. 
 It is also possible to pass parameters to the \LaTeX{}-to-pdf converter. 
 Besides conversion into \gls{pdf} format, 
 all converters offer conversion to the older \gls{dvi} format 
-via option \texttt{-{}-output-format} as \texttt{lualatex} and \texttt{pdflatex}, 
+via option \texttt{-{}-output-format} as \lualatex{} and \pdflatex, 
 or the alternative \gls{xdv} generalizing \gls{dvi} 
-as \texttt{xelatex} does with the option \texttt{-{}-no-pdf}. 
+as \xelatex{} does with the option \texttt{-{}-no-pdf}. 
 
 In fact, the converter \texttt{latex2pdf} 
 does much more than converting TEX files to PDF files. 
-Figure~\ref{fig:tex2pdf} shows for \texttt{latex2pdf} set e.g.~to \texttt{lualatex}, 
+Figure~\ref{fig:tex2pdf} shows for \texttt{latex2pdf} set e.g.~to \lualatex{}, 
 that besides the PDF file also a LOG file and an AUX file is created. 
 The LOG file contains logging information on the run of the conversion 
 and the aux-file transports information from one run to the next, 
@@ -662,11 +662,11 @@ in the PDF file or whatever output file created.
 % Note that if depythontex is invoked, it is immaterial whether the subsequent run of LaTeX-to-pdf converter 
 % is on the original tex file or on the tex file created by depythontex. 
 
-An important remark is that \texttt{lualatex} is the preferred converter, 
+An important remark is that \lualatex{} is the preferred converter, 
 because files \texttt{*.stdout} can impose heavy memory usage 
-and currently \texttt{lualatex} is the only converter allocating memory dynamically. 
+and currently \lualatex{} is the only converter allocating memory dynamically. 
 
-As one can see, \texttt{pythontex} cooperates with \texttt{lualatex} in a way 
+As one can see, \texttt{pythontex} cooperates with \lualatex{} in a way 
 also \texttt{bibtex} or the other auxiliary programs do. 
 Although \texttt{pythontex}, at time of this writing in version 0.18, 
 is quite mature, it refrains from writing a log file and indicates errors and warnings 
@@ -1009,7 +1009,7 @@ one can set metadata such as author, title, subject and keyword
 as described in~\cite{HyperTextP}, Section 5.8. 
 On the other hand, 
 one could eliminate \texttt{CreationDate} and \texttt{ModDate}. 
-For newer versions of \texttt{pdflatex} this can be done alternatively 
+For newer versions of \pdflatex{} this can be done alternatively 
 with \texttt{\textbackslash pdfinfoomitdate1}. 
 
 The metadata which can be eliminated only in a engine specific way 
@@ -1018,13 +1018,13 @@ Note that the latter is {\em intentionally\/}
 a unique identifier for the individual document 
 and so strictly speaking it is not advised to eliminate this 
 but eliminating is necessary because it is incompatible with reproducibility. 
-Note that \texttt{xelatex} seems not to write PTEX keys at all 
+Note that \xelatex{} seems not to write PTEX keys at all 
 so only the \texttt{pdftrailerid} has to be eliminated or fixed. 
 
 Unfortunately, the commands required to make a pdf file reproducible 
 is not uniform among the tex to pdf converters. 
-In fact, it works best with \texttt{lualatex} and sufficiently for \texttt{pdflatex} 
-but support seems incomplete with \texttt{xelatex}. 
+In fact, it works best with \lualatex{} and sufficiently for \pdflatex{} 
+but support seems incomplete with \xelatex. 
 
 
 \begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\tiny,
@@ -1098,7 +1098,7 @@ but support seems incomplete with \texttt{xelatex}.
 
 
 
-If a user renounces independence of the engine and sticks to \texttt{pdflatex} only, 
+If a user renounces independence of the engine and sticks to \pdflatex{} only, 
 the package \texttt{hyperref} 
 could be replaced by specific commands. 
 Also, using the package \texttt{iftex} one can detect the used engine 
@@ -1143,7 +1143,7 @@ a \texttt{tex4htCommand}-command is used
 Together with its parameters, 
 it is described in Section!\ref{sec:settingsLatex2Html}. 
 This may be \texttt{htlatex}, the default based on \texttt{latex} 
-and \texttt{htxelatex} based on \texttt{xelatex}. 
+and \texttt{htxelatex} based on \xelatex. 
 
 Figure~\ref{fig:tex2xml} shows the steps \texttt{htlatex} performs: 
 From the input \LaTeX{} file \texttt{xxx.tex} 
@@ -1156,7 +1156,7 @@ which arises from \texttt{xxx.tex} by adding
 %
 Then \texttt{htlatex} runs \texttt{latex} on \texttt{yyy.tex} 
 which results in \texttt{yyy.dvi}. 
-Note that this is in contrast to \texttt{lualatex} 
+Note that this is in contrast to \lualatex{} 
 which would create some \texttt{yyy.pdf} unless otherwise specified. 
 
 Then comes the converter \pkg{tex4ht} into the game 

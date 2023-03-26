@@ -219,7 +219,7 @@ Note that the \texttt{-X} switch activates debugging
 which results in a more verbose output. 
 Example: \texttt{mvn -X latex:cfg}. 
 
-CAUTION\@: The latex processor is \texttt{xelatex} 
+CAUTION\@: The latex processor is \xelatex{} 
 can only be used to create \texttt{pdf} files; 
 instead of the \texttt{dvi} format, it supports the \texttt{xdv} format, 
 which cannot be created with this software. 
@@ -300,7 +300,7 @@ Also, typically, one wants to mix creation by this maven-plugin or ant-task
 with at least partial creation through external tools. 
 For example, if writing \LaTeX-files with Emacs, 
 it is much more convenient, to compile the \LaTeX{} main file 
-via \texttt{pdflatex} from within Emacs 
+via \pdflatex{} from within Emacs 
 or to create a pdf-file from a \gls{fig}-file 
 through \texttt{xfig}'s export dialog, 
 than using this maven-plugin or this ant-task. 

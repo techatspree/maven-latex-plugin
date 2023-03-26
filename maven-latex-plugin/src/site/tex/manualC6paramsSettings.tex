@@ -106,7 +106,7 @@ although also \gls{dvi} and \gls{xdv} are possible}.
 The value of the option is the command to invoke the converter of the category. 
 Also, there is a default converter in each category, 
 and sometimes there is just a single converter possible. 
-For example, \texttt{lualatex} is the default converter in the category \texttt{latex}. 
+For example, \lualatex{} is the default converter in the category \texttt{latex}. 
 
 This software knows about converters and registers the ones approved for this software. 
 Among the advantages are, that it is ensured that the converter is really in that category 
@@ -742,20 +742,20 @@ Parameter        & Default  \\
 \bottomrule
 \caption{\label{tab:paramLatex2pdf} The \LaTeX-to-pdf-converter}
 \endlastfoot%
-\texttt{latex2pdfCommand}       & \texttt{lualatex}      \\
+\texttt{latex2pdfCommand}       & \lualatex{}      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The \LaTeX{} command to create above all a pdf-file with. 
 Further formats are dvi and xdv and also other formats based on these. 
-Expected values are \texttt{lualatex}, \texttt{xelatex} and \texttt{pdflatex}. 
+Expected values are \lualatex, \xelatex{} and \pdflatex. 
 
-Note that for \texttt{xelatex} dvi mode 
+Note that for \xelatex{} dvi mode 
 (creating xdv-files instead of dvi-files) is not supported, 
 even not creating pdf or other formats via xdv. 
 See also the according options \texttt{\$latex2pdfOptions} and \texttt{\$pdfViaDvi}. 
 In particular, this maven plugin does not allow goal \texttt{dvi} and related 
-for \texttt{xelatex}. 
-%The default value is '\texttt{lualatex}'. 
+for \xelatex. 
+%The default value is '\lualatex{}'. 
 \end{minipage}
 } \\
 \texttt{latex2pdfOptions}   & see Section~\ref{subsec:latex2pdfOptions} \\
@@ -837,7 +837,7 @@ If \texttt{\$pdfViaDvi} is set
 and the latex processor needs repetitions, 
 these are all done creating dvi 
 and then pdf is created in a final step 
-invoking the command \texttt{\$dvi2pdfCommand} 
+invoking the command \texttt{\$dvi2pdfCommand}. 
 If \texttt{\$pdfViaDvi} is not set, 
 latex is directly converted into pdf. 
 
@@ -924,7 +924,7 @@ An overview over the options supported by the usual latex engines in distributio
 is given in~\cite{LatexGen}, Section 2. 
 In particular, there is a table with the options occurring in any latex converter 
 and columns indicating for each option for which converters it is valid. 
-Note that unlike the other engines, \texttt{lualatex} defines options starting with \texttt{-{}-}, 
+Note that unlike the other engines, \lualatex{} defines options starting with \texttt{-{}-}, 
 it works on according options starting with single dash also. 
 To support all engines with the same parameters, 
 the default options are among the ones common to all supported converters: 
@@ -976,7 +976,7 @@ The following list of prohibited options is illustrative but not complete:
                    pdf is the only allowed \dots. 
                    This is not supported by \xelatex. 
   \item[-no-pdf] generate XDV (extended DVI) output rather than PDF. 
-   This is specific for \texttt{xelatex}. 
+   This is specific for \xelatex. 
   \item[-progname=STRING] set program (and fmt) name to STRING
     only names also without -progname are possible 
   \item[-help] display this help and exit
