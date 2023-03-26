@@ -101,9 +101,12 @@ The default value is '.'.  -->
 
             <!-- A comma separated list of targets 
 		 to be stored in $targetSet. 
-		 Allowed values are pdf, html, txt, odt and docx. 
-		 The default value is 'pdf, html'. -->
-            <targets>pdf</targets>            <!-- , html -->
+		 Allowed values are pdf, dvi, html, txt, odt and docx. 
+		 The default value is 'pdf, html'. 
+     TBD: check whether dvi is allowed also 
+        -->
+
+            <targets>dvi</targets>            <!-- , html -->
 
             <!-- A comma separated list of excluded {@link Converter}s 
 given by their command, i.e. by {@link Converter#getCommand()}
