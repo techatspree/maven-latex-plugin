@@ -93,7 +93,7 @@ The default value is '.'.  -->
             <outputDirectory>.</outputDirectory>
 
             <!-- Diff directory relative to 'baseDirectory' 
-     used for diffing actually created artifact against prescribed one inthis directory. 
+     used for diffing actually created artifact against prescribed one in this directory. 
      This is relevant only if 'chkDiff' is set. 
      The according file is given by 'diffDirectoryFile'. 
      The default value is <code>.</code>. -->
@@ -102,11 +102,13 @@ The default value is '.'.  -->
             <!-- A comma separated list of targets 
 		 to be stored in $targetSet. 
 		 Allowed values are pdf, dvi, html, txt, odt and docx. 
+     Note that if '$latex2pdfCommand' is set to 'xelatex', 
+     the format 'dvi' and what is based on it are not supported. 
 		 The default value is 'pdf, html'. 
      TBD: check whether dvi is allowed also 
         -->
 
-            <targets>dvi</targets>            <!-- , html -->
+            <targets>pdf</targets>            <!-- , html -->
 
             <!-- A comma separated list of excluded {@link Converter}s 
 given by their command, i.e. by {@link Converter#getCommand()}
@@ -430,6 +432,7 @@ even not creating pdf or other formats via xdv.
 See also the according options '$latex2pdfOptions' and '$pdfViaDvi'. 
 In particular, this maven plugin does not allow goal 'dvi' and related 
 for 'xelatex'. 
+Consequently, '$targets' may not contain any of these goals. 
 The default value (for which this software is also tested) 
 is 'lualatex'. -->
             <latex2pdfCommand>lualatex</latex2pdfCommand>
@@ -485,7 +488,7 @@ Also not allowed because format is determined by this software
 -no-pdf          generate XDV (extended DVI) output rather than PDF
                 This is supported by 'xelatex' only. 
 
-For a more thorough discussion see the manual
+For a more thorough discussion see the manual. 
 -->
             <latex2pdfOptions> -interaction=nonstopmode -synctex=1 
  -src-specials 
@@ -578,7 +581,7 @@ only some space is visible and only in the final step
 performed by $dvi2pdfCommand, 
 the pictures are included using the bounding boxes 
 given by the .bb or the .xbb-file. 
-These are both created by $ebbCommand
+These are both created by $ebbCommand. 
 
 Of course, the target dvi is not affected: 
 This uses always the dvi-format. 
@@ -587,6 +590,17 @@ creating html, odt or docs:
 Although these are based on htlatex which is always dvi-based, 
 the preprocessing is done in dvi or in pdf. 
 Also the task txt is affected. 
+
+As indicated in '$latex2pdfCommand', 
+the processor 'xelatex' does not create 'dvi' 
+but 'xdv' files. 
+In a sense, the 'xdv' format is an extension of 'dvi'}' 
+but as for he 'xdv' format there is no viewer, 
+no way 'htlatex' or other applications 
+(except the \xelatex-internal 'xdvidpfmx') 
+and also no according mime type, 
+we refrained from subsumming this under ``kind of dvi''. 
+Thus, with 'xelatex' the flag '$pdfViaDvi' may not be set. 
 
 Performance: 
 false: 17.692s-18.892s
@@ -597,17 +611,30 @@ The default value is 'false'. -->
 
             <!-- The driver to convert dvi into pdf-files. 
 Note that this must fit the options 
-of the packages 'xcolor' and 'graphicx'. 
+of the packages 'xcolor', 'graphicx' and, provided no autodetection, 'hyperref'. 
 Sensible values are 
-'dvipdf', 'dvipdfm', 'dvipdfmx', 
+'dvipdfm', 'dvipdfmx' and 'xdvipdfmx', which are all the same in my implementation 
 and 'dvipdft' 
-(which is 'dvipdfm' with option '-t').  
+(which is roughly a wrapper around 'dvipdfm' with option '-t' using 'gs'). 
+Note that 'dvipdf' is just a script around `dvips` using 'gs' 
+but does not provide proper options; so not allowed. 
 The default value is 'dvipdfmx'. -->
             <dvi2pdfCommand>dvipdfmx</dvi2pdfCommand>
 
             <!-- The options for the command $dvi2pdfCommand. 
-The default value is the empty string. -->
-            <dvi2pdfOptions />
+The default value is '-V1.7' specifying the pdf version to be created. 
+The default version for pdf format for $dvi2pdfCommand is version 1.5. 
+The reason for using version 1.7 is $fig2dev which creates pdf figures in version 1.7 
+and forces $latex2pdfCommand in dvi mode to include pdf version 1.7 
+and finally $dvi2pdfCommand to use that also to avoid warnings. 
+
+Using $latex2pdfCommand if used to create pdf directly, by default also pdf version 1.5 is created. 
+For sake of uniformity, it is advisable to create pdf version 1.7 also. 
+In future this will be done uniformly through \DocumentMetadata command. 
+
+The default value is '-V1.7'. 
+-->
+            <dvi2pdfOptions>-V1.7</dvi2pdfOptions>
 
             <!-- The pattern is applied linewise to the log-file 
 and matching triggers rerunning $latex2pdfCommand 

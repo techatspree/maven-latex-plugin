@@ -238,6 +238,8 @@ which is by default '\texttt{\$targetDirectory/site}' on Unix systems.
 A comma separated list of targets to be stored in \texttt{\$targetSet}. 
 Allowed values are \texttt{pdf}, \texttt{dvi}, \texttt{html}, 
 \texttt{txt}, \texttt{odt} and \texttt{docx}. 
+Note that if \texttt{\$latex2pdfCommand} is set to \xelatex, 
+the format \texttt{dvi} and what is based on it are not supported. 
 %The default value is '\texttt{pdf, html}'. 
 \end{minipage}
 } \\
@@ -757,6 +759,7 @@ even not creating pdf or other formats via xdv.
 See also the according options \texttt{\$latex2pdfOptions} and \texttt{\$pdfViaDvi}. 
 In particular, this maven plugin does not allow goal \texttt{dvi} and related 
 for \xelatex. 
+Consequently, '\texttt{\$targets}' may not contain any of these goals. 
 %The default value is '\lualatex{}'. 
 \end{minipage}
 } \\
@@ -875,10 +878,6 @@ and also no according mime type,
 we refrained from subsumming this under ``kind of dvi''. 
 Thus, with \xelatex{} the flag \texttt{\$pdfViaDvi} may not be set. 
 
-%Note that \texttt{\$pdfViaDvi} cannot be set if \texttt{\$latex2pdfCommand} is \xelatex. 
-%This is because \xelatex{} does not create dvi but xdv. 
-For the latter there is no viewer and it is not even a mime type as x-dvi is. 
-
 %The default value is '\texttt{false}'. 
 \end{minipage}
 } \\
@@ -901,7 +900,17 @@ but does not provide proper options; so not allowed.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command \texttt{\$dvi2pdfCommand}. 
-%The default value is the empty string.
+he default value is '\texttt{-V1.7}' specifying the pdf version to be created. 
+The default version for pdf format for \texttt{\$dvi2pdfCommand} is version 1.5. 
+The reason for using version 1.7 is \texttt{\$fig2dev} which creates pdf figures in version 1.7 
+and forces \texttt{\$latex2pdfCommand} in dvi mode to include pdf version 1.7 
+and finally \texttt{\$dvi2pdfCommand} to use that also to avoid warnings. 
+
+Using \texttt{\$latex2pdfCommand} if used to create pdf directly, 
+by default also pdf version 1.5 is created. 
+For sake of uniformity, it is advisable to create pdf version 1.7 also. 
+In future this will be done uniformly through \texttt{\textbackslash{}DocumentMetadata} command. 
+%The default value is '-V1.7' but should be the empty string.
 \end{minipage}
 } \\
 \texttt{patternReRunLatex} &  see Section~\ref{subsec:patternReRunLatex} \\
