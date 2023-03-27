@@ -60,6 +60,30 @@
       This includes basic latex support but also support of all graphic source formats. 
       These must be worked into the manual. 
 
+
+%\RequirePackage{pdfmanagement-testphase} % this will not be required in future. 
+%\DocumentMetadata{pdfversion=1.7}
+\documentclass{article} 
+
+Literature: \cite{DocMetaDataSuppCode}
+Note also that vscode als knows about the keys. 
+Use this to extend the pattern for latex main files. 
+
+Also metapost direct in lualatex via luamplib, cite {LuaMpLib}
+Es gibt die Frage nach der Art wie man mp files einbindet.
+Erst mal hat mpost auch eine -recorder option, die sich vielleicht auch die mit input inkludierten mp files bezieht, das musste man mal schauen.
+Wenn man aber mit tex eine mplibcode Umgebung definiert und darin das eigentliche mp-file (mit intput filename in metapost) inkludiert,
+dann erkennt lualatex die Abhaengigkeit nicht.
+Nur wenn man ein Tex-file inkludiert das die mplibcode Umgebung enthaelt.
+Dann aber passt das highlighting eben nicht, weil es ja zu tex passt und nicht zu mp.
+Aus meiner Sicht ist da eine Luecke.
+Die Frage ist auch, ob latex erkennt, dass eine Abhaengigkeit besteht, wenn man das mps-file mit includegraphics einbindet.
+Vermutlich auch nicht.
+Aehnliches Problem bei xfig mit eingebettetem jpg Bild. 
+
+
+Also: meta-uml, with documentation 
+
   For 2.1: bib2gls                      From here on one can compile at least the twopagers 
                                         in some private project
   For 2.2: bibtex and biber
