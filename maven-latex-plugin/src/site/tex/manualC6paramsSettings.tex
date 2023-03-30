@@ -94,7 +94,7 @@ or are included to allow also development of latex files.
 
 As pointed out in the introduction of this chapter, 
 this software acts mainly by invoking various converters. 
-The converters are grouped in so-called {\em categories}. 
+The converters are grouped in so-called \emph{categories}. 
 The converters of a category have the same (file-)interface, %chktex 36
 means read and write the same files and, 
 mostly but not strictly necessarily, have the same options. 
@@ -119,7 +119,7 @@ In this case, the command name shall be given in the form
   <categoryCommand>commandName:category</categoryCommand>
 \end{verbatim}
 %
-to make sure, that the user is really aware that the converter (s)he uses 
+to make sure, that the user is really aware that the converter (s)he uses % chktex 36
 is in the correct category, i.e.~has the required interface. 
 Since neither of the registered converters has a \texttt{:} in its name, 
 This form is identified by the occurrence of a colon. 
@@ -173,13 +173,13 @@ Indicates whether the \texttt{VersionMojo} displays warnings only
 or also creates infos. 
 Infos refer to the version of this plugin and also on its git commit, 
 but also on the versions of the converters found 
-and lists the converters excluded, i.e. those not used
+and lists the converters excluded, i.e.\@ those not used
 and thus not tested on version.
 
 Warnings are emitted e.g. 
 if the version of a converter does not fit the expectations,
 the version of a converter could not be retrieved,
-e.g. because it is not installed 
+e.g.\@ because it is not installed 
 or if the converter specified is unknown altogether. 
 This defaults to \texttt{false} displaying also info.
 
@@ -249,7 +249,7 @@ the format \texttt{dvi} and what is based on it are not supported.
 A comma separated list of excluded {@link Converter}s 
 given by their command. 
 Excluded converters need not be installed but their names must be known. 
-They don't show up in the version check of target 'vrs' 
+They don't show up in the version check of target \texttt{vrs} 
 and of course they are not allowed to be used. 
 % By default, this list is empty. 
 \end{minipage}
@@ -291,7 +291,7 @@ and notify the developer of this plugin of the deficiency.
   Currently, names of latex main files 
   should better have pairwise different names, 
   even if in different directories. 
-  The empty string is the default, i.e. including all. 
+  The empty string is the default, i.e.\@ including all. 
   See parameter \texttt{mainFilesExcluded}. 
 \end{minipage}
 } \\
@@ -311,9 +311,9 @@ and notify the developer of this plugin of the deficiency.
   Together with \texttt{mainFilesExcluded}, 
   this is used for document development 
   to build the pdf of a subset of documents 
-  and e.g. because for a site one needs all documents, 
+  and e.g.\@ because for a site one needs all documents, 
   but with the software only the manual is shipped. 
-  The empty string is the default, i.e. excluding no file. 
+  The empty string is the default, i.e.\@ excluding no file. 
   See parameter \texttt{mainFilesIncluded}. 
 \end{minipage}
 } \\
@@ -385,14 +385,15 @@ If the current default value is not appropriate,
 please overwrite it in the configuration 
 and notify the developer of this plugin of the deficiency. 
 \end{minipage}
-} \\ % chktex 10 (bug) 
+} \\ % chktex 9 chktex 10 (bug) 
 \end{longtable}
 
 
-\subsection{The parameter \texttt{patternLatexMainFile}}
+\subsection{The parameter \texttt{patternLatexMainFile}}%
 \label{subsec:patternLatexMainFile}
 
-The default pattern for identifying a \LaTeX{} main file is given by Listing~\ref{lst:patternLatexMainFile}.
+The default pattern for identifying a \LaTeX{} main file 
+is given by Listing~\ref{lst:patternLatexMainFile}.
 
 \lstinputlisting[language=xml, basicstyle=\footnotesize,
 firstline=141, lastline=148,
@@ -480,15 +481,15 @@ So a pattern for latex main files could also be
 \end{verbatim}
 
 For users of visual code/latex workshop, there is another alternative: 
-Absence of first line \texttt{\% !TEX root}. 
+Absence of first line \texttt{\%~!TEX root}. 
 
 Also, if one wants to have a solution not relying on a tool-chain 
-not even on \LaTeX tools, 
+not even on \LaTeX{} tools, 
 One could use a convention, e.g.~marking main files with first line \texttt{\% MAIN FILE}, 
 which makes parsing quite fast. 
 
 
-\subsection{The parameter \texttt{patternCreatedFromLatexMain}}
+\subsection{The parameter \texttt{patternCreatedFromLatexMain}}%
 \label{subsec:patternCreatedFromLatexMain}
 
 The files created from a latex main file 
@@ -687,12 +688,12 @@ which are added automatically.
 } \\
 \end{longtable}
 
-\subsection{The parameter \texttt{metapostOptions}}
+\subsection{The parameter \texttt{metapostOptions}}%
 \label{subsec:metapostOptions}
 TODO\@: add 
 %%\texttt{\small -interaction=nonstopmode -recorder -s prologues=2}
 
-\subsection{The parameter \texttt{svg2devOptions}}
+\subsection{The parameter \texttt{svg2devOptions}}%
 \label{subsec:svg2devOptions}
 
 The following options are mandatory: 
@@ -726,7 +727,7 @@ Export document to an EPS file.
 % The default value is the minimal value, `-z -D - -export-latex'. 
 
 
-\section{Parameters for the \LaTeX-to-pdf Conversion}
+\section{Parameters for the \LaTeX-to-pdf Conversion}%
 \label{sec:settingsLatex2pdf}
 
 This section describes the parameters 
@@ -946,7 +947,7 @@ or -1 which signifies that there is no threshold.
 \end{longtable}
 
 
-\subsection{The parameter \texttt{latex2pdfOptions}}
+\subsection{The parameter \texttt{latex2pdfOptions}}%
 \label{subsec:latex2pdfOptions}
 
 An overview over the options supported by the usual latex engines in distribution \texlive{} 
@@ -1004,7 +1005,7 @@ The following list of prohibited options is illustrative but not complete:
   \item[-output-format=FORMAT] use FORMAT for job output; FORMAT is `dvi' or `pdf'
                    pdf is the only allowed \dots. 
                    This is not supported by \xelatex. 
-  \item[-no-pdf] generate XDV (extended DVI) output rather than PDF. 
+  \item[-no-pdf] generate XDV (extended DVI) output rather than PDF\@. 
    This is specific for \xelatex. 
   \item[-progname=STRING] set program (and fmt) name to STRING
     only names also without -progname are possible 
@@ -1053,7 +1054,7 @@ If not one has to clarify whether in \texlive{} all converters understand double
 If so all must be changed into double dash. 
 
 
-\subsection{The parameter \texttt{patternWarnLatex}}
+\subsection{The parameter \texttt{patternWarnLatex}}%
 \label{subsec:patternWarnLatex}
 
 The patterns given below are just by (unwritten) convention. 
@@ -1071,7 +1072,7 @@ For the current default value, we distinguish
 %
 \begin{itemize}
 \item
-\LaTeX-warnings emitted directly by \LaTeX 
+\LaTeX-warnings emitted directly by \LaTeX{} 
 starting with \texttt{LaTeX Warning: }, 
 \item
 \LaTeX-font-warnings related with fonts/font selection 
@@ -1109,7 +1110,7 @@ A space is missing\. (No warning)\.)
 %$ for emacs only 
 
 
-\subsection{The parameter \texttt{patternReRunLatex}}
+\subsection{The parameter \texttt{patternReRunLatex}}%
 \label{subsec:patternReRunLatex}
 TODO\@: add 
 
@@ -1136,11 +1137,10 @@ LaTeX Warning: Etaremune labels have changed\.$|
 \(rerunfilecheck\)                Rerun to get outlines right$)
 \end{Verbatim}
 
-FIXME: There is a bug in this pattern. See Section~\ref{chap:bugs}. 
+FIXME\@: There is a bug in this pattern. See Section~\ref{chap:bugs}. 
 
 
-\section{Parameters for Creation of the Bibliography}
-\label{sec:settingsBibTeX}
+\section{Parameters for Creation of the Bibliography}\label{sec:settingsBibTeX}
 
 This section describes the parameters 
 or creation of the bibliography
@@ -1194,7 +1194,7 @@ according to the `\texttt{bibtex}' documentation.
 } \\
 \end{longtable}
 
-\section{Parameters for Creation of the Indices}
+\section{Parameters for Creation of the Indices}%
 \label{sec:settingsMakeIndex}
 
 This section describes the parameters 
@@ -1258,7 +1258,7 @@ followed by \texttt{\$latex2pdfCommand}.
 
 This pattern only matches a warning 
 emitted by the package `\pkg{rerunfilecheck}' 
-e.g. used with option `\texttt{index}'. 
+e.g.\@ used with option `\texttt{index}'. 
 The default value 
 is chosen according to the package documentation. 
 
@@ -1302,10 +1302,10 @@ Do not use `\texttt{--verbose}' either for sake of portability.
 \end{longtable}
 
 
-\subsection{The parameter \texttt{patternReRunMakeIndex}}
+\subsection{The parameter \texttt{patternReRunMakeIndex}}%
 \label{subsec:patternReRunMakeIndex}
 
-As shown in \cite{RerunFChkP}, Section 2.3, Listing line 166, 
+As shown in~\cite{RerunFChkP}, Section 2.3, Listing line 166, 
 the pattern is 
 %
 \begin{Verbatim}
@@ -1314,7 +1314,7 @@ the pattern is
 %$ for emacs only 
 
 
-\section{Parameters for Creation of the Glossary}
+\section{Parameters for Creation of the Glossary}%
 \label{sec:settingsMakeGlossaries}
 
 This section describes the parameters 
@@ -1367,8 +1367,8 @@ Options `\texttt{-M<}' for `\texttt{xindy}'
 \begin{minipage}{0.95\linewidth}
 The pattern is applied line-wise to the `glg'-file 
 and matching indicates that \texttt{\$makeGlossariesCommand} failed. 
-The default value `\texttt{(\^\*\*\* unable to execute: )}' 
-is chosen according to the 'makeindex' documentation. 
+The default value `\texttt{(\^\*\*\* unable to execute:~)}' 
+is chosen according to the \texttt{makeindex} documentation. 
 If the default value is not appropriate, please modify 
 and notify the developer of this plugin. 
 \end{minipage}
@@ -1390,7 +1390,7 @@ The pattern is applied line-wise to the `glg'-file
 and matching indicates a warning when running `\texttt{xindy}' 
 via \texttt{\$makeGlossariesCommand}. 
 
-The default value `\texttt{(\^{}WARNING: )}' 
+The default value `\texttt{(\^{}WARNING:~)}' 
 (note the space and the brackets) 
 is chosen according to the '\texttt{xindy}' documentation. 
 
@@ -1409,7 +1409,7 @@ followed by \texttt{\$latex2pdfCommand}.
 
 This pattern only matches a warning 
 emitted by the package `\pkg{rerunfilecheck}' 
-e.g. used with option `\texttt{glossary}'. 
+e.g.\@ used with option `\texttt{glossary}'. 
 The default value 
 is chosen according to the package documentation. 
 
@@ -1420,10 +1420,9 @@ and notify the developer of this plugin of the bug.
 } \\
 \end{longtable}
 
-\subsection{The parameter \texttt{patternReRunMakeGlossaries}}
-\label{subsec:patternReRunMakeGlossaries}
+\subsection{The parameter \texttt{patternReRunMakeGlossaries}}\label{subsec:patternReRunMakeGlossaries}
 
-As shown in \cite{RerunFChkP}, Section 2.3, Listing line 210, 
+As shown in~\cite{RerunFChkP}, Section 2.3, Listing line 210, 
 the pattern is 
 %
 \begin{Verbatim}
@@ -1433,7 +1432,7 @@ the pattern is
 
 This holds even if \texttt{splitindex} is used. 
 
-\section{Parameters for including Code with \texttt{pythontex}}
+\section{Parameters for including Code with \texttt{pythontex}}%
 \label{sec:settingsPythontex}
 
 This section describes the parameters for invoking both 
@@ -1561,7 +1560,7 @@ Accordingly, the pattern texttt{patternWarnPyTex} is by default
 \end{Verbatim}
    
 
-\section{Parameters for Conversion \LaTeX{} to html}
+\section{Parameters for Conversion \LaTeX{} to html}%
 %\section{Parameters for the \LaTeX-to-html Conversion}
 \label{sec:settingsLatex2Html}
 
@@ -1646,7 +1645,7 @@ and notify the developer of this plugin of the bug.
 \end{longtable}
 
 
-\subsection{The parameter \texttt{patternT4htOutputFiles}}
+\subsection{The parameter \texttt{patternT4htOutputFiles}}%
 \label{subsec:patternT4htOutputFiles}
 
 
@@ -1660,7 +1659,7 @@ The default value has the following components:
 `\texttt{\^{}T\$Tli\textbackslash d+\textbackslash.x?html?\$}' are lists: 
 toc, lof, lot, indices, glossaries, NOT the bibliography. 
 \item
-'\texttt{\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' 
+'\texttt{\^{}T\$T(ch|se|su|ap)\textbackslash d+\textbackslash.x?html?\$}' % chktex 36
 are chapters, sections and subsections or below 
 and appendices. 
 \item
@@ -1672,12 +1671,12 @@ and appendices.
 `\texttt{\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
 are svg/png-files representing figures. 
 \item
-`\texttt{\^({}T\$T\textbackslash d+x\textbackslash.x?bb}' 
+`\texttt{\^({}T\$T\textbackslash d+x\textbackslash.x?bb}' % chktex 15 chktex 9
 are the bounding boxes 
 (suffix \texttt{.bb}  for \texttt{dvipdfm} and 
  suffix \texttt{.xbb} for \texttt{dvipdfmx}). 
 \item
-`\texttt{\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' 
+`\texttt{\^{}(cmsy)\textbackslash d+(-c)?-\textbackslash d+c?\textbackslash.png\$}' % chktex 36
 represents special symbols. 
 \end{itemize}
 		 
@@ -1708,7 +1707,7 @@ and still subject to development,
 this pattern cannot be guaranteed to be final. 
 
 
-\section{Parameters for further Conversions }
+\section{Parameters for further Conversions }%
 \label{sec:settingsExt}
 
 This section describes the parameters 
@@ -1995,7 +1994,7 @@ It is
 which adds a blank to all lines but the headlines. 
 That way, the kind of issue (\%k) is easily parsed. 
 This could be used for emitting an error instead of a warning 
-when processing goal {\em check}. 
+when processing goal \emph{check}. 
 
 
 \section{Parameters for Ensuring Reproducibility}\label{sec:paramRepro}
@@ -2076,7 +2075,7 @@ ranging from byte equivalence to some kind of visual equivalence.
   \begin{minipage}{0.95\linewidth}
     The diff-command for diffing pdf-files strictly or just visually 
     to check that the created pdf files are equivalent with prescribed ones. 
-    CAUTION: there are two philsophies: 
+    CAUTION\@: There are two philsophies: 
     Either the latex source files are created in a way that they reproduce strictly. 
     Then a strict diff command like \texttt{diff} is appropriate. 
     Else another diff command is required which checks for a kind of visual equality. 
@@ -2087,5 +2086,5 @@ ranging from byte equivalence to some kind of visual equivalence.
   \end{minipage}
   } \\\end{longtable}
 
-The options of \texttt{chktex} 
-are described in detail in~\cite{ChkTeX}, Section 6.1.2. 
+The options of \texttt{chktex} are described in detail 
+in~\cite{ChkTeX}, Section 6.1.2. % chktex 17 bug: rest but in 1674

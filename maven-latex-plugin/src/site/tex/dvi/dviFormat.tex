@@ -16,22 +16,22 @@
 \usepackage{hyperref}
 
 
-\ifLuaTeX
+\ifLuaTeX%
 % for lualatex
 %\pdfvariable minorversion=7
 % omit CreationDate and ModDate keys.
-\pdfvariable suppressoptionalinfo 767
+\pdfvariable suppressoptionalinfo 767% chktex 1
 % no adding to the trailer dictionary.
-\pdfvariable trailerid{}
-\pdfvariable suppressoptionalinfo -1
+\pdfvariable trailerid{}% chktex 1
+\pdfvariable suppressoptionalinfo -1% chktex 1
 \else
-\ifXeTeX
+\ifXeTeX%
 % for xelatex
 %\special{pdf:minorversion 7}
 % TBD: find a way to express pdfinfoomitdate: necessary? 
 \special{pdf:trailerid []}
 \else
-\ifPDFTeX
+\ifPDFTeX%
 %\pdfminorversion=7         % for pdflatex
 % omit CreationDate and ModDate keys.
 % not before pdfTeX 3.14159265-2.6-1.40.17
@@ -203,7 +203,7 @@ telling how many bytes they occupy; for example,
 
 \begin{itemize}
 
-\item[0-127] \texttt{set\_char\_$<d>$ $d$} where $d\in\{0,\dots,127\}$. 
+\item[0--127] \texttt{set\_char\_$<d>$ $d$} where $d\in\{0,\dots,127\}$. 
 
 Typeset character number~$d$ from font~$f$ 
 such that the reference point of the character is at $(h,v)$. 
@@ -212,7 +212,7 @@ Note that a character may have zero or negative width,
 so one cannot be sure that $h$ will advance after this command; 
 but $h$ usually does increase.
 
-\item[128-131] \texttt{set\_$<d>$ $128+d$ $c[d]$} where $d\in\{1,\dots,4\}$. 
+\item[128--131] \texttt{set\_$<d>$ $128+d$ $c[d]$} where $d\in\{1,\dots,4\}$. 
 Same as \texttt{set\_char\_0}, except that character number~$c$ is typeset. 
 Note that $d$ determines the number of characters. 
 \texttt{set\_$2$} is intended for oriental languages 
@@ -283,7 +283,7 @@ The number of pops should never exceed the number of pushes,
 since it would be highly embarrassing if the stack were empty 
 at the time of a \texttt{pop} command.
 
-\item[143-146] \texttt{right$<d>$ $142+d$ $b[d]$} where $d\in\{1,\dots,4\}$. 
+\item[143--146] \texttt{right$<d>$ $142+d$ $b[d]$} where $d\in\{1,\dots,4\}$. 
 Set $h:=h+b$, i.e., move right $b$ units.
 The parameter is a signed number in two's complement notation; 
 if $b<0$, the reference point actually moves left.
@@ -294,7 +294,7 @@ this parameterless command will usually suffice, because the same kind of motion
 will occur several times in succession; the following commands explain how
 $w$ gets particular values. 
 
-\item[148-151] \texttt{w$<d>$ $147+d$ $b[d]$} where $d\in\{1,\dots,4\}$. 
+\item[148--151] \texttt{w$<d>$ $147+d$ $b[d]$} where $d\in\{1,\dots,4\}$. 
 Set $w:=b$ and $h:=h+b$. 
 The value of $b$ is a signed quantity in two's complement notation. 
 This command changes the current $w$~spacing and moves right by $b$.
@@ -305,7 +305,7 @@ Set $h:=h+x$; i.e., move right $x$ units. The `$x$'
 commands are like the `$w$' commands except that they involve $x$ instead
 of $w$.
 
-\item[153-156] \texttt{x$<d>$ $152+d$ $b[d]$} where $d\in\{1,\dots,4\}$. 
+\item[153--156] \texttt{x$<d>$ $152+d$ $b[d]$} where $d\in\{1,\dots,4\}$. 
 Set $x:=b$ and $h:=h+b$. 
 The value of $b$ is a signed quantity in two's complement notation. 
 This command changes the current $x$~spacing and moves right by $b$.
@@ -322,7 +322,7 @@ Set $v:=v+y$; i.e., move down $y$ units.
 With luck, this parameterless command will usually suffice, 
 because the same kind of motion will occur several times in succession.
 
-\item[162-165] \texttt{y$<d>$ $161+d$ $a[d]$} where $d\in\{1,\dots,4\}$. 
+\item[162--165] \texttt{y$<d>$ $161+d$ $a[d]$} where $d\in\{1,\dots,4\}$. 
 Set $y:=a$ and $v:=v+a$. 
 The value of $a$ is a signed quantity in two's complement notation. 
 This command changes the current $y$~spacing and moves down by $a$. 
@@ -334,7 +334,7 @@ because the same kind of motion will occur several times in succession.
 The `\texttt{z}' commands are like the `\texttt{y}' commands 
 except that they involve $z$ instead of $y$. 
 
-\item[167-170] \texttt{z$<d>$ $166+d$ $a[d]$} where $d\in\{1,\dots,4\}$. 
+\item[167--170] \texttt{z$<d>$ $166+d$ $a[d]$} where $d\in\{1,\dots,4\}$. 
 Set $y:=a$ and $v:=v+a$. 
 The value of $a$ is a signed quantity in two's complement notation. 
 This command changes the current $z$~spacing and moves down by $a$. 
@@ -344,16 +344,16 @@ This command changes the current $z$~spacing and moves down by $a$.
 Set $f:=0$. Font 0 must previously have been
 defined by a \texttt{fnt\_def} instruction, as explained below.
 
-\item[172-234] \texttt{fntnum$<d>$ $171+d$ } where $d\in\{1,\dots,63\}$. 
+\item[172--234] \texttt{fntnum$<d>$ $171+d$ } where $d\in\{1,\dots,63\}$. 
 Set $f:=d$. 
 
 
-\item[235-238] \texttt{fnt$<d>$ $235+d$ $k[d]$} where $d\in\{1,\dots,4\}$. 
+\item[235--238] \texttt{fnt$<d>$ $235+d$ $k[d]$} where $d\in\{1,\dots,4\}$. 
 Set $f:=k$. 
 An application of \texttt{fnt$2$} or higher 
 maybe used for fonts with colors and texture information. 
 
-\item[239-242] \texttt{xxx$<d>$ $238+d$ $k[2]$ $x[k]$} 
+\item[239--242] \texttt{xxx$<d>$ $238+d$ $k[2]$ $x[k]$} 
 where $d\in\{1,\dots,4\}$. 
 This command is undefined in general; 
 it functions as a $(k+2)$-byte \texttt{nop} 
@@ -363,7 +363,7 @@ setting $k$ to the number of bytes being sent.
 It is recommended that $x$ be a string having the form of a keyword 
 followed by possible parameters relevant to that keyword.
 
-\item[243-246] \texttt{fntdef$<d>$ $242+d$ 
+\item[243--246] \texttt{fntdef$<d>$ $242+d$ 
 $k[d]$ $c[4]$ $s[4]$ $d[4]$ $a[1]$ $l[1]$ $n[a+l]$} 
 where $d\in\{1,\dots,4\}$. 
 Define font $k$; font definitions will be explained shortly.
@@ -379,11 +379,10 @@ Beginning of the postamble, see below.
 \item[249] \texttt{post\_post $249$}. 
 Ending of the postamble, see below. 
 
-\item[250-255] undefined currently. 
+\item[250--255] undefined currently. 
 \end{itemize}
 
-\section{The Preamble}
-\label{sec:preamble}
+\section{The Preamble}\label{sec:preamble}
 
 The preamble contains basic information about the file as a whole. 
 As stated above, there are six parameters:
@@ -421,8 +420,7 @@ Finally, $k$ and $x$ allow the \.{DVI} writer to include a comment, which is not
 interpreted further. The length of comment $x$ is $k$, where $0<=k<256$.
 
 
-\section{Font definitions}
-\label{sec:fontDef}
+\section{Font definitions}\label{sec:fontDef}
 
 Font definitions for a given font number $k$ contain further parameters
 \[
@@ -439,7 +437,7 @@ character widths in font $k$; font dimensions in \texttt{TFM} files and other
 font files are relative to this quantity, which is always positive and
 less than $2^{27}$. 
 It is given in the same units as the other dimensions of the \texttt{DVI} file. 
-Parameter $d$ is similar to $s$; it is the ``design size,'' 
+Parameter $d$ is similar to $s$; it is the ``design size'' 
 and (like~$s$) it is given in \texttt{DVI} units. 
 Thus, font $k$ is to be used at $mag\cdot s/1000d$ times its normal size.
 
@@ -458,8 +456,7 @@ Like \texttt{nop} commands,
 font definitions can appear before the first \texttt{bop}, 
 or between an \texttt{eop} and a \texttt{bop}. 
 
-\section{The Postamble}
-\label{sec:postamble}
+\section{The Postamble}\label{sec:postamble}
 
 The last page in a \texttt{DVI} file is followed by `\texttt{post}'; 
 this command introduces the postamble, 

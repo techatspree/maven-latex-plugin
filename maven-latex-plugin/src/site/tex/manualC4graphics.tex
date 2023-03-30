@@ -414,7 +414,7 @@ and may thus be created with any editor but
 for sake of reproducibility it is recommended to use only files
 created by \texttt{gnuplot}.
 To ensure that a hand-written gnuplot file \texttt{xxx.gp},
-e.g. with a single line like
+e.g.\@ with a single line like
 %
 \begin{verbatim}
 plot [-10:10] sin(x), atan(x), cos(atan(x))
@@ -443,7 +443,7 @@ figures stored in \texttt{.gp}-files created by \texttt{gnuplot}.
 To export a file \texttt{xxx.gp} into several external formats, 
 it uses \texttt{gnuplot} itself. 
 According to the manual~\cite{GnuPlot}, Part IV, 
-\texttt{gnuplot} supports output formats through so called {\em terminals}. 
+\texttt{gnuplot} supports output formats through so called \emph{terminals}. 
 Among those are several ones intended for inclusion into \LaTeX-files, 
 like \texttt{Cairolatex}, \texttt{Eepic}, \texttt{Epslatex}, 
 \texttt{Latex}, \texttt{Lua}, 
@@ -619,6 +619,7 @@ and embedded in this \LaTeX-file
 with the \cmd{includegraphics}-command. 
 Normally, \cmd{includegraphics} is invoked with the filename without extension, 
 but for mps-files, the extension is needed. 
+As for inclusion of fig-files, the package \pkg{graphicx} is needed. 
 
 \begin{figure}[htb]
 \centering

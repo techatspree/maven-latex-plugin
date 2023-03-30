@@ -36,26 +36,26 @@ or when development finished at a stage.
 \section{The source files}\label{sec:sources}
 
 The \LaTeX-files and also files included via \cmd{input}{} 
-are in the {\em tex-source directory}, 
-\index{tex-source directory}
+are in the \emph{tex-source directory}, 
+\index{tex-source directory}% chktex 24
 which is by default \texttt{./src/site/tex}, 
-where "`'\texttt{.}"' is the {\em base directory\/} of this maven-project. 
-\index{base directory}
+where ``\texttt{.}'' is the \emph{base directory} of this maven-project. 
+\index{base directory}% chktex 24
 The \LaTeX-files to be compiled top level, 
 typically not inputted anywhere via \cmd{input}, 
-are called {\em \LaTeX{} main files}. 
+are called \emph{\LaTeX{} main files}. 
 As an example, 
-in the {\em tex-source directory\/} of this software, 
+in the \emph{tex-source directory} of this software, 
 \texttt{manualLatexMavenPlugin.tex} is a \LaTeX{} main file, 
 whereas the file \texttt{header.tex} is not although also a \LaTeX-file. 
 % identification of the latex main file?
 \LaTeX{} main files are detected automatically. 
-\index{latex main file}
+\index{latex main file}% chktex 24
 
 The included files may be again \LaTeX-files, but also bibliography files, 
 listings included by package \pkg{listing}, verbatim text included with \pkg{verbatim} 
 and maybe soon even code files to be executed via the package \pkg{pythontex}. 
-\index{pythontex}
+\index{pythontex}% chktex 24
 The great bulk of input files however, are graphic files in various formats. 
 As regards the way their files are included in \LaTeX-files, 
 there are the following kinds of graphic formats, 
@@ -173,8 +173,8 @@ Here \texttt{latex} is the (short) name of the plugin
 and \texttt{cfg} is the goal. 
 It can also be interpreted as \texttt{mvn $<$source$>$:$<$target$>$}: 
 The source files are in \texttt{latex}-format and the target-formats 
-are read from the {\em configuration\/} in the pom 
-({\em configuration\/} is what \texttt{cfg} stands for). 
+are read from the \emph{configuration} in the pom 
+(\emph{configuration} is what \texttt{cfg} stands for). 
 
 By default, the target formats are \texttt{pdf} and \texttt{html}. 
 The following Listing~\ref{lst:targetsAll} shows a configuration 
@@ -225,13 +225,13 @@ instead of the \texttt{dvi} format, it supports the \texttt{xdv} format,
 which cannot be created with this software. 
 
 For creating the graphic files in the tex-source directory, 
-there is a goal {\em graphics}, invoked by \texttt{mvn latex:grp}. 
+there is a goal \emph{graphics}, invoked by \texttt{mvn latex:grp}. 
 This goal does not create any output in the site directory. 
 Instead, it populates the source directories 
 with graphic files which can be directly included into the \LaTeX-file 
 and so it allows to run the \LaTeX-compiler on the latex main files 
 from within a development environment. 
-Thus, the goal {\em graphics\/} is thus a vital feature 
+Thus, the goal \emph{graphics} is thus a vital feature 
 for development of documents. 
 
 
@@ -395,7 +395,7 @@ from the target folder.
 During development of a \LaTeX-main file, 
 it is often more convenient to compile from within an editor like Emacs. 
 The problem is, that compilation fails if the graphic files are missing. 
-This is what the goal {\em graphics\/} accessible via 
+This is what the goal \emph{graphics} accessible via 
 % 
 \begin{Verbatim}
 mvn latex:grp
@@ -405,7 +405,7 @@ is for:
 It creates all graphic files required to compile the \LaTeX-main files. 
 
 Still this does not create a bibliography, an index or a glossary. 
-With {\em auctex\/}\index{auctex}, an Emacs-package for editing \LaTeX, 
+With \emph{auctex}\index{auctex}, an Emacs-package for editing \LaTeX, 
 bibliography and index are well supported. 
 To create a glossary, auctex has to be modified a little. 
 
@@ -427,7 +427,7 @@ where \texttt{xxx} is
 \texttt{ilg} for \texttt{makeindex}. 
 \end{itemize}
 
-The last goal regularly used for development of documentation is {\em check}. 
+The last goal regularly used for development of documentation is \emph{check}. 
 It is invoked via 
 % 
 \begin{Verbatim}
@@ -436,7 +436,7 @@ mvn latex:chk
 %
 and runs \texttt{chktex}, described in~\cite{ChkTeX}, 
 on each latex main file 
-after having created graphic files as for goal {\em graphics}. 
+after having created graphic files as for goal \emph{graphics}. 
 As a result, a log-file with suffix \texttt{.clg} is created 
 but not copied to the target folder. 
 If the log-file contains an entry, 

@@ -35,22 +35,22 @@
 \usepackage{graphicx}% [pdftex] 
 \usepackage{hyperref}% driver [hpdftex] is autodetected 
 
-\ifLuaTeX
+\ifLuaTeX%
 % for lualatex
-\pdfvariable minorversion=7
+\pdfvariable minorversion=7% chktex 1
 % omit CreationDate and ModDate keys.
-\pdfvariable suppressoptionalinfo 767
+\pdfvariable suppressoptionalinfo 767% chktex 1
 % no adding to the trailer dictionary.
-\pdfvariable trailerid{}
-\pdfvariable suppressoptionalinfo -1
+\pdfvariable trailerid{}% chktex 1
+\pdfvariable suppressoptionalinfo -1% chktex 1
 \else
-\ifXeTeX
+\ifXeTeX%
 % for xelatex
 \special{pdf:minorversion 7}
 % TBD: find a way to express pdfinfoomitdate: necessary? 
 \special{pdf:trailerid []}
 \else
-\ifPDFTeX
+\ifPDFTeX%
 \pdfminorversion=7         % for pdflatex
 % omit CreationDate and ModDate keys.
 % not before pdfTeX 3.14159265-2.6-1.40.17
@@ -186,7 +186,7 @@ which demands the default orientation.
 Whereas each attribute given in the header is described by a single line, 
 for various object types a single line is not sufficient. 
 Each object description may start with an indefinite number of comment lines. 
-The first mandatory line of an object description is called the {\em headline}. 
+The first mandatory line of an object description is called the \emph{headline}. 
 The headline does not start with a blank. 
 When reading subsequent lines referring to the same object 
 xfig accepts a non-empty sequence of blanks, 
@@ -729,7 +729,7 @@ For \texttt{FontFlags} bit 2 = 1,
 \end{enumerate}
       
 The \texttt{Text} field above is a sequence of ASCII characters. 
-It starts after a {\em single\/} blank character 
+It starts after a \emph{single} blank character 
 which separates the coordinate field \texttt{x, y} 
 from the \texttt{Text} field. 
 This allows to specify texts with leading blanks. 
