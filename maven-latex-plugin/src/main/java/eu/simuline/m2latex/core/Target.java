@@ -150,12 +150,12 @@ public enum Target {
      * </ul>
      *
      * @param latexProcessor
-     *                       the processor to process <code>texFile</code>
-     * @param texFile
-     *                       the latex main file to be processed.
+     *    the processor to process <code>texFile</code>
+     * @param desc
+     *    the latex main file to be processed.
      * @throws BuildFailureException
-     *                               TEX01 if invocation of a command
-     *                               to transform <code>texFile</code> failed.
+     *    TEX01 if invocation of a command
+     *    to transform <code>texFile</code> failed.
      */
     public abstract void processSource(LatexProcessor latexProcessor, LatexMainDesc desc)
             throws BuildFailureException;

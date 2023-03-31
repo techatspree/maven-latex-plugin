@@ -468,7 +468,7 @@ public class MetaInfo {
 		 * Create a version from given pattern. 
 		 * This is used in {@link Version(Converter, CommandExecutor)} 
 		 * to create the version info of a converter 
-		 * but also in {@link VersionInterval(Converter, String)} 
+		 * but also in {@link VersionInterval#VersionInterval(Converter, String)} 
 		 * to get the minimum/maximum expected version of a converter. 
 		 * 
 		 * @param patternEnv

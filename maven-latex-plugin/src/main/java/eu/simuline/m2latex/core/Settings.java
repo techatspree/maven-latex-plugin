@@ -173,6 +173,8 @@ public class Settings {
      * A comma separated list of targets 
      * returned as a set by {@link #getTargetSet()}. 
      * For allowed values see {@link Target}. 
+     * Note that if {@link #latex2pdfCommand} is set to <code>xelatex</code>, 
+     * the format 'dvi' and what is based on it are not supported. 
      * The default value is <code>pdf, html</code>. 
      */
     @Parameter(name = "targets", defaultValue = "pdf, html")
@@ -670,9 +672,19 @@ public class Settings {
     // parameters for latex2pdf-conversion 
 
     /**
-     * The LaTeX command to create a pdf-file or a dvi-file. 
-     * Possible values are e.g. 
+     * The LaTeX command to create above all a pdf-file with, 
+     * but also dvi and other formats based on these. 
+     * Expected values are 
      * <code>lualatex</code> <code>xelatex</code>, and <code>pdflatex</code>. 
+     * <p>
+     * Note that for <code>xelatex</code> dvi mode 
+     * (creating xdv-files instead of dvi-files) is not supported, 
+     * even not creating pdf or other formats via xdv. 
+     * See also the according options {@link #latex2pdfOptions} 
+     * and {@link #pdfViaDvi}. 
+     * In particular, for <code>xelatex</code> 
+     * this maven plugin does not allow goal <code>dvi</code> and related. 
+     * Consequently, {@link #targets} may not contain any of these goals. 
      * The default value (for which this software is also tested) 
      * is <code>lualatex</code>.
      */
@@ -699,6 +711,9 @@ public class Settings {
      * <li><code>-shell-escape</code> 
      * allows to use write18-mechanism for shell commands (why needed?)
      * </ul>
+     * Note that several options offered by some latex converters 
+     * are not allowed for this software. 
+     * For details consult the manual. 
      */
     // useful also: -file-line-error
     @Parameter(name = "latex2pdfOptions", 
@@ -817,6 +832,13 @@ public class Settings {
      * then the formats are more based on (encapsulated) postscript; 
      * else on pdf. 
      * <p>
+     * In the dvi-file for jpg, png and svg 
+     * only some space is visible and only in the final step 
+     * performed by $dvi2pdfCommand, 
+     * the pictures are included using the bounding boxes 
+     * given by the .bb or the .xbb-file. 
+     * These are both created by $ebbCommand. 
+     * <p>
      * Of course, the target dvi is not affected: 
      * This uses always the dvi-format. 
      * What is also affected are the tasks 
@@ -824,6 +846,17 @@ public class Settings {
      * Although these are based on htlatex which is always dvi-based, 
      * the preprocessing is done in dvi or in pdf. 
      * Also the task txt is affected. 
+     * <p>
+     * As indicated in {@link #latex2pdfCommand}, 
+     * the processor <code>xelatex</code> does not create <code>dvi</code> 
+     * but <code>xdv</code> files. 
+     * In a sense, the <code>xdv</code> format is an extension of <code>dvi</code>} 
+     * but as for the <code>xdv</code> format there is no viewer, 
+     * no way <code>htlatex</code> or other applications 
+     * (except the \xelatex-internal <code>xdvidpfmx<code>) 
+     * and also no according mime type, 
+     * we refrained from subsumming this under ``kind of dvi''. 
+     * Thus, with <code>xelatex<code> the flag {@link #pdfViaDvi} may not be set. 
      * <p>
      * The default value is <code>false</code>. 
      */
@@ -834,11 +867,15 @@ public class Settings {
     /**
      * The driver to convert dvi into pdf-files. 
      * Note that this must fit the options 
-     * of the packages <code>xcolor</code> and <code>graphicx</code>. 
+     * of the packages <code>xcolor</code>, <code>graphicx</code> 
+     * and, provided no autodetection, <code>hyperref</code>. 
      * Sensible values are 
      * <code>dvipdf</code>, <code>dvipdfm</code>, <code>dvipdfmx</code>, 
      * and <code>dvipdft</code> 
      * (which is <code>dvipdfm</code> with option <code>-t</code>). 
+     * Note that <code>dvipdf</code> is just a script 
+     * around <code>dvips</code> using <code>gs</code> 
+     * but does not provide proper options; so not allowed. 
      * The default value is <code>dvipdfmx</code>. 
      */
     @Parameter(name = "dvi2pdfCommand", defaultValue = "dvipdfmx")
@@ -846,10 +883,22 @@ public class Settings {
 
     /**
      * The options for the command {@link #dvi2pdfCommand}. 
-     * The default value is the empty string. 
+     * The default value is <code>-V1.7<code> specifying the pdf version to be created. 
+     * The default version for pdf format for {@link #dvi2pdfCommand} is version 1.5. 
+     * The reason for using version 1.7 is <code>fig2dev</code> 
+     * which creates pdf figures in version 1.7 
+     * and forces {@link #latex2pdfCommand} in dvi mode to include pdf version 1.7 
+     * and finally {@link #dvi2pdfCommand} to use that also to avoid warnings. 
+     * <p>
+     * Using {@link #latex2pdfCommand} if used to create pdf directly, 
+     * by default also pdf version 1.5 is created. 
+     * For sake of uniformity, it is advisable to create pdf version 1.7 also. 
+     * In future this will be done uniformly through <code>\DocumentMetadata</code> command. 
+     * TThe default value is <code>-V1.7</code> but will in future be the empty string again. 
+
      */
     @Parameter(name = "dvi2pdfOptions", defaultValue = "")
-    private String dvi2pdfOptions = "";
+    private String dvi2pdfOptions = "-V1.7";
 
     /**
      * The pattern is applied linewise to the log-file 
