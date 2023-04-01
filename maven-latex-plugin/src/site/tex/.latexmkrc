@@ -1,3 +1,4 @@
+#!/usr/bin/env perl
 # to create pdf via lualatex 
 #$pdflatex = 'lualatex -file-line-error %O %S';
 $pdf_mode = 4;# specifies creation of pdf via lualatex 
@@ -5,6 +6,8 @@ $pdf_mode = 4;# specifies creation of pdf via lualatex
 $bibtex_use=2;
 #$makeindex = 'makeindex %O -o %D %S'; # the default
 
+# TBD: clarify: xdv and dvi seem to be internal. 
+# maybe missing other extensions in conjunction with synctex
 $clean_ext .= " %R.synctex.gz";
 
 # bbl does not work
