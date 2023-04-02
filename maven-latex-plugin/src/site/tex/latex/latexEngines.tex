@@ -87,7 +87,8 @@
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
 \@ifpackageloaded{tex4ht}{%
-  % \usepackage[tex4ht]{hyperref}
+  \usepackage[tex4ht]{hyperref}
+  \renewcommand{\url}[1]{\texttt{#1}}% not active, replacement for hyperref
   \setboolean{texFhtLoaded}{true}%
 }{%
 %\usepackage[dvipdfmx]{hyperref}%
@@ -528,9 +529,6 @@ Note that \xelatex{} works as the other engines for PDF,
 whereas it has XDV instead of DVI as alternative format. 
 Thus the format DVI is ignored. 
 See the manual. 
-
-
-
 
 
 \bibliographystyle{alpha}

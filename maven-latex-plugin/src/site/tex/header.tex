@@ -61,7 +61,11 @@
   % \usepackage[tex4ht]{hyperref}
 \newcommand{\url}[1]{\texttt{#1}}% not active, replacement for hyperref
 }{%
-  \usepackage{hyperref}%[dvipdfmx]
+\ifxetex%
+\usepackage{hyperref}
+\else
+  \usepackage[dvipdfmx]{hyperref}%[dvipdfmx]
+\fi
 }% tex4ht not loaded 
 
 %\usepackage{bmpsize}% not for xelatex 
@@ -93,6 +97,7 @@
 
 % index and glossary
 \ifthenelse{\boolean{texFhtLoaded}}{%
+\newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
 }{
   \usepackage{splitidx}%[split]
 %  \usepackage{makeidx}
@@ -102,7 +107,8 @@
   % , xindy or even [xindy={language=english,codepage=utf8}]
   % mainly for index and glossaries 
   %\makeglossaries% TBD: activate later
-}
+  \newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}}
+  }
 
 \usepackage{booktabs}
 \aboverulesep=0ex
@@ -114,7 +120,6 @@
 
 
 \newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
-\newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}}
 
 \newcommand{\pdflatex}{\texttt{pdflatex}}
 \newcommand{\lualatex}{\texttt{lualatex}}

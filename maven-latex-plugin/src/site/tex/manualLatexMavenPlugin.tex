@@ -80,7 +80,8 @@
 \ifthenelse{\boolean{texFhtLoaded}}{%
   % no glossaries and no index with tex4ht 
   \newcommand{\gls}[1]{#1}
-  \renewcommand{\index}[1]{ }
+  \renewcommand{\index}[1]{}
+  \newcommand{\newindex}[1][]{}
 }{%
 \setacronymstyle{long-short}
 % file formats 
@@ -176,6 +177,8 @@ programming language for printers and printable file format;
 today mostly replaced by PDF}
 \newacronym{mps}{mps}{metapost's postscript like output including text}
 \newacronym{mpx}{mpx}{metapost tex output: texts }
+\newindex[General Index]{idx}
+\newindex[LaTeX Packages]{pkg}
 }
 
 % \newglossaryentry{latex}{name={latex},description={%
@@ -210,8 +213,9 @@ today mostly replaced by PDF}
 \endgroup}
 
 
-\newindex[General Index]{idx}
-\newindex[LaTeX Packages]{pkg}
+% \newindex[General Index]{idx}
+% \newindex[LaTeX Packages]{pkg}
+
 % does not work 
 %\setindexpreamble[pkg]{This index comprises all the latex packages used. }
 
