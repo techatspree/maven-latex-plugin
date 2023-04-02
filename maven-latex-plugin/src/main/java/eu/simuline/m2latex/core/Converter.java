@@ -167,7 +167,13 @@ enum Converter {
 	}
 
     },
-    Dvipdfm {
+   /**
+    * Converts dvi to pdf. 
+    * Note that in current texlive distribution, 
+    * this is just linked to {@link #XDvipdfmx}. 
+    * Thus it is able to convert also xdv files. 
+    */
+       Dvipdfm {
 	String getCommand() {
 	    return "dvipdfm";
 	}
@@ -186,6 +192,16 @@ enum Converter {
 	}
 
    },
+   /**
+    * Converts dvi to pdf. 
+    * Note that in current texlive distribution, 
+    * this is just linked to {@link #XDvipdfmx}. 
+    * Thus it is able to convert also xdv files. 
+    * Theoretically, the difference to {@link #Dvipdfm} 
+    * is the support for asian languages, 
+    * but because {@link #Dvipdfm} is also linked to {@link #XDvipdfmx}, 
+    * the two programs are the same. 
+    */
     Dvipdfmx {
 	String getCommand() {
 	    return "dvipdfmx";
@@ -204,6 +220,16 @@ enum Converter {
 	    return ConverterCategory.Dvi2Pdf;
 	}
     },
+    /**
+     * Theoretically converts xdv to pdf; 
+     * it is a backend of {@link #XeLatex} 
+     * which is invoked transparently, unless <code>-no-pdf</code> is specified. 
+     * but in the current texlive distribution 
+     * this is linked from {@link #Dvipdfm} and from {@link #Dvipdfmx} 
+     * and can thus also convert dvi to pdf. 
+    * In fact, if used without file extension it chooses between dvi and xdv; 
+    * if both are present, xdv is converted. 
+    */
     XDvipdfmx {
 	String getCommand() {
 	    return "xdvipdfmx";
@@ -222,7 +248,18 @@ enum Converter {
 	    return ConverterCategory.Dvi2Pdf;
 	}
     },
-    Dvipdft {
+  /**
+    * Converts dvi to pdf. 
+    * Note that in current texlive distribution, 
+    * this is just a wrapper around {@link #Dvipdfm} 
+    * using {@link #GS} to create thumbnails. 
+    * Thus, as  {@link #Dvipdfm} it is able to convert also xdv files. 
+    * <p>
+    * From the docs of the script: 
+    * This script makes a first (fast) run with dvipdfm, then calls gs on
+    * the resulting pdf file to get the thumbnails and finally calls dvipdfm.
+     */
+   Dvipdft {
 	String getCommand() {
 	    return "dvipdft";
 	}
