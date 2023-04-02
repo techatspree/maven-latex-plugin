@@ -9,7 +9,7 @@ package eu.simuline.m2latex.core;
  * and, if used as a maven plugin equivalently,
  * a command setting in the configuration in the pom.
  * So in a sense the category represents the commands settings. 
- * Consequently, each category has a method {@link #getFieldname()}
+ * Consequently, each category has a method {@link #getCommandFieldname()}
  * returning the according field in the settings. 
  *
  */
@@ -82,6 +82,27 @@ enum ConverterCategory {
 			return "diffPdf";
 		}
 	},
+  /**
+   * Converters transforming <code>dvi</code> files into pdf files. 
+   * Some of them can also convert <code>xdv</code> to <code>pdf</code>, 
+   * but this is immaterial, 
+   * because the <code>xdv</code> format is not supported. 
+   * The currently registered converters, {@link Converter#Dvipdfm}, 
+   * {@link Converter#Dvipdfmx}, {@link Converter#XDvipdfmx} 
+   * and {@link Converter#Dvipdft} 
+   * can all convert <code>xdv</code> files. 
+   * At least for texlive, 
+   * all of these converters can be run with filename including the extension 
+   * or without extension. 
+   * If both extensions, <code>dvi</code> and <code>xdv</code> are found, 
+   * the <code>xdv</code> is processed, else the file which is found. 
+   * Of course if neither extension is found an error is emitted. 
+   * <p>
+   * Note also, 
+   * that <code>dvipdf</code> is currently not among the {@link Converter}s, 
+   * and if it is it does not belong to this category 
+   * becausse it does not provide proper options. 
+   */
 	Dvi2Pdf() {
 		String getExtName() {
 			return "dvi2pdf";
@@ -139,11 +160,29 @@ enum ConverterCategory {
 	};
 
 	// may throw UnsupportedOperationException
-	String getFieldname() {
+  /**
+   * Returns the name of the field in the configuration 
+   * containing the command of the converter of this category. 
+   * 
+   * @return
+   *    the name of the field in the configuration 
+   *    containing the command of the converter of this category. 
+   *    This is just {@link #getExtName()} 
+   *    followed by the literal <code>Command</code>. 
+   */
+	String getCommandFieldname() {
 		return this.getExtName() + "Command";
 	}
 
 	// may throw UnsupportedOperationException
+  /**
+   * Returns the name under which the category occurs in the configuration. 
+   * This applies at least to the command (see {@link #getFieldName()}) 
+   * and to the options. 
+   * 
+   * @return
+   *    the name under which the category occurs in the configuration. 
+   */
 	abstract String getExtName();
 
 }
