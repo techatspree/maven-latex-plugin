@@ -1878,8 +1878,8 @@ public class Settings {
         }
         if (conv.getCategory() != cat) {
             throw new BuildFailureException("TSS08: Tried to use converter '" + convStr +
-                    "' in configuration '" + cat.getFieldname() +
-                    "' instead of configuration '" + conv.getCategory().getFieldname() + "'. ");
+                    "' in configuration '" + cat.getCommandFieldname() +
+                    "' instead of configuration '" + conv.getCategory().getCommandFieldname() + "'. ");
         }
         return convStr;
     }
@@ -2045,12 +2045,12 @@ public class Settings {
     public String getCommand(ConverterCategory cat) throws BuildFailureException {
         String cmdName;
         try {
-            cmdName = (String) this.getClass().getDeclaredField(cat.getFieldname()).get(this);
+            cmdName = (String) this.getClass().getDeclaredField(cat.getCommandFieldname()).get(this);
         } catch (NoSuchFieldException nsfe) {
             throw new IllegalStateException("Could not find field '" + 
-                                            cat.getFieldname() + "' in Settings. ");
+                                            cat.getCommandFieldname() + "' in Settings. ");
         } catch (IllegalAccessException iace) {
-            throw new IllegalStateException("Parameter '" + cat.getFieldname() + "' not readable. ");
+            throw new IllegalStateException("Parameter '" + cat.getCommandFieldname() + "' not readable. ");
         } catch (IllegalArgumentException iage) {
             throw new IllegalStateException("Settings class mismatch. ");
         }
