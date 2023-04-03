@@ -1081,7 +1081,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// Documentation says, that this is needed for interface eps,
 	// but not for interface pdf.
 	// Experiments show, that we can do without it in any case.
-
+  @SuppressWarnings("unused")
 	private void runEbb(File file) throws BuildFailureException {
 	String command = this.settings.getCommand(ConverterCategory.EbbCmd);
 	File workingDir = file.getParentFile();
