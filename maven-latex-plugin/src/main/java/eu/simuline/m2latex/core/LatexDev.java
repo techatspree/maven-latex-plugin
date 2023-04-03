@@ -11,6 +11,10 @@ import java.io.File;
  * Whereas for the backend <code>pdf</code>, 
  * also <code>pdf</code> is used, 
  * <code>dvips</code> uses postscript-based formats. 
+ * CAUTION: as <code>xelatex</code> cannot create dvi but creates xdv instead, 
+ * and the latter does not fit into the further workflow, 
+ * neither there is a third format based on xdv 
+ * nor is xdv subsummed in format <code>dvips</code>. 
  *
  * Created: Tue Oct 18 10:06:30 2016
  *
@@ -130,7 +134,7 @@ public enum LatexDev {
    */
   abstract String getGraphicsInTexSuffix();
 
-  /**
+ /**
    * Returns the name of the target language <code>latex2dev</code> uses 
    * to convert the latex files into. 
    * This is set via option <code>-output-format=</code>. 
@@ -142,9 +146,24 @@ public enum LatexDev {
   /**
    * Returns the target file of a LaTeX run. 
    * This has the suffix given by {@link #getLatexOutputFormat()}. 
+   * 
+   * @param desc
+   *    the latex main description. 
+   * @return
+   *    the latex target file. 
+   *    If <code>xxx.tex</code> is the latex main file, 
+   *    then the target file is <code>xxx.dvi</code> or <code>xxx.pdf</code>. 
    */
   abstract File latexTargetFile(LatexMainDesc desc);
 
+  /**
+   * Invoked in settings. 
+   * 
+   * @param pdfViaDvi
+   *    whether the switch {@link Settings#pdfViaDvi} is set. 
+   * @return
+   *    {@link LatexDev#dvips} if <code>pdfViaDvi</code>; else {@link LatexDev#pdf};
+   */
   static LatexDev devViaDvi(boolean pdfViaDvi) {
     LatexDev res = pdfViaDvi ? LatexDev.dvips : LatexDev.pdf;
     assert res.isViaDvi() == pdfViaDvi;
