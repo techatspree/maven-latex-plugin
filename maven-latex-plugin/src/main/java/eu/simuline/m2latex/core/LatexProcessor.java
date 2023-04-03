@@ -647,7 +647,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // may log warnings EEX01, EEX02, EEX03, WEX04, WEX05,
         // EAP01, EAP02, WAP04, WFU03
         runLatex2dev(desc, dev);
-        File texFile = desc.texFile;
+        //File texFile = desc.texFile;
 
         // create bibliography, index and glossary by need
         // may throw BuildFailureException TEX01
@@ -1823,6 +1823,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
         String[] args = buildLatexArguments(this.settings, dev, texFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
+        // CAUTION: an error also occurs if running xelatex in conjunction with dvi mode 
+        // because this engine creates xdv instead of dvi 
         this.executor.execute(desc.parentDir, // workingDir
                 this.settings.getTexPath(),
                 command,
@@ -1841,12 +1843,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
     protected static String[] buildLatexArguments(Settings settings,
             LatexDev dev,
             File texFile) {
-        // FIXME: hack with literal
+        // FIXME: here it should be taken xelatex into account, using different settings: 
+        // added is dev==pdf, then nothing, else dev==dvi it is "-no-pdf". 
         return buildArguments(settings.getLatex2pdfOptions() +
                 " -output-format=" + dev.getLatexOutputFormat(),
                 texFile);
     }
 
+    // TBD: take xelatex into account: process xdv for mode dvi 
     /**
      * Runs conversion from dvi to pdf-file
      * executing {@link Settings#getDvi2pdfCommand()}
