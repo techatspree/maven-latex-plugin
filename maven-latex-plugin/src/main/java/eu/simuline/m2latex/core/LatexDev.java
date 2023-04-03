@@ -11,7 +11,7 @@ import java.io.File;
  * Whereas for the backend <code>pdf</code>, 
  * also <code>pdf</code> is used, 
  * <code>dvips</code> uses postscript-based formats. 
- * CAUTION: as <code>xelatex</code> cannot create dvi but creates xdv instead, 
+ * CAUTION: As <code>xelatex</code> cannot create dvi but creates xdv instead, 
  * and the latter does not fit into the further workflow, 
  * neither there is a third format based on xdv 
  * nor is xdv subsummed in format <code>dvips</code>. 
