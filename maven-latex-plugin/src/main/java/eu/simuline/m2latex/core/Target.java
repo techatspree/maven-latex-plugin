@@ -1,6 +1,6 @@
 package eu.simuline.m2latex.core;
 
-import java.io.File;
+//import java.io.File;
 
 /**
  * The enumeration of all supported (creational) targets.
