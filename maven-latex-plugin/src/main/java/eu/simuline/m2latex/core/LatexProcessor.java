@@ -52,10 +52,11 @@ import eu.simuline.m2latex.mojo.GraphicsMojo;
  * Processing of the latex main files is done in {@link #create()}
  * according to the target(s) given by the parameters.
  * The elements of the enumeration {@link Target} use methods
- * {@link #processLatex2rtf(File)}, {@link #processLatex2dvi(File)},
- * {@link #processLatex2pdf(File)},
- * {@link #processLatex2html(File)}, {@link #processLatex2odt(File)},
- * {@link #processLatex2docx(File)} and {@link #processLatex2txt(File)}.
+ * {@link #processLatex2rtf(LatexMainDesc)}, {@link #processLatex2dvi(LatexMainDesc)},
+ * {@link #processLatex2pdf(LatexMainDesc)},
+ * {@link #processLatex2html(LatexMainDesc)}, {@link #processLatex2odt(LatexMainDesc)}, 
+ * {@link #processLatex2docx(LatexMainDesc)} 
+ * and {@link #processLatex2txt(LatexMainDesc)}.
  */
 public class LatexProcessor extends AbstractLatexProcessor {
 
@@ -209,7 +210,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * processing graphic-files 
      * via {@link LatexPreProcessor#processGraphicsSelectMain(File, DirNode)} 
      * and processing the tex main files 
-     * via {@link Target#processSource(LatexProcessor, File)}. 
+     * via {@link Target#processSource(LatexProcessor, LatexMainDesc)}. 
      * If a diff-tool for the target format is available
      * and if check by diff is specified, 
      * the resulting file is checked to be equal to a specified file. 
@@ -580,8 +581,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * or a MakeGlossaries run fails
      * or if a BibTeX run or a MakeIndex or a MakeGlossary run issues a warning
      * in the according methods
-     * {@link #runLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)},
-     * {@link #runBibtexByNeed(File)},
+     * {@link #runLatex2dev(LatexMainDesc, LatexDev)},
+     * {@link #runBibtexByNeed(LatexMainDesc)},
      * {@link #runMakeIndexByNeed(LatexMainDesc)} and
      * {@link #runMakeGlossaryByNeed(LatexMainDesc)}.
      * <p>
@@ -635,9 +636,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    from {@link Settings#getMakeGlossariesCommand()}
      *    </ul>
      * @see #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)
-     * @see #processLatex2html(File)
-     * @see #processLatex2odt(File)
-     * @see #processLatex2docx(File)
+     * @see #processLatex2html(LatexMainDesc)
+     * @see #processLatex2odt(LatexMainDesc)
+     * @see #processLatex2docx(LatexMainDesc)
      */
     private int preProcessLatex2dev(LatexMainDesc desc, LatexDev dev)
             throws BuildFailureException {
@@ -708,11 +709,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Note that still no logging of warnings from a latex run is done.
      * This is done
-     * in {@link #processLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}.
+     * in {@link #processLatex2dev(LatexMainDesc, LatexDev)}.
      * The exclusion of logging of warnings is indicated by the name part
      * 'Core'.
      * Processing without logging of warnings
-     * is required by {@link #processLatex2txt(File)}.
+     * is required by {@link #processLatex2txt(LatexMainDesc)}.
      * <p>
      * The output format of the LaTeX run is given by <code>dev</code>,
      * to be more precise by {@link LatexDev#getLatexOutputFormat()}.
@@ -744,10 +745,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      *    See {@link LatexDev#getLatexOutputFormat()}.
      * @throws BuildFailureException
      *    TEX01 as for
-     *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
+     *    {@link #preProcessLatex2dev(LatexMainDesc, LatexDev)}
      *    maybe caused by subsequent runs.
-     * @see #processLatex2dvi(File)
-     * @see #processLatex2txt(File)
+     * @see #processLatex2dvi(LatexMainDesc)
+     * @see #processLatex2txt(LatexMainDesc)
      */
     private void processLatex2devCore(LatexMainDesc desc, LatexDev dev)
             throws BuildFailureException {
@@ -1039,7 +1040,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running an exernal command fails.
      * </ul>
      *
-     * @param texFile
+     * @param desc
      *    the tex file to be processed.
      * @throws BuildFailureException
      *    TEX01 as for
@@ -1080,15 +1081,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running an exernal command fails.
      * </ul>
      *
-     * @param texFile
+     * @param desc
      *    the tex file to be processed.
      * @throws BuildFailureException
      *    TEX01 as for
      *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
      *    but also as for
      *    {@link #runLatex2odt(LatexProcessor.LatexMainDesc)}.
-     * @see #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)
-     * @see #runLatex2odt(LatexProcessor.LatexMainDesc)
+     * @see #preProcessLatex2dev(LatexMainDesc, LatexDev)
+     * @see #runLatex2odt(LatexMainDesc)
      * @see Target#odt
      */
     void processLatex2odt(LatexMainDesc desc) throws BuildFailureException {
@@ -1121,17 +1122,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running an exernal command fails.
      * </ul>
      *
-     * @param texFile
+     * @param desc
      *    the latex main file to be processed.
      * @throws BuildFailureException
      *    TEX01 as for
      *    {@link #preProcessLatex2dev(LatexProcessor.LatexMainDesc, LatexDev)}
      *    but also as for
      *    {@link #runLatex2odt(LatexProcessor.LatexMainDesc)}
-     *    and for {@link #runOdt2doc(File)}.
+     *    and for {@link #runOdt2doc(LatexMainDesc)}.
      * @see #preProcessLatex2dev(LatexMainDesc, LatexDev)
      * @see #runLatex2odt(LatexProcessor.LatexMainDesc)
-     * @see #runOdt2doc(File)
+     * @see #runOdt2doc(LatexMainDesc)
      * @see Target#docx
      */
     void processLatex2docx(LatexMainDesc desc) throws BuildFailureException {
@@ -1161,7 +1162,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running an exernal command fails.
      * </ul>
      *
-     * @param texFile
+     * @param desc
      *    the tex file to be processed.
      * @throws BuildFailureException
      *    TEX01 if running the latex2rtf command
@@ -1188,14 +1189,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running an exernal command fails.
      * </ul>
      *
-     * @param texFile
+     * @param desc
      *    the tex file to be processed.
      * @throws BuildFailureException
      *    TEX01 as for
-     *    {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)}
-     *    and for {@link #runPdf2txt(File)}.
+     *    {@link #processLatex2devCore(LatexMainDesc, LatexDev)}
+     *    and for {@link #runPdf2txt(LatexMainDesc)}.
      * @see #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)
-     * @see #runPdf2txt(File)
+     * @see #runPdf2txt(LatexMainDesc)
      * @see Target#txt
      */
     void processLatex2txt(LatexMainDesc desc) throws BuildFailureException {

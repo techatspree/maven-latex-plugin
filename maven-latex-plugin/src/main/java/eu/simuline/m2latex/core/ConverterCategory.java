@@ -177,7 +177,7 @@ enum ConverterCategory {
 	// may throw UnsupportedOperationException
   /**
    * Returns the name under which the category occurs in the configuration. 
-   * This applies at least to the command (see {@link #getFieldName()}) 
+   * This applies at least to the command (see {@link #getCommandFieldname()}) 
    * and to the options. 
    * 
    * @return
