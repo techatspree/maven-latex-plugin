@@ -26,6 +26,10 @@ import org.apache.maven.plugin.AbstractMojo;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
+// TBD: use new dependency on slf4j 
+//import com.jcabi.log.Logger;
+//import org.slf4j.impl.StaticLoggerBinder;
+
 import java.io.File;
 
 /**
