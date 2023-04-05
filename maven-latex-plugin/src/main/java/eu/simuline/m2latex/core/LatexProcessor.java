@@ -1411,9 +1411,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // idxFilesExtInDir == null
         // Then the check for option split cannot be done.
 
+        assert (explIdxIdent != null) == needRun;
         if (idxFilesExtInDir != null && idxFilesExtInDir.length > 0) {
             // Here, idxFilesExtInDir contains the idx-files \jobname-xxx.idx
-            if (!needRun || explIdxIdent.isEmpty()) {
+            //if (!needRun || explIdxIdent.isEmpty()) {
+            if (explIdxIdent == null || explIdxIdent.isEmpty()) {
                 // Here, either \jobname.idx does not exist at all
                 // or does not contain an entry \indexentry[yyy]{...}{..}
 
@@ -1428,7 +1430,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
             }
         }
 
-        if (needRun) {
+        //if (needRun) {
+        if (explIdxIdent != null) {
             // Here, runMakeIndex or runSplitIndex must be performed
 
             // check whether more than one index has to be created
