@@ -113,7 +113,7 @@ The default value is '.'.  -->
             <!-- A comma separated list of excluded {@link Converter}s 
 given by their command, i.e. by {@link Converter#getCommand()}
 returned as a set by {@link #getConvertersExcluded()}. 
-Excluded converters need not be installed. 
+Excluded converters need not be installed but their names must be known. 
 They don't show up in the version check of target 'vrs' 
 and of course they are not allowed to be used. 
 By default, this list is empty. -->
@@ -422,8 +422,8 @@ which are added automatically.
 The default value is '-v'. -->
             <ebbOptions>-v</ebbOptions>
 
-            <!-- The LaTeX command to create above all a pdf-file with. 
-Further formats are dvi and xdv and also other formats based on these. 
+            <!-- The LaTeX command to create above all a pdf-file with, 
+              but also dvi and other formats based on these. 
 Expected values are 'lualatex' 'xelatex', and 'pdflatex'. 
 
 Note that for 'xelatex' dvi mode 
@@ -444,10 +444,9 @@ LaTeX Font Warning: Font shape 'OMS/cmtt/m/n' undefined
 
             <!-- The options for the command $latex2pdfCommand. 
 Leading and trailing blanks are ignored. 
-A sequence of at least one blank 
-separates the proper options. 
+One blank separates the proper options. 
 
-The default value  comprises the following options: 
+The default value comprises the following options: 
 <ul>
   <li>'-interaction=nonstopmode' 
   prevents latex from stopping at the first error. </li>
@@ -628,11 +627,12 @@ The reason for using version 1.7 is $fig2dev which creates pdf figures in versio
 and forces $latex2pdfCommand in dvi mode to include pdf version 1.7 
 and finally $dvi2pdfCommand to use that also to avoid warnings. 
 
-Using $latex2pdfCommand if used to create pdf directly, by default also pdf version 1.5 is created. 
+Using $latex2pdfCommand if used to create pdf directly, 
+by default also pdf version 1.5 is created. 
 For sake of uniformity, it is advisable to create pdf version 1.7 also. 
 In future this will be done uniformly through \DocumentMetadata command. 
 
-The default value is '-V1.7'. 
+The default value is '-V1.7' but will in future be the empty string again. 
 -->
             <dvi2pdfOptions>-V1.7</dvi2pdfOptions>
 
