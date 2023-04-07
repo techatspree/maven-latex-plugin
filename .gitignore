@@ -5,3 +5,4 @@ target
 .idea
 *.iml
 .directory
+maven-latex-plugin/src/site/doc/mpLualatex/maps.pdf
