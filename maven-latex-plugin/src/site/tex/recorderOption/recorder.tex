@@ -48,7 +48,7 @@
 \hypersetup{
   pdfinfo={
     Author      ={Ernst Reissner},
-    Title       ={The recorder option for latex processors},
+    Title       ={The recorder option for latex processors and its applications},
     CreationDate={unknown},
     ModDate     ={unknown},
     Producer    ={unknown},
@@ -67,7 +67,10 @@
 \fi%
 \fi%ifpdf
 
-\title{The recorder option for latex processors}
+
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+
+\title{The recorder option for latex processors and its applications}
 
 \author{Ernst Reißner}
 \date{}
@@ -77,28 +80,51 @@
 \maketitle
 \tableofcontents
 
-\section{Introduction}
+\section{Introduction}\label{sec:intro}
+
 This document is about the \texttt{recorder} option available for all modern \LaTeX{} processors, 
 among those also \texttt{lualatex}. 
 If the \LaTeX{} processor is applied to a file \texttt{xxx.tex} with this option set, 
-it writes a file \texttt{xxx.fls} in the FLS format which is described here. 
+it writes a file \texttt{xxx.fls} in the FLS format 
+which is described in Section~\ref{sec:format}. 
 Essentially, it contains dependency information for that file 
 which can be used to decide on rebuilding the document. 
 This is mostly to spare processing time 
 while still ensuring that the created documents are up-to-date. 
 Among others, \texttt{latexmk} uses this information. 
-The problem here is, 
+
+Another possible use case for the FLS files is to ensure reprocucibility of the results. 
+The FLS file can be the main contribution to this: 
+Essentially for reproduction all the input files mentioned in the FLS file 
+must be the delivered to reproduce the results. 
+
+Part is in the installation so if this is known, 
+only the files mentioned in the FLS file as input which are outside the installation must be delivered. 
+CAUTION\@: There are packages not part of an installation 
+but installed separately fitting into the folder structure of the installation 
+like the tikz uml package described in~\cite{tikzumlP} at time of this writing. 
+
+To get all creates files all files mentioned in the FLS file as output must be delivered. 
+\medskip
+
+
+The problem with the FLS files is, 
 that no official information on the FLS format seems available 
 and so there is no way but reverse engineering. 
 
 The risk to have an incomplete specification is always present, 
 also that the format is updated and the reverse engineered specification is rendered invalid. 
 Thus, software based on this specification must be failure tolerant. 
-The goal that the result is perfect if no warning is displayed 
-forces 
+The goal that the result of running this software is perfect if no warning is displayed 
+implies that, the parser for FLS files emits a warning for small deviations from the expected 
+still tolerating these deviations. 
+
+Another problem is, that seemingly the list given by the FLS files 
+is not complete. 
+Some gaps are spotted in Section~\ref{sec:gaps}
 
 
-\section{The FLS format}
+\section{The FLS format}\label{sec:format}
 
 The FLS format seems to be line based and so is the description. 
 The format is described in terms of the possible form of lines. 
@@ -112,9 +138,9 @@ The available \texttt{type}s are
   Seemingly this is the folder containing the latex file \texttt{xxx.tex} to be processed. 
   This type of line occurs once and is the first line. 
   We refer to it as the \emph{current directory}. 
-  \item[INPUT] All input files. Among those \texttt{xxx.tex}, \texttt{xxx.aux}, 
+  \item[INPUT] Intentionally all input files. Among those \texttt{xxx.tex}, \texttt{xxx.aux}, 
   Possibly graphic files and files related with fonts. 
-  \item[OUTPUT] Almost all output files. 
+  \item[OUTPUT] Intentionally all output files. 
   Among those \texttt{xxx.log}, \texttt{xxx.tex}, \texttt{xxx.pdf}
   but also very strange cache files. 
   Note that \texttt{xxx.fls} itself and also the file \texttt{xxx.synctex.gz} are not mentioned. 
@@ -134,7 +160,7 @@ In the first case, it seems that these paths refer to files in a subdirectory
 of the current directory, not in the second. 
 
 The absolute paths either refer to the installation or to a cache. 
-In my linux box, the cache is at \texttt{/home/ernst/.cache/texmf/}, so it is in my home directory. 
+In my linux box, the cache is at \texttt{~/.cache/texmf/}, so it is in my home directory. 
 
 The installation directory of a \TeX{} Live installation, 
 is given by \texttt{kpsewhich latex.ltx}, 
@@ -147,5 +173,66 @@ INPUT /var/lib/texmf/web2c/luahbtex/lualatex.fmt
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT /etc/texmf/web2c/mktex.cnf
 \end{verbatim}
+
+\section{Gaps}\label{sec:gaps}
+
+The FSL file itself is not among the outputs mentioned, 
+which may be intentional as this information is redundant. 
+Besides this, the only examples without loading packages, 
+the author knows about at time of this writing 
+are the file \texttt{xxx.synctex.gz} and related. 
+In general, each package is responsible for keeping track of its file input and output. 
+So to ensure that the input and output files mentioned in the FLS file, 
+it is advisable to restrict oneself to a liminted set of packages. 
+
+If FIG files are used then as mentioned in~\cite{XFigF}, Section 3.2, 
+also pictures can be included. 
+Some of the supported formats allow even inclusion of further files. 
+
+Metapost files, described in~\cite{MPost} also offer a way to include other files. 
+Also the processor for metapost, \texttt{mpost} offers its own \texttt{recorder} option 
+as indicated in~\cite{MPost},~Appendix~B~2.1. 
+Note that also \texttt{luatex} can be used as a metapost processor 
+and it should be checked which of the dependencies within metapost files 
+\texttt{luatex} records within its FLS file. 
+
+Strange enough, nowhere in the manual~\cite{MPost} 
+is introduced the probably most relevant way of including other metapost files, 
+namely by the command \texttt{input}, 
+although Section~13.1 uses this mechanism to include \texttt{TEX.mp}. 
+There is a separate Section~12 on reading and writing files, 
+which mention the commands \texttt{readfrom}, \texttt{closefrom} 
+and \texttt{write}\dots\texttt{to}. 
+
+Besides this, there is a more hidden way to include files, 
+because between \texttt{btex} or \texttt{verbatimtex} and \texttt{etex} 
+can be placed arbitrary \TeX{} material 
+and in particular the \texttt{\textbackslash{}input} macro to include further TEX files. 
+
+For \texttt{lualatex},~\cite{LuaInMp}, 
+Section~``Helpers'' illustrates that lua code can be directly invoked within matapost. 
+Of course, lua can access files, possibly reading or writing, and it is hardly conceivable, 
+that the files seen or touched are recorded. 
+
+The author did not check for any of these constructions which may introduce dependencies, 
+which of all these dependencies are taken into account, 
+in the FLS file created by \texttt{mpost} with given \texttt{recorder} option. 
+
+Besides running an external metapost processor, 
+the package \texttt{luamplib} available for \texttt{lualatex} (see~\cite{LuaMpLib})
+can include metapost files or metapost code directly. 
+This offers the chance 
+to include the dependencies not in an ``external'' FLS file of the metapost file
+but directly in the FLS file of the processed latex file. 
+
+In older versions of \texttt{luamplib} 
+even metapost files included with \texttt{input <file>;} where not recorded in the FLS file. 
+
+Maybe there are more files not mentioned. 
+
+
+
+\bibliographystyle{alpha}
+\bibliography{../lit}{}% chktex 11 
 
 \end{document}
