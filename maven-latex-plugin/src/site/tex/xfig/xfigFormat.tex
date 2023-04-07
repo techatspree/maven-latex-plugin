@@ -346,7 +346,8 @@ Color pseudo-object (see Section~\ref{subsec:colorPseudoObj}).
 \item
 Ellipse (see Section~\ref{subsec:ellipse}) which is a generalization of circle.
 \item
-Polyline (see Section~\ref{subsec:polyline}) which includes polygon and box.
+Polyline (see Section~\ref{subsec:polyline}) which comprises polygon, 
+box and also included pictures.
 \item
 Spline (see Section~\ref{subsec:spline}) 
 which may be closed, open approximated, interpolated or an x-spline.
@@ -464,7 +465,7 @@ ellipse\_start\_y:: Integer
 ellipse\_end\_x:: Integer
 ellipse\_end\_y:: Integer
 
-\subsection{Polygonal line}\label{subsec:polyline}
+\subsection{Polygonal line, Box and included Picture}\label{subsec:polyline}
 
 Defines various kinds of polygonal lines, both open and closed. 
 As special cases also boxes and arc-boxes, i.e.~boxes with rounded vertices. 
@@ -520,8 +521,8 @@ the \texttt{BackwardArrowLine} only if \texttt{BackwardArrow} is not 0;
 both described in Section~\ref{subsec:paramArrowLines}. 
 
 
-Only if \texttt{SubType} in the Headline is 5, 
-follows a \texttt{PicLine} with the following form:
+Only if \texttt{SubType} in the Headline is 5, representing an included picture, 
+follows a \texttt{PicLine} with the following form: \\
 %
 \begin{tabular}{lll}
 \toprule
@@ -529,10 +530,12 @@ type    & name        & Possible values or explanation \\
 \midrule
 \midrule
 boolean & Orientation & 0: normal \\
-&&                      1: flipped at diagonal \\
+        &             & 1: flipped at diagonal \\
 string  & File        & name of picture file to import \\
 \bottomrule
 \end{tabular}
+
+The allowed file types are eps/ps, pdf, gif, jpg, pcx, png, ppm, tiff, xmb and xpm. 
 
 Then follows a \texttt{PointsLine} with a number of coordinates 
 given by \texttt{NPoints} in the first line. 
