@@ -518,14 +518,43 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
     -->
 
 	  <release  version="1.6"
-		date="2022-01-01"
+		date="2022-04-10"
 		description="Main feature: minimum support for pythontex. 
 		Added support for unregistred converters. 
 		Added inclusion/exclusion of latex main files.">
-			<action dev='reissner' type='add'>
+      <action dev='reissner' type='update'>
+      pom: version updates
+      </action>
+      <action dev='reissner' type='add'>
+        metadata: tried on pdfversion and added documentation
+      </action>
+      <action dev='reissner' type='fix'>
+        reworked manuals so that they compile for any tex engine 
+        and also for htlatex. 
+      </action>
+      <action dev='reissner' type='add'>
+        extended and restructured backlog for further releases. 
+      </action>
+      <action dev='reissner' type='add'>
+      added config for vscode, the new editor. 
+      </action>
+      <action dev='reissner' type='add'>
+        added a lot of external documentation and also restructured. 
+        This affects also the literature file lit.bib. 
+        Focus is on engines, recorder option, distributions, metapost, ... 
+      </action>
+      <action dev='reissner' type='fix'>
+        including xdv alongside dvi on a minimum effort base. 
+        Still preparing a better support. 
+      </action>
+      <action dev='reissner' type='add'>
 			added document recorder.tex and its artifact. 
 			</action>
-			<action dev='reissner' type='add'>
+      <action dev='reissner' type='add'>
+        added document latexEngines.tex and its artifact. 
+        Gained an overview over the tex engines above all xelatex
+      </action>
+      <action dev='reissner' type='add'>
 				added documentation for pythontex and depythontex 
 				going beyond the manual but needed for implementation of this software. 
 				Added references to original software by Poore
@@ -555,7 +584,7 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
 				I want to create figures without memory restrictions, which is offered by lualatex.
 			</action>
 			<action dev='reissner' type='update'>
-				Updated version patterns and strings, also form e.g. inkscape, pdftotext, pdfinfo, exiftool, gnuplot.
+				Updated versions, version patterns and strings, also form e.g. inkscape, pdftotext, pdfinfo, exiftool, gnuplot.
 			</action>
 			<action dev='reissner' type='add'>
 				Added support for unregistered converters specifying their category for safety.
