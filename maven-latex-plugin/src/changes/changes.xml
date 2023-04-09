@@ -19,9 +19,32 @@
       - minimal documentation for best tested configuration (in readme)
       - in readme: shortcut for people which do not want to read all. 
 
-  For 1.7: 
+  For 1.7: seems to be very much about xdv and dvi. 
+    What is not clear to me is how important dvi is, at least there is a mime type. 
+    Example: seemingly, there is no xdv viewer. 
+    Also not so clear, how much of dvi can be also done with xdv transparently. 
+    Only if dvi/xdv is important enough and enough can be done transparently with both formats 
+    it is worth supporting both. 
+    Some hints: https://en.wikipedia.org/wiki/Device_independent_file_format 
+    in particular the section on related software which is essentially viewers and converters. 
+    It is not at all clear that it is worth it. 
     - xdv support for xelatex, 
       in the course of this: check of options. 
+      document that with xelatex 
+      - there is no goal xdv. Instead, in conjunction with xelatex the goal dvi creates xdv. 
+      - so both mvn latex:dvi and mvn latex:cfg with config dvi create xdv. 
+      - in contrast mvn latex:xdi is not allowed. 
+      - when verifying, the latex converter xxxlatex is invoked as `xxxlatex -help`. 
+        This works for all. 
+        Then the patterns `^-?-output-format` and `^-no-pdf` are searched. 
+        An error is created if not exactly one of them is present. 
+        If `^-no-pdf` is present, it is xelatex like. 
+        LatexDev obtains a third device, called xdv. 
+      - mvn latex:cfg reading a configuration and there also xdi is not amo
+    - all the dvi to pdf converters at least of texlive are also xdv to pdf converters. 
+      If run with filename without ending, they work transparently. 
+      Only if both types are present, dvi and xdv, then the latter is preferred. 
+      
     - rework on the readme: 
       add a section on the configuration preferred: 
       - suse tumbleweed linux
@@ -40,9 +63,10 @@
       - If pdf shall be created via dvi, i.e. xdv, then the right converter must be chosen 
         which can transform xdv into pdf. 
 
-  For 1.8: rework on mp: 
+  For 1.8: rework on graphics, e.g. mp: 
     - more significant figure (state diagram)
     - research on dependencies 
+    - Rework of according section in manual 
     - integrated version with lualatex with package luamplib and advantages: 
       use latex macros defined in the tex file 
     - alternative tikz, in particular tikz-uml. 
@@ -52,6 +76,14 @@
       Solution is either mp directly in the tex file or input tex file, 
       but this looks bad in the editor because tex grammar expected. 
       Here some research is required. 
+		xfig: rework on the description of the format xfigFormat.tex. 
+		I think, creating an example figure would be fine. 
+		Also listings shall be taken from this example file 
+		and the compiled version shall be included as a figure. 
+		Maybe a good idea to extend the .latexmkrc file already. 
+
+		Consider all in folder MetaPostInTex. 
+  
   For 2.0: document development 
       take also configuration of vscode into account. 
       This comprises support for source code and previewer. 
@@ -71,8 +103,10 @@ Use this to extend the pattern for latex main files.
 
 Also metapost direct in lualatex via luamplib, cite {LuaMpLib}
 Es gibt die Frage nach der Art wie man mp files einbindet.
-Erst mal hat mpost auch eine -recorder option, die sich vielleicht auch die mit input inkludierten mp files bezieht, das musste man mal schauen.
-Wenn man aber mit tex eine mplibcode Umgebung definiert und darin das eigentliche mp-file (mit intput filename in metapost) inkludiert,
+Erst mal hat mpost auch eine -recorder option, die sich vielleicht auch die mit input inkludierten mp files bezieht, 
+das musste man mal schauen.
+Wenn man aber mit tex eine mplibcode Umgebung definiert und darin das eigentliche mp-file 
+(mit intput filename in metapost) inkludiert,
 dann erkennt lualatex die Abhaengigkeit nicht.
 Nur wenn man ein Tex-file inkludiert das die mplibcode Umgebung enthaelt.
 Dann aber passt das highlighting eben nicht, weil es ja zu tex passt und nicht zu mp.
@@ -80,6 +114,25 @@ Aus meiner Sicht ist da eine Luecke.
 Die Frage ist auch, ob latex erkennt, dass eine Abhaengigkeit besteht, wenn man das mps-file mit includegraphics einbindet.
 Vermutlich auch nicht.
 Aehnliches Problem bei xfig mit eingebettetem jpg Bild. 
+
+Not recognizing dependencies is an issue at work but at home it works. 
+But there I have the problem, that all dependencies create extra files on the local folder.. 
+No idea why. 
+
+Example for all documentclasses to be supported: 
+- book: e.g. manual
+- report: not yet used 
+- article: e.g. dviFomat.tex
+- leaflet: missing but could contain a small marketing document 
+- letter: missing 
+- beamer: missing 
+  This is particularly interesting, e.g. because it is widely applicable 
+  and it is technically interesting: 
+  - has a very special header for presentation and for handout. 
+  - creates a lot of extensions: in particular xxx.<number>.vrb for pagew shich are fragile. 
+    The details can be read from the manual. 
+  - in beamer manual there is no hint on labels. 
+    They are \begin{frame}[label={frm:someName}]
 
 
 Also: meta-uml, with documentation 
@@ -94,7 +147,14 @@ Also: meta-uml, with documentation
                                                and also a certain paper the author nees 
 
   For 4.x: 
-    Besides distribution TeX Live, also support MiKTeX
+    Besides distribution TeX Live, also support MiKTeX 
+    One has to install MiKTeX also and check comunities and options not only of tex engines 
+    but also of other tools. 
+    Deceicive is whether the same tools are supported. 
+    Also whether tools requiring double dash also understand single dash and the other way round. 
+    Also whether unknown options are really ignored. 
+    This would be important if options deviate. 
+    Then one can give just both variants that of texlive and that of miktex so one is understood the other not. 
     Maybe before try TeX Live with Windows. 
     transfer into maven central. 
 	For 4.x: 
@@ -180,7 +240,7 @@ Also: meta-uml, with documentation
 	   Also, files created by latexmk shall be cleared. 
 	 - clean goal based on (categories of) coverters.
     -->
-
+    <!-- the parameter latex2pdfCommand must be renamed: latex2devCommand, also the options and so on. -->
     <!-- TBD: rework on Converter.cmd2conv: 
 	 Check also call hierarchy
 	 also endow with appropriate failure handling  -->
@@ -190,6 +250,8 @@ Also: meta-uml, with documentation
     <!-- TBD: mention epsf like in my dissertation  -->
     <!-- TBD: Bugfix: superfluous comma in: 
 	 WPP03: Skipped processing of files with suffixes [, .el]. -->
+
+
 
 	 <!-- TBD: allow for more restrictions in versions of converters. 
 		An application would be to ensure strict reproducibility 
@@ -446,10 +508,13 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
       indicates the base directory, here /usr/share/texmf. 
       Note that also mktexlsr is available for texlive. 
       versions can be found easily 
-      'kpsewhich -version' and 'mktexlsr -version'. 
+      'kpsewhich -version' 'kpsewhere -version' and 'mktexlsr -version'. 
       First line of answer is 'kpathsea version 6.3.4'
       and 'mktexlsr version revision 62699 (2022-03-14 10:53:53 +0100)'. 
       Location of the distribution may help to check reproducible results. 
+
+      Search also for other kpse commands. 
+      For miktex consider 'findtexmf'
     -->
 
 	  <release  version="1.6"
