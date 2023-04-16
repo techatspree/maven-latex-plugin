@@ -149,8 +149,6 @@ output format of \texttt{makeindex} and \texttt{xindy}}
 \newacronym{glo}{glo}{%
 glossary file containing unsorted and multiple glossary entries; 
 output format of tex processors with package \texttt{makeglossaries}}
-\newacronym{glg}{glg}{%
-\texttt{makeglossaries} log file }
 \newacronym{gls}{gls}{%
 glossary file containing sorted, unified and formatted glossary entries;
 output format of the \texttt{makeglossaries} tool read by tex processors}
@@ -643,7 +641,7 @@ Identifier        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:TSS} The \texttt{BuildFailureException}s of the class \texttt{Settings}   }
+\caption{\label{tab:TSS} The \texttt{BuildFailureException}s of Settings   }
 \endlastfoot%
 \texttt{\footnotesize TSS01} 
 & \texttt{\footnotesize The tex source directory '\$texSrcDirectoryFile'} \\
@@ -743,10 +741,8 @@ which are not excluded, i.e.~listed in configuration in section \texttt{converte
  & \texttt{\footnotesize with invalid category '\$catStr'; should be '\dots'.} \\
  \multicolumn2{|l|}{
  \begin{minipage}{0.95\linewidth}
-   The converter \texttt{convName} 
-   is specified in the setting \texttt{<catCommand>} 
-   in the form \texttt{convName:notCat} 
-   with category \texttt{notCat} not coinciding with \texttt{cat} as required. 
+   The converter is specified in the form \texttt{<catCommand>convName:notCat</catCommand>} 
+   with \texttt{notCat} not coinciding with \texttt{cat} as required. 
  \end{minipage}
  } \\
 \end{longtable}
@@ -760,7 +756,7 @@ Id.        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:TMI} The \texttt{BuildFailureException}s of the class \texttt{MetaInfo}  }
+\caption{\label{tab:TMI} The \texttt{BuildFailureException}s of MetaInfo  }
 \endlastfoot%
 \texttt{\footnotesize TMI01} 
 & \texttt{\footnotesize Cannot get stream to file '\$fileName'. }  \\
@@ -797,7 +793,7 @@ Id.        & Message  \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:TFU} The \texttt{BuildFailureException}s of the class \texttt{TexFileUtilsImpl}  }
+\caption{\label{tab:TFU} The \texttt{BuildFailureExceptions} of \texttt{TexFileUtilsImpl}  }
 \endlastfoot%
 \texttt{\footnotesize TFU01} 
 & \texttt{\footnotesize Cannot create destination directory '\$targetDir'. }  \\
@@ -833,7 +829,7 @@ This is mainly because of writing permissions.
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:TLP} The \texttt{BuildFailureException}s of the class \texttt{LatexProcessor}  }
+  \caption{\label{tab:TLP} The \texttt{BuildFailureExceptions} of \texttt{LatexProcessor}  }
   \endlastfoot%
   \texttt{\footnotesize TLP01} 
   & \texttt{\footnotesize Artifact '\$pdfFileAct' from '\$texFile' could not be reproduced. }  \\
@@ -1147,8 +1143,8 @@ FIXME
 \end{minipage}
 } \\
 \texttt{\footnotesize WPP05} 
-& \texttt{\footnotesize Included latex files which are not latex main files: } \\
-& \texttt{\footnotesize \texttt{\$includedNotMainFiles}. } \\
+& \texttt{\footnotesize Included latex files which are not latex main files: 
+\texttt{\$includedNotMainFiles}. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 In parameter \texttt{mainFilesIncluded} 
@@ -1159,8 +1155,8 @@ This is also affected by parameter \texttt{patternLatexMainFile}.
 \end{minipage}
 } \\
 \texttt{\footnotesize WPP06} 
-& \texttt{\footnotesize Excluded latex files which are not latex main files: } \\
-& \texttt{\footnotesize \texttt{\$excludedNotMainFiles}. } \\
+& \texttt{\footnotesize Excluded latex files which are not latex main files: 
+\texttt{\$excludedNotMainFiles}. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 In parameter \texttt{mainFilesExcluded} 
@@ -1171,8 +1167,8 @@ This is also affected by parameter \texttt{patternLatexMainFile}.
 \end{minipage}
 } \\
 \texttt{\footnotesize WPP07} 
-& \texttt{\footnotesize Included/Excluded latex main files not identified by their name: } \\
-& \texttt{\footnotesize \texttt{\$inclExcl}. } \\
+& \texttt{\footnotesize Included/Excluded latex main files not identified by their name: 
+\texttt{\$inclExcl}. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 This indicates that there are different latex main files 
