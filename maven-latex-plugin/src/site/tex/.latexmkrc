@@ -199,14 +199,13 @@ sub run_makeglossaries {
 
 
 
-push @generated_exts, "pytxcode";# why not one line only? 
-push @generated_exts, "depytx";
+$pythontex = 'pythontexW %O %R';
+push @generated_exts, "pytxcode", "plg";
+push @generated_exts, "depytx", "dplg";
 
-$clean_ext .= " %R.plg %R.dplg pythontex-files-%R/*"; # why not part of generated_exts?
-
-
-$pythontex = 'pythontex %O %S';
-$extra_rule_spec{'pythontex'}  = [ 'internal', '', 'mypythontex', "%Y%R.pytxcode",  "%Ypythontex-files-%R/%R.pytxmcr",    "%R", 1 ];
+$clean_ext .= " pythontex-files-%R/* pythontex-files-%R";
+#$extra_rule_spec{'pythontex'}  = [ 'internal', '', 'mypythontex', "%Y%R.pytxcode",  "%Ypythontex-files-%R/%R.pytxmcr", "%R", 1 ];
+$extra_rule_spec{'pythontex'}  = [ 'internal', '', 'mypythontex', "%R.pytxcode",  "pythontex-files-%R/%R.pytxmcr", "%R", 1 ];
 
 sub mypythontex {
    my $result_dir = $aux_dir1."pythontex-files-$$Pbase";
@@ -215,6 +214,7 @@ sub mypythontex {
    #my $fh = new FileHandle $$Pdest, "r";
    open( my $fh, "<", $$Pdest );
    if ($fh) {
+      print "path: $ENV{PATH}";
       while (<$fh>) {
          if ( /^%PythonTeX dependency:\s+'([^']+)';/ ) {
 	     print "Found pythontex dependency '$1'\n";
