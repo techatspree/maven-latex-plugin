@@ -544,10 +544,15 @@ spellcheck, 27
   -->
 
 	  <release  version="1.6"
-		date="2022-04-10"
+		date="2022-04-16"
 		description="Main feature: minimum support for pythontex. 
 		Added support for unregistred converters. 
 		Added inclusion/exclusion of latex main files.">
+      <action dev='reissner' type='add'>
+      extracted new way to determine the latex main file 
+      from changex.xml into detMainFile.md. 
+      This preparatory for the next release. 
+      </action>
       <action dev='reissner' type='update'>
       pom: version updates
       </action>
