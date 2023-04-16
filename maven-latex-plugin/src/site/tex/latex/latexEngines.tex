@@ -1,6 +1,7 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass{article}
 \synctex=1
+
 \usepackage{iftex}
 
 \iftutex%
@@ -9,8 +10,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \fi
+
 \usepackage{fancyvrb}
 
+\usepackage[nottoc, numindex, numbib]{tocbibind}
 
 %%\pdfinfoomitdate1
 %\pdfsuppressptexinfo-1
@@ -108,7 +111,6 @@
 %\usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
 
 
-\usepackage[nottoc, numindex, numbib]{tocbibind}
 
 %\usepackage{latex-bnf}
 \title{Special and common aspects of pdf/dvi/xdvi generators }
@@ -147,7 +149,7 @@ This document is about features the three generators on latex,
 \pdflatex, \lualatex{} and \xelatex{} have in common 
 and discusses also aspects under which they are specific. 
 These programs are just underlying tex engines preloading the the \LaTeX{} format. 
-The names of the underlying engines just drop the inner sylable "`\texttt{la}"'. 
+The names of the underlying engines just drop the inner sylable ``\texttt{la}''. 
 For \texttt{pdftex} there is a user manual~\cite{PdfTexUsr}, 
 for \texttt{luatex} there is a reference manual~\cite{LuaTexRef} and 
 for \texttt{xetex} a reference guide~\cite{XeTexRef}. 
@@ -183,9 +185,9 @@ Moreover, our research refers to a specific distribution, \texlive.
   \bottomrule
   \caption{\label{tab:versions} Converters and the version this document refers to }
   \endlastfoot%
-  \pdflatex{}  & pdfTeX 3.141592653-2.6-1.40.24 \\
-  \xelatex{}   & XeTeX 3.141592653-2.6-0.999994 \\
-  \lualatex{}  & LuaHBTeX, Version 1.15.0 \\
+  \pdflatex{}  & \texttt{pdfTeX 3.141592653-2.6-1.40.24} \\% chktex 8
+  \xelatex{}   & \texttt{XeTeX 3.141592653-2.6-0.999994} \\% chktex 8
+  \lualatex{}  & \texttt{LuaHBTeX, Version 1.15.0} \\
 \end{longtable}
 
 
@@ -218,7 +220,7 @@ option & \multicolumn{3}{l}{included} & explanation \\
 \midrule
 \endfirsthead%
 \bottomrule
-\caption{\label{tab:latexOptionsCommonTexlive} Options of \TeX{} engines in \texlive }
+\caption{\label{tab:latexOptionsCommonTexlive} Options of \TeX{} engines in \texlive}
 \endlastfoot%
 \texttt{(-)-cnf-line=STRING}       & p&x&l & parse \texttt{STRING} as a configuration file line \\
 \texttt{-{}-credits}               & -&-&l & Display credits and exit. \\
@@ -344,7 +346,7 @@ One has to clarify, whether the maven latex plugin under consideration really wo
   \midrule
   \endfirsthead%
   \bottomrule
-  \caption{\label{tab:latexOptionsCommonMiktex} Options of \TeX{} engines in \miktex }
+  \caption{\label{tab:latexOptionsCommonMiktex} Options of \TeX{} engines in \miktex}
   \endlastfoot%
   \texttt{-{}-alias=name}             & p&x&l       & Pretend to be program name, \dots\footnote%
  {Using this option is equivalent to copying the program file to name and invoking name.} \\
@@ -352,13 +354,13 @@ One has to clarify, whether the maven latex plugin under consideration really wo
 Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-buf-size=n}               & p&x&- & Set the the maximum number of characters \dots \\
 \texttt{-{}-c-style-errors}           & p&x&l       & Change the way, error messages are printed. \\
-\texttt{-{}-credits}                  & -&-&l & Display credits and exit. \footnote%
+\texttt{-{}-credits}                  & -&-&l & Display credits and exit\footnote%
    {The same as for \texlive. }. \\
 \texttt{-{}-disable-8bit-chars}       & p&x&- & Make only 7-bit characters printable. \\
 \texttt{-{}-disable/enable-installer} & p&x&l       & Disable/Enable automatic installation of packages. \\
 \texttt{-{}-disable-write18}          & p&x&l       & Disable the \texttt{\textbackslash{}write18\{command\}} construct.\\
-\texttt{-{}-enable-write18}           & p&x&l       & Fully enable the \texttt{\textbackslash{}write18\{command\}} construct. \footnote%
-{Corresponds roughly to \texttt{(-)-shell-escape} in \texlive. } \\
+\texttt{-{}-enable-write18}           & p&x&l       & Fully enable the \texttt{\textbackslash{}write18\{command\}} construct\footnote%
+{Corresponds roughly to \texttt{(-)-shell-escape} in \texlive. }. \\
 \texttt{-{}-restrict-write18}         & p&x&l       & Partially enable the \texttt{\textbackslash{}write18{command}} construct. \\
 %\texttt{-{}-parse-first-line}   & p&x&- & Disable checking \dots the first line \dots \\
 \texttt{-{}-debug-format}             & -&-&l & Enable format debugging\footnote%
@@ -390,8 +392,8 @@ Set \texttt{dir} as the directory to write auxiliary files to. \\
 \texttt{-{}-include-directory=dir}    & p&x&l       & Add the directory \texttt{dir} to [those] \\
                                       &  & &        & to be searched for input files. \\
 \texttt{-{}-initialize}               & p&x&l       & Become the INI variant of the program. \\
-\texttt{-{}-interaction=mode}         & p&x&l       & Set the interaction mode. (\texttt{mode=batchmode/nonstopmode/}\\
-&& && \texttt{scrollmode/errorstopmode}) \\
+\texttt{-{}-interaction=mode}         & p&x&l       & Set the interaction mode (\texttt{mode=batchmode/nonstopmode/}\\
+&& && \texttt{scrollmode/errorstopmode}). \\
 \texttt{-{}-job-name=name}            & p&x&l       & Set the name of the job (\texttt{\textbackslash{}jobname}). \\
 \texttt{-{}-job-time=file}            & p&x&- & Set the time-stamp of all output files \\
                                       &  & &        & equal to file's time-stamp. \\

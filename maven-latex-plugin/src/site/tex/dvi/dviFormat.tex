@@ -1,14 +1,15 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[10pt, a4paper]{article}
+\synctex=1
 
 \usepackage{iftex}
+
 \iftutex%
 \usepackage{fontspec}
 \else
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \fi
-
 
 \usepackage{fancyvrb}
 
@@ -20,7 +21,7 @@
 
 \ifLuaTeX%
 % for lualatex
-%\pdfvariable minorversion=7
+\pdfvariable minorversion=7
 % omit CreationDate and ModDate keys.
 \pdfvariable suppressoptionalinfo 767% chktex 1
 % no adding to the trailer dictionary.
@@ -29,12 +30,12 @@
 \else
 \ifXeTeX%
 % for xelatex
-%\special{pdf:minorversion 7}
+\special{pdf:minorversion 7}
 % TBD: find a way to express pdfinfoomitdate: necessary? 
 \special{pdf:trailerid []}
 \else
 \ifPDFTeX%
-%\pdfminorversion=7         % for pdflatex
+\pdfminorversion=7         % for pdflatex
 % omit CreationDate and ModDate keys.
 % not before pdfTeX 3.14159265-2.6-1.40.17
 %\pdfinfoomitdate=1                   % for pdflatex
