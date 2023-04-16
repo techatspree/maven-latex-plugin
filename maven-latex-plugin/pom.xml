@@ -915,7 +915,7 @@
 			<plugin>
 				<groupId>eu.simuline.m2latex</groupId>
 				<artifactId>latex-maven-plugin</artifactId>
-				<version>1.5</version>	<!-- 1.6-SNAPSHOT -->
+				<version>1.6</version>
 
 				<configuration>
 					<settings>
@@ -924,10 +924,8 @@
             <!--chkDiff>true</chkDiff-->
             <!--targets>dvi</targets-->
             <!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
-            
-						<!--pythontexCommand>pythontexW:pythontex</pythontexCommand-->
-						<!--pythontexOptions>- -rerun=always</pythontexOptions-->
-
+						<pythontexCommand>pythontexW:pythontex</pythontexCommand>
+						<pythontexOptions>--rerun=always</pythontexOptions>
 						<!--patternErrPyTex>\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\(s\), [0-9]+ warning\(s\)</patternErrPyTex-->
 						<!--patternWarnPyTex>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\(s\), [1-9][0-9]* warning\(s\)</patternWarnPyTex-->
             <!--depythontexCommand>depythontexW</depythontexCommand-->
