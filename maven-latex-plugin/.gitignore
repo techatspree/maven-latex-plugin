@@ -7,3 +7,6 @@
 # TBD: eliminate this workaround 
 src/site/tex/buildParams.tex
 src/test/resources/integration/pom4pdf.xml
+
+src/site/tex/pythontex-files-manualLatexMavenPlugin
+src/site/tex/pythontex/pythontex-files-pythontexInOut
