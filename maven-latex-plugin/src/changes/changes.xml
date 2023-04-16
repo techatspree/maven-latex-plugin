@@ -99,7 +99,6 @@
 
 Literature: \cite{DocMetaDataSuppCode}
 Note also that vscode als knows about the keys. 
-Use this to extend the pattern for latex main files. 
 
 Also metapost direct in lualatex via luamplib, cite {LuaMpLib}
 Es gibt die Frage nach der Art wie man mp files einbindet.
@@ -368,9 +367,6 @@ also modification of working directory with \setpythontexworkingdir is not suppo
 	We need a way to register a converter for a ConverterCategory. 
 	I think, we shall copy technique of javaoctave. -->
 
-	<!-- add a way to include/exclude main files. 
-		This would also ease development of this software in particular, deactivating the whole manual -->
-
 	<!-- unlike othe converters, pythontex does not always update its result files. 
 		Normally, there is a check that the result files changed. 
 		It must be possible to pypass that. 
@@ -390,11 +386,6 @@ also modification of working directory with \setpythontexworkingdir is not suppo
 	<!-- TBD: use std/err output to detect rerun information, not log files: 
 		this is much faster. -->
 
-		<!-- After build with recorder is supported: 
-		a tex file shall either be a main file or shall occur in a fls file. 
-	If neither is the case, then most probably, the according file is a main file and is not recognized. 
-	In this case, a warning shall be issued. 
-Maybe it is a good idea to allow an exclusion list, or maybe it suffices to rename that file xx.tex->xx.tex.deact -->
 	<!-- TBD: rerunfilecheck and out files created by hyperref -->
 	<!-- TBD: fix [WARNING] WPP03: Skipped processing of files with suffixes [, .latexmkrc, .log]. -->
 	<!-- TBD: consider https://tex.stackexchange.com/questions/7770/file-extensions-related-to-latex-etc -->
@@ -426,6 +417,7 @@ Maybe it is a good idea to allow an exclusion list, or maybe it suffices to rena
 			and a section on the old way with criticism. 
 			A switch legacyGlossaries which is false by default. 
 	-->
+  <!-- support for document development: subfiles package -->
 	<!-- TBD: for xfig there is a way to convert to tikz. 
 		I think, this is a single target file only and has same quality at least as we have currently. 
 		I think it is worth moving from mixed tex-pdf to tikz in tex only. -->
@@ -436,10 +428,6 @@ Maybe it is a good idea to allow an exclusion list, or maybe it suffices to rena
 
 		<!-- TBD: if an error occurred (not for warning), skip cleanup, 
 			not so easy: typically more than one  latex main file -->
-		<!-- TBDL in manual: hint to check the latex main files recognized. 
-			It could be that due to a mistake in the regular expression 
-			used to determine the latex main files, not all are created. 
-		-->
 		<!-- TBD: in tables for parameters and warnings and so 
 			frequently horizontal lines are missing. -->
 		<!-- terms.bib: 
@@ -516,6 +504,44 @@ PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
       Search also for other kpse commands. 
       For miktex consider 'findtexmf'
     -->
+
+    <!-- Check whether the following really works with mpost but not with lualatex 
+      included directly with luamplib: 
+
+      beginfig(2)
+        z1=(0,0);  z2=(10,20);
+        z3=(10,0); z4=(0,10);
+        draw z1 - - z2;  draw z3 - - z4;
+        def
+          det(expr a,b) = (xpart a * ypart b - ypart a * xpart b)
+        enddef;
+        l:=det(z3-z1,z3-z4)/det(z2-z1,z3-z4);
+        z5=l[z1,z2];
+        %pickup pencircle scaled 4pt;
+        %drawdot z5;
+        drawdot z5 withpen pencircle scaled 4pt;
+      endfig;
+      end
+    -->
+
+    <!-- see DetermineTexMainFile -->
+
+  <!-- 
+    i know that %!TEX directives are meta data used by development requirements, 
+    % !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode 
+but maybe this can be taken into account when compiling. 
+e.g. by setting the latex compiler and some options. 
+It may also serve as mark for latex main files as suggested in detMainFile.md. 
+Maybe with warning that deviating from default. 
+
+According to the texworks manual the following magic comments are supported. 
+!TeX
+encoding, 26
+program, 26
+root, 17
+spellcheck, 27
+  -->
 
 	  <release  version="1.6"
 		date="2022-04-10"
