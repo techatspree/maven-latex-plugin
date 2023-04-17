@@ -548,12 +548,19 @@ spellcheck, 27
       description="Like last release 
       but now documents are created with version 1.6. 
       That way quality is assured">
-      <action dev='reissner' type='update'>
+      <action dev='reissner' type='fix'>
+        Corrected .latexmkrc. Now works at least for pythontexInOut, 
+        but not for the manual still... no idea why
+      </action>
+      <action dev='reissner' type='fix'>
+        Eliminated bad boxes
+      </action>
+       <action dev='reissner' type='update'>
         In .gitignore eliminated files created by pythontex 
         which were silently vital for success of tests. 
         Not before now we have quality assured. 
       </action>
-      <action dev='reissner' type='update'>
+       <action dev='reissner' type='update'>
         Eliminated dependency on emacs and auctex. 
         This affects also .gitignore. 
       </action>
