@@ -1,0 +1,837 @@
+\chapter{Exceptions and Logging}\label{chap:exceptionLogging}
+
+If during execution of this software something goes wrong, 
+and it is possible to detect that, the user shall be notified. 
+
+Maven foresees a mechanism to abort the whole build, i.e.~lifecycle phase 
+or a single goal and accordingly ant allows to abort a task. 
+In both cases, abortion is implemented by throwing an exception. 
+
+
+A maven plugin aborts a goal throwing a 
+%
+\begin{verbatim}
+org.apache.maven.plugin.MojoFailureException
+\end{verbatim}
+%
+and a 
+%
+\begin{verbatim}
+org.apache.maven.plugin.MojoExecutionException 
+\end{verbatim}
+%
+to abort the life-cycle phase. 
+Since this plugin is just for documentation, 
+there is no need to abort site creation altogether, 
+so only the former exception occurs. 
+
+An ant-task aborts an ant-build throwing a
+%
+\begin{verbatim}
+org.apache.tools.ant.BuildException
+\end{verbatim}
+%
+without further distinction. 
+
+This software provides both a maven plugin and an ant task 
+built on the same code base. 
+Thus, the maven plugin throws a \texttt{MojoFailureException} 
+if and only if the according ant-task throws an \texttt{BuildException} 
+in the same situation. 
+
+Section~\ref{sec:exception} describes 
+the philosophy of throwing an exception and 
+defines in detail under what circumstances which exception is thrown. 
+
+Roughly speaking, an exception is thrown only if something is really wrong, 
+e.g.~a non-recoverable error or an indication 
+that the build system is out of control or if this plugin/task 
+is likely to destroy the work of another plugin/task. 
+
+If something went wrong, but no exception is thrown, 
+the user must be notified by logging 
+and the build process to go on, 
+skipping a section of a task as small as possible. 
+Both, maven and ant provide a logging mechanism 
+with the levels error, warning, info and debug. 
+Section~\ref{sec:logWarnErr} describes the errors and warnings; 
+the lot of infos and debugging output are not described here. 
+
+Verbosity is chosen by the following command line options: 
+%
+\begin{itemize}
+\item[\texttt{-e}] shows error messages, 
+\item[\texttt{-X}] shows debug-messages, 
+\item[\texttt{-q}] quiet hides the info-level and shows \emph{only} errors. 
+\end{itemize}
+%
+There seems no way to get warnings only. 
+
+Each exception offers a message and also each warning has a warning message. 
+The messages are endowed with a unique identifier of the form 
+\texttt{KCCDD}, where \texttt{K} is the kind which is one of 
+%
+\begin{itemize}
+\item[T] Throwable, 
+which results in a \texttt{MojoFailureException} for the maven-plugin 
+and \texttt{BuildException} for the ant-task. 
+This is described in detail in Section~\ref{sec:exception} 
+\item[E] logging as ERROR, 
+\item[W] logging as WARNING 
+\item[I] logging as INFO which occurs frequently
+\item[D] logging as DEBUGGING output, which is lengthy 
+\end{itemize}
+
+The shortcut \texttt{CC} describes the class where the exception is thrown 
+or the warning is logged: 
+%
+\begin{itemize}
+\item[EX] CommandExectutorImpl: 
+a class executing applications on a command line. 
+\item[PP] LatexPreProcessor: preprocessing of \LaTeX-files: 
+Processing of graphic files and detection of latex main files. 
+\item[LP] LatexProcessor: processing of \LaTeX-main files: 
+conversion into various output formats. 
+\item[SS] Settings: A container holding the values of all parameters. 
+These are either default or read from the configuration 
+in the pom for the maven plugin and in the build file for the ant task. 
+\item[MI] MetaInfo: offering meta information
+  as expected and actual versions of converters. 
+\item[FU] TexFileUtilsImpl: a class providing access to files. 
+\end{itemize}
+%
+Finally, \texttt{DD} is a two digit number enumerating the messages.
+
+
+\begin{longtable}{|ll|}
+\toprule
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:LogMI} The logging for MetaInfo   }
+\endlastfoot%
+\texttt{\footnotesize WMI01} 
+& \texttt{\footnotesize Version string from converter \$conv did not match expected form:      } \\
+& \texttt{\footnotesize \$conv: 'version'not?in\$interv } \\% chktex 32
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  Indicates that the version string coming from the converter \$conv
+  is not as expected.
+  Programming error excluded, this means that the version does not fit,
+  i.e.~is not in \texttt{\$interv}.
+\end{minipage}
+} \\
+\texttt{\footnotesize WMI02} 
+& \texttt{\footnotesize \$conv: '\$actVersion'not in\$interv} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  Indicates that the version of converter \$conv can be detected
+  and is \$actVersion but does not fit the expectation which is \$expVersion. 
+\end{minipage}
+}
+\end{longtable}
+
+
+
+
+\begin{longtable}{|ll|}
+\toprule
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:LogFU} The logging for TexFileUtils   }
+\endlastfoot%
+\texttt{\footnotesize WFU01} 
+& \texttt{\footnotesize Cannot read directory '\$dir';  } \\
+& \texttt{\footnotesize build may be incomplete. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD 
+\end{minipage}
+} \\
+\texttt{\footnotesize XFU02} 
+& \texttt{\footnotesize  TBD} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize WFU03}  & \texttt{\footnotesize Cannot close '\$file'.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU05}  & \texttt{\footnotesize Cannot delete file '\$file'.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU06}  & \texttt{\footnotesize Cannot move file '\$src'
+                                to '\$dest'.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+TBD
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU07}  & \texttt{\footnotesize File '\$srcFile' to be filtered cannot be read.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  WORKAROUND for \texttt{inkscape}
+  filtering \texttt{eps\_tex}-file into \texttt{ptx} file:
+  The former is not a readable regular file. 
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU08}  & \texttt{\footnotesize Destination file '\$destFile' for filtering cannot be written.} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+ WORKAROUND for \texttt{inkscape}
+  filtering \texttt{eps\_tex}-file into \texttt{ptx} file:
+  The latter is not a writable regular file. 
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU09}  & \texttt{\footnotesize Cannot filter file '\$srcFile' into '\$destFile'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+ WORKAROUND for \texttt{inkscape}
+  filtering \texttt{eps\_tex}-file into \texttt{ptx} file:
+  Either reading a line or writing a line failed. 
+\end{minipage}
+} \\
+\end{longtable}
+TBD\@: check whether workaround still necessary. 
+TBD\@: complete list
+TBD\@: add missing lists 
+
+
+\section{Exceptions}\label{sec:exception}
+
+Exceptions are thrown only if no substantial part of 
+this maven-goal or this ant-task may be completed 
+as if the tex source directory does not exist or is no directory 
+or if a failure occurs which indicates 
+that the underlying system does not work properly, 
+as if the tex source directory or a subdirectory is not readable 
+or if execution of an external program fails. 
+The latter does not mean that the program returns with an error code, 
+but it means that execution from within java fails.
+
+\begin{longtable}{|ll|}
+\toprule
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:TEX} The \texttt{BuildFailureException}s of the internal class
+\texttt{CommandExecutorImpl} }
+  % TBD: find out why the above texttt does not show up in the text. 
+\endlastfoot%
+\texttt{\footnotesize TEX01} & \texttt{\footnotesize Error running \$command. }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Compare with EEX01 in Table~\ref{tab:WarnCEI}: 
+Error execution means 
+%
+\begin{itemize}
+\item
+the file expected to be the working directory 
+does not exist or is not a directory. 
+\item
+method \texttt{Runtime.exec(String, String[], File)} fails % chktex 36
+throwing an \texttt{IOException}. 
+\item
+an error inside systemOut parser occurs 
+\item
+an error inside systemErr parser occurs 
+\item
+Wrapping an \texttt{InterruptedException} 
+on the process to be executed thrown by \texttt{Proces.waitFor()}. % chktex 36
+\end{itemize}
+%
+whereas for EEX01 just a failure code is returned. 
+\end{minipage}
+} \\
+\end{longtable}
+
+
+
+\begin{longtable}{|ll|}
+\toprule
+Identifier        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:TSS} The \texttt{BuildFailureException}s of the class \texttt{Settings} }
+\endlastfoot%
+\texttt{\footnotesize TSS01} 
+& \texttt{\footnotesize The tex source directory '\$texSrcDirectoryFile'} \\
+& \texttt{\footnotesize should be an existing directory, but is not. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The tex source directory is given in the pom/build-file 
+with default value \texttt{./src/site/tex}. 
+It contains or is \texttt{\$texSrcProcDirectoryFile}. 
+Thus is must be a directory. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS02} 
+& \texttt{\footnotesize The tex source processing directory '\$texSrcProcDirectoryFile'} \\
+& \texttt{\footnotesize should be an existing directory, but is not. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The tex source processing directory is given in the pom/build-file 
+relative to \texttt{\$texSrcDirectoryFile}
+with default value \texttt{.}. 
+It contains all files to be processed. 
+Thus is must be a directory. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS03}  & \texttt{\footnotesize The output directory '\$outputDirectory'} \\
+& \texttt{\footnotesize should be a directory if it exists, but is not. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The output directory is given in the pom/build-file 
+with default value \texttt{./target/site/.}. 
+The output directory is where the result of the goal/task 
+are copied to. 
+If it does not yet exist, it is created 
+but if it exists and is a regular file, it cannot be created any more. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS04}  & \texttt{\footnotesize The target set '\$targets' } \\
+& \texttt{\footnotesize should be a subset of the registered targets '\ldots', but is not. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The target set is given in the pom/build-file 
+with default value \texttt{pdf, html}. 
+A single target can be given on the command line
+as e.g.~via \texttt{mvn latex:pdf} and also in this case,
+the validity of the target is checked, so that e.g.~\texttt{mvn latex:invalid}
+throws an exception, but the mechanism relies directly on mavens ability
+to check the targets of this plugin. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS05}  & \texttt{\footnotesize The excluded converters '\$convertersExcluded' } \\
+& \texttt{\footnotesize should form a subset of the registered converters '\ldots'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+From the possible ``registered'' converters the ones not used may be excluded
+to avoid that they cause errors when trying to check correctness of version in
+target \texttt{vrs} accessed via \texttt{mvn latex:vrs}.
+These converters may not even be installed. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS06}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
+& \texttt{\footnotesize although not among the registered converters '\ldots' as expected. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Only registered converters may be used. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS07}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
+& \texttt{\footnotesize although among the excluded converters '\ldots'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Among the registered converters only those may be used,
+which are not excluded, i.e.~listed in configuration in section \texttt{convertersExcluded}.
+\end{minipage}
+} \\
+\texttt{\footnotesize TSS08}  & \texttt{\footnotesize Tried to use converter '\$convStr' } \\
+ & \texttt{\footnotesize in configuration '\ldots' instead of configuration '\ldots'. } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+   Each converter may occur in a specified configuration only.
+   So e.g. \lualatex{} is only allowed in configuration
+   '\texttt{latex2pdfCommand}'.
+   If used in configuration '\texttt{makeIndexCommand}' this causes this exception,
+   because in that configuration, e.g \texttt{makeindex} is allowed. 
+ \end{minipage}
+ } \\
+ \texttt{\footnotesize TSS09}  & \texttt{\footnotesize The diff directory '\$diffDirectoryFile' } \\
+ & \texttt{\footnotesize should be a directory if it exists, but is not.  } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+   The \texttt{\$diffDirectoryFile} shall exist and be a directory. 
+   In it shall be stored the artifacts the actually created shall be compared with 
+   if \texttt{chkDiff} is set using the command \texttt{diffPdfCommand}. 
+   As the name suggests, currently only pdf-files are compared. 
+ \end{minipage}
+ } \\
+ \texttt{\footnotesize TSS10}  & \texttt{\footnotesize Specified unregistered converter '\$convStrProper'} \\
+ & \texttt{\footnotesize with invalid category '\$catStr'; should be '\dots'.} \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+  The converter \texttt{convName} 
+  is specified in the setting \texttt{<catCommand>} 
+  in the form \texttt{convName:notCat} 
+  with category \texttt{notCat} not coinciding with \texttt{cat} as required. 
+ \end{minipage}
+ } \\
+\end{longtable}
+
+
+\begin{longtable}{|ll|}
+\toprule
+Id.        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:TMI} The \texttt{BuildFailureException}s of the class \texttt{MetaInfo} }
+\endlastfoot%
+\texttt{\footnotesize TMI01} 
+& \texttt{\footnotesize Cannot get stream to file '\$fileName'. }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  Stream to file within jar.
+  This may be the manifest file, pom.properties or git.properties. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TMI02} 
+& \texttt{\footnotesize Cannot load properties from file '\$fileName'.  }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+  Provided the stream to the file is ok,
+  could not load property.
+  This may occur for pom.properties or git.properties. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TMI03} 
+& \texttt
+{\footnotesize IOException reading manifest. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Provided the stream to the manifest file is ok, could not read completely.
+\end{minipage}
+} \\
+\end{longtable}
+
+\begin{longtable}{|ll|}
+\toprule
+Id.        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:TFU} The \texttt{BuildFailureException}s of the class \texttt{TexFileUtilsImpl}  }
+\endlastfoot%
+\texttt{\footnotesize TFU01} 
+& \texttt{\footnotesize Cannot create destination directory '\$targetDir'. }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+This is mainly because of writing permissions. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TFU04} 
+& \texttt{\footnotesize Cannot overwrite directory '\$destFile'. }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Because this plugin shall not turn directories into regular files 
+and vice versa. 
+This failure indicates that another plugin/task disturbs this one. 
+\end{minipage}
+} \\
+\texttt{\footnotesize TFU06} 
+& \texttt
+{\footnotesize Cannot copy file '\$srcFileName' to directory '\$targetDir'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+This is mainly because of writing permissions. 
+\end{minipage}
+} \\
+\end{longtable}
+
+\begin{longtable}{|ll|}
+  \toprule
+  Id.        & Message  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:TLP} The \texttt{BuildFailureException}s of the class \texttt{LatexProcessor} }
+  \endlastfoot%
+  \texttt{\footnotesize TLP01} 
+  & \texttt{\footnotesize Artifact '\$pdfFileAct' from '\$texFile' could not be reproduced. }  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  Processing \$texFile' yields \$pdfFileAct which is not ``alike'' the stored version. 
+  Currently, that kind of check can be performed for \texttt{pdf} files only. 
+  Also the diff check is executed only if parameter \$chkDiff described in Section~\ref{sec:paramRepro} is set. 
+  Then the diff command \$diffPdfCommand is performed to determine whether the artifacts are equivalent
+  in the sense given by the diff command. 
+  The concrete meaning of that equivalence 
+  may range from strict equivalence to some kind of visual equivalence. 
+  \end{minipage}
+  } \\
+  \texttt{\footnotesize TLP02} 
+  & \texttt{\footnotesize  No file '\$pdfFileCmp' to compare with artifact from '\$texFile'. }  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  The PDF file '\$pdfFileCmp' expected for comparison with the PDF file created from '\$texFile' does not exist. 
+  It is expected only if a diff check is configured according to \$chkDiff described in Section~\ref{sec:paramRepro}. 
+  Currently, that kind of check can be performed for \texttt{pdf} files only. 
+  \end{minipage}
+  }
+\end{longtable}
+  
+  
+
+
+
+FIXME\@: to be added. 
+
+
+\section{Logging of Warnings and Errors}\label{sec:logWarnErr}
+
+The rules for logging warnings and errors is, 
+that the user must be notified, 
+if something went wrong, but the run is not aborted, 
+by a warning or an error. 
+It is not required that for each detail going wrong, 
+there is a separate notification, 
+but the user must be sure, that all is ok, 
+if no warning and no error occurs. 
+
+To decide whether it is an error or a warning to be logged, 
+one has to distinguish, 
+whether the problem occurs when running an external application 
+or within internal code. 
+In the first case, the decision whether it is an error or a warning 
+is left to that application: 
+%
+\begin{itemize}
+\item 
+If the application returns an error code other than 0, 
+it is an error. 
+\item
+If the application is expected to write a log file, 
+but none is found, it is an error. 
+The applications used here, 
+return a nontrivial error code if no log file is written. 
+\item
+The applications used here, writing a log file 
+distinguish between error and warning. 
+If a log file is written both are logged in the log file 
+and can be distinguished by the form of the entry via pattern matching. 
+If no error occurs, the return code is 0, even if warnings occur. 
+\item
+If an application writes at least one error into the log file, 
+this software logs an error. 
+\item
+If an application writes no error into the log file 
+but at least one warning, principally this software logs a warning. 
+There may be parameters to switch off warnings partially 
+or all of them, 
+but there must be also a configuration of parameter values 
+that allow logging all warnings. 
+\end{itemize}
+
+If an application does not create the expected output file, 
+this software logs an error. 
+This may be because of an internal error as described above, 
+but also because of wrong parameters. 
+So, 
+% LTeX: enabled=false
+e.g.~\texttt{lualatex -v xxx.tex} 
+% LTeX: enabled=true
+does not create a pdf-file as expected. 
+
+
+\begin{longtable}{|ll|}
+\toprule
+\small Id.        & \small Message  \\
+\multicolumn2{|l|}{\small Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:WarnALP} The errors and warnings on running a command  }
+\endlastfoot%
+\texttt{\footnotesize EEX01} & \texttt{\footnotesize Running \$command 
+			    failed with return code \$returnCode. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Compare with TEX01 in Table~\ref{tab:TEX}: 
+Error execution means that there is even no valid return code. 
+% Variables: 
+% %
+% \begin{itemize}
+% \item \texttt{\$command}: The command executed. 
+% \item \texttt{\$returnCode}: The failure code which is not $0$ in this case. 
+% \end{itemize}
+\end{minipage}
+} \\
+\texttt{\footnotesize EEX02} & \texttt{\footnotesize Running \$command failed: 
+			  No target file '\$fileName' written. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize EEX03} 
+& \texttt{\footnotesize Running \$command failed: 
+Target file '\$fileName' is not updated. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command \texttt{\$command} is expected 
+to write to the file '\texttt{\$fileName}' but this file is not updated. 
+This indicates an error executing \texttt{\$command}. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WEX04} 
+& \texttt
+{\footnotesize Cannot read target file '\$fileName'; may be outdated. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WEX05} 
+& \texttt{\footnotesize Update control may emit false warnings. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize EAP02} & \texttt{\footnotesize Running \$command failed: 
+No log file '\$logFileName' written. }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command \texttt{\$command} is expected 
+to write a log file '\texttt{\$logFileName}' but no such file exists. 
+This indicates an error executing \texttt{\$command}. 
+\end{minipage}
+} \\
+\texttt{\footnotesize EAP01}  & \texttt{\footnotesize Running \$command failed. 
+Errors logged in '\$logFileName'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command \texttt{\$command} logged at least one error 
+in the file '\texttt{\$logFileName}', 
+where more details can be found. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WAP03} 
+& \texttt{\footnotesize Running \$command emitted warnings 
+logged in '\$logFileName'. }  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The command \texttt{\$command} logged at least one warning 
+in the file '\texttt{\$logFileName}', 
+where more details can be found. 
+Note that if \texttt{\$command} is a latex processor, 
+this warning comes only iff the parameter \texttt{\$debugWarnings} is set. 
+Note also that notifications on bad boxes are not counted as warnings here. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP03} 
+& \texttt{\footnotesize Running \$command created bad boxes 
+logged in '\$logFileName'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Here, \texttt{\$command} is a latex processor. 
+It logged at least one bad box, 
+overfull or underfull, horizontal or vertical 
+in \texttt{\$logFileName} where more details can be found. 
+Note that 
+this warning comes only iff the parameter \texttt{\$debugBadBoxes} is set. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP06} 
+& \texttt{\footnotesize Running \$command 
+found issues logged in '\$logFileName'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Here, \texttt{\$command} is a checker tool. 
+Strictly speaking, unlike the other warnings here, 
+this does not signify that running \texttt{\$command} went wrong 
+but uncovered an issue (warning/error/message) logged in a file. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP05} 
+& \texttt{\footnotesize Use package \texttt{splitidx} 
+without option \texttt{split} in \texttt{\$texFileName}. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+This indicates that an extended idx-file ``\texttt{xxx-yy.idx}'' 
+has been found without \texttt{xxx.idx} or without according entry 
+\texttt{\textbackslash indexentry[yy]\{\dots\}\{\dots\}} 
+in \texttt{xxx.idx}. 
+\end{minipage}
+} \\
+\end{longtable}
+
+
+\begin{longtable}{|ll|}
+\toprule
+Id.        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:WarnCEI} The errors and warnings on files/streams  }
+\endlastfoot%
+\texttt{\footnotesize WFU01} 
+& \texttt{\footnotesize Cannot read directory '\$dir'; 
+build may be incomplete. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WPP02} 
+& \texttt{\footnotesize Cannot read tex file '\$texFile'; 
+may bear latex main file. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WAP04} 
+& \texttt{\footnotesize Cannot read log file '\$logFileName'; 
+  may hide warnings/errors. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP02} 
+& \texttt{\footnotesize Cannot read log file '\$logFileName'; 
+  \$kind may require rerun. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP04} 
+& \texttt{\footnotesize Cannot read idx file '\$idxFileName'; 
+skip creation of index. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WFU03} 
+& \texttt{\footnotesize Cannot close '\$closeable'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU05} 
+& \texttt{\footnotesize Cannot delete file '\$delFile'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+
+\end{minipage}
+} \\
+\texttt{\footnotesize EFU06} 
+& \texttt{\footnotesize Cannot move file '\$fromFile' to '\$toFile'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\end{longtable}
+
+
+\begin{longtable}{|ll|}
+\toprule
+Id.        & Message  \\
+\multicolumn2{|l|}{Explanation }  \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:WarnLPP} Miscellaneous errors and warnings  }
+\endlastfoot%
+\texttt{\footnotesize WPP03} 
+& \texttt{\footnotesize Skipped processing of files with suffixes \$skipped. }\\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WPP04} 
+& \texttt{\footnotesize Skip processing \texttt{\$srcFile}: 
+  interpreted as target of \texttt{\$lmFile}. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\texttt{\footnotesize WPP05} 
+& \texttt{\footnotesize Included latex files which are not latex main files: } \\
+& \texttt{\footnotesize \texttt{\$includedNotMainFiles}. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+In parameter \texttt{mainFilesIncluded} 
+only latex main files shall be mentioned. 
+The above message shows files specified 
+which are not recognized as latex main files. 
+This is also affected by parameter \texttt{patternLatexMainFile}. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WPP06} 
+& \texttt{\footnotesize Excluded latex files which are not latex main files: } \\
+& \texttt{\footnotesize \texttt{\$excludedNotMainFiles}. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+In parameter \texttt{mainFilesExcluded} 
+only latex main files shall be mentioned. 
+The above message shows files specified 
+which are not recognized as latex main files. 
+This is also affected by parameter \texttt{patternLatexMainFile}. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WPP07} 
+& \texttt{\footnotesize Included/Excluded latex main files not identified by their name: } \\
+& \texttt{\footnotesize \texttt{\$inclExcl}. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+This indicates that there are different latex main files 
+with the same name (of course in different directories) 
+and that \texttt{\$inclExcl} are those given in parameter 
+\texttt{mainFilesIncluded} or \texttt{mainFilesExcluded}. 
+\end{minipage}
+} \\
+
+
+
+\texttt{\footnotesize WLP01} 
+& \texttt{\footnotesize LaTeX requires rerun 
+but maximum number \$maxNumRerunsLatex reached. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+FIXME
+\end{minipage}
+} \\
+\end{longtable}
+
+
+
+
+
+
+
+
+%\begin{longtable}
+  
+%\end{longtable}
+
+FIXME\@: to be added. 

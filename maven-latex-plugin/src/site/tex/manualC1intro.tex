@@ -1,0 +1,125 @@
+\chapter{Introduction}
+
+This document is created with \lualatex{} or that like 
+with output format 
+\ifpdf%
+pdf%
+\else
+dvi%
+\fi.
+The package \pkg{tex4ht} 
+is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
+
+\LaTeX{} is a beautiful way to create printable documents, 
+in our days preferably as \gls{pdf}-files, 
+with a particular strength in typesetting formulae like
+% pandoc invocation given in README.md
+% TBD: check why pandoc can create this formula whereas it fails for align.
+% TBD: pandoc seems to have problems with links to tables
+% and tables dont look optimal.
+% TBD: link to figures seem not to work, to be honest i cannot see any figure
+% whereas toc is present, other tables are not. 
+% also index, bibliography and that like seems to miss. 
+%
+% \begin{equation*}
+%   \pi  = \sqrt{12}\;\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}. %chktex 3
+% \end{equation*}
+%
+\begin{align}
+\pi & = \sqrt{12}\;\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}. %chktex 3
+\end{align}
+%
+Here, portability of the format \gls{pdf} is a vital feature. 
+In the past, normally \gls{dvi} (device independent)
+described in~\cite{DviF} has been used 
+and still creation of external formats like \gls{html}, 
+\gls{odt} and \gls{docx} are based on an intermediate \gls{dvi}-file.
+It is much more lightweight than pdf specified in~\cite{Pdf1}, in~\cite{Pdf2}
+and in~\cite{Pdf3}.
+% strange: no mention of other formats
+% epub for example, htm, xhtml and office formats also rtf
+% manpages, javahelp
+
+This piece of software implements both an ant-task and a maven-plugin 
+generating documentation of various formats from \LaTeX-files 
+in a uniform way. 
+Chapter~\ref{chap:install} shows how to install both the maven-plugin 
+and the ant-task 
+and Chapter~\ref{chap:usage} describes the usage. 
+Note that the maven-plugin is both easier to install 
+and more versatile to be used. 
+
+From the \LaTeX-files, the latex main files must be extracted, 
+only these must be compiled. 
+It is very usual to endow \LaTeX-files with figures. 
+On the other hand, there are many graphic formats 
+which cannot be included directly in a \LaTeX-file 
+but must be preprocessed. 
+If there is some format needed but not yet provided, 
+please write an email to the author. 
+
+Graphic files must be preprocessed before processing latex main files, 
+as described in Chapter~\ref{chap:GraphConversions}. 
+Then follows the proper processing of latex main files 
+including creation of index and glossaries 
+as described in Chapter~\ref{chap:latexMainConversions}. 
+Besides \gls{pdf}, these formats include the web-formats \gls{html} 
+and \gls{xhtml}, 
+open offices format \gls{odt}, Microsoft's word formats like \gls{docx} 
+and finally plain text. 
+
+Uniformity of ant-task and a maven-plugin means in particular, 
+that the settings which may be passed to the task 
+and those allowed for the plugin are in a one-to-one relation. 
+They are both described in Chapter~\ref{chap:settings}. 
+It is a design goal, that the auxiliary programs 
+used by this software are fully configurable via parameters, 
+that aspects not completely specified can be handled flexibly, 
+there are parameters supporting information development 
+and that for the parameters are default values 
+which allow doing without explicit parametrization in most of the cases.\index{ant-task}%
+Both, the ant-task and the maven-plugin rely on the same code base 
+which form the package \texttt{org.m2latex.core}. 
+The code specific for the ant-task is in \texttt{org.m2latex.antTask} 
+and that specific for the maven-plugin is in \texttt{org.m2latex.mojo}. 
+
+
+The creation process supports an index, a glossary and a bibliography. 
+In addition, code written in python and other languages can be included and executed 
+during creation of the document. 
+Again, further functionality can be added by demand. 
+
+The present manual is created by the maven-plugin or the ant-task 
+described here. 
+There should be no difference in the result. 
+This manual is designed in a way that it covers the most important features 
+but also to demand the most important features. 
+That way, creating this manual is a top level test 
+for the underlying software. 
+The maven-plugin is somehow superior 
+because it better supports the design process for the \LaTeX{} sources. 
+
+If something goes wrong in the build process, 
+or there is an indication 
+of some deficiency in the result of the build process, 
+processing must be aborted if going on does not make sense 
+and there must be some error or warning logging 
+as described in Chapter~\ref{chap:exceptionLogging}. 
+
+The configuration of the maven plugin and of the ant-task 
+are given in Chapter~\ref{chap:listings}
+in Listing~\ref{lst:fullConfig} and in Listing~\ref{lst:fullConfigAnt},
+respectively. 
+
+The author found some gaps, i.e.~desirable features 
+which are not yet implemented. 
+To prioritize further work, 
+all these gaps are collected in Chapter~\ref{chap:gaps}. 
+Accordingly, the most important bugs are collected in
+Chapter~\ref{chap:bugs}. 
+The user is encouraged to contribute with feature requests 
+and bug reports and to vote for realization of features 
+and on fixing bugs. 
+Software quality is ensured mainly through tests 
+which are described in Chapter~\ref{chap:tests}. 
+
