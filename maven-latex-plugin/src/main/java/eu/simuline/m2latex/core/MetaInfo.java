@@ -109,7 +109,7 @@ public class MetaInfo {
 		 * containing the manifest represented by this object 
 		 * was created by maven jar plugin with proper version. 
 		 */
-		private final static String MVN_JAR_PLUGIN = "Maven Jar Plugin 3.2.0";
+		private final static String MVN_JAR_PLUGIN = "Maven Jar Plugin 3.2.2";
 
 		/**
 		 * The name of the manifest file which is in the folder {@link #META_FOLDER} 
