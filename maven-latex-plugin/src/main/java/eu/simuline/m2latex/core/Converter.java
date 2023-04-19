@@ -111,6 +111,14 @@ enum Converter {
       return "latex2rtf";
     }
 
+    String getVersionOption() {
+      return "-v";
+    }
+
+    String getHelpOption() {
+      return "-h";
+    }
+
     String getVersionPattern() {
       return "(([0-9]+)\\.([0-9]+)\\.([0-9]+) r([0-9]+))";
     }
@@ -127,10 +135,6 @@ enum Converter {
   Odt2doc {
     String getCommand() {
       return "odt2doc";
-    }
-
-    String getVersionOption() {
-      return "--version";
     }
 
     // TBC: not clear whether this is the significant version 
@@ -153,6 +157,10 @@ enum Converter {
       return "pdftotext";
     }
 
+    String getVersionOption() {
+      return "-v";
+    }
+
     String getVersionPattern() {
       return X_X_X;
     }
@@ -168,6 +176,10 @@ enum Converter {
   Dvips {
     String getCommand() {
       return "dvips";
+    }
+
+    String getVersionOption() {
+      return "-v";
     }
 
     String getVersionPattern() {
@@ -194,10 +206,6 @@ enum Converter {
   Dvipdfm {
     String getCommand() {
       return "dvipdfm";
-    }
-
-    String getVersionOption() {
-      return "--version";
     }
 
     String getVersionPattern() {
@@ -229,10 +237,6 @@ enum Converter {
       return "dvipdfmx";
     }
 
-    String getVersionOption() {
-      return "--version";
-    }
-
     String getVersionPattern() {
       return VYYYYMMDD;
     }
@@ -259,10 +263,6 @@ enum Converter {
   XDvipdfmx {
     String getCommand() {
       return "xdvipdfmx";
-    }
-
-    String getVersionOption() {
-      return "--version";
     }
 
     String getVersionPattern() {
@@ -294,10 +294,6 @@ enum Converter {
       return "dvipdft";
     }
 
-    String getVersionOption() {
-      return "--version";
-    }
-
     String getVersionPattern() {
       return "(([0-9]{4})([0-9]{2})([0-9]{2})\\.([0-9]{4}))";
     }
@@ -315,12 +311,21 @@ enum Converter {
       return "gs";
     }
 
+    String getVersionOption() {
+      return "--version";
+    }
+    // String getVersionOption() {
+    //   return "-v";
+    // }
+
     String getVersionPattern() {
-      return VX_X__X;
+      //return VX_X__X;
+      return X_X_X;
     }
 
     String getVersionEnvironment() {
-      return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+      //return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+      return "^%s";
     }
 
     ConverterCategory getCategory() {
@@ -330,10 +335,6 @@ enum Converter {
   ChkTeX {
     String getCommand() {
       return "chktex";
-    }
-
-    String getVersionOption() {
-      return "-W";
     }
 
     String getVersionPattern() {
@@ -354,21 +355,14 @@ enum Converter {
       return "diff-pdf-visually";
     }
 
-    // TBD: bugfix: this is just the help option. 
-    // -v is the verbose option 
-    String getVersionOption() {
-      return "-h";
-    }
-
     String getVersionPattern() {
-      return VX;
+      return X_X_X;
     }
 
     // TBD: rework 
     String getVersionEnvironment() {
       //return "default: %s";
-      return //"^usage: " + getCommand() + ".*\n"+
-      "Compare two PDFs visually. The exit code is %s ";
+      return "^" + getCommand() + " %s";
     }
 
     // TBD: make specific 
@@ -405,12 +399,6 @@ enum Converter {
   Diff {
     String getCommand() {
       return "diff";
-    }
-
-    // TBD: bugfix: this is just the help option. 
-    // -v is the verbose option 
-    String getVersionOption() {
-      return "-v";
     }
 
     String getVersionPattern() {
@@ -456,6 +444,10 @@ enum Converter {
 
     String getVersionOption() {
       return "-ver";
+    }
+
+    String getHelpOption() {
+      return "-h";
     }
 
     String getVersionPattern() {
@@ -581,7 +573,7 @@ enum Converter {
     }
 
     String getVersionOption() {
-      return "-h";
+      return "-h";// Note: with --version an additional file is scanned. 
     }
 
     String getVersionPattern() {
@@ -603,10 +595,6 @@ enum Converter {
       return "splitindex";
     }
 
-    String getVersionOption() {
-      return "--version";
-    }
-
     String getVersionPattern() {
       return VX_X;
     }
@@ -625,10 +613,6 @@ enum Converter {
       return "xindy";
     }
 
-    String getVersionOption() {
-      return "-V";
-    }
-
     // TBC: not clear whether this is the significant version 
     String getVersionPattern() {
       return X_X_X;
@@ -645,10 +629,6 @@ enum Converter {
   Makeglossaries {
     String getCommand() {
       return "makeglossaries";
-    }
-
-    String getVersionOption() {
-      return "--help";
     }
 
     String getVersionPattern() {
@@ -670,10 +650,6 @@ enum Converter {
       return "pythontex";
     }
 
-    String getVersionOption() {
-      return "--version";
-    }
-
     String getVersionPattern() {
       return VX_X;
     }
@@ -690,10 +666,6 @@ enum Converter {
   DePythonTeX {
     String getCommand() {
       return "depythontex";
-    }
-
-    String getVersionOption() {
-      return "--version";
     }
 
     String getVersionPattern() {
@@ -750,10 +722,6 @@ enum Converter {
       return "ebb";
     }
 
-    String getVersionOption() {
-      return "--version";
-    }
-
     // 2nd line 
     String getVersionPattern() {
       return VYYYYMMDD;
@@ -772,10 +740,6 @@ enum Converter {
       return "gnuplot";
     }
 
-    String getVersionOption() {
-      return "-V";
-    }
-
     String getVersionPattern() {
       return "(([0-9]+)\\.([0-9]+) patchlevel ([0-9]+))";
     }
@@ -791,10 +755,6 @@ enum Converter {
   Inkscape {
     String getCommand() {
       return "inkscape";
-    }
-
-    String getVersionOption() {
-      return "--version";
     }
 
     String getVersionPattern() {
@@ -818,6 +778,10 @@ enum Converter {
 
     String getVersionOption() {
       return "-V";
+    }
+
+    String getHelpOption() {
+      return "-h";
     }
 
     String getVersionPattern() {
@@ -924,15 +888,26 @@ enum Converter {
    * 
    * @return
    *    the option to display (a string containing) version information. 
-   *    As a default, this is <code>-v</code> which is the most common such option.
+   *    As a default, this is <code>--version</code> which is the posix standard option. 
+   *    At the same time it is quite frequent and works sometimes although not documented in help. 
+   *    This is overwritten only because the default does not work 
+   *    or is considerably worse than the default. 
    */
   String getVersionOption() {
-    return "-v";
+    return "--version";
   }
 
-  // String getHelpOption() {
-  //   return "--help";
-  // }
+  /**
+   * Returns the option which just help information. 
+   * 
+   * @return
+   *    the option to display help information. 
+   *    As a default, this is <code>--help</code> which is the posix standard option. 
+   *    At the same time it is quite frequent and works sometimes although not documented in help. 
+   */
+  String getHelpOption() {
+    return "--help";
+  }
 
   /**
    * Returns the pattern of the version for this converter as a regular expression. 
