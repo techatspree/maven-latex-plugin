@@ -1,5 +1,5 @@
 
-% !TEX root = manualLatexMavenPlugin.tex
+% !TEX root = manualLMP.tex
 \chapter{Processing of \LaTeX{} main files}\label{chap:latexMainConversions}
 
 Given graphics in formats includable in TEX files, 
@@ -514,14 +514,14 @@ Accordingly, for option \texttt{makeindex} the aux-file receives lines
 %
 \begin{lstlisting}[language=TeX]
 \providecommand\@istfilename[1]{}
-\@istfilename{manualLatexMavenPlugin.ist}
+\@istfilename{manualLMP.ist}
 \end{lstlisting}
 %
 whereas for option \texttt{xindy}, there are lines 
 %
 \begin{lstlisting}[language=TeX]
 \providecommand\@istfilename[1]{}
-\@istfilename{manualLatexMavenPlugin.xdy}
+\@istfilename{manualLMP.xdy}
 ...
 \providecommand\@xdylanguage[2]{}
 \@xdylanguage{main}{english}
@@ -1112,7 +1112,7 @@ breaklines,
 %float, 
 captionpos=b, label={lst:reprPdfEngines},
 caption={Create reproducible pdf files for various engines}]%
-{./manualLatexMavenPlugin.tex}
+{./manualLMP.tex}
 
 
 % TBD: insert listings how this document is made. 

@@ -12,7 +12,7 @@
     and in particularly the the 'README.md' therein.
     Check in particular the section on the maven plugin. 
     For a really detailled description in contrast see 
-    {{{http://www.simuline.eu/LatexMavenPlugin/manualLatexMavenPlugin.pdf}manual}}.
+    {{{http://www.simuline.eu/LatexMavenPlugin/manualLMP.pdf}manual}}.
     Note that this manual is created by this <<<maven-latex-plugin>>>
     and serves also as a testsuite for the plugin.
     This is also why it is available as pdf only:
