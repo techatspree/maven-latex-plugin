@@ -544,10 +544,20 @@ spellcheck, 27
   -->
 
     <release  version="1.7"
-      date="2022-04-16"
-      description="Like last release 
-      but now documents are created with version 1.6. 
-      That way quality is assured">
+      date="2022-04-19"
+      description="Essentially, made all documents compilable with latexmk">
+      <action dev='reissner' type='fix'>
+        The goal vrs does not work for the 1.7-SNAPSHOT. 
+        THis is because of a version mismatch with the jar plugin. 
+        We hope that just releasing fixes this. 
+        So this is a mixture between fix and update. 
+      </action>
+      <action dev='reissner' type='fix'>
+        Extracted chapters from manual, renamed manual: 
+        shorter name, now pythontex works with latexmk. 
+        This is a workaround for a bug either in latexmk or in lualatex. 
+        All works fine for other latex engines. 
+      </action>
       <action dev='reissner' type='fix'>
         Corrected .latexmkrc. Now works at least for pythontexInOut, 
         but not for the manual still... no idea why
