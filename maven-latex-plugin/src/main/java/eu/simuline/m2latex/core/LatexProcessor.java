@@ -1877,7 +1877,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <p>
      * Logging:
      * <ul>
-     * WPL07: if both dvi and xdv files are present. 
+     * WLP07: if both dvi and xdv files are present.
      * <li>EEX01, EEX02, EEX03, WEX04, WEX05:
      * if running the dvi2pdf command failed.
      * </ul>
@@ -1899,7 +1899,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // because we have to treat both, dvi and xdv
         // TBD: warning if both are present; then xdv is preferred. 
         if (desc.dviFile.exists() && desc.xdvFile.exists()) {
-          this.log.warn("WPL07: Found both '" + desc.dviFile + 
+          this.log.warn("WLP07: Found both '" + desc.dviFile +
           "' and '" + desc.xdvFile + "'; convert the latter. ");
         }
         this.log.debug("Running " + command +
