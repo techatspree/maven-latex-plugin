@@ -5,16 +5,14 @@ import java.io.File;
 /**
  * Enumeration of the (conversion of latex to a) target format, called a 'device'. 
  * Currently, there are two, <code>pdf</code> and <code>dvips</code>, 
- * the latter representing <code>dvi</code> 
+ * the latter representing <code>dvi</code> and code>xdv</code> 
  * but <code>html</code> and <code>odt</code> are also desirable. 
  * The backend also affects the natural graphic formats: 
  * Whereas for the backend <code>pdf</code>, 
  * also <code>pdf</code> is used, 
  * <code>dvips</code> uses postscript-based formats. 
- * CAUTION: As <code>xelatex</code> cannot create dvi but creates xdv instead, 
- * and the latter does not fit into the further workflow, 
- * neither there is a third format based on xdv 
- * nor is xdv subsummed in format <code>dvips</code>. 
+ * Note that <code>xelatex</code> xdv format 
+ * corresponds with the other converters dvi format. 
  *
  * Created: Tue Oct 18 10:06:30 2016
  *
@@ -49,9 +47,14 @@ public enum LatexDev {
       return false;
     }
 
-    File latexTargetFile(LatexMainDesc desc) {
+    boolean isDefault() {
+      return true;
+    }
+
+    File latexTargetFile(LatexMainDesc desc, boolean isTypeXelatex) {
       return desc.pdfFile;
     }
+
   },
   // latex creates dvi but not with the given drivers. 
   // dvi can be created also with 
@@ -87,10 +90,15 @@ public enum LatexDev {
       return true;
     }
 
-    File latexTargetFile(LatexMainDesc desc) {
-      return desc.dviFile;
+    boolean isDefault() {
+      return false;
     }
-  };
+
+    File latexTargetFile(LatexMainDesc desc, boolean isTypeXelatex) {
+      return isTypeXelatex ? desc.xdvFile : desc.dviFile;
+    }
+
+    };
 
   /**
    * Returns the name of the language 
@@ -144,17 +152,28 @@ public enum LatexDev {
   abstract boolean isViaDvi();
 
   /**
+   * The format created without specific command line option. 
+   * This is true just pdf. 
+   * It is false for dvi like formats; besides dvi itself xdv. 
+   */
+  abstract boolean isDefault();
+
+  /**
    * Returns the target file of a LaTeX run. 
    * This has the suffix given by {@link #getLatexOutputFormat()}. 
    * 
    * @param desc
    *    the latex main description. 
+   * @param isTypeXelatex
+   *    This is relevant only for {@link #dvips} 
+   *    returning xdv or dvi. 
    * @return
    *    the latex target file. 
    *    If <code>xxx.tex</code> is the latex main file, 
-   *    then the target file is <code>xxx.dvi</code> or <code>xxx.pdf</code>. 
+   *    then the target file is <code>xxx.dvi</code>, <code>xxx.xdv</code> 
+   *    or <code>xxx.pdf</code>. 
    */
-  abstract File latexTargetFile(LatexMainDesc desc);
+  abstract File latexTargetFile(LatexMainDesc desc, boolean isTypeXelatex);
 
   /**
    * Invoked in settings. 

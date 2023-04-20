@@ -10,6 +10,7 @@ class LatexMainDesc {
     final File texFile;
     final File pdfFile;
     final File dviFile;
+    final File xdvFile;
 
     final File logFile;
 
@@ -30,6 +31,7 @@ class LatexMainDesc {
         this.xxxFile = TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
         this.pdfFile = withSuffix(LatexProcessor.SUFFIX_PDF);
         this.dviFile = withSuffix(LatexProcessor.SUFFIX_DVI);
+        this.xdvFile = withSuffix(LatexProcessor.SUFFIX_XDV);
         this.logFile = withSuffix(LatexProcessor.SUFFIX_LOG);
 
         this.idxFile = withSuffix(LatexProcessor.SUFFIX_IDX);

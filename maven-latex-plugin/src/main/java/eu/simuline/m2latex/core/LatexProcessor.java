@@ -75,6 +75,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
  
     final static String SUFFIX_AUX = ".aux";
     final static String SUFFIX_DVI = ".dvi";
+    final static String SUFFIX_XDV = ".xdv";
 
     // bibtex
     final static String SUFFIX_BLG = ".blg";
@@ -918,7 +919,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
 
     void processLatex2dvi(LatexMainDesc desc) throws BuildFailureException {
-        this.log.info("Converting into dvi:  LaTeX file '" + desc.texFile + "'. ");
+        this.log.info("Converting into dvi/xdv:  LaTeX file '" + desc.texFile + "'. ");
         // may throw BuildFailureException TEX01,
         // log warning EEX01, EEX02, EEX03, WEX04, WEX05
         // WFU03, WAP04, WLP03, WLP04
@@ -1820,11 +1821,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
             throws BuildFailureException {
 
         File texFile = desc.texFile;
-        // FIXME: wrong name; better is latex2dev
+        // FIXME: wrong name; better is latex2devc
         String command = this.settings.getCommand(ConverterCategory.LaTeX);
         this.log.debug("Running " + command +
                 " on '" + texFile.getName() + "'. ");
-        String[] args = buildLatexArguments(this.settings, dev, texFile);
+        boolean isTypeXelatex = Converter.XeLatex.getCommand().equals(settings.getLatex2pdfCommand());
+        String[] args = buildLatexArguments(this.settings, dev, texFile, isTypeXelatex);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
         // CAUTION: an error also occurs if running xelatex in conjunction with dvi mode 
@@ -1833,7 +1835,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 this.settings.getTexPath(),
                 command,
                 args,
-                dev.latexTargetFile(desc));
+                dev.latexTargetFile(desc, isTypeXelatex));
 
         // logging errors (warnings are done in processLatex2pdf)
         // may log EAP01, EAP02, WAP04, WFU03
@@ -1846,29 +1848,43 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // also for tests
     protected static String[] buildLatexArguments(Settings settings,
             LatexDev dev,
-            File texFile) {
+            File texFile, 
+            boolean isTypeXelatex) throws BuildFailureException {
         // FIXME: here it should be taken xelatex into account, using different settings: 
         // added is dev==pdf, then nothing, else dev==dvi it is "-no-pdf". 
-        return buildArguments(settings.getLatex2pdfOptions() +
-                " -output-format=" + dev.getLatexOutputFormat(),
-                texFile);
+        String options = settings.getLatex2pdfOptions();
+        if (!dev.isDefault()) {
+          // Here we shall create dvi or xdv file 
+          // FIXME: this shall be based on analysis of the options of the converter, 
+          // not on its name 
+          options += isTypeXelatex
+          ? " -no-pdf"
+          : " -output-format=" + dev.getLatexOutputFormat();
+        }
+        
+        return buildArguments(options, texFile);
     }
 
-    // TBD: take xelatex into account: process xdv for mode dvi 
-    /**
-     * Runs conversion from dvi to pdf-file
+   /**
+     * Runs conversion from dvi or xdv to pdf-file
      * executing {@link Settings#getDvi2pdfCommand()}
-     * on a dvi-file covered by <code>desc</code> with arguments
-     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}.
+     * on a dvi/xdv-file covered by <code>desc</code> with arguments
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
+     * Note that this works only because all converter of the according category 
+     * can convert both dvi and xdv 
+     * and apply also on the filename without extension. 
+     * If both files are present, the xdv file is processed. 
      * <p>
      * Logging:
      * <ul>
+     * WPL07: if both dvi and xdv files are present. 
      * <li>EEX01, EEX02, EEX03, WEX04, WEX05:
      * if running the dvi2pdf command failed.
      * </ul>
      *
      * @param desc
-     *     the description of a latex main file <code>dviFile</code>
+     *     the description of a latex main file 
+     *     <code>dviFile</code> or <code>xdvFile</code>
      *     including the dvi-file dvi2pdf is to be run on.
      * @throws BuildFailureException
      *     TEX01 if invocation of the dvi2pdf command returned by
@@ -1879,10 +1895,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
         assert this.settings.getPdfViaDvi().isViaDvi();
 
         String command = this.settings.getCommand(ConverterCategory.Dvi2Pdf);
+        // use desc.xxxFile rather than desc.dviFile, 
+        // because we have to treat both, dvi and xdv
+        // TBD: warning if both are present; then xdv is preferred. 
+        if (desc.dviFile.exists() && desc.xdvFile.exists()) {
+          this.log.warn("WPL07: Found both '" + desc.dviFile + 
+          "' and '" + desc.xdvFile + "'; convert the latter. ");
+        }
         this.log.debug("Running " + command +
-                " on '" + desc.dviFile.getName() + "'. ");
+                " on '" + desc.xxxFile.getName() + "'. ");
         String[] args = buildArguments(this.settings.getDvi2pdfOptions(),
-                desc.dviFile);
+                desc.xxxFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
         this.executor.execute(desc.parentDir, // workingDir
