@@ -8,7 +8,7 @@
 	<!-- The Basics -->
 	<groupId>eu.simuline.m2latex</groupId>
 	<artifactId>latex-maven-plugin</artifactId>
-	<version>1.8-SNAPSHOT</version>
+	<version>1.8</version>
 	<packaging>maven-plugin</packaging>
 
 	<!--parent>
@@ -125,7 +125,7 @@
       scm:git:https://github.com/Reissner/latex-maven-plugin.git
 		</developerConnection>
 		<url>https://github.com/Reissner/latex-maven-plugin</url>
-		<tag>latex-maven-plugin-1.3</tag>
+		<tag>latex-maven-plugin-1.8</tag>
 	</scm>
 
 	<distributionManagement>		<!-- For authentication see ~/.m2/settings.xml -->
