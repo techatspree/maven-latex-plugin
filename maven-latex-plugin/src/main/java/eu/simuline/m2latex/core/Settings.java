@@ -691,6 +691,21 @@ public class Settings {
     @Parameter(name = "latex2pdfCommand", defaultValue = "lualatex")
     private String latex2pdfCommand = "lualatex";
 
+    // // TBD: this may well be null 
+    // // used in LatexProcessor.runLatex2dev to find out whether 
+    // // - xelatex (option -no-pdf) or 
+    // // - lualatex or pdflatex (option -output-format=dvi or pdf)
+    // // - something unknown. 
+    // // depends on the 
+    // Converter latex2pdfType = Converter.cmd2Conv(latex2pdfCommand);
+
+    // enum LatexConverterType {
+    //   Xdv, Dvi, Invalid;
+    //   // String target2Option(Target target) {
+    //   //   switch (target)
+    //   // }
+    // }
+
     /**
      * The options for the command {@link #latex2pdfCommand}. 
      * Leading and trailing blanks are ignored. 

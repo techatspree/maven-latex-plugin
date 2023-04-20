@@ -727,7 +727,7 @@ public class LatexProcessorTest {
 		     aryEq(LatexProcessor.buildLatexArguments
 			(this.settings, 
 			 this.settings.getPdfViaDvi(), 
-			 this.texFile)),
+			 this.texFile, false)),
 		     eq(this.dviPdfFile));
 
 	// FIXME: should work also in order. 

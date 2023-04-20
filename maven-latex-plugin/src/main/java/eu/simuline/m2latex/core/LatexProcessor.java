@@ -1821,7 +1821,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
             throws BuildFailureException {
 
         File texFile = desc.texFile;
-        // FIXME: wrong name; better is latex2devc
+        // FIXME: wrong name; better is latex2dev
         String command = this.settings.getCommand(ConverterCategory.LaTeX);
         this.log.debug("Running " + command +
                 " on '" + texFile.getName() + "'. ");
