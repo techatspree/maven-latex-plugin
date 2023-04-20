@@ -42,7 +42,7 @@ public enum Target {
      */
     dvi() {
         // FIXME: how does this fit with preprocessing??
-        private final String LATEX_OUTPUT_FILES = "^(T$T\\.dvi|.+(\\.(ptx|eps|jpg|png)|\\d+\\.mps))$";
+        private final String LATEX_OUTPUT_FILES = "^(T$T\\.(dvi|xdv)|.+(\\.(ptx|eps|jpg|png)|\\d+\\.mps))$";
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
