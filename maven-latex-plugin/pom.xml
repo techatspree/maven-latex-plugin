@@ -915,11 +915,12 @@
 			<plugin>
 				<groupId>eu.simuline.m2latex</groupId>
 				<artifactId>latex-maven-plugin</artifactId>
-				<version>1.6</version>
+				<version>1.7</version>
 
 				<configuration>
 					<settings>
 						<!--latex2pdfCommand>xelatex</latex2pdfCommand-->
+            <!--pdfViaDvi>true</pdfViaDvi-->
 						<cleanUp>false</cleanUp>
             <!--chkDiff>true</chkDiff-->
             <!--targets>dvi</targets-->
