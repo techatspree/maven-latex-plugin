@@ -109,7 +109,7 @@ public class MetaInfo {
 		 * containing the manifest represented by this object 
 		 * was created by maven jar plugin with proper version. 
 		 */
-		private final static String MVN_JAR_PLUGIN = "Maven Jar Plugin 3.2.2";
+		private final static String MVN_JAR_PLUGIN = "Maven JAR Plugin 3.2.2";
 
 		/**
 		 * The name of the manifest file which is in the folder {@link #META_FOLDER} 
@@ -169,7 +169,7 @@ public class MetaInfo {
 			if (!MVN_JAR_PLUGIN.equals(this.mAtts.get(CREATED_BY))) {
 				// MVN_JAR_PLUGIN includes the version also 
 				throw new IllegalStateException(
-						"Found manifest not created by '" + MVN_JAR_PLUGIN + "'. ");
+						"Found manifest not created by '" + MVN_JAR_PLUGIN + "' message was '"+this.mAtts.get(CREATED_BY) +"'. ");
 			}
 
 			//		Map<String, Attributes> entriesMf = mf.getEntries();
