@@ -453,7 +453,7 @@ Latex main files are marked with an end section as this file:
 \begin{Verbatim}[fontsize=\footnotesize]
 %%% Local Variables: 
 %%% mode: latex
-%%% TeX-command-extra-options: "-src-specials -recorder -shell-escape" 
+%%% TeX-command-extra-options: "-recorder -shell-escape" 
 %%% TeX-master: t
 %%% End: 
 \end{Verbatim}
@@ -963,8 +963,6 @@ the default options are among the ones common to all supported converters:
   \item[-interaction=nonstopmode] To avoid user interaction in case of an error 
   This seems mandatory. 
   \item[-synctex=1] to create \texttt{.synctex.gz} files needed for interaction between editor and viewer. 
-  \item[-src-specials] only important when creating dvi-files or (\texttt{xdv} files) 
-    to create more fancy graphics
   \item[-recorder] Strictly speaking not necessary at the current stage, 
     but for later versions of this software, to allows to track dependencies. 
   \item[-shell-escape] allows the tex engine to access the shell to execute. 

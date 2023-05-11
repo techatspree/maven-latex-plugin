@@ -719,8 +719,6 @@ public class Settings {
      * <li><code>-synctex=1</code> 
      * makes latex create a pdf file 
      * which synchronizes with an editor supporting synchtex. 
-     * <li><code>-src-specials</code> 
-     * includes source specials into the output. dvi only? 
      * <li><code>-recorder</code> 
      * makes latex create an fls-file specifying all inputted files. 
      * <li><code>-shell-escape</code> 
@@ -734,13 +732,11 @@ public class Settings {
     @Parameter(name = "latex2pdfOptions", 
 	       defaultValue = "-interaction=nonstopmode " + // 
 	"-synctex=1 " + 
-	"-src-specials " + 
 	"-recorder " + 
 	"-shell-escape")
     private String latex2pdfOptions = 
 	"-interaction=nonstopmode " + // 
 	"-synctex=1 " + 
-	"-src-specials " + 
 	"-recorder " + 
 	"-shell-escape";
 

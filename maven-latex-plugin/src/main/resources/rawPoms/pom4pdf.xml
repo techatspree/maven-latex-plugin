@@ -188,7 +188,7 @@ and notify the developer of this plugin of the deficiency. -->
     The empty string is the default, i.e. excluding no file. 
     See #mainFilesIncluded
     -->
-    <mainFilesExcluded></mainFilesExcluded>
+    <mainFilesExcluded>test</mainFilesExcluded>
 
             <!-- Path to the TeX scripts or null. 
 In the latter case, the scripts must be on the system path. 
@@ -373,7 +373,7 @@ Leading and trailing blanks are ignored.
 A sequence of at least one blank separate the proper options. 
 The default value is '-interaction=nonstopmode -recorder -s prologues=2'. 
 FIXME: does not work:'outputtemplate="%j_%c.mps"' -->
-            <metapostOptions> -interaction=nonstopmode -recorder -s prologues=2 
+            <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"
             </metapostOptions>
 
             <!-- The command for conversion of svg-files 
@@ -453,8 +453,6 @@ The default value comprises the following options:
 <li>-synctex=1'
   makes latex create a pdf file 
   which synchronizes with an editor supporting synchtex. </li>
-<li>'-src-specials' 
-  includes source specials into the output. dvi only? </li>
 <li>'-recorder'
   makes latex create an fls-file specifying all inputted files. 
   May be mandatory in later versions. </li>
@@ -490,7 +488,6 @@ Also not allowed because format is determined by this software
 For a more thorough discussion see the manual. 
 -->
             <latex2pdfOptions> -interaction=nonstopmode -synctex=1 
- -src-specials 
  -recorder 
  -shell-escape 
             </latex2pdfOptions>
