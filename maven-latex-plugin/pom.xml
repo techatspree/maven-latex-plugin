@@ -163,6 +163,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- checked during validation -->
 		<versionMvn>3.8.4</versionMvn>
+    <versionTestPlugins>3.0.0</versionTestPlugins>
 		<versionJunit5>5.8.2</versionJunit5>
 		<!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
 		<versionJunit4>4.13.2</versionJunit4><!-- 4.12 -->
@@ -878,7 +879,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${versionTestPlugins}</version>
 				<configuration>
 					<argline>-X</argline>
 					<trimStackTrace>false</trimStackTrace>
@@ -1006,11 +1007,10 @@
 				</reportSets>
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${versionTestPlugins}</version>
 				<reportSets />
 			</plugin>
 			<!--plugin>
