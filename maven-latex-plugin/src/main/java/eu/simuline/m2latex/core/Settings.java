@@ -265,7 +265,7 @@ public class Settings {
      * names of latex main files should better have pairwise different names, 
      * even if in different directories. 
      * <p>
-     * Together with {@link #mainFilesExcluded}, 
+     * Together with {@link #mainFilesIncluded}, 
      * this is used for document development 
      * to build the pdf of a subset of documents 
      * and e.g. because for a site one needs all documents, 
@@ -637,7 +637,7 @@ public class Settings {
      * or are in conflict with automatically added options: 
      * <ul>
      * <li><code>--export-filename==FILENAME</code>
-     * <li><code>--export-tyoe=type</code> 
+     * <li><code>--export-type=type</code> 
      * <ul>
      *
      * The default value is the minimal value, 
