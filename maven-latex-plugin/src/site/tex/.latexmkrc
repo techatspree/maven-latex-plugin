@@ -83,12 +83,11 @@ $clean_ext .= " %R.ist %R.xdy %R-*.ind %R-*.idx %R-*.ilg %R-*.ind";
 add_cus_dep('fig', 'ptx', 0, 'fig2dev');
 sub fig2dev {
   $file = $_[0];
-  print("$file");
   rdb_add_generated("$file.eps", "$file.pdf", "$file.ptx");
   my $GenOptions = "";
   my $PtxOptions = "";
   my $PdfEpsOptions = "";
-  print("create from $file.fig");
+  print("create from $file.fig\n");
   rdb_add_generated("$file.ptx", "$file.pdf", "$file.eps");
   #fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.eps   
   #fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.pdf   
@@ -102,10 +101,11 @@ sub fig2dev {
   return ($ret1 or $ret2 or $ret3);
 }
 
+my $gnuplotOptions = "";
 add_cus_dep('gp', 'ptx', 0, 'gnuplot');
 sub gnuplot {
   $file = $_[0];
-  print("create from $file.gp");
+  print("create from $file.gp\n");
   rdb_add_generated("$file.ptx", "$file.pdf", "$file.eps");
   my $nuplotOptions = "";
   my $ret1 = system("gnuplot -e \"set terminal cairolatex pdf $gnuplotOptions;\
@@ -122,7 +122,7 @@ sub gnuplot {
 add_cus_dep('mp', 'mps', 0, 'mpost');
 sub mpost {
   my $file = $_[0];
-  print("create from $file.mp");
+  print("create from $file.mp\n");
   rdb_add_generated("$file.mps", "$file.fls", "$file.log");
   my ($name, $path) = fileparse($file);
   pushd($path);
@@ -135,7 +135,7 @@ sub mpost {
 add_cus_dep('svg', 'ptx', 0, 'inkscape');
 sub inkscape {
   my $file = $_[0];
-  print("create from $file.svg");
+  print("create from $file.svg\n");
   rdb_add_generated("$file.ptx", "$file.pdf");
   my $ret1 = system("inkscape -D --export-filename=$file.pdf --export-latex $file.svg ");
   #my $ret2 = system("inkscape -D --export-filename=$file.eps --export-latex $file.svg ");
