@@ -92,6 +92,24 @@
 %\usepackage[active]{srcltx}
 \usepackage{longtable}
 \usepackage{listings}
+% this is a workaround for including listings with latexmk.. 
+% This can be fixed 
+% - as shown below 
+% - patch in package listings 
+% - patch in latexmk 
+% I would prefer the latter. 
+\usepackage{xpatch}
+\makeatletter
+\newcommand*{\NewLine}{^^J}%
+\xpatchcmd{\lst@MissingFileError}
+{Package Listings Error: File `#1(.#2)' not found.}
+{LaTeX Error: File `#1.#2' not found.\NewLine}{%
+  \typeout{File ending patch for \string\lst@MissingFileError\space done.}%
+}{%
+  \typeout{File ending patch for \string\lst@MissingFileError\space failed.}%
+}
+\makeatother
+
 \usepackage{fancyvrb}
 
 
@@ -117,7 +135,6 @@
 %\makeglossary% for rerunfilecheck 
 
 %\usepackage{etexcmds} %still later 
-
 
 \newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
 

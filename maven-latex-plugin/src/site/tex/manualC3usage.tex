@@ -53,7 +53,7 @@ whereas the file \texttt{header.tex} is not although also a \LaTeX-file.
 \index{latex main file}% chktex 24
 
 The included files may be again \LaTeX-files, but also bibliography files, 
-listings included by package \pkg{listing}, verbatim text included with \pkg{verbatim} 
+listings included by package \pkg{listings}, verbatim text included with \pkg{verbatim} 
 and maybe soon even code files to be executed via the package \pkg{pythontex}. 
 \index{pythontex}% chktex 24
 The great bulk of input files however, are graphic files in various formats. 
@@ -543,6 +543,61 @@ caption={Output of goal \texttt{latex:vrs}}]
 \end{lstlisting}
 %[INFO]           upmendex:           '1.00'in[0.54;1.00]
 %[INFO]           xindy:              '2.5.1'in[2.5.1]
+
+
+
+Another aspect of document development is integration with other tools. 
+Above the emacs editor enhanced with auctex was mentioned. 
+An alternative is vscode in conjunction with the extension \texttt{latex workshop}. 
+
+A valuable standalone tool is \texttt{latexmk}. 
+It can even run in background. 
+This manual can also be compiled with \texttt{latexmk} 
+but only with adapted configuration file \texttt{.latexmkrc}. 
+% to be included. 
+This software and \texttt{latexmk} follow a different philosphy in finding dependencies: 
+Whereas this software creates image files in advance before invoking a latex converter, 
+\texttt{latexmk} first calls the latex converter in nonstopmode 
+to avoid a stop because of a missing file. 
+Then the file is created using the appropriate rule (hopefully unique) 
+and the converter is run again, 
+this time passing the inclusion of the first created files 
+failing at the next one. 
+This goes on that way until the last included file is created. 
+Then the latex converter runs through without failure caused by missing files. 
+
+There are two problems with this: 
+This yields a huge number of runs for the converter 
+which is time consuming 
+and there is at least one kind of inclusion which does not work that way: 
+inclusion with \texttt{\textbackslash lstinputlisting} 
+provided by \pkg{listings}. 
+In fact, i have an email from J. Hoffmann, author of listings 
+telling that there are more packages with the same problem. 
+To be checked: \pkg{fancyvrb} and \pkg{moreverb}. 
+Nevertheless, all other ways of inclusion \emph{used by this manual} 
+like the one with \texttt{\textbackslash import} 
+seem to work fine. 
+
+The current workaround is illustrated in Listing~\ref{lst:fileIfExists} 
+modifying \pkg{listings}' output to make it digestable for \texttt{latexmk}. 
+
+\lstinputlisting[firstline=94, lastline=112,
+language=tex, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:fileIfExists}, 
+caption={Patch of the \texttt{listings} package given by the header file. }]%
+{header.tex}
+
+Still some generalization in \texttt{latexmk} could spare this modification. 
+
+Another point is, that currently for each file \texttt{latexmk} creates with a separate rule, 
+another run of the latex processor is required: 
+The initial run is interrupted with the first missing file. 
+Then that file is created by an appropriate rule and the latex processor is rerun 
+failing with the next missing file. 
+That way the process goes on until the last file is created with a rule. 
+Of course this proceedure is quite time consuming, so an alternative is required. 
+
 
 
 
