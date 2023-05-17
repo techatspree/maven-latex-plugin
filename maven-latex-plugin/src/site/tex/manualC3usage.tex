@@ -547,13 +547,36 @@ caption={Output of goal \texttt{latex:vrs}}]
 
 
 Another aspect of document development is integration with other tools. 
-Above the emacs editor enhanced with auctex was mentioned. 
-An alternative is vscode in conjunction with the extension \texttt{latex workshop}. 
 
-A valuable standalone tool is \texttt{latexmk}. 
+Document development starts with the editor. 
+Above the emacs editor enhanced with auctex was mentioned. 
+We recommend VS code in conjunction with several extensions. 
+If VS code itself is already installed 
+the script in Listing~\ref{lst:instVScode} installs and updates all extensions 
+the author used to develop this manual. 
+The core extension is \texttt{latex workshop}, 
+the others are mainly used for editing graphic files. 
+
+\lstinputlisting[
+language=bash, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:instVScode}, 
+caption={Install script for extensions of VS code. }]%
+{instVScode4tex.sh}
+
+
+A valuable standalone build tool is \texttt{latexmk}. 
 It can even run in background. 
 This manual can also be compiled with \texttt{latexmk} 
-but only with adapted configuration file \texttt{.latexmkrc}. 
+but only with adapted configuration file \texttt{.latexmkrc}; 
+the one depicted in Listing~\ref{lst:latexmkrc}. 
+
+\lstinputlisting[firstline=94, lastline=112,
+language=Perl, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:latexmkrc}, 
+caption={The config file \texttt{.latexmkrc} to compile this manual. }]%
+{header.tex}
+
+
 % to be included. 
 This software and \texttt{latexmk} follow a different philosphy in finding dependencies: 
 Whereas this software creates image files in advance before invoking a latex converter, 
@@ -598,20 +621,94 @@ failing with the next missing file.
 That way the process goes on until the last file is created with a rule. 
 Of course this proceedure is quite time consuming, so an alternative is required. 
 
+Both, the install script \texttt{instVScode4tex.sh} for VS code extensions 
+given in Listing~\ref{lst:instVScode} 
+and the config file \texttt{.latexmkrc} depicted in Listing~\ref{lst:latexmkrc} 
+are packaged in the JAR file representing this software. 
+% TBD: in the long run these listings shall come from the proper pom 
+% but with different versions. 
+That way these resources can be made available via the maven dependency plugin 
+by unpacking from the JAR. 
+Listing~\ref{lst:depUnpack} shows the according configuration in the pom. 
 
-Document development starts with the editor. 
-We recommend VS code in conjunction with several extensions. 
-If VS code itself is already installed 
-the script in Listing~\ref{lst:instVScode} installs and updates all extensions 
-the author used to develop this manual. 
+\begin{lstlisting}[language=XML, basicstyle=\scriptsize,
+  float, captionpos=b, label={lst:depUnpack}, 
+  caption={Part of a pom describing installing files }]
+  <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-dependency-plugin</artifactId>
+  <version>3.3.0</version>
+  <executions>
+    <execution>
+      <?m2e execute onConfiguration,onIncremental?>
+      <id>unpack-latex</id>
+      <goals>
+        <goal>unpack</goal>
+      </goals>
+      <phase>initialize</phase>
+    </execution>
+  </execution>
 
-\lstinputlisting[
-language=bash, basicstyle=\scriptsize,
-float, captionpos=b, label={lst:instVScode}, 
-caption={Install script for extensions of VS code. }]%
-{instVScode4tex.sh}
+  <configuration>
+  <artifactItems>
+    <artifactItem>
+      <groupId>eu.simuline.m2latex</groupId>
+      <artifactId>latex-maven-plugin</artifactId>
+      <version>2.0</version>
+      <type>jar</type>
+      <overWrite>true</overWrite>
+      <outputDirectory>...</outputDirectory>
+      <includes>**/.latexmkrc</includes>
+      <fileMappers>
+        <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+      </fileMappers>
+    </artifactItem>
+    <artifactItem>
+      <groupId>eu.simuline.m2latex</groupId>
+      <artifactId>latex-maven-plugin</artifactId>
+      <version>2.0</version>
+      <type>jar</type>
+      <overWrite>true</overWrite>
+      <outputDirectory>...</outputDirectory>
+      <includes>**/instVScode4tex.sh</includes>
+      <fileMappers>
+        <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+      </fileMappers>
+    </artifactItem>
+  </artifactItems>
+</configuration>
+</plugin>
+\end{lstlisting}
+
+Accordingly, Listing~\ref{lst:depClean} shows a configuration for the pom 
+that makes the clean plugin cleanup the unpacked files. 
 
 
+\begin{lstlisting}[language=XML, basicstyle=\scriptsize,
+  float, captionpos=b, label={lst:depClean}, 
+  caption={Part of a pom describing cleaning installed files }]
+  <!-- configuration for clean plugin -->
+  <plugin>
+    <artifactId>maven-clean-plugin</artifactId>
+    <version>3.1.0</version>
+    <configuration>
+      <filesets>
+        <fileset>
+          <directory>...</directory>
+          <includes>
+            <include>instVScode4tex.sh</include>
+          </includes>
+        </fileset>
+        <fileset>
+          <directory>...</directory>
+          <includes>
+            <include>.latexmkrc</include>
+          </includes>
+        </fileset>
+      </filesets>
+    </configuration>
+  </plugin>
+\end{lstlisting}
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
 
