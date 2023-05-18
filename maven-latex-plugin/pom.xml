@@ -594,39 +594,39 @@
 						</configuration>
 					</execution>
 					<execution>
-	<!-- filter the pom for integration tests -->
-	<id>filterIntTestPoms</id>
-	<phase>validate</phase>
-	<goals>
-		<goal>copy-resources</goal>
-	</goals>
-	<configuration>
-		<outputDirectory>src/test/resources/integration</outputDirectory>
-		<resources>
-			<resource>
-				<directory>src/main/resources/rawPoms</directory>
-				<includes>
-					<include>pom4pdf.xml</include>
-				</includes>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-	</configuration>
-</execution>
-<execution>
-	<id>copy-pdf2site</id>
-	<phase>pre-site</phase>
-	<goals>
-		<goal>copy-resources</goal>
-	</goals>
-	<configuration>
-<outputDirectory>${project.build.outputDirectory}</outputDirectory>
-<resources>
-	<resource>
-		<directory>src/main/resources/docsCmp</directory>
-		<filtering>false</filtering>
-	</resource>
-</resources>
+	          <!-- filter the pom for integration tests -->
+	          <id>filterIntTestPoms</id>
+	          <phase>validate</phase>
+	          <goals>
+		          <goal>copy-resources</goal>
+	          </goals>
+	          <configuration>
+          		<outputDirectory>src/test/resources/integration</outputDirectory>
+          		<resources>
+          			<resource>
+          				<directory>src/main/resources/rawPoms</directory>
+          				<includes>
+          					<include>pom4pdf.xml</include>
+          				</includes>
+          				<filtering>true</filtering>
+          			</resource>
+          		</resources>
+          	</configuration>
+          </execution>
+          <execution>
+          	<id>copy-pdf2site</id>
+          	<phase>pre-site</phase>
+          	<goals>
+          		<goal>copy-resources</goal>
+          	</goals>
+          	<configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+              	<resource>
+              		<directory>src/main/resources/docsCmp</directory>
+              		<filtering>false</filtering>
+              	</resource>
+              </resources>
 						</configuration>
 					</execution>
 				</executions>
