@@ -23,6 +23,7 @@ $lualatex = "lualatex $latex2pdfOptions %O %S";
 #$postscript_mode = $dvi_mode = 0;
 
 # to configure bibtex 
+# bbl files are never precious 
 $bibtex_use=2;
 
 # this cannot be done according to the according latex maven plugin, 
@@ -43,6 +44,7 @@ $cleanup_includes_generated = 1;
 
 # TBD: clarify: xdv and dvi seem to be internal. 
 # maybe missing other extensions in conjunction with synctex
+# maybe better @generated_exts see below 
 $clean_ext .= " %R.synctex.gz";
 
 # bbl does not work
@@ -69,7 +71,7 @@ $clean_ext .= " %R.synctex.gz";
 push @generated_exts, "lol";
 push @generated_exts, "dvi", "xdv";
 # for beamer class 
-push @generated_exts, "nav", "snm", "vrb";
+push @generated_exts, "nav", "snm", "vrb", 'run.xml';
 
 # why are .ist and xdy not under generated_exts? 
 # note that currently, either %R or what is present is the extension only! 
