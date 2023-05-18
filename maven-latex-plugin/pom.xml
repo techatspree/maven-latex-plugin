@@ -581,18 +581,9 @@
 							<outputDirectory>src/site/tex</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/main/resources/buildParams4tex</directory>
-									<includes>
-										<include>buildParams.tex</include>
-									</includes>
-									<!--excludes>
-										<exclude>docsCmp/**/*.pdf</exclude>
-									</excludes-->
-									<filtering>true</filtering>
-								</resource>
-								<resource>
 									<directory>src/main/resources/</directory>
 									<includes>
+										<include>buildParams.tex</include>
 										<include>instVScode4tex.sh</include>
 								    <include>.latexmkrc</include>
 									</includes>
