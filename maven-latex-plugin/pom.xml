@@ -883,7 +883,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${versionTestPlugins}</version>
 				<configuration>
-					<argline>-X</argline>
+					<argLine>-Xmixed</argLine>
 					<trimStackTrace>false</trimStackTrace>
 					<systemPropertyVariables>
 						<!--testResourcesDir>${project.testResources}</testResourcesDir-->
