@@ -590,7 +590,18 @@
 									</excludes-->
 									<filtering>true</filtering>
 								</resource>
-							</resources>
+								<resource>
+									<directory>src/main/resources/</directory>
+									<includes>
+										<include>instVScode4tex.sh</include>
+								    <include>.latexmkrc</include>
+									</includes>
+									<!--excludes>
+										<exclude>docsCmp/**/*.pdf</exclude>
+									</excludes-->
+									<filtering>true</filtering>
+								</resource>
+              </resources>
 						</configuration>
 					</execution>
 					<execution>
@@ -692,6 +703,8 @@
 							<directory>src/site/tex</directory>
 							<includes>
 								<include>buildParams.tex</include>
+								<include>instVScode4tex.sh</include>
+								<include>.latexmkrc</include>
 							</includes>
 						</fileset>
 						<fileset>
