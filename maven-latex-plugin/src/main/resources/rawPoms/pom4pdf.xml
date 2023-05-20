@@ -35,9 +35,9 @@
         <version>${project.version}</version>
         <!--TBD: This must be updated with the resources plugin -->
         <configuration>
-          <!--baseDirectory>${basedir}</baseDirectory-->
-          <!--targetDirectory>${project.build.directory}</targetDirectory-->
-          <targetSiteDirectory>${basedir}/src/test/resources/integration/target</targetSiteDirectory>
+          <!--baseDirectory></baseDirectory-->
+          <!--targetDirectory>target/</targetDirectory-->
+          <targetSiteDirectory>src/test/resources/integration/target</targetSiteDirectory>
           <!-- Indicates whether the `VersionMojo` displays warnings only 
 		   or also creates infos. 
 		   Infos refer to the version of this plugin 
@@ -306,7 +306,7 @@ for text objects to 'fsize'.
 Refers to the latex-fonts only. 
 o '-b width' 
 specify width of blank border around figure (1/72 inch). -->
-            <fig2devGenOptions />
+            <fig2devGenOptions>${fig2devGenOptions}</fig2devGenOptions>
 
             <!-- The options for the command $fig2devCommand 
 specific for the output languages 'pdftex_t' 
@@ -335,7 +335,7 @@ o '-v'
 Verbose mode.
 
 The default value for this option is the empty string. -->
-            <fig2devPtxOptions />
+            <fig2devPtxOptions>fig2devPtxOptions</fig2devPtxOptions>
 
             <!-- The options for the command $fig2devCommand 
 specific for the output language 'pdftex'. 
@@ -345,7 +345,7 @@ $fig2devGenOptions specifies the options
 common for the two output langugages 
 'pdftex' and 'pdftex_t'. 
 The default value for this option is the empty string. -->
-            <fig2devPdfEpsOptions />
+            <fig2devPdfEpsOptions>fig2devPdfEpsOptions</fig2devPdfEpsOptions>
 
             <!-- The command for conversion of gnuplot-files 
 into various formats. 
@@ -361,7 +361,7 @@ Note that the option 'pdf|eps'
 of the terminal 'cairolatex' is not available, 
 because it is set internally. 
 The default option string is empty. -->
-            <gnuplotOptions />
+            <gnuplotOptions>${gnuplotOptions}</gnuplotOptions>
 
             <!-- The command for conversion of gnuplot-files 
 into metapost`s postscript. 
@@ -373,8 +373,7 @@ Leading and trailing blanks are ignored.
 A sequence of at least one blank separate the proper options. 
 The default value is '-interaction=nonstopmode -recorder -s prologues=2'. 
 FIXME: does not work:'outputtemplate="%j_%c.mps"' -->
-            <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"
-            </metapostOptions>
+            <metapostOptions>${metapostOptions}</metapostOptions>
 
             <!-- The command for conversion of svg-files 
 into a mixed format. 
@@ -404,7 +403,7 @@ determines the file type.
 
 The default value is the minimal value, 
 '-D - -export-latex'. -->
-            <svg2devOptions>-D --export-latex</svg2devOptions>
+            <svg2devOptions>${svg2devOptions}</svg2devOptions>
 
             <!-- The command to create bounding box information 
 from jpg-files and from png-files. 
@@ -420,7 +419,7 @@ The default value is 'ebb'. -->
 except '-m' and '-x' 
 which are added automatically. 
 The default value is '-v'. -->
-            <ebbOptions>-v</ebbOptions>
+            <ebbOptions>${ebbOptions}</ebbOptions>
 
             <!-- The LaTeX command to create above all a pdf-file with, 
               but also dvi and other formats based on these. 
@@ -487,9 +486,8 @@ Also not allowed because format is determined by this software
 
 For a more thorough discussion see the manual. 
 -->
-            <latex2pdfOptions> -interaction=nonstopmode -synctex=1 
- -recorder 
- -shell-escape 
+            <latex2pdfOptions>
+            ${latex2pdfOptions}
             </latex2pdfOptions>
 
             <!-- The pattern is applied linewise to the log-file 

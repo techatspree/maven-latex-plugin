@@ -16,9 +16,8 @@ $pdf_mode = 4;# specifies creation of pdf via lualatex
 # It converts raw SVG files to the PDF+PDF_TEX combo using InkScape.
 # $lualatex = "lualatex --shell-escape";
 
-# note that -recorder is implicitly added 
-$latex2pdfOptions = "-interaction=nonstopmode -synctex=1 -shell-escape";
-$lualatex = "lualatex $latex2pdfOptions %O %S";
+# note that -recorder is implicitly added by latexmk, so may be duplicated, but no disadvantage 
+$lualatex = "lualatex ${latex2pdfOptions} %O %S";
 
 #$postscript_mode = $dvi_mode = 0;
 
@@ -86,18 +85,15 @@ add_cus_dep('fig', 'ptx', 0, 'fig2dev');
 sub fig2dev {
   $file = $_[0];
   rdb_add_generated("$file.eps", "$file.pdf", "$file.ptx");
-  my $GenOptions = "";
-  my $PtxOptions = "";
-  my $PdfEpsOptions = "";
   print("create from $file.fig\n");
   rdb_add_generated("$file.ptx", "$file.pdf", "$file.eps");
   #fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.eps   
   #fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.pdf   
   #fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xxx.ptx
 
-  my $ret1 = system("fig2dev -L  pstex   $GenOptions $PdfEpsOptions       $file.fig $file.eps");
-  my $ret2 = system("fig2dev -L pdftex   $GenOptions $PdfEpsOptions       $file.fig $file.pdf");
-  my $ret3 = system("fig2dev -L pdftex_t $GenOptions $PtxOptions -p $file $file.fig $file.ptx");
+  my $ret1 = system("fig2dev -L  pstex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.eps");
+  my $ret2 = system("fig2dev -L pdftex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.pdf");
+  my $ret3 = system("fig2dev -L pdftex_t ${fig2devGenOptions} ${fig2devPtxOptions} -p $file $file.fig $file.ptx");
 
 
   return ($ret1 or $ret2 or $ret3);
@@ -110,10 +106,10 @@ sub gnuplot {
   print("create from $file.gp\n");
   rdb_add_generated("$file.ptx", "$file.pdf", "$file.eps");
   my $nuplotOptions = "";
-  my $ret1 = system("gnuplot -e \"set terminal cairolatex pdf $gnuplotOptions;\
+  my $ret1 = system("gnuplot -e \"set terminal cairolatex pdf ${gnuplotOptions};\
             set output '$file.ptx';\
             load '$file.gp'\"");
-  # my $ret2 = system("gnuplot -e \"set terminal cairolatex eps $gnuplotOptions;\
+  # my $ret2 = system("gnuplot -e \"set terminal cairolatex eps ${gnuplotOptions};\
   #           set output '$file.ptx';\
   #           load '$file.gp'\"");
   return $ret;
@@ -128,7 +124,7 @@ sub mpost {
   rdb_add_generated("$file.mps", "$file.fls", "$file.log");
   my ($name, $path) = fileparse($file);
   pushd($path);
-  my $return = system("mpost -interaction=nonstopmode -recorder -s prologues=2 -s 'outputtemplate=\"%j.mps\"' $name");
+  my $return = system(qq/mpost ${metapostOptions} $name/);
   popd();
   return $return;
 }
@@ -139,8 +135,8 @@ sub inkscape {
   my $file = $_[0];
   print("create from $file.svg\n");
   rdb_add_generated("$file.ptx", "$file.pdf");
-  my $ret1 = system("inkscape -D --export-filename=$file.pdf --export-latex $file.svg ");
-  #my $ret2 = system("inkscape -D --export-filename=$file.eps --export-latex $file.svg ");
+  my $ret1 = system("inkscape --export-filename=$file.pdf ${svg2devOptions} $file.svg ");
+  #my $ret2 = system("inkscape --export-filename=$file.eps -D --export-latex $file.svg ");
   #use File::Copy;
   # This works only for pdf, not for eps. 
   #unlink($file.pdf_tex) or die "cannot unlink $file.pdf_tex";

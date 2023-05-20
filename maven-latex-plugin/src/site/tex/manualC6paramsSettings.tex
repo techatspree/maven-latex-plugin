@@ -565,7 +565,7 @@ Currently only \texttt{pdf} combined with \texttt{ptx} is supported.
 %The default value is '\texttt{fig2dev}'. 
 \end{minipage}
 } \\
-\texttt{fig2devGenOptions}   & empty     \\
+\texttt{fig2devGenOptions}   & \makeEmptyExplicit{\figToDevGenOptions}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command \texttt{\$fig2devCommand} 
@@ -578,7 +578,7 @@ respectively.
 % The default value is the empty string. 
 \end{minipage}
 } \\
-\texttt{fig2devPtxOptions}   & empty     \\
+\texttt{fig2devPtxOptions}   & \makeEmptyExplicit{\figToDevPtxOptions}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command \texttt{\$fig2devCommand} 
@@ -592,7 +592,7 @@ and `\texttt{-p xxx.pdf}' specifies the pdf-file to be included.
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
-\texttt{fig2devPdfEpsOptions}   & empty     \\
+\texttt{fig2devPdfEpsOptions}   & \makeEmptyExplicit{\figToDevPdfEpsOptions}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command \texttt{\$fig2devCommand} 
@@ -616,7 +616,7 @@ combined with pdf\_t (latex-texts) is supported.
 % The default value is 'gnuplot'. 
 \end{minipage}
 } \\
-\texttt{gnuplotOptions}   & empty    \\
+\texttt{gnuplotOptions}   & \makeEmptyExplicit{\gnuplotOptions}    \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options specific for \texttt{\$gnuplotCommand}'s 
@@ -655,7 +655,7 @@ The command for conversion of svg-files into a mixed format.
 %The default value is 'inkscape'. 
 \end{minipage}
 } \\
-\texttt{svg2devOptions} & \texttt{-z -D --export-latex} \\
+\texttt{svg2devOptions} & \makeEmptyExplicit{\svgToDevOptions} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command \texttt{\$svg2devCommand} 
@@ -690,41 +690,71 @@ which are added automatically.
 
 \subsection{The parameter \texttt{metapostOptions}}%
 \label{subsec:metapostOptions}
-TODO\@: add 
-%%\texttt{\small -interaction=nonstopmode -recorder -s prologues=2}
+
+The options of the (sole standalone) metapost compiler 
+are given in the metapost manual~\cite{MPost}, Appendix B.2.1. 
+The current default option line for this software is as follows: 
+%
+\begin{center}
+  \texttt{\metapostOptions}
+\end{center}
+%-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"
+
+The details are as follows: 
+%
+\begin{description}
+  \item[-interaction=nonstopmode] To avoid user interaction in case of an error 
+  This seems mandatory. 
+  \item[-recorder] Strictly speaking not necessary at the current stage, 
+    but for later versions of this software, to allows to track dependencies. 
+  \item[-s prologues=2] In general the \texttt{-s} assigns an internal key a value. 
+  Here it is the kind of the prologue. 
+  The value 2 is a compromize between safe quality of output and length of artifact. 
+  \item[outputtemplate="\%j.mps"] Determines the name of the output file. 
+  The default given here uses the jobname and the canonical ending. 
+  Unlike the default value of \texttt{mpost}, no number of the figure within the metapost file is given. 
+  This comes from the fact that we assume a single figure only 
+  and ignore the number of the figure. 
+  \end{description}
+
+  % TBD: here one could add the options which are excluded. 
+  % -dvitopm, -help, -version, -troff, -halt-on-error, ...
+
+  % better the useful options: 
+  % -numbersystem=⟨string⟩ Set arithmetic mode to one of scaled, double, binary, decimal
 
 \subsection{The parameter \texttt{svg2devOptions}}%
 \label{subsec:svg2devOptions}
 
 The following options are mandatory: 
 %
-\begin{itemize}
-\item `-z' or `--without-gui' 
-process files from console. 
-\item `-D' or `--export-area-drawing' 
-Export the drawing (not the page)
-\item `--export-latex' 
+\begin{description}
+\item[--export-area-drawing] 
+Export the drawing (not the page). 
+\item[--export-latex] 
 Export into PDF/PS/EPS format without text. 
 Besides the PDF/PS/EPS files, a \LaTeX-file \texttt{latexfile.tex} is exported,
-putting the text on top of the PDF/PS/EPS file. 
+putting the text on top of the PDF/PS/EPS file, i.e. including the according pure graphic file. 
 Include the result in LaTeX as: 
 \cmd{input\{latexfile.tex\}}. 
 
 Note that the latter option is necessary, 
 to create the expected files. 
 It is also conceivable to export text as pdf/eps 
-\end{itemize}
+\end{description}
 
 \noindent
 The following options are prohibited, 
-because they are automatically added by the software: 
-\begin{itemize}
-\item `-A=FILENAME' or `--export-pdf=FILENAME' 
-Export document to a  PDF file. 
-\item `-E=FILENAME' or `--export-eps=FILENAME' 
-Export document to an EPS file. 		 
-\end{itemize}
-% The default value is the minimal value, `-z -D - -export-latex'. 
+because they are automatically added by the software or interfers with : 
+%
+\begin{description}
+\item[--export-filename=FILENAME] Export document to a file with type given by the extension. 
+This is used both to export into PDF and into EPS format. 
+The extension is always given explicitly. 
+\item[--export-type=TYPE] Overwrites the type given by \texttt{--export-filename}. 
+If no extension is given, this is to determine the export type. 
+\end{description}
+% The default value is the minimal value, `- -export-area-drawing - -export-latex'. 
 
 
 \section{Parameters for the \LaTeX-to-pdf Conversion}%
@@ -957,7 +987,14 @@ and columns indicating for each option for which converters it is valid.
 Note that unlike the other engines, \lualatex{} defines options starting with \texttt{-{}-}, 
 it works on according options starting with single dash also. 
 To support all engines with the same parameters, 
-the default options are among the ones common to all supported converters: 
+the default options are among the ones common to all supported converters. 
+Currently, default option line is as follows: 
+%
+\begin{center}
+  \texttt{\latexToPdfOptions}
+\end{center}
+%
+The details are as follows: 
 %
 \begin{description}
   \item[-interaction=nonstopmode] To avoid user interaction in case of an error 

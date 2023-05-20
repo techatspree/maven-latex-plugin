@@ -170,6 +170,18 @@
 		<versionItf>0.11.0</versionItf>
 		<versionAnt>1.10.0</versionAnt><!-- 1.10.13 -->
     <versionSlf4j>2.0.7</versionSlf4j>
+    <!-- properties for config of latex plugin -->
+    <!-- This goes into pom4pdf.xml and also in .latexmkrc, 
+    but not in the config of this project -->
+    <latex2pdfOptions>-interaction=nonstopmode -recorder -synctex=1 -shell-escape</latex2pdfOptions>
+    <fig2devGenOptions></fig2devGenOptions>
+    <fig2devPtxOptions></fig2devPtxOptions>
+    <fig2devPdfEpsOptions></fig2devPdfEpsOptions>
+    <gnuplotOptions></gnuplotOptions>
+    <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"
+    </metapostOptions>
+    <svg2devOptions>--export-area-drawing --export-latex</svg2devOptions>
+    <ebbOptions>--export-area-drawing --export-latex</ebbOptions>
 	</properties>
 
 	<dependencies>
@@ -696,6 +708,7 @@
 								<include>buildParams.tex</include>
 								<include>instVScode4tex.sh</include>
 								<include>.latexmkrc</include>
+								<!--include>pom4pdf.xml</include-->
 							</includes>
 						</fileset>
 						<fileset>

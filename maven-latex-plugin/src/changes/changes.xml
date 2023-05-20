@@ -543,6 +543,11 @@ root, 17
 spellcheck, 27
   -->
 
+  <!-- in pom we have config of latex plugin. 
+  We neither use for all of test pom, nor for all of latex nor for code generation at all. 
+  This could be changed. 
+  -->
+
   <!-- xelatex support; better read available options -->
 
   <!-- fig2dev: maybe lange mp (metapost) is superior to mixed latex and pdf -->

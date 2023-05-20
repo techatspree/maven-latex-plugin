@@ -10,10 +10,17 @@
 \newcommand{\devSite}{\texttt{https://github.com/Reissner/maven-latex-plugin}}
 \newcommand{\antJarDir}{\texttt{/usr/share/ant/lib/}}
 \newcommand{\createdJar}{\texttt{latex-maven-plugin-\strippedVersionID-antTask.jar}}
+% properties for config of latex plugin 
+\newcommand{\makeEmptyExplicit}[1]{\ifdefempty{#1}{empty}{\texttt{#1}}}
+\newcommand{\latexToPdfOptions}{${latex2pdfOptions}}
+\newcommand{\figToDevGenOptions}{${fig2devGenOptions}}
+\newcommand{\figToDevPtxOptions}{${fig2devPtxOptions}}
+\newcommand{\figToDevPdfEpsOptions}{${fig2devPdfEpsOptions}}
+
+\newcommand{\gnuplotOptions}{${gnuplotOptions}}
+\verbdef\metapostOptions{${metapostOptions}}
+\newcommand{\svgToDevOptions}{${svg2devOptions}}
 
 
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "manualLatexMavenPlugin"
-%%% End:
+
 
