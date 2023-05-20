@@ -604,7 +604,7 @@ public class Settings {
 	       defaultValue = "-interaction=nonstopmode -recorder " + 
 	       "-s prologues=2")
     private String metapostOptions = 
-	"-interaction=nonstopmode -recorder -s prologues=2";
+	"-interaction=nonstopmode -recorder -s prologues=2 -s 'outputtemplate=\"%j.mps\"'";
 
     /**
      * The command for conversion of svg-files 
