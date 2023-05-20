@@ -324,12 +324,10 @@ fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xx
 %
 and ``inputting'' \texttt{xxx.ptx} works for both \LaTeX{} output formats. 
 
-
-Note that \texttt{xfig} chooses its file suffix 
-according to Table~\ref{tab:xfigSuffixes} 
-which deviate from those used by this software. 
-The suffixes used here, 
-better reflect the file formats. 
+Table~\ref{tab:xfigSuffixes} relates the language specified with the \texttt{-L} option 
+with the suffix of the output file choosen canonically, the suffix we choose 
+and the actual file format. 
+In contrast to \texttt{fig2dev}, we choose the actual file format, except if this is TEX. 
 We opted for the quite unusual suffix \texttt{.ptx} 
 instead of \texttt{.tex} 
 to avoid that tex-files may be both, 
@@ -344,8 +342,7 @@ Output format (language) & xfig suffix & our suffix & format \\
 \midrule
 \endfirsthead%
 \bottomrule%
-\caption{\label{tab:xfigSuffixes} Suffixes used by xfig as opposed to suffixes
-  used here and actual file format }
+\caption{\label{tab:xfigSuffixes} Language, suffixes and file format }
 \endlastfoot%
 pstex                    & pstex       & eps        & eps \\
 pstex\_t                 & pstex\_t    & ptx        & tex \\

@@ -335,7 +335,7 @@ o '-v'
 Verbose mode.
 
 The default value for this option is the empty string. -->
-            <fig2devPtxOptions>fig2devPtxOptions</fig2devPtxOptions>
+            <fig2devPtxOptions>${fig2devPtxOptions}</fig2devPtxOptions>
 
             <!-- The options for the command $fig2devCommand 
 specific for the output language 'pdftex'. 
@@ -345,7 +345,7 @@ $fig2devGenOptions specifies the options
 common for the two output langugages 
 'pdftex' and 'pdftex_t'. 
 The default value for this option is the empty string. -->
-            <fig2devPdfEpsOptions>fig2devPdfEpsOptions</fig2devPdfEpsOptions>
+            <fig2devPdfEpsOptions>${fig2devPdfEpsOptions}</fig2devPdfEpsOptions>
 
             <!-- The command for conversion of gnuplot-files 
 into various formats. 
