@@ -92,6 +92,10 @@
       This includes basic latex support but also support of all graphic source formats. 
       These must be worked into the manual. 
 
+use 
+https://inkscape.org/doc/inkscape-man.html#OPTIONS
+to export pages or pages of pdfs to include in the own document. 
+This is useful for citations or to get pics. 
 
 %\RequirePackage{pdfmanagement-testphase} % this will not be required in future. 
 %\DocumentMetadata{pdfversion=1.7}
