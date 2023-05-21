@@ -288,12 +288,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					LatexPreProcessor proc,
 					Map<File, SuffixHandler> file2handler) {
 				// may log WPP02, WFU01, WFU03, EFU05
-				proc.clearTargetTexIfLatexMain(file);
+				boolean isLatexMain = proc.clearTargetTexIfLatexMain(file);
+        if (!isLatexMain) {
+          file2handler.put(file, this);
+        }
 			}
 
 			void clearTarget(File file, LatexPreProcessor proc) {
-				throw new IllegalStateException("Clearing targets of '" + file +
-						"' should have been done already. ");
+        proc.clearIfTexNoLatexMain(file);
 			}
 
 			String getSuffix() {
@@ -1143,7 +1145,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * EFU05: Failed to delete file
 	 */
 	private void clearTargetJpgPng(File file) {
-		this.log.info("Deleting targets of jpg/png-file '" + file + "'. ");
+		this.log.info("Deleting bounding boxes of file '" + file + "' if present. ");
 		// may log EFU05
 		deleteIfExists(file, SUFFIX_XBB);
 		deleteIfExists(file, SUFFIX_BB);
@@ -1158,6 +1160,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <p>
 	 * Logging:
 	 * EFU05: Failed to delete file
+   * @return
+   *    whether existed. 
 	 */
 	private void deleteIfExists(File file, String suffix) {
 		File delFile = TexFileUtils.replaceSuffix(file, suffix);
@@ -1166,7 +1170,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		}
 		// may log EFU05
 		this.fileUtils.deleteOrError(delFile, false);
+    return;
 	}
+
+
 
 	/**
 	 * Returns whether <code>texFile</code> is a latex main file,
@@ -1243,12 +1250,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * @param texFile
 	 *    the tex-file of which the created files shall be deleted
 	 *    if it is a latex main file.
+   * @return
+   *    whether <code>texFile</code> is a latex main file. 
 	 */
-	private void clearTargetTexIfLatexMain(File texFile) {
+	private boolean clearTargetTexIfLatexMain(File texFile) {
 		// exclude files which are no latex main files
 		// may log WFU03, WPP02
 		if (!isLatexMainFile(texFile)) {
-			return;
+			return false;
 		}
 		this.log.info("Deleting targets of latex main file '" +
 				texFile + "'. ");
@@ -1256,7 +1265,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		FileFilter filter = TexFileUtils.getFileFilter(texFile, this.settings.getPatternCreatedFromLatexMain(), allowsDir);
 		// may log WFU01, EFU05
 		this.fileUtils.deleteX(texFile, filter, true);
+    return true;
 	}
+
+  private void clearIfTexNoLatexMain(File texFile) {
+		this.log.info("Deleting aux files of tex '" + texFile + "' if present (included). ");
+    deleteIfExists(texFile, LatexProcessor.SUFFIX_AUX);
+  }
 
 	/**
 	 * Detects files in the directory represented by <code>node</code>
