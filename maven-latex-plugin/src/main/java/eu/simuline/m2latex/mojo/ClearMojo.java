@@ -27,7 +27,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.util.SortedSet;
-//import java.util.EnumSet;
+// import java.util.EnumSet;
 
 /**
  * Clears all created files in the folders containing the LaTeX sources 
@@ -37,36 +37,36 @@ import java.util.SortedSet;
 @Mojo(name = "clr", defaultPhase = LifecyclePhase.CLEAN)
 public class ClearMojo extends AbstractLatexMojo {
 
-    // api-docs inherited from ParameterAdapter 
-    // FIXME: not required by ClearMojo, GraphicsMojo, ChkMojo  
-     public SortedSet<Target> getTargetSet() {
-    	throw new IllegalStateException();
-    }
+  // api-docs inherited from ParameterAdapter 
+  // FIXME: not required by ClearMojo, GraphicsMojo, ChkMojo  
+  public SortedSet<Target> getTargetSet() {
+    throw new IllegalStateException();
+  }
 
-    /**
-     * Invoked by maven executing the plugin. 
-     * <p>
-     * Logging: 
-     * <ul>
-     * <li> WPP02: tex file may be latex main file 
-     * <li> WFU01: Cannot read directory...
-     * <li> WFU03: cannot close tex file 
-     * <li> EFU05: Failed to delete file 
-     * </ul>
-     *
-     * @throws BuildFailureException 
-     *    TSS02 if the tex source processing directory does either not exist 
-     *    or is not a directory. 
-     */
-    public void execute() throws MojoFailureException {
-	initialize();
-	try {
-	    // may throw BuildFailureException TSS02 
-	    // may log warnings WPP02, WFU01, WFU03, EFU05 
-	    this.latexProcessor.clearAll();
-	} catch (BuildFailureException e) {
-	    throw new MojoFailureException(e.getMessage(), e.getCause());
-	}
+  /**
+   * Invoked by maven executing the plugin. 
+   * <p>
+   * Logging: 
+   * <ul>
+   * <li> WPP02: tex file may be latex main file 
+   * <li> WFU01: Cannot read directory...
+   * <li> WFU03: cannot close tex file 
+   * <li> EFU05: Failed to delete file 
+   * </ul>
+   *
+   * @throws BuildFailureException 
+   *    TSS02 if the tex source processing directory does either not exist 
+   *    or is not a directory. 
+   */
+  public void execute() throws MojoFailureException {
+    initialize();
+    try {
+      // may throw BuildFailureException TSS02 
+      // may log warnings WPP02, WFU01, WFU03, EFU05 
+      this.latexProcessor.clearAll();
+    } catch (BuildFailureException e) {
+      throw new MojoFailureException(e.getMessage(), e.getCause());
     }
+  }
 
 }
