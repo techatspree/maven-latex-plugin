@@ -181,14 +181,14 @@
     <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"
     </metapostOptions>
     <svg2devOptions>--export-area-drawing --export-latex</svg2devOptions>
-    <ebbOptions>--export-area-drawing --export-latex</ebbOptions>
+    <ebbOptions>-v</ebbOptions>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>${versionMvn}</version><!-- ${versionMvn} 4.0.0-alpha-5 -->
+			<version>3.9.2</version><!-- ${versionMvn} 4.0.0-alpha-5 -->
 			<scope>provided</scope>
 		</dependency>
 
