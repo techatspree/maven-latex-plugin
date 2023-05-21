@@ -664,6 +664,25 @@ For more details see Section~\ref{subsec:svg2devOptions}.
 \end{minipage}
 } \\
 \midrule
+\texttt{createBoundingBoxes} & \texttt{false} \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+   Whether for pixel formats like jpg and png 
+   command \texttt{\$ebbCommand} is invoked to determine the bounding box. 
+   This is relevant, if at all, only in dvi mode. 
+   Note that the package \texttt{bmpsize} is an alternative 
+   to invoking \texttt{ebb}, 
+   which seems not to work for \texttt{xelatex}. 
+   Moreover, all seems to work fine with neither of these techniques. 
+   The \texttt{\$dvi2pdfCommand} given by the default, \texttt{dvipdfmx}, 
+   seems the only which yields the picture sizes as in PDF mode 
+   which fit well. 
+   Note also that miktex does not offer neither package \pkg{bmpsize} 
+   nor \texttt{ebb}. 
+   This alone requires to switch off invocation of \texttt{ebb} by default. 
+   So the default value is \texttt{false}. 
+  \end{minipage}
+} \\
 \texttt{ebbCommand} & \texttt{ebb} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}

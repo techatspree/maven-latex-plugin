@@ -873,15 +873,45 @@ This is done as usual with the command \cmd{includegraphics}{}
 provided by the package \pkg{graphicx}. 
 According to the documentation~\cite{GraX}, page 13, 
 the bounding box must be provided somehow. 
+
 This may be done via the package \pkg{bmpsize} 
-but also using the command \texttt{ebb}. 
+but alternatively also using the command \texttt{ebb}. 
+There is some hint, that \pkg{bmpsize} does not work with \texttt{xelatex}. 
+So maybe \texttt{ebb} is the better alternative. 
+Note that both techniques are available in distribution \texlive, 
+but not in \miktex. 
+
+Research shows, that inclusion is seemlessly if PDF files are created. 
+So the problem addressed is specific for creating DVI files. 
+Also at time of this writing, it seems that also in DVI mode, no problems occur. 
+Nevertheless, the author experienced errors on missing bounding box 
+and to be save, provides a way to invoke \texttt{ebb} on the file \texttt{xxx.jpg}. 
+
+With parameter \texttt{-m}, this creates a file \texttt{xxx.bb} 
+containing the bounding box for \texttt{dvipdfm}, 
+and with parameter \texttt{-x} a file \texttt{xxx.xbb} 
+containing an extended bounding box for \texttt{dvipdfmx}. 
+The current implementation seems not to make any difference, 
+whether the bounding boxes are created or not. 
+
+Sizes seem to differ in dvi ouput after conversion to pdf, 
+depending on whether \texttt{dvipdfm} or \texttt{dvipdfmx} is used. 
+Only the latter yields the same size as direct conversion to PDF creates. 
+
+Since bounding boxes seem superfluous, 
+we control their creation with a parameter \texttt{createBoundingBoxes} 
+whether to invoke \texttt{ebb}, which is false by default. 
+Nevertheless, if we invoke, then we do twice 
+creating bounded boxes and extended bounding boxes. 
+
+
 FIXME\@: further research and further documentation is required. 
 
 Note that both for \pdflatex{} and siblings creating pdf-output 
 and for \texttt{htlatex} in conjunction with \texttt{dvipdfmx} 
 (see Section~\ref{sec:figpdf}) 
 files in the format pdf, \gls{png}, \gls{jpg} are supported. 
- **** what about \gls{gif}? 
+% **** what about \gls{gif}? 
 This list may be incomplete. 
 
 \begin{figure}[htb]
@@ -906,7 +936,28 @@ FIXME: at the moment, htlatex does not work with pictures at all.
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
 }{
-\includegraphics[width=0.9\textwidth]{F4_09somePngOboeBaroqueDennerMIR370}%.png
+\includegraphics[width=0.9\textwidth]
+{F4_09somePngOboeBaroqueDennerMIR370}%.png
 }
 \caption{\label{fig:asIsPng}Some png-picture, directly included }
 \end{figure}
+
+Note that in dvi/xdv mode all usual latex converter 
+can include bmp-pictures, whereas in pdf mode only \texttt{xelatex} 
+can do that, maybe because it creates XDV internally in any case. 
+In contrast, \texttt{lualatex} and \texttt{pdflatex} can not. 
+% The following works for lualatex but not for pdflatex 
+% And still the same picture, Figure~\ref{fig:asIsPng} shows the oboe 
+% as bmp-file. 
+
+% \begin{figure}[htb]
+%   \centering
+%   \ifthenelse{\boolean{texFhtLoaded}}{
+%   should be a picture 
+%   }{
+%   \includegraphics[width=0.9\textwidth]
+%   {F4_10someBmpOboeBaroqueDennerMIR370.bmp}%.bmp
+%   }
+%   \caption{\label{fig:asIsBmp}Some bmp-picture, directly included }
+%   \end{figure}
+  

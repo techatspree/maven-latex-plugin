@@ -222,12 +222,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		jpg {
 			void procSrc(File file, LatexPreProcessor proc)
 					throws BuildFailureException {
-				proc.log.info("Jpg-file '" + file + "' needs no processing. ");
-				// FIXME: this works for pdf but not for dvi:
-				// in the latter case:
-				// ! LaTeX Error: Cannot determine size of graphic ...
-				// FIXME: only for dvi
-				// proc.runEbb(file);
+				proc.runEbbByConfig(file);
 			}
 
 			// void clearTarget(File file,
@@ -252,12 +247,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		png {
 			void procSrc(File file, LatexPreProcessor proc)
 					throws BuildFailureException {
-				proc.log.info("Png-file '" + file + "' needs no processing. ");
-				// FIXME: this works for pdf but not for dvi:
-				// in the latter case:
-				// ! LaTeX Error: Cannot determine size of graphic ...
-				// FIXME: only for dvi
-				// proc.runEbb(file);
+            proc.runEbbByConfig(file);
+
 			}
 
 			// void clearTarget(File file,
@@ -578,6 +569,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				this.settings.getFig2devPdfEpsOptions(),
 				figFile,
 				figInTexFile);
+        //this.log.info("Running fig2dev"+java.util.Arrays.asList(args));
 		this.log.debug("Running " + command + " -L pdftex/pstex  ... on '" +
 				figFile.getName() + "'. ");
 		// may throw BuildFailureException TEX01,
@@ -1081,44 +1073,50 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// Documentation says, that this is needed for interface eps,
 	// but not for interface pdf.
 	// Experiments show, that we can do without it in any case.
-  @SuppressWarnings("unused")
-	private void runEbb(File file) throws BuildFailureException {
-	String command = this.settings.getCommand(ConverterCategory.EbbCmd);
-	File workingDir = file.getParentFile();
-	String[] args = buildNullArguments(this.settings.getEbbOptions(), file);
 
-	// Creation of .xbb files for driver dvipdfmx
-	// FIXME: literal
-	args[0] ="-x";
-	File resFile = TexFileUtils.replaceSuffix(file, SUFFIX_XBB);
+    private void runEbbByConfig(File file) throws BuildFailureException {
+      if (!this.settings.getCreateBoundingBoxes()) {
+        // suffix without dot 
+        String suffix = TexFileUtils.getSuffix(file).substring(1);
+        this.log.info(suffix.toUpperCase() + "-file '" + file
+            + "' needs no processing. ");
+        // FIXME: this works for pdf but not for dvi:
+        // in the latter case:
+        // ! LaTeX Error: Cannot determine size of graphic ...
+        // FIXME: only for dvi
+        return;
+      }
 
-	this.log.debug("Running " + command +
-	" twice on '" + file.getName() + "'. ");
-	// may throw BuildFailureException TEX01,
-	// may log EEX01, EEX02, EEX03, WEX04, WEX05
-	this.executor.execute(workingDir,
-	this.settings.getTexPath(), //****
-	command,
-	args,
-	resFile);
+      String command = this.settings.getCommand(ConverterCategory.EbbCmd);
+      File workingDir = file.getParentFile();
+      String[] args = buildNullArguments(this.settings.getEbbOptions(), file);
 
-	// Creation of .bb files for driver dvipdfm
-	// FIXME: literal
-	args[0] ="-m";
-	resFile = TexFileUtils.replaceSuffix(file, SUFFIX_BB);
+      // Creation of .xbb files for driver dvipdfmx
+      // FIXME: literal
+      args[0] = "-x";
+      File resFile = TexFileUtils.replaceSuffix(file, SUFFIX_XBB);
 
-	this.executor.execute(workingDir,
-	this.settings.getTexPath(), //****
-	command,
-	args,
-	resFile);
-	}
+      this.log
+          .debug("Running " + command + " twice on '" + file.getName() + "'. ");
+      // may throw BuildFailureException TEX01,
+      // may log EEX01, EEX02, EEX03, WEX04, WEX05
+      this.executor.execute(workingDir, this.settings.getTexPath(), //****
+          command, args, resFile);
+
+      // Creation of .bb files for driver dvipdfm
+      // FIXME: literal
+      args[0] = "-m";
+      resFile = TexFileUtils.replaceSuffix(file, SUFFIX_BB);
+
+      this.executor.execute(workingDir, this.settings.getTexPath(), //****
+          command, args, resFile);
+    }
 
 	/**
 	 * Returns an array of strings,
 	 * where the 0th entry is <code>null</code>
 	 * and a placeholder for option <code>-x</code> or <code>-m</code>
-	 * when used by {@link #runEbb(File)}
+	 * when used by {@link #runEbbByConfig(File)}
 	 * and for the export option
 	 * when used by {@link #runSvg2Dev(File, LatexDev, boolean)}
 	 * then follow the options from <code>options</code>

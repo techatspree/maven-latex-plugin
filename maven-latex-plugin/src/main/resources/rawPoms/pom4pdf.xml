@@ -405,6 +405,23 @@ The default value is the minimal value,
 '-D - -export-latex'. -->
             <svg2devOptions>${svg2devOptions}</svg2devOptions>
 
+<!--
+   Whether for pixel formats like jpg and png 
+   command '$ebbCommand' is invoked to determine the bounding box. 
+   This is relevant, if at all, only in dvi mode. 
+   Note that the package 'bmpsize' is an alternative 
+   to invoking 'ebb', 
+   which seems not to work for 'xelatex'. 
+   Moreover, all seems to work fine with neither of these techniques. 
+   The '$dvi2pdfCommand' given by the default, 'dvipdfmx', 
+   seems the only which yields the picture sizes as in PDF mode 
+   which fit well. 
+   Note also that miktex does not offer neither package 'bmpsize' 
+   nor 'ebb'. 
+   This alone requires to switch off invocation of 'ebb' by default. 
+   So the default value is 'false'. -->
+<createBoundingBoxes>false</createBoundingBoxes>
+
             <!-- The command to create bounding box information 
 from jpg-files and from png-files. 
 This is run twice: 

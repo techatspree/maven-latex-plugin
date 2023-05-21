@@ -643,8 +643,27 @@ public class Settings {
      * The default value is the minimal value, 
      * <code>-D --export-latex</code>. 
      */
-   @Parameter(name = "svg2devOptions", defaultValue = "-D --export-latex")
-   private String svg2devOptions = "-D --export-latex";
+    @Parameter(name = "svg2devOptions", defaultValue = "-D --export-latex")
+    private String svg2devOptions = "-D --export-latex";
+
+    /**
+     * Whether for pixel formats like jpg and png 
+     * command {@link #ebbCommand} is invoked to determine the bounding box. 
+     * This is relevant, if at all, only in dvi mode. 
+     * Note that the package <code>bmpsize</code> is an alternative 
+     * to invoking <code>ebb</code>, 
+     * which seems not to work for xelatex. 
+     * Moreover, all seems to work fine with neither of these techniques. 
+     * The {@link #dvi2pdfCommand} given by the default, <code>dvipdfmx</code>, 
+     * seems the only which yields the picture sizes as in PDF mode 
+     * which fit well. 
+     * Note also that miktex does not offer neither package <code>bmpsize</code> 
+     * nor <code>ebb</code>. 
+     * This alone requires to switch off invocation of <code>ebb</code> by default. 
+     * So the default value is <code>false</code>. 
+     */
+    @Parameter(name = "createBoundingBoxes", defaultValue = "false")
+    private boolean createBoundingBoxes = false;
 
     /**
      * The command to create bounding box information 
@@ -663,7 +682,7 @@ public class Settings {
      * The options for the command {@link #ebbCommand} 
      * except <code>-m</code> and <code>-x</code> 
      * which are added automatically. 
-     * The default value is <code>-v</code>. 
+     * The default value is <code>-v</code> to make <code>ebb<code> verbose. 
      */
     // without -x and -m 
     @Parameter(name = "ebbOptions", defaultValue = "-v")
@@ -1973,6 +1992,10 @@ public class Settings {
 	return  this.svg2devOptions;
     }
 
+    public boolean getCreateBoundingBoxes() {
+      return this.createBoundingBoxes;
+    }
+
     // for ant task only 
     public String getEbbCommand() throws BuildFailureException {
         return getCommand(ConverterCategory.EbbCmd);
@@ -2437,6 +2460,10 @@ public class Settings {
 	    .replaceAll("(\t|\n| )+", " ").trim();
     }
 
+    public void setCreateBoundingBoxes(boolean createBoundingBoxes) {
+      this.createBoundingBoxes = createBoundingBoxes;
+    }
+
     public void setEbbCommand(String ebbCommand) {
         this.ebbCommand = ebbCommand;
     }
@@ -2881,7 +2908,7 @@ public class Settings {
         sb.append(", metapostOptions=").append(this.metapostOptions);
         sb.append(", svg2devCommand=").append(this.svg2devCommand);
         sb.append(", svg2devOptions=").append(this.svg2devOptions);
-
+        sb.append(", createBoundingBoxes=").append(this.createBoundingBoxes);
         sb.append(", ebbCommand=").append(this.ebbCommand);
         sb.append(", ebbOptions=").append(this.ebbOptions);
 
