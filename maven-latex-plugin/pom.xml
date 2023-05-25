@@ -167,6 +167,7 @@
     <!-- properties for config of latex plugin -->
     <!-- This goes into pom4pdf.xml and also in .latexmkrc, 
     but not in the config of this project -->
+    <versionStripped>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}</versionStripped>
     <latex2pdfOptions>-interaction=nonstopmode -recorder -synctex=1 -shell-escape</latex2pdfOptions>
     <fig2devGenOptions></fig2devGenOptions>
     <fig2devPtxOptions></fig2devPtxOptions>
