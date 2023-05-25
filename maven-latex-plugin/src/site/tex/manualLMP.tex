@@ -230,6 +230,10 @@ Version \strippedVersionID}
 \author{Ernst Reissner (rei3ner@arcor.de)}
 \date{\versionDate}
 
+
+% seems to have a problem with pythontexW maybe clean before
+%\includeonly{manualC4graphics}
+
 \begin{document}
 \maketitle
 
@@ -251,17 +255,18 @@ Version \strippedVersionID}
 \chapter{Listings}\label{chap:listings}% maybe appendix?
 
 
-First we list the versions of the executables
-which are run to create this manual.
-They are given in \url{../../main/resources/version.properties}
+% First we list the versions of the executables
+% which are run to create this manual.
+% They are given in \url{../../main/resources/version.properties}
+% \url{https://www.simuline.eu/LatexMavenPlugin/fromTex/F4_03someGnuplot.gp}
 
-\lstinputlisting[language=xml, basicstyle=\scriptsize,
-%irstline=220, lastline=1108,
-breaklines,
-%float,
-captionpos=b, label={lst:versionsExec},
-caption={The versions of the executables potentially used}]
-{../../main/resources/version.properties}% chktex 11 
+% \lstinputlisting[language=xml, basicstyle=\scriptsize,
+% %firstline=220, lastline=1108,
+% breaklines, 
+% %float,
+% captionpos=b, label={lst:versionsExec},
+% caption={The versions of the executables potentially used}]
+% {../../main/resources/version.properties}% chktex 11 
 
 
 Next we provide listings of the configuration 
@@ -274,7 +279,7 @@ In \texttt{pom.xml} only text elements occur.
 
 The maven-plugin described here, 
 requires the definition in \texttt{pom.xml}
-given by Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}. 
+given by Listing~\ref{lst:fullConfigMvn} on page~\pageref{lst:fullConfigMvn}. 
 
 %\lstset{language=xml, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
@@ -282,7 +287,7 @@ given by Listing~\ref{lst:fullConfig} on page~\pageref{lst:fullConfig}.
 firstline=32, lastline=991, 
 breaklines, showstringspaces=false,
 %float,
-captionpos=b, label={lst:fullConfig},
+captionpos=b, label={lst:fullConfigMvn},
 caption={The full configuration and executions of this maven plugin}]
 {../../test/resources/integration/pom4pdf.xml}% chktex 11 
 
@@ -304,7 +309,7 @@ given by Listing~\ref{lst:fullConfigAnt}.
 %\lstset{language=xml, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[language=xml, basicstyle=\scriptsize,
-breaklines,
+breaklines, showstringspaces=false,
 %float,
 captionpos=b, label={lst:fullConfigAnt},
 caption={The definition of this ant task and target}]
