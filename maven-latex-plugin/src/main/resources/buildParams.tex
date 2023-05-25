@@ -1,3 +1,6 @@
+% makes parameters from pom available for tex by defining commands 
+
+% The coordinates 
 % TBD: integrate that into git 
 \newcommand{\groupId}{\texttt{${project.groupId}}}
 \newcommand{\artifactId}{\texttt{${project.artifactId}}}
@@ -6,10 +9,15 @@
 % \newcommand{\versionID}{\texttt{${project.version}}}
 % TBD: replace this by sth from git or what. 
 \newcommand{\versionDate}{2022-04-23}
+
+% sites and jar 
 \newcommand{\repo}{\texttt{https://www.simuline.eu/RepositoryMaven}}
 \newcommand{\devSite}{\texttt{https://github.com/Reissner/maven-latex-plugin}}
+\newcommand{\urlSite}{${urlSite}}
 \newcommand{\antJarDir}{\texttt{/usr/share/ant/lib/}}
 \newcommand{\createdJar}{\texttt{latex-maven-plugin-\strippedVersionID-antTask.jar}}
+
+
 % properties for config of latex plugin 
 \newcommand{\makeEmptyExplicit}[1]{\ifdefempty{#1}{empty}{\texttt{#1}}}
 \newcommand{\latexToPdfOptions}{${latex2pdfOptions}}
@@ -20,6 +28,8 @@
 \newcommand{\gnuplotOptions}{${gnuplotOptions}}
 \verbdef\metapostOptions{${metapostOptions}}
 \newcommand{\svgToDevOptions}{${svg2devOptions}}
+
+
 
 
 

@@ -121,6 +121,11 @@
 		<site>
 			<id>publicSiteAtSimuline</id>
 			<url>ftp://www.simuline.eu/public_html/LatexMavenPlugin</url>
+      <!-- site is 
+      http://www.simuline.eu/LatexMavenPlugin/ 
+      This is configured by a parameter, 
+      but not really single source. 
+      But to overcome: lot of parameters -->
 		</site>
 
 		<repository>
@@ -171,6 +176,8 @@
     </metapostOptions>
     <svg2devOptions>--export-area-drawing --export-latex</svg2devOptions>
     <ebbOptions>-v</ebbOptions>
+
+    <urlSite>http://www.simuline.eu/LatexMavenPlugin/</urlSite>
 	</properties>
 
 	<dependencies>
