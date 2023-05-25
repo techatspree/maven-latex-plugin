@@ -212,6 +212,10 @@ Also: meta-uml, with documentation
 	   or maybe latex git package. 
 	   Note that there may be documentation not created through latex 
 	   and so git package may not be a generic solution. 
+   - version not only of converters but also on latex packages. 
+     An alternative: texlive and just the version of that, 
+     no additional packages or versioning only of those packages. 
+     This must be evaluated... maybe difficult to handle and overkill. 
 	 - include docs in jar.
 	 - redesign: Target s are creational ones.
 	   In mojos we also have creational ones and others.
