@@ -149,6 +149,9 @@ Also: meta-uml, with documentation
     - depythontex if parametrized accordingly  From here on one can compile for papers 
                                                and also a certain paper the author nees 
 
+
+  Note that build.xml is out of date: not all config is present. 
+
   For 4.x: 
     Besides distribution TeX Live, also support MiKTeX 
     One has to install MiKTeX also and check comunities and options not only of tex engines 
