@@ -151,6 +151,7 @@ Also: meta-uml, with documentation
 
 
   Note that build.xml is out of date: not all config is present. 
+  in html mode: \href and \url receive a kind of dummy. 
 
   For 4.x: 
     Besides distribution TeX Live, also support MiKTeX 

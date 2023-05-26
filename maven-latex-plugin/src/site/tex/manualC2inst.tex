@@ -210,7 +210,8 @@ So to run this software, the aforementioned programs
 or at least the subset used, must be installed.
 To obtain reproducible results, the versions must fit.
 This version is checked with the executables with versions given by 
-an according \href{\urlSite fromMain/version.properties}{properties file}. 
+an according properties file 
+\href{\urlSite fromMain/version.properties}{version.properties}. 
 
 % TBD: rework on the above list of programs
 % since it has been extended.
@@ -457,10 +458,10 @@ caption={The executions of this plugin}]
 Note the section \texttt{configuration} in Listing~\ref{lst:executions}
 which is empty and can be skipped in a default configuration
 creating \texttt{pdf}- and \texttt{hmtl}-documentation.
-However, Listing~\ref{lst:fullConfigMvn} on page~\pageref{lst:fullConfigMvn}
-lists the full configuration with default values
-and executions.
-Chapter~\ref{chap:settings} describes the settings individually.
+However, \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} 
+gives an example pom using this latex plugin 
+with full configuration with default values and executions.
+In addition, Chapter~\ref{chap:settings} describes each setting individually.
 
 To check whether the installation of the plugin succeeded,
 in the directory of the pom command
@@ -499,8 +500,9 @@ In my installation it is \antJarDir;
 as can be seen in the ant documentation,
 in general it is in folder \texttt{lib} in ant's installation directory. 
 
-The ant buildfile is given in Listing~\ref{lst:fullConfigAnt}
-on page~\pageref{lst:fullConfigAnt}.
+However, \href{\urlSite build.xml}{build.xml} 
+gives an example build file using this latex ant task 
+with full configuration with default values and executions.
 From that, one has to copy the following
 into the \texttt{build.xml} file in the current project:
 %
@@ -514,6 +516,8 @@ into the \texttt{build.xml} file in the current project:
 
 As for the maven plugin, for the ant task, add configuration, 
 where a deviation from the default requires to do so. 
+The configuration is the same and is described in detail 
+in Chapter~\ref{chap:settings}. 
 
 
 
