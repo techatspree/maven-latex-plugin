@@ -137,6 +137,10 @@ Example for all documentclasses to be supported:
   - in beamer manual there is no hint on labels. 
     They are \begin{frame}[label={frm:someName}]
 
+Lua in latex see: 
+https://tex.stackexchange.com/questions/464045/how-to-use-lua-code-from-external-file-in-lualatex
+Also mention vscode extension. 
+Relate with pythontex 
 
 Also: meta-uml, with documentation 
 
