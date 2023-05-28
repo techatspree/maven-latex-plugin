@@ -1,5 +1,8 @@
-prologues := 1;% overwritten by command line setting 
-outputtemplate:="%j%c.mps"
+%prologues := 0;% default
+%%prologues := 3;
+%outputtemplate:="%{jobname}.%{charcode}";% default
+%outputtemplate:="%{jobname}%{charcode}.mps";% for latex 
+%outputformat:="eps";% default
 input metauml;
 beginfig(1);
   % states
@@ -15,9 +18,12 @@ beginfig(1);
   Playing.w = Paused.e + (120, 0);
   %endAll.w  = Standby.e  + (20,0);
 
-  drawObjects(beginAll, Stopped, Playing, Paused);
+  Note.A("This is my aleph", btex $\aleph$ etex);
+  A.e = beginAll.w + (-20, 0);
 
-  % % feedback; links after draw: bad
+  drawObjects(beginAll, Stopped, Playing, Paused, A);
+
+  % feedback; links after draw: bad
 
   % links between states 
   link(transition)(beginAll.e -- Stopped.w);
@@ -38,5 +44,4 @@ beginfig(1);
     (stopPaused.nw = 0.5[Paused.ne, Stopped.sw]);
 endfig;
 end
-bye
 

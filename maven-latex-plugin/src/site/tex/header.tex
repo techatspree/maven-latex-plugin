@@ -39,6 +39,7 @@
 \usepackage[a4paper, showframe]{geometry}% option , showframe
 %\usepackage{showframe} as an alternative 
 \usepackage{microtype}
+\usepackage{textcomp}
 %\usepackage{anyfontsize}
 %\usepackage{cleveref}
 
@@ -72,6 +73,12 @@
 }% tex4ht not loaded 
 
 %\usepackage{bmpsize}% not for xelatex 
+\fi
+
+\ifluatex
+  \usepackage{luamplib}
+  \newcommand*\inputmpcode[1]{\begin{mplibcode}input #1\end{mplibcode}}
+\else
 \fi
 
 % \@ifpackageloaded{tex4ht}{%

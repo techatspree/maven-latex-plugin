@@ -47,8 +47,8 @@ is strictly speaking no graphics package.
 According to its documentation~\cite{ImpoP}, 
 it allows an imported file to find its own inputs 
 (using ``\cmd{input}'', ``\cmd{includegraphics}'' etc.) in that directory. 
-This is vital for the graphic formats for which a tex-file is imported 
-which itself imports a pdf/eps file located in the same folder 
+This is vital for the graphic formats for which a TEX file is imported 
+which itself imports a PDF/EPS file located in the same folder 
 but not in the folder of the importing file. 
 It is advisable to combine the \texttt{import} package with other graphic packages 
 to include graphics in separate graphic files. 
@@ -63,18 +63,18 @@ Nevertheless, we do not treat this technique in this chapter,
 but separately in Section~\ref{sec:pythontex}. 
 This is because graphics is a side aspect of \pkg{pythontex} 
 and also because strictly speaking there is no preprocessing. 
-First a latex processor is run and the package extracts the code 
+First a latex processor is run, and the package extracts the code 
 into a separate file which is then further processed by an external tool. 
 This is more like running \cmd{bibtex} to extract a bibliography. 
 
 If using the package \texttt{pythontex} 
-a special processing interacting with the latex to pdf converter is required also, 
+a special processing interacting with the latex to PDF converter is required also, 
 but it is not preprocessing. 
 \end{itemize}
 
-We support figures created in the \gls{fig} by the program xfig, 
+We support figures created in the \gls{fig} by the program \texttt{xfig}, 
 figures created by the plotting utility \texttt{gnuplot}, 
-the tex-specific graphic language metapost, 
+the TEX specific graphic language MetaPost, 
 figures in \gls{svg}-format 
 and finally figures in formats which can be included into a \LaTeX-file 
 without preprocessing like \gls{png} and \gls{jpg}. 
@@ -88,7 +88,7 @@ and the default value.
 Of course this converter must be installed. 
 It is advisable to have also an editor installed. 
 Sometimes the editor is used also as converter. 
-For human readable formats like \texttt{fig}, it often makes sense, 
+For human-readable formats like \texttt{fig}, it often makes sense, 
 to use both the graphical editor and the textual one. 
 
 \begin{longtable}{|l|ll|}
@@ -103,7 +103,7 @@ Overview over the supported graphic formats }
 \endlastfoot%
 fig             & \texttt{fig2devCommand}, e.g.~\texttt{fig2dev}  & xfig, emacs   \\
 gnuplot (gp)    & \texttt{gnuplotCommand}, e.g.~\texttt{gnuplot}  & emacs         \\
-metapost (mp)   & \texttt{metapostCommand}, e.g.~\texttt{mpost}   & emacs         \\
+MetaPost (mp)   & \texttt{metapostCommand}, e.g.~\texttt{mpost}   & emacs         \\
 svg             & \texttt{svg2devCommand}, e.g.~\texttt{inkscape} & inkscape      \\
 jpg, png        & ---        & gimp          \\
 \end{longtable}
@@ -117,44 +117,44 @@ This section describes the conversions of
 graphical source files into target files 
 in detail. 
 
-But pdf also occurs as an intermediate format for pictures. 
+But PDF also occurs as an intermediate format for pictures. 
 For historical reasons, still \gls{eps} is used. 
 Section~\ref{sec:figpdf} shows that it suffices to stick to pictures 
-in pdf-format. 
+in PDF format. 
 % FIXME\@: REALLY? 
 %FIXME\@: missing pdf als basic input format. What about (e)ps? 
 Section~\ref{sec:fig2dev} shows how \texttt{fig2dev} converts fig-files 
-into \LaTeX-files containing text and including graphics in as pdf-files. 
+into \LaTeX-files containing text and including graphics in as PDF files. 
 Likewise, Section~\ref{sec:gnuplot2dev} describes 
-how gnuplot converts gnuplot-files into pdf-files. 
+how gnuplot converts gnuplot-files into PDF files. 
 An interesting alternative to gnuplot for computing pictures 
-is metapost described in Section~\ref{sec:metapost}. 
-A more elaborate alternative to fig-pictures are svg-pictures 
+is MetaPost described in Section~\ref{sec:metapost}. 
+A more elaborate alternative to fig-pictures are SVG pictures 
 described in Section~\ref{sec:picSvg}
 Also several formats collected in Section~\ref{sec:picasis} 
 may be included as is. 
 
 
 
-\section{Including pdf-files}\label{sec:figpdf}
+\section{Inclusion of PDF files}\label{sec:figpdf}
 
-Modern \LaTeX{} implementations directly create pdf-files. 
-Thus it makes sense, to allow including graphics as pdf-files 
+Modern \LaTeX{} implementations directly create PDF files. 
+Thus, it makes sense, to allow including graphics as PDF files 
 in \LaTeX-files. 
-This is done in pdf mode 
+This is done in PDF mode 
 by the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx}. 
 In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}-format 
 which is still used to create \gls{html}-output, 
 this is not supported by the default driver, 
 Instead it shall be used the driver \texttt{dvipdfmx}. 
-To obtain a \LaTeX-file which works both for creating pdf and html, 
+To obtain a \LaTeX-file which works both for creating PDF and HTML, 
 insert in the header of the \LaTeX{} main file
 given by Listing~\ref{lst:header}. 
 %
 %\lstset{language=tex, basicstyle=\small}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[firstline=20, lastline=22,
-language=tex, basicstyle=\small,
+language=TeX, basicstyle=\small,
 float, captionpos=b, label={lst:header}, 
 caption={From the header of the tex-source of this manual}]%
 {header.tex}
@@ -165,7 +165,7 @@ which is given by Listing~\ref{lst:xhtml}.
 %
 %\lstset{language=tex, basicstyle=\scriptsize}
 % FIXME\@: nag complains for htlatex 
-\lstinputlisting[language=tex, basicstyle=\scriptsize,
+\lstinputlisting[language=TeX, basicstyle=\scriptsize,
 float, captionpos=b, label={lst:xhtml},
 caption={Configuration file \texttt{myxhtml.cfg}}]
 {myxhtml.tex}
@@ -218,7 +218,7 @@ in format \texttt{pdftex\_t} which starts as given by Listing~\ref{lst:ptx}.
 
 %\lstset{language=tex, breaklines, basicstyle=\footnotesize}
 % FIXME\@: nag complains for htlatex 
-\lstinputlisting[language=tex, basicstyle=\tiny,
+\lstinputlisting[language=TeX, basicstyle=\tiny,
 breaklines, lastline=25,
 float, captionpos=b, label={lst:ptx}, 
 caption={The ptx-file for a fig-file}]{F4_01fig2dev.ptx}
@@ -425,8 +425,8 @@ it is recommended to convert it via
 gnuplot -persist -e "load 'xxx.gp'; save 'xxx.gp'"
 \end{lstlisting}
 %
-If you have a look 
-\href{\urlSite fromTex/F4_03someGnuplot.gp}{inside the resulting file}, 
+If you have a look inside the resulting file 
+\href{\urlSite fromTex/F4_03someGnuplot.gp}{\texttt{F4\_03someGnuplot.gp}}, 
 you can see, that in a comment line
 the current version of \texttt{gnuplot} is documented
 and also all the settings implicitly used.
@@ -454,7 +454,7 @@ like \texttt{Cairolatex}, \texttt{Eepic}, \texttt{Epslatex},
 Note that also export into the fig-format via the terminal \texttt{Fig} 
 is supported which in turn may be included in latex 
 as described in Section~\ref{sec:fig2dev}. 
-Also \texttt{gnuplot} pictures may be exported in metapost format 
+Also \texttt{gnuplot} pictures may be exported in MetaPost format 
 which in turn may be included in latex 
 as described in Section~\ref{sec:metapost}. 
 
@@ -557,51 +557,174 @@ Converted sample gnuplot-file into ptx and pdf files }
 \end{figure}
 
 
-\section{Inclusion of Metapost files}\label{sec:metapost}
+\section{Inclusion of MetaPost files}\label{sec:metapost}
 
-A graphic format, very native to TeX is \texttt{metapost}, 
-a derivative of \texttt{metafont} originally used to describe shape of fonts. 
+A vector graphic format, very native to TeX is \texttt{MetaPost}, 
+a derivative of \texttt{Metafont} originally used to describe shape of fonts. 
 Although seemingly supported by \TeX{} only, 
-\texttt{metapost} is interesting at its own, 
+\texttt{MetaPost} is interesting in its own right, 
 as it is a graphical programming language, 
-Turing complete, much like postscript. 
-Files containing \texttt{metapost} have the ending \texttt{.mp}. 
+Turing complete, much like postscript, and allows also declarative programming. 
+The manual describing the language is~\cite{MPost}, 
+seemingly complete, but it is not. 
+Thus, one can be thankful for \cite{MPostGuid} 
+which offers some introduction and for the really helpful tutorial~\cite{MPostTut}. 
+
+Files containing \texttt{MetaPost} have the ending \texttt{.mp}. 
 Note that there are other graphic formats 
 like monochrome pictures in TIFF-format 
 which are identified with the same extension 
-but the metapost format has nothing to do with this. 
+but the MetaPost format has nothing to do with this. 
 
-The interpreter for \texttt{metapost} 
+Since \texttt{MetaPost} is a programming language, 
+MetaPost files are created with an editor. 
+Since \texttt{MetaPost} is very versatile, 
+it is impossible to give an impression by a single example. 
+We decided to choose an example 
+using a MetaPost library, \texttt{MetaUML}, 
+described in~\cite{MetaUml} for some reasons apparent later. 
+The example file is given in Listing~\ref{lst:metapost} 
+and also on the web as 
+\href{\urlSite fromTex/F4_05someMetapost.mp}{\texttt{F4\_05someMetapost.mp}}. 
+It is the source file of Figure~\ref{fig:metapost}. 
+Pasting the into VS Code, one can see the highlighting, 
+of course provided the extensions Section~\ref{sec:devel} 
+and given by Listing~\ref{lst:instVScode} are installed. 
+
+
+\lstinputlisting[language=MetaPost,
+basicstyle=\footnotesize,
+float,
+showstringspaces={false},
+numbers={left}, stepnumber={5}, 
+captionpos=b, label={lst:metapost},
+caption={An example file in MetaPost}]
+{F4_05someMetapost.mp}
+
+Listing~\ref{lst:metapost} illustrates some structure of MetaPost. 
+As in \TeX, comments start with \texttt{\%} and end with the line or with the file. 
+The proper figures are enclosed between \texttt{beginfig(n)} and \texttt{endfig}, 
+where $n$ is the number of the figure, the so called \texttt{charcode}\footnote%
+{This is a relict from Metafont, where each figure showed a character}, 
+and the file ends with \texttt{end}. 
+This software relies on specifying a single figure per file; the \texttt{charcode} is irrelevant. 
+
+Code outside figures is possible, but does not belong to a figure 
+and is thus not displayed. 
+In our example, besides \texttt{end} commands outside the figure 
+are just \texttt{input xxx}, where \texttt{xxx} names a so-called library 
+defined by the file \texttt{xxx.mp} 
+and a sequence of settings of internal variables 
+of the MetaPost compiler 
+controlling how the following figure is compiled. 
+Most of them even in comments. 
+
+The compiler for \texttt{MetaPost} 
 is given by the parameter \texttt{metapostCommand} 
-which defaults to \texttt{mpost}. 
+which defaults to \texttt{mpost}, occasionally just \texttt{mp}. 
+
+Each internal variable which can be set in the MP file 
+can also be set when invoking \texttt{mpost} 
+using the option \texttt{-s \textlangle variable\textrangle=\textlangle value\textrangle} 
+as described in~\cite{MPost},~Section~B.2.1. 
+There it is stated that the option is read just before the file is read, 
+which implies that the setting in the file overrides the command line setting. 
+
+The most basic setting is \texttt{outputformat:="eps"} 
+which is the only setting appropriate for latex. 
+So don't change\footnote%
+{Note that \texttt{metapostCommand} may also besides \gls{eps} 
+output \gls{svg} and \gls{png}, 
+just by setting \texttt{outputformat:="svg"} or that like. 
+Caution: case-sensitive, assuming silently \texttt{eps} if the format is not recognized. 
+Whereas \gls{svg} is a vector format as MetaPost ifself, \gls{png} is a raster format}. 
+Note the strange default setting for the names of the output files, \texttt{outputtemplate}, 
+which reflects the \texttt{charcode} of the individual figures as file ending. 
+For inclusion in latex, the file ending \texttt{mps} is required 
+and so frequently \texttt{outputtemplate} is set to reflect the ending. 
+It seems more appropriate to make the setting in the command line 
+which yields the following invocation
+%
+\begin{verbatim}
+  mpost -s 'outputtemplate="%{jobname}%{charcode}.mps"' xxx.mp
+\end{verbatim}
+
+As we agreed that a MetaPost file shall contain a single figure only, 
+we also ignore the \texttt{charcode} which unifies MetaPost with other formats supported. 
+This yields 
+%
+\begin{verbatim}
+  mpost -s 'outputtemplate="%{jobname}.mps"' xxx.mp
+\end{verbatim}
+%
+The MetaPost file shall not overwrite the command line settings. 
+
+The setting of \texttt{prologues} controls where fonts come from and 
+becomes relevant when using \TeX{} for typesetting. 
+Listing~\ref{lst:metapost}, line 21 includes a label via a note implicitly, 
+and for the material between \texttt{btex} and \texttt{etex} uses \TeX{}. 
+The manual~\cite{MPost}, Section 8.1 is on typesetting labels 
+and specifies the meaning of \texttt{prologues}. 
+If we stick to including in \LaTeX{} and creating PDF out of that only, 
+the default setting $0$ is appropriate always 
+but since this software uses DVI as intermediate format, e.g. to create HTML, 
+or because for debugging one wants to view the MPS files standalone in a viewer 
+things are not so easy. 
+For details see ~\cite{MPost}, Section 14.2. 
+Setting \texttt{prologues:=1} is deprecated. 
+The only save way to get the correct display is to include fonts in the MPS file, 
+setting \texttt{prologues:=3}, but this makes the MPS file quite big. 
+So a good compromise is to set \texttt{prologues:=2} as a command line option 
+resulting in 
+%
+\begin{verbatim}
+  mpost -s prologues=2 -s 'outputtemplate="%{jobname}.mps"' xxx.mp
+\end{verbatim}
+%
+and overwriting by need as in Listing~\ref{lst:metapost}, line 2. 
+
+As mentioned above, \texttt{input xxx} includes a library 
+making the program dependent on a file \texttt{xxx.mp}. 
+As for latex processors, also \texttt{mpost} records dependencies recursively 
+in an FLS file if invoked with option \texttt{-recorder}. 
+Also like latex processors, an error shall not cause break or interaction 
+so adding the option \texttt{-interaction=nonstopmode}. 
+Thus, we arrive finally at the default invocation 
+%
+\begin{verbatim}
+  mpost -interaction=nonstopmode -recorder \
+    -s prologues=2 -s 'outputtemplate="%{jobname}.mps"' xxx.mp
+\end{verbatim}
+
+
+
+
+
+
+% TBD: treat mpxerr.tex, mpxerr.log
+% this must be done both in software and in this manual 
+
+
+
 
 
 Figure~\ref{fig:mp2mps} illustrates 
-how \texttt{mpost} converts an \gls{mp}-file \texttt{xxx.mp} by default: 
+how \texttt{mpost} converts an \gls{mp}-file \texttt{xxx.mp} 
+with the given settings into various result files: 
 %
 \begin{itemize}
 \item
-into one or more \gls{mps}-files \texttt{xxx1.mps}\dots \texttt{xxxn.mps}, 
-(as the mp-file may declare more than one figure) 
+an \gls{mps}-file or with setting 
+\begin{verbatim}outputtemplate="\%{jobname}\%{charcode}.mps"\end{verbatim}
+more \gls{mps}-files \texttt{xxx1.mps}\dots \texttt{xxxn.mps}, 
 \item
-creating a log-file \texttt{xxx.log} much like \LaTeX{} does 
+a log-file \texttt{xxx.log} and a fls-file \texttt{xxx.fls} much like \LaTeX{} does 
 \item
-and an \gls{mpx}-file \texttt{xxx.mpx} containing the text of the figure. 
+and an \gls{mpx}-file \texttt{xxx.mpx} containing the \LaTeX{} text of the figure; 
+this is not created if there is no such text. 
 \end{itemize}
 
-The mps-files look like postscript, or more like encapsulated postscript, 
-but are not completely valid, since the prologue is missing, by default. 
-Inserting the line ``\texttt{prologues\ :=\ 2;}'' % chktex 26
-in the first line of the mp-file 
-solves the problem as~\cite{MPost}, Section~14.2.1 explains. 
-Then it can be viewed in ghostscript. 
 
-A much better alternative is 
-to specify the the option \texttt{-s prologues=2} for \texttt{mpost}. 
-
-Roughly speaking, the mpx-file contains text parts of the mp-file; 
-more knowledge is not necessary, as the texts are also in the mps-files 
-and so the mpx-file is not used by this software. 
 
 \begin{figure}[htb]
 \centering
@@ -610,13 +733,13 @@ should be a picture
 }{
 \import{}{F4_04mp2mps.ptx}
 }
-\caption{\label{fig:mp2mps}Conversion of a metapost-file into an mps-file}
+\caption{\label{fig:mp2mps}Conversion of a MetaPost-file into an mps-file}
 \end{figure}
 
 
-Figure~\ref{fig:metapost} gives an example of a metapost file 
+Figure~\ref{fig:metapost} gives an example of a MetaPost file 
 included in this \LaTeX-file as ab mps-file 
-created from the metapost file 
+created from the MetaPost file 
 and embedded in this \LaTeX-file 
 with the \cmd{includegraphics}-command. 
 Normally, \cmd{includegraphics} is invoked with the filename without extension, 
@@ -627,74 +750,74 @@ As for inclusion of fig-files, the package \pkg{graphicx} is needed.
 \centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
-}{
+}{ 
 %\includegraphics{F4_05someMetapost1.mps}
 \includegraphics{F4_05someMetapost.mps}
 }
 \caption{\label{fig:metapost}
-Converted sample metapost-file included as mps-file  }
+Converted sample MetaPost-file included as mps-file  }
 \end{figure}
 
-Note that \texttt{metapostCommand} may also besides \gls{eps} 
-output \gls{svg} and \gls{png}, 
-just by setting 
-%
-\begin{verbatim}
-outputformat:="svg" 
-\end{verbatim}
-%
-or that like 
-(caution: case sensitive, assuming silently \texttt{eps} if not recognized). 
-One would also adapt 
-%
-\begin{verbatim}
-outputtemplate:="\%j\%c.svg"
-\end{verbatim}
-%
-to control the names of the mps-files created. 
-Here \texttt{\%j} represents the jobname and $\%c$ the number. 
-One may well define alternatively 
-%
-\begin{verbatim}
-outputtemplate:="\%j-\%c.svg"
-\end{verbatim}
+One of the descendants of MetaPost is TikZ (see introductory text~\cite{TikzIntro})
+and one of the deficiencies resolved is that it allows passing information 
+from the main document to the proper figure. 
 
-Finally we may set: 
+With \lualatex{} this can be reached for MetaPost also using package \pkg{luamplib} 
 %
-\begin{verbatim}
-prologues := 3;
-\end{verbatim}
+\lstinputlisting[language=tex, basicstyle=\scriptsize, linerange={78-82}]{header.tex}
 
-So the mp-file starts 
+The package itself provides an environment \texttt{mplibcode}. 
+Essentially, \lualatex{} interprets all code 
+enclosed in the \texttt{mplibcode} environment as MetaPost. 
+The package is enhanced with the command \texttt{\textbackslash inputmpcode} 
+which allows also load MetaPost from a file. 
+The latter is preferred to direct inclusion with the \texttt{mplibcode} environment, 
+e.g. for sake of proper code highlighting. 
+Note that the package declaration is enclosed in an if construct, 
+ensuring that the package is loaded only if lualatex or that like is run. 
+
+That this allows better integration within the enclosing latex document 
+is illustrated by redefining the letter $\aleph$ as $\alpha$ which is really related. 
 %
-%\lstset{language=metapost, basicstyle=\normalsize}
-\begin{lstlisting}[language=metapost, basicstyle=\normalsize]
-outputformat:="svg";
-outputtemplate:="\%j\%c.svg";
-prologues := 3;
+\begin{lstlisting}[language=TeX, linerange={793-796}]
+  {% make redefine local 
+  \renewcommand{\aleph}{\alpha}
+  \inputmpcode{F4_05someMetapost}
+  }% to recover from redefine {manualC4graphics.tex}
 \end{lstlisting}
 
-As an alternative, \texttt{mpost} compiler may be invoked with option 
-%
-\begin{verbatim}
--s<key>=<value>
-\end{verbatim}
-%
-described in~\cite{MPost}, Appendix B.2.1. 
-That way we can set internal variables with values 
-overwriting those given by the mp-files. 
-We recommend specification of internal variables through options 
-if required globally. 
+Figure~\ref{fig:metapostLua} documents, 
+that the redefinition really influences rendering in the MetaPost file. 
 
-This would lead to invocation 
-%
-\begin{Verbatim}[fontsize=\scriptsize]
-mpost -s 'outputformat="svg"' -s 'outputtemplate:="%j%c.svg"' -s prologues=3 file.mp
-\end{Verbatim}
+\begin{figure}[htb]
+  \centering
+  \ifthenelse{\boolean{texFhtLoaded}}{
+  should be a picture 
+  }{
+  \ifluatex
+  {% make redefine local 
+  \renewcommand{\aleph}{\alpha}
+  \inputmpcode{F4_05someMetapost}
+  }% to recover from redefine 
+  \else
+  \includegraphics{F4_05someMetapost.mps}
+  \fi
+  }%texFhtLoaded
+  \caption{\label{fig:metapostLua}
+  Sample MetaPost-file included via \texttt{luamplib} for lua(hb)tex }
+  \end{figure}
+  
 
-%FIXME\@: 
-Note that the output 
+  
+  %Question: how to center, how to scale? 
+  %Interesting: interaction between MetaPost code and enclosing tex: 
+  
+  
 
+
+
+% I cannot detect an mps file. 
+  
 % This example is simple but not very illustrative. 
 % In the long run we shall use a state diagram based on~\cite{MetaUml}. 
 
@@ -788,12 +911,12 @@ and more than that, is in an experimental phase,
 we provide explicit preprocessing of svg-files using \texttt{inkscape}. 
 Another problem with the \pkg{svg}-package is, 
 that according to~\cite{SvgP}, Section~1, 
-it does not work on windows platforms. 
+it does not work on Windows platforms. 
 
 
 Some research shows,
 that \texttt{inkscape} in the version current at time of this writing
-exports mixed pdf and latex: If invoked as 
+exports mixed PDF and latex: If invoked as 
 %
 \begin{Verbatim}[fontsize=\footnotesize]
 inkscape --export-filename=xxx.pdf --export-area-drawing --export-latex xxx.svg 
@@ -869,6 +992,26 @@ should be a picture
 }
 \caption{\label{fig:svgWithText}Some svg-picture with text FIXME\@: uniformity  }
 \end{figure}
+
+In contrast to the FIG format, 
+SVG pictures can be created by several programs. 
+Among those is also \texttt{inkscape} 
+which can be used like \texttt{xfig}  
+as a grapical editor with export functionality. 
+In contrast to FIG format, 
+SVG is essentially human readable, 
+in fact an XML derivative. 
+The author calls it ``essentially'', 
+referring to the fact, that the format is quite wordy 
+as is illustrated by the source code 
+\href{\urlSite fromTex/F4_07someSvg.svg}{\texttt{F4\_07someSvg.svg}} 
+for the above picture. 
+Nevertheless, it can be an advantage 
+to go into internals and manipulate with a text editor. 
+Pasting the into vscode one can see the highlighting, 
+and a preview, 
+of course provided the extensions Section~\ref{sec:devel} 
+and given by Listing~\ref{lst:instVScode} are installed. 
 
 
 \section{Pictures which are not transformed}\label{sec:picasis}
