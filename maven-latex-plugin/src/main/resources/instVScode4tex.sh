@@ -1,9 +1,28 @@
 #!/bin/sh -
 
+# Explanation 
+# code --extensions-dir <dir>
+#     Set the root path for extensions.
+# code --list-extensions
+#     List the installed extensions.
+# code --show-versions
+#     Show versions of installed extensions, when using --list-extension.
+# code --install-extension (<extension-id> | <extension-vsix-path>)
+#     Installs an extension.
+# code --uninstall-extension (<extension-id> | <extension-vsix-path>)
+#     Uninstalls an extension.
+# code --enable-proposed-api (<extension-id>)
+#     Enables proposed API features for extensions. 
+#     Can receive one or more extension IDs to enable individually.
+
 echo "latex and friends"
 # latex and friends 
 code --force --install-extension james-yu.latex-workshop
 code --force --install-extension mathematic.vscode-latex
+# lua 
+# [lua]: Couldn't find message for key config.runtime. ...
+#code --force --install-extension sumneko.lua
+
 # bib
 code --force --install-extension phr0s.bib
 code --force --install-extension twday.bibmanager
