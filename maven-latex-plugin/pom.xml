@@ -173,12 +173,12 @@
     <fig2devPtxOptions></fig2devPtxOptions>
     <fig2devPdfEpsOptions></fig2devPdfEpsOptions>
     <gnuplotOptions></gnuplotOptions>
-    <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"
+    <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s 'outputtemplate="%j.mps"'
     </metapostOptions>
     <svg2devOptions>--export-area-drawing --export-latex</svg2devOptions>
     <ebbOptions>-v</ebbOptions>
 
-    <urlSite>http://www.simuline.eu/LatexMavenPlugin/</urlSite>
+    <urlSite>https://www.simuline.eu/LatexMavenPlugin/</urlSite>
 	</properties>
 
 	<dependencies>
