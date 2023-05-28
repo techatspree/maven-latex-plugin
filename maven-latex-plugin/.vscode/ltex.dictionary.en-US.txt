@@ -30,3 +30,7 @@ pygmentized
 pygments
 pythontexW
 pythontex-files-xxx
+Ghostscript
+MetaPost
+MetaUML
+TikZ

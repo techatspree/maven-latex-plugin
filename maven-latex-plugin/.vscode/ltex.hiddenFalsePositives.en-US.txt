@@ -33,3 +33,5 @@
 {"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QThe converter .\\E$"}
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QtexFhtLoaded should be a picture   F5_08depy2out.ptx Conversion of a depytx-file using depythontex\\E$"}
 {"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QThe pattern to match in java style is (PythonTeX: .+ -| - Current: ) [1-9][0-9]* error (s ), [0-9]+ warning (s )\\E$"}
+{"rule":"BE_INTEREST_IN","sentence":"^\\QAlthough seemingly supported by \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q only, metapost is interesting in its own right, as it is a graphical programming language, Turing complete, much like postscript.\\E$"}
+{"rule":"BE_INTEREST_IN","sentence":"^\\QAlthough seemingly supported by \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q only, MetaPost is interesting in its own right, as it is a graphical programming language, Turing complete, much like postscript, and allows also declarative programming.\\E$"}
