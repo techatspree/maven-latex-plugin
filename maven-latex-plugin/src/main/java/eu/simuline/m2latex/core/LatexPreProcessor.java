@@ -940,8 +940,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				this.settings.getTexPath(), // ****
 				command,
 				args,
-				TexFileUtils.replaceSuffix(mpFile,
-						"1" + SUFFIX_MPS));
+				TexFileUtils.replaceSuffix(mpFile, SUFFIX_MPS));
 
 		// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx
 		// FIXME: what is xxx.mpx for?
@@ -976,7 +975,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		FileFilter filter = new FileFilter() {
 			public boolean accept(File file) {
 				return !file.isDirectory()
-						&&  file.getName().matches(root + "\\d+" + SUFFIX_MPS);
+						&&  file.getName().matches(root + SUFFIX_MPS);
 			}
 		};
 		// may log WFU01, EFU05
