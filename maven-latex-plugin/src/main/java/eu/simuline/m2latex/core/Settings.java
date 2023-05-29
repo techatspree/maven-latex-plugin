@@ -602,9 +602,52 @@ public class Settings {
      */
     @Parameter(name = "metapostOptions", 
 	       defaultValue = "-interaction=nonstopmode -recorder " + 
-	       "-s prologues=2")
+	       "-s prologues=2 -s 'outputtemplate=\"%j.mps\"'")
     private String metapostOptions = 
 	"-interaction=nonstopmode -recorder -s prologues=2 -s 'outputtemplate=\"%j.mps\"'";
+
+      /**
+     * The pattern is applied linewise to the log-file of mpost 
+     * and matching indicates an error 
+     * emitted by the command {@link #metapostCommand}. 
+     * <p>
+     * The default value is choosen to match quite exactly 
+     * the latex errors in the log file, no more no less. 
+     * Since no official documentation was found, 
+     * the default pattern may be incomplete. 
+     * In fact it presupposes, that $latex2pdfOptions 
+     * does not contain `<code>-file-line-error-style</code>'.   
+     * <p>
+     * If the current default value is not appropriate, 
+     * please overwrite it in the configuration 
+     * and notify the developer of this plugin of the deficiency. 
+     * The default value is `<code>(^! )</code>' (note the space). 
+     */
+    // FIXME: Problem with line error style 
+    @Parameter(name = "patternErrMPost", defaultValue = "(^! )")
+    private String patternErrMPost = "(^! )";
+
+    /**
+     * The pattern is applied linewise to the log-file of mpost 
+     * and matching indicates a warning 
+     * emitted by the command {@link #metapostCommand}. 
+     * <p>
+     * This pattern may never be ensured to be complete, 
+     * because any library may indicate a warning 
+     * with its own pattern any new package may break completeness. 
+     * Nevertheless, the default value aims completeness 
+     * while be restrictive enough 
+     * not to indicate a warning where none was emitted. 
+     * <p>
+     * If the current default value is not appropriate, 
+     * please overwrite it in the configuration 
+     * and notify the developer of this plugin of the deficiency. 
+     * The default value is given below. 
+     */
+    // mpost --no-parse-first-line yields 
+    // warning: mpost: unimplemented option
+     @Parameter(name = "patternWarnMPost", defaultValue = "^([Ww]arning: )")
+    private String patternWarnMPost = "^([Ww]arning: )";
 
     /**
      * The command for conversion of svg-files 
@@ -1983,6 +2026,19 @@ public class Settings {
         return  this.metapostOptions;
     }
 
+    // same pattern as for latex 
+    public String getPatternErrMPost() {
+        return  this.patternErrMPost;
+    }
+
+    // same pattern as for latex 
+    // FIXME: counterexample
+    //Preloading the plain mem file, version 1.005) ) (./F4_05someMetapost.mp
+    // Warning: outputtemplate=0: value has the wrong type, assignment ignored.
+    public String getPatternWarnMPost() {
+        return  this.patternWarnMPost;
+  }
+
    // for ant task only 
     public String getSvg2devCommand() throws BuildFailureException {
         return getCommand(ConverterCategory.Svg2Dev);
@@ -2016,11 +2072,6 @@ public class Settings {
     }
 
     public String getPatternErrLatex() {
-	return  this.patternErrLatex;
-    }
-
-    // same pattern as for latex 
-    public String getPatternErrMPost() {
 	return  this.patternErrLatex;
     }
 
@@ -2449,6 +2500,19 @@ public class Settings {
    	public void addText(String args) {
    	    Settings.this.setMetapostOptions(args);
    	}
+    }
+
+        // same pattern as for latex 
+        public void setPatternErrMPost(String patternErrMPost) {
+          this.patternErrMPost = patternErrMPost;
+      }
+
+      // same pattern as for latex 
+      // FIXME: counterexample
+      //Preloading the plain mem file, version 1.005) ) (./F4_05someMetapost.mp
+      // Warning: outputtemplate=0: value has the wrong type, assignment ignored.
+      public void setPatternWarnMPost(String patternWarnMPost) {
+          this.patternWarnMPost = patternWarnMPost;
     }
 
     public void setSvg2devCommand(String svg2devCommand) {
@@ -2906,6 +2970,8 @@ public class Settings {
         sb.append(", gnuplotOptions=").append(this.gnuplotOptions);
         sb.append(", metapostCommand=").append(this.metapostCommand);
         sb.append(", metapostOptions=").append(this.metapostOptions);
+        sb.append(", patternErrMPost=").append(this.patternErrMPost);
+        sb.append(", patternWarnMPost=").append(this.patternWarnMPost);
         sb.append(", svg2devCommand=").append(this.svg2devCommand);
         sb.append(", svg2devOptions=").append(this.svg2devOptions);
         sb.append(", createBoundingBoxes=").append(this.createBoundingBoxes);
