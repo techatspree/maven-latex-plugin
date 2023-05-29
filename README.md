@@ -33,7 +33,7 @@ and the [build file](./maven-latex-plugin/build.xml)
 illustrate installation and usage. 
 
 The improvements the author plans 
-are collected as ['TO-DOs'](#ss:todo) without special ordering. 
+are collected as ['To-Dos'](#ss:todo) without special ordering. 
 The reader is encouraged to contribute to continuous improvement 
 by [contacting me](mailto:rei3ner@arcor.de). 
 Both, new ideas and bare coding, both are welcome. 
@@ -191,9 +191,9 @@ including those provided by the package `texlive-graphix`.
 The following graphic formats are supported: 
 
 - `tikz`/`pgf` is included by the `tex` converter 
-  and needs no action from the **LaTeX builder**. 
+  and needs no action from the **LaTeX builder** 
   Note that `tikzedt` is a good graphical editor for that. 
-- metapost, `.mp` is a native format 
+- MetaPost, `.mp` is a native format 
   in used in the context of the `tex` format
 - `jpg`, `png` and by need other pixel formats are via package `graphix` 
 - gnuplot, `.gp` and SVG are converted into a `tex` file 
