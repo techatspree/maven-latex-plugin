@@ -728,10 +728,17 @@ The details are as follows:
     but for later versions of this software, to allows to track dependencies. 
   \item[-s prologues=2] In general the \texttt{-s} assigns an internal key a value. 
   Here it is the kind of the prologue. 
-  The value 2 is a compromize between safe quality of output and length of artifact. 
-  \item[outputtemplate="\%j.mps"] Determines the name of the output file. 
+  The value 2 is a compromise between safe quality of output and length of artifact. 
+  As described in detail in~\cite{MPost}, Section 8.2, a value of 0 is sufficient for pdf output. 
+  Also, if no \LaTeX{} is used to typeset labels, the prologue value is irrelevant. 
+  The value 1 is deprecated, 2 yields a prologue only slightly longer than with 0, 
+  whereas the savest setting 3 yields a huge prologue. 
+  So the compromize is 2 and if 3 is needed in individual cases, 
+  this setting can be overwritten in the MP file. 
+  \item[outputtemplate="\%j.mps"] determines the name of the output file. 
   The default given here uses the jobname and the canonical ending. 
-  Unlike the default value of \texttt{mpost}, no number of the figure within the metapost file is given. 
+  Unlike the default value of \texttt{mpost}, 
+  no number of the figure within the metapost file is given. 
   This comes from the fact that we assume a single figure only 
   and ignore the number of the figure. 
   \end{description}
