@@ -942,12 +942,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				args,
 				TexFileUtils.replaceSuffix(mpFile, SUFFIX_MPS));
 
-		// from xxx.mp creates xxx1.mps, xxx.log and xxx.mpx
-		// FIXME: what is xxx.mpx for?
+		// from xxx.mp creates xxx.mps, xxx.log and for tex labels xxx.mpx
+    // with -recorder option in addition xxx.fls 
+		// FIXME: monitoring of those additional files. 
+    // keep trying to be in one line with the latex processors 
 		File logFile = TexFileUtils.replaceSuffix(mpFile, SUFFIX_LOG);
 		// may log WFU03, EAP01, EAP02, WAP04
-		logErrs(logFile, command, this.settings.getPatternErrMPost());
-		// FIXME: what about warnings?
+		logErrs (logFile, command, this.settings.getPatternErrMPost());
+    // may log warnings WFU03, WAP03, WAP04
+    logWarns(logFile, command, this.settings.getPatternWarnMPost());
 	}
 
 	/**
