@@ -31,33 +31,33 @@ This is one of
 %
 \begin{itemize}
 \item[fig2dev]
-The converter of fig-files into mixed latex- and pdf-files. 
+The converter of fig-files into mixed latex- and PDF-files. 
 \item[gnuplot]
-The converter of gnuplot-files into mixed latex- and pdf-files. 
+The converter of gnuplot-files into mixed latex- and PDF-files. 
 \item[metapost]
-The converter of metapost-files into mixed latex- and pdf-files.
+The converter of MetaPost-files into mixed latex- and PDF-files.
 \item[latex2pdf]
-The converter of latex-files into pdf-files. 
+The converter of latex-files into PDF-files. 
 \item[bibtex]
 The creator of a bibliography from an aux-file.
-\item[MakeIndex]
+\item[makeindex]
 The makeindex utility creating an index. 
-\item[MakeGlossaries]
+\item[makeglossaries]
 The makeglossaries utility creating a glossary. 
 \item[pythontex]
 The utility to invoke python and other languages from within \LaTeX{} 
-and to replace the code by its results dynamicallyt. 
+and to replace the code by its results dynamically. 
 \item[depythontex]
-The utility to replace code finaly after a run of \texttt{pythontex}. 
+The utility to replace code finally after a run of \texttt{pythontex}. 
 \item[tex4ht]
-The converter of latex into html and also into odt, 
+The converter of latex into HTML and also into ODT, 
 depending on the parameters. 
 \item[latex2rtf]
-The converter of latex-files into rtf-files. 
+The converter of latex-files into RTF-files. 
 \item[odt2doc]
-The converter of odt-files into doc(x)-files. % chktex 36
+The converter of ODT-files into doc(x)-files. % chktex 36
 \item[pdf2txt]
-The converter of pdf-files into txt-files. 
+The converter of PDF-files into TXT-files. 
 \item[chktex]
 A code-checker converting in a sense a latex main file into a log-file 
 containing errors, warnings and further messages. 
@@ -83,7 +83,7 @@ Essentially, there are two kinds of parameters:
 Most are just passed to the converters invoked by this software. 
 The parameters of this software 
 are so that the choice of the converter, i.e.~the name of the application 
-can be configured 
+can be configured, 
 and also each converter can be almost freely configured. 
 
 Parameters not passed to an application, 
@@ -170,8 +170,8 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Indicates whether the \texttt{VersionMojo} displays warnings only 
-or also creates infos. 
-Infos refer to the version of this plugin and also on its git commit, 
+or also creates pieces of info. 
+Info refers to the version of this plugin and also on its git commit, 
 but also on the versions of the converters found 
 and lists the converters excluded, i.e.\@ those not used
 and thus not tested on version.
@@ -195,7 +195,7 @@ in case something goes wrong.
 The latex source directory as a string 
 relative to \texttt{\$baseDirectory}, 
 containing \texttt{\$texSrcProcDirectory}. 
-This directory determines also the sub-directory of 
+This directory determines also the subdirectory of 
 \texttt{\$outputDirectory} to lay down the generated artifacts. 
 The default value is ``\texttt{src/site/tex}'' on Unix systems. 
 \end{minipage}
@@ -246,9 +246,9 @@ the format \texttt{dvi} and what is based on it are not supported.
 \texttt{convertersExcluded}          & empty     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-A comma separated list of excluded {@link Converter}s 
+A comma separated list of excluded {Converter}s 
 given by their command. 
-Excluded converters need not be installed but their names must be known. 
+Excluded converters need not be installed, but their names must be known. 
 They don't show up in the version check of target \texttt{vrs} 
 and of course they are not allowed to be used. 
 % By default, this list is empty. 
@@ -261,7 +261,7 @@ The pattern to be applied to the contents of tex-files
 which identifies a \LaTeX{} main file. 
 Here we assume that the latex main file should contain 
 the declaration ``\cmd{documentclass}'' 
-or the old fashioned ``\cmd{documentstyle}'' 
+or the old-fashioned ``\cmd{documentstyle}'' 
 preceded by a few constructs. 
 Strictly speaking, this is not necessary. 
 For a more thorough discussion, 
@@ -310,7 +310,7 @@ and notify the developer of this plugin of the deficiency.
   even if in different directories. 
   Together with \texttt{mainFilesExcluded}, 
   this is used for document development 
-  to build the pdf of a subset of documents 
+  to build the PDF-files of a subset of documents 
   and e.g.\@ because for a site one needs all documents, 
   but with the software only the manual is shipped. 
   The empty string is the default, i.e.\@ excluding no file. 
@@ -344,7 +344,7 @@ and matching shall accept all the files
 which were created from a latex main file `\texttt{xxx.tex}'. 
 It is neither applied to directories 
 nor to `\texttt{xxx.tex}' itself. 
-It shall not comprise neither graphic files to be processed 
+It shall comprise neither graphic files to be processed 
 nor files created from those graphic files. 
 
 This pattern is applied 
@@ -368,7 +368,7 @@ is replaced by the prefix `\texttt{xxx}'.
 The sequence `\texttt{T\$T}' must always be replaced: 
 The symbol `\texttt{\$}' occurs as end-sign as `\texttt{)\$}' % chktex 9
 or as literal symbol as `\texttt{\$}'. 
-Thus `\texttt{T\$T}' is no regular occurrence 
+Thus, `\texttt{T\$T}' is no regular occurrence 
 and must always be replaced with `\texttt{xxx}'. 
 		 
 Spaces and newlines are removed 
@@ -395,7 +395,7 @@ and notify the developer of this plugin of the deficiency.
 The default pattern for identifying a \LaTeX{} main file 
 is given by Listing~\ref{lst:patternLatexMainFile}.
 
-\lstinputlisting[language=xml, basicstyle=\footnotesize,
+\lstinputlisting[language=XML, basicstyle=\footnotesize,
 firstline=141, lastline=148,
 breaklines,
 %float,
@@ -414,7 +414,7 @@ caption={The default pattern of the latex main file in a form as in a pom config
 
 This means that the latex main file is the one 
 containing \cmd{documentclass}{} for modern classes 
-and \cmd{documentstyle}{} for old fashioned ones. 
+and \cmd{documentstyle}{} for old-fashioned ones. 
 This may be preceded only by 
 %
 \begin{itemize}
@@ -495,13 +495,13 @@ which makes parsing quite fast.
 The files created from a latex main file 
 depend strongly on the compiler options 
 and on packages used in the latex main file 
-and in the tex files inputted. 
+and in the TEX-files inputted. 
 The default value 
 `\texttt{\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
 is appropriate for most parameters and packages: 
 most packages create files with names only 
 which coincide with the name of the latex main file, except the suffix. 
-This is all sufficient even for programs doing postprocessing 
+This is all sufficient even for programs doing post-processing 
 such as \texttt{bibtex}, \texttt{makeindex}, \texttt{xindy} and 
 \texttt{makeglossaries}. 
 The only exception is \texttt{splitindex} 
@@ -514,7 +514,7 @@ and finally package `\pkg{tex4ht}' is for all the rest.
 The pattern is designed 
 to match quite exactly the created files, 
 not much more and at any case not less. 
-In particular it has to comprise the files matching pattern 
+In particular, it has to comprise the files matching pattern 
 \texttt{\$patternT4htOutputFiles}. 
 Nevertheless, since any new package may break the pattern, 
 and not every package is well documented, 
@@ -561,7 +561,7 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The fig2dev command for conversion of fig-files into various formats. 
-Currently only \texttt{pdf} combined with \texttt{ptx} is supported. 
+Currently, only \texttt{PDF} combined with \texttt{ptx} is supported. 
 %The default value is '\texttt{fig2dev}'. 
 \end{minipage}
 } \\
@@ -588,7 +588,7 @@ the option `\texttt{-L pdftex\_t}' specifies the language,
 \texttt{\$fig2devGenOptions} specifies the options 
 common for the two output languages 
 `\texttt{pdftex}' and `\texttt{pdftex\_t}' 
-and `\texttt{-p xxx.pdf}' specifies the pdf-file to be included. 
+and `\texttt{-p xxx.pdf}' specifies the PDF-file to be included. 
 % The default value for this option is the empty string. 
 \end{minipage}
 } \\
@@ -611,8 +611,8 @@ common for the two output languages
 \begin{minipage}{0.95\linewidth}
 The command for conversion of gnuplot-files 
 into various formats. 
-Currently only pdf (graphics) 
-combined with pdf\_t (latex-texts) is supported. 
+Currently, only \texttt{pdf} (graphics) 
+combined with \texttt{pdf\_t} (latex-texts) is supported. 
 % The default value is 'gnuplot'. 
 \end{minipage}
 } \\
@@ -667,9 +667,9 @@ For more details see Section~\ref{subsec:svg2devOptions}.
 \texttt{createBoundingBoxes} & \texttt{false} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-   Whether for pixel formats like jpg and png 
+   Whether for pixel formats like JPG and PNG 
    command \texttt{\$ebbCommand} is invoked to determine the bounding box. 
-   This is relevant, if at all, only in dvi mode. 
+   This is relevant, if at all, only in dvi-mode. 
    Note that the package \texttt{bmpsize} is an alternative 
    to invoking \texttt{ebb}, 
    which seems not to work for \texttt{xelatex}. 
@@ -677,7 +677,7 @@ For more details see Section~\ref{subsec:svg2devOptions}.
    The \texttt{\$dvi2pdfCommand} given by the default, \texttt{dvipdfmx}, 
    seems the only which yields the picture sizes as in PDF mode 
    which fit well. 
-   Note also that miktex does not offer neither package \pkg{bmpsize} 
+   Note also that \miktex{} offers neither package \pkg{bmpsize} 
    nor \texttt{ebb}. 
    This alone requires to switch off invocation of \texttt{ebb} by default. 
    So the default value is \texttt{false}. 
@@ -687,7 +687,7 @@ For more details see Section~\ref{subsec:svg2devOptions}.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The command to create bounding box information 
-from jpg-files and from png-files. 
+from JPG-files and from PNG-files. 
 This is run twice: 
 once with parameter `\texttt{-m}' 
 to create `.bb'-files for driver `\texttt{dvipdfm}' and 
@@ -732,8 +732,8 @@ The details are as follows:
   As described in detail in~\cite{MPost}, Section 8.2, a value of 0 is sufficient for pdf output. 
   Also, if no \LaTeX{} is used to typeset labels, the prologue value is irrelevant. 
   The value 1 is deprecated, 2 yields a prologue only slightly longer than with 0, 
-  whereas the savest setting 3 yields a huge prologue. 
-  So the compromize is 2 and if 3 is needed in individual cases, 
+  whereas the safest setting 3 yields a huge prologue. 
+  So the compromise is 2 and if 3 is needed in individual cases, 
   this setting can be overwritten in the MP file. 
   \item[outputtemplate="\%j.mps"] determines the name of the output file. 
   The default given here uses the jobname and the canonical ending. 
@@ -806,7 +806,7 @@ Parameter        & Default  \\
 \texttt{latex2pdfCommand}       & \lualatex{}      \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The \LaTeX{} command to create above all a pdf-file with. 
+The \LaTeX{} command to create above all a PDF-file with. 
 Further formats are dvi and xdv and also other formats based on these. 
 Expected values are \lualatex, \xelatex{} and \pdflatex. 
 
@@ -892,7 +892,7 @@ rerun \LaTeX{} and have a look at the log-file.
 \texttt{pdfViaDvi}    & \texttt{false}          \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Whether creation of pdf-files from \LaTeX-files 
+Whether creation of PDF-files from \LaTeX-files 
 goes via dvi-files. 
 
 If \texttt{\$pdfViaDvi} is set 
@@ -920,10 +920,10 @@ These are both created by \texttt{\$ebbCommand}.
 Of course, the target dvi is not affected: 
 This uses always the dvi-format. 
 What is also affected are the tasks 
-creating html, odt or docs: 
+creating HTML, ODT or docs: 
 Although these are based on \texttt{htlatex} which is always dvi-based, 
 the preprocessing is done in dvi or in pdf. 
-Also the task txt is affected. 
+Also the task TXT is affected. 
 
 As indicated in \texttt{\$latex2pdfCommand}, 
 the processor \xelatex{} does not create \texttt{dvi} 
@@ -941,7 +941,7 @@ Thus, with \xelatex{} the flag \texttt{\$pdfViaDvi} may not be set.
 \texttt{dvi2pdfCommand}   & \texttt{dvipdfmx}         \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The driver to convert dvi into pdf-files. 
+The driver to convert dvi into PDF-files. 
 Note that this must fit the options 
 of the packages `\pkg{xcolor}', `\pkg{graphicx}' and, provided no autodetection, \pkg{hyperref}. 
 Sensible values are `\texttt{dvipdfm}', `\texttt{dvipdfmx}' and `\texttt{dvipdft}', 
@@ -957,15 +957,15 @@ but does not provide proper options; so not allowed.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command \texttt{\$dvi2pdfCommand}. 
-he default value is '\texttt{-V1.7}' specifying the pdf version to be created. 
-The default version for pdf format for \texttt{\$dvi2pdfCommand} is version 1.5. 
-The reason for using version 1.7 is \texttt{\$fig2dev} which creates pdf figures in version 1.7 
-and forces \texttt{\$latex2pdfCommand} in dvi mode to include pdf version 1.7 
+The default value is '\texttt{-V1.7}' specifying the PDF version to be created. 
+The default version for PDF format for \texttt{\$dvi2pdfCommand} is version 1.5. 
+The reason for using version 1.7 is \texttt{\$fig2dev} which creates PDF figures in version 1.7 
+and forces \texttt{\$latex2pdfCommand} in DVI mode to include PDF version 1.7 
 and finally \texttt{\$dvi2pdfCommand} to use that also to avoid warnings. 
 
-Using \texttt{\$latex2pdfCommand} if used to create pdf directly, 
-by default also pdf version 1.5 is created. 
-For sake of uniformity, it is advisable to create pdf version 1.7 also. 
+Using \texttt{\$latex2pdfCommand} if used to create PDF directly, 
+by default also PDF version 1.5 is created. 
+For sake of uniformity, it is advisable to create PDF version 1.7 also. 
 In future this will be done uniformly through \texttt{\textbackslash{}DocumentMetadata} command. 
 %The default value is '-V1.7' but should be the empty string.
 \end{minipage}
@@ -1027,11 +1027,11 @@ The details are as follows:
   This seems mandatory. 
   \item[-synctex=1] to create \texttt{.synctex.gz} files needed for interaction between editor and viewer. 
   \item[-recorder] Strictly speaking not necessary at the current stage, 
-    but for later versions of this software, to allows to track dependencies. 
-  \item[-shell-escape] allows the tex engine to access the shell to execute. 
+    but for later versions of this software, to allows tracking dependencies. 
+  \item[-shell-escape] allows the TEX engine to access the shell to execute. 
   This is needed for some reason for driver \texttt{dvipdfmx} 
   which seems to be the sole one supporting 
-  pdf-pictures in dvi-mode and pdf-pictures in pdf-mode. 
+  PDF-pictures in DVI-mode and PDF-pictures in PDF-mode. 
 
   An alternative would be \texttt{-shell-restricted}. 
   CAUTION\@: In \miktex{} this is \texttt{--enable-write18} instead. 
@@ -1623,7 +1623,7 @@ Accordingly, the pattern texttt{patternWarnPyTex} is by default
 \end{Verbatim}
    
 
-\section{Parameters for Conversion \LaTeX{} to html}%
+\section{Parameters for Conversion \LaTeX{} to HTML}%
 %\section{Parameters for the \LaTeX-to-html Conversion}
 \label{sec:settingsLatex2Html}
 
@@ -1696,7 +1696,7 @@ The pattern is designed to match quite exactly
 the files to be copied to \texttt{\$targetSiteDirectory}, 
 for the goal `\texttt{html}', 
 not much more and at any case not less. 
-since \texttt{\$tex2htCommand} is not well documented, 
+Since \texttt{\$tex2htCommand} is not well documented, 
 and still subject to development, 
 this pattern cannot be guaranteed to be final. 
 
@@ -1777,8 +1777,8 @@ This section describes the parameters
 of the converter from and to further formats 
 which are given in Table~\ref{tab:paramExt}. 
 
-These converters convert latex into rtf directly, 
-they convert odt into doc-like documents and pdf into pure text. 
+These converters convert latex into RTF directly, 
+they convert ODT into doc-like documents and pdf into pure text. 
 A special case is the code-checker 
 in a sense converting latex into a log-file. 
 For each of them, the name of the command can be specified 
@@ -1800,7 +1800,7 @@ Parameter        & Default  \\
 \texttt{latex2rtfCommand}    & \texttt{latex2rtf}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The latex2rtf command to create rtf from latex directly. 
+The latex2rtf command to create RTF from latex directly. 
 %The default value is '\texttt{latex2rtf}'. 
 \end{minipage}
 } \\
@@ -1840,7 +1840,7 @@ to keep permissions and timestamp of the original document.
 \texttt{pdf2txtCommand}      & \texttt{pdftotext}        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The pdf2txt-command for converting pdf-files 
+The pdf2txt-command for converting PDF-files 
 into plain text files. 
 %The default value is '\texttt{pdftotext}'. 
 \end{minipage}
@@ -2136,7 +2136,7 @@ ranging from byte equivalence to some kind of visual equivalence.
   \texttt{diffPdfCommand}      & \texttt{diff}  \\
   \multicolumn2{|l|}{
   \begin{minipage}{0.95\linewidth}
-    The diff-command for diffing pdf-files strictly or just visually 
+    The diff-command for diffing PDF-files strictly or just visually 
     to check that the created pdf files are equivalent with prescribed ones. 
     CAUTION\@: There are two philsophies: 
     Either the latex source files are created in a way that they reproduce strictly. 
