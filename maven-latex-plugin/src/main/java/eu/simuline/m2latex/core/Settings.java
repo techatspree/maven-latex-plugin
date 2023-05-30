@@ -34,6 +34,11 @@ import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only
  * The settings for a maven plugin and for an ant task. 
  * These are the elements of the maven pom in element <code>settings</code> 
  * and accordingly for the ant build file. 
+ * <p>
+ * For the options we have the contract, 
+ * that in the initial value they are trimmed and separated by a single blank. 
+ * The setter methods are so that before setting the new value is trimmed 
+ * and multiple whitespaces are replaced by a single blank. 
  */
 public class Settings {
 
@@ -2416,19 +2421,19 @@ public class Settings {
     this.fig2devCommand = fig2devCommand;
   }
 
+  private static String beautifyOptions(String rawOption) {
+    return rawOption.replaceAll("(\t|\n| )+", " ").trim();
+  }
   public void setFig2devGenOptions(String fig2devGenOptions) {
-    this.fig2devGenOptions =
-        fig2devGenOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.fig2devGenOptions = beautifyOptions(fig2devGenOptions);
   }
 
   public void setFig2devPtxOptions(String fig2devPtxOptions) {
-    this.fig2devPtxOptions =
-        fig2devPtxOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.fig2devPtxOptions = beautifyOptions(fig2devPtxOptions);
   }
 
   public void setFig2devPdfEpsOptions(String fig2devPdfEpsOptions) {
-    this.fig2devPdfEpsOptions =
-        fig2devPdfEpsOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.fig2devPdfEpsOptions = beautifyOptions(fig2devPdfEpsOptions);
   }
 
   public void setGnuplotCommand(String gnuplotCommand) {
@@ -2436,7 +2441,7 @@ public class Settings {
   }
 
   public void setGnuplotOptions(String gnuplotOptions) {
-    this.gnuplotOptions = gnuplotOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.gnuplotOptions = beautifyOptions(gnuplotOptions);
   }
 
   public void setMetapostCommand(String metapostCommand) {
@@ -2445,7 +2450,7 @@ public class Settings {
 
   // setter method for metapostOptions in maven 
   public void setMetapostOptions(String metapostOptions) {
-    this.metapostOptions = metapostOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.metapostOptions = beautifyOptions(metapostOptions);
   }
 
   // method introduces metapostOptions in ant 
@@ -2468,9 +2473,10 @@ public class Settings {
     this.patternErrMPost = patternErrMPost;
   }
 
-  // same pattern as for latex 
-  // FIXME: counterexample
-  //Preloading the plain mem file, version 1.005) ) (./F4_05someMetapost.mp
+  // not same pattern as for latex. 
+  // in particular, not dependent on library, hm.. mostly? 
+  // Example: 
+  // Preloading the plain mem file, version 1.005) ) (./F4_05someMetapost.mp
   // Warning: outputtemplate=0: value has the wrong type, assignment ignored.
   public void setPatternWarnMPost(String patternWarnMPost) {
     this.patternWarnMPost = patternWarnMPost;
@@ -2481,7 +2487,7 @@ public class Settings {
   }
 
   public void setSvg2devOptions(String svg2dev) {
-    this.svg2devOptions = svg2devOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.svg2devOptions = beautifyOptions(svg2devOptions);
   }
 
   public void setCreateBoundingBoxes(boolean createBoundingBoxes) {
@@ -2493,7 +2499,7 @@ public class Settings {
   }
 
   public void setEbbOptions(String ebbOptions) {
-    this.ebbOptions = ebbOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.ebbOptions = beautifyOptions(ebbOptions);
   }
 
   public void setLatex2pdfCommand(String latex2pdfCommand) {
@@ -2514,7 +2520,7 @@ public class Settings {
    */
   // setter method for latex2pdfOptions in maven 
   public void setLatex2pdfOptions(String args) {
-    this.latex2pdfOptions = args.replaceAll("(\t|\n| )+", " ").trim();
+    this.latex2pdfOptions = beautifyOptions(args);
   }
 
   // method introduces latex2pdfOptions in ant 
@@ -2593,8 +2599,8 @@ public class Settings {
   }
 
   // setter method for patternReRunLatex in maven 
-  public void setPatternReRunLatex(String pattern) {
-    this.patternReRunLatex = pattern.replaceAll("(\t|\n)+", "").trim();
+  public void setPatternReRunLatex(String patternReRunLatex) {
+    this.patternReRunLatex = patternReRunLatex.replaceAll("(\t|\n)+", "").trim();
   }
 
   // method introduces patternReRunLatex in ant 
@@ -2625,7 +2631,7 @@ public class Settings {
   }
 
   public void setBibtexOptions(String bibtexOptions) {
-    this.bibtexOptions = bibtexOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.bibtexOptions = beautifyOptions(bibtexOptions);
   }
 
   // setter method for patternErrBibtex in maven 
@@ -2673,8 +2679,7 @@ public class Settings {
   }
 
   public void setMakeIndexOptions(String makeIndexOptions) {
-    this.makeIndexOptions =
-        makeIndexOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.makeIndexOptions = beautifyOptions(makeIndexOptions);
   }
 
   // setter method for patternErrMakeIndex in maven 
@@ -2744,8 +2749,7 @@ public class Settings {
   }
 
   public void setSplitIndexOptions(String splitIndexOptions) {
-    this.splitIndexOptions =
-        splitIndexOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.splitIndexOptions = beautifyOptions(splitIndexOptions);
   }
 
   public void setMakeGlossariesCommand(String makeGlossariesCommand) {
@@ -2753,8 +2757,7 @@ public class Settings {
   }
 
   public void setMakeGlossariesOptions(String makeGlossariesOptions) {
-    this.makeGlossariesOptions =
-        makeGlossariesOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.makeGlossariesOptions = beautifyOptions(makeGlossariesOptions);
   }
 
   public void setPatternErrMakeGlossaries(String patternErrMakeGlossaries) {
@@ -2781,8 +2784,7 @@ public class Settings {
   }
 
   public void setPythontexOptions(String pythontexOptions) {
-    this.pythontexOptions =
-        pythontexOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.pythontexOptions = beautifyOptions(pythontexOptions);
   }
 
   public void setPatternErrPyTex(String patternErrPyTex) {
@@ -2809,8 +2811,7 @@ public class Settings {
   }
 
   public void setTex4htStyOptions(String tex4htStyOptions) {
-    this.tex4htStyOptions =
-        tex4htStyOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.tex4htStyOptions = beautifyOptions(tex4htStyOptions);
   }
 
   public void setTex4htOptions(String tex4htOptions) {
@@ -2818,7 +2819,7 @@ public class Settings {
   }
 
   public void setT4htOptions(String t4htOptions) {
-    this.t4htOptions = t4htOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.t4htOptions = beautifyOptions(t4htOptions);
   }
 
   // setter method for patternT4htOutputFiles in maven 
@@ -2848,8 +2849,7 @@ public class Settings {
 
   // FIXME: replaceAll: should be unified. 
   public void setLatex2rtfOptions(String latex2rtfOptions) {
-    this.latex2rtfOptions =
-        latex2rtfOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.latex2rtfOptions = beautifyOptions(latex2rtfOptions);
   }
 
   public void setOdt2docCommand(String odt2docCommand) {
@@ -2857,7 +2857,7 @@ public class Settings {
   }
 
   public void setOdt2docOptions(String odt2docOptions) {
-    this.odt2docOptions = odt2docOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.odt2docOptions = beautifyOptions(odt2docOptions);
   }
 
   public void setPdf2txtCommand(String pdf2txtCommand) {
@@ -2866,7 +2866,7 @@ public class Settings {
 
   // getter commands: for ant task only. 
   public void setPdf2txtOptions(String pdf2txtOptions) {
-    this.pdf2txtOptions = pdf2txtOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.pdf2txtOptions = beautifyOptions(pdf2txtOptions);
   }
 
   public void setChkTexCommand(String chkTexCommand) {
@@ -2874,7 +2874,7 @@ public class Settings {
   }
 
   public void setChkTexOptions(String chkTexOptions) {
-    this.chkTexOptions = chkTexOptions.replaceAll("(\t|\n| )+", " ").trim();
+    this.chkTexOptions = beautifyOptions(chkTexOptions);
   }
 
   public void setDiffPdfCommand(String diffPdfCommand) {
