@@ -2344,7 +2344,7 @@ public class Settings {
   }
 
   public void setConvertersExcluded(String convertersExcluded) {
-    this.convertersExcluded = convertersExcluded;
+    this.convertersExcluded = convertersExcluded.trim();
   }
 
   // setter method for patternLatexMainFile in maven 
