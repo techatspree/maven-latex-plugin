@@ -173,8 +173,7 @@
     <fig2devPtxOptions></fig2devPtxOptions>
     <fig2devPdfEpsOptions></fig2devPdfEpsOptions>
     <gnuplotOptions></gnuplotOptions>
-    <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s 'outputtemplate="%j.mps"'
-    </metapostOptions>
+    <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"</metapostOptions>
     <svg2devOptions>--export-area-drawing --export-latex</svg2devOptions>
     <ebbOptions>-v</ebbOptions>
 

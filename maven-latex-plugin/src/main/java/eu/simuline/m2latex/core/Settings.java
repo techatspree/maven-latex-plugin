@@ -604,20 +604,20 @@ public class Settings {
    */
   @Parameter(name = "metapostOptions",
       defaultValue = "-interaction=nonstopmode -recorder "
-          + "-s prologues=2 -s 'outputtemplate=\"%j.mps\"'")
+          + "-s prologues=2 -s outputtemplate=\"%j.mps\"")
   private String metapostOptions =
-      "-interaction=nonstopmode -recorder -s prologues=2 -s 'outputtemplate=\"%j.mps\"'";
+      "-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate=\"%j.mps\"";
 
   /**
-  * The pattern is applied linewise to the log-file of mpost 
+  * The pattern is applied line by line to the log-file of mpost 
   * and matching indicates an error 
   * emitted by the command {@link #metapostCommand}. 
   * <p>
-  * The default value is choosen to match quite exactly 
+  * The default value is chosen to match quite exactly 
   * the latex errors in the log file, no more no less. 
   * Since no official documentation was found, 
   * the default pattern may be incomplete. 
-  * In fact it presupposes, that $latex2pdfOptions 
+  * In fact, it presupposes, that {@link #metapostOptions} 
   * does not contain `<code>-file-line-error-style</code>'.   
   * <p>
   * If the current default value is not appropriate, 
@@ -630,7 +630,7 @@ public class Settings {
   private String patternErrMPost = "(^! )";
 
   /**
-   * The pattern is applied linewise to the log-file of mpost 
+   * The pattern is applied line by line to the log-file of mpost 
    * and matching indicates a warning 
    * emitted by the command {@link #metapostCommand}. 
    * <p>
