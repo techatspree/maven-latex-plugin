@@ -647,11 +647,53 @@ A sequence of at least one blank separate the proper options.
 %'\texttt{-interaction=nonstopmode -recorder -s prologues=2}'. 
 \end{minipage}
 } \\
+\texttt{patternErrMPost} & \texttt{(\^{}!\ )} \\% chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line by line to the log-file of \texttt{\$metapostCommand} 
+and matching indicates an error 
+emitted by the command \texttt{\$metapostCommand}. 
+
+The default value is chosen to match quite exactly 
+the latex errors in the log file, no more no less. 
+Since no official documentation was found, 
+
+The default pattern may be incomplete. 
+In fact, it presupposes, that \texttt{\$metapostOptions}  
+does not contain `\texttt{-file-line-error-style}'.   
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+%The default value is `<code>(^! )</code>' (note the space).  
+\end{minipage}
+} \\
+\texttt{patternWarnMPost} & \texttt{\^{}([Ww]arning: )} \\% chktex 37
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+The pattern is applied line by line to the log-file of \texttt{\$metapostCommand} 
+and matching indicates a warning 
+emitted by the command \texttt{\$metapostCommand}. 
+
+This pattern may never be ensured to be complete, 
+because any library may indicate a warning 
+with its own pattern any new package may break completeness. 
+Nevertheless, the default value aims completeness 
+while be restrictive enough 
+not to indicate a warning where none was emitted. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+The default value is given below. 
+%The default value is `<code>(^! )</code>' (note the space).  
+\end{minipage}
+} \\
 \midrule
 \texttt{svg2devCommand} & \texttt{inkscape} \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The command for conversion of svg-files into a mixed format. 
+The command for conversion of SVG-files into a mixed format. 
 %The default value is 'inkscape'. 
 \end{minipage}
 } \\

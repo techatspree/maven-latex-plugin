@@ -375,6 +375,40 @@ The default value is '-interaction=nonstopmode -recorder -s prologues=2'.
 FIXME: does not work:'outputtemplate="%j_%c.mps"' -->
             <metapostOptions>${metapostOptions}</metapostOptions>
 
+            <!--  The pattern is applied line by line to the log-file of mpost 
+and matching indicates an error 
+emitted by the command $metapostCommand. 
+
+The default value is chosen to match quite exactly 
+the latex errors in the log file, no more no less. 
+Since no official documentation was found, 
+the default pattern may be incomplete. 
+In fact, it presupposes, that $metapostOptions 
+does not contain `-file-line-error-style<'.   
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+The default value is `(^! )' (note the space). -->
+            <patternErrMPost>(^! )</patternErrMPost>
+
+            <!-- The pattern is applied line by line to the log-file of mpost 
+and matching indicates a warning 
+emitted by the command $metapostCommand. 
+
+This pattern may never be ensured to be complete, 
+because any library may indicate a warning 
+with its own pattern any new package may break completeness. 
+Nevertheless, the default value aims completeness 
+while be restrictive enough 
+not to indicate a warning where none was emitted. 
+
+If the current default value is not appropriate, 
+please overwrite it in the configuration 
+and notify the developer of this plugin of the deficiency. 
+The default value is given below. -->
+            <patternWarnMPost>^([Ww]arning: )</patternWarnMPost>
+
             <!-- The command for conversion of svg-files 
 into a mixed format. 
 The default value is 'inkscape'. -->

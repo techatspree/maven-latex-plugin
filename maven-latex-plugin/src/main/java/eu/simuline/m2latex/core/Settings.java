@@ -609,22 +609,22 @@ public class Settings {
       "-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate=\"%j.mps\"";
 
   /**
-  * The pattern is applied line by line to the log-file of mpost 
-  * and matching indicates an error 
-  * emitted by the command {@link #metapostCommand}. 
-  * <p>
-  * The default value is chosen to match quite exactly 
-  * the latex errors in the log file, no more no less. 
-  * Since no official documentation was found, 
-  * the default pattern may be incomplete. 
-  * In fact, it presupposes, that {@link #metapostOptions} 
-  * does not contain `<code>-file-line-error-style</code>'.   
-  * <p>
-  * If the current default value is not appropriate, 
-  * please overwrite it in the configuration 
-  * and notify the developer of this plugin of the deficiency. 
-  * The default value is `<code>(^! )</code>' (note the space). 
-  */
+   * The pattern is applied line by line to the log-file of mpost 
+   * and matching indicates an error 
+   * emitted by the command {@link #metapostCommand}. 
+   * <p>
+   * The default value is chosen to match quite exactly 
+   * the latex errors in the log file, no more no less. 
+   * Since no official documentation was found, 
+   * the default pattern may be incomplete. 
+   * In fact, it presupposes, that {@link #metapostOptions} 
+   * does not contain `<code>-file-line-error-style</code>'.   
+   * <p>
+   * If the current default value is not appropriate, 
+   * please overwrite it in the configuration 
+   * and notify the developer of this plugin of the deficiency. 
+   * The default value is `<code>(^! )</code>' (note the space). 
+   */
   // FIXME: Problem with line error style 
   @Parameter(name = "patternErrMPost", defaultValue = "(^! )")
   private String patternErrMPost = "(^! )";
