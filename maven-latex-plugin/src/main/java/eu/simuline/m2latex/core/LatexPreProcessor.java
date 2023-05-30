@@ -972,17 +972,18 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		deleteIfExists(mpFile, SUFFIX_LOG);
 		deleteIfExists(mpFile, SUFFIX_FLS);
 		deleteIfExists(mpFile, SUFFIX_MPX);
-		// delete files xxxNumber.mps
-		String name1 = mpFile.getName();
-		final String root = name1.substring(0, name1.lastIndexOf("."));
-		FileFilter filter = new FileFilter() {
-			public boolean accept(File file) {
-				return !file.isDirectory()
-						&&  file.getName().matches(root + SUFFIX_MPS);
-			}
-		};
-		// may log WFU01, EFU05
-		this.fileUtils.deleteX(mpFile, filter, false);
+    deleteIfExists(mpFile, SUFFIX_MPS);
+		// // delete files xxxNumber.mps
+		// String name1 = mpFile.getName();
+		// final String root = name1.substring(0, name1.lastIndexOf("."));
+		// FileFilter filter = new FileFilter() {
+		// 	public boolean accept(File file) {
+		// 		return !file.isDirectory()
+		// 				&&  file.getName().matches(root + SUFFIX_MPS);
+		// 	}
+		// };
+		// // may log WFU01, EFU05
+		// this.fileUtils.deleteX(mpFile, filter, false);
 	}
 
 	/**
