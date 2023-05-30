@@ -201,7 +201,7 @@ public class Settings {
   /**
    * The pattern to be applied to the beginning of the contents of tex-files 
    * which identifies a latex main file. 
-   * The default value is choosen to match quite exactly 
+   * The default value is chosen to match quite exactly 
    * the latex main files. 
    * Here we assume that the latex main file should contain 
    * the declaration `\documentclass' 
@@ -211,7 +211,7 @@ public class Settings {
    * For a more thorough discussion, 
    * and for an alternative approach, consult the manual. 
    * <p>
-   * The default value is choosen to match quite exactly 
+   * The default value is chosen to match quite exactly 
    * the latex main files, no more no less. 
    * Since the pattern is chosen 
    * according to documentation collected from the internet, 
@@ -222,7 +222,7 @@ public class Settings {
    * and notify the developer of this plugin of the deficiency. 
    */
   // FIXME: not only on this pattern: 
-  // Matching is linewise which is inappropriate. 
+  // Matching is line by line which is inappropriate. 
   // pattern is to be applied to the start of the tex-file 
   @Parameter(name = "patternLatexMainFile")
   private String patternLatexMainFile = "\\A(\\\\RequirePackage\\s*" + // RequirePackage 
@@ -800,15 +800,15 @@ public class Settings {
       "-synctex=1 " + "-recorder " + "-shell-escape";
 
   /**
-   * The pattern is applied linewise to the log-file 
+   * The pattern is applied line by line to the log-file 
    * and matching indicates an error 
    * emitted by the command {@link #latex2pdfCommand}. 
    * <p>
-   * The default value is choosen to match quite exactly 
+   * The default value is chosen to match quite exactly 
    * the latex errors in the log file, no more no less. 
    * Since no official documentation was found, 
    * the default pattern may be incomplete. 
-   * In fact it presupposes, that $latex2pdfOptions 
+   * In fact, it presupposes, that {@link #latex2pdfOptions} 
    * does not contain `<code>-file-line-error-style</code>'.   
    * <p>
    * If the current default value is not appropriate, 
@@ -821,7 +821,7 @@ public class Settings {
   private String patternErrLatex = "(^! )";
 
   /**
-   * The pattern is applied linewise to the log-file 
+   * The pattern is applied line by line to the log-file 
    * and matching indicates a warning 
    * emitted by the command {@link #latex2pdfCommand}, 
    * disragarding warnings on bad boxes 
@@ -964,7 +964,7 @@ public class Settings {
   private String dvi2pdfOptions = "-V1.7";
 
   /**
-   * The pattern is applied linewise to the log-file 
+   * The pattern is applied line by line to the log-file 
    * and matching triggers rerunning {@link #latex2pdfCommand} 
    * if {@link #maxNumReRunsLatex} is not yet reached 
    * to ensure termination. 
