@@ -659,7 +659,7 @@ The command for conversion of svg-files into a mixed format.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The options for the command \texttt{\$svg2devCommand} 
-for exporting svg-figures into latex compatible files. 
+for exporting SVG-figures into latex compatible files. 
 For more details see Section~\ref{subsec:svg2devOptions}. 
 \end{minipage}
 } \\
@@ -715,7 +715,7 @@ are given in the metapost manual~\cite{MPost}, Appendix B.2.1.
 The current default option line for this software is as follows: 
 %
 \begin{center}
-  \texttt{\metapostOptions}
+  {\scriptsize\texttt{\metapostOptions}}
 \end{center}
 %-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"
 
@@ -1049,15 +1049,15 @@ Note that part of the default values is mandatory, in particular \texttt{nonstop
 but there are also options which are not allowed. 
 In most of the cases, the problem is that the latex engine does not create an output 
 or does not create it in the expected location or in the expected form. 
-This may apply to the main artifact, i.e.\@ pdf or dvi or xdvi 
+This may apply to the main artifact, i.e.\@ PDF or DVI or XDV, 
 but it may also apply to log files and other files. 
 
 The following list of prohibited options is illustrative but not complete: 
 %
 \begin{description}
   \item[-draftmode] switch on draft mode (generates no output PDF which causes an error) 
-  \item[-output-directory=dir] to specify the output dir 
-  \item[-aux-directory=dir] to specify the output aux-dir 
+  \item[-output-directory=dir] to specify the output directory 
+  \item[-aux-directory=dir] to specify the auxiliary output directory 
   \item[-job-name=name] effectively changes the output file name 
   \item[-quiet] makes the log quiet and 
       so circumvents error and warning detection 
@@ -1087,9 +1087,9 @@ because it prevents operation as intended for this software.
 Two options deserve particular notification, both specifying the output format: 
 %
 \begin{description}
-  \item[-no-pdf] which is specific to \xelatex, makes \xelatex{} create xdv files 
+  \item[-no-pdf] which is specific to \xelatex, makes \xelatex{} create XDV files 
   which currently cannot be further processed by this software. 
-  As soon as this software supports xdv files, this option is set by this software, 
+  As soon as this software supports XDV files, this option is set by this software, 
   not by the user. 
   \item[-output-format=FORMAT], which this software uses to set the output format, 
   either to \texttt{dvi} or to \texttt{pdf}. 
@@ -1097,7 +1097,7 @@ Two options deserve particular notification, both specifying the output format:
   For \xelatex, this software only supports \texttt{pdf}, 
   which \xelatex{} creates because \texttt{-no-pdf} is not given. 
   The option \texttt{-output-format=pdf} does no harm, because it is ignored. 
-  As soon as this software supports xdv creation, 
+  As soon as this software supports XDV creation, 
   it will no longer pass \texttt{-output-format} to \xelatex. 
 \end{description}
 
@@ -1105,7 +1105,7 @@ Two options deserve particular notification, both specifying the output format:
 In general, there are two forms of options, one starting with double dash, \texttt{-{}-}, 
 and the other form with single dash. 
 In \texlive, \pdflatex{} and \xelatex{} use single dash, 
-whereas \lualatex{} uses double dash accoding to the help text. 
+whereas \lualatex{} uses double dash according to the help text. 
 But using the single dash always is ok, 
 because \lualatex{} understands single dash also. 
 
