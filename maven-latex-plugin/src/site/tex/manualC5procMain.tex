@@ -641,15 +641,23 @@ Information required to integrate pythontex into this software
 partially goes much beyond the official documentation and is collected in~\cite{PyTexInOut}. 
 It could also be interesting for the user for debugging. 
 
-Running the \LaTeX-to-pdf converter on a file \texttt{xxx.tex} with package \pkg{pythontex} loaded 
-yields a file \texttt{xxx.pytxcode} and if the package is loaded with option \texttt{depythontex} 
+Running the \LaTeX-to-pdf converter on a file \texttt{xxx.tex} 
+with package \pkg{pythontex} loaded 
+yields a file \texttt{xxx.pytxcode} 
+and if the package is loaded with option \texttt{depythontex} 
 also a file \texttt{xxx.depytx}.
 If the file \texttt{xxx.pytxcode} is present, 
-this software invokes the command line tool \texttt{pythontex} (same name as the according package) 
+this software invokes the command line tool \texttt{pythontex} 
+(same name as the according package) 
 to \texttt{xxx.pytxcode} (without ending) 
 which converts this into a variety of output files, 
-which are, without further configuration, all in the folder \texttt{pythontex-files-xxx}
-as shown in Figure~\ref{fig:py2dir}, which is described in more detail in~\cite{PyTexInOut}, Section~3. 
+which are, without further configuration, 
+all in the folder \texttt{pythontex-files-xxx}
+as shown in Figure~\ref{fig:py2dir}, 
+which is described in more detail in~\cite{PyTexInOut}, Section~3. 
+Note that this software uses the wrapper \texttt{pythontexW} 
+of \texttt{pythontex} described below, instead of \texttt{pythontex} itself. 
+The figure reflects this. 
 
 % TBD: later on, if \texttt{xxx.depytx} after \texttt{pythontex} also \texttt{pythontex} is invoked, 
 % creating a tex file without python code. 
@@ -683,15 +691,18 @@ Thus, the author wrote a little wrapper, called \texttt{pythontexW}
 \end{verbatim}
 %
 and place it where it can be found, e.g.~in the folder of \texttt{pythontex}. 
-Note that this is specific for unixoid operating systems but can be easily adapted to windows. 
+Note that this is specific for unix-like operating systems 
+but can be easily adapted to windows. 
 Accordingly, \texttt{depythontex} behaves in a non-standard way: 
 Firstly, by default, it does not output a result file but outputs on standard output. 
 This can be changed using the option \texttt{--output} or \texttt{-o} for short. 
-Also, \texttt{depythontex} changes into interactive mode if the output file is already present. 
+Also, \texttt{depythontex} changes into interactive mode 
+if the output file is already present. 
 To avoid this, the option \texttt{--overwrite} is required. 
 Overwriting without asking is the standard behavior of all other auxiliary programs. 
-As \texttt{pythontex} also \texttt{depythontex} does not write a log file but just prints its errors and warnings. 
-Thus, the author wrote a little wrapper, called \texttt{pythontexW} 
+As \texttt{pythontex} also \texttt{depythontex} does not write a log file 
+but just prints its errors and warnings. 
+Thus, the author wrote a little wrapper, called \texttt{depythontexW} 
 %
 \begin{verbatim}
   #! /bin/bash
@@ -760,19 +771,6 @@ Fortunately, the latter two command line options have no counterpart in the pack
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 If we place some code, e.g.~python code as inline code using \cmd{pyc}
 %
 \begin{lstlisting}[basicstyle=\footnotesize]
@@ -793,9 +791,9 @@ it is explicitly set to highlight the string created by python,
 but it is python which evaluates the little computation 
 and which prints the string. 
 
-Since \texttt{pythontex} is written in python 
+Since \texttt{pythontex} is written in python, 
 including python code in the \LaTeX{} document 
-uses the python interpreter already installed as a prerequisite of \texttt{pythontex}. 
+uses the python interpreter already installed, as a prerequisite of \texttt{pythontex}. 
 To use another language, the according interpreter must be installed in addition to python. 
 
 
@@ -806,7 +804,7 @@ To use another language, the according interpreter must be installed in addition
 % TBD: depythontex
 
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
   \centering
   \ifthenelse{\boolean{texFhtLoaded}}{
   should be a picture 
@@ -818,9 +816,12 @@ To use another language, the according interpreter must be installed in addition
 
 
   Figure~\ref{fig:depy2out} shows the files converted by \texttt{depythontex}. 
+  As for \texttt{depythontex}, this software uses the wrapper \texttt{depythontexW} 
+  of \texttt{depythontex} instead of \texttt{depythontex} itself. 
+  This is reflected in the figure. 
 
 
-  \begin{figure}[htb]
+  \begin{figure}[!htb]
     \centering
     \ifthenelse{\boolean{texFhtLoaded}}{
     should be a picture 
@@ -1205,7 +1206,7 @@ through the ``\cmd{Needs\{\ldots\}}'' command.
 \raggedbottom{}
 
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
 \centering
 \ifthenelse{\boolean{texFhtLoaded}}{
 should be a picture 
