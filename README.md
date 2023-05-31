@@ -5,14 +5,14 @@
 Use this maven-latex-plugin in your Maven projects 
 and this ant tasks in your ant projects 
 to automatically convert 
-all LaTeX documents `*.tex` into the desired output format. 
+all LaTeX documents into the desired output format. 
 
 The maven plugin and the ant task, 
 both pieces of software share the same code base, 
 called the '**LaTeX builder**', 
 and provides its (common) features.
 Whereas the features implemented are outlined in the sequel 
-in [Section 'Features'](#ss:features) 
+in [Section 'Features'](#ssFeatures) 
 the features to come are collected in 
 [Section 'Feature Requests'](#ss:featureRequests).
 
@@ -52,7 +52,7 @@ Mailing list: https://groups.google.com/group/maven-latex-plugin-users
 Contribute: https://github.com/akquinet/maven-latex-plugin/wiki/Contribute
 -->
 
-Section [Features](#ss:features) describes the features of the converter 
+Section [Features](#ssFeatures) describes the features of the converter 
 independently of context of maven or ant. 
 As the '**LaTeX builder**' is merely a bundle of converters 
 to offer an interface to maven and to ant, 
@@ -61,7 +61,7 @@ as e.g. `pdflatex` to convert latex into PDF format.
 Section [Installation](#ss:installation)
 is about installation of these converters. 
 
-## Features <a id='ss:features'></a>
+## Features <a id='ssFeatures'></a>
 
 The main use of the '**LaTeX builder**' is to automatically convert 
 all LaTeX documents `.tex` 
@@ -71,7 +71,7 @@ to the targets' folder by default to `$root/target/site/`.
 To that end, it applies a latex converter like `pdflatex` 
 to the top level sources ignoring `.tex` files which are just included. 
 
-### Output in various formats <!--{#sss:featuresOutFormats}--><a id='sss:featuresOutFormats'></a>
+### Output in various formats <!--{#sssFeaturesOutFormats}--><a id='sssFeaturesOutFormats'></a>
 
 One aim is to convert latex files in printable formats 
 like `pdf`, formats in the office world like `docx` and browser formats 
@@ -93,7 +93,7 @@ to provide good conversions in formats other than
 
 For further plans see [here](#ss:featureRequests). 
 
-### Support for development of sources <a id='sss:featuresDevSrc'></a>
+### Support for development of sources <a id='sssFeaturesDevSrc'></a>
 
 The '**LaTeX builder**' is designed 
 to build artifacts for all source documents at once 
@@ -118,7 +118,7 @@ The '**LaTeX builder**' can use these intermediate files
 as it creates these files also in the working directory 
 and can also perform a cleanup 
 needed in a build process as described in 
-[Section 'Cleanup after creation'](#sss:featuresCleanup). 
+[Section 'Cleanup after creation'](#sssFeaturesCleanup). 
 
 When starting development of a document with a lot of graphics 
 from a clean working directory 
@@ -128,7 +128,7 @@ includable in `.tex` files.
 Thus, '**LaTeX builder**' offers separate creation of these graphic files 
 through the maven goal `grp`. 
 
-### Cleanup after creation <a id='sss:featuresCleanup'></a>
+### Cleanup after creation <a id='sssFeaturesCleanup'></a>
 
 Of course, besides creation there is also a way to clean up, 
 i.e. to remove files built. 
@@ -137,7 +137,7 @@ both of maven and of ant,
 there is a maven goal and an ant task to remove the intermediate files 
 in the working directory which is the directory of the source documents. 
 For details see 
-[Section 'Support for development of sources'](#sss:featuresDevSrc). 
+[Section 'Support for development of sources'](#sssFeaturesDevSrc). 
 
 ### Reproducibility and equality artifacts <a id='sss:repArts'></a>
 
@@ -164,7 +164,7 @@ Another aspect of reproducibility is, when computations are performed the result
 This is not treated here 
 but in an item of [Section 'Feature Request'](#ss:featureRequests). 
 
-### Inclusion of bibliographies, indices and similar content <a id='sss:featuresLists'></a>
+### Inclusion of bibliographies, indices and similar content <a id='sssFeaturesLists'></a>
 
 Also, this '**LaTeX builder**' supports bibliographies, 
 indices (also split ones) and glossaries. 
@@ -173,7 +173,7 @@ list of figures, list of tables and list of listings
 refers to clean up only. 
 There is an according ant task and a maven goal. 
 
-### Check of sources and results, logging <a id='sss:featuresCheckLog'></a>
+### Check of sources and results, logging <a id='sssFeaturesCheckLog'></a>
 
 Analyzing the log file created by the converters, 
 the '**LaTeX builder**' displays errors and warnings, e.g. overfull boxes. 
@@ -184,7 +184,7 @@ that **if compilation is without error or warning, the output is valid and perfe
 Another aspect is check of sources which is available 
 through the maven goal `chk`. 
 
-### Input of various graphics formats <a id='sss:featuresInputGrp'></a>
+### Input of various graphics formats <a id='sssFeaturesInputGrp'></a>
 
 The last feature to point out is the support for various graphic formats 
 including those provided by the package `texlive-graphix`. 
@@ -223,7 +223,7 @@ In the lifecycle, this is performed in phase `validate`.
 
 ## Feature Requests <a id='ss:featureRequests'></a>
 
-Beyond the features presented in [Section 'Features'](#ss:features), 
+Beyond the features presented in [Section 'Features'](#ssFeatures), 
 further features are planned for future releases: 
 
 - Currently, this software consists of the core component **LaTeX builder**, 
@@ -437,7 +437,7 @@ More loosely coupled to the '**LaTeX builder**'
 is a build tool to build from individual sources, `latexmk`. 
 Currently, it is not used by this software, and maybe it never will. 
 On the other hand, there are reasons to support interaction with that tool 
-in the course of [document development](#sss:featuresDevSrc). 
+in the course of [document development](#sssFeaturesDevSrc). 
 Of course there are alternatives to `latexmk`, 
 but we decided to concentrate on a single tool, and we chose `latexmk`. 
 
@@ -482,7 +482,7 @@ The formats `tikz`/`pgf` provide a superset of the features of `xfig`.
 ## How to use the latex-maven-plugin <a id='ss:mavenPlugin'></a>
 
 Goals `cfg` to create, `clr` to clean up as described 
-in [Section 'Cleanup after creation'](#sss:featuresCleanup). 
+in [Section 'Cleanup after creation'](#sssFeaturesCleanup). 
 Invocation is e.g. as `mvn latex:cfg`. 
 
 These goals are in a one-to-one relation 
