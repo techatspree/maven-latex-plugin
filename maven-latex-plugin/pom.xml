@@ -555,7 +555,7 @@
       </plugin>
 -->
 
-			<!-- used to create version without SNAPSHOT suffix for documentation -->
+			<!-- used to create version without SNAPSHOT suffix and timestamp for documentation -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
