@@ -567,6 +567,16 @@
 							<goal>parse-version</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>parse-timestamp</id>
+						<goals>
+							<goal>timestamp-property</goal>
+						</goals>
+            <configuration>
+              <name>timestampDay</name>
+              <pattern>yyyy-MM-dd</pattern>
+            </configuration>
+					</execution>
 				</executions>
 			</plugin>
 
