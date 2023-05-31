@@ -168,13 +168,19 @@
     <!-- This goes into pom4pdf.xml and also in .latexmkrc, 
     but not in the config of this project -->
     <versionStripped>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}</versionStripped>
+    <latex2pdfCommand>lualatex</latex2pdfCommand>
     <latex2pdfOptions>-interaction=nonstopmode -recorder -synctex=1 -shell-escape</latex2pdfOptions>
+    <fig2devCommand>fig2dev</fig2devCommand>
     <fig2devGenOptions></fig2devGenOptions>
     <fig2devPtxOptions></fig2devPtxOptions>
     <fig2devPdfEpsOptions></fig2devPdfEpsOptions>
+    <gnuplotCommand>gnuplot</gnuplotCommand>
     <gnuplotOptions></gnuplotOptions>
+    <metapostCommand>mpost</metapostCommand>
     <metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"</metapostOptions>
+    <svg2devCommand>inkscape</svg2devCommand>
     <svg2devOptions>--export-area-drawing --export-latex</svg2devOptions>
+    <ebbCommand>ebb</ebbCommand>
     <ebbOptions>-v</ebbOptions>
 
     <urlSite>https://www.simuline.eu/LatexMavenPlugin/</urlSite>

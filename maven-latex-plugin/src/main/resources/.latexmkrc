@@ -120,10 +120,11 @@ sub gnuplot {
   $file = $_[0];
   print("create from $file.gp\n");
   rdb_add_generated("$file.ptx", "$file.pdf", "$file.eps");
-  my $nuplotOptions = "";
-  my $ret1 = system("gnuplot -e \"set terminal cairolatex pdf ${gnuplotOptions};\
+  # here in the java code no quoting occurs 
+  #my $gnuplotOptionsQ = quote(qq/${gnuplotOptions}/);
+  my $ret1 = system(qq/${gnuplotCommand} -e "set terminal cairolatex pdf ${gnuplotOptions};\
             set output '$file.ptx';\
-            load '$file.gp'\"");
+            load '$file.gp'"/);
   # my $ret2 = system("gnuplot -e \"set terminal cairolatex eps ${gnuplotOptions};\
   #           set output '$file.ptx';\
   #           load '$file.gp'\"");
@@ -152,7 +153,7 @@ sub inkscape {
   my $file = $_[0];
   print("create from $file.svg\n");
   rdb_add_generated("$file.ptx", "$file.pdf");
-  my $ret1 = system("inkscape --export-filename=$file.pdf ${svg2devOptions} $file.svg ");
+  my $ret1 = system(qq/${svg2devCommand} --export-filename=$file.pdf ${svg2devOptions} $file.svg/);
   #my $ret2 = system("inkscape --export-filename=$file.eps -D --export-latex $file.svg ");
   #use File::Copy;
   # This works only for pdf, not for eps. 

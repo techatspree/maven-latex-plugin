@@ -278,7 +278,7 @@ zzT$T\.e?ps|
 into various formats. 
 Currently only pdf combined with pdf_t is supported. 
 The default value is 'fig2dev'.  -->
-            <fig2devCommand>fig2dev</fig2devCommand>
+            <fig2devCommand>${fig2devCommand}</fig2devCommand>
 
             <!-- The options for the command $fig2devCommand 
 common to both output languages. 
@@ -352,7 +352,7 @@ into various formats.
 Currently only pdf (graphics) 
 combined with pdf_t (latex-texts) is supported. 
 The default value is 'gnuplot'. -->
-            <gnuplotCommand>gnuplot</gnuplotCommand>
+            <gnuplotCommand>${gnuplotCommand}</gnuplotCommand>
 
             <!-- The options specific for $gnuplotCommand s
 output terminal 'cairolatex', 
@@ -366,7 +366,7 @@ The default option string is empty. -->
             <!-- The command for conversion of gnuplot-files 
 into metapost`s postscript. 
 The default value is 'mpost'. -->
-            <metapostCommand>mpost</metapostCommand>
+            <metapostCommand>${metapostCommand}</metapostCommand>
 
             <!-- The options for the command $metapostCommand. 
 Leading and trailing blanks are ignored. 
@@ -412,7 +412,7 @@ The default value is given below. -->
             <!-- The command for conversion of svg-files 
 into a mixed format. 
 The default value is 'inkscape'. -->
-            <svg2devCommand>inkscape</svg2devCommand>
+            <svg2devCommand>${svg2devCommand}</svg2devCommand>
 
             <!-- The options for the command $svg2devCommand 
 for exporting svg-figures into latex compatible files. 
@@ -464,7 +464,7 @@ to create '.bb'-files for driver 'dvipdfm' and
 once with parameter '-x' 
 to create '.xbb'-files for driver 'dvipdfmx'. 
 The default value is 'ebb'. -->
-            <ebbCommand>ebb</ebbCommand>
+            <ebbCommand>${ebbCommand}</ebbCommand>
 
             <!-- The options for the command $ebbCommand 
 except '-m' and '-x' 
@@ -485,7 +485,7 @@ for 'xelatex'.
 Consequently, '$targets' may not contain any of these goals. 
 The default value (for which this software is also tested) 
 is 'lualatex'. -->
-            <latex2pdfCommand>lualatex</latex2pdfCommand>
+            <latex2pdfCommand>${latex2pdfCommand}</latex2pdfCommand>
 
             <!-- occurs for xelatex but neither for pdflatex nor for lualatex: 
 LaTeX Font Warning: Font shape 'OMS/cmtt/m/n' undefined

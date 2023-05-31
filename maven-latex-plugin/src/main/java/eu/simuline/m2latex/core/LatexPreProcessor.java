@@ -879,6 +879,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		File grpFile = TexFileUtils.replaceSuffix(gpFile, dev.getGraphicsInTexSuffix());
 		File ptxFile = TexFileUtils.replaceSuffix(gpFile, SUFFIX_PTX);
 
+    // TBD: clarify how this is quoted 
 		String[] args = new String[] {
 				"-e", // run a command string "..." with commands separated by ';'
 				//
