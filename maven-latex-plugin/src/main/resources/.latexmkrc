@@ -80,20 +80,35 @@ push @generated_exts, "nav", "snm", "vrb", 'run.xml';
 # should be under indexing 
 $clean_ext .= " %R.ist %R.xdy %R-*.ind %R-*.idx %R-*.ilg %R-*.ind";
 
+# many arguments shall be quoted 
+# but in many cases it is immaterial; except in metapost 
+sub quote {
+  $inString = $_[0];
+  #print "in: $inString\n";
+  $outString = $inString;
+  $outString =~ s/^ */'/;
+  $outString =~ s/ *$/'/;
+  $outString =~ s/ +/' '/g;
+  $outString =~ s/''//;# empty if "''"
+  
+  #print "out: $outString\n";
+  return $outString;
+}
+
+
 
 add_cus_dep('fig', 'ptx', 0, 'fig2dev');
 sub fig2dev {
   $file = $_[0];
-  rdb_add_generated("$file.eps", "$file.pdf", "$file.ptx");
   print("create from $file.fig\n");
   rdb_add_generated("$file.ptx", "$file.pdf", "$file.eps");
   #fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.eps   
   #fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.pdf   
   #fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xxx.ptx
 
-  my $ret1 = system("fig2dev -L  pstex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.eps");
-  my $ret2 = system("fig2dev -L pdftex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.pdf");
-  my $ret3 = system("fig2dev -L pdftex_t ${fig2devGenOptions} ${fig2devPtxOptions} -p $file $file.fig $file.ptx");
+  my $ret1 = system(qq/${fig2devCommand} -L  pstex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.eps/);
+  my $ret2 = system(qq/${fig2devCommand} -L pdftex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.pdf/);
+  my $ret3 = system(qq/${fig2devCommand} -L pdftex_t ${fig2devGenOptions} ${fig2devPtxOptions} -p $file $file.fig $file.ptx/);
 
 
   return ($ret1 or $ret2 or $ret3);
@@ -121,10 +136,12 @@ add_cus_dep('mp', 'mps', 0, 'mpost');
 sub mpost {
   my $file = $_[0];
   print("create from $file.mp\n");
-  rdb_add_generated("$file.mps", "$file.fls", "$file.log");
+  rdb_add_generated("$file.mps", "$file.mpx", "$file.fls", "$file.log");
   my ($name, $path) = fileparse($file);
   pushd($path);
-  my $return = system(qq/mpost ${metapostOptions} $name/);
+  my $metapostOptionsQ = quote(qq/${metapostOptions}/);
+  #print "quoted: $metapostOptionsQ\n";
+  my $return = system(qq/${metapostCommand} $metapostOptionsQ $name/);
   popd();
   return $return;
 }
