@@ -12,7 +12,8 @@ both pieces of software share the same code base,
 called the '**LaTeX builder**', 
 and provides its (common) features.
 Whereas the features implemented are outlined in the sequel 
-in [Section 'Features'](#ssFeatures) 
+<!--in [Section 'Features'](#ssFeatures) -->
+in [Section 'Features'](#features) 
 the features to come are collected in 
 [Section 'Feature Requests'](#ss:featureRequests).
 
