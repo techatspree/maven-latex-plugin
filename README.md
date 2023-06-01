@@ -81,7 +81,7 @@ The following lists the supported output formats
 together with the converters used by this plugin. 
 The author must admit that there is a lot to do still, 
 to provide good conversions in formats other than 
-`pdf`, `dvi` and `ps` and `txt`. 
+`pdf`, `dvi`, `ps` and `txt`. 
 
 - `pdf`, `dvi`, `ps` (with converters `pdflatex`, `xelatex` or similar.)
 - `html`, `xhtml` (partially supported). 
@@ -124,7 +124,7 @@ needed in a build process as described in
 When starting development of a document with a lot of graphics 
 from a clean working directory 
 it is quite cumbersome to create intermediate graphic files 
-includable in `.tex` files. 
+includable in TEX-files. 
 
 Thus, '**LaTeX builder**' offers separate creation of these graphic files 
 through the maven goal `grp`. 
