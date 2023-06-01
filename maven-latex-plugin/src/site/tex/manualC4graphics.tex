@@ -764,7 +764,7 @@ from the main document to the proper figure.
 
 With \lualatex{} this can be reached for MetaPost also using package \pkg{luamplib} 
 %
-\lstinputlisting[language=tex, basicstyle=\scriptsize, linerange={78-82}]{header.tex}
+\lstinputlisting[language=TeX, basicstyle=\scriptsize, linerange={78-82}]{header.tex}
 
 The package itself provides an environment \texttt{mplibcode}. 
 Essentially, \lualatex{} interprets all code 
@@ -779,7 +779,7 @@ ensuring that the package is loaded only if lualatex or that like is run.
 That this allows better integration within the enclosing latex document 
 is illustrated by redefining the letter $\aleph$ as $\alpha$ which is really related. 
 %
-\begin{lstlisting}[language=TeX, linerange={793-796}]
+\begin{lstlisting}[language=TeX]
   {% make redefine local 
   \renewcommand{\aleph}{\alpha}
   \inputmpcode{F4_05someMetapost}
