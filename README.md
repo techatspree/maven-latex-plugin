@@ -1632,9 +1632,7 @@ Pandoc shall be invoked with option `--verbose`
 which seem to indicate the most important flaws. 
   
 - Support for `ps` is missing. 
-
 - `pdfinfo` and other `poppler` tools to be evaluated. 
-
 - Evaluation of `unoconv`: seems to offer also conversion from `html` to `odt` and
   that like. 
   Very bad: no manual. I hate that. 
@@ -1642,9 +1640,7 @@ which seem to indicate the most important flaws.
   Just type `unoconv -f odt manual.html`. 
 
 - Evaluation of latex2png, latex2man, latex2nemeth, latex2html
-
 - evaluation of `pstoedit`
-
 - It seems reasonable, to write a new plugin based on `texinfo`. 
 
 ## To the (plugin) developer <a id='ss:devel'></a>
