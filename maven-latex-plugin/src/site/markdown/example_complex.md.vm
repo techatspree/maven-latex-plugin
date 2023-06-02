@@ -1,29 +1,23 @@
-    ------
-    maven-latex-plugin Complex Example
-    ------
-    Carsten Erker
-    ------
-    ------
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
 
-Complex Example
+# Complex Example
 
-    The following configuration contains three executions which will create
+The following configuration contains three executions which will create
 
-    * a pdf version of each TeX document under PROJECT_HOME/target/site,
+- a pdf version of each TeX document under PROJECT_HOME/target/site,
+- an html multi-page version under PROJECT_HOME/target/site/reference/html_multipage,
+- an html single-page version under PROJECT_HOME/target/site/reference/html_singlepage.
 
-    * an html multi-page version under PROJECT_HOME/target/site/reference/html_multipage,
+ 
 
-    * an html single-page version under PROJECT_HOME/target/site/reference/html_singlepage.
-
-    []
-
-+--
+```[xml]
 <project>
     <build>
         <plugins>
             <plugin>
-                <groupId>de.akquinet.maven</groupId>
-                <artifactId>maven-latex-plugin</artifactId>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
                 <version>${project.version}</version>
                 <inherited>false</inherited>
                 <executions>
@@ -74,4 +68,4 @@ Complex Example
         </plugins>
     </build>
 </project>
-+--
+```

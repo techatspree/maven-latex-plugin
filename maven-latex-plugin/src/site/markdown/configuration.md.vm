@@ -1,23 +1,19 @@
-    ------
-    maven-latex-plugin Configuration
-    ------
-    Carsten Erker
-    ------
-    ------
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
 
-Configuration
+# Configuration
 
-    The following code snippet shows all possible configuration settings with their default values.
+The following code snippet shows all possible configuration settings with their default values.
 
-+---
+```[xml]
 <plugin>
-    <groupId>de.akquinet.maven</groupId>
-    <artifactId>maven-latex-plugin</artifactId>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
     <version>${project.version}</version>
     <configuration>
         <settings>
             <!-- all tex main documents in this folder (including subfolders) will be processed -->
-            <texDirectory>${basedir}/src/site/tex</texDirectory>
+            <texDirectory>src/site/tex</texDirectory>
             <!-- the generated artifacts will be copied to this folder relative to \${project.reporting.outputDirectory} -->
             <outputDirectory>.</outputDirectory>
             <!-- the working directory, for temporary files and LaTeX processing -->
@@ -57,4 +53,4 @@ Configuration
         </execution>
     </executions>
 </plugin>
-+---
+```

@@ -1,25 +1,19 @@
-    ------
-    maven-latex-plugin Simple Example
-    ------
-    Carsten Erker
-    ------
-    ------
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
 
-Simple Example
+# Simple Example
 
-    The following configuration contains one execution which will create
+The following configuration contains one execution which will create
 
-    * a pdf version of each TeX document under PROJECT_HOME/target/site.
+- a pdf version of each TeX document under PROJECT_HOME/target/site.
 
-    []
-
-+--
+```[xml]
 <project>
     <build>
         <plugins>
             <plugin>
-                <groupId>de.akquinet.maven</groupId>
-                <artifactId>maven-latex-plugin</artifactId>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
                 <version>${project.version}</version>
                 <inherited>false</inherited>
                 <executions>
@@ -34,4 +28,4 @@ Simple Example
         </plugins>
     </build>
 </project>
-+--
+```

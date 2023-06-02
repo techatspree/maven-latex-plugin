@@ -1,0 +1,44 @@
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
+
+# Usage
+
+## Source code repository
+
+```
+https://github.com/Reissner/maven-latex-plugin
+```
+
+## Maven repository
+
+```[xml]
+<project>
+  <pluginRepositories>
+		<pluginRepository>
+			<id>latex-maven-plugin-repo</id>
+			<url>https://www.simuline.eu/RepositoryMaven</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
+```
+
+## Maven plugin dependency
+
+```
+<project>[xml]
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+

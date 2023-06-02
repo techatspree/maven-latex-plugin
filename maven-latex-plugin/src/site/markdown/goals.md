@@ -1,20 +1,16 @@
-    ------
-    maven-latex-plugin Goals
-    ------
-    Carsten Erker
-    ------
-    ------
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
 
-Goals
+# Goals
 
-    [latex:latex] Create PDF, PS or DVI
+    [latex:latex]: Create PDF, PS or DVI
 
-    [latex:tex4ht] Create HTML
+    [latex:tex4ht]: Create HTML
 
 
-* Example with default configuration:
+ Example with default configuration:
 
-------------------------------------
+```
 myproject
 |-- src
 |   +-- site
@@ -29,4 +25,4 @@ myproject
         |-- doc1.pdf
         +-- somefolder
             +-- doc2main.pdf
-------------------------------------
+```
