@@ -57,7 +57,7 @@ independently of context of maven or ant.
 As the '**LaTeX builder**' is merely a bundle of converters 
 to offer an interface to maven and to ant, 
 it relies on several converters doing the proper work, 
-as e.g. `pdflatex` to convert latex into PDF format. 
+as e.g. `lualatex` to convert latex into PDF format. 
 Section [Installation](#ss:installation)
 is about installation of these converters. 
 
@@ -68,10 +68,10 @@ all LaTeX documents `.tex`
 which are by default in `$root/src/tex/` and subdirectories 
 into desired output format(s) and to push 
 to the targets' folder by default to `$root/target/site/`. 
-To that end, it applies a latex converter like `pdflatex` 
+To that end, it applies a latex converter like `lualatex` 
 to the top level sources ignoring `.tex` files which are just included. 
 
-### Output in various formats <!--{#sssFeaturesOutFormats}--><a id='sssFeaturesOutFormats'></a>
+### Output in various formats <a id='sssFeaturesOutFormats'></a>
 
 One aim is to convert latex files in printable formats 
 like `pdf`, formats in the office world like `docx` and browser formats 
@@ -82,7 +82,7 @@ The author must admit that there is a lot to do still,
 to provide good conversions in formats other than 
 `pdf`, `dvi`, `ps` and `txt`. 
 
-- `pdf`, `dvi`, `ps` (with converters `pdflatex`, `xelatex` or similar.)
+- `pdf`, `dvi`, `ps` (with converters `lualatex`, `xelatex` or similar.)
 - `html`, `xhtml` (partially supported). 
   The author is not content with `htlatex` for many reasons. 
   It is in the package `texlive-tex4th`.
@@ -290,8 +290,8 @@ applications mentioned in the next table
 
 | executable     | package                 |
 |:---------------|:------------------------|
-| **`pdflatex`** | `texlive-latex-bin-bin` |
-|   `lualatex`   | `texlive-latex-bin-bin` |
+| **`lualatex`** | `texlive-latex-bin-bin` |
+|   `pdflatex`   | `texlive-latex-bin-bin` |
 |   `xelatex`    | `texlive-xetex-bin`     |
 
 Besides `pdf`, also other output formats are supported. 
@@ -915,10 +915,10 @@ zzT$T\.e?ps|
 
             <!-- The LaTeX command to create a pdf-file. 
 		 Possible values are e.g. 
-		 'pdflatex', 'lualatex' and 'xelatex'. 
+		 'lualatex' 'pdflatex', and 'xelatex'. 
 		 The default value (for which this software is also tested) 
-		 is 'pdflatex'. -->
-            <latex2pdfCommand>pdflatex</latex2pdfCommand>
+		 is 'lualatex'. -->
+            <latex2pdfCommand>lualatex</latex2pdfCommand>
 
  <!-- occurs for xelatex but neither for pdflatex nor for lualatex: 
       LaTeX Font Warning: Font shape 'OMS/cmtt/m/n' undefined
@@ -1589,7 +1589,7 @@ This is itself a to-do.
 - document the role of `mathjax`
 
 - The newest version of gnuplot introduce the problem 
-  that the `pdf` output version is 1.7 whereas the one for `pdflatex` is 1.5. 
+  that the `pdf` output version is 1.7 whereas the one for `lualatex` is 1.5. 
   This yields a warning. 
   A way to resolve that problem is just downgrading by subsequent invocation
   of something like 
@@ -1625,7 +1625,7 @@ shows
 - `docx`, `odt`, maybe making `unoconv` superfluous, 
 - `html`, `html4`, `html5` maybe substituting tex4ht 
 - `plain`, maybe text, then substituting 
-- `pdf` (maybe using `pdflatex`)
+- `pdf` (maybe using `lualatex`)
   
 Pandoc shall be invoked with option `--verbose` 
 which seem to indicate the most important flaws. 
@@ -1664,8 +1664,8 @@ Finally, there are various problems with the plugin test harness.
 
 A completely different problem is introduced 
 by the fact, that with new test method based on diffing real `pdf`'s, 
-the tests become sensitive on the versions of `pdflatex`. 
-In particular, if the version of `pdflatex` changes, 
+the tests become sensitive on the versions of `lualatex`. 
+In particular, if the version of `lualatex` changes, 
 the `pdf` files used for comparison must be changed also. 
 To that end, run a script copying the current `pdf`s overwriting the blueprints 
 from the base directory (this presupposes development in Linux):
