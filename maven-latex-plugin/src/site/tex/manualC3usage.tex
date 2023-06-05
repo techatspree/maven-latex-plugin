@@ -179,12 +179,17 @@ are read from the \emph{configuration} in the pom
 By default, the target formats are \texttt{pdf} and \texttt{html}. 
 The following Listing~\ref{lst:targetsAll} shows a configuration 
 with the full range of output formats including in addition 
-the open office document format \texttt{odt}, 
+the OpenOffice document format \texttt{odt}, 
 the MS word-formats \texttt{doc(x)} and \texttt{rtf} % chktex 36
 and also plain text format \texttt{txt} in utf8 encoding. 
+
 Note that the target \texttt{docx} converts by default into \gls{docx} 
-but may also be configured to produce the old fashioned \gls{doc} format. 
-%
+but may also be configured to produce the old-fashioned \gls{doc} format. 
+
+Be aware that the target \texttt{dvi} creates output in DVI format 
+only for latex processors \lualatex{} and \pdflatex{}, 
+whereas \xelatex{} creates the XDV (extended DVI) format for target \texttt{dvi}. 
+
 %\lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}[language=xml, basicstyle=\small,
 escapechar=|,
@@ -212,19 +217,36 @@ Sometimes it is more convenient
 to specify the output formats not via the pom 
 but directly as a goal on the command line. 
 In particular, one may write \texttt{mvn latex:pdf} to create documentation 
-in pdf-format only.
-Likewise command \texttt{mvn latex:dvi} to get good old dvi files
+in PDF-format only.
+Likewise, command \texttt{mvn latex:dvi} to get good old dvi/xdv files
 or even \texttt{mvn latex:txt} for plain text, just as examples. 
+
 Note that the \texttt{-X} switch activates debugging 
 which results in a more verbose output. 
 Example: \texttt{mvn -X latex:cfg}. 
 
-CAUTION\@: The latex processor is \xelatex{} 
-can only be used to create \texttt{pdf} files; 
-instead of the \texttt{dvi} format, it supports the \texttt{xdv} format, 
-which cannot be created with this software. 
+% The code shows that allowed is only what is defined in enum Target. 
+% Thus chk, which is a goal, is not output format. 
+% This makes sense because Target specifies the files to be copied to the target filder. 
 
-For creating the graphic files in the tex-source directory, 
+% in a sense this section mixes up output formats and goals. 
+% For goal latex:cfg the output formats are as listed under config target. 
+% Other goals, like latex:pdf specify a single output format. 
+
+% Still other goals have no output format. These are 
+% - latex:chk, although a check file is created. 
+%   TBD: currently, there is no config to make chk run on latex main files. 
+% - latex:grp, although graphic files are created but they are not exported. 
+%   This may be done if source distributions are defined. 
+% - latex:vrs, creating a version output or emitting warning if a version does not fit. 
+% - latex:clr, for cleanup. 
+
+% TBD: latex:grp does not fit: it is not an output format. 
+% maybe it becomes output format if introducing source distributions 
+% 
+% Same is true for target clr. 
+
+For creating the graphic files in the TEX source directory, 
 there is a goal \emph{graphics}, invoked by \texttt{mvn latex:grp}. 
 This goal does not create any output in the site directory. 
 Instead, it populates the source directories 
@@ -250,7 +272,7 @@ giving the default value and a description.
 
 
 For sake of uniformity, 
-the name of the ant-task is \texttt{latex:cfg} 
+the name of the ant-task is \texttt{latex:cfg}, 
 and it can be invoked via \texttt{ant latex:cfg}. 
 Unlike the maven-plugin, the ant-task 
 does not allow to specify a target on the command line. 
