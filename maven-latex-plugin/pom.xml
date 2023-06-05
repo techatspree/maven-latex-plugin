@@ -569,6 +569,9 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>3.3.0</version>
+        <configuration>
+        	<locale>en_US</locale>
+        </configuration>
 				<executions>
 					<execution>
 						<id>parse-version</id>
