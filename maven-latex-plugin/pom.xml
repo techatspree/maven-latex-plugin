@@ -454,6 +454,7 @@
 				<directory>src/main/resources</directory>
 				<includes>
 					<include>.latexmkrc</include>
+					<include>.chktexrc</include>
 					<include>COPYING</include>
 					<include>instVScode4tex.sh</include>
 					<include>version.properties</include>
@@ -616,6 +617,7 @@
 										<include>buildParams.tex</include>
 										<include>instVScode4tex.sh</include>
 								    <include>.latexmkrc</include>
+										<include>.chktexrc</include>
 									</includes>
 									<!--excludes>
 										<exclude>docsCmp/**/*.pdf</exclude>
@@ -726,6 +728,7 @@
 								<include>buildParams.tex</include>
 								<include>instVScode4tex.sh</include>
 								<include>.latexmkrc</include>
+								<include>.chktexrc</include>
 								<!--include>pom4pdf.xml</include-->
 							</includes>
 						</fileset>

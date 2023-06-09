@@ -1,0 +1,42 @@
+OutFormat = {
+# Modifications by E. Reissner, to have all but headlines 
+# starting with blank. 
+# That way, %k: error/warning/message are easily detected. 
+
+# -v0; silent mode
+%f%b%l%b%c%b%n%b%m!n
+
+# -v1; normal mode, modified so that subsequent lines start with ' '
+"%k %n in %f line %l: %m!n %r%s%t!n %u!n"
+
+# -v2; fancy mode, modified so that subsequent lines start with ' '
+"%k %n in %f line %l: %m!n %r%i%s%I%t!n!n"
+
+# -v3; lacheck mode
+"!"%f!", line %l: %m!n"
+
+# -v4; verbose lacheck mode, modified so that subsequent lines start with ' '
+"!"%f!", line %l: %m!n %r%s%t!n %u!n"
+
+# -v5; no line number, ease auto-test 
+# modified so that subsequent lines start with ' '
+"%k %n in %f: %m!n %r%s%t!n %u!n"
+
+# -v6; emacs compilation mode
+"!"%f!", line %l.%c:(#%n) %m!n"
+
+}
+
+
+Silent {
+  \textbackslash
+}
+
+WipeArg {
+  \lstinputlisting:[]{}
+}
+
+VerbEnvir
+{
+  Verbatim lstlisting
+}
