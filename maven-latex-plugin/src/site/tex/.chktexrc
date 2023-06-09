@@ -474,6 +474,7 @@ WipeArg
     \cite:[]{} \nocite:{}
     \input:{} \verbatiminput:[]{} \listinginput:[]{}{}
     \verbatimtabinput:[]{} \include:{} \includeonly:{}
+    \lstinputlisting:[]{} # E. Reissner 
     \bibitem:[]{}
     \cline:{} \cmidrule:[](){}
     \href:{}{}
