@@ -668,7 +668,7 @@ and notify the developer of this plugin of the deficiency.
 %The default value is `<code>(^! )</code>' (note the space).  
 \end{minipage}
 } \\
-\texttt{patternWarnMPost} & \texttt{\^{}([Ww]arning: )} \\% chktex 37
+\texttt{patternWarnMPost} & \texttt{\^{}([Ww]arning: )} \\% chktex 36 chktex 37
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern is applied line by line to the log-file of \texttt{\$metapostCommand} 
@@ -777,7 +777,7 @@ The details are as follows:
   whereas the safest setting 3 yields a huge prologue. 
   So the compromise is 2 and if 3 is needed in individual cases, 
   this setting can be overwritten in the MP file. 
-  \item[outputtemplate="\%j.mps"] determines the name of the output file. 
+  \item[outputtemplate="\%j.mps"] determines the name of the output file. %chktex 18
   The default given here uses the jobname and the canonical ending. 
   Unlike the default value of \texttt{mpost}, 
   no number of the figure within the metapost file is given. 
@@ -802,9 +802,9 @@ Export the drawing (not the page).
 \item[--export-latex] 
 Export into PDF/PS/EPS format without text. 
 Besides the PDF/PS/EPS files, a \LaTeX-file \texttt{latexfile.tex} is exported,
-putting the text on top of the PDF/PS/EPS file, i.e. including the according pure graphic file. 
-Include the result in LaTeX as: 
-\cmd{input\{latexfile.tex\}}. 
+putting the text on top of the PDF/PS/EPS file, 
+i.e.\@ including the according pure graphic file. 
+Include the result in \LaTeX{} as: \cmd{input\{latexfile.tex\}}. 
 
 Note that the latter option is necessary, 
 to create the expected files. 
@@ -813,7 +813,7 @@ It is also conceivable to export text as pdf/eps
 
 \noindent
 The following options are prohibited, 
-because they are automatically added by the software or interfers with : 
+because they are automatically added by the software or interfers with: 
 %
 \begin{description}
 \item[--export-filename=FILENAME] Export document to a file with type given by the extension. 
@@ -1609,7 +1609,8 @@ If this is not appropriate, please modify and notify the developer of this plugi
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern in the \gls{plg}-file 
-indicating a warning when running \texttt{pythontex}, resp. \texttt{pythontexW} via \texttt{\$mpythontexCommand}.
+indicating a warning when running \texttt{pythontex}, 
+resp.\@ \texttt{pythontexW} via \texttt{\$mpythontexCommand}.
 If this is not appropriate, please modify and notify the developer of this plugin. 
 \end{minipage}
 } \\
@@ -1776,7 +1777,7 @@ and appendices.
 `\texttt{\^{}T\$T\textbackslash d+x\textbackslash.png\$}' 
 are svg/png-files representing figures. 
 \item
-`\texttt{\^({}T\$T\textbackslash d+x\textbackslash.x?bb}' % chktex 15 chktex 9
+`\texttt{\^{}T\$T\textbackslash d+x\textbackslash.x?bb}' % chktex 15 chktex 9
 are the bounding boxes 
 (suffix \texttt{.bb}  for \texttt{dvipdfm} and 
  suffix \texttt{.xbb} for \texttt{dvipdfmx}). 
@@ -2069,7 +2070,7 @@ OutFormat
 }
 \end{verbatim}
 
-Note that ``\texttt!'' is to escape quotes and newline. 
+Note that ``\texttt{!}'' is to escape quotes and newline. 
 More than these can be added to \texttt{chktexrc}. 
 
 

@@ -6,7 +6,7 @@
 \newcommand{\artifactId}{\texttt{${project.artifactId}}}
 %\newcommand{\strippedVersionID}{${parsedVersion.majorVersion}.${parsedVersion.minorVersion}}
 \newcommand{\strippedVersionID}{${versionStripped}}
-\newcommand{\versionDate}{${timestampDay}}
+\newcommand{\versionDate}{${timestampDay}}% chktex 8
 
 % sites and jar 
 \newcommand{\repo}{\texttt{https://www.simuline.eu/RepositoryMaven}}
@@ -30,7 +30,7 @@
 \newcommand{\gnuplotOptions}{${gnuplotOptions}}
 
 \newcommand{\metapostCommand}{${metapostCommand}}
-\verbdef\metapostOptions{${metapostOptions}}
+\verbdef\metapostOptions|${metapostOptions}|% chktex 15 chktex 18
 \newcommand{\svgToDevOptions}{${svg2devOptions}}
 
 \newcommand{\ebbCommand}{${ebbCommand}}

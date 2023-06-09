@@ -38,10 +38,10 @@ Used to extract resolution and bounding box.
 FIXME\@: needed more information. 
 For details see~\cite{BmpP}. 
 \item[tikz]
-The tikz code described in \cite{TikzPGF} is just in \LaTeX{} format. 
+The tikz code described in~\cite{TikzPGF} is just in \LaTeX{} format. 
 Thus, it can be included directly anddoes not require any preprocessing. 
 Still what is needed is a good graphical editor like \texttt{tikzedt} 
-with online manual \cite{TikzEdt}. 
+with online manual~\cite{TikzEdt}. 
 \item[import]
 is strictly speaking no graphics package. 
 According to its documentation~\cite{ImpoP}, 
@@ -181,12 +181,12 @@ via \cmd{includegraphics}.
 
 \section{Conversion of fig-files}\label{sec:fig2dev}
 
-\index{xfig}
-\index{fig2dev}
-A simple but still useful tool to draw figures is \texttt{xfig} 
+
+
+A simple but still useful tool to draw figures is \texttt{xfig}\index{xfig}\index{fig2dev} 
 which stores graphics in a native format 
 described in~\cite{XFigF} with file extension \texttt{.fig}. 
-The file extension \texttt{.fig} is also used by matlab to store plots 
+The file extension \texttt{.fig} is also used by MATLAB to store plots, 
 but this is something different. 
 Graphics in xfig format cannot be directly included in latex files 
 but must be exported into a \LaTeX-readable format. 
@@ -202,12 +202,11 @@ and \texttt{pdf} would be the ideal export format for all kinds of objects,
 except for texts with set ``special''-flag. 
 In \texttt{pdf} format, texts are interpreted literally, 
 independent of the ``special''-flag. 
-Thus \texttt{fig2dev} offers a mixed solution: 
+Thus, \texttt{fig2dev} offers a mixed solution: 
 export \texttt{xxx.fig} in format \texttt{pdftex} which yields a pdf-file 
 \texttt{xxx.pdf} containing all but text with set ``special''-flag 
 and complementary \texttt{pdftex\_t} which yields a tex-file \texttt{xxx.ptx} 
-including the pdf-file and the texts with set ``special''-flag. 
-\index{special-flag}%maybe glossary 
+including the pdf-file and the texts with set ``special''-flag\index{special-flag}. %maybe glossary 
 The exported files are in the same directory \texttt{yyy} 
 as the original file \texttt{xxx.fig}. 
 
@@ -325,12 +324,13 @@ fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xx
 and ``inputting'' \texttt{xxx.ptx} works for both \LaTeX{} output formats. 
 
 Table~\ref{tab:xfigSuffixes} relates the language specified with the \texttt{-L} option 
-with the suffix of the output file choosen canonically, the suffix we choose 
+with the suffix of the output file chosen canonically, the suffix we choose 
 and the actual file format. 
-In contrast to \texttt{fig2dev}, we choose the actual file format, except if this is TEX. 
+In contrast to \texttt{fig2dev}, 
+we choose the actual file format, except if this is TEX\@. 
 We opted for the quite unusual suffix \texttt{.ptx} 
 instead of \texttt{.tex} 
-to avoid that tex-files may be both, 
+to avoid that TEX-files may be both, 
 source files and created files, 
 but this is not compulsory, 
 since the same holds and is accepted for pdf-files. 
@@ -394,7 +394,7 @@ into pdf-, eps- and ptx-files with inclusions}
 
 The term ``gnuplot'' refers to a file format
 and to a program \texttt{gnuplot}
-which can read this format, both described in \cite{GnuPlot}. 
+which can read this format, both described in~\cite{GnuPlot}. 
 
 Note that there seems no official file extension 
 to identify gnuplot files. 
@@ -567,7 +567,7 @@ as it is a graphical programming language,
 Turing complete, much like postscript, and allows also declarative programming. 
 The manual describing the language is~\cite{MPost}, 
 seemingly complete, but it is not. 
-Thus, one can be thankful for \cite{MPostGuid} 
+Thus, one can be thankful for~\cite{MPostGuid} 
 which offers some introduction and for the really helpful tutorial~\cite{MPostTut}. 
 
 Files containing \texttt{MetaPost} have the ending \texttt{.mp}. 
@@ -603,7 +603,7 @@ caption={An example file in MetaPost}]
 
 Listing~\ref{lst:metapost} illustrates some structure of MetaPost. 
 As in \TeX, comments start with \texttt{\%} and end with the line or with the file. 
-The proper figures are enclosed between \texttt{beginfig(n)} and \texttt{endfig}, 
+The proper figures are enclosed between \texttt{beginfig(n)} and \texttt{endfig}, %chktex 36
 where $n$ is the number of the figure, the so called \texttt{charcode}\footnote%
 {This is a relict from Metafont, where each figure showed a character}, 
 and the file ends with \texttt{end}. 
@@ -625,17 +625,17 @@ which defaults to \texttt{mpost}, occasionally just \texttt{mp}.
 
 Each internal variable which can be set in the MP file 
 can also be set when invoking \texttt{mpost} 
-using the option \texttt{-s \textlangle variable\textrangle=\textlangle value\textrangle} 
+using the option \texttt{-s \textlangle{}variable\textrangle=\textlangle{}value\textrangle} 
 as described in~\cite{MPost},~Section~B.2.1. 
 There it is stated that the option is read just before the file is read, 
 which implies that the setting in the file overrides the command line setting. 
 
-The most basic setting is \texttt{outputformat:="eps"} 
+The most basic setting is \texttt{outputformat:="eps"} %chktex 18
 which is the only setting appropriate for latex. 
 So don't change\footnote%
 {Note that \texttt{metapostCommand} may also besides \gls{eps} 
 output \gls{svg} and \gls{png}, 
-just by setting \texttt{outputformat:="svg"} or that like. 
+just by setting \texttt{outputformat:="svg"} or that like. %chktex 18
 Caution: case-sensitive, assuming silently \texttt{eps} if the format is not recognized. 
 Whereas \gls{svg} is a vector format as MetaPost ifself, \gls{png} is a raster format}. 
 Note the strange default setting for the names of the output files, \texttt{outputtemplate}, 
@@ -667,10 +667,10 @@ The manual~\cite{MPost}, Section 8.1 is on typesetting labels
 and specifies the meaning of \texttt{prologues}. 
 If we stick to including in \LaTeX{} and creating PDF out of that only, 
 the default setting $0$ is appropriate always 
-but since this software uses DVI as intermediate format, e.g. to create HTML, 
+but since this software uses DVI as intermediate format, e.g.\@ to create HTML, 
 or because for debugging one wants to view the MPS files standalone in a viewer 
 things are not so easy. 
-For details see ~\cite{MPost}, Section 14.2. 
+For details see~\cite{MPost}, Section 14.2. 
 Setting \texttt{prologues:=1} is deprecated. 
 The only save way to get the correct display is to include fonts in the MPS file, 
 setting \texttt{prologues:=3}, but this makes the MPS file quite big. 
@@ -772,7 +772,7 @@ enclosed in the \texttt{mplibcode} environment as MetaPost.
 The package is enhanced with the command \texttt{\textbackslash inputmpcode} 
 which allows also load MetaPost from a file. 
 The latter is preferred to direct inclusion with the \texttt{mplibcode} environment, 
-e.g. for sake of proper code highlighting. 
+e.g.\@ for sake of proper code highlighting. 
 Note that the package declaration is enclosed in an if construct, 
 ensuring that the package is loaded only if lualatex or that like is run. 
 
@@ -794,7 +794,7 @@ that the redefinition really influences rendering in the MetaPost file.
   \ifthenelse{\boolean{texFhtLoaded}}{
   should be a picture 
   }{
-  \ifluatex
+  \ifluatex%
   {% make redefine local 
   \renewcommand{\aleph}{\alpha}
   \inputmpcode{F4_05someMetapost}
@@ -804,9 +804,8 @@ that the redefinition really influences rendering in the MetaPost file.
   \fi
   }%texFhtLoaded
   \caption{\label{fig:metapostLua}
-  Sample MetaPost-file included via \texttt{luamplib} for lua(hb)tex }
-  \end{figure}
-  
+  Sample MetaPost-file included via \texttt{luamplib} for lua(hb)tex } % chktex 36
+\end{figure}
 
   
   %Question: how to center, how to scale? 
@@ -850,8 +849,8 @@ that the redefinition really influences rendering in the MetaPost file.
 Comparable with the xfig-format described in Section~\ref{sec:fig2dev} 
 but much more elaborate and widely used is the \gls{svg}-format. 
 There is a huge up-to-date official SVG 1.1 specification,~\cite{Svg11} 
-and a specification for SVG Tiny 1.2, 
-\cite{Svg12Tiny} which is itself quite short and more readable 
+and a specification~\cite{Svg12Tiny} for SVG Tiny 1.2, 
+which is itself quite short and more readable 
 and gives also a good overview on ``SVG Big''. 
 For a tutorial, see~\cite{SvgTut}. 
 As stated in~\cite{Svg12Tiny}, Section~1.1, 
@@ -1077,7 +1076,7 @@ should be a picture
 As an example, Figure~\ref{fig:asIsPng} shows the same picture 
 as png-file. 
 
-FIXME: at the moment, htlatex does not work with pictures at all. 
+FIXME\@: At the moment, \texttt{htlatex} does not work with pictures at all. 
 
 \begin{figure}[htb]
 \centering

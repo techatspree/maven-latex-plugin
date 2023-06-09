@@ -2,26 +2,24 @@
 
 \chapter{Installation}\label{chap:install}
 
-Both the ant-task and the maven-plugin just direct parameters 
+Both the ant-task\index{ant-task} and the maven-plugin just direct parameters 
 from ant and from maven, respectively, 
 to the programs that do the proper work. 
 Thus, installation of the ant-task and of the maven-plugin 
 requires that all needed programs are installed. 
 These prerequisites are collected in Section~\ref{sec:prerequisites}. 
-\index{ant-task}
 
 \section{Prerequisites}\label{sec:prerequisites}
 
-The ant-task is tested with \index{ant}
+The ant-task is tested with\index{ant} 
 %
 \begin{verbatim}
 Apache Ant(TM) version 1.10.12 compiled on December 14 1969}
 \end{verbatim}
 %
 (of course the year is not correct, but this is the version string
-displayed by that release) and the maven-plugin with 
+displayed by that release) and the maven-plugin with\index{maven} 
 %
-\index{maven}
 \begin{verbatim}
 Apache Maven 3.8.5 
 \end{verbatim}
@@ -38,11 +36,10 @@ Also, this plugin is written in java.
 To use the maven-plugin, of course maven must be installed 
 and to use the ant-task, ant must be installed. 
 
-The ant-task just passes parameters in the build file to the core 
+The ant-task\index{ant-task} just passes parameters in the build file to the core 
 and accordingly the maven-plugin passes parameters in the pom 
 to the core of this software. 
 The core just invokes various programs to do the actual work. 
-\index{ant-task}
 
 Besides plain building of documentation, 
 this software also supports development of documents. 
@@ -101,8 +98,7 @@ It serves as an interpreter and also as a converter.
 Strictly speaking, only the latter functionality is required here. 
 \item
 To convert \gls{mp}-files into \gls{eps}-files, 
-\index{mpost}\index{metapost}
-the interpreter \texttt{mpost} or equivalent is required. 
+the interpreter \texttt{mpost}\index{mpost}\index{metapost} or equivalent is required. 
 This comes with a standard tex-installation. 
 With the standard configuration, 
 the resulting eps-file can be viewed with \texttt{ghostscript} 
@@ -112,7 +108,6 @@ To include \gls{svg}-files into \LaTeX\index{svg},
 \texttt{inkscape}\index{inkscape} must be installed. 
 It also serves to create and to edit svg-files. 
 \end{itemize}
-
 
 
 Currently, for including pdf-files in both cases, 
@@ -134,16 +129,14 @@ to be supported:
 %
 \begin{itemize}
 \item
-To create pdf-files from \LaTeX-files we use \lualatex{} 
+To create pdf-files from \LaTeX-files we use \lualatex\index{lualatex} 
 or some other kind of \LaTeX{} creating pdf-files 
-like \xelatex{} or \pdflatex. 
-\index{lualatex}\index{xelatex}\index{pdflatex}
+like \xelatex\index{xelatex} or \pdflatex\index{pdflatex}. 
 
 \LaTeX{} uses several auxiliary programs. 
-Above all \texttt{bibtex}, to create the bibliography 
-and \texttt{makeindex} and \texttt{splitindex} for the index 
-and \texttt{makeglossaries} for the glossary. 
-\index{bibtex}\index{makeindex}\index{splitindex}\index{makeglossaries}
+Above all \texttt{bibtex}\index{bibtex}, to create the bibliography 
+and \texttt{makeindex}\index{makeindex} and \texttt{splitindex}\index{splitindex} for the index 
+and \texttt{makeglossaries}\index{makeglossaries} for the glossary. 
 The latter two 
 also require the latex packages \pkg{makeidx}, optionally \pkg{showidx}, 
 both described in~\cite{MkidxShIdxP}, 
@@ -155,9 +148,8 @@ Both, \texttt{makeglossaries} and \texttt{xindy} are written in Perl,
 which shall also be installed if a glossary is required. 
 
 To include program code in Python, octave and other language, 
-\texttt{pythontex} is needed; to eliminate that code creating an equivalent tex-file, 
-one has to combine it with \texttt{depythontex}. 
-\index{pythontex}\index{depythontex}
+\texttt{pythontex}\index{pythontex} is needed; to eliminate that code creating an equivalent tex-file, 
+one has to combine it with \texttt{depythontex}\index{depythontex}. 
 Both are written in Python3 which shall be installed also as a dependency. 
 To use them, one also needs to install the package \pkg{pytontex}. 
 
@@ -179,30 +171,26 @@ Currently the author is not aware of any alternative to the two.
 This includes also creating open office documents like odt-files. 
 Thus open office documents are created in two steps, 
 the first is to create pdf-files with the according tools, 
-the second one is done by \texttt{htlatex} or that like. 
-\index{htlatex}\index{htxelatex}
+the second one is done by \texttt{htlatex}\index{htlatex} or that like.\index{htxelatex} 
 \item
-To create rtf-files, currently \texttt{latex2rtf} is used. 
+To create RTF-files, currently \texttt{latex2rtf}\index{latex2rtf} is used. 
 Note that this does not require \pdflatex. 
 As a drawback, not all \LaTeX-packages are supported. 
-\index{latex2rtf}
 \item
-MS word documents are created from open office documents 
-via the command \texttt{odt2doc} and thus require three steps 
+MS Word documents are created from OpenOffice documents 
+via the command \texttt{odt2doc}\index{odt2doc}  and thus require three steps 
 and so the according tool chain. 
-\index{odt2doc} 
 \item
-Finally, there is a way, to create plain text files from the pdf-files 
-via \texttt{pdftotext}. 
-The way from \LaTeX{} to text via pdf makes sense 
-because that text is well formatted math mode symbols like $\pi$. 
+Finally, there is a way, to create plain text files from the PDF-files 
+via \texttt{pdftotext}\index{pdftotext}. 
+The way from \LaTeX{} to text via PDF makes sense 
+because that text is well formatted math mode symbols like $\pi$ 
 and because table of contents, index, glossary and that like are included. 
-So, for that task, besides \texttt{pdftotext} the whole toolchain to create
-pdf-files is required. 
-\index{pdftotext}
+So, for that task, besides \texttt{pdftotext} the whole tool chain to create
+PDF-files is required. 
 \item
 An application which does not create a target, 
-i.e.~a file in the target directory is \texttt{chktex} 
+i.e.~a file in the target directory is \texttt{chktex}\index{chktex} 
 which just checks the latex main files and associated files. 
 \end{itemize}
 
@@ -485,14 +473,14 @@ Unlike maven which loads jars with the classes inside automatically
 from
 % 
 \begin{Verbatim}[fontsize=\small, commandchars=\\\{\}]
-\repo
+\repo%
 \end{Verbatim}
 %
 the jar for the tasks, \createdJar,
 must be downloaded manually from
 %
 \begin{Verbatim}[fontsize=\scriptsize, commandchars=\\\{\}]
-\repo/eu/simuline/m2latex/\artifactId/\strippedVersionID
+\repo/eu/simuline/m2latex/\artifactId/\strippedVersionID%
 \end{Verbatim}
 %
 Moreover, ant expects to find the jar files in an according folder.
@@ -501,7 +489,7 @@ as can be seen in the ant documentation,
 in general it is in folder \texttt{lib} in ant's installation directory. 
 
 However, \href{\urlSite build.xml}{build.xml} 
-gives an example build file using this latex ant task 
+gives an example build file using this latex ant task\index{ant-task} 
 with full configuration with default values and executions.
 From that, one has to copy the following
 into the \texttt{build.xml} file in the current project:
@@ -512,7 +500,6 @@ into the \texttt{build.xml} file in the current project:
 \item The taskdefs \texttt{latexCfg}  and \texttt{latex:Clr}
 \item The  targets \texttt{latex:cfg} and \texttt{latex:clr}
 \end{itemize}
-\index{ant-task}
 
 As for the maven plugin, for the ant task, add configuration, 
 where a deviation from the default requires to do so. 
@@ -543,7 +530,7 @@ mvn clean install
 but this does not work since the plugin needs itself to be installed
 to perform even \texttt{clean}.
 To solve that problem just comment out all its executions
-in the local \texttt{pom.xml} by enclosing them in \texttt{<!--...-->}.
+in the local \texttt{pom.xml} by enclosing them in \texttt{<!--\ldots-->}.
 In fact this is a minor bug, since, to be strict, only
 the executions for verification and clearing must be deactivated.
 For processing, it would be sufficient to add
@@ -582,7 +569,7 @@ by \texttt{ant jar} also cleanup is possible with \texttt{ant clean}.
 Finally, the ant task can be tested with \texttt{ant latex:cfg}
 and \texttt{ant latex:clr}. 
 
-In the long run, it should be possible to build the ant task from sources
+In the long run, it should be possible to build the ant task\index{ant-task} from sources
 with ant alone.
-\index{ant-task}
+
 
