@@ -309,9 +309,9 @@ overwriting the default values.
 
 During development, it is comfortable, 
 to have the log-file in the same directory as the \LaTeX{} main file. 
-Also, if pdf- and tex-files are synchronized, 
+Also, if PDF- and TEX-files are synchronized, 
 % FIXME: reference to package 
-also the pdf-file should be in the same directory. 
+also the PDF-file should be in the same directory. 
 Likewise, files in graphic formats 
 which cannot be included into a \LaTeX-file without conversion, 
 that converted file shall be in the same directory as the original one. 
@@ -323,10 +323,10 @@ with at least partial creation through external tools.
 For example, if writing \LaTeX-files with Emacs, 
 it is much more convenient, to compile the \LaTeX{} main file 
 via \pdflatex{} from within Emacs 
-or to create a pdf-file from a \gls{fig}-file 
+or to create a PDF-file from a \gls{fig}-file 
 through \texttt{xfig}'s export dialog, 
 than using this maven-plugin or this ant-task. 
-Also these tools work best, if all is in one folder. 
+Also, these tools work best, if all is in one folder. 
 
 On the other hand, 
 conventionally, in a maven project, 
@@ -347,7 +347,7 @@ Process all graphics files of the formats requiring preprocessing.
 \item
 Determine the \LaTeX{} main files.
 \item
-Run the \LaTeX{} converter, e.g.~the one creating pdf-output or docx-output.
+Run the \LaTeX{} converter, e.g.~the one creating PDF-output or DOCX-output.
 This may include running auxiliary programs like \texttt{bibtex} or \texttt{pythontex} 
 and also rerunning the \LaTeX{} converter several times. 
 \item
@@ -357,14 +357,14 @@ Remove all files not present at the beginning of a run, by default.
 % FIXME: maybe different for goal chk. 
 \end{itemize}
 
-To keep e.g.~the resulting pdf, 
+To keep e.g.~the resulting PDF, 
 just create it via compilation through Emacs, 
 even if not all graphic files to be included are present 
 or just by a \texttt{touch}-command. 
 Then in the next run of this plugin, 
-this pdf will be re-created, 
+this PDF will be re-created, 
 that time complete with the graphics output. 
-That way, synchronization between \LaTeX- and pdf-files is possible. 
+That way, synchronization between \LaTeX- and PDF-files is possible. 
 Likewise, to keep the log-file or the aux-file, just touch it. 
 This technique is really valuable for debugging. 
 
@@ -428,7 +428,7 @@ It creates all graphic files required to compile the \LaTeX-main files.
 
 Still this does not create a bibliography, an index or a glossary. 
 With \emph{auctex}\index{auctex}, an Emacs-package for editing \LaTeX, 
-bibliography and index are well supported. 
+bibliography and index are well-supported. 
 To create a glossary, auctex has to be modified a little. 
 
 %FIXME\@: include this into auctex. 
@@ -583,9 +583,9 @@ caption={Output of goal \texttt{latex:vrs}}]
 Another aspect of document development is integration with other tools. 
 
 Document development starts with the editor. 
-Above the emacs editor enhanced with auctex was mentioned. 
-We recommend VS code in conjunction with several extensions. 
-If VS code itself is already installed 
+Above the Emacs editor enhanced with auctex was mentioned. 
+We recommend VS Code in conjunction with several extensions. 
+If VS Code itself is already installed 
 the script in Listing~\ref{lst:instVScode} installs and updates all extensions 
 the author used to develop this manual. 
 The core extension is \texttt{latex workshop}, 
@@ -633,7 +633,7 @@ like the one with \texttt{\textbackslash{}import}
 seem to work fine. 
 
 The current workaround is illustrated in Listing~\ref{lst:fileIfExists} 
-modifying \pkg{listings}' output to make it digestable for \texttt{latexmk}. 
+modifying \pkg{listings}' output to make it digestible for \texttt{latexmk}. 
 
 \lstinputlisting[firstline=94, lastline=112,
 language=tex, basicstyle=\scriptsize,
