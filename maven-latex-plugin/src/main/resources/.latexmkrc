@@ -16,7 +16,8 @@ $pdf_mode = 4;# specifies creation of pdf via lualatex
 # It converts raw SVG files to the PDF+PDF_TEX combo using InkScape.
 # $lualatex = "lualatex --shell-escape";
 
-# note that -recorder is implicitly added by latexmk, so may be duplicated, but no disadvantage 
+# note that -recorder is implicitly added by latexmk, 
+# so may be duplicated, but no disadvantage 
 $lualatex = "lualatex ${latex2pdfOptions} %O %S";
 
 #$postscript_mode = $dvi_mode = 0;
