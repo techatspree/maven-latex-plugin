@@ -668,6 +668,10 @@ into VS Code one can see the highlighting, and a preview,
 of course provided the extensions Section~\ref{sec:devel} 
 and given by Listing~\ref{lst:instVScode} are installed; 
 \texttt{.chktexrc} is given in Listing~\ref{lst:chktexrc}. 
+Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
+as described, the local configuration file fits only for UNIX-like operating systems. 
+For Windows and that like, \texttt{chktexrc} is expected. 
+% TBD: link? 
 
 
 \begin{lstlisting}[language=XML, basicstyle=\scriptsize,
@@ -697,7 +701,7 @@ and given by Listing~\ref{lst:instVScode} are installed;
       <type>jar</type>
       <overWrite>true</overWrite>
       <outputDirectory>...</outputDirectory>
-      <includes>**/.latexmkrc **/.chktexrc</includes>
+      <includes>**/.latexmkrc, **/.chktexrc</includes>
       <fileMappers>
         <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
       </fileMappers>
