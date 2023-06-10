@@ -468,6 +468,18 @@ Note that, with default configuration,
 \texttt{chktex} requires the \LaTeX-package \pkg{booktabs} 
 described in~\cite{BooktP}. 
 
+Besides the basic configuration packaged with \texttt{chktex}, 
+there can be an additional configuration file \texttt{.chktexrc} 
+which partially overwrites variables set by the basic configuration file, 
+partially, for list-valued variables, adds entries. 
+Listing~\ref{lst:chktexrc} shows the configuration \texttt{.chktexrc} 
+needed to check this manual without error or warning. 
+
+\lstinputlisting[basicstyle=\scriptsize,
+float, captionpos=b, label={lst:chktexrc}, 
+caption={The config file \texttt{.chktexrc} to check this manual. }]%
+{.chktexrc}
+
 % rsvg-convert -f pdf -o t.pdf t.svg
 % inkscape t.svg --export-pdf=t.pdf
 % convert file.svgz file.pdf 
@@ -589,18 +601,14 @@ caption={Install script for extensions of VS code. }]%
 A valuable standalone build tool is \texttt{latexmk}. 
 It can even run in background. 
 This manual can also be compiled with \texttt{latexmk} 
-but only with adapted configuration file \texttt{.latexmkrc}; 
-the one depicted in Listing~\ref{lst:latexmkrc}. 
-
-\lstinputlisting[firstline=94, lastline=112,
-language=Perl, basicstyle=\scriptsize,
-float, captionpos=b, label={lst:latexmkrc}, 
-caption={The config file \texttt{.latexmkrc} to compile this manual. }]%
-{header.tex}
+but only with adapted configuration file \texttt{.latexmkrc}. 
+Since it is too long to include it directly in this manual, 
+we refer to its location on the website 
+\href{\urlSite fromMain/.latexmkrc}{\texttt{.latexmkrc}}. 
 
 
 % to be included. 
-This software and \texttt{latexmk} follow a different philosphy in finding dependencies: 
+This software and \texttt{latexmk} follow a different philosophy in finding dependencies: 
 Whereas this software creates image files in advance before invoking a latex converter, 
 \texttt{latexmk} first calls the latex converter in nonstopmode 
 to avoid a stop because of a missing file. 
@@ -643,21 +651,23 @@ failing with the next missing file.
 That way the process goes on until the last file is created with a rule. 
 Of course this procedure is quite time-consuming, so an alternative is required. 
 
-Both, the installation script \texttt{instVScode4tex.sh} for VS Code extensions 
+The installation script \texttt{instVScode4tex.sh} for VS Code extensions 
 given in Listing~\ref{lst:instVScode} 
-and the config file \texttt{.latexmkrc} depicted in Listing~\ref{lst:latexmkrc} 
+and the config files \texttt{.latexmkrc} and \texttt{.chktexrc} 
 are packaged in the JAR file representing this software. 
 % TBD: in the long run these listings shall come from the proper pom 
 % but with different versions. 
 That way these resources can be made available via the maven dependency plugin 
 by unpacking from the JAR\@. 
 Listing~\ref{lst:depUnpack} shows the according configuration in the pom. 
-In addition, it is available on the web as 
-\href{\urlSite fromMain/.latexmkrc}{\texttt{.latexmkrc}}. 
-Pasting the into vscode one can see the highlighting, 
-and a preview, 
+In addition, the configuration files are available on the web as 
+\href{\urlSite fromMain/.latexmkrc}{\texttt{.latexmkrc}} and as 
+\href{\urlSite fromMain/.chktexrc}{\texttt{.chktexrc}}, respectively. 
+Pasting \texttt{.latexmkrc}, which is just Perl code, 
+into VS Code one can see the highlighting, and a preview, 
 of course provided the extensions Section~\ref{sec:devel} 
-and given by Listing~\ref{lst:instVScode} are installed. 
+and given by Listing~\ref{lst:instVScode} are installed; 
+\texttt{.chktexrc} is given in Listing~\ref{lst:chktexrc}. 
 
 
 \begin{lstlisting}[language=XML, basicstyle=\scriptsize,
@@ -687,7 +697,7 @@ and given by Listing~\ref{lst:instVScode} are installed.
       <type>jar</type>
       <overWrite>true</overWrite>
       <outputDirectory>...</outputDirectory>
-      <includes>**/.latexmkrc</includes>
+      <includes>**/.latexmkrc **/.chktexrc</includes>
       <fileMappers>
         <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
       </fileMappers>
@@ -732,6 +742,7 @@ that makes the clean plugin cleanup the unpacked files.
           <directory>...</directory>
           <includes>
             <include>.latexmkrc</include>
+            <include>.chktexrc</include>
           </includes>
         </fileset>
       </filesets>
