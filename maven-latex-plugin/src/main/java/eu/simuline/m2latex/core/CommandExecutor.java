@@ -42,6 +42,57 @@ class CommandExecutor {
     }
   } // class CmdResult 
 
+    /**
+   * The way return codes are checked: Not at all, if nonzero and special treatments. 
+   * This is used in {@link CommandExecutor#execute(File, File , String, boolean, String[])} 
+   * to decide whether the return code shall indicate that execution failed. 
+   * TBD: shall be part of category 
+   */
+  enum ReturnCodeChecker {
+    /**
+     * Never detect fail of execution. 
+     */
+    Never {
+      boolean hasFailed(int returnCode) {
+        return false;
+      }
+    },
+    /**
+     * Detect fail of execution if return code is nonzero. 
+     */
+    IsNonZero {
+      boolean hasFailed(int returnCode) {
+        return returnCode != 0;
+      }
+    },
+    /**
+     * Detect fail of execution only if return code is 1. 
+     * <p>
+     * Currently used for chk only. 
+     * Its return values are really strange: 
+     * <ul>
+     * <li>1 if an error in execution occurs, 
+     *     e.g. option -neee although -n requires a number. </li>
+     * <li>3 if an error was found except if case 1 occurs. 
+     *     Note that all findings are warnings 
+     *     if not configured as errors with -exx, xx a number. </li>
+     * <li>2 if a warning was found, except if one of the above cases occur. 
+     *     one can deactivate always. </li>
+     * <li>0 if neither of the above occurred. 
+     *     Note that still warnings could be given but deactivated, 
+     *     e.g. excluded linewise. </li>
+     * </ul>
+     */
+    IsOne {
+      boolean hasFailed(int returnCode) {
+        return returnCode == 1;
+      }
+    };
+
+    abstract boolean hasFailed(int returnCode);
+  } // enum ReturnCodeChecker 
+
+
   private final LogWrapper log;
 
   CommandExecutor(LogWrapper log) {
@@ -338,9 +389,10 @@ class CommandExecutor {
     try {
       // may throw CommandLineException 
       returnCode = executeCommandLine(cl, output, output);
-      if (returnCode != 0 && checkReturnCode) {
-        this.log.error("EEX01: Running " + command + " failed with return code "
-            + returnCode + ". ");
+      ReturnCodeChecker checker = checkReturnCode ? ReturnCodeChecker.IsNonZero : ReturnCodeChecker.Never;
+      if (checker.hasFailed(returnCode)) {
+          this.log.error("EEX01: Running " + command + " failed with return code "
+        + returnCode + ". ");
       }
     } catch (CommandLineException e) {
       throw new BuildFailureException("TEX01: Error running " + command + ". ",
