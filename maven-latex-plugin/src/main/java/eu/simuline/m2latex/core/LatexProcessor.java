@@ -2197,24 +2197,48 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 clgFile);
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        this.executor.execute(texFile.getParentFile(),
+        CommandExecutor.CmdResult res = this.executor.execute(texFile.getParentFile(),
                 this.settings.getTexPath(),
                 command,
                 CommandExecutor.ReturnCodeChecker.IsOne,
                 args,
                 clgFile);
-        if (!clgFile.exists()) {
-            // Here, chktex could not perform the check
-            // but the failure is already logged.
-            return;
+        switch (res.returnCode) {
+            case 0: // all ok 
+            if (clgFile.exists() && clgFile.length() != 0) {
+                this.log.info("Checker '" + command
+                + "' logged a message in " + clgFile + ". ");
+            }
+            break;
+            case 1: // execution error already treated in executor; 
+            // nothing to be done. 
+            break;
+            case 3: // no execution error but check found error 
+            this.log.error("ELP02: Checker '" + command
+                + "' logged an error in " + clgFile + ". ");
+            break;
+            case 2: // no execution error and no error but warning. 
+            this.log.warn("WLP08: Checker '" + command
+                + "'' logged a warning in " + clgFile + ". ");
+            break;
+            default:
+            this.log.error("ELP01: For command '" + command 
+            + "' found unexpected return code " + res.returnCode + ". ");
         }
-        // assert !clgFile.isDirectory();
-        if (clgFile.length() != 0) {
-            // FIXME: maybe we shall distinguish errors/warnings/messages
-            this.log.warn("WLP06: Running " + command +
-                    " found issues logged in '" +
-                    texFile.getName() + "'. ");
-        }
+        // Possibly, if not using the -q option 
+        // the status messages delivers even more pieces of information. 
+        // Maintain this, to indicate why WLP06 does not occur any more. 
+        // if (!clgFile.exists()) {
+        //     // Here, chktex could not perform the check
+        //     // but the failure is already logged.
+        //     return;
+        // }
+        // // assert !clgFile.isDirectory();
+        // if (clgFile.length() != 0) {
+        //     this.log.warn("WLP06: Running " + command +
+        //             " found issues logged in '" +
+        //             texFile.getName() + "'. ");
+        // }
     }
 
     /**
@@ -2296,7 +2320,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 this.settings.getTexPath(),
                 command,
                 CommandExecutor.ReturnCodeChecker.Never,
-                args).success;
+                args).getSuccess();
     }
 
 }
