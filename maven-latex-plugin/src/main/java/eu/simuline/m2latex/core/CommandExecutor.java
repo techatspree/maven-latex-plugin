@@ -372,7 +372,15 @@ class CommandExecutor {
                             String command,
                             boolean checkReturnCode,
                             String[] args) throws BuildFailureException {
+    ReturnCodeChecker checker = checkReturnCode ? ReturnCodeChecker.IsNonZero : ReturnCodeChecker.Never;
+    return execute(workingDir, pathToExecutable, command, checker, args);
+  }
 
+  private CmdResult execute(File workingDir,
+                            File pathToExecutable,
+                            String command,
+                            ReturnCodeChecker checker,
+                            String[] args) throws BuildFailureException {
     // prepare execution 
     String executable = new File(pathToExecutable, command).getPath();
     Commandline cl = new Commandline(executable);
@@ -389,7 +397,6 @@ class CommandExecutor {
     try {
       // may throw CommandLineException 
       returnCode = executeCommandLine(cl, output, output);
-      ReturnCodeChecker checker = checkReturnCode ? ReturnCodeChecker.IsNonZero : ReturnCodeChecker.Never;
       if (checker.hasFailed(returnCode)) {
           this.log.error("EEX01: Running " + command + " failed with return code "
         + returnCode + ". ");
