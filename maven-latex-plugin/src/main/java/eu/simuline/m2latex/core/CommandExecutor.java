@@ -266,8 +266,10 @@ class CommandExecutor {
 
     // Proper execution 
     // may throw BuildFailureException TEX01, log warning EEX01 
+    ReturnCodeChecker checker = checkReturnCode
+      ? ReturnCodeChecker.IsNonZero : ReturnCodeChecker.Never;
     CmdResult res =
-        execute(workingDir, pathToExecutable, command, checkReturnCode, args);
+        execute(workingDir, pathToExecutable, command, checker, args);
 
     // may log EEX02, EEX03, WEX04 
     for (int idx = 0; idx < resFiles.length; idx++) {
@@ -344,6 +346,9 @@ class CommandExecutor {
    *    is on the execution path 
    * @param command
    *    the name of the program to be executed 
+   * @param checker
+   *    the checker for the return code 
+   *    which decides whether an execution error EEX01 has to be logged. 
    * @param args
    *    the list of arguments, 
    *    each containing a blank enclosed in double quotes. 
@@ -367,15 +372,6 @@ class CommandExecutor {
    *    on the process to be executed thrown by {@link Process#waitFor()}. 
    *    </ul>
    */
-  private CmdResult execute(File workingDir,
-                            File pathToExecutable,
-                            String command,
-                            boolean checkReturnCode,
-                            String[] args) throws BuildFailureException {
-    ReturnCodeChecker checker = checkReturnCode ? ReturnCodeChecker.IsNonZero : ReturnCodeChecker.Never;
-    return execute(workingDir, pathToExecutable, command, checker, args);
-  }
-
   private CmdResult execute(File workingDir,
                             File pathToExecutable,
                             String command,
