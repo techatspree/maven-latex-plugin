@@ -165,7 +165,8 @@ class CommandExecutor {
                     String command,
                     String[] args,
                     File... resFiles) throws BuildFailureException {
-    return execute(workingDir, pathToExecutable, command, true, args, resFiles);
+    return execute(workingDir, pathToExecutable, command, 
+          ReturnCodeChecker.IsNonZero, args, resFiles);
   }
 
   /**
@@ -200,9 +201,9 @@ class CommandExecutor {
    * @param args
    *    the list of arguments, 
    *    each containing a blank enclosed in double quotes. 
-   * @param checkReturnCode
-   *    whether to check that the return code is zero. 
-   *    Else notify about the error. 
+   * @param checker
+   *    the checker for the return code 
+   *    which decides whether an execution error EEX01 has to be logged. 
    * @param resFiles
    *    optional result files, i.e. target files which shall be updated 
    *    by this command. 
@@ -230,7 +231,7 @@ class CommandExecutor {
   CmdResult execute(File workingDir,
                     File pathToExecutable,
                     String command,
-                    boolean checkReturnCode,
+                    ReturnCodeChecker checker,
                     String[] args,
                     File... resFiles) throws BuildFailureException {
     // analyze old result files 
@@ -266,8 +267,7 @@ class CommandExecutor {
 
     // Proper execution 
     // may throw BuildFailureException TEX01, log warning EEX01 
-    ReturnCodeChecker checker = checkReturnCode
-      ? ReturnCodeChecker.IsNonZero : ReturnCodeChecker.Never;
+
     CmdResult res =
         execute(workingDir, pathToExecutable, command, checker, args);
 
