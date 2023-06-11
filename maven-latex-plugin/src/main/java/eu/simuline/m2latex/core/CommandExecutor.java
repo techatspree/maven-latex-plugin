@@ -32,13 +32,27 @@ import        org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer
  */
 class CommandExecutor {
 
+  /**
+   * Represents the result of the invocation of a command 
+   * consisting of the {@link #output} and its {@link #returnCode}. 
+   * In addition the {@link CommandExecutor.ReturnCodeChecker} 
+   * given by {@link #checker} plays a role to determine 
+   * whether the return code signifies success, 
+   * which is returned by {@link #getSuccess()}. 
+   */
   static class CmdResult {
     final String output;
-    final boolean success;
+    final private ReturnCodeChecker checker;
+    final int returnCode;
 
-    CmdResult(String output, boolean success) {
+    CmdResult(String output, ReturnCodeChecker checker, int returnCode) {
       this.output = output;
-      this.success = success;
+      this.checker = checker;
+      this.returnCode = returnCode;
+    }
+
+    boolean getSuccess() {
+      return !this.checker.hasFailed(this.returnCode);
     }
   } // class CmdResult 
 
@@ -403,6 +417,8 @@ class CommandExecutor {
     }
 
     log.debug("Output:\n" + output.getOutput() + "\n");
-    return new CmdResult(output.getOutput(), returnCode == 0);
+    // TBD: fix bug: return code based on checker. 
+    // also not success but store return code itself 
+    return new CmdResult(output.getOutput(), checker, returnCode);
   }
 }
