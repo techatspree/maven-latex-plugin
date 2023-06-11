@@ -2200,6 +2200,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.executor.execute(texFile.getParentFile(),
                 this.settings.getTexPath(),
                 command,
+                CommandExecutor.ReturnCodeChecker.IsOne,
                 args,
                 clgFile);
         if (!clgFile.exists()) {
@@ -2294,7 +2295,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         return this.executor.execute(null, // texFile.getParentFile(),
                 this.settings.getTexPath(),
                 command,
-                false,
+                CommandExecutor.ReturnCodeChecker.Never,
                 args).success;
     }
 
