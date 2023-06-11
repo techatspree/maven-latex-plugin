@@ -656,6 +656,7 @@ this warning comes only iff the parameter \texttt{\$debugBadBoxes} is set.
 found issues logged in '\$logFileName'. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
+\textbf{This warning does no longer occur. The following is the original explanation: }
 Here, \texttt{\$command} is a checker tool. 
 Strictly speaking, unlike the other warnings here, 
 this does not signify that running \texttt{\$command} went wrong 
@@ -678,7 +679,7 @@ in \texttt{xxx.idx}.
 convert the latter. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-This indicates that for conversion to pdf there are a dvi file and a xdv file 
+This indicates that for conversion to PDF there are a DVI-file and a XDV-file 
 which may come from mixed application of \texttt{xelatex} and another converter. 
 In this case, the \texttt{\$xdvFile} is converted. 
 \end{minipage}
@@ -831,6 +832,38 @@ but maximum number \$maxNumRerunsLatex reached. } \\
 FIXME
 \end{minipage}
 } \\
+\texttt{\footnotesize ELP01} 
+& \texttt{\footnotesize For command '\$command' 
+found unexpected return code \$returnCode. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Here, \texttt{\$command} is a checker tool. 
+The return codes are determined by reverse engineering. 
+So possibly \texttt{\$returnCode} cannot be interpreted. 
+\end{minipage}
+} \\
+\texttt{\footnotesize ELP02} 
+& \texttt{\footnotesize Checker '\$command' logged an error in \$clgFile. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Indicates that the checker found an error. 
+Note that errors are warnings declared explicitly as errors. 
+There is also the case that warnings are declared as simple messages 
+and thus causes neither a warning nor an error. 
+\end{minipage}
+} \\
+\texttt{\footnotesize WLP08} 
+& \texttt{\footnotesize Checker '\$command' logged a warning in \$clgFile. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Indicates that the checker found a warning. 
+Implicitly it means that no error was found 
+since this would cause EPL02. 
+Note that warnings can be declared as simple messages 
+and thus cause neither a warning nor an error. 
+\end{minipage}
+} \\
+
 \end{longtable}
 
 
