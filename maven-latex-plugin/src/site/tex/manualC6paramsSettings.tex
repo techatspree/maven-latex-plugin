@@ -232,15 +232,27 @@ which is by default '\texttt{\$targetDirectory/site}' on Unix systems.
 %The default value is '\texttt{.}'.  
 \end{minipage}
 } \\
-\texttt{targets}          & \texttt{pdf, html}     \\
+\texttt{targets}          & \texttt{chk, pdf, html}     \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 A comma separated list of targets to be stored in \texttt{\$targetSet}. 
-Allowed values are \texttt{pdf}, \texttt{dvi}, \texttt{html}, 
-\texttt{txt}, \texttt{odt} and \texttt{docx}. 
-Note that if \texttt{\$latex2pdfCommand} is set to \xelatex, 
-the format \texttt{dvi} and what is based on it are not supported. 
-%The default value is '\texttt{pdf, html}'. 
+Allowed values are \texttt{chk}, \texttt{dvi}, \texttt{pdf}, \texttt{html}, 
+\texttt{odt}, \texttt{docx}, \texttt{rtf} and \texttt{txt}. 
+
+The targets are mostly related to output formats. 
+One exception is \texttt{chk} which represents a check, i.e.\@ linting of the source. 
+
+While in general target \texttt{dvi} represents creation of output in DVI format, 
+if \texttt{\$latex2pdfCommand} is set to \xelatex, 
+the target \texttt{dvi} yields an output in extended DVI format, i.e. in XDV. 
+Also target \texttt{html} may represent creation of HTML files and of XHMTL files. 
+Analogously \texttt{docx} corresponds with DOCX format by default, 
+but can also be configured to mean DOC. 
+
+Independent of the order given, the given targets are created 
+in an internal ordering. 
+
+%The default value is '\texttt{chk, pdf, html}'. 
 \end{minipage}
 } \\
 \texttt{convertersExcluded}          & empty     \\
