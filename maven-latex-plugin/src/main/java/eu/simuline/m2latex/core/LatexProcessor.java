@@ -413,7 +413,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                     .processGraphicsSelectMain(texProcDir, node);
 
             for (File latexMain : latexMainFiles) {
-                runCheck(latexMain);
+                processCheck(getLatexMainDesc(latexMain));
             }
         } finally {
             // FIXME: also removes the clg-files
@@ -2167,6 +2167,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // Seems not to create a log-file.
     }
 
+    void processCheck(LatexMainDesc desc) throws BuildFailureException {
+        this.log.info("Checking:  LaTeX file '" + desc.texFile + "'. ");
+        runCheck(desc);
+    }
+
     /**
      * Runs the check command given by {@link Settings#getChkTexCommand()}
      * on the latex main file <code>texFile</code>
@@ -2180,15 +2185,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * if running the ChkTeX command failed.
      * </ul>
      *
-     * @param texFile
-     *     the latex main file to be checked for.
+     * @param desc
+     *    the description of a latex main file <code>texFile</code>
+     *    to be processed.
      * @throws BuildFailureException
      *     TEX01 if invocation of the check command
      *     returned by {@link Settings#getChkTexCommand()} failed.
      */
-    private void runCheck(File texFile) throws BuildFailureException {
-        //
-        File clgFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_CLG);
+    private void runCheck(LatexMainDesc desc) throws BuildFailureException {
+        File texFile = desc.texFile;
+        File clgFile = desc.withSuffix(SUFFIX_CLG);
         String command = this.settings.getCommand(ConverterCategory.LatexChk);
         this.log.debug("Running " + command +
                 " on '" + texFile.getName() + "'. ");
@@ -2207,7 +2213,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
             case 0: // all ok 
             if (clgFile.exists() && clgFile.length() != 0) {
                 this.log.info("Checker '" + command
-                + "' logged a message in " + clgFile + ". ");
+                + "' logged a message in '" + clgFile.getName() + "'. ");
             }
             break;
             case 1: // execution error already treated in executor; 
@@ -2215,15 +2221,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
             break;
             case 3: // no execution error but check found error 
             this.log.error("ELP02: Checker '" + command
-                + "' logged an error in " + clgFile + ". ");
+                + "' logged an error in '" + clgFile.getName() + "'. ");
             break;
             case 2: // no execution error and no error but warning. 
             this.log.warn("WLP08: Checker '" + command
-                + "'' logged a warning in " + clgFile + ". ");
+                + "' logged a warning in '" + clgFile.getName() + "'. ");
             break;
             default:
             this.log.error("ELP01: For command '" + command 
-            + "' found unexpected return code " + res.returnCode + ". ");
+                + "' found unexpected return code " + res.returnCode + ". ");
         }
         // Possibly, if not using the -q option 
         // the status messages delivers even more pieces of information. 

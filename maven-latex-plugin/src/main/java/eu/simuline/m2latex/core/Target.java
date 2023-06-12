@@ -38,6 +38,21 @@ public enum Target {
 
     },
     /**
+     * The only target without artifact
+     */
+    chk() {
+
+        // may throw BuildFailureException TEX01
+        public void processSource(LatexProcessor latexProcessor,
+                                  LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processCheck(desc);
+        }
+
+        public String getPatternOutputFiles(Settings settings) {
+            return Target.NO_OUTPUT_FILES;
+        }
+    },
+    /**
      * standalone.
      */
     dvi() {
@@ -46,7 +61,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexMainDesc desc) throws BuildFailureException {
+                                  LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2dvi(desc);
         }
 
@@ -62,7 +77,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexMainDesc desc) throws BuildFailureException {
+                                  LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2pdf(desc);
         }
 
@@ -81,7 +96,7 @@ public enum Target {
     html() {
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexMainDesc desc) throws BuildFailureException {
+                                  LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2html(desc);
         }
 
@@ -115,7 +130,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexMainDesc desc) throws BuildFailureException {
+                                LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2docx(desc);
         }
 
@@ -131,7 +146,7 @@ public enum Target {
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
-        LatexMainDesc desc) throws BuildFailureException {
+                                LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2txt(desc);
         }
 
@@ -139,6 +154,9 @@ public enum Target {
             return TXT_OUTPUT_FILES;
         }
     };
+
+    private final static String NO_OUTPUT_FILES = ".^";
+
 
     /**
      * Processes the latex main file <code>texFile</code>
