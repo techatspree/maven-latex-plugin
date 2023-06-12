@@ -20,24 +20,6 @@ package eu.simuline.m2latex.core;
 public enum Target {
 
     /**
-     * standalone
-     *
-     */
-    rtf() {
-        private final String RTF_OUTPUT_FILES = "^T$T\\.rtf$";
-
-        // may throw BuildFailureException TEX01
-        public void processSource(LatexProcessor latexProcessor,
-                                  LatexMainDesc desc) throws BuildFailureException {
-            latexProcessor.processLatex2rtf(desc);
-        }
-
-        public String getPatternOutputFiles(Settings settings) {
-            return RTF_OUTPUT_FILES;
-        }
-
-    },
-    /**
      * The only target without artifact
      */
     chk() {
@@ -137,6 +119,24 @@ public enum Target {
         public String getPatternOutputFiles(Settings settings) {
             return MSWORD_OUTPUT_FILES;
         }
+    },
+    /**
+     * standalone
+     *
+     */
+    rtf() {
+        private final String RTF_OUTPUT_FILES = "^T$T\\.rtf$";
+
+        // may throw BuildFailureException TEX01
+        public void processSource(LatexProcessor latexProcessor,
+                                  LatexMainDesc desc) throws BuildFailureException {
+            latexProcessor.processLatex2rtf(desc);
+        }
+
+        public String getPatternOutputFiles(Settings settings) {
+            return RTF_OUTPUT_FILES;
+        }
+
     },
     /**
      * Based on {@link #pdf}
