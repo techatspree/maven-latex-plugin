@@ -39,4 +39,22 @@
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QPasting .latexmkrc, which is just Perl code, into VS Code one can see the highlighting, and a preview, of course provided the extensions Section \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q and given by Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q are installed.\\E$"}
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe installation script instVScode4tex.sh for VS Code extensions given in Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q and the config files .latexmkrc and .chktexrc depicted in Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q and in Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q are packaged in the JAR file representing this software.\\E$"}
 {"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QThe installation script instVScode4tex.sh for VS Code extensions given in Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q and the config files .latexmkrc and .chktexrc depicted in Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q and in Listing \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q are packaged in the JAR file representing this software.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QBibTEXing\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QTame the BeaST - The B to X of BibTEX\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\QUser Manual for glossaries.sty v4.26\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\Qbib2gls: a command line Java application to convert .bib files to glossaries-extra.sty resource files\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\Qglossaries-extra.sty v1.48: an extension to the glossaries package\\E$"}
+{"rule":"FILE_EXTENSIONS_CASE","sentence":"^\\QThe svg Package\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\Qinputenc.sty\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q font encodings\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Qsrcltx.sty · srctex.sty\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\Qsrcltx.sty · srctex.sty\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QJens Berger, Spektrumvn.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QSpecial and common aspects of pdf/dvi/xdvi generators\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe dvi format and the program dvitype\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Qtexdoc dvitype\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe DVItype processor\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QDvipdfm User's Manual\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe documentmetadata-support code\\E$"}
+
 
