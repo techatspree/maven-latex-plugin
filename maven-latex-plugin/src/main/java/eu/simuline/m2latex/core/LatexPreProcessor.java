@@ -1273,7 +1273,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	}
 
   private void clearIfTexNoLatexMain(File texFile) {
-		this.log.info("Deleting aux files of tex '" + texFile + "' if present (included). ");
+		this.log.info("Deleting aux file of tex file '" + texFile + "' if present (included). ");
     deleteIfExists(texFile, LatexProcessor.SUFFIX_AUX);
   }
 
