@@ -54,6 +54,15 @@ class CommandExecutor {
     boolean getSuccess() {
       return !this.checker.hasFailed(this.returnCode);
     }
+
+    public String toString() {
+      StringBuilder res = new StringBuilder();
+      res.append("<CmdResult>");
+      res.append("\nreturnCode" + this.returnCode);
+      res.append("\nsuccess" + this.getSuccess());
+      res.append("\n</CmdResult>");
+      return res.toString();
+    }
   } // class CmdResult 
 
     /**
