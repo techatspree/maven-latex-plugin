@@ -72,3 +72,9 @@ LTeX
 mvn
 
 
+latexmk
+graphicx
+dvipdfm
+dvipdfmx
+WYRIWYR
+IisO
