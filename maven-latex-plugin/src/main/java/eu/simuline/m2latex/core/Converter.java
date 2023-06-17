@@ -42,7 +42,7 @@ enum Converter {
      * see {@link #getVersionPattern()}. 
      */
     String getVersionEnvironment() {
-      return "^pdfTeX 3\\.[0-9]*-[0-9]+\\.[0-9]+-%s \\(TeX Live [0-9]{4}/";
+      return "^pdfTeX 3\\.[0-9]*-[0-9]+\\.[0-9]+-%s \\(TeX Live [0-9]{4}(?:/.+)?\\)";
     }
 
     ConverterCategory getCategory() {
@@ -60,8 +60,9 @@ enum Converter {
       return X_X_X;
     }
 
+    // The last symbol is either `)` indicating tol
     String getVersionEnvironment() {
-      return "^This is LuaHBTeX, Version %s \\(TeX Live [0-9]{4}/";
+      return "^This is LuaHBTeX, Version %s \\(TeX Live [0-9]{4}(?:/.+)?\\)";
     }
 
     ConverterCategory getCategory() {
@@ -99,7 +100,7 @@ enum Converter {
      * see {@link #getVersionPattern()}. 
      */
     String getVersionEnvironment() {
-      return "^XeTeX 3\\.[0-9]*-[0-9]+\\.[0-9]+-%s \\(TeX Live [0-9]{4}/";
+      return "^XeTeX 3\\.[0-9]*-[0-9]+\\.[0-9]+-%s \\(TeX Live [0-9]{4}(?:/.+)?\\)";
     }
 
     ConverterCategory getCategory() {
@@ -125,7 +126,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^" + getCommand()
-          + " %s \\(released [A-Z][a-z]{2} [0-9]+, [0-9]{4}\\)\n";
+          + " %s \\(released [A-Z][a-z]{2} [0-9]+, [0-9]{4}\\)\\R";
     }
 
     ConverterCategory getCategory() {
@@ -144,7 +145,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       // The optional first lines contains deprecation information 
-      return "^(?:[^\n]*\n[^\n]*\n)?" + "unoconv %s\n";
+      return "^(?:.*\\R.*\\R)?" + "unoconv %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -166,7 +167,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + getCommand() + " version %s\n";
+      return "^" + getCommand() + " version %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -189,7 +190,7 @@ enum Converter {
     String getVersionEnvironment() {
       return "^This is " + getCommand() + "\\(k\\) %s "
           + "(?:\\(TeX Live [0-9]+\\)  )?"
-          + "Copyright [0-9]+ Radical Eye Software \\(www\\.radicaleye\\.com\\)\n";
+          + "Copyright [0-9]+ Radical Eye Software \\(www\\.radicaleye\\.com\\)\\R";
     }
 
     ConverterCategory getCategory() {
@@ -214,7 +215,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^This is " + getCommand()
-          + " Version %s by the DVIPDFMx project team,\n";
+          + " Version %s by the DVIPDFMx project team,\\R";
     }
 
     ConverterCategory getCategory() {
@@ -243,7 +244,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^This is " + getCommand()
-          + " Version %s by the DVIPDFMx project team,\n";
+          + " Version %s by the DVIPDFMx project team,\\R";
     }
 
     ConverterCategory getCategory() {
@@ -271,7 +272,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^This is " + getCommand()
-          + " Version %s by the DVIPDFMx project team,\n";
+          + " Version %s by the DVIPDFMx project team,\\R";
     }
 
     ConverterCategory getCategory() {
@@ -299,7 +300,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + getCommand() + " version %s by Thomas Esser and others\n";
+      return "^" + getCommand() + " version %s by Thomas Esser and others\\R";
     }
 
     ConverterCategory getCategory() {
@@ -324,7 +325,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      //return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+      //return "^GPL Ghostscript %s \\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\\R";
       return "^%s";
     }
 
@@ -343,7 +344,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^" + ChkTeX + " v%s - "
-          + "Copyright [0-9]{4}-[0-9]{2} Jens T. Berger Thielemann.\n";
+          + "Copyright [0-9]{4}-[0-9]{2} Jens T. Berger Thielemann.\\R";
     }
 
     ConverterCategory getCategory() {
@@ -387,7 +388,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       //return "default: %s";
-      return "^Usage: [^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n"
+      return "^Usage: .*\\R.*\\R.*\\R.*\\R.*\\R.*\\R.*\\R.*\\R"
           + ".*\\w*rasterization resolution \\(default: %s dpi\\)";
     }
 
@@ -473,7 +474,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + BibTeX + " %s \\(TeX Live [0-9]{4}/";
+      return "^" + BibTeX + " %s \\(TeX Live [0-9]{4}(?:/.+)?\\)";
     }
 
     ConverterCategory getCategory() {
@@ -502,9 +503,9 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^This is " + BibTeXu + ": a UTF-8 Big " + BibTeX
-          + " version [^\n]* \\(TeX Live [0-9]{4}\\)\n"
-          + "Implementation: [^\n]*\n"
-          + "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
+          + " version .* \\(TeX Live [0-9]{4}\\)\\R"
+          + "Implementation: .*\\R"
+          + "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\\R";
     }
 
     ConverterCategory getCategory() {
@@ -534,9 +535,9 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^This is 8-bit Big " + BibTeX
-          + " version [^\n]* \\(TeX Live [0-9]{4}\\)\n"
-          + "Implementation: [^\n]*\n"
-          + "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\n";
+          + " version .* \\(TeX Live [0-9]{4}\\)\\R"
+          + "Implementation: .*\\R"
+          + "Release version: %s \\([0-9]{2} [a-z]{3} [0-9]{4}\\)\\R";
     }
 
     ConverterCategory getCategory() {
@@ -558,7 +559,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^This is " + getCommand() + ", version %s "
-          + "\\[TeX Live [0-9]{4}\\] \\(kpathsea \\+ Thai support\\).\n";
+          + "\\[TeX Live [0-9]{4}\\] \\(kpathsea \\+ Thai support\\).\\R";
     }
 
     ConverterCategory getCategory() {
@@ -582,7 +583,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^" + getCommand()
-          + " - index processor, version %s \\(TeX Live [0-9]{4}\\).\n";
+          + " - index processor, version %s \\(TeX Live [0-9]{4}\\).\\R";
     }
 
     ConverterCategory getCategory() {
@@ -600,7 +601,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + getCommand() + ".pl %s\n";
+      return "^" + getCommand() + ".pl %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -619,7 +620,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + getCommand() + " release: %s\n";
+      return "^" + getCommand() + " release: %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -637,7 +638,7 @@ enum Converter {
 
     String getVersionEnvironment() {
       return "^" + Makeglossaries + " Version %s "
-          + "\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+          + "\\([0-9]{4}-[0-9]{2}-[0-9]{2}\\)\\R";
     }
 
     ConverterCategory getCategory() {
@@ -655,7 +656,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + PythonTeX + " %s\n";
+      return "^" + PythonTeX + " %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -673,7 +674,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + DePythonTeX + " %s\n";
+      return "^" + DePythonTeX + " %s\\R";
     }
 
     // TBD: add a category 
@@ -692,8 +693,8 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^\n?" + Latexmk
-          + ", John Collins, .*[0-9]+ [A-Z][a-z]+\\.? [0-9]+. Version %s\n";
+      return "^(?:.*\\R)*" + Latexmk
+          + ", John Collins, .*[0-9]+ [A-Z][a-z]+\\.? [0-9]+. Version %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -710,7 +711,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + MetaPost + " %s \\(TeX Live [0-9]{4}/";
+      return "^" + MetaPost + " %s \\(TeX Live [0-9]{4}(?:/.+)?\\)";
     }
 
     ConverterCategory getCategory() {
@@ -728,7 +729,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^[^\n]*\nThis is " + getCommand() + " Version %s\n";
+      return "^.*\\RThis is " + getCommand() + " Version %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -745,7 +746,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + getCommand() + " %s\n";
+      return "^" + getCommand() + " %s\\R";
     }
 
     ConverterCategory getCategory() {
@@ -763,8 +764,8 @@ enum Converter {
 
     // TBD: sometimes the pango line '    Pango version: 1.46.2' comes first. 
     String getVersionEnvironment() {
-      return "^(?:[^\n]*\n)?" // eliminates pango version popping up sparsely
-          + Inkscape + " %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\n";
+      return "^(?:.*\\R)?" // eliminates pango version popping up sparsely
+          + Inkscape + " %s \\([0-9a-f]+, [0-9]{4}-[0-9]{2}-[0-9]{2}\\)\\R";
     }
 
     ConverterCategory getCategory() {
@@ -789,7 +790,7 @@ enum Converter {
     }
 
     String getVersionEnvironment() {
-      return "^" + getCommand() + " Version %s\n";
+      return "^" + getCommand() + " Version %s\\R";
     }
 
     ConverterCategory getCategory() {
