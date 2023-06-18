@@ -16,7 +16,6 @@ package org.codehaus.plexus.util.cli;
  * limitations under the License.
  */
 
-import java.security.AccessControlException;
 
 /**
  * A shutdown hook that does not throw any exceptions upon container startup/shutdown or security manager
@@ -38,10 +37,6 @@ class ShutdownHookUtils
         catch ( IllegalStateException ignore )
         {
         }
-        catch ( AccessControlException ignore )
-        {
-        }
-
 
     }
 
@@ -52,9 +47,6 @@ class ShutdownHookUtils
             Runtime.getRuntime().removeShutdownHook( hook );
         }
         catch ( IllegalStateException ignore )
-        {
-        }
-        catch ( AccessControlException ignore )
         {
         }
     }
