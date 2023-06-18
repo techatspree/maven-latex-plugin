@@ -34,7 +34,6 @@ public interface ParameterAdapter {
      * The iterator returned by the iterator method 
      * traverses the elements in their natural order 
      * (the order in which the enum constants are declared). 
-     * TODO: generalize to more than one target. 
      *
      * @throws BuildFailureException
      *    if the configuration does not provide a valid target set.
