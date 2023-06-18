@@ -33,7 +33,8 @@ import java.util.SortedSet;
  * <p>
  * Defines the goal <code>chk</code> which is not tied to a lifecycle phase. 
  */
-@Mojo(name = "chk")
+@Mojo(name = "chk")// maybe , defaultPhase = LifecyclePhase.POST-SITE
+// https://maven.apache.org/plugin-tools/maven-plugin-tools-annotations/index.html
 public class ChkMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 

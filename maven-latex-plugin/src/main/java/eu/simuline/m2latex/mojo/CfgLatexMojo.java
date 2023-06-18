@@ -35,6 +35,7 @@ import java.util.SortedSet;
  * tied to the lifecycle phase <code>site</code>. 
  */
 @Mojo(name = "cfg", defaultPhase = LifecyclePhase.SITE)
+// https://maven.apache.org/plugin-tools/maven-plugin-tools-annotations/index.html
 public class CfgLatexMojo extends AbstractLatexMojo {
 
     // api-docs inherited from ParameterAdapter 

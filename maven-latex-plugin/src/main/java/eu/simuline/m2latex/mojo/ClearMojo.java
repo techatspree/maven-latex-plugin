@@ -35,6 +35,11 @@ import java.util.SortedSet;
  * tied to the lifecycle phase <code>clean</code>. 
  */
 @Mojo(name = "clr", defaultPhase = LifecyclePhase.CLEAN)
+// TBD: research: 
+// https://maven.apache.org/plugin-tools/maven-plugin-tools-annotations/index.html
+// @Execute( goal = "<goal-name>",
+//           phase = LifecyclePhase.<phase>,
+//           lifecycle = "<lifecycle-id>" )
 public class ClearMojo extends AbstractLatexMojo {
 
   // api-docs inherited from ParameterAdapter 
