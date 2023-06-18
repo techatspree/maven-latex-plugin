@@ -266,7 +266,8 @@ Also: meta-uml, with documentation
     <!-- TBD: Bugfix: superfluous comma in: 
 	 WPP03: Skipped processing of files with suffixes [, .el]. -->
 
-
+	<!-- target vrs: still depends on texlive, shall also work for miktex. 
+	Also take whole lines into account (add more \R) -->
 
 	 <!-- TBD: allow for more restrictions in versions of converters. 
 		An application would be to ensure strict reproducibility 
