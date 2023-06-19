@@ -837,8 +837,8 @@ class TexFileUtils {
    *    Whether deletion also allows directories. 
    */
   void deleteOrError(File delFile, boolean allowsDirs) {
-    assert delFile.exists() && (!delFile.isDirectory()
-        || allowsDirs) : "Expected existing (regular) file " + delFile;
+    assert delFile.exists() && (!delFile.isDirectory() || allowsDirs)
+      : "Expected existing (regular) file " + delFile;
     if (!FileUtils.deleteQuietly(delFile)) {
       this.log.error("EFU05: Cannot delete file '" + delFile + "'. ");
     }
