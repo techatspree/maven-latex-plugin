@@ -35,16 +35,17 @@ import java.util.Set;
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
 
+// TBD: rework 
 /**
  * The latex processor creates various output from latex sources
  * including also preprocessing of graphic files in several formats.
  * This is the core class of this piece of software.
  * The main method is {@link #create()} which is executed by the ant task
- * and by the maven plugin given by {@link CfgLatexMojo}.
+ * and by the maven plugin given by { @link CfgLatexMojo}.
  * Also important are {@link #clearAll()} which is executed by
- * the maven plugin given by {@link ClearMojo}.
+ * the maven plugin given by { @link ClearMojo}.
  * also {@link #processGraphics()} which is executed by
- * the maven plugin given by {@link GraphicsMojo}
+ * the maven plugin given by { @link GraphicsMojo}
  * which is helpful for information development.
  * <p>
  * This class delegates preprocessing of the graphic files,
@@ -202,9 +203,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 new TexFileUtils(log), paramAdapt);
     }
 
+    // TBD: rework 
     /**
-     * Defines creational ant-task defined in {@link LatexCfgTask} 
-     * and the according goals in {@link CfgLatexMojo} 
+     * Defines creational ant-task defined in { @link LatexCfgTask} 
+     * and the according goals in { @link CfgLatexMojo} 
      * and subclasses of the maven plugin. 
      * <p>
      * This consists in reading the parameters 
@@ -367,15 +369,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
         }
     }
 
+    // TBD: rework 
     /**
-     * Defines check goal of the maven plugin in {@link ChkMojo}.
+     * Defines check goal of the maven plugin in { @link ChkMojo}.
      * This includes also creation of graphic files.
      * <p>
      * TBD: logging
      * <ul>
      *    <li>WPP05: Included tex files which are no latex main files 
-	 *    <li>WPP06: Included tex files which are no latex main files 
-	 *    <li>WPP07: inluded/excluded files not identified by their names.
+	   *    <li>WPP06: Included tex files which are no latex main files 
+	   *    <li>WPP07: inluded/excluded files not identified by their names.
      * </ul>
      * 
      * @throws BuildFailureException
@@ -425,8 +428,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         }
     }
 
+    // TBD: rework 
     /**
-     * Defines graphics goal of the maven plugin in {@link GraphicsMojo}.
+     * Defines graphics goal of the maven plugin in { @link GraphicsMojo}.
      * <p>
      * Logging:
      * <ul>
@@ -438,8 +442,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * <li>EEX01, EEX02, EEX03, WEX04, WEX05:
      * if running graphic processors failed.
      * <li>WPP05: Included tex files which are no latex main files 
-	 * <li>WPP06: Included tex files which are no latex main files 
-	 * <li>WPP07: inluded/excluded files not identified by their names.
+	   * <li>WPP06: Included tex files which are no latex main files 
+	   * <li>WPP07: inluded/excluded files not identified by their names.
      * </ul>
      *
      * @throws BuildFailureException
@@ -467,9 +471,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.preProc.processGraphicsSelectMain(texProcDir, node);
     }
 
+    // TBD: rework 
     /**
-     * Defines clearing ant-task defined in {@link LatexClrTask}
-     * and the according goal in {@link ClearMojo} of the maven plugin.
+     * Defines clearing ant-task defined in { @link LatexClrTask}
+     * and the according goal in { @link ClearMojo} of the maven plugin.
      * Consists in clearing created graphic files
      * and created files derived from latex main file.
      * <p>

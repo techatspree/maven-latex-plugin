@@ -1,7 +1,8 @@
+// TBD: rework: eliminate or correct links 
 /**
  * Common code base of ant tasks 
- * given by {@link eu.simuline.m2latex.antTask} and 
- * (goals of) the maven plugin located at {@link eu.simuline.m2latex.mojo}.
+ * given by { @link eu.simuline.m2latex.antTask} and 
+ * (goals of) the maven plugin located at { @link eu.simuline.m2latex.mojo}.
  * Both are defined by classes  
  * with common interface {@link ParameterAdapter}. 
  * Both could be called 'target' in the sense as understood in a makefile, 
@@ -10,18 +11,18 @@
  * which is a transformation of a tex document into a document in a target format 
  * stored in the <code>target</code> folder for delivery (thus the name). 
  * To illustrate the difference, note that the maven goal 
- * defined by {@link eu.simuline.m2latex.mojo.CfgLatexMojo} 
+ * defined by { @link eu.simuline.m2latex.mojo.CfgLatexMojo} 
  * may include any subset of (creational) targets, depending on the configuration. 
  * On the other hand, the goals defined by 
- * {@link eu.simuline.m2latex.mojo.ClearMojo}, 
- * {@link eu.simuline.m2latex.mojo.ChkMojo} (just checkstyle) 
- * {@link eu.simuline.m2latex.mojo.GraphicsMojo} 
+ * { @link eu.simuline.m2latex.mojo.ClearMojo}, 
+ * { @link eu.simuline.m2latex.mojo.ChkMojo} (just checkstyle) 
+ * { @link eu.simuline.m2latex.mojo.GraphicsMojo} 
  * performing preprocessing of graphics without deliverable, and 
- * {@link eu.simuline.m2latex.mojo.VersionMojo} 
+ * { @link eu.simuline.m2latex.mojo.VersionMojo} 
  * which displays versions of the applications 
  * this software relies on and whether these versions are valid, 
  * do not correspond with any creational target. 
- * On the other hand, e.g. {@link eu.simuline.m2latex.mojo.ChkMojo} 
+ * On the other hand, e.g. { @link eu.simuline.m2latex.mojo.ChkMojo} 
  * corresponds with target {@link Target#pdf}. 
  * <p>
  * From a functional point of view, the main classes of this package 

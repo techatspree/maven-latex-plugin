@@ -3,6 +3,10 @@ package eu.simuline.m2latex.core;
 
 import java.util.SortedSet;
 
+// TBD: re-add
+//  * @see eu.simuline.m2latex.antTask.LatexCfgTask
+//  * @see eu.simuline.m2latex.mojo.AbstractLatexMojo
+ 
 /**
  * Common interface to pass parameters from ant and from maven. 
  * The core method is {@link #initialize()}. 
@@ -15,9 +19,7 @@ import java.util.SortedSet;
  * {@link initialize()} is needed by all goals/tasks, 
  * whereas  
  *
- * @see eu.simuline.m2latex.antTask.LatexCfgTask
- * @see eu.simuline.m2latex.mojo.AbstractLatexMojo
- */
+*/
 public interface ParameterAdapter {
 
     /**

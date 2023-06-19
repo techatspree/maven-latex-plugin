@@ -28,7 +28,7 @@ import java.util.TreeSet;
 import org.apache.maven.plugins.annotations.Parameter;
 
 // is AbstractLatexMojo but not public
-import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only
+//import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only
 
 /**
  * The settings for a maven plugin and for an ant task. 
