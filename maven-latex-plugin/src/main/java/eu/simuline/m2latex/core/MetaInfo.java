@@ -3,18 +3,21 @@ package eu.simuline.m2latex.core;
 //import org.apache.maven.project.io.xpp3.MavenXpp3Reader;
 //import org.apache.maven.project.Model;
 
-import java.io.InputStream;
+import eu.simuline.m2latex.core.CommandExecutor.CmdResult;
 
+import java.io.InputStream;
 import java.io.IOException;
 
 import java.util.Properties;
 import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 // TBD: extract this class into a separate git repository
 // and use it as a submodule.
@@ -743,6 +746,11 @@ public class MetaInfo {
 	private final static String TOOL_VERSION_FORMAT = "%s%-18s %s '%s'%s%s";
 
 	/**
+	 * The command <code>which</code> as a string. 
+	 */
+	private static final String CMD_WHICH = "which";
+
+	/**
 	 * Only used to find the excluded converters. 
 	 * We use the full settings because we just read and reading may throw exception. 
 	 * This occurs in {@link #printMetaInfo(boolean)} only. 
@@ -778,12 +786,11 @@ public class MetaInfo {
 		this.executor = executor;
 		this.log = log;
 	}
-    
 
 	// CAUTION, depends on the maven-jar-plugin and its version 
 	/**
 	 * Prints meta information, mainly version information 
-	 * on this software and on the converters used. 
+	 * on this software and on the converters and checker tools used. 
 	 * <p>
 	 * WMI01: If the version string of a converter cannot be read. 
 	 * WMI02: If the version of a converter is not as expected. 
@@ -825,7 +832,6 @@ public class MetaInfo {
 			//	    //File[] files = new File(url.toURI()).listFiles();
 			//	    //System.out.println("cd maven; ls: "+java.util.Arrays.asList(files));
 			//	} catch (URISyntaxException e) {
-			//	    // TODO Auto-generated catch block
 			//	    throw new IllegalStateException("Found unexpected type of url: "+url);
 			//	}
 			String propertyFileName = META_FOLDER + "maven/" + "eu.simuline.m2latex/"
@@ -853,7 +859,6 @@ public class MetaInfo {
 			//	MavenXpp3Reader reader = new MavenXpp3Reader();
 			//	Model model = reader.read(new InputStreamReader(url.openStream()));
 
-
 			GitProperties gitProperties = new GitProperties();
 			this.log.info("git properties: ");
 			gitProperties.log();
@@ -873,8 +878,6 @@ public class MetaInfo {
 			//	System.out.println("version.makeindex:"
 			//		   +properties.getProperty("version.makeindex"));
 
-
-
 			// headlines 
 			this.log.info("tool versions: ");
 			this.log.info(String.format(TOOL_VERSION_FORMAT, "?warn?    ", "command",
@@ -883,8 +886,6 @@ public class MetaInfo {
 		} else {
 			versionQuote = "version ";
 		}
-
-
 
 		Properties versionProperties = getProperties(VERSION_PROPS_FILE);
 		if (versionProperties.size() > Converter.values().length) {
@@ -901,15 +902,36 @@ public class MetaInfo {
 		// may throw BuildFailureException TSS05
 		SortedSet<Converter> convertersExcluded =
 				this.settings.getConvertersExcluded();
+		// collects converters not found but also not excluded. 
+		SortedSet<Converter> convertersNotFound = new TreeSet<Converter>();
 		// TBD: try to deal with makeindex using stdin instead of dummy file: 
 		// InputStream sysInBackup = System.in;
 		for (Converter conv : Converter.values()) {
 			if (convertersExcluded.contains(conv)) {
+				// Note that for excluded converters, no warnings are emitted. 
 				continue;
 			}
 			doWarn = false;
 			//System.setIn(new ByteArrayInputStream("\u0004\n".getBytes()));
 			cmd = conv.getCommand();
+
+      CmdResult resultWhich = this.executor.execute(TexFileUtils.getEmptyIdx().getParentFile(),
+                    null,
+                    CMD_WHICH,
+                    CommandExecutor.ReturnCodeChecker.Never,
+                    new String[] {cmd});
+      if (resultWhich.returnCode == 1) {
+        // skip if command cmd is unknown to command which. 
+				// Note that converters which are not accessible (typically not installed) 
+				// do not cause warnings here, because when using them, the situation is pretty clear. 
+				// This is different for unexpected behavior caused by version not taken into account. 
+				// Nevertheless, the converters not found are listed as an information, 
+				// as the excluded are. 
+        convertersNotFound.add(conv);
+        continue;
+      }
+
+			// get actual version of the converter and expected version interval 
 			actVersionObj = new Version(conv, this.executor);
 			expVersion = versionProperties.getProperty(cmd);
 			expVersionItv = new VersionInterval(conv, expVersion);
@@ -947,9 +969,18 @@ public class MetaInfo {
 			doWarnAny |= doWarn;
 		} // for 
 
-		if (includeVersionInfo && !convertersExcluded.isEmpty()) {
-			this.log.info("excluded tools: ");
-			this.log.info(Converter.toCommandsString(convertersExcluded));
+		if (includeVersionInfo) {
+			// keep informed about excluded tools 
+			if (!convertersExcluded.isEmpty()) {
+				this.log.info("tools excluded: ");
+				this.log.info(Converter.toCommandsString(convertersExcluded));
+			}
+
+			// keep informed about included tools not found 
+			if (!convertersNotFound.isEmpty()) {
+				this.log.info("tools not found: ");
+				this.log.info(Converter.toCommandsString(convertersNotFound));
+			}
 		}
 		return doWarnAny;
 	}
