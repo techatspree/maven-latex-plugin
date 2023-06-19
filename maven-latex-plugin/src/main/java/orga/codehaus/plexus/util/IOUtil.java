@@ -1,4 +1,4 @@
-package org.codehaus.plexus.util;
+package orga.codehaus.plexus.util;
 
 /* ====================================================================
  * The Apache Software License, Version 1.1

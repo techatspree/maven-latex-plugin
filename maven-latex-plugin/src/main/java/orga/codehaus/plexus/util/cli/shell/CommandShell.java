@@ -1,4 +1,4 @@
-package org.codehaus.plexus.util.cli.shell;
+package orga.codehaus.plexus.util.cli.shell;
 
 /*
  * Copyright The Codehaus Foundation.

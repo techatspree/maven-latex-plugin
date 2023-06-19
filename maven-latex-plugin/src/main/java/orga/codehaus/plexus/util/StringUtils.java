@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.codehaus.org/>.
  */
-package org.codehaus.plexus.util;
+package orga.codehaus.plexus.util;
 
 import java.util.Arrays;
 import java.util.Iterator;

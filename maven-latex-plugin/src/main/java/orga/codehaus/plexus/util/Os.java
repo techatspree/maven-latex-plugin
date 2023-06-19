@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 
-package org.codehaus.plexus.util;
+package orga.codehaus.plexus.util;
 
 import java.util.HashSet;
 import java.util.Locale;
