@@ -362,7 +362,7 @@ Also: meta-uml, with documentation
 		This must be done in all documents. 
 	--> 
 	<!-- TBD: eliminate letter size using package geometry (robustindex) -->
-	
+	<!-- re-add links deactivated y { @ link ...} and by: // * @see ... -->
 	 <!--
 here is a bug affecting goal odt: 
 /usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
