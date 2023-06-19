@@ -24,12 +24,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-import eu.simuline.m2latex.antTask.LatexCfgTask;
-import eu.simuline.m2latex.antTask.LatexClrTask;
-import eu.simuline.m2latex.mojo.CfgLatexMojo;
-import eu.simuline.m2latex.mojo.ChkMojo;
-import eu.simuline.m2latex.mojo.ClearMojo;
-import eu.simuline.m2latex.mojo.GraphicsMojo;
+// TBD: all this must be eliminated. 
+//import eu.simuline.m2latex.antTask.LatexCfgTask;
+//import eu.simuline.m2latex.antTask.LatexClrTask;
+// import eu.simuline.m2latex.mojo.CfgLatexMojo;
+// import eu.simuline.m2latex.mojo.ChkMojo;
+// import eu.simuline.m2latex.mojo.ClearMojo;
+// import eu.simuline.m2latex.mojo.GraphicsMojo;
 
 // idea: use latex2rtf and unoconv
 // idea: targets for latex2html, latex2man, latex2png and many more. 
