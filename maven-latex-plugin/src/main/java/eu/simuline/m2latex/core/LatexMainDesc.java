@@ -26,7 +26,7 @@ class LatexMainDesc {
 
     final File parentDir;
 
-    LatexMainDesc(File texFile, TexFileUtils fileUtils) {
+    LatexMainDesc(File texFile) {
         this.texFile = texFile;
         this.xxxFile = TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
         this.pdfFile = withSuffix(LatexProcessor.SUFFIX_PDF);

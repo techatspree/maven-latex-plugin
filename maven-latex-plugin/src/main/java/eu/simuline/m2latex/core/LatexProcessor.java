@@ -571,7 +571,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 
     private LatexMainDesc getLatexMainDesc(File texFile) {
-        return new LatexMainDesc(texFile, this.fileUtils);
+        return new LatexMainDesc(texFile);
     }
 
     /**
@@ -2123,6 +2123,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 suffix = args[idx].substring(2, args[idx].length());
             }
         }
+        // FIXME: no validity check on suffix 
         assert suffix != null;
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
