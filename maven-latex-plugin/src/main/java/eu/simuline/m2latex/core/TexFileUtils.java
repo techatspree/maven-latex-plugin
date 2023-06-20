@@ -263,7 +263,6 @@ class TexFileUtils {
    * all its files passing <code>fileFilter</code> 
    * are considered as output files and 
    * are copied to <code>targetDir</code>. 
-   * This is invoked by {@link LatexProcessor#create()} only. 
    * <p>
    * Logging: 
    * <ul>
