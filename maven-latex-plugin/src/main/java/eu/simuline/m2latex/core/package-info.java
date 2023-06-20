@@ -1,4 +1,4 @@
-// TBD: rework: eliminate or correct links 
+// TBD: rework: eliminate or correct links
 /**
  * Common code base of ant tasks 
  * given by { @link eu.simuline.m2latex.antTask} and 

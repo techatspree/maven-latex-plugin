@@ -1,6 +1,6 @@
 package eu.simuline.m2latex.core;
 
-// TBD: correct links 
+// TBD: correct links
 /**
  * This is needed as a wrapper 
  * to {@link org.apache.maven.plugin.MojoExecutionException} 
@@ -29,12 +29,13 @@ package eu.simuline.m2latex.core;
  */
 public class BuildExecutionException extends AbstractBuildException {
 
-    public BuildExecutionException(String message) {
-	super(message);
-	assert false;
-    }
-    public BuildExecutionException(String message, Throwable cause) {
-	super(message, cause);
-	assert false;
-    }
+  public BuildExecutionException(String message) {
+    super(message);
+    assert false;
+  }
+
+  public BuildExecutionException(String message, Throwable cause) {
+    super(message, cause);
+    assert false;
+  }
 }

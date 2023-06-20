@@ -1,5 +1,6 @@
 package eu.simuline.m2latex.core;
-// TBD: rename: LatexBuildException, maybe abstract 
+
+// TBD: rename: LatexBuildException, maybe abstract
 /**
  * The base class for {@link BuildExecutionException} 
  * and for {@link BuildFailureException}. 
@@ -15,11 +16,11 @@ package eu.simuline.m2latex.core;
  */
 class AbstractBuildException extends Exception {
 
-   protected AbstractBuildException(String message) {
-       super(message);
-    }
+  protected AbstractBuildException(String message) {
+    super(message);
+  }
 
-    protected AbstractBuildException(String message, Throwable cause) {
-	super(message, cause);
-    }
+  protected AbstractBuildException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }
