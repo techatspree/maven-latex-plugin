@@ -498,14 +498,17 @@ class TexFileUtils {
    *    <code>\put(0,0){\includegraphics[width=\\unitlength]{xxx.eps}}</code>
    *    with variable <code>xxx</code> and leading blanks\
    */
-  public void filterInkscapeIncludeFile(File srcFile) {
-    assert LatexPreProcessor.SUFFIX_EPSTEX
-        .equals(getSuffix(srcFile)) : "Expected suffix '"
-            + LatexPreProcessor.SUFFIX_EPSTEX + "' found '" + getSuffix(srcFile)
-            + "'";
-    File destFile = replaceSuffix(srcFile, LatexPreProcessor.SUFFIX_PTX);
-    File bareFile = replaceSuffix(srcFile, LatexPreProcessor.SUFFIX_VOID);
-    //FileReader reader = null;
+  public void filterInkscapeIncludeFile(File srcFile,
+          File destFile,
+          String bareFileName,
+          String epsSuffix) {
+    // assert LatexPreProcessor.SUFFIX_EPSTEX
+    //     .equals(getSuffix(srcFile)) : "Expected suffix '"
+    //         + LatexPreProcessor.SUFFIX_EPSTEX + "' found '" + getSuffix(srcFile)
+    //         + "'";
+    // File destFile = replaceSuffix(srcFile, LatexPreProcessor.SUFFIX_PTX);
+    // File bareFile = replaceSuffix(srcFile, LatexPreProcessor.SUFFIX_VOID);
+    // //FileReader reader = null;
     BufferedReader bufferedReader = null;
     FileWriter writer = null;
     try {
@@ -529,8 +532,8 @@ class TexFileUtils {
 
       // third line must be changed. 
       line = bufferedReader.readLine();
-      line = line.replace(bareFile.getName() + LatexPreProcessor.SUFFIX_EPS
-          + "' (pdf, eps, ps)", bareFile.getName() + ".pdf/eps/ps'\n");
+      line = line.replace(bareFileName + epsSuffix
+          + "' (pdf, eps, ps)", bareFileName + ".pdf/eps/ps'\n");
       writer.write(line);
 
       // readLine may throw IOException
@@ -543,8 +546,8 @@ class TexFileUtils {
       // readLine may throw IOException 
       line = bufferedReader.readLine();
       line = line.replace(
-          bareFile.getName() + LatexPreProcessor.SUFFIX_EPS + "}}%",
-          bareFile.getName() + "}}%\n");
+          bareFileName + epsSuffix + "}}%",
+          bareFileName + "}}%\n");
       writer.write(line);
 
       line = bufferedReader.readLine();
@@ -950,7 +953,7 @@ class TexFileUtils {
    * Temporarily generated file to be passed to {@link Converter#Makeindex}
    * to allow to determine the version of the tool.
    */
-  static File EMPTY_IDX;
+  private static File EMPTY_IDX;
 
   static File getEmptyIdx() {
     if (EMPTY_IDX == null) {

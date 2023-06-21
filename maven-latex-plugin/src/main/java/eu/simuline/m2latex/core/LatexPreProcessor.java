@@ -51,14 +51,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		}
 	} // static
 
-	// used in preprocessing only and in TexFileUtils for a workaround
-	final static String SUFFIX_TEX = ".tex";
+	// used in preprocessing only (once)
+	private final static String SUFFIX_TEX = ".tex";
 
-	// home-brewed ending to represent tex including postscript
+	// home-brewed ending to represent tex including postscript 
+  // TBD: used internally in methods runFig2TexInclDev, clearTargetPtxPdfEps, runGnuplot2Dev
+  // used outside only in TexFileTuils.filterInkscapeIncludeFile
 	final static String SUFFIX_PTX = ".ptx";
 	// the next two for preprocessing and in LatexDev only
-	final static String SUFFIX_PDFTEX = ".pdf_tex";
-	final static String SUFFIX_EPSTEX = ".eps_tex";
+  // TBD: analyze: also: PDF, EPS
+	final static String SUFFIX_PDFTEX = ".pdf_tex";// LatexDev only 
+	final static String SUFFIX_EPSTEX = ".eps_tex";// LatexDev
 
 	// suffix for xfig
 	private final static String SUFFIX_FIG = ".fig";
@@ -79,7 +82,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// just for silently skipping
 	private final static String SUFFIX_BIB = ".bib";
 	// for latex main file creating html and for graphics.
-	final static String SUFFIX_EPS = ".eps";
+	static final String SUFFIX_EPS = ".eps";// LatexDev
 
 	private final static String SUFFIX_XBB = ".xbb";
 	private final static String SUFFIX_BB = ".bb";
@@ -1054,8 +1057,15 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 		if (filterTex) {
 			// may log EFU07, EFU08, EFU09: cannot fiter
-			// for eps only
-			this.fileUtils.filterInkscapeIncludeFile(texFile);
+			// for eps only 
+      String suffix = TexFileUtils.getSuffix(texFile);
+      assert SUFFIX_EPSTEX.equals(suffix)
+        : "Expected suffix '" + SUFFIX_EPSTEX + "' found '" + suffix + "'";
+      File destFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_PTX);
+      File bareFile = TexFileUtils.replaceSuffix(texFile, SUFFIX_VOID);
+
+			this.fileUtils.filterInkscapeIncludeFile(texFile, destFile,
+                                               bareFile.getName(), SUFFIX_EPS);
 		}
 		this.fileUtils.deleteOrError(texFile, false);
 	}
