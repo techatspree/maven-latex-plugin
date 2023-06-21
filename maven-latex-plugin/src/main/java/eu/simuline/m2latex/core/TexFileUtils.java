@@ -52,6 +52,11 @@ class TexFileUtils {
 
   private final static String PATTERN_INS_LATEX_MAIN = "T\\$T";
 
+  // TBD: make configurable 
+  // folder created by auxiliary program pythontex 
+  // holding all its output files by default 
+  final static String PREFIX_PYTEX_OUT_FOLDER = "pythontex-files-";
+
   private final LogWrapper log;
 
   TexFileUtils(LogWrapper log) {
@@ -926,7 +931,7 @@ class TexFileUtils {
     assert containsAll;
     currSubdirs.removeAll(origSubdirs);
     Set<String> diffSet = currSubdirs;
-    String regex = LatexProcessor.PREFIX_PYTEX_OUT_FOLDER + ".+";// represents file name
+    String regex = PREFIX_PYTEX_OUT_FOLDER + ".+";// represents file name
     for (String name : diffSet) {
       assert name.matches(regex);
       System.out.println("del: " + new File(dir, name));

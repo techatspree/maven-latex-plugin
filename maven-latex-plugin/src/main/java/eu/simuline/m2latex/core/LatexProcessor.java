@@ -104,10 +104,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // logging file for pythontex written by pythontexW
     final static String SUFFIX_PLG = ".plg";
 
-    // TBD: make configurable 
-    // folder created by auxiliary program pythontex 
-    // holding all its output files by default 
-    final static String PREFIX_PYTEX_OUT_FOLDER = "pythontex-files-";
 
     // file in PREFIX_PYTEX_OUT_FOLDER 
     // created by auxiliary program pythontex
@@ -1751,7 +1747,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         " on '" + pycFile.getName() + "'. ");
         String[] args = buildArguments(this.settings.getPythontexOptions(), desc.xxxFile);
 
-        File outFolder = TexFileUtils.replacePrefix(PREFIX_PYTEX_OUT_FOLDER, desc.xxxFile);
+        File outFolder = TexFileUtils.replacePrefix(TexFileUtils.PREFIX_PYTEX_OUT_FOLDER, desc.xxxFile);
         String repOutFileName = desc.xxxFile.getName() + SUFFIX_PYTXMCR;
         File repOutFile = new File(outFolder, repOutFileName);
         if (repOutFile.exists()) {
