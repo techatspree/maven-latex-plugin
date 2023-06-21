@@ -22,7 +22,7 @@ import eu.simuline.m2latex.core.Target;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
-//import java.util.EnumSet;
+// import java.util.EnumSet;
 
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -33,12 +33,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo(name = "docx")
 public class DocxMojo extends CfgLatexMojo {
 
-    public SortedSet<Target> getTargetSet() {
-	SortedSet<Target> res = new TreeSet<Target>();
-	res.add(Target.docx);
-	return res;
-	//return EnumSet.of(Target.docx);
-    }
+  public SortedSet<Target> getTargetSet() {
+    SortedSet<Target> res = new TreeSet<Target>();
+    res.add(Target.docx);
+    return res;
+    //return EnumSet.of(Target.docx);
+  }
 
 
 }

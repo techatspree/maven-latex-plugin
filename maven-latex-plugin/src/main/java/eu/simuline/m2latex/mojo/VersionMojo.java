@@ -38,12 +38,6 @@ import java.util.SortedSet;
 // in fact, Metainfo can give more info than just versioning 
 public class VersionMojo extends AbstractLatexMojo {
 
-    // api-docs inherited from ParameterAdapter 
-    // FIXME: not required by ClearMojo, GraphicsMojo, ChkMojo  
-     public SortedSet<Target> getTargetSet() {
-    	throw new IllegalStateException();
-    }
-
      /**
       * Prints meta information, mainly version information 
       * on this software and on the converters used. 

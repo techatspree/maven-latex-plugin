@@ -24,7 +24,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
-//import java.util.EnumSet;
+// import java.util.EnumSet;
 
 /**
  * Build documents in open office formats from LaTeX sources 
@@ -33,10 +33,10 @@ import java.util.TreeSet;
 @Mojo(name = "odt")
 public class OdtMojo extends CfgLatexMojo {
 
-    public SortedSet<Target> getTargetSet() {
-	SortedSet<Target> res = new TreeSet<Target>();
-	res.add(Target.odt);
-	return res;
-	//return EnumSet.of(Target.odt);
-    }
+  public SortedSet<Target> getTargetSet() {
+    SortedSet<Target> res = new TreeSet<Target>();
+    res.add(Target.odt);
+    return res;
+    //return EnumSet.of(Target.odt);
+  }
 }

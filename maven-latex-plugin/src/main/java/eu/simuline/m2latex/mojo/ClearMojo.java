@@ -42,12 +42,6 @@ import java.util.SortedSet;
 //           lifecycle = "<lifecycle-id>" )
 public class ClearMojo extends AbstractLatexMojo {
 
-  // api-docs inherited from ParameterAdapter 
-  // FIXME: not required by ClearMojo, GraphicsMojo, ChkMojo  
-  public SortedSet<Target> getTargetSet() {
-    throw new IllegalStateException();
-  }
-
   /**
    * Invoked by maven executing the plugin. 
    * <p>
