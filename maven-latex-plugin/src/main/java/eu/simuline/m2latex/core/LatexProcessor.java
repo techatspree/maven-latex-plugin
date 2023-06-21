@@ -267,6 +267,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     public void create(SortedSet<Target> targetSet) throws BuildFailureException {
 
+        // TBD: clarify whether this is superfluous 
         this.paramAdapt.initialize();
         this.log.info("-----------create-------------");
         this.log.debug("Settings: " + this.settings.toString());
