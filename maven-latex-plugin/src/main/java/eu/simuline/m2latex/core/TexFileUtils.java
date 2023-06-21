@@ -960,14 +960,22 @@ class TexFileUtils {
    */
   private static File EMPTY_IDX;
 
+  // unsorted and not unified index created by latex
+  final static String SUFFIX_IDX = ".idx";
+  // sorted and unified index created by makeindex
+  final static String SUFFIX_IND = ".ind";
+  // log file created by makeindex
+  final static String SUFFIX_ILG = ".ilg";
+
+
+
   static File getEmptyIdx() {
     if (EMPTY_IDX == null) {
       try {
-        EMPTY_IDX =
-            File.createTempFile("forMakeindex", LatexProcessor.SUFFIX_IDX);
+        EMPTY_IDX = File.createTempFile("forMakeindex", SUFFIX_IDX);
         EMPTY_IDX.deleteOnExit();
-        replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_IND).deleteOnExit();
-        replaceSuffix(EMPTY_IDX, LatexProcessor.SUFFIX_ILG).deleteOnExit();
+        replaceSuffix(EMPTY_IDX, SUFFIX_IND).deleteOnExit();
+        replaceSuffix(EMPTY_IDX, SUFFIX_ILG).deleteOnExit();
       } catch (Exception e) {
         // TBD: eliminate: shall be a warning or even less than that.
         // But to that end, this must not be static. 

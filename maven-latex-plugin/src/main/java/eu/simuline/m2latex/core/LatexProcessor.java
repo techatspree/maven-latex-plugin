@@ -85,11 +85,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     // makeindex for index
     // unsorted and not unified index created by latex
-    final static String SUFFIX_IDX = ".idx";
+    final static String SUFFIX_IDX = TexFileUtils.SUFFIX_IDX;
     // sorted and unified index created by makeindex
-    final static String SUFFIX_IND = ".ind";
+    final static String SUFFIX_IND = TexFileUtils.SUFFIX_IND;
     // log file created by makeindex
-    final static String SUFFIX_ILG = ".ilg";
+    final static String SUFFIX_ILG = TexFileUtils.SUFFIX_ILG;
 
     // unsorted and not unified glossary created by latex
     final static String SUFFIX_GLO = ".glo";
