@@ -392,38 +392,38 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // FIXME: maybe sufficient not to create graphics, if no \input.
     // Also, maybe good not to remove log file
     // maybe good to make suffix configurable rather than hardcoded.
-    public void checkAll() throws BuildFailureException {
+    // public void checkAll() throws BuildFailureException {
 
-        this.paramAdapt.initialize();
-        this.log.debug("Settings: " + this.settings.toString());
+    //     this.paramAdapt.initialize();
+    //     this.log.debug("Settings: " + this.settings.toString());
 
-        // may throw BuildFailureException TSS02
-        File texProcDir = this.settings.getTexSrcProcDirectoryFile();
-        assert texProcDir.exists() && texProcDir.isDirectory()
-                : "Expected existing tex processing folder " + texProcDir;
+    //     // may throw BuildFailureException TSS02
+    //     File texProcDir = this.settings.getTexSrcProcDirectoryFile();
+    //     assert texProcDir.exists() && texProcDir.isDirectory()
+    //             : "Expected existing tex processing folder " + texProcDir;
 
-        // constructor DirNode may log warning WFU01 Cannot read directory
-        DirNode node = new DirNode(texProcDir, this.fileUtils);
+    //     // constructor DirNode may log warning WFU01 Cannot read directory
+    //     DirNode node = new DirNode(texProcDir, this.fileUtils);
 
-        try {
-            // TBD: eliminate processing graphics. 
-            // may throw BuildFailureException TEX01,
-            // log warning WFU03, WPP02, WPP03,
-            // EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09
-            Collection<File> latexMainFiles = this.preProc
-                    .processGraphicsSelectMain(texProcDir, node);
+    //     try {
+    //         // TBD: eliminate processing graphics. 
+    //         // may throw BuildFailureException TEX01,
+    //         // log warning WFU03, WPP02, WPP03,
+    //         // EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09
+    //         Collection<File> latexMainFiles = this.preProc
+    //                 .processGraphicsSelectMain(texProcDir, node);
 
-            for (File latexMain : latexMainFiles) {
-                processCheck(getLatexMainDesc(latexMain));
-            }
-        } finally {
-            // FIXME: also removes the clg-files
-            if (this.settings.isCleanUp()) {
-                // may log warning WFU01, EFU05
-                this.fileUtils.cleanUp(node, texProcDir);
-            }
-        }
-    }
+    //         for (File latexMain : latexMainFiles) {
+    //             processCheck(getLatexMainDesc(latexMain));
+    //         }
+    //     } finally {
+    //         // FIXME: also removes the clg-files
+    //         if (this.settings.isCleanUp()) {
+    //             // may log warning WFU01, EFU05
+    //             this.fileUtils.cleanUp(node, texProcDir);
+    //         }
+    //     }
+    // }
 
     // TBD: rework 
     /**
