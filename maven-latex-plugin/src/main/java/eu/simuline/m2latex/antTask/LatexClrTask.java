@@ -9,11 +9,6 @@ import java.util.SortedSet;
 
 public class LatexClrTask extends AbstractLatexTask {
 
-  // api-docs inherited from ParameterAdapter
-  public SortedSet<Target> getTargetSet() {
-    throw new IllegalStateException();
-  }
-
   /**
    * Invoked by ant executing the task. 
    * <p>

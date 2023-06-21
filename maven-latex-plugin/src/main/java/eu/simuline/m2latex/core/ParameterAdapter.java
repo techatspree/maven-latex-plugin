@@ -28,17 +28,4 @@ public interface ParameterAdapter {
      */
     void initialize();
 
-    /**
-     * Returns the set of targets. 
-     * FIXME: Better would be Enum set but best a sorted kind of EnumSet
-     * The set is an EnumSet and thus in a sense sorted, 
-     * although not implementing SortedSet: *****
-     * The iterator returned by the iterator method 
-     * traverses the elements in their natural order 
-     * (the order in which the enum constants are declared). 
-     *
-     * @throws BuildFailureException
-     *    if the configuration does not provide a valid target set.
-     */
-    SortedSet<Target> getTargetSet() throws BuildFailureException;
 }

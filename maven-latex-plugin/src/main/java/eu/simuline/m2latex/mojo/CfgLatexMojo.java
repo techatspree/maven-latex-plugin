@@ -91,7 +91,7 @@ public class CfgLatexMojo extends AbstractLatexMojo {
       // may log WFU01, WFU03, EFU05, EFU07, EFU08, EFU09 
       // WPP02, WPP03, WPP05, WPP06, WPP07, 
       // EEX01, EEX02, EEX03, WEX04, WEX05 
-      this.latexProcessor.create();
+      this.latexProcessor.create(getTargetSet());
     } catch (BuildFailureException e) {
       throw new MojoFailureException(e.getMessage(), e.getCause());
     }

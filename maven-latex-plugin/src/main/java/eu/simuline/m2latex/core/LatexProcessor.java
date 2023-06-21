@@ -265,7 +265,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 	 *    <li>WPP07: inluded/excluded files not identified by their names.
      *    </ul>
      */
-    public void create() throws BuildFailureException {
+    public void create(SortedSet<Target> targetSet) throws BuildFailureException {
 
         this.paramAdapt.initialize();
         this.log.info("-----------create-------------");
@@ -305,7 +305,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
                         : "Expected target folder " + targetDir + " folder if exists. ";
 
                 // may throw BuildFailureException TSS04
-                for (Target target : this.paramAdapt.getTargetSet()) {
+                for (Target target : targetSet) {
                     // may throw BuildFailureException TEX01,
                     // log warning EEX01, EEX02, EEX03, WEX04, WEX05
                     target.processSource(this, getLatexMainDesc(texFile));
