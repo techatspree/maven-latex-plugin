@@ -948,7 +948,7 @@ enum Converter {
    *    The executable given by {@link #getCommand()} 
    *    is passed options {@link #getVersionOption()} 
    *    to get version option and run 
-   *    in the directory containing {@link TexFileUtils#EMPTY_IDX}. 
+   *    in the directory containing {@link TexFileUtils#getEmptyIdx()}. 
    * @return
    *    the output of the invocation 
    *    which matches {@link #getVersionEnvironment()}. 
