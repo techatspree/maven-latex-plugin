@@ -38,8 +38,6 @@ import java.util.SortedSet;
 // https://maven.apache.org/plugin-tools/maven-plugin-tools-annotations/index.html
 public class CfgLatexMojo extends AbstractLatexMojo {
 
-  // api-docs inherited from ParameterAdapter 
-  // FIXME: not required by ClearMojo 
   public SortedSet<Target> getTargetSet() throws BuildFailureException {
     return this.settings.getTargetSet();
   }
