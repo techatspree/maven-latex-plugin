@@ -23,6 +23,7 @@ import java.io.FileFilter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import java.util.SortedSet;
 
 // TBD: all this must be eliminated. 
 //import eu.simuline.m2latex.antTask.LatexCfgTask;
@@ -178,7 +179,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         super(settings, executor, log, fileUtils);
         this.paramAdapt = paramAdapt;
         this.preProc = new LatexPreProcessor(this.settings, this.executor, this.log, this.fileUtils);
-        this.metaInfo = new MetaInfo(this.settings, this.executor, this.log);
+        this.metaInfo = new MetaInfo(this.executor, this.log);
     }
 
     /**
@@ -1249,7 +1250,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      */
     public boolean printMetaInfo(boolean includeVersionInfo)
             throws BuildFailureException {
-        return this.metaInfo.printMetaInfo(includeVersionInfo);
+		  // may throw BuildFailureException TSS05
+      SortedSet<Converter> convertersExcluded =
+				  this.settings.getConvertersExcluded();
+      return this.metaInfo.printMetaInfo(includeVersionInfo, convertersExcluded);
     }
 
     /**

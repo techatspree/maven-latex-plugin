@@ -751,13 +751,6 @@ public class MetaInfo {
 	private static final String CMD_WHICH = "which";
 
 	/**
-	 * Only used to find the excluded converters. 
-	 * We use the full settings because we just read and reading may throw exception. 
-	 * This occurs in {@link #printMetaInfo(boolean)} only. 
-	 */
-	private final Settings settings;
-
-	/**
 	 * Executor to find the version string.  
 	 */
 	private final CommandExecutor executor;
@@ -771,18 +764,15 @@ public class MetaInfo {
 	private final LogWrapper log;
 
 	/**
-	 * Creates meta info from the settings, using an executor to find out the version 
+	 * Creates meta info using an executor to find out the version 
 	 * and a logger to log warnings and infos, e.g. if a version does not fit the expectations. 
 	 * 
-	 * @param settings
-	 *    The settings which determine the converters
 	 * @param executor
 	 *    the executor to execute the converters to find out their version. 
 	 * @param log
 	 *    the logger to log info on versions. 
 	 */
-	MetaInfo(Settings settings, CommandExecutor executor, LogWrapper log) {
-		this.settings = settings;
+	MetaInfo(CommandExecutor executor, LogWrapper log) {
 		this.executor = executor;
 		this.log = log;
 	}
@@ -797,6 +787,8 @@ public class MetaInfo {
 	 *
 	 * @param includeVersionInfo
 	 *    whether to include plain version info; else warnings only.
+   * @param convertersExcluded
+   *    set of excluded converters. 
 	 * @return
 	 *    whether a warning has been issued. 
 	 * @throws BuildFailureException
@@ -810,7 +802,8 @@ public class MetaInfo {
 	 *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
 	 *    </ul>
 	 */
-	public boolean printMetaInfo(final boolean includeVersionInfo)
+	public boolean printMetaInfo(final boolean includeVersionInfo,
+                              SortedSet<Converter> convertersExcluded)
 			throws BuildFailureException {
 
 		String versionQuote = "";
@@ -900,8 +893,8 @@ public class MetaInfo {
 		VersionInterval expVersionItv;
 		boolean doWarn, doWarnAny = false;
 		// may throw BuildFailureException TSS05
-		SortedSet<Converter> convertersExcluded =
-				this.settings.getConvertersExcluded();
+		// SortedSet<Converter> convertersExcluded =
+		// 		this.settings.getConvertersExcluded();
 		// collects converters not found but also not excluded. 
 		SortedSet<Converter> convertersNotFound = new TreeSet<Converter>();
 		// TBD: try to deal with makeindex using stdin instead of dummy file: 
