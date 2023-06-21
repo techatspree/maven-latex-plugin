@@ -19,14 +19,11 @@
 package eu.simuline.m2latex.mojo;
 
 import eu.simuline.m2latex.core.Target;
-import eu.simuline.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugins.annotations.Mojo;
 
-import org.apache.maven.plugin.MojoFailureException;
-
 import java.util.SortedSet;
-// import java.util.EnumSet;
+import java.util.TreeSet;
 
 /**
  * Checks all latex main files after having created all graphical files. 
@@ -35,38 +32,47 @@ import java.util.SortedSet;
  */
 @Mojo(name = "chk") // maybe , defaultPhase = LifecyclePhase.POST-SITE
 // https://maven.apache.org/plugin-tools/maven-plugin-tools-annotations/index.html
-public class ChkMojo extends AbstractLatexMojo {
+public class ChkMojo extends CfgLatexMojo {
 
-  /**
-   * Invoked by maven executing the plugin. 
-   * <p>
-   * Logging: 
-   * <ul>
-   * <li>WPP02: tex file may be latex main file 
-   * <li>WPP05: Included tex files which are no latex main files 
-   * <li>WPP06: Included tex files which are no latex main files 
-   * <li>WPP07: inluded/excluded files not identified by their names.
-   * <li>WFU01: Cannot read directory...
-   * <li>WFU03: cannot close tex file 
-   * <li>EFU05: Failed to delete file 
-   * <li>EFU07, EFU08, EFU09: if filtering a file fails. 
-   * </ul>
-   *
-   * @throws BuildFailureException 
-   *    TSS02 if the tex source processing directory does either not exist 
-   *    or is not a directory. 
-   */
-  public void execute() throws MojoFailureException {
-    initialize();
-    try {
-      // may throw BuildFailureException TSS02 
-      // may log warnings WPP02, WPP05, WPP06, WPP07, 
-      // WFU01, WFU03, EFU05 
-      // EFU07, EFU08, EFU09: if filtering a file fails. 
-      this.latexProcessor.checkAll();
-    } catch (BuildFailureException e) {
-      throw new MojoFailureException(e.getMessage(), e.getCause());
-    }
-  }
-
+   public SortedSet<Target> getTargetSet() {
+       SortedSet<Target> res = new TreeSet<Target>();
+       res.add(Target.chk);
+       return res;
+       //return EnumSet.of(Target.dvi);
+   }
 }
+// public class ChkMojo extends AbstractLatexMojo {
+
+//   /**
+//    * Invoked by maven executing the plugin. 
+//    * <p>
+//    * Logging: 
+//    * <ul>
+//    * <li>WPP02: tex file may be latex main file 
+//    * <li>WPP05: Included tex files which are no latex main files 
+//    * <li>WPP06: Included tex files which are no latex main files 
+//    * <li>WPP07: inluded/excluded files not identified by their names.
+//    * <li>WFU01: Cannot read directory...
+//    * <li>WFU03: cannot close tex file 
+//    * <li>EFU05: Failed to delete file 
+//    * <li>EFU07, EFU08, EFU09: if filtering a file fails. 
+//    * </ul>
+//    *
+//    * @throws BuildFailureException 
+//    *    TSS02 if the tex source processing directory does either not exist 
+//    *    or is not a directory. 
+//    */
+//   public void execute() throws MojoFailureException {
+//     initialize();
+//     try {
+//       // may throw BuildFailureException TSS02 
+//       // may log warnings WPP02, WPP05, WPP06, WPP07, 
+//       // WFU01, WFU03, EFU05 
+//       // EFU07, EFU08, EFU09: if filtering a file fails. 
+//       this.latexProcessor.checkAll();
+//     } catch (BuildFailureException e) {
+//       throw new MojoFailureException(e.getMessage(), e.getCause());
+//     }
+//   }
+
+// }
