@@ -16,9 +16,14 @@ abstract class AbstractLatexProcessor {
 
     // both LatexProcessor and LatexPreProcessor 
     // LaTeX and mpost with option -recorder 
+    // Used only to clean, 
+    // but only in LatexPreProcessor, because else clean mechanism is just xxx.yyy 
+    // In the long run, this will be used by both, 
+    // because it is scanned to find out dependencies 
     final static String SUFFIX_FLS = ".fls";
-    // both LatexProcessor and LatexPreProcessor 
+    // both LatexProcessor and LatexPreProcessor, used in LatexMainDesc
     // for LaTeX but also for mpost 
+    // used to 
     final static String SUFFIX_LOG = ".log";
 
     // both LatexProcessor and LatexPreProcessor 
