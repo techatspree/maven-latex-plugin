@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<!-- coordinates for model and artifact xxx -->
 	<modelVersion>4.0.0</modelVersion>
@@ -18,7 +19,7 @@
   </parent-->
 
 	<!-- information for generating a site: about -->
-	<name>Maven LaTeX Plugin</name>
+	<name>LaTeX Maven Plugin</name>
 	<description>
     Automatically create documents 
     in formats PDF, XDOC, ODT, TXT, HTML and others 
@@ -76,6 +77,10 @@
 			<organization>l2r</organization>
 			<organizationUrl>https://www.simuline.eu</organizationUrl>
 			<timezone>Europe/Berlin</timezone>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
 			<properties>
 				<picUrl>http://www.simuline.eu/Gluck_0001.gif</picUrl>
 			</properties>
@@ -85,10 +90,10 @@
 	<!-- mailingLists></mailingLists-->
 
 	<!-- this is a trial -->
-  <!-- in maven central: not recommended -->
+	<!-- in maven central: not recommended -->
 	<pluginRepositories>
 		<pluginRepository>
-			<id>latex-maven-plugin-repo</id>
+			<id>plugin-repo</id>
 			<!--url>http://akquinet.github.com/maven-latex-plugin/maven2/</url-->
 			<url>https://www.simuline.eu/RepositoryMaven</url>
 			<releases>
