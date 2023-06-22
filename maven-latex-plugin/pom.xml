@@ -913,12 +913,10 @@
 				<version>3.0.1</version>
 			</plugin>
 
-
-			<!-- versions 3.0.0 or newer (3.1.1) only in conjunction with maven 3.9.0-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.2</version>
+				<version>3.0.0</version><!-- 2.8.2 -->
 			</plugin>
 
 			<plugin>
