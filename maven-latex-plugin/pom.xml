@@ -986,22 +986,27 @@
 			<plugin>
 				<groupId>eu.simuline.m2latex</groupId>
 				<artifactId>latex-maven-plugin</artifactId>
-				<version>1.8</version>
+				<version>2.0-SNAPSHOT</version>
 
 				<configuration>
 					<settings>
 						<!--latex2pdfCommand>xelatex</latex2pdfCommand-->
-            <!--pdfViaDvi>true</pdfViaDvi-->
+						<!--pdfViaDvi>true</pdfViaDvi-->
 						<cleanUp>false</cleanUp>
-            <!--chkDiff>true</chkDiff-->
-            <!--targets>dvi</targets-->
-            <!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
+						<!--chkDiff>true</chkDiff-->
+						<!--targets>dvi</targets-->
+						<!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
+						<targets>chk, pdf</targets>
+						<mainFilesIncluded>manualLMP</mainFilesIncluded>
+						<mainFilesExcluded>test</mainFilesExcluded>
 						<pythontexCommand>pythontexW:pythontex</pythontexCommand>
 						<pythontexOptions>--rerun=always</pythontexOptions>
 						<!--patternErrPyTex>\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\(s\), [0-9]+ warning\(s\)</patternErrPyTex-->
 						<!--patternWarnPyTex>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\(s\), [1-9][0-9]* warning\(s\)</patternWarnPyTex-->
-            <!--depythontexCommand>depythontexW</depythontexCommand-->
-					</settings>	
+						<!--depythontexCommand>depythontexW</depythontexCommand-->
+						<chkTexOptions>-q -b0 -L</chkTexOptions>
+					</settings>
+					<!--versionsWarnOnly>true</versionsWarnOnly-->
 				</configuration>
 				<executions>
 					<execution>
