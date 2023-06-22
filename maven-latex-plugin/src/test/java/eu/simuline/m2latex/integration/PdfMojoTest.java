@@ -9,58 +9,58 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 
 public class PdfMojoTest extends AbstractMojoTestCase {
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-	// required for mojo lookups to work
-	super.setUp();
-    }
+  /**
+   * @see junit.framework.TestCase#setUp()
+   */
+  protected void setUp() throws Exception {
+    // required for mojo lookups to work
+    super.setUp();
+  }
 
-    protected void tearDown() throws Exception {
-        // required
-        super.tearDown();
-    }
-     
-    /**
-     * Tests whether the manual is the same as the one stored for comparison. 
-     * 
-     * @throws Exception
-     */
-    public void testMojoGoal() throws Exception {
-        // getBasedir() is inherited from org.codehaus.plexus.PlexusTestCase
-        File thisDir = new File(getBasedir(), "src/test/resources/integration/");
-        File testPom = new File(thisDir, "pom4pdf.xml");
-        assertNotNull(testPom);
-        assertTrue(testPom.exists());
+  protected void tearDown() throws Exception {
+    // required
+    super.tearDown();
+  }
 
-        // cleanup the target folder 
-        File target = new File(thisDir, "target/");
-        FileUtils.deleteDirectory(target);
-        boolean res = target.mkdir();
-        assert res || !res;
+  /**
+   * Tests whether the manual is the same as the one stored for comparison. 
+   * 
+   * @throws Exception
+   */
+  public void testMojoGoal() throws Exception {
+    // getBasedir() is inherited from org.codehaus.plexus.PlexusTestCase
+    File thisDir = new File(getBasedir(), "src/test/resources/integration/");
+    File testPom = new File(thisDir, "pom4pdf.xml");
+    assertNotNull(testPom);
+    assertTrue(testPom.exists());
 
-        // define the file to be created and the one to be compared with 
-        //File act = new File(thisDir, "target/manualLMP.pdf");
-        //File cmp = new File(thisDir,    "cmp/manualLMP.pdf");
-        //File act = new File(thisDir, "target/dvi/dviFormat.pdf");
-        //File cmp = new File(thisDir,    "cmp/dvi/dviFormat.pdf");
+    // cleanup the target folder 
+    File target = new File(thisDir, "target/");
+    FileUtils.deleteDirectory(target);
+    boolean res = target.mkdir();
+    assert res || !res;
 
-        // run the pdf-goal in the pom 
-        // TBD: in othe framework: also check lifecycle phase like site and so 
-	    PdfMojo testMojo = (PdfMojo)lookupMojo("pdf", testPom);
-	    assertNotNull(testMojo);
-        testMojo.execute();
-        // Here, according to pom2pdf.xml, the generated pdf is expected at 
-        // ${basedir}/src/test/resources/integration/target/manualLMP.pdf
-        //assert act.exists() && cmp.exists();
+    // define the file to be created and the one to be compared with 
+    //File act = new File(thisDir, "target/manualLMP.pdf");
+    //File cmp = new File(thisDir,    "cmp/manualLMP.pdf");
+    //File act = new File(thisDir, "target/dvi/dviFormat.pdf");
+    //File cmp = new File(thisDir,    "cmp/dvi/dviFormat.pdf");
 
-        // check that the goal yielded the expected document. 
-        // This is no longer needed as that test is done by the plugin itself 
-        // and even more generally: bitwise equality not required.
-        //assertTrue(IOUtils.contentEquals(new FileInputStream(cmp), new FileInputStream(act)));
+    // run the pdf-goal in the pom 
+    // TBD: in other framework: also check lifecycle phase like site and so 
+    PdfMojo testMojo = (PdfMojo) lookupMojo("pdf", testPom);
+    assertNotNull(testMojo);
+    testMojo.execute();
+    // Here, according to pom2pdf.xml, the generated pdf is expected at 
+    // ${basedir}/src/test/resources/integration/target/manualLMP.pdf
+    //assert act.exists() && cmp.exists();
 
-        // cleanup
-        FileUtils.deleteDirectory(target);
-    }
+    // check that the goal yielded the expected document. 
+    // This is no longer needed as that test is done by the plugin itself 
+    // and even more generally: bitwise equality not required.
+    //assertTrue(IOUtils.contentEquals(new FileInputStream(cmp), new FileInputStream(act)));
+
+    // cleanup
+    FileUtils.deleteDirectory(target);
+  }
 }
