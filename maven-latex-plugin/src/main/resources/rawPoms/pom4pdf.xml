@@ -13,16 +13,17 @@
   <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>Maven LaTeX Plugin pdf text</name>
+  <name>LaTeX Maven Plugin pdf text</name>
   <description>
-    A plugin test which shall create the manual of the latex-maven-plugin
+    A plugin test which shall create the manual of the latex-maven-plugin 
+    and some related documents. 
   </description>
 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
