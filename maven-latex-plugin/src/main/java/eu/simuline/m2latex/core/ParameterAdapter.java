@@ -1,11 +1,8 @@
 
 package eu.simuline.m2latex.core;
 
-import java.util.SortedSet;
 
 // TBD: re-add
-//  * @see eu.simuline.m2latex.antTask.LatexCfgTask
-//  * @see eu.simuline.m2latex.mojo.AbstractLatexMojo
  
 /**
  * Common interface to pass parameters from ant and from maven. 
@@ -13,13 +10,12 @@ import java.util.SortedSet;
  * Note that both implementations, the one of an ant task 
  * and the one for the maven plugin implement a method execute() 
  * but throwing specific exceptions. 
- * <p> 
- * TODO: describe getTarget()
- * TODO: redesign: split up in two interfaces: 
- * {@link initialize()} is needed by all goals/tasks, 
- * whereas  
  *
-*/
+ * TODO: eliminate this interface
+ *
+ * @see eu.simuline.m2latex.antTask.LatexCfgTask
+ * @see eu.simuline.m2latex.mojo.AbstractLatexMojo
+ */
 public interface ParameterAdapter {
 
     /**
