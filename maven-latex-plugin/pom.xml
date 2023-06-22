@@ -353,7 +353,7 @@
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
-			<version>3.3.0</version>
+			<version>3.3.0</version> <!-- 4.0.0 3.3.0 -->
 		</dependency>
 
 		<dependency>
