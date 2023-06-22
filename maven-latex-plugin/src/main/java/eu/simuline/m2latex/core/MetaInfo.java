@@ -449,7 +449,7 @@ public class MetaInfo {
 		/**
 		 * Create a version for a converter <code>conv</code> 
 		 * invoking it with the proper option using <code>executor</code>. 
-		 * This is used in {@link MetaInfo#printMetaInfo(boolean)} 
+		 * This is used in {@link MetaInfo#printMetaInfo(boolean, SortedSet<Converter>)} 
 		 * to create the version info of a converter. 
 		 * 
 		 * @param conv
@@ -738,7 +738,7 @@ public class MetaInfo {
 	private final static String VERSION_PROPS_FILE = "version.properties";
 
 	/**
-	 * Format string used in {@link #printMetaInfo(boolean)} 
+	 * Format string used in {@link #printMetaInfo(boolean, SortedSet<Converter>)} 
 	 * to define a table of converters and their versions
 	 * with rows (warning), converter, version quote, 
 	 * actual version and allowed version interval.  

@@ -65,9 +65,9 @@ class CommandExecutor {
     }
   } // class CmdResult 
 
-    /**
+  /**
    * The way return codes are checked: Not at all, if nonzero and special treatments. 
-   * This is used in {@link CommandExecutor#execute(File, File , String, boolean, String[])} 
+   * This is used in {@link CommandExecutor#execute(File, File, String, ReturnCodeChecker, String[])} 
    * to decide whether the return code shall indicate that execution failed. 
    * TBD: shall be part of category 
    */
@@ -129,7 +129,7 @@ class CommandExecutor {
    * given by <code>resFile</code> is not newly created, 
    * i.e. if it does not exist or is not updated. 
    * This is a convenience method of 
-   * {@link #execute(File, File, String, boolean, String[], File... )}, 
+   * {@link #execute(File, File, String, ReturnCodeChecker, String[], File... )}, 
    * where the boolean signifies whether the return code is checked. 
    * This is set to <code>true</code> in this method. 
    * 

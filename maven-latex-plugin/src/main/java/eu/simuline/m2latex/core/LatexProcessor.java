@@ -41,7 +41,7 @@ import java.util.SortedSet;
  * The latex processor creates various output from latex sources
  * including also preprocessing of graphic files in several formats.
  * This is the core class of this piece of software.
- * The main method is {@link #create()} which is executed by the ant task
+ * The main method is {@link #create(SortedSet<Target>)} which is executed by the ant task
  * and by the maven plugin given by { @link CfgLatexMojo}.
  * Also important are {@link #clearAll()} which is executed by
  * the maven plugin given by { @link ClearMojo}.
@@ -52,7 +52,7 @@ import java.util.SortedSet;
  * This class delegates preprocessing of the graphic files,
  * selection of the latex main files and deleting their targets
  * to {@link LatexPreProcessor}.
- * Processing of the latex main files is done in {@link #create()}
+ * Processing of the latex main files is done in {@link #create(SortedSet<Target>)}
  * according to the target(s) given by the parameters.
  * The elements of the enumeration {@link Target} use methods
  * {@link #processLatex2rtf(LatexMainDesc)}, {@link #processLatex2dvi(LatexMainDesc)},
@@ -236,6 +236,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * </ul>
      *
      * FIXME: exceptions not really clear. 
+     * 
+     * @param targetSet
+     *    the set of targets to be created. 
+     *    The target 'chk' does not create artifacts except the log file clg. 
      * @throws BuildFailureException 
      *    <ul>
      *    <li> TSS01 if 
@@ -1792,7 +1796,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * on the latex main file <code>texFile</code>
      * described by <code>desc</code>
      * in the directory containing <code>texFile</code> with arguments
-     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}.
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File, boolean)}.
      * The output format of the LaTeX run is given by <code>dev</code>,
      * to be more precise by {@link LatexDev#getLatexOutputFormat()}.
      * <p>
@@ -1876,7 +1880,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * Runs conversion from dvi or xdv to pdf-file
      * executing {@link Settings#getDvi2pdfCommand()}
      * on a dvi/xdv-file covered by <code>desc</code> with arguments
-     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}. 
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File, boolean)}. 
      * Note that this works only because all converter of the according category 
      * can convert both dvi and xdv 
      * and apply also on the filename without extension. 
@@ -2029,7 +2033,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * executing {@link Settings#getTex4htCommand()}
      * on <code>texFile</code>
      * in the directory containing <code>texFile</code> with arguments
-     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}.
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File, boolean)}.
      * <p>
      * Logs a warning or an error if the latex run failed
      * invoking {@link #logErrs(File, String)}
@@ -2093,7 +2097,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * executing {@link Settings#getOdt2docCommand()}
      * on an odt-file created from <code>texFile</code>
      * in the directory containing <code>texFile</code> with arguments
-     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}.
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File, boolean)}.
      * <p>
      * Logging:
      * <ul>
@@ -2142,7 +2146,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
      * executing {@link Settings#getPdf2txtCommand()}
      * on a pdf-file created from <code>texFile</code>
      * in the directory containing <code>texFile</code> with arguments
-     * given by {@link #buildLatexArguments(Settings, LatexDev, File)}.
+     * given by {@link #buildLatexArguments(Settings, LatexDev, File, boolean)}.
      * <p>
      * Logging:
      * <ul>

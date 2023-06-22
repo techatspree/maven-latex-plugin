@@ -78,7 +78,7 @@ public class CfgLatexMojo extends AbstractLatexMojo {
    *    exists already as a regular file. 
    *    <li> TFU03, TFU04, TFU05, TFU06 if 
    *    copy of output files to target folder fails. 
-   *    For details see {@link LatexProcessor#create()}. 
+   *    For details see {@link LatexProcessor#create(SortedSet<Target>)}. 
    *    </ul>
    */
   public void execute() throws MojoFailureException {

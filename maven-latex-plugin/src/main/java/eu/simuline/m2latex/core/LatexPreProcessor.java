@@ -1174,8 +1174,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <p>
 	 * Logging:
 	 * EFU05: Failed to delete file
-   * @return
-   *    whether existed. 
 	 */
 	private void deleteIfExists(File file, String suffix) {
 		File delFile = TexFileUtils.replaceSuffix(file, suffix);
