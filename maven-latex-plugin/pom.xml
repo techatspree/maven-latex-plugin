@@ -279,7 +279,6 @@
     </dependency-->
 
 		<!-- dependencies to annotations -->
-		<!-- 3.4 3.8.1 3.6.4 3.9.0 -->
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
@@ -351,7 +350,7 @@
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
-			<version>3.3.0</version>			<!-- 3.3.0 4.0.0-->
+			<version>3.3.0</version>
 		</dependency>
 
 		<dependency>
@@ -512,6 +511,7 @@
 
 
 		<plugins>
+
 			<!-- at the moment just to enforce maven version
 	   use as mvn validate not as mvn enforcer:enforce
 	   TBD: add a lot of tests -->
@@ -537,9 +537,9 @@
 							</message>
 						</requireMavenVersion>
 						<requireJavaVersion>
-							<version>11</version>
+							<version>17</version>
 						</requireJavaVersion>
-						<!--dependencyConvergence/-->						<!-- this fails because of plugin-api -->
+						<dependencyConvergence/>
 					</rules>
 				</configuration>
 			</plugin>
@@ -587,9 +587,9 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>3.3.0</version>
-        <configuration>
-        	<locale>en_US</locale>
-        </configuration>
+				<configuration>
+					<locale>en_US</locale>
+				</configuration>
 				<executions>
 					<execution>
 						<id>parse-version</id>
@@ -602,10 +602,10 @@
 						<goals>
 							<goal>timestamp-property</goal>
 						</goals>
-            <configuration>
-              <name>timestampDay</name>
-              <pattern>yyyy-MM-dd</pattern>
-            </configuration>
+						<configuration>
+							<name>timestampDay</name>
+							<pattern>yyyy-MM-dd</pattern>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -633,7 +633,7 @@
 									<includes>
 										<include>buildParams.tex</include>
 										<include>instVScode4tex.sh</include>
-								    <include>.latexmkrc</include>
+										<include>.latexmkrc</include>
 										<include>.chktexrc</include>
 									</includes>
 									<!--excludes>
@@ -641,43 +641,43 @@
 									</excludes-->
 									<filtering>true</filtering>
 								</resource>
-              </resources>
+							</resources>
 						</configuration>
 					</execution>
 					<execution>
-	          <!-- filter the pom for integration tests -->
-	          <id>filterIntTestPoms</id>
-	          <phase>validate</phase>
-	          <goals>
-		          <goal>copy-resources</goal>
-	          </goals>
-	          <configuration>
-          		<outputDirectory>src/test/resources/integration</outputDirectory>
-          		<resources>
-          			<resource>
-          				<directory>src/main/resources/rawPoms</directory>
-          				<includes>
-          					<include>pom4pdf.xml</include>
-          				</includes>
-          				<filtering>true</filtering>
-          			</resource>
-          		</resources>
-          	</configuration>
-          </execution>
-          <execution>
-          	<id>copy-pdf2site</id>
-          	<phase>pre-site</phase>
-          	<goals>
-          		<goal>copy-resources</goal>
-          	</goals>
-          	<configuration>
-              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              <resources>
-              	<resource>
-              		<directory>src/main/resources/docsCmp</directory>
-              		<filtering>false</filtering>
-              	</resource>
-              </resources>
+						<!-- filter the pom for integration tests -->
+						<id>filterIntTestPoms</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/test/resources/integration</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/rawPoms</directory>
+									<includes>
+										<include>pom4pdf.xml</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-pdf2site</id>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/docsCmp</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
 						</configuration>
 					</execution>
 				</executions>
@@ -778,6 +778,22 @@
 				</configuration>
 			</plugin>
 
+			<!-- configuration was source and target = 1.8 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<compilerArgs>
+						<arg>-g</arg>
+						<arg>-Xlint:unchecked</arg>
+					</compilerArgs>
+					<source>17</source>
+					<target>17</target>
+				</configuration>
+			</plugin>
+
+
 
 			<!-- creates HelpMojo 
 	   Still there is a problem with detail=true. 
@@ -790,10 +806,10 @@
 				<!-- this is the first version with a NullPointerException -->
 				<!--version>3.6.4</version-->
 				<!-- this is the current version at the time of this writing -->
-				<version>3.3</version>				<!-- 3.3 newest currently: 3.8.1-->
+				<version>3.9.0</version>
 				<!-- this version allows installation, but fails with javadoc -->
 				<configuration>
-          <!--goalPrefix>plugin</goalPrefix-->
+					<goalPrefix>latex</goalPrefix>
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
 				</configuration>
 
@@ -804,34 +820,18 @@
 						<goals>
 							<goal>descriptor</goal>
 						</goals>
-						<phase>process-classes</phase>
+						<!--phase>process-classes</phase-->
 					</execution>
-					<!--execution>
-            <id>generated-helpmojo</id>
-            <goals>
-              <goal>helpmojo</goal>
-            </goals>
- 	    <phase>process-classes</phase>
-         </execution-->
+					<execution>
+						<id>generated-helpmojo</id>
+						<goals>
+							<goal>helpmojo</goal>
+						</goals>
+					</execution>
+					<!--phase>process-classes</phase-->
 				</executions>
 			</plugin>
 
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
-				<configuration>
-					<compilerArgs>
-						<arg>-g</arg>
-						<arg>-Xlint:unchecked</arg>
-						<!--arg>-Xlint:deprecation</arg-->
-					</compilerArgs>
-					<source>1.8</source>
-					<target>1.8</target>
-					<!--release>11</release-->
-				</configuration>
-			</plugin>
 
 			<!-- maybe three jars even: one each for 
 	   - maven plugin 
@@ -851,8 +851,8 @@
 						<configuration>
 							<classifier>antTask</classifier>
 							<includes>
-								<include>**/antTask/*</include>								<!-- this is added to the name
-		of the jar file-->
+								<include>**/antTask/*</include>
+								<!-- this is added to the name of the jar file-->
 								<include>**/core/*</include>
 								<include>org/apache/maven/plugin/*Exception*</include>
 								<include>org/apache/commons/io/*</include>
