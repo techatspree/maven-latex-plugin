@@ -20,8 +20,8 @@ package eu.simuline.m2latex.core;
 
 import eu.simuline.m2latex.mojo.MavenLogWrapper;
 
-//mport eu.simuline.m2latex.core.BuildExecutionException;
-//import eu.simuline.m2latex.core.BuildFailureException;
+// mport eu.simuline.m2latex.core.BuildExecutionException;
+// import eu.simuline.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
@@ -31,62 +31,64 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-//import org.junit.Ignore;
+// import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.After;
 
 public class TexFileUtilsTest {
-	private final static File WORKING_DIR = 
-	new File(System.getProperty("unitTestResourcesDir"));
+	private final static File WORKING_DIR =
+			new File(System.getProperty("unitTestResourcesDir"));
 	//private final static File KEEP_ME = 
 	//new File(System.getProperty("keepMe"));
 
-    // FIXME: occurs also in other testclasses: 
-    // to be unified. 
-    private static void cleanWorkingDir() {
-	cleanDirRec(WORKING_DIR);
-    }
+	// FIXME: occurs also in other testclasses: 
+	// to be unified. 
+	private static void cleanWorkingDir() {
+		cleanDirRec(WORKING_DIR);
+	}
 
-    // does not work for hidden directories 
-    private static void cleanDirRec(File dir) {
-			assert dir.isDirectory() : "Expected directory. ";
-			File[] files = dir.listFiles();
-			assert files != null : "Directory is not readable. ";
-			boolean proof;
-			for (File file : files) {
-				assert file.exists();
-				if (file.isDirectory()) {
-					assert !file.isHidden();
-					cleanDirRec(file);
-					assert file.listFiles().length == 0;
-				}
-				if (!file.isHidden()) {
-					proof = file.delete();
-					assert proof;
-				}
+	// does not work for hidden directories 
+	private static void cleanDirRec(File dir) {
+		assert dir.isDirectory() : "Expected directory. ";
+		File[] files = dir.listFiles();
+		assert files != null : "Directory is not readable. ";
+		boolean proof;
+		for (File file : files) {
+			assert file.exists();
+			if (file.isDirectory()) {
+				assert !file.isHidden();
+				cleanDirRec(file);
+				assert file.listFiles().length == 0;
+			}
+			if (!file.isHidden()) {
+				proof = file.delete();
+				assert proof;
 			}
 		}
+	}
 
-    @Before public void setUp() throws IOException {
-	cleanWorkingDir();
-    }
+	@Before
+	public void setUp() throws IOException {
+		cleanWorkingDir();
+	}
 
-    @After public void tearDown() throws IOException {
-	cleanWorkingDir();
-    }
+	@After
+	public void tearDown() throws IOException {
+		cleanWorkingDir();
+	}
 
 
- 
-    @Test public void testGetTargetDir() throws BuildFailureException {
 
-        File expected = new File(WORKING_DIR, "dir2/subdir");
-	TexFileUtils utils = 
-	    new TexFileUtils(new MavenLogWrapper(new SystemStreamLog()));
-	// may throw BuildFailureException 
-        File actual = utils
-	    .getTargetDirectory(new File(WORKING_DIR, "dir1/subdir/file"),
-				new File(WORKING_DIR, "dir1"),
-				new File(WORKING_DIR, "dir2"));
-        assertEquals(expected, actual);
-    }
+	@Test
+	public void testGetTargetDir() throws BuildFailureException {
+
+		File expected = new File(WORKING_DIR, "dir2/subdir");
+		TexFileUtils utils =
+				new TexFileUtils(new MavenLogWrapper(new SystemStreamLog()));
+		// may throw BuildFailureException 
+		File actual =
+				utils.getTargetDirectory(new File(WORKING_DIR, "dir1/subdir/file"),
+						new File(WORKING_DIR, "dir1"), new File(WORKING_DIR, "dir2"));
+		assertEquals(expected, actual);
+	}
 }
