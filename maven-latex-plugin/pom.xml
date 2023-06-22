@@ -805,12 +805,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<!--version>3.4</version-->
-				<!-- this is the first version with a NullPointerException -->
-				<!--version>3.6.4</version-->
-				<!-- this is the current version at the time of this writing -->
 				<version>3.9.0</version>
-				<!-- this version allows installation, but fails with javadoc -->
 				<configuration>
 					<goalPrefix>latex</goalPrefix>
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
