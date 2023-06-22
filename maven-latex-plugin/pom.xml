@@ -1006,7 +1006,7 @@
 						<!--depythontexCommand>depythontexW</depythontexCommand-->
 						<chkTexOptions>-q -b0 -L</chkTexOptions>
 					</settings>
-					<!--versionsWarnOnly>true</versionsWarnOnly-->
+					<versionsWarnOnly>true</versionsWarnOnly>
 				</configuration>
 				<executions>
 					<execution>
@@ -1033,9 +1033,9 @@
 						<goals>
 							<goal>vrs</goal>
 						</goals>
-						<configuration>
+						<!--configuration>
 							<versionsWarnOnly>true</versionsWarnOnly>
-						</configuration>
+						</configuration-->
 					</execution>
 				</executions>
 			</plugin>
