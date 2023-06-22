@@ -18,16 +18,12 @@
 
 package eu.simuline.m2latex.mojo;
 
-import eu.simuline.m2latex.core.Target;
 import eu.simuline.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 
 import org.apache.maven.plugin.MojoFailureException;
-
-import java.util.SortedSet;
-//import java.util.EnumSet;
 
 /**
  * Displays version info of this plugin but above all on all converters 
