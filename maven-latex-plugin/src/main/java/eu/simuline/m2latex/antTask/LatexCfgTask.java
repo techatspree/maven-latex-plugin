@@ -3,10 +3,7 @@ package eu.simuline.m2latex.antTask;
 import org.apache.tools.ant.BuildException;
 
 import eu.simuline.m2latex.core.BuildFailureException;
-import eu.simuline.m2latex.core.Target;
 import eu.simuline.m2latex.core.LatexProcessor;
-
-import java.util.SortedSet;
 
 public class LatexCfgTask extends AbstractLatexTask {
 

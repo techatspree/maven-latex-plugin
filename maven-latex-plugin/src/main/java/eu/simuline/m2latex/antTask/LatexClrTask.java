@@ -3,9 +3,6 @@ package eu.simuline.m2latex.antTask;
 import org.apache.tools.ant.BuildException;
 
 import eu.simuline.m2latex.core.BuildFailureException;
-import eu.simuline.m2latex.core.Target;
-
-import java.util.SortedSet;
 
 public class LatexClrTask extends AbstractLatexTask {
 
