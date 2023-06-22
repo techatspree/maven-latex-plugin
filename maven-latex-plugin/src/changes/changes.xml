@@ -378,6 +378,11 @@ here is a bug affecting goal odt:
 also modification of working directory with \setpythontexworkingdir is not supported. 
 -->
 
+<!-- speedup of tests: use html instead of pdf. 
+This may be faster because not so many reruns are necessary. -->
+<!-- speedup of creation: if -recorder switch is used, 
+rerun only if artifact is outdated. -->
+
 <!-- with pythontexW and depythontexW, we need unregistered converters, 
 	and this is true for other converters also. 
 	So Exception TSS06 in Settings.java is not appropriate. 
