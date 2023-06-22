@@ -23,7 +23,6 @@ public enum Target {
      * The only target without artifact
      */
     chk() {
-
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
                                   LatexMainDesc desc) throws BuildFailureException {
@@ -39,7 +38,6 @@ public enum Target {
      */
     dvi() {
         // FIXME: how does this fit with preprocessing??
-        private final String LATEX_OUTPUT_FILES = "^(T$T\\.(dvi|xdv)|.+(\\.(ptx|eps|jpg|png)|\\d+\\.mps))$";
 
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
@@ -48,23 +46,21 @@ public enum Target {
         }
 
         public String getPatternOutputFiles(Settings settings) {
-            return LATEX_OUTPUT_FILES;
+            return "^(T$T\\.(dvi|xdv)|.+(\\.(ptx|eps|jpg|png)|\\d+\\.mps))$";
         }
     },
     /**
      * standalone.
      */
     pdf() {
-        private final String LATEX_OUTPUT_FILES = "^T$T\\.pdf$";
-
-        // may throw BuildFailureException TEX01
+         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
                                   LatexMainDesc desc) throws BuildFailureException {
             latexProcessor.processLatex2pdf(desc);
         }
 
         public String getPatternOutputFiles(Settings settings) {
-            return LATEX_OUTPUT_FILES;
+            return "^T$T\\.pdf$";
         }
 
         public boolean hasDiffTool() {
@@ -91,8 +87,6 @@ public enum Target {
      *
      */
     odt() {
-        private final String OOFFICE_OUTPUT_FILES = "^T$T\\.(odt|fodt|uot|uot)$";
-
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor, 
                                 LatexMainDesc desc) throws BuildFailureException {
@@ -100,7 +94,7 @@ public enum Target {
         }
 
         public String getPatternOutputFiles(Settings settings) {
-            return OOFFICE_OUTPUT_FILES;
+            return "^T$T\\.(odt|fodt|uot|uot)$";
         }
     },
     /**
@@ -108,8 +102,6 @@ public enum Target {
      *
      */
     docx() {
-        private final String MSWORD_OUTPUT_FILES = "^T$T\\.(doc(|6|.95|.x|.x7)|rtf)$";
-
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
                                 LatexMainDesc desc) throws BuildFailureException {
@@ -117,7 +109,7 @@ public enum Target {
         }
 
         public String getPatternOutputFiles(Settings settings) {
-            return MSWORD_OUTPUT_FILES;
+            return "^T$T\\.(doc(|6|.95|.x|.x7)|rtf)$";
         }
     },
     /**
@@ -125,8 +117,6 @@ public enum Target {
      *
      */
     rtf() {
-        private final String RTF_OUTPUT_FILES = "^T$T\\.rtf$";
-
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
                                   LatexMainDesc desc) throws BuildFailureException {
@@ -134,16 +124,13 @@ public enum Target {
         }
 
         public String getPatternOutputFiles(Settings settings) {
-            return RTF_OUTPUT_FILES;
+            return "^T$T\\.rtf$";
         }
-
     },
     /**
      * Based on {@link #pdf}
      */
     txt() {
-        private final String TXT_OUTPUT_FILES = "^T$T\\.txt$";
-
         // may throw BuildFailureException TEX01
         public void processSource(LatexProcessor latexProcessor,
                                 LatexMainDesc desc) throws BuildFailureException {
@@ -151,12 +138,14 @@ public enum Target {
         }
 
         public String getPatternOutputFiles(Settings settings) {
-            return TXT_OUTPUT_FILES;
+            return "^T$T\\.txt$";
         }
     };
 
+    /**
+     * Regular expression which does not fit any file. 
+     */
     private final static String NO_OUTPUT_FILES = ".^";
-
 
     /**
      * Processes the latex main file <code>texFile</code>
@@ -175,8 +164,8 @@ public enum Target {
      *    TEX01 if invocation of a command
      *    to transform <code>texFile</code> failed.
      */
-    public abstract void processSource(LatexProcessor latexProcessor, LatexMainDesc desc)
-            throws BuildFailureException;
+    public abstract void processSource(LatexProcessor latexProcessor,
+            LatexMainDesc desc) throws BuildFailureException;
 
     /**
      * Returns the pattern of the output files.
@@ -205,5 +194,4 @@ public enum Target {
     public boolean hasDiffTool() {
         return false;
     }
-
 }
