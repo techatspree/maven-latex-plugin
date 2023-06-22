@@ -164,7 +164,7 @@
     without project.build.sourceEncoding the build is platform dependent! -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- checked during validation -->
-		<versionMvn>3.8.4</versionMvn><!-- 3.9.2 3.8.4 -->
+		<versionMvn>3.9.2</versionMvn><!-- 3.9.2 3.8.4 -->
 		<versionTestPlugins>3.0.0</versionTestPlugins>
 		<versionJunit5>5.8.2</versionJunit5>
 		<!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
