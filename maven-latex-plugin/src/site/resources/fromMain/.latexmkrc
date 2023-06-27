@@ -1,1 +1,1 @@
-../../../main/resources/.latexmkrc
+../../tex/.latexmkrc
