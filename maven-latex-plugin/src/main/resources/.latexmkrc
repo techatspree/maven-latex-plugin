@@ -1,5 +1,8 @@
 #!/usr/bin/env perl
 
+# .latexmkrc adapted to the configurability of the latex-maven-plugin and its ant task 
+# version ${version}
+
 # to create pdf via lualatex 
 #$pdflatex = 'lualatex -file-line-error %O %S';
 

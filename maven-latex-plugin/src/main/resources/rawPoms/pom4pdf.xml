@@ -16,7 +16,7 @@
   <name>LaTeX Maven Plugin pdf text</name>
   <description>
     A plugin test which shall create the manual of the latex-maven-plugin 
-    and some related documents. 
+    and some related documents for the LaTeX Maven plugin version ${version}. 
   </description>
 
   <dependencies>
