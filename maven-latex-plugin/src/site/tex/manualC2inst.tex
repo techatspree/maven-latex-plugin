@@ -359,10 +359,12 @@ caption={The source repository for this plugin}]
 \end{lstlisting}
 
 Then it can be used from command line,
-e.g.~to create pdfs as \texttt{mvn latex:pdf}
-or for cleanup \texttt{mvn latex:clr} with with default configuration
-just adding the coordinates in the builts-plugin section of the pom
+e.g.~to create PDF files as \texttt{mvn latex:pdf}
+or for cleanup \texttt{mvn latex:clr} with default configuration
+just adding the coordinates in the build-plugins section of the pom
 as shown in Listing~\ref{lst:coords}. 
+Alternatively, the plugin can be configured also 
+in the reporting-plugins section of the pom. 
 %
 %\lstset{language=xml, basicstyle=\small}
 \begin{lstlisting}[language=xml, basicstyle=\footnotesize,
@@ -389,25 +391,44 @@ caption={The coordinates of this plugin}]
 </project>
 \end{lstlisting}
 
-
+% TBD: reference to section 'goals in lifecycle'. 
 To make the plugin available within a build,
-one has to add executions, e.g.~as shown in Listing~\ref{lst:executions}:
-Typically, this plugin is used in the \texttt{site} lifecycle phase 
-to process latex sources,
-but it must also be used to clean up the source directory
-in phase \texttt{clean},
-because during document development that directory may be polluted.
-Finally, it is recommended to add a check of the converter versions
-right in the phase \texttt{validate}.
-Note that typically one will use goal \texttt{cfg}
-to create documentation because this allows to configure the output formats,
-but it may be also perfectly appropriate to stick to a single format
-as \texttt{pdf}.
+one has to add executions, e.g.~as shown in Listing~\ref{lst:executions}. 
+For all three goals a default phase is defined, 
+as given as a comment but as this is hard-coded, 
+one has to specify in the executions only 
+when deviating from the default. 
+
+Typically, this plugin, to be more precise its goal \texttt{cfg}, 
+which allows to configure the output formats in setting \texttt{targets},  
+is used in the \texttt{site} lifecycle phase 
+to process latex sources. 
+It is perfectly ok to stick to a single format like PDF. 
+
+Normally, all created files in the source directory are removed 
+after the output has been copied to the target, 
+but during document development, described in Section~\ref{sec:devel}, 
+cleanup may be deactivated and so the source directory may be polluted. 
 Cleanup is recommended to make the individual runs of this plugin independent.
-Finally, it is recommended to check the validity of the installed converters.
-Note the special configuration for that task
-which seems appropriate to skip info output on the console
-and have warnings if something goes wrong. 
+Thus, there is a dedicated goal \texttt{clr} 
+to clean up the source directory in phase \texttt{clean}.
+
+Finally, it is recommended to add a check of the converter versions
+right in the phase \texttt{validate} via goal \texttt{vrs}.
+Listing~\ref{lst:executions} specifies \texttt{versionsWarnOnly=true}, 
+which restricts goal \texttt{vrs} to just display a warning 
+if something is wrong 
+which seems appropriate in the context of validation. 
+
+For the default \texttt{versionsWarnOnly=false}, 
+the goal \texttt{vrs} 
+yields a full list of registered converters, 
+signifying which may cause trouble 
+because its version is out of range
+as displayed in Listing~\ref{lst:vrsOut}. 
+In the course of 
+For details see Section~\ref{sec:devel}. 
+
 
 
 %\lstset{language=xml, basicstyle=\small}
@@ -598,7 +619,8 @@ if \createdJar{} is placed where ant can find it
 or if the parts are deactivated below the line
 %
 \begin{Verbatim}
-<!-- deactivate the following unless the ant task is installed already -->
+  <!-- deactivate the following,
+  unless the ant task is installed already -->
 \end{Verbatim}
 
 I feel building with maven and linking the jar created
