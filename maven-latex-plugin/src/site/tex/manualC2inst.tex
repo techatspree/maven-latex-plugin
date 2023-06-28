@@ -330,7 +330,7 @@ provides useful environments to mark verbatim text.
 \end{itemize}
 
 
-\section{Setting pom.xml and build.xml}\label{sec:sgml}
+\section{Setting pom.xml for the maven plugin}\label{sec:xmlPom}
 
 If this software is used as a maven plugin,
 it need not explicitly be installed, maven itself does this by need
@@ -420,27 +420,72 @@ caption={The executions of this plugin}]
   <artifactId>|\artifactId|</artifactId>
   <version>|\strippedVersionID|</version>
   <configuration>
-  ...
+    <settings>
+      <!--targets>chk, pdf, html</targets-->
+      <!--cleanUp>false</cleanUp-->
+      ...
+    </settings>
   </configuration>
   <executions>
     <execution>
       <id>process-latex-sources</id>
       <!-- chk, dvi, pdf, html, odt, docx, rtf, txt -->
       <goals><goal>cfg</goal></goals>
+      <!-- phase>site</phase-->
     </execution>
     <execution>
       <id>clear-latex-sources</id>
       <goals><goal>clr</goal></goals>
-    </execution>
+      <!-- phase>clean</phase-->
+     </execution>
     <execution>
       <id>validate-converters</id>
       <goals><goal>vrs</goal></goals>
+      <!-- phase>validate</phase-->
       <configuration>
         <versionsWarnOnly>true</versionsWarnOnly>
-       </configuration>
+      </configuration>
     </execution>
   </executions>
 </plugin>
+\end{lstlisting}
+
+The executions considered so far are appropriate 
+for mavens default lifecycle. 
+Typically, this maven plugin is used in the site lifecycle, 
+which does not contain the phase \texttt{validate}, 
+but accordingly \texttt{pre-site}. 
+As a consequence, goal \texttt{vrs} is not invoked. 
+To get around, 
+one could specify the phase \texttt{pre-site} in the execution explicitly. 
+The author uses the maven jxr plugin 
+as illustrated in Listing~\ref{lst:forkJxr}, 
+which, as a side effect, forks toe lifecycle 
+and includes phase \texttt{validate} of the default lifecycle 
+and in particular goal \texttt{vrs}. 
+
+
+\begin{lstlisting}[language=XML, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=hb, label={lst:forkJxr}, 
+caption={Forked execution with jxr plugin}]
+<project>
+  ...
+  <reporting>
+    <plugins>
+      ...
+      <!-- as a side effect, 
+          triggers 'generate-sources' forked phase execution  -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>3.3.0</version>
+      </plugin>
+      ...
+    </plugins>
+  </reporting>
+</project>
+
 \end{lstlisting}
 
 Note the section \texttt{configuration} in Listing~\ref{lst:executions}
@@ -449,24 +494,21 @@ creating \texttt{pdf}- and \texttt{hmtl}-documentation.
 However, \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} 
 gives an example pom using this latex plugin 
 with full configuration with default values and executions.
-In addition, Chapter~\ref{chap:settings} describes each setting individually.
-
-To check whether the installation of the plugin succeeded,
-in the directory of the pom command
-%
-\begin{Verbatim}
-mvn latex:vrs
-\end{Verbatim}
-%
-which shall return meta info, above all the version of the plugin,
-and a list all converters needed
-together with the actual versions and the expected versions
-as displayed in Listing~\ref{lst:vrsOut}.
-Note that not all converters need to be installed, only the needed ones.
-For details see Section~\ref{sec:devel}.
-%TBD: maybe better split that section according to goals. 
+In addition, Chapter~\ref{chap:settings} describes each setting individually. 
 \medskip
 
+At this point, this software can be used in full functionality as a maven plugin, 
+but in fact it offers more than functionality, it also offers configuration. 
+
+\medskip
+
+In addition to functionality, 
+this software also offers a lot of configuration. 
+TBD: go on here. 
+
+\medskip
+
+\section{Setting build.xml for the ant task}\label{sec:xmlBuild}
 
 As you can see, the \texttt{taskdef}'s refer to java classes.
 Unlike maven which loads jars with the classes inside automatically
@@ -543,7 +585,7 @@ including the development of the ant task,
 the maven built, creates the file \createdJar{}
 defining the ant task.
 To this end, also \texttt{mvn clean package} is sufficient.
-After that, installation proceeds like described in Section~\ref{sec:sgml}
+After that, installation proceeds like described in Section~\ref{sec:xmlBuild}
 copying that jar file ant's lib-folder where ant can find it.
 
 With root access and after having checked the proper paths,
