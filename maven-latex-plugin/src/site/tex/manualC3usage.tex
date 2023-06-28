@@ -45,7 +45,7 @@ The \LaTeX-files to be compiled top level,
 typically not inputted anywhere via \cmd{input}, 
 are called \emph{\LaTeX{} main files}. 
 As an example, 
-in the \emph{tex-source directory} of this software, 
+in the \emph{TEX source directory} of this software, 
 \texttt{manualLMP.tex} is a \LaTeX{} main file, 
 whereas the file \texttt{header.tex} is not although also a \LaTeX-file. 
 % identification of the latex main file?
@@ -59,7 +59,7 @@ and maybe soon even code files to be executed via the package \pkg{pythontex}.
 The great bulk of input files however, are graphic files in various formats. 
 As regards the way their files are included in \LaTeX-files, 
 there are the following kinds of graphic formats, 
-all included in the tex-source directory. 
+all included in the TEX source directory. 
 %
 \begin{enumerate}
 \item
@@ -69,7 +69,7 @@ and are defined in an according package.
 Examples are \pkg{eepic} described in~\cite{EEpic}
 and above all \pkg{tikz} described in~\cite{TikzPGF}. 
 \item
-the second one via the command \cmd{includegraphics}{} 
+The second one via the command \cmd{includegraphics}{} 
 defined by the package \pkg{graphicx} 
 which is described in~\cite{GraX}. 
 Chapter 2 therein mentions the supported drivers, 
@@ -77,10 +77,10 @@ among these are also \texttt{dvipdfm} and \texttt{dvipdfmx}.
 It is not the package but the driver 
 which decides on the support of graphic formats. 
 The dvipdfm user manual,~\cite{DviPdfMx} lists the allowed formats 
-metapost-output (i.e.~\gls{mps}), postscript, 
+MetaPost (i.e.~\gls{mps}), postscript, 
 \gls{pdf}, \gls{jpg} and \gls{png}. 
 \item\label{it:transExp}
-the third one must be transformed into a graphics format 
+The third one must be transformed into a graphics format 
 of one of the former two kinds using an external tool for transformation. 
 Here, of course, only a limited support is possible, 
 because there is a broad variety of formats. 
@@ -137,22 +137,22 @@ a link shall be used.
 
 Note that unlike former version, 
 the current version of this software does not create a working directory 
-by cloning the tex-source directory. 
-Instead, it operates directly on the tex-source directory 
+by cloning the TEX source directory. 
+Instead, it operates directly on the TEX source directory 
 also creating intermediate files.
 The advantage of processing that way is,
 that this allows cooperation between this software
-and other toolchains which are better suited for developping latex files.
+and other tool chains which are better suited for developing latex files.
 Details are described in Section~\ref{sec:devel}.
 
-The downside is that a file residing in the tex-source directory 
+The downside is that a file residing in the TEX source directory 
 risks being overwritten by this software, 
 if it does not stick to the rules. 
 The rules are simple: 
 For each graphic file, being transformed, 
 i.e.~of types~\ref{it:transExp} or~\ref{it:transImp} above, 
 additional files are created with the same name up to the suffix. 
-Thus for these graphic files no file with the same name 
+Thus, for these graphic files no file with the same name 
 up to the ending is allowed. 
 The same is true for the \LaTeX{} main files.
 
@@ -175,6 +175,7 @@ It can also be interpreted as \texttt{mvn $<$source$>$:$<$target$>$}:
 The source files are in \texttt{latex}-format and the target-formats 
 are read from the \emph{configuration} in the pom 
 (\emph{configuration} is what \texttt{cfg} stands for). 
+% TBD: clarify what about the ant task 
 
 By default, the target formats are \texttt{pdf} and \texttt{html}. 
 The following Listing~\ref{lst:targetsAll} shows a configuration 
@@ -257,7 +258,7 @@ Thus, the goal \emph{graphics} is thus a vital feature
 for development of documents. 
 
 
-Finally, there is another target for clearing the tex-source directory 
+Finally, there is another target for clearing the TEX source directory 
 recursively, invoked by \texttt{mvn latex:clr}. 
 For more details on the last three goals, see Section~\ref{sec:devel}. 
 
