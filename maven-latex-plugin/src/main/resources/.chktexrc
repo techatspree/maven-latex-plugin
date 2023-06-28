@@ -1,5 +1,7 @@
 # config file for chktex 
-# adapted to latex-maven-plugin and to the according ant task
+# adapted to latex-maven-plugin and to the according ant task version ${version}
+
+# LTeX: SETTINGS enabled=false
 
 Silent {
   \textbackslash
