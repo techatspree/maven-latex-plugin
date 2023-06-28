@@ -2115,6 +2115,19 @@ That way, the kind of issue (\%k) is easily parsed.
 This could be used for emitting an error instead of a warning 
 when processing goal \emph{check}. 
 
+Although the return code of \texttt{chktex} is not documented, 
+a bit of reverse engineering shows the following distinction: 
+%
+\begin{enumerate}\setcounter{enumi}{-1}
+  \item Successful execution and found neither an error nor a warning. 
+  \item Execution as such did not succeed, 
+  e.g. because of an invalid option like \texttt{-exx}. 
+  \item An error occurred and in particular execution as such suceeded. 
+  \item A warning occurred but no error and in particular execution as such suceeded. 
+\end{enumerate}
+
+On this behavior this software bases its failure messages. 
+
 
 \section{Parameters for Ensuring Reproducibility}\label{sec:paramRepro}
 
