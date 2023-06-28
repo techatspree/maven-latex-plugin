@@ -9,8 +9,10 @@ Thus, all sections of this chapter are either general
 or apply to the maven plugin.
 Only Section~\ref{sec:usageAntTask} specifically refer to the ant task. 
 Usage presupposes installation as described in Chapter~\ref{chap:install}
-including settings in \texttt{pom.xml}
-as described in Section~\ref{sec:sgml}.
+including settings in \texttt{pom.xml} 
+as described in Section~\ref{sec:xmlPom} for the maven plugin 
+and the settings in \texttt{build.xml} 
+as described in Section~\ref{sec:xmlBuild} for the ant task.
 
 This plugin may be used both if the \LaTeX-sources are finished 
 to create the output described by them 
@@ -308,6 +310,112 @@ overwriting the default values.
 
 \section{Development of Documents}\label{sec:devel}
 
+The term ``development of documents'' is coined by the author 
+and reflects that writing a document 
+resembles developing software 
+in that it is an iterative process consisting in producing, 
+checking, modifying, correcting, erasing, checking again\dots. 
+After initial creation, is like a dialog between the author and its work. 
+
+This is true of course independent of the tools used, 
+but some tools support this process better than others. 
+For document development the ideal are WYSIWYG (``what you see is what you get'') editors, 
+which should maybe be better called WYRIWYR (``what you write is what you read''), 
+or, taking also drawings into account, IisO (``input is output''). %TBD: maybe better glossary 
+For software development these are prototyping languages, interpreted at least. 
+
+From that point of view, \LaTeX{} and friends is the worst conceivable choice: 
+%
+\begin{itemize}
+  \item
+  You write in an editor, but you read off from a viewer. 
+  \item
+  You write a sequence of commands, but you read text, formulae, drawings. 
+  In a sense you program the appearance of a page or site. 
+
+  This discrepancy becomes particularly apparent if creating a drawing in \LaTeX, 
+  e.g. with TikZ, because even drawings are described or programmed quite formally. 
+  \item
+  You cannot just see instantly the result of your work; 
+  first you have to trigger a compilation process and wait some time. 
+  So, besides an editor and a viewer you also need some kind of console. 
+  It is even worse: typically, you need more than one 
+  \item 
+  The compilation process may go wrong or be in a sense deficient, 
+  so what you need is observing logs, either on the console or in a log file. 
+\end{itemize}
+
+This explains the need for tools and techniques to mitigate the situation. 
+
+Seemingly, this \LaTeX-builder is not to contribute to document development, 
+because this is used after the end of the development process, 
+automating the compilation process. 
+But since compilation may fail and because it is also a checker tool, 
+it may be the start point for another loop in the development process. 
+
+Before describing the contribution of this \LaTeX-builder 
+to the process of document development, 
+let us describe this process in more detail, 
+in particular the other tools supporting document development and their interaction. 
+With this background in mind, it is easy to describe the role of the \LaTeX-builder 
+in the team of development tools. 
+
+\subsection{Tools supporting document development}
+
+Editor VS Code with extensions in conjunction with viewer. 
+Mention also Emacs with AUC\TeX. 
+Point to installation script for extensions described in Section~\ref{subsec:develConfig}. 
+
+Describe forward search and backward search. 
+Also mention clean goal described in more detail in Section~\ref{subsec:develClean}
+
+Mention a way to speed up compilation: using includes rather than imports. 
+As a consequence, additional AUX files are created. 
+These are also cleaned. 
+
+The latex processor may fail. 
+Typically, the latex converter must be invoked more than once 
+and besides the latex converter some further auxiliary programs must be run. 
+What to do is displayed on the console. 
+Most of the programs write success messages and more detailed information 
+containing error messages, warning or just information messages in their respective log files. 
+In the course of 
+
+
+Next talk about orchestration: 
+The user is freed from deciding which of the many auxiliary programs are to be invoked next 
+and whether the latex converter is to be invoked once more 
+in order to emit final correct output. 
+
+There is another tool doing this work, \texttt{latexmk}. 
+Essentially, it is better suited to document development, 
+because it allows easily to build a single document only and is considerably faster 
+because no overhead from maven or ant, 
+and it can be run in nonstopmode. 
+
+Still, \LaTeX-builder has its place in conjunction with \texttt{latexmk}. 
+
+
+\subsection{Goal Clean}\label{subsec:develClean}
+
+Maybe the material is not enough for a separate section. 
+Important to ensure independence. 
+
+
+\subsection{Installation and Configuration}\label{subsec:develConfig}
+
+Install script for installing extensions for VS Code 
+helping in developing \LaTeX{} documents. 
+
+In addition, configuration scripts for \texttt{latexmk} and \texttt{chktex}. 
+Also describe how to use. 
+
+
+
+\subsection{Miscellaneous}% This is to be removed in the long run. 
+
+
+
 During development, it is comfortable, 
 to have the log-file in the same directory as the \LaTeX{} main file. 
 Also, if PDF- and TEX-files are synchronized, 
@@ -475,6 +583,7 @@ which partially overwrites variables set by the basic configuration file,
 partially, for list-valued variables, adds entries. 
 Listing~\ref{lst:chktexrc} shows the configuration \texttt{.chktexrc} 
 needed to check this manual without error or warning. 
+Details can be found in~\cite{ChkTeX22},~Section 6.1.5.  
 
 \lstinputlisting[basicstyle=\scriptsize,
 float, captionpos=b, label={lst:chktexrc}, 
@@ -683,27 +792,57 @@ failing with the next missing file.
 That way the process goes on until the last file is created with a rule. 
 Of course this procedure is quite time-consuming, so an alternative is required. 
 
+
+
+
+
+
+As described in~\cite{LatexMk23}, 
+Section~``CONFIGURATION/INITIALIZATION (RC) FILES'', 
+There are various configuration files \texttt{latexmkrc} or \texttt{.latexmkrc}, 
+among these a global one, a local one referring to the enclosing folder 
+and finally one specified by the command line option \texttt{-r}. 
+
+Likewise, \cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
+has a global configuration file \texttt{chktexrc} 
+and a local one \texttt{.chktexrc} or \texttt{chktexrc}, 
+depending on the operating system. 
+Finally, a configuration file can be specified with the option \texttt{-l}, 
+according to \cite{ChkTeX22}, Section 6.1.1. 
+Unfortunately, the ordering in which the configuration file given by option 
+is read in compared to the other, is not clearly specified. 
+
+For sake of reproducibility, we recommend restricting to the global configuration file 
+which is tied to the installation and to a local file either respected because it is in the local folder 
+or because it is given via a command line option. 
+
+
 The installation script \texttt{instVScode4tex.sh} for VS Code extensions 
 given in Listing~\ref{lst:instVScode} 
 and the config files \texttt{.latexmkrc} and \texttt{.chktexrc} 
 are packaged in the JAR file representing this software. 
+In general all these files are filtered, 
+i.e. they are defined using property names from the pom, but these are replaced by the actual value. 
+For \texttt{.latexmkrc} the JAR file there is a raw variant with property names 
+in subfolder \texttt{raw} which we refer to as the ``raw \texttt{.latexmkrc}''. 
 % TBD: in the long run these listings shall come from the proper pom 
 % but with different versions. 
 That way these resources can be made available via the maven dependency plugin 
 by unpacking from the JAR\@. 
+Both \texttt{.latexmkrc} files and the file \texttt{.chktexrc} 
+are intended as local configuration files. 
+
+
 Listing~\ref{lst:depUnpack} shows the according configuration in the pom. 
 In addition, the configuration files are available on the web as 
-\href{\urlSite fromMain/.latexmkrc}{\texttt{.latexmkrc}} and as 
+\href{\urlSite fromMain/.latexmkrc}{\texttt{.latexmkrc}}, 
+\href{\urlSite fromMain/raw/.latexmkrc}{raw \texttt{.latexmkrc}} and as 
 \href{\urlSite fromMain/.chktexrc}{\texttt{.chktexrc}}, respectively. 
 Pasting \texttt{.latexmkrc}, which is just Perl code, 
 into VS Code one can see the highlighting, and a preview, 
 of course provided the extensions Section~\ref{sec:devel} 
 and given by Listing~\ref{lst:instVScode} are installed; 
 \texttt{.chktexrc} is given in Listing~\ref{lst:chktexrc}. 
-Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
-as described, the local configuration file fits only for UNIX-like operating systems. 
-For Windows and that like, \texttt{chktexrc} is expected. 
-% TBD: link? 
 
 
 \begin{lstlisting}[language=XML, basicstyle=\scriptsize,
@@ -785,6 +924,29 @@ that makes the clean plugin cleanup the unpacked files.
     </configuration>
   </plugin>
 \end{lstlisting}
+
+So far, the local configuration files are in just a single place. 
+This is sufficient if using a command line option specifying its 
+*****
+
+
+
+
+Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
+as described, the local configuration file fits only for UNIX-like operating systems. 
+For Windows and that like, \texttt{chktexrc} is expected. 
+This can be realized with a link. 
+For sake of reproducibility, we recommend only global config files, 
+a local one in the current directory and maybe another one 
+specified with the option \texttt{-r} as described below. 
+In order to have the same \texttt{.chktexrc} for all main files in different folders, 
+one shall use a central \texttt{.chktexrc}, e.g. \texttt{src/site/tex/.chktexrc}, 
+and then either set a link to it from all folders with latex main files 
+or just use the \texttt{-r}. 
+Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
+in which the configuration file given by the option \texttt{-r} is read in. 
+
+% TBD: link? 
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
 
