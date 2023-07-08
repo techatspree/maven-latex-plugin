@@ -76,7 +76,7 @@ abstract class AbstractLatexProcessor {
      */
      protected void logErrs(File logFile, String command, String pattern) {
     	if (logFile.exists()) {
-	    // hasErrsWarns may log warnings WFU03, WAP04 
+	        // hasErrsWarns may log warnings WFU03, WAP04 
     	    if (hasErrsWarns(logFile, pattern)) {
     		this.log.error("EAP01: Running " + command + 
 			       " failed. Errors logged in '" + 
@@ -106,9 +106,13 @@ abstract class AbstractLatexProcessor {
      * @see #logErrs(File, String, String) 
      */
     // for both LatexProcessor and LatexPreProcessor 
-    // FIXME: for LatexPreProcessor never needed. 
     protected void logWarns(File logFile, String command, String pattern) {
-	// hasErrsWarns may log warnings WFU03, WAP04 
+	    // hasErrsWarns may log warnings WFU03, WAP04 
+        // It is ok that no log file exists, 
+        // because this is treated by logErrs invoked before. 
+        // TBD: this is bad design. 
+        // If so, then a singlel method to log errors and warnings is needed. 
+        // This may well be implemented by invoking both logErrs followed by logWarns. s
     	if (logFile.exists() && hasErrsWarns(logFile, pattern)) {
 	    // logs warning WAP03: emitted warnings 
 	    logWarn(logFile, command);
@@ -129,14 +133,14 @@ abstract class AbstractLatexProcessor {
     }
 
     /**
-     *
+     * 
      * Logging: 
      * <ul>
      * <li> WFU03 cannot close 
      * <li> WAP04 if <code>logFile</code> is not readable. 
      * </ul>
      */
-    // FIXME: not clear whether error or warning; also command not clear. 
+    // FIXME: command not clear. 
     // used in 
     // logErrs (File, String, String)
     // logWarns(File, String, String)
