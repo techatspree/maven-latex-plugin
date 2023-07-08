@@ -110,6 +110,19 @@ class CommandExecutor {
       boolean hasFailed(int returnCode) {
         return returnCode == 1;
       }
+    },
+    /**
+     * Detect fail of execution if return code is neither 0 nor 1. 
+     * <p>
+     * Currently used for diff only. 
+     * It is applicable to the diff tool: 0 same, 1 difference, 2 trouble. 
+     * Unfortunately diff-pdf-visually has encoding 0 same, 2 difference, 1 trouble. 
+     * Thus it is not directly usable, only via a wrapper exchanging 1 and 3
+     */
+    IsNotZeroOrOne {
+      boolean hasFailed(int returnCode) {
+        return returnCode == 1;
+      }
     };
 
     abstract boolean hasFailed(int returnCode);
