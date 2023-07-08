@@ -12,6 +12,10 @@
 	<version>2.0-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
+	<prerequisites>
+		<maven>3.9.1</maven>
+	</prerequisites>
+
 	<!--parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
@@ -31,7 +35,7 @@
     Furthermore, checks for rerun, warnings and under/overfull boxes. 
 	</description>
 
-	<url>https://github.com/Reissner/latex-maven-plugin/</url>
+	<url>https://github.com/Reissner/latex-maven-plugin/</url>	<!-- should be mojohouse -->
 	<inceptionYear>2016</inceptionYear>
 	<licenses>
 		<license>
@@ -41,7 +45,6 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
-
 
 	<organization>
 		<name>Simuline Organization (l2r)</name>
@@ -54,7 +57,7 @@
   </organization-->
 
 	<developers>
-		<developer>
+		<!-- <developer>
 			<id>cerker</id>
 			<name>Carsten Erker</name>
 			<email>carsten.erker at akquinet dot de</email>
@@ -68,7 +71,7 @@
 			<email>heinz.wilming at akquinet dot de</email>
 			<organization>akquinet tech@spree GmbH</organization>
 			<organizationUrl>http://www.akquinet.de</organizationUrl>
-		</developer>
+		</developer> -->
 
 		<developer>
 			<id>ereissner</id>
