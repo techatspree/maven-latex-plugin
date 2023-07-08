@@ -1675,6 +1675,11 @@ public class Settings {
    * Alternatives are <code>diff-pdf</code> and <code>diff-pdf-visually</code> 
    * both implementing a visual diff. 
    * Note that unlike for other tools, no options can be passed in this case explicitly. 
+   * CAUTION: Expected return value 0 means same, 1 normal difference, all other values: failure. 
+   * Thus <code>diff-pdf-visually</code> is not allowed, 
+   * because uses different return code: exchanging 1 and 2. 
+   * Thus usable for a wrapper only. 
+   * TBD: work into this addition. 
    */
   @Parameter(name = "diffPdfCommand", defaultValue = "diff")
   private String diffPdfCommand = "diff";

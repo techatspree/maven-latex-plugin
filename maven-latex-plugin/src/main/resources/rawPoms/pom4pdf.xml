@@ -1138,7 +1138,11 @@ avoiding verbose output and backing up the output log-file. -->
       The default value is a mere 'diff'. 
       Alternatives are 'diff-pdf' and 'diff-pdf-visually' 
       both implementing a visual diff. 
-      Note that unlike for other tools, no options can be passed in this case explicitly. -->
+      Note that unlike for other tools, no options can be passed in this case explicitly. 
+      CAUTION: Expected return value 0 means same, 1 normal difference, all other values: failure. 
+      Thus <code>diff-pdf-visually</code> is not allowed, 
+      because uses different return code: exchanging 1 and 2. 
+      Thus usable for a wrapper only. -->
 
             <diffPdfCommand>diff</diffPdfCommand>
 

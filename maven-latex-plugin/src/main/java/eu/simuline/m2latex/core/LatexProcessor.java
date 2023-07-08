@@ -2334,11 +2334,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
         // may throw BuildFailureException TEX01,
         // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
-        return this.executor.execute(null, // texFile.getParentFile(),
+        int returnCode = this.executor.execute(null, // texFile.getParentFile(),
                 this.settings.getTexPath(),
                 command,
-                CommandExecutor.ReturnCodeChecker.Never,
-                args).getSuccess();
+                CommandExecutor.ReturnCodeChecker.IsNotZeroOrOne,
+                args).returnCode;
+        // other value 2 caused an exception before 
+        //assert returnCode == 0 || returnCode == 1 : "diff unexpected return value "+returnCode;
+        // 0 means that the files 'coincide', 
+        // where as 2 means that there is a significant difference 
+        return returnCode == 0;
     }
 
 }
