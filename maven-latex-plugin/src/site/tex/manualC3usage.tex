@@ -581,14 +581,10 @@ Besides the basic configuration packaged with \texttt{chktex},
 there can be an additional configuration file \texttt{.chktexrc} 
 which partially overwrites variables set by the basic configuration file, 
 partially, for list-valued variables, adds entries. 
-Listing~\ref{lst:chktexrc} shows the configuration \texttt{.chktexrc} 
-needed to check this manual without error or warning. 
-Details can be found in~\cite{ChkTeX22},~Section 6.1.5.  
+Section~\ref{sec:xmlPom} describes how to access the \texttt{.chktexrc} 
+with which this manual is checked and 
+details to the form of \texttt{.chktexrc} can be found in~\cite{ChkTeX22},~Section 6.1.5.  
 
-\lstinputlisting[basicstyle=\scriptsize,
-float, captionpos=b, label={lst:chktexrc}, 
-caption={The config file \texttt{.chktexrc} to check this manual. }]%
-{.chktexrc}
 
 % rsvg-convert -f pdf -o t.pdf t.svg
 % inkscape t.svg --export-pdf=t.pdf
@@ -726,25 +722,22 @@ Document development starts with the editor.
 Above the Emacs editor enhanced with auctex was mentioned. 
 We recommend VS Code in conjunction with several extensions. 
 If VS Code itself is already installed 
-the script in Listing~\ref{lst:instVScode} installs and updates all extensions 
+the script in Listing~\ref{lst:instVScode} on page~\pageref{lst:instVScode}  
+installs and updates all extensions 
 the author used to develop this manual. 
 The core extension is \texttt{latex workshop}, 
 the others are mainly used for editing graphic files. 
+For details see Section~\ref{sec:xmlPom}. 
 
-\lstinputlisting[
-language=bash, basicstyle=\scriptsize,
-float, captionpos=b, label={lst:instVScode}, 
-caption={Install script for extensions of VS code. }]%
-{instVScode4tex.sh}
+
 
 
 A valuable standalone build tool is \texttt{latexmk}. 
 It can even run in background. 
 This manual can also be compiled with \texttt{latexmk} 
 but only with adapted configuration file \texttt{.latexmkrc}. 
-Since it is too long to include it directly in this manual, 
-we refer to its location on the website 
-\href{\urlSite fromMain/.latexmkrc}{\texttt{.latexmkrc}}. 
+For details see Section~\ref{sec:xmlPom}. 
+
 
 
 
@@ -795,157 +788,6 @@ Of course this procedure is quite time-consuming, so an alternative is required.
 
 
 
-
-
-As described in~\cite{LatexMk23}, 
-Section~``CONFIGURATION/INITIALIZATION (RC) FILES'', 
-There are various configuration files \texttt{latexmkrc} or \texttt{.latexmkrc}, 
-among these a global one, a local one referring to the enclosing folder 
-and finally one specified by the command line option \texttt{-r}. 
-
-Likewise, \cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
-has a global configuration file \texttt{chktexrc} 
-and a local one \texttt{.chktexrc} or \texttt{chktexrc}, 
-depending on the operating system. 
-Finally, a configuration file can be specified with the option \texttt{-l}, 
-according to \cite{ChkTeX22}, Section 6.1.1. 
-Unfortunately, the ordering in which the configuration file given by option 
-is read in compared to the other, is not clearly specified. 
-
-For sake of reproducibility, we recommend restricting to the global configuration file 
-which is tied to the installation and to a local file either respected because it is in the local folder 
-or because it is given via a command line option. 
-
-
-The installation script \texttt{instVScode4tex.sh} for VS Code extensions 
-given in Listing~\ref{lst:instVScode} 
-and the config files \texttt{.latexmkrc} and \texttt{.chktexrc} 
-are packaged in the JAR file representing this software. 
-In general all these files are filtered, 
-i.e. they are defined using property names from the pom, but these are replaced by the actual value. 
-For \texttt{.latexmkrc} the JAR file there is a raw variant with property names 
-in subfolder \texttt{raw} which we refer to as the ``raw \texttt{.latexmkrc}''. 
-% TBD: in the long run these listings shall come from the proper pom 
-% but with different versions. 
-That way these resources can be made available via the maven dependency plugin 
-by unpacking from the JAR\@. 
-Both \texttt{.latexmkrc} files and the file \texttt{.chktexrc} 
-are intended as local configuration files. 
-
-
-Listing~\ref{lst:depUnpack} shows the according configuration in the pom. 
-In addition, the configuration files are available on the web as 
-\href{\urlSite fromMain/.latexmkrc}{\texttt{.latexmkrc}}, 
-\href{\urlSite fromMain/raw/.latexmkrc}{raw \texttt{.latexmkrc}} and as 
-\href{\urlSite fromMain/.chktexrc}{\texttt{.chktexrc}}, respectively. 
-Pasting \texttt{.latexmkrc}, which is just Perl code, 
-into VS Code one can see the highlighting, and a preview, 
-of course provided the extensions Section~\ref{sec:devel} 
-and given by Listing~\ref{lst:instVScode} are installed; 
-\texttt{.chktexrc} is given in Listing~\ref{lst:chktexrc}. 
-
-
-\begin{lstlisting}[language=XML, basicstyle=\scriptsize,
-  float, captionpos=b, label={lst:depUnpack}, 
-  caption={Part of a pom describing installing files }]
-  <plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-dependency-plugin</artifactId>
-  <version>3.3.0</version>
-  <executions>
-    <execution>
-      <?m2e execute onConfiguration,onIncremental?>
-      <id>unpack-latex</id>
-      <goals>
-        <goal>unpack</goal>
-      </goals>
-      <phase>initialize</phase>
-    </execution>
-  </execution>
-
-  <configuration>
-  <artifactItems>
-    <artifactItem>
-      <groupId>eu.simuline.m2latex</groupId>
-      <artifactId>latex-maven-plugin</artifactId>
-      <version>2.0</version>
-      <type>jar</type>
-      <overWrite>true</overWrite>
-      <outputDirectory>...</outputDirectory>
-      <includes>**/.latexmkrc, **/.chktexrc</includes>
-      <fileMappers>
-        <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
-      </fileMappers>
-    </artifactItem>
-    <artifactItem>
-      <groupId>eu.simuline.m2latex</groupId>
-      <artifactId>latex-maven-plugin</artifactId>
-      <version>2.0</version>
-      <type>jar</type>
-      <overWrite>true</overWrite>
-      <outputDirectory>...</outputDirectory>
-      <includes>**/instVScode4tex.sh</includes>
-      <fileMappers>
-        <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
-      </fileMappers>
-    </artifactItem>
-  </artifactItems>
-</configuration>
-</plugin>
-\end{lstlisting}
-
-Accordingly, Listing~\ref{lst:depClean} shows a configuration for the pom 
-that makes the clean plugin cleanup the unpacked files. 
-
-
-\begin{lstlisting}[language=XML, basicstyle=\scriptsize,
-  float, captionpos=b, label={lst:depClean}, 
-  caption={Part of a pom describing cleaning installed files }]
-  <!-- configuration for clean plugin -->
-  <plugin>
-    <artifactId>maven-clean-plugin</artifactId>
-    <version>3.1.0</version>
-    <configuration>
-      <filesets>
-        <fileset>
-          <directory>...</directory>
-          <includes>
-            <include>instVScode4tex.sh</include>
-          </includes>
-        </fileset>
-        <fileset>
-          <directory>...</directory>
-          <includes>
-            <include>.latexmkrc</include>
-            <include>.chktexrc</include>
-          </includes>
-        </fileset>
-      </filesets>
-    </configuration>
-  </plugin>
-\end{lstlisting}
-
-So far, the local configuration files are in just a single place. 
-This is sufficient if using a command line option specifying its 
-*****
-
-
-
-
-Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
-as described, the local configuration file fits only for UNIX-like operating systems. 
-For Windows and that like, \texttt{chktexrc} is expected. 
-This can be realized with a link. 
-For sake of reproducibility, we recommend only global config files, 
-a local one in the current directory and maybe another one 
-specified with the option \texttt{-r} as described below. 
-In order to have the same \texttt{.chktexrc} for all main files in different folders, 
-one shall use a central \texttt{.chktexrc}, e.g. \texttt{src/site/tex/.chktexrc}, 
-and then either set a link to it from all folders with latex main files 
-or just use the \texttt{-r}. 
-Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
-in which the configuration file given by the option \texttt{-r} is read in. 
-
 % TBD: link? 
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
@@ -971,7 +813,7 @@ mvn clean
 
 Finally, the goal \texttt{latex:vrs} displaying versions of converters
 is tied to the phase \texttt{validate}. 
-Thus it is thus invoked when commanding
+Thus, it is thus invoked when commanding
 %
 \begin{Verbatim}[fontsize=\scriptsize]
 mvn validate

@@ -520,14 +520,232 @@ In addition, Chapter~\ref{chap:settings} describes each setting individually.
 
 At this point, this software can be used in full functionality as a maven plugin, 
 but in fact it offers more than functionality, it also offers configuration. 
+Table~\ref{tab:cfgFilesLink} indicates the configuration files 
+and the URL where it can be found on the generated site. 
 
-\medskip
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    File & Link\\
+    \midrule{}
+    \texttt{instVScode4tex.sh} & \href{\urlSite fromMain/instVScode4tex.sh}{instVScode4tex.sh} \\
+    \texttt{.latexmkrc}        & \href{\urlSite fromMain/.latexmkrc}{.latexmkrc} \\
+    \texttt{.latexmkrc} (raw)  & \href{\urlSite fromMain/raw/.latexmkrc}{.latexmkrc} \\
+    \texttt{.chktexrc}         & \href{\urlSite fromMain/.chktexrc}{.chktexrc} \\
+    \texttt{pom4pdf.xml}       & \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} \\
+    \bottomrule
+  \end{tabular}
+  \caption{\label{tab:cfgFilesLink} The configuration files and their links}
+\end{table}
 
-In addition to functionality, 
-this software also offers a lot of configuration. 
-TBD: go on here. 
+If the editor VS Code is already installed, the script \texttt{instVScode4tex.sh} 
+also given by Listing~\ref{lst:instVScode}, 
+installs and updates all extensions the author used to write \LaTeX-code. 
 
-\medskip
+\lstinputlisting[
+language=bash, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:instVScode}, 
+caption={Install script for extensions of VS code. }]%
+{instVScode4tex.sh}
+
+Pasting \texttt{.latexmkrc}, which is just Perl code, 
+into VS Code one can see the highlighting, and a preview, 
+of course provided the extensions given by Listing~\ref{lst:instVScode} are installed; 
+The Perl script \texttt{.latexmkrc} is in fact the configuration file 
+for the development tool \texttt{latexmk}. 
+
+The file \texttt{.latexmkrc} comes in two versions, 
+one is ready to use and creates PDF the same files as this maven plugin, 
+provided the default settings are used. 
+The experience of the author is, that this is sufficient in most cases. 
+In contrast, the raw version contains several variables. 
+If these are set as properties in the \texttt{pom.xml}, 
+the variables are replaced by their values by filtering. 
+The same properties must be used to configure this plugin in the pom. 
+
+The file \texttt{.chktexrc} is to configure \texttt{chktex}. 
+Its current state is given in Listing~\ref{lst:chktexrc}. 
+The user is kindly asked to help to improve it. 
+Finally, \texttt{pom4pdf.xml} is a pom containing a full setting for this plugin 
+with comments and default settings. 
+
+\lstinputlisting[basicstyle=\scriptsize,
+float, captionpos=b, label={lst:chktexrc}, 
+caption={The config file \texttt{.chktexrc} to check this manual. }]%
+{.chktexrc}
+
+
+
+All these files are not only provided in the project site, 
+but also in the JAR of the plugin itself. 
+
+Thus, they are available in a project using this latex plugin using the dependency plugin. 
+Listing~\ref{lst:depUnpack} shows the according configuration in the pom. 
+The first \texttt{artifactItem} extracts \texttt{instVScode4tex.sh}. 
+Since \texttt{instVScode4tex.sh} is not only to install extensions in VS Code 
+but also to update them, it is convenient to have the script at hand. 
+Project \url{https://github.com/Reissner/QMngMnt} 
+uses the script for automation of installation and update. 
+
+In the next \texttt{artifactItem} extracts \texttt{.latexmkrc} and \texttt{.chktexrc} 
+into the latex directory. 
+It comes in handy to place the configuration files centrally 
+and then either link for each relevant subfolder where needed 
+or use according command line options. 
+
+
+As described in~\cite{LatexMk23}, 
+Section~``CONFIGURATION/INITIALIZATION (RC) FILES'', 
+There are various configuration files \texttt{latexmkrc} or \texttt{.latexmkrc}, 
+among these a global one, a local one referring to the enclosing folder 
+and finally one specified by the command line option \texttt{-r}. 
+
+Likewise, \cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
+has a global configuration file \texttt{chktexrc} 
+and a local one \texttt{.chktexrc} or \texttt{chktexrc}, 
+depending on the operating system. 
+Finally, a configuration file can be specified with the option \texttt{-l}, 
+according to \cite{ChkTeX22}, Section 6.1.1. 
+Unfortunately, the ordering in which the configuration file given by option 
+is read in compared to the other, is not clearly specified. 
+
+For sake of reproducibility, we recommend restricting to the global configuration file 
+which is tied to the installation and to a local file either respected because it is in the local folder 
+or because it is given via a command line option. 
+
+Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
+as described, the local configuration file fits only for UNIX-like operating systems. 
+For Windows and that like, \texttt{chktexrc} is expected. 
+This can be realized with a link. 
+For sake of reproducibility, we recommend only global config files, 
+a local one in the current directory and maybe another one 
+specified with the option \texttt{-r} as described below. 
+In order to have the same \texttt{.chktexrc} for all main files in different folders, 
+one shall use a central \texttt{.chktexrc}, e.g. \texttt{src/site/tex/.chktexrc}, 
+and then either set a link to it from all folders with latex main files 
+or just use the \texttt{-r}. 
+Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
+in which the configuration file given by the option \texttt{-r} is read in. 
+
+
+
+
+\begin{lstlisting}[language=XML, basicstyle=\scriptsize,
+  float, captionpos=b, label={lst:depUnpack}, 
+  caption={Part of a pom describing installing files }]
+<build>
+  ...
+  <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-dependency-plugin</artifactId>
+  <version>3.6.0</version>
+  <executions>
+    <execution>
+      <id>unpack-latex</id>
+      <goals>
+        <goal>unpack</goal>
+      </goals>
+      <phase>initialize</phase>
+    </execution>
+  </execution>
+
+  <configuration>
+    <artifactItems>
+      <artifactItem>
+      <groupId>eu.simuline.m2latex</groupId>
+      <artifactId>latex-maven-plugin</artifactId>
+      <version>2.0</version>
+      <type>jar</type>
+      <overWrite>true</overWrite>
+      <outputDirectory>...</outputDirectory>
+      <includes>instVScode4tex.sh</includes>
+      <fileMappers>
+        <org.codehaus.plexus.components.io.filemappers.IdentityMapper/>
+      </fileMappers>
+    </artifactItem>
+
+    <artifactItem>
+      <groupId>eu.simuline.m2latex</groupId>
+      <artifactId>latex-maven-plugin</artifactId>
+      <version>2.0</version>
+      <type>jar</type>
+      <overWrite>true</overWrite>
+      <outputDirectory>${latexDir}</outputDirectory>
+      <includes>.latexmkrc, .chktexrc</includes>
+      <fileMappers>
+        <org.codehaus.plexus.components.io.filemappers.IdentityMapper/>
+      </fileMappers>
+    </artifactItem>
+
+    <artifactItem>
+      <groupId>eu.simuline.m2latex</groupId>
+      <artifactId>latex-maven-plugin</artifactId>
+      <version>2.0</version>
+      <type>jar</type>
+      <overWrite>true</overWrite>
+      <outputDirectory>src/main/resources</outputDirectory>
+      <includes>.latexmkrc.raw</includes>
+      <fileMappers><!-- hack! -->
+        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+          <pattern>c.raw$</pattern>
+          <replacement>c</replacement>
+        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+      </fileMappers>
+    </artifactItem>
+  </artifactItems>
+</configuration>
+</plugin>
+\end{lstlisting}
+
+
+The last \texttt{artifactItem} in Listing~\ref{lst:depUnpack} 
+extracts the raw \texttt{.latexmkrc}. 
+As mentioned above, the intention behind is, 
+to keep \texttt{latexmk} and this latex plugin synchronized 
+by providing properties in the pom and using them as settings when configuring the latex plugin 
+and at the same time to filter the raw \texttt{.latexmkrc}. 
+Currently, not all possible settings of this plugin 
+are taken into account in the raw \texttt{.latexmkrc}. 
+It is advisable, to use a raw \texttt{.latexmkrc} taking only parameters into account, 
+which are explicitly configured for the latex plugin. 
+So the given raw \texttt{.latexmkrc} is no more than a hint. 
+
+Listing~\ref{lst:depClean} shows a configuration for the pom 
+that makes the clean plugin cleanup the files 
+unpacked by the dependency plugin if configured as in Listing~\ref{lst:depUnpack}. 
+
+
+\begin{lstlisting}[language=XML, basicstyle=\scriptsize,
+  float, captionpos=b, label={lst:depClean}, 
+  caption={Part of a pom describing cleaning installed files }]
+  <!-- configuration for clean plugin -->
+  <plugin>
+    <artifactId>maven-clean-plugin</artifactId>
+    <version>3.1.0</version>
+    <configuration>
+      <filesets>
+        <fileset>
+          <directory>...</directory>
+          <includes>
+            <include>instVScode4tex.sh</include>
+          </includes>
+        </fileset>
+        <fileset>
+          <directory>...</directory>
+          <includes>
+            <include>.latexmkrc</include>
+            <include>.chktexrc</include>
+          </includes>
+        </fileset>
+      </filesets>
+    </configuration>
+  </plugin>
+\end{lstlisting}
+
+
+
+
 
 \section{Setting build.xml for the ant task}\label{sec:xmlBuild}
 
