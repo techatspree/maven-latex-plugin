@@ -91,7 +91,8 @@ After mvn clean ant build does not work.
        <symlink action="delete" link="${antJarDir}${createdJar}"/>
   </target>
 
- <!-- deactivate the following unless the ant task is installed already -->
+ <!-- deactivate the following,
+      unless the ant task is installed already -->
 
   <path id="latex.classpath">
     <fileset dir="${antJarDir}"> 
