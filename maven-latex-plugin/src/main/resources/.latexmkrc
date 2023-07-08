@@ -3,6 +3,9 @@
 # .latexmkrc adapted to the configurability of the latex-maven-plugin and its ant task 
 # version ${version}
 
+# This is to check whether the pom really overwrites the settings in defaultSettingsAs.properties
+# ${chkTexOptions}<chkTexOptions>-q -b0 -L -H1</chkTexOptions>
+
 # to create pdf via lualatex 
 #$pdflatex = 'lualatex -file-line-error %O %S';
 
@@ -11,6 +14,7 @@
 # 2: postscript conversion, as specified by the $ps2pdf variable (useless)
 # 3: dvi conversion, as specified by the $dvipdf variable (useless)
 # 4: lualatex, as specified by the $lualatex variable (best)
+#    Note that we abuse that by replacing lualatex by a variable
 # 5: xelatex, as specified by the $xelatex variable (second best)
 $pdf_mode = 4;# specifies creation of pdf via lualatex 
 
@@ -21,7 +25,7 @@ $pdf_mode = 4;# specifies creation of pdf via lualatex
 
 # note that -recorder is implicitly added by latexmk, 
 # so may be duplicated, but no disadvantage 
-$lualatex = "lualatex ${latex2pdfOptions} %O %S";
+$lualatex = "${latex2pdfCommand} ${latex2pdfOptions} %O %S";
 
 #$postscript_mode = $dvi_mode = 0;
 
