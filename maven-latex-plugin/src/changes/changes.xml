@@ -266,8 +266,32 @@ Also: meta-uml, with documentation
     <!-- TBD: Bugfix: superfluous comma in: 
 	 WPP03: Skipped processing of files with suffixes [, .el]. -->
 
+	<!-- filters/defaultSettingsAs.properties: 
+		must be completed, must be used generally for creation of pom4pdf.xml and manual. 
+		In the long run, must also be used for code generation of Settings. 
+		For Settings it may be a good idea to use groovy instead of java. 
+
+		An alternative is, 
+		that Settings can create all this and the process goes in opposite direction. 
+	-->
+
 	<!-- target vrs: still depends on texlive, shall also work for miktex. 
 	Also take whole lines into account (add more \R) -->
+
+	<!-- the bug in creating the jar for the ant task in the jar plugin 
+	comes from the fact, that we removed the sources. 
+	The approach with the sources is very bad. 
+	Instead one shall replace the jar plugin by the assembly plugin, 
+	find out the dependency containing all the relevant classes 
+	and then package those using an assembly descriptor. -->
+
+	<!-- maybe a good idea to turn this plugin into a report plugin. 
+	https://maven.apache.org/guides/plugin/guide-java-report-plugin-development.html
+	-->
+
+	<!-- Interesting to find out why goal vrs is executed 
+	even in site-deploy although tied to phase validate 
+	which is not part of site-deploy -->
 
 	 <!-- TBD: allow for more restrictions in versions of converters. 
 		An application would be to ensure strict reproducibility 
