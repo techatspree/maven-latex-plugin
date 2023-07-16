@@ -99,6 +99,7 @@ public class Settings {
    * The according file is given by {@link #texSrcDirectoryFile}. 
    * The default value is {@link #SST}. 
    */
+  @RuntimeParameter
   @Parameter(name = "texSrcDirectory",
       defaultValue = "src${file.separator}site${file.separator}tex")
   private String texSrcDirectory = SST;
@@ -121,6 +122,7 @@ public class Settings {
    * The default value is <code>.</code>, 
    * i.e. the latex souce processing directory is the latex source directory. 
    */
+  @RuntimeParameter
   @Parameter(name = "texSrcProcDirectory", defaultValue = ".")
   private String texSrcProcDirectory = ".";
 
@@ -138,6 +140,7 @@ public class Settings {
    * The default value is <code>true</code>. 
    */
   // FIXME: maybe in the long run: only latex main files. 
+  @RuntimeParameter
   @Parameter(name = "readTexSrcProcDirRec", defaultValue = "true")
   private boolean readTexSrcProcDirRec = true;
 
@@ -150,6 +153,7 @@ public class Settings {
    *
    * @see #texSrcDirectory
    */
+  @RuntimeParameter
   @Parameter(name = "outputDirectory", defaultValue = ".")
   private String outputDirectory = ".";
 
@@ -166,6 +170,7 @@ public class Settings {
    * The according file is given by {@link #diffDirectoryFile}. 
    * The default value is <code>.</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "diffDirectory", defaultValue = ".")
   private String diffDirectory = ".";
 
@@ -183,6 +188,7 @@ public class Settings {
    * the format 'dvi' and what is based on it are not supported. 
    * The default value is <code>pdf, html</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "targets", defaultValue = "pdf, html")
   private String targets = "pdf, html";
 
@@ -195,6 +201,7 @@ public class Settings {
    * and of course they are not allowed to be used. 
    * By default, this list is empty. 
    */
+  @RuntimeParameter
   @Parameter(name = "convertersExcluded", defaultValue = "")
   private String convertersExcluded = "";
 
@@ -224,6 +231,7 @@ public class Settings {
   // FIXME: not only on this pattern: 
   // Matching is line by line which is inappropriate. 
   // pattern is to be applied to the start of the tex-file 
+  @RuntimeParameter
   @Parameter(name = "patternLatexMainFile")
   private String patternLatexMainFile = "\\A(\\\\RequirePackage\\s*" + // RequirePackage 
   /**/"(\\[(\\s|\\w|,)*\\])?\\s*" + // [options]
@@ -254,6 +262,7 @@ public class Settings {
    * 
    * @see #mainFilesExcluded
    */
+  @RuntimeParameter
   @Parameter(name = "mainFilesIncluded", defaultValue = "")
   private String mainFilesIncluded = "";
 
@@ -279,6 +288,7 @@ public class Settings {
    * 
    * @see #mainFilesIncluded
    */
+  @RuntimeParameter
   @Parameter(name = "mainFilesExcluded", defaultValue = "")
   private String mainFilesExcluded = "";
 
@@ -293,6 +303,8 @@ public class Settings {
    * represent the <code>null</code>-File. 
    * The default value is <code>null</code>. 
    */
+  // TBD: clarify whether null as defaultValue works properly 
+  @RuntimeParameter
   @Parameter(name = "texPath", defaultValue = "null")
   private File texPath = null;
 
@@ -306,6 +318,7 @@ public class Settings {
    * This is <code>false</code> by default and is set to <code>true</code> only 
    * in the context of tests. 
    */
+  @RuntimeParameter
   @Parameter(name = "chkDiff", defaultValue = "false")
   private boolean chkDiff = false;
 
@@ -314,6 +327,7 @@ public class Settings {
    * May be used for debugging when setting to <code>false</code>. 
    * The default value is <code>true</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "cleanUp", defaultValue = "true")
   private boolean cleanUp = true;
 
@@ -362,6 +376,7 @@ public class Settings {
    * and notify the developer of this plugin of the deficiency. 
    * The default value is given below. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternCreatedFromLatexMain")
   private String patternCreatedFromLatexMain =
       // besides T$T.xxx, with xxx not containing ., 
@@ -400,6 +415,7 @@ public class Settings {
    * @see #fig2devPtxOptions
    * @see #fig2devPdfEpsOptions
    */
+  @RuntimeParameter
   @Parameter(name = "fig2devCommand", defaultValue = "fig2dev")
   private String fig2devCommand = "fig2dev";
 
@@ -440,6 +456,7 @@ public class Settings {
    * In this case include them in 
    * {@link #fig2devPtxOptions} and in {@link #fig2devPdfEpsOptions}. 
    */
+  @RuntimeParameter
   @Parameter(name = "fig2devGenOptions", defaultValue = "")
   private String fig2devGenOptions = "";
 
@@ -480,6 +497,7 @@ public class Settings {
   // instead of fig2dev itself, 
   // which invokes fig2dev with the according options. 
   // Problem is that xfig does not support this. 
+  @RuntimeParameter
   @Parameter(name = "fig2devPtxOptions", defaultValue = "")
   private String fig2devPtxOptions = "";
 
@@ -531,6 +549,7 @@ public class Settings {
   // instead of fig2dev itself, 
   // which invokes fig2dev with the according options. 
   // Problem is that xfig does not support this. 
+  @RuntimeParameter
   @Parameter(name = "fig2devPdfEpsOptions", defaultValue = "")
   private String fig2devPdfEpsOptions = "";
 
@@ -541,6 +560,7 @@ public class Settings {
    * combined with pdf_t (latex-texts) is supported. 
    * The default value is <code>gnuplot</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "gnuplotCommand", defaultValue = "gnuplot")
   private String gnuplotCommand = "gnuplot";
 
@@ -573,6 +593,7 @@ public class Settings {
    * because it is set internally. 
    * The default option string is empty. 
    */
+  @RuntimeParameter
   @Parameter(name = "gnuplotOptions", defaultValue = "")
   private String gnuplotOptions = "";
 
@@ -581,6 +602,7 @@ public class Settings {
    * into metapost's postscript. 
    * The default value is <code>mpost</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "metapostCommand", defaultValue = "mpost")
   private String metapostCommand = "mpost";
 
@@ -602,6 +624,7 @@ public class Settings {
    * -debug creates intermediate files mp3mnuvD.dvi and mp3mnuvD.tex 
    * No info available about the details. 
    */
+  @RuntimeParameter
   @Parameter(name = "metapostOptions",
       defaultValue = "-interaction=nonstopmode -recorder "
           + "-s prologues=2 -s outputtemplate=\"%j.mps\"")
@@ -626,6 +649,7 @@ public class Settings {
    * The default value is `<code>(^! )</code>' (note the space). 
    */
   // FIXME: Problem with line error style 
+  @RuntimeParameter
   @Parameter(name = "patternErrMPost", defaultValue = "(^! )")
   private String patternErrMPost = "(^! )";
 
@@ -648,6 +672,7 @@ public class Settings {
    */
   // mpost --no-parse-first-line yields 
   // warning: mpost: unimplemented option
+  @RuntimeParameter
   @Parameter(name = "patternWarnMPost", defaultValue = "^([Ww]arning: )")
   private String patternWarnMPost = "^([Ww]arning: )";
 
@@ -656,6 +681,7 @@ public class Settings {
    * into a mixed format FIXME, synchronize with fig2devCommand. 
    * The default value is <code>inkscape</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "svg2devCommand", defaultValue = "inkscape")
   private String svg2devCommand = "inkscape";
 
@@ -688,6 +714,7 @@ public class Settings {
    * The default value is the minimal value, 
    * <code>-D --export-latex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "svg2devOptions", defaultValue = "-D --export-latex")
   private String svg2devOptions = "-D --export-latex";
 
@@ -707,6 +734,7 @@ public class Settings {
    * This alone requires to switch off invocation of <code>ebb</code> by default. 
    * So the default value is <code>false</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "createBoundingBoxes", defaultValue = "false")
   private boolean createBoundingBoxes = false;
 
@@ -720,6 +748,7 @@ public class Settings {
    * to create <code>.xbb</code>-files for driver <code>dvipdfmx</code>. 
    * The default value is <code>ebb</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "ebbCommand", defaultValue = "ebb")
   private String ebbCommand = "ebb";
 
@@ -730,6 +759,7 @@ public class Settings {
    * The default value is <code>-v</code> to make <code>ebb<code> verbose. 
    */
   // without -x and -m 
+  @RuntimeParameter
   @Parameter(name = "ebbOptions", defaultValue = "-v")
   private String ebbOptions = "-v";
 
@@ -752,6 +782,7 @@ public class Settings {
    * The default value (for which this software is also tested) 
    * is <code>lualatex</code>.
    */
+  @RuntimeParameter
   @Parameter(name = "latex2pdfCommand", defaultValue = "lualatex")
   private String latex2pdfCommand = "lualatex";
 
@@ -793,6 +824,7 @@ public class Settings {
    * For details consult the manual. 
    */
   // useful also: -file-line-error
+  @RuntimeParameter
   @Parameter(name = "latex2pdfOptions",
       defaultValue = "-interaction=nonstopmode " + // 
           "-synctex=1 " + "-recorder " + "-shell-escape")
@@ -817,6 +849,7 @@ public class Settings {
    * The default value is `<code>(^! )</code>' (note the space). 
    */
   // FIXME: Problem with line error style 
+  @RuntimeParameter
   @Parameter(name = "patternErrLatex", defaultValue = "(^! )")
   private String patternErrLatex = "(^! )";
 
@@ -841,6 +874,7 @@ public class Settings {
    *
    * @see #debugBadBoxes
    */
+  @RuntimeParameter
   @Parameter(name = "patternWarnLatex", defaultValue = "^(LaTeX Warning: |"
       + "LaTeX Font Warning: |" + "(Package|Class) .+ Warning: |" +
       // pdftex warning (ext4): destination with the same identifier
@@ -864,6 +898,7 @@ public class Settings {
    * rerun LaTeX and have a look at the log-file. 
    * The default value is <code>true</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "debugBadBoxes", defaultValue = "true")
   private boolean debugBadBoxes = true;
 
@@ -874,6 +909,7 @@ public class Settings {
    * rerun LaTeX and have a look at the log-file. 
    * The default value is <code>true</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "debugWarnings", defaultValue = "true")
   private boolean debugWarnings = true;
 
@@ -924,6 +960,7 @@ public class Settings {
    * The default value is <code>false</code>. 
    */
   // if false: directly 
+  @RuntimeParameter
   @Parameter(name = "pdfViaDvi", defaultValue = "false")
   private boolean pdfViaDvi = false;
 
@@ -941,6 +978,7 @@ public class Settings {
    * but does not provide proper options; so not allowed. 
    * The default value is <code>dvipdfmx</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "dvi2pdfCommand", defaultValue = "dvipdfmx")
   private String dvi2pdfCommand = "dvipdfmx";
 
@@ -960,6 +998,7 @@ public class Settings {
    * TThe default value is <code>-V1.7</code> but will in future be the empty string again. 
   
    */
+  @RuntimeParameter
   @Parameter(name = "dvi2pdfOptions", defaultValue = "")
   private String dvi2pdfOptions = "-V1.7";
 
@@ -985,6 +1024,7 @@ public class Settings {
   // FIXME: explicit tests required for each pattern. 
   // Not only those but all patterns. 
   // FIXME: seems a problem with the pattern spreading over two lines 
+  @RuntimeParameter
   @Parameter(name = "patternReRunLatex", defaultValue =
   // general message 
   "^(LaTeX Warning: Label\\(s\\) may have changed\\. "
@@ -1057,6 +1097,7 @@ public class Settings {
    * This shall be non-negative 
    * or <code>-1</code> which signifies that there is no threshold. 
    */
+  @RuntimeParameter
   @Parameter(name = "maxNumReRunsLatex", defaultValue = "5")
   private int maxNumReRunsLatex = 5;
 
@@ -1068,6 +1109,7 @@ public class Settings {
    * (using a bst-style file). 
    * The default value is <code>bibtex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "bibtexCommand", defaultValue = "bibtex")
   private String bibtexCommand = "bibtex";
 
@@ -1087,6 +1129,7 @@ public class Settings {
    * The options for the command {@link #bibtexCommand}. 
    * The default value is the empty string. 
    */
+  @RuntimeParameter
   @Parameter(name = "bibtexOptions", defaultValue = "")
   private String bibtexOptions = "";
 
@@ -1096,6 +1139,7 @@ public class Settings {
    * The default value is chosen 
    * according to the <code>bibtex</code> documentation. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternErrBibtex", defaultValue = "error message")
   private String patternErrBibtex = "error message";
 
@@ -1105,6 +1149,7 @@ public class Settings {
    * The default value is chosen 
    * according to the <code>bibtex</code> documentation. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternWarnBibtex", defaultValue = "^Warning--")
   private String patternWarnBibtex = "^Warning--";
 
@@ -1115,6 +1160,7 @@ public class Settings {
    * from an idx-file logging on an ilg-file. 
    * The default value is <code>makeindex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "makeIndexCommand", defaultValue = "makeindex")
   private String makeIndexCommand = "makeindex";
 
@@ -1150,6 +1196,7 @@ public class Settings {
    * on 3 or more successive pages. 
    * </ul>
    */
+  @RuntimeParameter
   @Parameter(name = "makeIndexOptions", defaultValue = "")
   private String makeIndexOptions = "";
 
@@ -1159,6 +1206,7 @@ public class Settings {
    * The default value <code>(!! Input index error )</code> 
    * is chosen according to the <code>makeindex</code> documentation. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternErrMakeIndex",
       defaultValue = "(!! Input index error )")
   private String patternErrMakeIndex = "(!! Input index error )";
@@ -1169,6 +1217,7 @@ public class Settings {
    * The default value <code>(## Warning )</code> 
    * is chosen according to the <code>makeindex</code> documentation. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternWarnMakeIndex", defaultValue = "(## Warning )")
   private String patternWarnMakeIndex = "(## Warning )";
 
@@ -1184,6 +1233,7 @@ public class Settings {
    * (s)he is asked to contribute 
    * and to notify the developer of this plugin. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternReRunMakeIndex", defaultValue =
   //"^Package rerunfilecheck Warning: File `.*\\.idx' has changed\\.$" //+
   "^\\(rerunfilecheck\\) +Rerun LaTeX/makeindex to get index right\\.$")
@@ -1202,6 +1252,7 @@ public class Settings {
    * This command invokes {@link #makeIndexCommand}. 
    * The default value is <code>splitindex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "splitIndexCommand", defaultValue = "splitindex")
   private String splitIndexCommand = "splitindex";
 
@@ -1225,6 +1276,7 @@ public class Settings {
    * Do not use <code>--verbose</code> either for sake of portability. 
    * The default value is <code>-V</code>; it could also be empty. 
    */
+  @RuntimeParameter
   @Parameter(name = "splitIndexOptions", defaultValue = "-V")
   private String splitIndexOptions = "splitindexOptions";
 
@@ -1237,6 +1289,7 @@ public class Settings {
    * into account logging on a glg-file. 
    * The default value is <code>makeglossaries</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "makeGlossariesCommand", defaultValue = "makeglossaries")
   private String makeGlossariesCommand = "makeglossaries";
 
@@ -1257,6 +1310,7 @@ public class Settings {
    * <code>-t</code> and <code>-o</code> for both, 
    * <code>xindy</code> and <code>makeindex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "makeGlossariesOptions", defaultValue = "")
   private String makeGlossariesOptions = "";
 
@@ -1267,6 +1321,7 @@ public class Settings {
    * If this is not appropriate, please modify 
    * and notify the developer of this plugin. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternErrMakeGlossaries",
       defaultValue = "^\\*\\*\\* unable to execute: ")
   private String patternErrMakeGlossaries = "^\\*\\*\\* unable to execute: ";
@@ -1278,8 +1333,9 @@ public class Settings {
    * The default value is <code>(^ERROR: )</code> (note the space). 
    * If this is not appropriate, please modify 
    * and notify the developer of this plugin. 
-   * FIXME: This is not used. 
    */
+  // FIXME: This is not used. 
+  @RuntimeParameter
   @Parameter(name = "patternErrXindy", defaultValue = "(^ERROR: )")
   private String patternErrXindy = "(^ERROR: )";
 
@@ -1292,6 +1348,7 @@ public class Settings {
    * If this is not appropriate, please modify 
    * and notify the developer of this plugin. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternWarnXindy", defaultValue = "(^WARNING: )")
   private String patternWarnXindy = "(^WARNING: )";
 
@@ -1307,6 +1364,7 @@ public class Settings {
    * (s)he is asked to contribute 
    * and to notify the developer of this plugin. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternReRunMakeGlossaries", defaultValue =
   //"^Package rerunfilecheck Warning: File `.*\\.glo' has changed\\.$" +
   // FIXME: really MAKEINDEX! 
@@ -1334,6 +1392,7 @@ public class Settings {
    * CAUTION: Since <code>pythontexW</code> is not registered with this software, 
    * one has to specify it with its category as <code>pythontexW:pythontex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "pythontexCommand", defaultValue = "pythontex")
   private String pythontexCommand = "pythontex";
 
@@ -1351,6 +1410,7 @@ public class Settings {
    * and forces setting <code>--rerun=always</code>. 
    * The default value is <code>--rerun=always</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "pythontexOptions", defaultValue = "--rerun=always")
   private String pythontexOptions = "--rerun=always";
 
@@ -1365,6 +1425,7 @@ public class Settings {
    * If this is not appropriate, please modify 
    * and notify the developer of this plugin. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternErrPyTex",
       defaultValue = "\\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)")
   private String patternErrPyTex =
@@ -1379,6 +1440,7 @@ public class Settings {
    * If this is not appropriate, please modify 
    * and notify the developer of this plugin. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternWarnPyTex",
       defaultValue = "(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\\(s\\), [1-9][0-9]* warning\\(s\\)")
   private String patternWarnPyTex =
@@ -1396,6 +1458,7 @@ public class Settings {
    * CAUTION: Since <code>depythontexW</code> is not registered with this software, 
    * one has to specify it with its category as <code>depythontexW:depythontex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "depythontexCommand", defaultValue = "depythontex")
   private String depythontexCommand = "depythontex";
 
@@ -1412,6 +1475,7 @@ public class Settings {
    * For the possibilites see the manual of the pythontex package 
    * or the help dialog of code>depythontex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "depythontexOptions", defaultValue = "")
   private String depythontexOptions = "";
 
@@ -1424,6 +1488,7 @@ public class Settings {
    * The default value (for which this software is also tested) 
    * is <code>htlatex</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "tex4htCommand", defaultValue = "htlatex")
   private String tex4htCommand = "htlatex";
 
@@ -1434,6 +1499,7 @@ public class Settings {
    * e.g. html or odt or something like that. 
    * The default value is <code>html,2</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "tex4htStyOptions", defaultValue = "html,2")
   private String tex4htStyOptions = "html,2";
 
@@ -1446,6 +1512,7 @@ public class Settings {
    * The former two are used by <code>t4ht</code> 
    * which is configured via {@link #t4htOptions}. 
    */
+  @RuntimeParameter
   @Parameter(name = "tex4htOptions", defaultValue = "")
   private String tex4htOptions = "";
 
@@ -1456,6 +1523,7 @@ public class Settings {
    * The value <code>-p</code> prevents creation of png-pictures.
    * The default value is the empty string. 
    */
+  @RuntimeParameter
   @Parameter(name = "t4htOptions", defaultValue = "")
   private String t4htOptions = "";
 
@@ -1512,6 +1580,7 @@ public class Settings {
    * and to notify the developer of this plugin. 
    * Then the default value will be extended. 
    */
+  @RuntimeParameter
   @Parameter(name = "patternT4htOutputFiles", defaultValue = "")
   private String patternT4htOutputFiles =
       "^(T$T(((ch|se|su|ap|li)?\\d+)?\\.x?html?|" +
@@ -1526,6 +1595,7 @@ public class Settings {
    * The latex2rtf command to create rtf from latex directly. 
    * The default value is <code>latex2rtf</code>. 
    */
+  @RuntimeParameter
   @Parameter(name = "latex2rtfCommand", defaultValue = "latex2rtf")
   private String latex2rtfCommand = "latex2rtf";
 
@@ -1533,6 +1603,7 @@ public class Settings {
    * The options of the command {@link #latex2rtfCommand}. 
    * The default value is the empty string. 
    */
+  @RuntimeParameter
   @Parameter(name = "latex2rtfOptions", defaultValue = "")
   private String latex2rtfOptions = "";
 
@@ -1546,6 +1617,7 @@ public class Settings {
    *
    * @see #odt2docOptions
    */
+  @RuntimeParameter
   @Parameter(name = "odt2docCommand", defaultValue = "odt2doc")
   private String odt2docCommand = "odt2doc";
 
@@ -1564,6 +1636,7 @@ public class Settings {
    *
    * @see #odt2docCommand
    */
+  @RuntimeParameter
   @Parameter(name = "odt2docOptions", defaultValue = "-fdocx")
   private String odt2docOptions = "-fdocx";
 
@@ -1573,6 +1646,7 @@ public class Settings {
    *
    * @see #pdf2txtOptions
    */
+  @RuntimeParameter
   @Parameter(name = "pdf2txtCommand", defaultValue = "pdftotext")
   private String pdf2txtCommand = "pdftotext";
 
@@ -1583,6 +1657,7 @@ public class Settings {
    * @see #pdf2txtCommand
    */
   // TBD: check 
+  @RuntimeParameter
   @Parameter(name = "pdf2txtOptions", defaultValue = "-q")
   private String pdf2txtOptions = "-q";
 
@@ -1594,6 +1669,7 @@ public class Settings {
    *
    * @see #chkTexOptions
    */
+  @RuntimeParameter
   @Parameter(name = "chkTexCommand", defaultValue = "chktex")
   private String chkTexCommand = "chktex";
 
@@ -1661,6 +1737,7 @@ public class Settings {
   // -q: no copyright information 
   // -b: toggle creation of backup file: with -o: yes, additional -b: no 
   //     explicitly as -b0 and -b1, respectively. 
+  @RuntimeParameter
   @Parameter(name = "chkTexOptions", defaultValue = "")
   private String chkTexOptions = "-q -b0";
 
@@ -1681,6 +1758,7 @@ public class Settings {
    * Thus usable for a wrapper only. 
    * TBD: work into this addition. 
    */
+  @RuntimeParameter
   @Parameter(name = "diffPdfCommand", defaultValue = "diff")
   private String diffPdfCommand = "diff";
 
@@ -2429,6 +2507,7 @@ public class Settings {
   private static String beautifyOptions(String rawOption) {
     return rawOption.replaceAll("(\t|\n| )+", " ").trim();
   }
+
   public void setFig2devGenOptions(String fig2devGenOptions) {
     this.fig2devGenOptions = beautifyOptions(fig2devGenOptions);
   }
@@ -2605,7 +2684,8 @@ public class Settings {
 
   // setter method for patternReRunLatex in maven 
   public void setPatternReRunLatex(String patternReRunLatex) {
-    this.patternReRunLatex = patternReRunLatex.replaceAll("(\t|\n)+", "").trim();
+    this.patternReRunLatex =
+        patternReRunLatex.replaceAll("(\t|\n)+", "").trim();
   }
 
   // method introduces patternReRunLatex in ant 
