@@ -280,6 +280,13 @@ Also: meta-uml, with documentation
       Advisible: not add manually to @Parameter's in Settings, 
     but by ASM or something. 
     Here a lot of research is required still.  -->
+  <!-- reading parameters of Settings: 
+    Add a postprocessing of the class files: 
+    Whereever @Parameter is given, add @RuntimeParameter. 
+    Check whether parameter name is field name. 
+    This is necessary because @RuntimeParameter does not store parameter name. 
+    Of course this could be changed. 
+  -->
 
 	<!-- target vrs: still depends on texlive, shall also work for miktex. 
 	Also take whole lines into account (add more \R) -->
