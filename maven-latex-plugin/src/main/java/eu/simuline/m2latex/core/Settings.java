@@ -2980,111 +2980,84 @@ public class Settings {
     this.diffPdfCommand = diffPdfCommand;
   }
 
+  /**
+   * Returns the parameters defined in this class as a map from their names to their values. 
+   * Parameters are marked by annotations of type {@link Parameter}. 
+   * Since this is not runtime visible, we mark parameters with another annotation, {@link RuntimeParameter}. 
+   * Currently, their names are the names of the field (TBD: add check, see changes). 
+   * There is one case where the default value is <code>null</code>. 
+   * The string representation is 'null'. 
+   * In the long run, the {@link RuntimeParameter} shall be added automatically 
+   * while performing check of names. 
+   * Currently it is checked that the parameter is private and not static. 
+   * 
+   * The ordering of the parameters is the ordering of the according fields in the class. 
+   * To that end, we use {@link LinkedHashMap}. 
+   * 
+   * @return
+   *   A map from names of parameters to their current values as a string. 
+   *   If <code>null</code> use the string 'null'. 
+   */
+  public Map<String, String> getProperties() {
+    // keys are never null, but values may be null
+    Map<String, String> res = new LinkedHashMap<String, String>();
+    Field[] fields = this.getClass().getDeclaredFields();
+    String name;
+    Object value;
+    int mod;
+    for (Field field : fields) {
+      // TBD: in the long run maybe Parameter
+      RuntimeParameter annot = field.getAnnotation(RuntimeParameter.class);
+      //System.out.println(Arrays.asList(field.getDeclaredAnnotations()));
+      if (annot == null) {
+        // Here, the field is no parameter. 
+        continue;
+      }
+      // Here, the field is a parameter 
+      // TBD: check for right name and default value 
+      mod = field.getModifiers();
+      if (Modifier.isStatic(mod)) {
+        continue;
+      }
+      assert !Modifier.isStatic (mod) : "found parameter which is static. ";
+      assert !Modifier.isFinal  (mod) : "found parameter which is final. ";
+      assert  Modifier.isPrivate(mod) : "found parameter which is not private. ";
+
+      name = field.getName();
+      //assert annot.name().equals(name) : "Parameter name shall be fieldname. ";
+      field.setAccessible(true);
+      try {
+        value = field.get(this);
+        res.put(name, value == null ? null : value.toString());
+      } catch (IllegalArgumentException iare) {
+        throw new IllegalStateException(
+            "Found no field '" + name + "' in setting. ");
+      } catch (IllegalAccessException iace) {
+        throw new IllegalStateException(
+            "Illegal access to field '" + name + "' although set accessible. ");
+      }
+    }
+    return res;
+  }
 
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    // directories and related
-    sb.append("[ baseDirectory=").append(this.baseDirectory);
-    sb.append(", targetDirectory=").append(this.targetDirectory);
-    sb.append(", targetSiteDirectory=").append(this.targetSiteDirectory);
-    sb.append(", texSrcDirectory=").append(this.texSrcDirectory);
-    sb.append(", texSrcProcDirectory=").append(this.texSrcProcDirectory);
-    sb.append(", readTexSrcProcDirRec=").append(this.readTexSrcProcDirRec);
-    sb.append(", outputDirectory=").append(this.outputDirectory);
-    sb.append(", diffDirectory=").append(this.diffDirectory);
-    // general parameters
-    sb.append(", targets=").append(this.targets);
-    sb.append(", convertersExcluded=").append(this.convertersExcluded);
-    sb.append(", patternLatexMainFile=").append(this.patternLatexMainFile);
-    sb.append(", mainFilesIncluded=").append(this.mainFilesIncluded);
-    sb.append(", mainFilesExcluded=").append(this.mainFilesExcluded);
-    sb.append(", texPath=").append(this.texPath);
-    sb.append(", cleanUp=").append(this.cleanUp);
-    sb.append(", chkDiff=").append(this.chkDiff);
-    sb.append(", patternCreatedFromLatexMain=")
-        .append(this.patternCreatedFromLatexMain);
+    List<String> res = new ArrayList<String>();
+    String name, value;
+    name = "baseDirectory";
+    value = this.baseDirectory.toString();
+    res.add(name+"="+value+"");
+    name = "targetDirectory";
+    value = this.targetDirectory.toString();
+    res.add(name+"="+value+"");
+    name = "targetSiteDirectory";
+    value = this.targetSiteDirectory.toString();
+    res.add(name+"="+value+"");
+    Map<String, String> name2value = this.getProperties();
 
-    // parameters for graphical preprocessors
-    sb.append(", fig2devCommand=").append(this.fig2devCommand);
-    sb.append(", fig2devGenOptions=").append(this.fig2devGenOptions);
-    sb.append(", fig2devPtxOptions=").append(this.fig2devPtxOptions);
-    sb.append(", fig2devPdfEpsOptions=").append(this.fig2devPdfEpsOptions);
-    sb.append(", gnuplotCommand=").append(this.gnuplotCommand);
-    sb.append(", gnuplotOptions=").append(this.gnuplotOptions);
-    sb.append(", metapostCommand=").append(this.metapostCommand);
-    sb.append(", metapostOptions=").append(this.metapostOptions);
-    sb.append(", patternErrMPost=").append(this.patternErrMPost);
-    sb.append(", patternWarnMPost=").append(this.patternWarnMPost);
-    sb.append(", svg2devCommand=").append(this.svg2devCommand);
-    sb.append(", svg2devOptions=").append(this.svg2devOptions);
-    sb.append(", createBoundingBoxes=").append(this.createBoundingBoxes);
-    sb.append(", ebbCommand=").append(this.ebbCommand);
-    sb.append(", ebbOptions=").append(this.ebbOptions);
-
-    // parameters for latex2pdf
-    sb.append(", latex2pdfCommand=").append(this.latex2pdfCommand);
-    sb.append(", latex2pdfOptions=").append(this.latex2pdfOptions);
-    sb.append(", patternErrLatex=").append(this.patternErrLatex);
-    sb.append(", patternWarnLatex=").append(this.patternWarnLatex);
-    sb.append(", debugBadBoxes=").append(this.debugBadBoxes);
-    sb.append(", debugWarnings=").append(this.debugWarnings);
-    sb.append(", pdfViaDvi=").append(this.pdfViaDvi);
-    sb.append(", dvi2pdfCommand=").append(this.dvi2pdfCommand);
-    sb.append(", dvi2pdfOptions=").append(this.dvi2pdfOptions);
-
-    sb.append(", patternReRunLatex=").append(this.patternReRunLatex);
-    sb.append(", maxNumReRunsLatex=").append(this.maxNumReRunsLatex);
-    // parameters for BibTeX
-    sb.append(", bibtexCommand=").append(this.bibtexCommand);
-    sb.append(", bibtexOptions=").append(this.bibtexOptions);
-    sb.append(", patternErrBibtex=").append(this.patternErrBibtex);
-    sb.append(", patternWarnBibtex=").append(this.patternWarnBibtex);
-    // parameters for MakeIndex
-    sb.append(", makeIndexCommand=").append(this.makeIndexCommand);
-    sb.append(", makeIndexOptions=").append(this.makeIndexOptions);
-    sb.append(", patternErrMakeIndex=").append(this.patternErrMakeIndex);
-    sb.append(", patternWarnMakeIndex=").append(this.patternWarnMakeIndex);
-    sb.append(", patternReRunMakeIndex=").append(this.patternReRunMakeIndex);
-    sb.append(", splitIndexCommand=").append(this.splitIndexCommand);
-    sb.append(", splitIndexOptions=").append(this.splitIndexOptions);
-    // parameters for MakeGlossaries
-    sb.append(", makeGlossariesCommand=").append(this.makeGlossariesCommand);
-    sb.append(", makeGlossariesOptions=").append(this.makeGlossariesOptions);
-    sb.append(", patternErrMakeGlossaries=")
-        .append(this.patternErrMakeGlossaries);
-    sb.append(", patternErrXindy=").append(this.patternErrXindy);
-    sb.append(", patternWarnXindy=").append(this.patternWarnXindy);
-    sb.append(", patternReRunMakeGlossaries=")
-        .append(this.patternReRunMakeGlossaries);
-    // parameters for pythontex
-    sb.append(", pythontexCommand=").append(this.pythontexCommand);
-    sb.append(", pythontexOptions=").append(this.pythontexOptions);
-    sb.append(", patternErrPyTex=").append(this.patternErrPyTex);
-    sb.append(", patternWarnPyTex=").append(this.patternWarnPyTex);
-    // parameters for latex2html
-    sb.append(", depythontexCommand=").append(this.depythontexCommand);
-    sb.append(", depythontexOptions=").append(this.depythontexOptions);
-    sb.append(", tex4htCommand=").append(this.tex4htCommand);
-    sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
-    sb.append(", tex4htOptions=").append(this.tex4htOptions);
-    sb.append(", t4htOptions=").append(this.t4htOptions);
-    sb.append(", patternT4htOutputFiles=").append(this.patternT4htOutputFiles);
-    // parameters for latex2rtf
-    sb.append(", latex2rtfCommand=").append(this.latex2rtfCommand);
-    sb.append(", latex2rtfOptions=").append(this.latex2rtfOptions);
-    // parameters for odt2doc
-    sb.append(", odt2docCommand=").append(this.odt2docCommand);
-    sb.append(", odt2docOptions=").append(this.odt2docOptions);
-    // parameters for pdf2txt
-    sb.append(", pdf2txtCommand=").append(this.pdf2txtCommand);
-    sb.append(", pdf2txtOptions=").append(this.pdf2txtOptions);
-    // parameters for chktex
-    sb.append(", chkTexCommand=").append(this.chkTexCommand);
-    sb.append(", chkTexOptions=").append(this.chkTexOptions);
-    // parameters for diffing pdfs 
-    sb.append(", diffPdfCommand=").append(this.diffPdfCommand);
-    sb.append(']');
-    return sb.toString();
+    for (Map.Entry<String, String> entry : name2value.entrySet()) {
+      res.add(entry.getKey()+"="+entry.getValue()+"");
+    }
+    return res.toString();
   }
 
   public static void main(String[] args) {
