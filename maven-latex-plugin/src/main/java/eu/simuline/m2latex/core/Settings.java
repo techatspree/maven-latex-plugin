@@ -19,13 +19,27 @@
 package eu.simuline.m2latex.core;
 
 import java.io.File;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+
+import java.util.Map;
+import java.util.LinkedHashMap;
+//import java.util.TreeMap;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.HashSet;
 import java.util.TreeSet;
 
+
+// import java.lang.annotation.Annotation;
+
 import org.apache.maven.plugins.annotations.Parameter;
+// import org.apache.maven.plugin.descriptor.Parameter;
 
 // is AbstractLatexMojo but not public
 import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only
@@ -2992,9 +3006,9 @@ public class Settings {
 
     // parameters for graphical preprocessors
     sb.append(", fig2devCommand=").append(this.fig2devCommand);
-    sb.append(", fig2devGenOptions").append(this.fig2devGenOptions);
-    sb.append(", fig2devPtxOptions").append(this.fig2devPtxOptions);
-    sb.append(", fig2devPdfEpsOptions").append(this.fig2devPdfEpsOptions);
+    sb.append(", fig2devGenOptions=").append(this.fig2devGenOptions);
+    sb.append(", fig2devPtxOptions=").append(this.fig2devPtxOptions);
+    sb.append(", fig2devPdfEpsOptions=").append(this.fig2devPdfEpsOptions);
     sb.append(", gnuplotCommand=").append(this.gnuplotCommand);
     sb.append(", gnuplotOptions=").append(this.gnuplotOptions);
     sb.append(", metapostCommand=").append(this.metapostCommand);
@@ -3038,6 +3052,7 @@ public class Settings {
     sb.append(", makeGlossariesOptions=").append(this.makeGlossariesOptions);
     sb.append(", patternErrMakeGlossaries=")
         .append(this.patternErrMakeGlossaries);
+    sb.append(", patternErrXindy=").append(this.patternErrXindy);
     sb.append(", patternWarnXindy=").append(this.patternWarnXindy);
     sb.append(", patternReRunMakeGlossaries=")
         .append(this.patternReRunMakeGlossaries);
@@ -3047,6 +3062,8 @@ public class Settings {
     sb.append(", patternErrPyTex=").append(this.patternErrPyTex);
     sb.append(", patternWarnPyTex=").append(this.patternWarnPyTex);
     // parameters for latex2html
+    sb.append(", depythontexCommand=").append(this.depythontexCommand);
+    sb.append(", depythontexOptions=").append(this.depythontexOptions);
     sb.append(", tex4htCommand=").append(this.tex4htCommand);
     sb.append(", tex4htStyOptions=").append(this.tex4htStyOptions);
     sb.append(", tex4htOptions=").append(this.tex4htOptions);
