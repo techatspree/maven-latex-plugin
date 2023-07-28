@@ -447,7 +447,7 @@ The ending of the filename, which is either eps or pdf
 determines the file type. 
 
 The default value is the minimal value, 
-'-D - -export-latex'. -->
+'- -export-area-drawing - -export-latex'. -->
             <svg2devOptions>${svg2devOptions}</svg2devOptions>
 
 <!--
