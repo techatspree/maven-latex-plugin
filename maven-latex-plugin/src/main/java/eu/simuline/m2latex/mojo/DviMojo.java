@@ -26,9 +26,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 //import java.util.EnumSet;
 
+// documentation occurs in latex:help
 /**
- * Builds DVI documents from LaTeX sources 
- * for the goal <code>dvi</code> which is not tied to a lifecycle phase. 
+ * Builds DVI documents from LaTeX sources. 
  */
 @Mojo(name = "dvi")
 public class DviMojo extends CfgLatexMojo {

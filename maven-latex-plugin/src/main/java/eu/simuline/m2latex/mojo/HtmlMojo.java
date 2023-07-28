@@ -26,9 +26,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 //import java.util.EnumSet;
 
+// documentation occurs in latex:help
 /**
- * Build HTML documents and XHTML documents from LaTeX sources 
- * for the goal <code>html</code> which is not tied to a lifecycle phase. 
+ * Build HTML documents and XHTML documents from LaTeX sources. 
  */
 @Mojo(name = "html")
 public class HtmlMojo extends CfgLatexMojo {

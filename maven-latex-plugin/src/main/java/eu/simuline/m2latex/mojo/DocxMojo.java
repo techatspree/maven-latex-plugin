@@ -26,9 +26,9 @@ import java.util.TreeSet;
 
 import org.apache.maven.plugins.annotations.Mojo;
 
+// documentation occurs in latex:help
 /**
- * Build documents in msword formats, above all docx from LaTeX sources 
- * for the goal <code>docx</code> which is not tied to a lifecycle phase. 
+ * Build documents in msword formats, above all docx from LaTeX sources. 
  */
 @Mojo(name = "docx")
 public class DocxMojo extends CfgLatexMojo {

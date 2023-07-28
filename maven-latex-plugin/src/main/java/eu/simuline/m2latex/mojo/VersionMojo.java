@@ -25,9 +25,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 
 import org.apache.maven.plugin.MojoFailureException;
 
+// documentation occurs in latex:help
 /**
- * Displays version info of this plugin but above all on all converters 
- * (except makeindex). 
+ * Displays version info of this plugin but above all on all converters. 
+ * The goal is tied to the lifecycle phase <code>validate</code> by default.  
  */
 @Mojo(name = "vrs", defaultPhase = LifecyclePhase.VALIDATE)
 // TBD: maybe verify

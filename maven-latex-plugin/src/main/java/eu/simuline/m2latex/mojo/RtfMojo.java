@@ -26,9 +26,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 //import java.util.EnumSet;
 
+// documentation occurs in latex:help
 /**
- * Builds rtf documents from LaTeX sources 
- * for the goal <code>rtf</code> which is not tied to a lifecycle phase. 
+ * Builds rtf documents from LaTeX sources. 
  */
 @Mojo(name = "rtf")
 public class RtfMojo extends CfgLatexMojo {

@@ -29,10 +29,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 
 import java.util.SortedSet;
 
+// documentation occurs in latex:help
 /**
- * Builds documents in the formats configured in the pom from LaTeX sources 
- * for the goal <code>cfg</code> 
- * tied to the lifecycle phase <code>site</code>. 
+ * Builds documents in the formats configured in the pom from LaTeX sources. 
+ * The goal is tied to the lifecycle phase <code>site</code> by default. 
  */
 @Mojo(name = "cfg", defaultPhase = LifecyclePhase.SITE)
 // https://maven.apache.org/plugin-tools/maven-plugin-tools-annotations/index.html

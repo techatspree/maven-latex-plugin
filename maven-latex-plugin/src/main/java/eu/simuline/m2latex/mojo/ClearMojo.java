@@ -25,10 +25,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 
 import org.apache.maven.plugin.MojoFailureException;
 
+// documentation occurs in latex:help
 /**
- * Clears all created files in the folders containing the LaTeX sources 
- * for the goal <code>clr</code> 
- * tied to the lifecycle phase <code>clean</code>. 
+ * Clears all created files in the folders containing the LaTeX sources. 
+ * The goal is tied to the lifecycle phase <code>clean</code> by default.  
  */
 @Mojo(name = "clr", defaultPhase = LifecyclePhase.CLEAN)
 // TBD: research: 

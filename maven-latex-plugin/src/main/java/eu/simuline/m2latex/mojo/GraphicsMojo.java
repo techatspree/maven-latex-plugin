@@ -24,6 +24,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import org.apache.maven.plugin.MojoFailureException;
 
+// documentation occurs in latex:help
 /**
  * Transforms all graphic files into formats 
  * which can be included into LaTeX files 

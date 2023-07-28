@@ -25,10 +25,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+
+// documentation occurs in latex:help
 /**
  * Checks all latex main files after having created all graphical files. 
- * <p>
- * Defines the goal <code>chk</code> which is not tied to a lifecycle phase. 
  */
 @Mojo(name = "chk") // maybe , defaultPhase = LifecyclePhase.POST-SITE
 // https://maven.apache.org/plugin-tools/maven-plugin-tools-annotations/index.html
