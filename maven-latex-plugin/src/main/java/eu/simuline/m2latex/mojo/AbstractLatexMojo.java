@@ -131,6 +131,6 @@ abstract class AbstractLatexMojo extends AbstractMojo
     this.settings.setTargetDirectory(this.targetDirectory);
 
     this.latexProcessor =
-        new LatexProcessor(this.settings, new MavenLogWrapper(getLog()), this);
+        new LatexProcessor(this.settings, new MavenLogWrapper(this.getClass()), this);
   }
 }
