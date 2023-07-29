@@ -190,7 +190,7 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>4.0.0-alpha-7</version><!-- 3.9.0 4.0.0-alpha-7 -->
+			<version>4.0.0-alpha-7</version>
 			<!--scope>provided</scope-->
 		</dependency>
 
@@ -216,7 +216,7 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-compat</artifactId>
-			<version>${versionMvn}</version> <!-- ${versionMvn} -->
+			<version>4.0.0-alpha-7</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -225,7 +225,7 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-core</artifactId>
-			<version>${versionMvn}</version>
+			<version>4.0.0-alpha-7</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -244,7 +244,7 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-model</artifactId>
-			<version>${versionMvn}</version>
+			<version>4.0.0-alpha-7</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -343,7 +343,7 @@
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
-			<version>3.3.0</version> <!-- 4.0.0 3.3.0 -->
+			<version>4.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -365,7 +365,7 @@
 		<dependency>
 			<groupId>org.apache.maven.plugin-testing</groupId>
 			<artifactId>maven-plugin-testing-harness</artifactId>
-			<version>3.3.0</version>
+			<version>4.0.0-alpha-1</version>
 			<scope>test</scope>
 		</dependency>
 
