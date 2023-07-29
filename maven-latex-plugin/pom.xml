@@ -157,42 +157,29 @@
     </mailingList-->
 	</mailingLists>
 
-	<!--issueManagement>
-    <system>Github Issues</system>
-    <url>https://github.com/akquinet/latex-maven-plugin/issues</url>
-    </issueManagement-->
+	<issueManagement>
+		<system>Github Issues</system>
+		<url>https://github.com/Reissner/latex-maven-plugin/issues</url>
+		<!--url>https://github.com/akquinet/latex-maven-plugin/issues</url-->
+	</issueManagement>
 
 	<properties>
 		<!-- Using platform encoding to copy filtered resources; 
     without project.build.sourceEncoding the build is platform dependent! -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- checked during validation -->
-		<versionMvn>3.9.2</versionMvn><!-- 3.9.2 3.8.4 -->
+		<versionMvn>3.9.2</versionMvn>
 		<versionTestPlugins>3.0.0</versionTestPlugins>
 		<versionJunit5>5.8.2</versionJunit5>
 		<!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
 		<versionJunit4>4.13.2</versionJunit4>
 		<versionItf>0.11.0</versionItf>
-		<versionAnt>1.10.13</versionAnt> <!-- 1.10.0 1.10.13 -->
+		<versionAnt>1.10.13</versionAnt>
 		<versionSlf4j>2.0.7</versionSlf4j>
 		<!-- properties for config of latex plugin -->
 		<!-- This goes into pom4pdf.xml and also in .latexmkrc, 
     but not in the config of this project -->
 		<versionStripped>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}</versionStripped>
-		<latex2pdfCommand>lualatex</latex2pdfCommand>
-		<latex2pdfOptions>-interaction=nonstopmode -recorder -synctex=1 -shell-escape</latex2pdfOptions>
-		<fig2devCommand>fig2dev</fig2devCommand>
-		<fig2devGenOptions></fig2devGenOptions>
-		<fig2devPtxOptions></fig2devPtxOptions>
-		<fig2devPdfEpsOptions></fig2devPdfEpsOptions>
-		<gnuplotCommand>gnuplot</gnuplotCommand>
-		<gnuplotOptions></gnuplotOptions>
-		<metapostCommand>mpost</metapostCommand>
-		<metapostOptions>-interaction=nonstopmode -recorder -s prologues=2 -s outputtemplate="%j.mps"</metapostOptions>
-		<svg2devCommand>inkscape</svg2devCommand>
-		<svg2devOptions>--export-area-drawing --export-latex</svg2devOptions>
-		<ebbCommand>ebb</ebbCommand>
-		<ebbOptions>-v</ebbOptions>
 
 		<urlSite>https://www.simuline.eu/LatexMavenPlugin/</urlSite>
 	</properties>
