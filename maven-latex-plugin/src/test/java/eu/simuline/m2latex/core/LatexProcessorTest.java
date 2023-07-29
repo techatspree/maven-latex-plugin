@@ -27,8 +27,6 @@ import java.io.FileFilter;
 // import java.io.Writer;
 import java.io.IOException;
 
-// import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugin.logging.SystemStreamLog;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.RETURNS_SMART_NULLS;
@@ -124,7 +122,7 @@ public class LatexProcessorTest {
 	//     });
 	//private LogWrapper log = mock(MavenLogWrapper.class, RETURNS_SMART_NULLS);
 	private final LogWrapper log =
-			spy(new MavenLogWrapper(new SystemStreamLog()));
+		spy(new MavenLogWrapper(this.getClass()));
 
 	private LatexProcessor processor = new LatexProcessor(this.settings,
 			this.executor, this.log, this.fileUtils, new PdfMojo());

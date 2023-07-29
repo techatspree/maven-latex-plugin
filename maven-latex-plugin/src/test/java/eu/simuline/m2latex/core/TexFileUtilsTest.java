@@ -23,8 +23,6 @@ import eu.simuline.m2latex.mojo.MavenLogWrapper;
 // mport eu.simuline.m2latex.core.BuildExecutionException;
 // import eu.simuline.m2latex.core.BuildFailureException;
 
-import org.apache.maven.plugin.logging.SystemStreamLog;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -77,14 +75,12 @@ public class TexFileUtilsTest {
 		cleanWorkingDir();
 	}
 
-
-
 	@Test
 	public void testGetTargetDir() throws BuildFailureException {
 
 		File expected = new File(WORKING_DIR, "dir2/subdir");
 		TexFileUtils utils =
-				new TexFileUtils(new MavenLogWrapper(new SystemStreamLog()));
+			new TexFileUtils(new MavenLogWrapper(this.getClass()));
 		// may throw BuildFailureException 
 		File actual =
 				utils.getTargetDirectory(new File(WORKING_DIR, "dir1/subdir/file"),

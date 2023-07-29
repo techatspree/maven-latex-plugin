@@ -253,7 +253,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${versionSlf4j}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- needed when running the integration test -->
@@ -261,7 +260,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${versionSlf4j}</version>
-			<scope>test</scope>
 		</dependency>
 		<!-- <scope>test</scope>: if not then the plugin descriptors are not found  -->
 
