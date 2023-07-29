@@ -190,8 +190,8 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.9.0</version>
-			<scope>provided</scope>
+			<version>4.0.0-alpha-7</version><!-- 3.9.0 4.0.0-alpha-7 -->
+			<!--scope>provided</scope-->
 		</dependency>
 
 		<!-- TBD: lot of dependency convergence errors, 
