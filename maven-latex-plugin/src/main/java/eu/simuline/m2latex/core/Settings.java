@@ -735,11 +735,11 @@ public class Settings {
    * <ul>
    *
    * The default value is the minimal value, 
-   * <code>-D --export-latex</code>. 
+   * <code>--export-area-drawing --export-latex</code>. 
    */
   @RuntimeParameter
   @Parameter(name = "svg2devOptions", defaultValue = "-D --export-latex")
-  private String svg2devOptions = "-D --export-latex";
+  private String svg2devOptions = "--export-area-drawing --export-latex";
 
   /**
    * Whether for pixel formats like jpg and png 
