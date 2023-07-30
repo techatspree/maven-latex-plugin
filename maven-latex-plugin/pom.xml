@@ -704,18 +704,30 @@
 							</resources>
 						</configuration>
 					</execution>
+
+					<!-- filter the full pom for site generation -->
 					<execution>
-						<id>copy-pdf2site</id>
-						<phase>pre-site</phase>
+						<id>filterFullPomSite</id>
+						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<outputDirectory>src/site/resources/fromMain</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/main/resources/docsCmp</directory>
-									<filtering>false</filtering>
+									<directory>src/main/resources/rawPoms</directory>
+									<includes>
+										<include>pom4pdf.xml</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+								<resource>
+									<directory>src/main/resources</directory>
+									<includes>
+										<include>version.properties</include>
+									</includes>
+									<filtering>true</filtering>
 								</resource>
 							</resources>
 						</configuration>
