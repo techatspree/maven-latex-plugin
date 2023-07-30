@@ -1020,9 +1020,9 @@
 				<groupId>eu.simuline.m2latex</groupId>
 				<artifactId>latex-maven-plugin</artifactId>
 				<version>2.0-SNAPSHOT</version>
-
 				<configuration>
 					<settings>
+						<convertersExcluded>upmendex, xindy</convertersExcluded>
 						<!--latex2pdfCommand>xelatex</latex2pdfCommand-->
 						<!--pdfViaDvi>true</pdfViaDvi-->
 						<cleanUp>false</cleanUp>
@@ -1039,15 +1039,15 @@
 						<!--depythontexCommand>depythontexW</depythontexCommand-->
 						<chkTexOptions>-q -b0 -L</chkTexOptions>
 					</settings>
-					<versionsWarnOnly>true</versionsWarnOnly>
 				</configuration>
+
 				<executions>
-					<execution>
+					<!--execution>
 						<id>process-latex-sources-pdf</id>
 						<goals>
 							<goal>pdf</goal>
 						</goals>
-					</execution>
+					</execution-->
 					<execution>
 						<id>process-latex-sources</id>
 						<goals>
@@ -1060,15 +1060,22 @@
 							<goal>clr</goal>
 						</goals>
 					</execution>
+          <!--execution>
+						<?m2e execute onConfiguration?>
+            <id>create-rc-files</id>
+            <goals>
+              <goal>dvl</goal>
+            </goals>
+          </execution-->
 					<execution>
 						<?m2e execute onConfiguration?>
 						<id>validate-converters</id>
 						<goals>
 							<goal>vrs</goal>
 						</goals>
-						<!--configuration>
+						<configuration>
 							<versionsWarnOnly>true</versionsWarnOnly>
-						</configuration-->
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
