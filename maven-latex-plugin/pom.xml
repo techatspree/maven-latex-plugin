@@ -983,7 +983,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${versionTestPlugins}</version>
 				<configuration>
-					<argLine>-Xmixed --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+					<argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>					<!-- -Xmixed  -->
 					<trimStackTrace>false</trimStackTrace>
 					<systemPropertyVariables>
 						<!--testResourcesDir>${project.testResources}</testResourcesDir-->
