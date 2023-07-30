@@ -1086,6 +1086,7 @@
 				</configuration>
 			</plugin>
 
+			<!-- as a side effect, triggers 'generate-sources' forked phase execution  -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
@@ -1119,7 +1120,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>${versionTestPlugins}</version>
-				<reportSets />
+				<reportSets/>
 			</plugin>
 			<!--plugin>
           <groupId>org.codehaus.mojo</groupId>
