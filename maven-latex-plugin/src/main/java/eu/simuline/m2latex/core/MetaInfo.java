@@ -51,7 +51,7 @@ public class MetaInfo {
 	 * @throws BuildFailureException
 	 *    TMI01: if the stream to <code>fileName</code> could not be created.
 	 */
-	static InputStream getStream(String fileName) throws BuildFailureException {
+	private static InputStream getStream(String fileName) throws BuildFailureException {
 		InputStream res =
 				MetaInfo.class.getClassLoader().getResourceAsStream(fileName);
 		if (res == null) {
@@ -745,10 +745,16 @@ public class MetaInfo {
 	 */
 	private final static String TOOL_VERSION_FORMAT = "%s%-18s %s '%s'%s%s";
 
+
+
 	/**
 	 * The command <code>which</code> as a string. 
 	 */
 	private static final String CMD_WHICH = "which";
+
+  private static final String COORDINATE_PROPERTY_FILE_NAME = 
+  META_FOLDER + "maven/" + "eu.simuline.m2latex/"
+					+ "latex-maven-plugin/" + "pom.properties";
 
 	/**
 	 * Executor to find the version string.  
@@ -776,6 +782,26 @@ public class MetaInfo {
 		this.executor = executor;
 		this.log = log;
 	}
+
+  // TBD: no general properties but class Coordinates 
+  // This allows access without specifying keys as strings 
+  /**
+   * Returns the coordinates of this maven plugin as a properties. 
+   *
+   * @return
+   *   The coordinates of this plugin as properties with keys 
+   *   'groupId', 'artifactId', 'version'. 
+   * @throws BuildFailureException
+   *   TMI01 if the stream to the according properties file could not be created 
+   *   TMI02 if the properties could not be read. 
+   */
+  Properties getCoordinates() throws BuildFailureException {
+    // may throw TMI01
+    Properties properties = getProperties(COORDINATE_PROPERTY_FILE_NAME);
+		assert "[groupId, artifactId, version]".equals(properties
+					.stringPropertyNames().toString()) : "Found unexpected properties ";
+    return properties;
+  }
 
 	// CAUTION, depends on the maven-jar-plugin and its version 
 	/**
@@ -827,19 +853,14 @@ public class MetaInfo {
 			//	} catch (URISyntaxException e) {
 			//	    throw new IllegalStateException("Found unexpected type of url: "+url);
 			//	}
-			String propertyFileName = META_FOLDER + "maven/" + "eu.simuline.m2latex/"
-					+ "latex-maven-plugin/" + "pom.properties";
-			this.log.info("pom properties:");
-			Properties properties = getProperties(propertyFileName);
-			assert "[groupId, artifactId, version]".equals(properties
-					.stringPropertyNames().toString()) : "Found unexpected properties ";
-			String coordGroupId = properties.getProperty("groupId");
-			String coordArtifactId = properties.getProperty("artifactId");
-			String coordVersion = properties.getProperty("version");
-
-			this.log.info("coordinate.groupId:    '" + coordGroupId + "'");
-			this.log.info("coordinate.artifactId: '" + coordArtifactId + "'");
-			this.log.info("coordinate.version:    '" + coordVersion + "'");
+			//String propertyFileName = META_FOLDER + "maven/" + "eu.simuline.m2latex/"
+			//		+ "latex-maven-plugin/" + "pom.properties";
+			this.log.info("pom properties: coordinates");
+      // may throw TMI01, TMI02
+			Properties coords = getCoordinates();
+			this.log.info("groupId:    '" + coords.getProperty("groupId") + "'");
+			this.log.info("artifactId: '" + coords.getProperty("artifactId") + "'");
+			this.log.info("version:    '" + coords.getProperty("version") + "'");
 
 			//	propertyFileName = "META-INF/"
 			//	    + "maven/"
