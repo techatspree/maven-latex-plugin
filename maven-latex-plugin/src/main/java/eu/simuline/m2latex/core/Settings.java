@@ -3085,13 +3085,6 @@ public class Settings {
    *   <li>closing input stream but not if closing an output stream</li>
    */
   public void filterLatexmkrc(File outFile, InputStream inStream) throws IOException {
-
-    boolean toBeWritten = LatexProcessor.toBeWrittenOutFile(outFile);
-    if (!toBeWritten) {
-      inStream.close();
-      return;
-    }
-
     BufferedReader bufReader =
         new BufferedReader(new InputStreamReader(inStream));
 

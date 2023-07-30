@@ -2327,9 +2327,17 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // TBD: centralize this because also needed for goal clr
 
     for (String fileName : RC_FILE_NAMES) {
+      // may throw TMI01
+      InputStream inStream = MetaInfo.getStream(fileName);
+      File outFile = this.settings.rcResourceToFile(fileName);
+
       try {
-        InputStream inStream = MetaInfo.getStream(fileName);
-        File outFile = this.settings.rcResourceToFile(fileName);
+        boolean toBeWritten = toBeWrittenOutFile(outFile);
+
+        if (!toBeWritten) {
+          inStream.close();
+          continue;
+        }
         this.settings.filterLatexmkrc(outFile, inStream);
       } catch (IOException ioe) {
         throw new BuildFailureException(
