@@ -18,8 +18,16 @@
 
 package eu.simuline.m2latex.core;
 
+import java.io.BufferedReader;
 import java.io.File;
-
+import java.io.FileReader;
+// import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+// import java.io.Reader;
+// import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -29,12 +37,13 @@ import java.util.Arrays;
 
 import java.util.Map;
 import java.util.LinkedHashMap;
-//import java.util.TreeMap;
+// import java.util.TreeMap;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.HashSet;
 import java.util.TreeSet;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // import java.lang.annotation.Annotation;
 
@@ -3040,22 +3049,146 @@ public class Settings {
     return res;
   }
 
+  /**
+   * The headline of generated config files. 
+   * Used for .latexmkrc and for .chktex. 
+   * This headline signifies, 
+   * that the file was created by this software. 
+   * As a consequence, 
+   * it may be deleted or overwritten by this software. 
+   * Else this is not done. 
+   */
+  private static final String HEADLINE_GEN =
+      "# rcfile written by latex plugin ";
+
+  /**
+   * Filters a resource given by <code>fileName</code> 
+   * similar to the maven resources plugin: 
+   * Replace the settings given by name in the form <code>${&lt;name%gt;}</code> 
+   * by the current value of the setting with the given name. 
+   * In contrast to the resources plugin, 
+   * the names refer to settings not to parameters, e.g. given in the pom 
+   * and also source and target differ: 
+   * The raw files are loaded as resources with name <code>fileName</code> 
+   * and are filtered and written as a file with the same name 
+   * into the folder given by {@link #texSrcDirectory}. 
+   * <p>
+   * This is appied to record files, 
+   * currently <code>.latexmkrc</code> and <code>.chktexrc</code>. 
+   * That way, <code>latexmk</code> and <code>chktex</code> 
+   * run with the according configuration 
+   * are aligned with the current settings of this plugin. 
+   *
+   * @param fileName
+   *   The name of the file to be filtered. 
+   *   This refers to the source file which is loaded as a resource 
+   *   and to the target file which is interpreted as a file in folder 
+   *   given by the parameter {@link #texSrcDirectory}. 
+   * @throws IOException
+   *   May occur if 
+   *   <ul>
+   *   <li>creating a {@link FileReader} or a {@link PrintStream},</li> 
+   *   <li>reading a line but not if writing a line,</li>
+   *   <li>closing input stream but not if closing an output stream</li>
+   */
+  public void filterLatexmkrc(String fileName) throws IOException {
+    // input stream 
+    // TBD: eliminate literals 
+    // Note that neither the class is null nor the classloader 
+    InputStream inStream =
+        this.getClass().getClassLoader().getResourceAsStream(fileName);
+    // still inStream may be null but this is a programming error 
+    assert inStream != null;
+    BufferedReader bufReader =
+        new BufferedReader(new InputStreamReader(inStream));
+
+    // output stream 
+    File outFile = new File(this.texSrcDirectory, fileName);
+    if (outFile.exists()) {
+      // to be checked whether it shall be overwritten 
+      // constructor of FileReader may throw IOException 
+      BufferedReader readerOutFile =
+          new BufferedReader(new FileReader(outFile));
+      // TBD: treat IOException better 
+      // may throw IOException 
+      String headline = readerOutFile.readLine();
+      // may throw IOException 
+      readerOutFile.close();
+      if (!HEADLINE_GEN.equals(headline)) {
+        // Here, the file was not written by this software 
+        // so it shall not be overwritten 
+        // TBD: maybe here a warning is at place 
+        // may throw IOException 
+        inStream.close();
+        return;
+      }
+      //System.out.println("overwrite .latexmkrc file");
+    }
+    // Here, outFile does not exist or shall be overwritten 
+
+
+    Pattern pattern = Pattern.compile("\\$\\{(\\w+)\\}");
+    Map<String, String> props = this.getProperties();
+
+    // may throw IOException: cannot be opened for writing, 
+    // if it does not exist but cannot be created 
+    // if it exists e.g because it is a directory, 
+    PrintStream writer = new PrintStream(outFile);
+
+    // the headline shows that the file is generated 
+    // and may thus be overwritten and erased. 
+    // throws IOExeption if an IO error occurs
+    writer.println(HEADLINE_GEN);
+
+    // Read File Line By Line
+    Matcher matcher;
+    String strLine;
+    // throws IOExeption if an IO error occurs
+    while ((strLine = bufReader.readLine()) != null) {
+      // filter until no variable in strLine found 
+      while (true) {
+        matcher = pattern.matcher(strLine);
+        if (matcher.find()) {
+          assert matcher.groupCount() >= 1;
+
+          // group zero is the whole, and it is not in the goup count 
+          if (matcher.group(1).equals("version")) {
+            writer.println(strLine);
+            break;
+          }
+          assert props.containsKey(matcher.group(1)) : "Key '"
+              + matcher.group(1) + "' not found. ";
+          strLine = matcher.replaceFirst(props.get(matcher.group(1)));
+        } else {
+          // Here, no variable in strLine found 
+          writer.println(strLine);
+          break;
+        }
+        // filter next line 
+      }
+    }
+
+    // Close the streams 
+    inStream.close();
+    writer.close();
+  }
+
   public String toString() {
     List<String> res = new ArrayList<String>();
-    String name, value;
-    name = "baseDirectory";
-    value = this.baseDirectory.toString();
-    res.add(name+"="+value+"");
-    name = "targetDirectory";
-    value = this.targetDirectory.toString();
-    res.add(name+"="+value+"");
-    name = "targetSiteDirectory";
-    value = this.targetSiteDirectory.toString();
-    res.add(name+"="+value+"");
+    //String name, value;
+    // name = "baseDirectory";
+    // value = this.baseDirectory.toString();
+    // res.add(name + "=" + value + "");
+    // name = "targetDirectory";
+    // value = this.targetDirectory.toString();
+    // res.add(name + "=" + value + "");
+    // name = "targetSiteDirectory";
+    // value = this.targetSiteDirectory.toString();
+    // res.add(name + "=" + value + "");
     Map<String, String> name2value = this.getProperties();
 
     for (Map.Entry<String, String> entry : name2value.entrySet()) {
-      res.add(entry.getKey()+"="+entry.getValue()+"");
+      res.add(entry.getKey() + "='" + entry.getValue() + "'");
     }
     return res.toString();
   }
