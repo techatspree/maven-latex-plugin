@@ -1147,6 +1147,13 @@
 				<version>3.9.0</version>
 			</plugin>
 
+			<!-- nullpointer exception and no issue tracker -->
+			<!--plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-linkcheck-plugin</artifactId>
+				<version>1.2</version>
+			</plugin-->
+
 		</plugins>
 	</reporting>
 
