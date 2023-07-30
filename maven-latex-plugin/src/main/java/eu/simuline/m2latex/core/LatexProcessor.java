@@ -2275,6 +2275,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     return returnCode == 0;
   }
 
+  private static final String[] RC_FILE_NAMES = new String[] {".latexmkrc", ".chktexrc"};
+
   /**
    * Processes files <code>.latexmkrc</code> and <code>.chktexrc</code> 
    * in the first case performing filtering 
@@ -2285,20 +2287,24 @@ public class LatexProcessor extends AbstractLatexProcessor {
   public void processRcFiles() throws BuildFailureException {
     //this.settings.getProperties();
     // TBD: centralize this because also needed for goal clr
-    String[] rcFiles = new String[] {".latexmkrc", ".chktexrc"};
-    for (String fileName : rcFiles) {
-    try {
-      InputStream inStream = MetaInfo.getStream(fileName);
-      this.settings.filterLatexmkrc(fileName, inStream);
-    } catch (IOException ioe) {
-      throw new BuildFailureException("Could not filter '" + fileName + "''. ", ioe);
-    }
-    }
-    //System.out.println("\norig string: \n" + this.settings.toString());
 
+    for (String fileName : RC_FILE_NAMES) {
+      try {
+        InputStream inStream = MetaInfo.getStream(fileName);
+        File outFile = this.settings.rcResourceToFile(fileName);
+        this.settings.filterLatexmkrc(outFile, inStream);
+      } catch (IOException ioe) {
+        throw new BuildFailureException(
+            "Could not filter '" + fileName + "''. ", ioe);
+      }
+    }
+  }
 
-    //this.log.info(this.settings.getProperties().toString());
-    //this.log.info(this.settings.toString());
+  private void cleanRcFiles() {
+    for (String fileName : RC_FILE_NAMES) {
+      File outFile = this.settings.rcResourceToFile(fileName);
+
+    }
   }
 
 }

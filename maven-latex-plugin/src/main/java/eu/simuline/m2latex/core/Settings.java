@@ -3061,7 +3061,7 @@ public class Settings {
   private static final String HEADLINE_GEN =
       "# rcfile written by latex plugin ";
 
-  private boolean toBeWrittenOutFile(File outFile) throws IOException {
+  private static boolean toBeWrittenOutFile(File outFile) throws IOException {
     if (outFile.exists()) {
       // to be checked whether it shall be overwritten 
       // constructor of FileReader may throw IOException 
@@ -3084,6 +3084,10 @@ public class Settings {
     return true;
   }
 
+  File rcResourceToFile(String fileNameResource) {
+    return new File(this.texSrcDirectory, fileNameResource);
+  }
+
   /**
    * Filters a resource given by <code>fileName</code> 
    * similar to the maven resources plugin: 
@@ -3102,7 +3106,7 @@ public class Settings {
    * run with the according configuration 
    * are aligned with the current settings of this plugin. 
    *
-   * @param fileName
+   * @param fileNameResource
    *   The name of the file to be filtered. 
    *   This refers to the source file which is loaded as a resource 
    *   and to the target file which is interpreted as a file in folder 
@@ -3114,10 +3118,10 @@ public class Settings {
    *   <li>reading a line but not if writing a line,</li>
    *   <li>closing input stream but not if closing an output stream</li>
    */
-  public void filterLatexmkrc(String fileName, InputStream inStream) throws IOException {
+  public void filterLatexmkrc(File outFile, InputStream inStream) throws IOException {
 
     // output stream 
-    File outFile = new File(this.texSrcDirectory, fileName);
+    //File outFile = rcResourceToFile(fileNameResource);
     boolean toBeWritten = toBeWrittenOutFile(outFile);
     if (!toBeWritten) {
       inStream.close();
