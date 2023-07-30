@@ -18,8 +18,10 @@
 
 package eu.simuline.m2latex.core;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -2275,7 +2277,43 @@ public class LatexProcessor extends AbstractLatexProcessor {
     return returnCode == 0;
   }
 
-  private static final String[] RC_FILE_NAMES = new String[] {".latexmkrc", ".chktexrc"};
+    /**
+   * The headline of generated config files. 
+   * Used for .latexmkrc and for .chktex. 
+   * This headline signifies, 
+   * that the file was created by this software. 
+   * As a consequence, 
+   * it may be deleted or overwritten by this software. 
+   * Else this is not done. 
+   */
+  static final String HEADLINE_GEN =
+      "# rcfile written by latex plugin ";
+
+  static boolean toBeWrittenOutFile(File outFile) throws IOException {
+    if (outFile.exists()) {
+      // to be checked whether it shall be overwritten 
+      // constructor of FileReader may throw IOException 
+      BufferedReader readerOutFile =
+          new BufferedReader(new FileReader(outFile));
+      // TBD: treat IOException better 
+      // may throw IOException 
+      String headline = readerOutFile.readLine();
+      // may throw IOException 
+      readerOutFile.close();
+      if (!HEADLINE_GEN.equals(headline)) {
+        // Here, the file was not written by this software 
+        // so it shall not be overwritten 
+        // TBD: maybe here a warning is at place 
+        // may throw IOException 
+        //inStream.close();
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  static final String[] RC_FILE_NAMES = new String[] {".latexmkrc", ".chktexrc"};
 
   /**
    * Processes files <code>.latexmkrc</code> and <code>.chktexrc</code> 

@@ -3049,40 +3049,6 @@ public class Settings {
     return res;
   }
 
-  /**
-   * The headline of generated config files. 
-   * Used for .latexmkrc and for .chktex. 
-   * This headline signifies, 
-   * that the file was created by this software. 
-   * As a consequence, 
-   * it may be deleted or overwritten by this software. 
-   * Else this is not done. 
-   */
-  private static final String HEADLINE_GEN =
-      "# rcfile written by latex plugin ";
-
-  private static boolean toBeWrittenOutFile(File outFile) throws IOException {
-    if (outFile.exists()) {
-      // to be checked whether it shall be overwritten 
-      // constructor of FileReader may throw IOException 
-      BufferedReader readerOutFile =
-          new BufferedReader(new FileReader(outFile));
-      // TBD: treat IOException better 
-      // may throw IOException 
-      String headline = readerOutFile.readLine();
-      // may throw IOException 
-      readerOutFile.close();
-      if (!HEADLINE_GEN.equals(headline)) {
-        // Here, the file was not written by this software 
-        // so it shall not be overwritten 
-        // TBD: maybe here a warning is at place 
-        // may throw IOException 
-        //inStream.close();
-        return false;
-      }
-    }
-    return true;
-  }
 
   File rcResourceToFile(String fileNameResource) {
     return new File(this.texSrcDirectory, fileNameResource);
@@ -3120,9 +3086,7 @@ public class Settings {
    */
   public void filterLatexmkrc(File outFile, InputStream inStream) throws IOException {
 
-    // output stream 
-    //File outFile = rcResourceToFile(fileNameResource);
-    boolean toBeWritten = toBeWrittenOutFile(outFile);
+    boolean toBeWritten = LatexProcessor.toBeWrittenOutFile(outFile);
     if (!toBeWritten) {
       inStream.close();
       return;
@@ -3142,7 +3106,7 @@ public class Settings {
     // the headline shows that the file is generated 
     // and may thus be overwritten and erased. 
     // throws IOExeption if an IO error occurs
-    writer.println(HEADLINE_GEN);
+    writer.println(LatexProcessor.HEADLINE_GEN);
 
     // Read File Line By Line
     Matcher matcher;
