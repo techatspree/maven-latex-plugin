@@ -3061,6 +3061,29 @@ public class Settings {
   private static final String HEADLINE_GEN =
       "# rcfile written by latex plugin ";
 
+  private boolean toBeWrittenOutFile(File outFile) throws IOException {
+    if (outFile.exists()) {
+      // to be checked whether it shall be overwritten 
+      // constructor of FileReader may throw IOException 
+      BufferedReader readerOutFile =
+          new BufferedReader(new FileReader(outFile));
+      // TBD: treat IOException better 
+      // may throw IOException 
+      String headline = readerOutFile.readLine();
+      // may throw IOException 
+      readerOutFile.close();
+      if (!HEADLINE_GEN.equals(headline)) {
+        // Here, the file was not written by this software 
+        // so it shall not be overwritten 
+        // TBD: maybe here a warning is at place 
+        // may throw IOException 
+        //inStream.close();
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * Filters a resource given by <code>fileName</code> 
    * similar to the maven resources plugin: 
@@ -3093,7 +3116,6 @@ public class Settings {
    */
   public void filterLatexmkrc(String fileName) throws IOException {
     // input stream 
-    // TBD: eliminate literals 
     // Note that neither the class is null nor the classloader 
     InputStream inStream =
         this.getClass().getClassLoader().getResourceAsStream(fileName);
@@ -3104,26 +3126,31 @@ public class Settings {
 
     // output stream 
     File outFile = new File(this.texSrcDirectory, fileName);
-    if (outFile.exists()) {
-      // to be checked whether it shall be overwritten 
-      // constructor of FileReader may throw IOException 
-      BufferedReader readerOutFile =
-          new BufferedReader(new FileReader(outFile));
-      // TBD: treat IOException better 
-      // may throw IOException 
-      String headline = readerOutFile.readLine();
-      // may throw IOException 
-      readerOutFile.close();
-      if (!HEADLINE_GEN.equals(headline)) {
-        // Here, the file was not written by this software 
-        // so it shall not be overwritten 
-        // TBD: maybe here a warning is at place 
-        // may throw IOException 
-        inStream.close();
-        return;
-      }
-      //System.out.println("overwrite .latexmkrc file");
+    boolean toBeWritten = toBeWrittenOutFile(outFile);
+    if (!toBeWritten) {
+      inStream.close();
+      return;
     }
+    // if (outFile.exists()) {
+    //   // to be checked whether it shall be overwritten 
+    //   // constructor of FileReader may throw IOException 
+    //   BufferedReader readerOutFile =
+    //       new BufferedReader(new FileReader(outFile));
+    //   // TBD: treat IOException better 
+    //   // may throw IOException 
+    //   String headline = readerOutFile.readLine();
+    //   // may throw IOException 
+    //   readerOutFile.close();
+    //   if (!HEADLINE_GEN.equals(headline)) {
+    //     // Here, the file was not written by this software 
+    //     // so it shall not be overwritten 
+    //     // TBD: maybe here a warning is at place 
+    //     // may throw IOException 
+    //     inStream.close();
+    //     return;
+    //   }
+    //   //System.out.println("overwrite .latexmkrc file");
+    // }
     // Here, outFile does not exist or shall be overwritten 
 
 
