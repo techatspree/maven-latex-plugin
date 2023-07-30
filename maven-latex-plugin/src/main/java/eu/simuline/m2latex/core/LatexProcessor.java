@@ -2289,8 +2289,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
   static final String HEADLINE_GEN =
       "# rcfile written by latex plugin ";
 
-  static boolean toBeWrittenOutFile(File outFile) throws IOException {
-    if (outFile.exists()) {
+  static boolean isCreatedByMyself(File outFile) throws IOException {
       // to be checked whether it shall be overwritten 
       // constructor of FileReader may throw IOException 
       BufferedReader readerOutFile =
@@ -2308,7 +2307,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
         //inStream.close();
         return false;
       }
-    }
     return true;
   }
 
@@ -2332,9 +2330,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
       File outFile = this.settings.rcResourceToFile(fileName);
 
       try {
-        boolean toBeWritten = toBeWrittenOutFile(outFile);
-
-        if (!toBeWritten) {
+        if (outFile.exists() && !isCreatedByMyself(outFile)) {
           inStream.close();
           continue;
         }
