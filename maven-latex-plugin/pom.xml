@@ -633,10 +633,37 @@
 				<version>3.3.0</version>
 				<configuration>
 					<propertiesEncoding>UTF-8</propertiesEncoding>
+					<!-- This relies on the fact, that the pom overwrites this, 
+						which means strange enough, that the pom is applied first. 
+						CAUTION: the pom influences not just some settings for latex-plugin 
+						but also the tests. -->
+					<filters>
+						<filter>src/main/filters/defaultSettingsAs.properties</filter>
+					</filters>
 				</configuration>
+
 				<executions>
+					<!-- copy PDFs into jar for comparison -->
 					<execution>
-						<!-- filter the build parameters for tex documents  -->
+						<id>copy-pdf2site</id>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/docsCmp</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+
+					<!-- filter the build parameters for tex documents -->
+					<execution>
 						<id>filterTexProps</id>
 						<phase>validate</phase>
 						<goals>
