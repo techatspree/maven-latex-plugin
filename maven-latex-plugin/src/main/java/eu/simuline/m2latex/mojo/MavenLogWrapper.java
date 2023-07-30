@@ -19,7 +19,7 @@ public class MavenLogWrapper implements LogWrapper {
   private final Logger log;
 
   public MavenLogWrapper(Class<?> cls) {
-    this.log = LoggerFactory.getLogger(cls);
+    this.log = LoggerFactory.getLogger(cls.getSimpleName());
   }
 
   public void error(String msg) {
