@@ -54,14 +54,14 @@ import org.apache.maven.plugins.annotations.Parameter;
 import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only
 
 /**
- * The settings for a maven plugin and for an ant task. 
- * These are the elements of the maven pom in element <code>settings</code> 
- * and accordingly for the ant build file. 
+ * The settings for a maven plugin and for an ant task.
+ * These are the elements of the maven pom in element <code>settings</code>
+ * and accordingly for the ant build file.
  * <p>
- * For the options we have the contract, 
- * that in the initial value they are trimmed and separated by a single blank. 
- * The setter methods are so that before setting the new value is trimmed 
- * and multiple whitespaces are replaced by a single blank. 
+ * For the options we have the contract,
+ * that in the initial value they are trimmed and separated by a single blank.
+ * The setter methods are so that before setting the new value is trimmed
+ * and multiple whitespaces are replaced by a single blank.
  */
 public class Settings {
 
