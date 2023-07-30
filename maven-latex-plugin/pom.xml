@@ -1060,13 +1060,13 @@
 							<goal>clr</goal>
 						</goals>
 					</execution>
-          <!--execution>
+          <execution>
 						<?m2e execute onConfiguration?>
             <id>create-rc-files</id>
             <goals>
               <goal>dvl</goal>
             </goals>
-          </execution-->
+          </execution>
 					<execution>
 						<?m2e execute onConfiguration?>
 						<id>validate-converters</id>
