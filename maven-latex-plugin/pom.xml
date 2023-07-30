@@ -460,13 +460,24 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
-					<include>.latexmkrc</include>
-					<include>.chktexrc</include>
 					<include>COPYING</include>
 					<include>instVScode4tex.sh</include>
 					<include>version.properties</include>
+          <!-- TBD: check whether needed -->
+					<include>defaultSettingsAs.properties</include>
+          <!-- rc-files: filtered at runtime: fill in current parameter values -->
+          <include>.latexmkrc</include>
+					<include>.chktexrc</include>
 				</includes>
-				<filtering>true</filtering>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/filters</directory>
+				<includes>
+          <!-- TBD: check whether needed -->
+					<include>defaultSettingsAs.properties</include>
+				</includes>
+				<filtering>false</filtering>
 			</resource>
 		</resources>
 
@@ -624,19 +635,15 @@
 									<includes>
 										<include>buildParams.tex</include>
 										<include>instVScode4tex.sh</include>
-										<include>.latexmkrc</include>
-										<include>.chktexrc</include>
 									</includes>
-									<!--excludes>
-										<exclude>docsCmp/**/*.pdf</exclude>
-									</excludes-->
 									<filtering>true</filtering>
 								</resource>
 							</resources>
 						</configuration>
 					</execution>
+
+					<!-- filter the full pom for integration tests -->
 					<execution>
-						<!-- filter the pom for integration tests -->
 						<id>filterIntTestPoms</id>
 						<phase>validate</phase>
 						<goals>
