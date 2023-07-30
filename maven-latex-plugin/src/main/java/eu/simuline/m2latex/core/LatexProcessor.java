@@ -21,6 +21,7 @@ package eu.simuline.m2latex.core;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -2287,7 +2288,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     String[] rcFiles = new String[] {".latexmkrc", ".chktexrc"};
     for (String fileName : rcFiles) {
     try {
-      this.settings.filterLatexmkrc(fileName);
+      InputStream inStream = MetaInfo.getStream(fileName);
+      this.settings.filterLatexmkrc(fileName, inStream);
     } catch (IOException ioe) {
       throw new BuildFailureException("Could not filter '" + fileName + "''. ", ioe);
     }

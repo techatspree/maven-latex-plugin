@@ -3114,15 +3114,7 @@ public class Settings {
    *   <li>reading a line but not if writing a line,</li>
    *   <li>closing input stream but not if closing an output stream</li>
    */
-  public void filterLatexmkrc(String fileName) throws IOException {
-    // input stream 
-    // Note that neither the class is null nor the classloader 
-    InputStream inStream =
-        this.getClass().getClassLoader().getResourceAsStream(fileName);
-    // still inStream may be null but this is a programming error 
-    assert inStream != null;
-    BufferedReader bufReader =
-        new BufferedReader(new InputStreamReader(inStream));
+  public void filterLatexmkrc(String fileName, InputStream inStream) throws IOException {
 
     // output stream 
     File outFile = new File(this.texSrcDirectory, fileName);
@@ -3131,28 +3123,9 @@ public class Settings {
       inStream.close();
       return;
     }
-    // if (outFile.exists()) {
-    //   // to be checked whether it shall be overwritten 
-    //   // constructor of FileReader may throw IOException 
-    //   BufferedReader readerOutFile =
-    //       new BufferedReader(new FileReader(outFile));
-    //   // TBD: treat IOException better 
-    //   // may throw IOException 
-    //   String headline = readerOutFile.readLine();
-    //   // may throw IOException 
-    //   readerOutFile.close();
-    //   if (!HEADLINE_GEN.equals(headline)) {
-    //     // Here, the file was not written by this software 
-    //     // so it shall not be overwritten 
-    //     // TBD: maybe here a warning is at place 
-    //     // may throw IOException 
-    //     inStream.close();
-    //     return;
-    //   }
-    //   //System.out.println("overwrite .latexmkrc file");
-    // }
-    // Here, outFile does not exist or shall be overwritten 
 
+    BufferedReader bufReader =
+        new BufferedReader(new InputStreamReader(inStream));
 
     Pattern pattern = Pattern.compile("\\$\\{(\\w+)\\}");
     Map<String, String> props = this.getProperties();

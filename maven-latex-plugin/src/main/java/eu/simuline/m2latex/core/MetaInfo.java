@@ -51,7 +51,7 @@ public class MetaInfo {
 	 * @throws BuildFailureException
 	 *    TMI01: if the stream to <code>fileName</code> could not be created.
 	 */
-	private static InputStream getStream(String fileName) throws BuildFailureException {
+	static InputStream getStream(String fileName) throws BuildFailureException {
 		InputStream res =
 				MetaInfo.class.getClassLoader().getResourceAsStream(fileName);
 		if (res == null) {
