@@ -363,7 +363,7 @@ e.g.~to create PDF files as \texttt{mvn latex:pdf}
 or for cleanup \texttt{mvn latex:clr} with default configuration
 just adding the coordinates in the build-plugins section of the pom
 as shown in Listing~\ref{lst:coords}. 
-Alternatively, the plugin can be configured also 
+Alternatively, the plugin can be inserted also 
 in the reporting-plugins section of the pom. 
 %
 %\lstset{language=xml, basicstyle=\small}
@@ -391,10 +391,48 @@ caption={The coordinates of this plugin}]
 </project>
 \end{lstlisting}
 
+This plugin is highly flexible by means of a lot of settings. 
+Listing~\ref{lst:coordsConfig} shows some of them, but all are in their default settings, 
+so no need to specify them explicitly: 
+%
+\begin{description}
+\item[\texttt{targets}] defines the output formats and the checks to be run 
+(\texttt{chk} signifies running \texttt{chktex}). 
+\item[\texttt{cleanUp}] whether all generated files shall be removed 
+leaving the \LaTeX{} source folder untouched. 
+\item[\texttt{latex2pdfCommand}] represents the names of the tools to be invoked. 
+There are more settings for treating tools. 
+\end{description}
+
+It is the experience of the author, that hardly any explicit setting is necessary at all. 
+If a setting is made explicitly then because of special environment 
+for which the default does not fit or a special taste the default is not compatible with either. 
+
+
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+  escapechar=|,
+  float, captionpos=hb, label={lst:coordsConfig}, 
+  caption={The coordinates of this plugin and some settings}]
+        <!-- create html and pdf and other formats from latex -->
+        <plugin>
+          <groupId>|\groupId|</groupId>
+          <artifactId>|\artifactId|</artifactId>
+          <version>|\strippedVersionID|</version>
+          <configuration>
+          <settings>
+            <!--targets>chk, pdf, html</targets-->
+            <!--latex2pdfCommand>lualatex</latex2pdfCommand-->
+            <!--cleanUp>false</cleanUp-->
+            ...
+          </settings>
+        </configuration>
+        </plugin>
+  \end{lstlisting}
+
 % TBD: reference to section 'goals in lifecycle'. 
 To make the plugin available within a build,
 one has to add executions, e.g.~as shown in Listing~\ref{lst:executions}. 
-For all three goals a default phase is defined, 
+For all goals a default phase is defined, 
 as given as a comment but as this is hard-coded, 
 one has to specify in the executions only 
 when deviating from the default. 
@@ -403,15 +441,37 @@ Typically, this plugin, to be more precise its goal \texttt{cfg},
 which allows to configure the output formats in setting \texttt{targets},  
 is used in the \texttt{site} lifecycle phase 
 to process latex sources. 
-It is perfectly ok to stick to a single format like PDF. 
+It is perfectly ok to stick to a single format like \texttt{pdf} 
+and configure \texttt{target} accordingly. 
+
+Alternatively, one may define an execution with the required goals like \texttt{pdf}, 
+but then the phase must be specified explicitly. 
+
+During document development, described in Section~\ref{sec:devel}, 
+one may invoke \texttt{latexmk} or \texttt{chktex} explicitly 
+or \texttt{latexmk} invokes \texttt{chktex}. 
+Both tools have a configuration file, 
+which is \texttt{.latexmkrc} and \texttt{.chktexrc}, respectively. 
+In particular, \texttt{.latexmkrc} 
+shall be kept synchronized with the settings of this plugin. 
+To this end, there is a goal \texttt{dvl} (for development), 
+which creates the configuration files. 
+This can be done invoking \texttt{mvn latex:dvl} 
+but also by means of an execution for each run 
+as illustrated in Listing~\ref{lst:executions}. 
+The latter is preferable, because the configuration files 
+are adapted to the settings in each run. 
 
 Normally, all created files in the source directory are removed 
 after the output has been copied to the target, 
 but during document development, described in Section~\ref{sec:devel}, 
-cleanup may be deactivated and so the source directory may be polluted. 
-Cleanup is recommended to make the individual runs of this plugin independent.
-Thus, there is a dedicated goal \texttt{clr} 
-to clean up the source directory in phase \texttt{clean}.
+cleanup may be deactivated by setting and so the source directory may be polluted. 
+This may happen if other tools are used in conjunction with this plugin. 
+
+Nevertheless, cleanup is recommended to make the individual runs of this plugin independent.
+Thus, for document development, there is a dedicated goal \texttt{clr} 
+to clean up the source directory in phase \texttt{clean}. 
+Note that also the configuration files created by goal \texttt{dvl} are cleared. 
 
 Finally, it is recommended to add a check of the converter versions
 right in the phase \texttt{validate} via goal \texttt{vrs}.
@@ -423,12 +483,15 @@ which seems appropriate in the context of validation.
 For the default \texttt{versionsWarnOnly=false}, 
 the goal \texttt{vrs} 
 yields a full list of registered converters, 
-signifying which may cause trouble 
+signifying which one may cause trouble 
 because its version is out of range
 as displayed in Listing~\ref{lst:vrsOut}. 
-In the course of 
-For details see Section~\ref{sec:devel}. 
+In the course of a build run, this seems too much information, 
+but in fact, it is just a matter of taste. 
 
+For details on executions of goals \texttt{dvl}, \texttt{clr} and \texttt{vrs} 
+see Section~\ref{sec:devel}. 
+% TBD: check and make the reference more precise. 
 
 
 %\lstset{language=xml, basicstyle=\small}
@@ -458,7 +521,13 @@ caption={The executions of this plugin}]
       <id>clear-latex-sources</id>
       <goals><goal>clr</goal></goals>
       <!-- phase>clean</phase-->
-     </execution>
+    </execution>
+    <execution>
+      <?m2e execute onConfiguration?>
+      <id>create-rc-files</id>
+      <goals><goal>dvl</goal></goals>
+      <!-- phase>validate</phase-->
+    </execution>
     <execution>
       <id>validate-converters</id>
       <goals><goal>vrs</goal></goals>
@@ -476,14 +545,14 @@ for mavens default lifecycle.
 Typically, this maven plugin is used in the site lifecycle, 
 which does not contain the phase \texttt{validate}, 
 but accordingly \texttt{pre-site}. 
-As a consequence, goal \texttt{vrs} is not invoked. 
+As a consequence, goals \texttt{dvl} and \texttt{vrs} are not invoked. 
 To get around, 
 one could specify the phase \texttt{pre-site} in the execution explicitly. 
-The author uses the maven jxr plugin 
+The author uses the \texttt{maven-jxr-plugin} 
 as illustrated in Listing~\ref{lst:forkJxr}, 
-which, as a side effect, forks toe lifecycle 
+which, as a side effect, forks the lifecycle 
 and includes phase \texttt{validate} of the default lifecycle 
-and in particular goal \texttt{vrs}. 
+and in particular goals \texttt{dvl} and texttt{vrs}. 
 
 
 \begin{lstlisting}[language=XML, basicstyle=\footnotesize,
@@ -530,8 +599,8 @@ and the URL where it can be found on the generated site.
     File & Link\\
     \midrule{}
     \texttt{instVScode4tex.sh} & \href{\urlSite fromMain/instVScode4tex.sh}{instVScode4tex.sh} \\
-    \texttt{.latexmkrc}        & \href{\urlSite fromMain/.latexmkrc}{.latexmkrc} \\
-    \texttt{.latexmkrc} (raw)  & \href{\urlSite fromMain/raw/.latexmkrc}{.latexmkrc} \\
+    \texttt{.latexmkrc}        & \href{\urlSite fromMain/.latexmkrc}{.latexmkrc} \\ % TBD: maybe new text 
+    \texttt{.latexmkrc} (raw)  & \href{\urlSite fromMain/raw/.latexmkrc}{.latexmkrc} \\% TBD: eliminate
     \texttt{.chktexrc}         & \href{\urlSite fromMain/.chktexrc}{.chktexrc} \\
     \texttt{pom4pdf.xml}       & \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} \\
     \bottomrule
