@@ -47,7 +47,7 @@ public class MetaInfo {
 	 * @param fileName
 	 *    a filename
 	 * @return
-	 *    an input stream to read from <code>fileName</code>.
+	 *    a non-null input stream to read from <code>fileName</code>.
 	 * @throws BuildFailureException
 	 *    TMI01: if the stream to <code>fileName</code> could not be created.
 	 */
