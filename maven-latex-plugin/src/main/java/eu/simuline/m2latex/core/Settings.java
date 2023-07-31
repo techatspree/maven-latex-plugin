@@ -20,14 +20,11 @@ package eu.simuline.m2latex.core;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-// import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-// import java.io.Reader;
-// import java.io.Writer;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -3049,52 +3046,50 @@ public class Settings {
     return res;
   }
 
-
+  /**
+   * Returns the file assoicated with the resource <code>fileNameResource</code>. 
+   *
+   * @param fileNameResource
+   *   The name of the resource which is also the (short) file name returned. 
+   * @return
+   *   the file in directory {@link #texSrcDirectory} with name <code>fileNameResource</code>. 
+   */
   File rcResourceToFile(String fileNameResource) {
     return new File(this.texSrcDirectory, fileNameResource);
   }
 
   /**
-   * Filters a resource given by <code>fileName</code> 
-   * similar to the maven resources plugin: 
+   * Filters a resource given by <code>inStream</code> 
+   * into a <code>writer</code> similar to the maven resources plugin: 
    * Replace the settings given by name in the form <code>${&lt;name%gt;}</code> 
    * by the current value of the setting with the given name. 
    * In contrast to the resources plugin, 
-   * the names refer to settings not to parameters, e.g. given in the pom 
-   * and also source and target differ: 
-   * The raw files are loaded as resources with name <code>fileName</code> 
-   * and are filtered and written as a file with the same name 
-   * into the folder given by {@link #texSrcDirectory}. 
+   * the names refer to settings not to parameters, e.g. given in the pom. 
    * <p>
-   * This is appied to record files, 
+   * This is applied to record files, 
    * currently <code>.latexmkrc</code> and <code>.chktexrc</code>. 
    * That way, <code>latexmk</code> and <code>chktex</code> 
    * run with the according configuration 
    * are aligned with the current settings of this plugin. 
    *
-   * @param fileNameResource
-   *   The name of the file to be filtered. 
-   *   This refers to the source file which is loaded as a resource 
-   *   and to the target file which is interpreted as a file in folder 
-   *   given by the parameter {@link #texSrcDirectory}. 
+   * @param inStream
+   *   The stream of the file to be filtered. 
+   *   This refers to the source file which is loaded 
+   *   as a resource with a certain filename. 
+   * @param writer
+   *   Refers to the file in folder 
+   *   given by the parameter {@link #texSrcDirectory} 
+   *   with the same name as the resource defining <code>inStream</code>. 
    * @throws IOException
-   *   May occur if 
-   *   <ul>
-   *   <li>creating a {@link FileReader} or a {@link PrintStream},</li> 
-   *   <li>reading a line but not if writing a line,</li>
-   *   <li>closing input stream but not if closing an output stream</li>
+   *   May occur if reading a line but not if writing a line. 
    */
-  public void filterLatexmkrc(File outFile, InputStream inStream) throws IOException {
+  public void filterRcFile(InputStream inStream, PrintStream writer)
+      throws IOException {//
     BufferedReader bufReader =
         new BufferedReader(new InputStreamReader(inStream));
 
     Pattern pattern = Pattern.compile("\\$\\{(\\w+)\\}");
     Map<String, String> props = this.getProperties();
-
-    // may throw IOException: cannot be opened for writing, 
-    // if it does not exist but cannot be created 
-    // if it exists e.g because it is a directory, 
-    PrintStream writer = new PrintStream(outFile);
 
     // the headline shows that the file is generated 
     // and may thus be overwritten and erased. 
@@ -3129,8 +3124,8 @@ public class Settings {
       }
     }
 
-    // Close the streams 
-    inStream.close();
+    // flush and close the streams 
+    writer.flush();
     writer.close();
   }
 
