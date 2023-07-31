@@ -4,9 +4,9 @@ import eu.simuline.m2latex.mojo.PdfMojo;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 
-import java.io.File;
-
 import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 
 public class PdfMojoTest extends AbstractMojoTestCase {
   /**
