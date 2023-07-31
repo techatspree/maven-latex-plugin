@@ -2304,27 +2304,35 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *   TBD: rethink whether an exception is appropriate or another warning. 
    */
   private boolean isCreatedByMyself(File aFile) {
+    assert aFile.exists() : "File " + aFile + " expected to exist. ";
     // to be checked whether it shall be overwritten 
     try {
-      // constructor of FileReader may throw IOException 
-      BufferedReader readerOutFile = new BufferedReader(new FileReader(aFile));
-      // TBD: treat IOException better 
-      // may throw IOException 
-      String headline = readerOutFile.readLine();
-      // may throw IOException 
-      readerOutFile.close();
-      if (!HEADLINE_GEN.equals(headline)) {
-        // Here, the file was not written by this software 
-        // so it shall not be overwritten 
-        this.log.warn("Cannot overwrite/clean config file '" + aFile
-            + "' because it is not self-created.");
-        return false;
+      if (!aFile.isDirectory()) {
+        // constructor of FileReader may throw 
+        // FileNotFoundException which is an IOException: 
+        // Since it does exist and is not a directory, 
+        // it is unreadable for some other reason 
+        BufferedReader reader =
+            new BufferedReader(new FileReader(aFile));
+        // TBD: treat IOException better 
+        // may throw IOException if an IO error occurs 
+        String headline = reader.readLine();
+        // may throw IOException 
+        reader.close();
+        if (HEADLINE_GEN.equals(headline)) {
+          return true;
+        }
       }
-      return true;
+      // Here, the file was not written by this software 
+      // so it shall not be overwritten 
+      this.log.warn("Cannot overwrite/clean config file '" + aFile
+          + "' because it is not self-created.");
+      return false;
+
     } catch (IOException ioe) {
       // In both cases: could not read headline 
       this.log.warn("Refuse to overwrite/clean config file '" + aFile
-          + "' because it may be not self-created.");
+          + "' because it may be not self-created or has dangling reader.");
       return false;
     }
   }
