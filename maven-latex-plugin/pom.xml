@@ -165,7 +165,7 @@
 
 	<properties>
 		<!-- Using platform encoding to copy filtered resources; 
-    without project.build.sourceEncoding the build is platform dependent! -->
+    without project.build.sourceEncoding the build depends on the platform! -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- checked during validation -->
 		<versionMvn>3.9.2</versionMvn>
@@ -963,7 +963,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>3.0.0</version>				<!-- 2.8.2 -->
+				<version>3.0.0</version>
 			</plugin>
 
 			<!-- javadoc plugin -->
