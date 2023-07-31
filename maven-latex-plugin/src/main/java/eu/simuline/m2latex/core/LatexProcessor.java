@@ -2277,7 +2277,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     return returnCode == 0;
   }
 
-    /**
+  /**
    * The headline of generated config files. 
    * Used for .latexmkrc and for .chktex. 
    * This headline signifies, 
@@ -2286,14 +2286,28 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * it may be deleted or overwritten by this software. 
    * Else this is not done. 
    */
-  static final String HEADLINE_GEN =
-      "# rcfile written by latex plugin ";
+  static final String HEADLINE_GEN = "# rcfile written by latex plugin ";
 
-  static boolean isCreatedByMyself(File outFile) throws IOException {
-      // to be checked whether it shall be overwritten 
+  /**
+   * Returns whether the given file is created by this software. 
+   * This is assumed if the first line is {@link #HEADLINE_GEN}. 
+   * It is assumed that the file exists. 
+   * 
+   * Warnings: 
+   * WPL08 if aFile is not created by this software. 
+   *
+   * @param aFile
+   * @return
+   *   whether the first line of the given file is proved to be is {@link #HEADLINE_GEN}. 
+   *   If and only if false, an warning is emitted. 
+   * @throws IOException
+   *   TBD: rethink whether an exception is appropriate or another warning. 
+   */
+  private boolean isCreatedByMyself(File aFile) {
+    // to be checked whether it shall be overwritten 
+    try {
       // constructor of FileReader may throw IOException 
-      BufferedReader readerOutFile =
-          new BufferedReader(new FileReader(outFile));
+      BufferedReader readerOutFile = new BufferedReader(new FileReader(aFile));
       // TBD: treat IOException better 
       // may throw IOException 
       String headline = readerOutFile.readLine();
@@ -2302,22 +2316,45 @@ public class LatexProcessor extends AbstractLatexProcessor {
       if (!HEADLINE_GEN.equals(headline)) {
         // Here, the file was not written by this software 
         // so it shall not be overwritten 
-        // TBD: maybe here a warning is at place 
-        // may throw IOException 
-        //inStream.close();
+        this.log.warn("Cannot overwrite/clean config file '" + aFile
+            + "' because it is not self-created.");
         return false;
       }
-    return true;
+      return true;
+    } catch (IOException ioe) {
+      // In both cases: could not read headline 
+      this.log.warn("Refuse to overwrite/clean config file '" + aFile
+          + "' because it may be not self-created.");
+      return false;
+    }
   }
 
-
-  static final String[] RC_FILE_NAMES = new String[] {".latexmkrc", ".chktexrc"};
+  /**
+   * The list of config files 
+   * created by goal dvl via {@link #processRcFiles()}
+   * and deleted by goal clr via {@link #clearRcFiles()} 
+   * under certain circumstances. 
+   */
+  static final String[] RC_FILE_NAMES =
+      new String[] {".latexmkrc", ".chktexrc"};
 
   /**
    * Processes files <code>.latexmkrc</code> and <code>.chktexrc</code> 
-   * in the first case performing filtering 
+   * in the first case performing filtering similar to the resources plugin, 
+   * with two differences: 
+   * <ul>
+   * <li> The names are those of parameters in settings, not properties in the pom. </li>
+   * <li> The sources are loaded as a resource by the classloader 
+   * by name <code>.latexmkrc</code> and <code>.chktexrc</code>, respectively  
+   * and the target is a file in the folder given by 
+   * </ul>
    * to insert the values of the settings and then place at the root folder of tex files. 
    * In the second case, just placing at the root folder of tex files. 
+   *  
+   * and also source and target differ: 
+   * <code>inStream</code> is a resources with name <code>fileName</code> 
+   * and are filtered and written as a file with the same name 
+   * into the folder given by 
    */
   //      * @throws BuildFailureException
   public void processRcFiles() throws BuildFailureException {
@@ -2330,22 +2367,36 @@ public class LatexProcessor extends AbstractLatexProcessor {
       File outFile = this.settings.rcResourceToFile(fileName);
 
       try {
+        // isCreatedByMyself may emit warnings TBD
         if (outFile.exists() && !isCreatedByMyself(outFile)) {
+          // may throw IOException 
           inStream.close();
-          continue;
+        } else {
+          // may throw IOException: cannot be opened for writing, 
+          // if it does not exist but cannot be created 
+          // if it exists e.g because it is a directory, 
+          PrintStream writer = new PrintStream(outFile);
+          // may throw IOException: readline. 
+          this.settings.filterLatexmkrc(inStream, writer);
+          // may throw IOExeption 
+          inStream.close();
         }
-        this.settings.filterLatexmkrc(outFile, inStream);
       } catch (IOException ioe) {
-        throw new BuildFailureException(
-            "Could not filter '" + fileName + "''. ", ioe);
+        // also maybe because no decision whether to overwrite
+        throw new BuildFailureException("???? '" + fileName + "'. ", ioe);
       }
     }
   }
 
-  private void cleanRcFiles() {
+  // TLP04 
+  // EFU05
+  private void clearRcFiles() {
     for (String fileName : RC_FILE_NAMES) {
       File outFile = this.settings.rcResourceToFile(fileName);
-
+      if (outFile.exists() && isCreatedByMyself(outFile)) {
+        // could emit EFU05
+        this.fileUtils.deleteOrError(outFile, false);
+      }
     }
   }
 
