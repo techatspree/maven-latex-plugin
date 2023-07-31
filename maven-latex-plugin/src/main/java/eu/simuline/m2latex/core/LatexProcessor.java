@@ -2348,23 +2348,29 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
   /**
    * Processes files <code>.latexmkrc</code> and <code>.chktexrc</code> 
-   * in the first case performing filtering similar to the resources plugin, 
+   * performing filtering similar to the resources plugin, 
    * with two differences: 
    * <ul>
    * <li> The names are those of parameters in settings, not properties in the pom. </li>
    * <li> The sources are loaded as a resource by the classloader 
-   * by name <code>.latexmkrc</code> and <code>.chktexrc</code>, respectively  
-   * and the target is a file in the folder given by 
+   * by name <code>.latexmkrc</code> and <code>.chktexrc</code>, respectively. 
+   * They are a kind of templates containing parameter names 
+   * and the target is a file in the folder given by {@link Settings#getTexSrcDirectory()}. 
+   * This file contains the values of the parameters, finally. 
    * </ul>
-   * to insert the values of the settings and then place at the root folder of tex files. 
-   * In the second case, just placing at the root folder of tex files. 
-   *  
-   * and also source and target differ: 
-   * <code>inStream</code> is a resources with name <code>fileName</code> 
-   * and are filtered and written as a file with the same name 
-   * into the folder given by 
+   * 
+   * @throws BuildFailureException
+   *   <ul>
+   *   <li>
+   *   TLP03: Failure while writing config file '...' or closing in-stream. 
+   *   Means that the config file <code>.latexmkrc</code> and <code>.chktexrc</code> 
+   *   could not be written. 
+   *   Each is created from a template replacing parameter names by their actual values. 
+   *   A reason may be that the template cannot be read or its in-stream cannot be closed. </li>
+   *   <li> TMI01 if the stream to the template cannot be read. </li>
+   *   </ul>
    */
-  //      * @throws BuildFailureException
+  //      
   public void processRcFiles() throws BuildFailureException {
     //this.settings.getProperties();
     // TBD: centralize this because also needed for goal clr
@@ -2394,8 +2400,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // THis is true not only when the Print stream cannot be created, 
         // but also if the resource cannot be read in filterRcFile. 
         // To be strict, one could go on even if inStream could not be closed. 
-        throw new BuildFailureException("???? Could not write config file '" + fileName + 
-          "' or could not close in-stream. ", ioe);
+        throw new BuildFailureException("TLP03 Failure while writing config file '" + fileName + 
+          "' or closing in-stream. ", ioe);
       }
     }
   }

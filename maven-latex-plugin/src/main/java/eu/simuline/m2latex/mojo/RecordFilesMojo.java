@@ -43,12 +43,8 @@ public class RecordFilesMojo extends AbstractLatexMojo {
    *
    * @throws MojoFailureException
    *    <ul>
-   *    <li>TMI01: if the stream to either the manifest file 
-   *        or to a property file, either {@LINK #VERSION_PROPS_FILE} 
-   *        or {@link eu.simuline.m2latex.core.MetaInfo.GitProperties#GIT_PROPS_FILE} could not be created. </li>
-   *    <li>TMI02: if the properties could not be read 
-   *        from one of the two property files mentioned above. </li>
-   *    <li>TSS05: if converters are excluded in the pom which are not known. </li>
+   *    <li>TMI01: if the stream to a template for an rc file could not be created. </li>
+   *    <li>TLP03: if the rc file cannot be written completely and reliably for some reason. </li>
    *    </ul>
    */
   public void execute() throws MojoFailureException {
@@ -57,7 +53,7 @@ public class RecordFilesMojo extends AbstractLatexMojo {
     try {
       // TBD: update 
       // warnings: WMI01, WMI02, 
-      // may throw build failure exception TSS XXXX TBD
+      // may throw build failure exception TLP03, TMI01
       this.latexProcessor.processRcFiles();
     } catch (BuildFailureException e) {
       // may throw Exception TBD
