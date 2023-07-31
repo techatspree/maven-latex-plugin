@@ -986,6 +986,72 @@ class TexFileUtils {
   }
 
 
+    /**
+   * The headline of generated config files. 
+   * Used for .latexmkrc and for .chktex. 
+   * This headline signifies, 
+   * that the file was created by this software. 
+   * As a consequence, 
+   * it may be deleted or overwritten by this software. 
+   * Else this is not done. 
+   */
+  static final String HEADLINE_GEN = "# rcfile written by latex plugin ";
+
+  // Could be in LatexProcessor or here in TexFileUtils. 
+  // Since it does logging and LatexProcessor does none so far 
+  // and since this fits layered architecture, we decided to put it here. 
+  /**
+   * Returns whether the given file is created by this software. 
+   * This is assumed if the first line is {@link #HEADLINE_GEN}. 
+   * It is assumed that the file exists. 
+   * 
+   * Warnings: 
+   * WFU10: if the file has not been created by this software 
+   * WFU11: if it cannot be ensured that the file has been created by this software 
+   * or if the reader to read to decide cannot be closed. 
+   *
+   * @param aFile
+   *   the file to be considered. 
+   * @return
+   *   whether the first line of the given file is proved to be is {@link #HEADLINE_GEN}. 
+   *   If and only if false, an warning is emitted. 
+   */
+  boolean isCreatedByMyself(File aFile) {
+    assert aFile.exists() : "File " + aFile + " expected to exist. ";
+    // to be checked whether it shall be overwritten 
+    try {
+      if (!aFile.isDirectory()) {
+        // constructor of FileReader may throw 
+        // FileNotFoundException which is an IOException: 
+        // Since it does exist and is not a directory, 
+        // it is unreadable for some other reason 
+        BufferedReader reader =
+            new BufferedReader(new FileReader(aFile));
+        // TBD: treat IOException better 
+        // may throw IOException if an IO error occurs 
+        String headline = reader.readLine();
+        // may throw IOException 
+        reader.close();
+        if (HEADLINE_GEN.equals(headline)) {
+          return true;
+        }
+      }
+      // Here, the file was not written by this software 
+      // so it shall not be overwritten 
+      this.log.warn("WFU10: Cannot overwrite/clean config file '" + aFile
+          + "' because it is not self-created. ");
+      return false;
+
+    } catch (IOException ioe) {
+      // In both cases: could not read headline 
+      this.log.warn("WFU11: Refuse to overwrite/clean config file '" + aFile
+          + "' because it may be not self-created or has dangling reader. ");
+      return false;
+    }
+  }
+
+
+
   public static void main(String[] args) {
     String regex = args[0];
     String text = args[1];

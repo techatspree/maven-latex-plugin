@@ -47,6 +47,8 @@ public class ClearMojo extends AbstractLatexMojo {
    * <li> WFU01: Cannot read directory...
    * <li> WFU03: cannot close tex file 
    * <li> EFU05: Failed to delete file 
+   * <li> WFU10, WFU11: if a config file is not written by this software 
+   * or it is not clear or the reader cannot close. 
    * </ul>
    *
    * @throws BuildFailureException 
@@ -57,7 +59,7 @@ public class ClearMojo extends AbstractLatexMojo {
     initialize();
     try {
       // may throw BuildFailureException TSS02 
-      // may log warnings WPP02, WFU01, WFU03, EFU05 
+      // may log warnings WPP02, WFU01, WFU03, EFU05, WFU10, WFU11
       this.latexProcessor.clearAll();
     } catch (BuildFailureException e) {
       throw new MojoFailureException(e.getMessage(), e.getCause());

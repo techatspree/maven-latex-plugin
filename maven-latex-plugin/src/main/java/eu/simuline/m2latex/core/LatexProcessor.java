@@ -18,12 +18,11 @@
 
 package eu.simuline.m2latex.core;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -503,11 +502,18 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * <li>WFU01: Cannot read directory...
    * <li>WFU03: cannot close tex file
    * <li>EFU05: Failed to delete file
+   * <li> WFU10, WFU11: if a config file is not written by this software 
+   * or it is not clear or the reader cannot close. 
    * </ul>
    *
    * @throws BuildFailureException
-   *    TSS02 if the tex source processing directory
-   *    does either not exist or is not a directory.
+   *   <ul>
+   *   <li> TSS02 if the tex source processing directory
+   *    does either not exist or is not a directory.</li>
+   *   <li> TLP04 if a config file cannot be decided whether to be cleared 
+   *    or could not be cleared. </li>
+   *   </ul>
+   *   TBD: synchronize: Really a throwable? 
    */
   public void clearAll() throws BuildFailureException {
     this.paramAdapt.initialize();
@@ -522,6 +528,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // constructor DirNode may log warning WFU01 Cannot read directory
     // clearCreated may log warnings WPP02, WFU01, WFU03, EFU05
     this.preProc.clearCreated(texProcDir);
+    // may log WFU10, WFU11, EFU05 
+    clearRcFiles();
   }
 
   // FIXME: use the -recorder option to resolve dependencies.
@@ -2278,66 +2286,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
   }
 
   /**
-   * The headline of generated config files. 
-   * Used for .latexmkrc and for .chktex. 
-   * This headline signifies, 
-   * that the file was created by this software. 
-   * As a consequence, 
-   * it may be deleted or overwritten by this software. 
-   * Else this is not done. 
-   */
-  static final String HEADLINE_GEN = "# rcfile written by latex plugin ";
-
-  /**
-   * Returns whether the given file is created by this software. 
-   * This is assumed if the first line is {@link #HEADLINE_GEN}. 
-   * It is assumed that the file exists. 
-   * 
-   * Warnings: 
-   * WPL08 if aFile is not created by this software. 
-   *
-   * @param aFile
-   * @return
-   *   whether the first line of the given file is proved to be is {@link #HEADLINE_GEN}. 
-   *   If and only if false, an warning is emitted. 
-   * @throws IOException
-   *   TBD: rethink whether an exception is appropriate or another warning. 
-   */
-  private boolean isCreatedByMyself(File aFile) {
-    assert aFile.exists() : "File " + aFile + " expected to exist. ";
-    // to be checked whether it shall be overwritten 
-    try {
-      if (!aFile.isDirectory()) {
-        // constructor of FileReader may throw 
-        // FileNotFoundException which is an IOException: 
-        // Since it does exist and is not a directory, 
-        // it is unreadable for some other reason 
-        BufferedReader reader =
-            new BufferedReader(new FileReader(aFile));
-        // TBD: treat IOException better 
-        // may throw IOException if an IO error occurs 
-        String headline = reader.readLine();
-        // may throw IOException 
-        reader.close();
-        if (HEADLINE_GEN.equals(headline)) {
-          return true;
-        }
-      }
-      // Here, the file was not written by this software 
-      // so it shall not be overwritten 
-      this.log.warn("Cannot overwrite/clean config file '" + aFile
-          + "' because it is not self-created.");
-      return false;
-
-    } catch (IOException ioe) {
-      // In both cases: could not read headline 
-      this.log.warn("Refuse to overwrite/clean config file '" + aFile
-          + "' because it may be not self-created or has dangling reader.");
-      return false;
-    }
-  }
-
-  /**
    * The list of config files 
    * created by goal dvl via {@link #processRcFiles()}
    * and deleted by goal clr via {@link #clearRcFiles()} 
@@ -2381,8 +2329,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
       File outFile = this.settings.rcResourceToFile(fileName);
 
       try {
-        // isCreatedByMyself may emit warnings TBD
-        if (!outFile.exists() || isCreatedByMyself(outFile)) {
+        // isCreatedByMyself may emit warnings WFU10, WFU11 
+        if (!outFile.exists() || this.fileUtils.isCreatedByMyself(outFile)) {
           // Here, outFile does not exist or is a regular file. 
 
           // may throw FileNotFoundException and so IOException: 
@@ -2406,12 +2354,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
     }
   }
 
-  // TLP04 
-  // EFU05
+
+  /**
+   * Deletes <code>.latexmkrc</code> and <code>.chktexrc</code> 
+   * in {@link Settings#getTexSrcDirectory()} if written by this software if possible. 
+   * 
+   * WFU10, WFU11: if a config file is not written by this software or it is not clear or the reader cannot close. 
+   * EFU05: if the config file shall be deleted but this coes not work. 
+   */
   private void clearRcFiles() {
     for (String fileName : RC_FILE_NAMES) {
       File outFile = this.settings.rcResourceToFile(fileName);
-      if (outFile.exists() && isCreatedByMyself(outFile)) {
+        // isCreatedByMyself may emit warnings WFU10, WFU11 
+      if (outFile.exists() && this.fileUtils.isCreatedByMyself(outFile)) {
         // could emit EFU05
         this.fileUtils.deleteOrError(outFile, false);
       }

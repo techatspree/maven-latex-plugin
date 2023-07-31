@@ -3094,7 +3094,7 @@ public class Settings {
     // the headline shows that the file is generated 
     // and may thus be overwritten and erased. 
     // throws IOExeption if an IO error occurs
-    writer.println(LatexProcessor.HEADLINE_GEN);
+    writer.println(TexFileUtils.HEADLINE_GEN);
 
     // Read File Line By Line
     Matcher matcher;
