@@ -205,6 +205,29 @@ TBD
   Either reading a line or writing a line failed. 
 \end{minipage}
 } \\
+\texttt{\footnotesize WFU10}  & \texttt{\footnotesize Cannot overwrite/clean config file '\$aFile' } \\
+                              & \texttt{\footnotesize because it is not self-created. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+May occur if a config file \texttt{.latexmkrc} or \texttt{.chktexrc} is present in the latex source directory 
+and is not created by this software. 
+To avoid the risk of overwriting or deleting user-written config files, 
+only config files written by this software can be overwritten in goal \texttt{dvl} 
+or deleted in goal \texttt{clr}. 
+\end{minipage} 
+} \\
+\texttt{\footnotesize WFU11}  & \texttt{\footnotesize Refuse to overwrite/clean config file '\$aFile' } \\
+                              & \texttt{\footnotesize because it may be not self-created or has dangling reader.  } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+To avoid the risk of overwriting or deleting user-written config files, 
+this software checks whether it was this software which wrote the config files 
+by reading the headline. 
+If this is not possible or if the reader to read that headline could not be closed after reading, 
+this warning is emitted. 
+Neither is the file overwritten in goal \texttt{dvl} nor is it deleted in goal \texttt{clr}. 
+\end{minipage}
+}
 \end{longtable}
 TBD\@: check whether workaround still necessary. 
 TBD\@: complete list
