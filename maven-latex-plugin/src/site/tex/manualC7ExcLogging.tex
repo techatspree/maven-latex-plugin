@@ -485,6 +485,18 @@ This is mainly because of writing permissions.
   It is expected only if a diff check is configured according to \$chkDiff described in Section~\ref{sec:paramRepro}. 
   Currently, that kind of check can be performed for \texttt{pdf} files only. 
   \end{minipage}
+  } \\
+  \texttt{\footnotesize TLP03} 
+  & \texttt{\footnotesize  Failure while writing config file '\$fileName' or closing in-stream.  }  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  Failure while performing goal \texttt{dvl} while writing config file '\texttt{\$fileName}' or closing in-stream. 
+  The file is either \texttt{.latexmkrc} or \texttt{.chktexrc}. 
+  It means that the config file could not be written. 
+  Each is created from a template replacing parameter names by their actual values. 
+  A reason may be that the template cannot be read or its in-stream cannot be closed. 
+  The result is written into the latex source directory. 
+  \end{minipage}
   }
 \end{longtable}
   
