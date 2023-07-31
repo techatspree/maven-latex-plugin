@@ -2376,22 +2376,26 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
       try {
         // isCreatedByMyself may emit warnings TBD
-        if (outFile.exists() && !isCreatedByMyself(outFile)) {
-          // may throw IOException 
-          inStream.close();
-        } else {
-          // may throw IOException: cannot be opened for writing, 
-          // if it does not exist but cannot be created 
-          // if it exists e.g because it is a directory, 
+        if (!outFile.exists() || isCreatedByMyself(outFile)) {
+          // Here, outFile does not exist or is a regular file. 
+
+          // may throw FileNotFoundException and so IOException: 
+          // if does not exist and a regular file of that name cannot be created for writing 
+          // or if it does exist and cannot be opened for writing, 
+          // or if some error occurs when creating or opening for writing 
           PrintStream writer = new PrintStream(outFile);
           // may throw IOException: readline. 
-          this.settings.filterLatexmkrc(inStream, writer);
-          // may throw IOExeption 
-          inStream.close();
+          this.settings.filterRcFile(inStream, writer);
         }
+        // may throw IOExeption 
+        inStream.close();
       } catch (IOException ioe) {
-        // also maybe because no decision whether to overwrite
-        throw new BuildFailureException("???? '" + fileName + "'. ", ioe);
+        // Here, the goal dvl must be aborted, or inStream could not be closed. 
+        // THis is true not only when the Print stream cannot be created, 
+        // but also if the resource cannot be read in filterRcFile. 
+        // To be strict, one could go on even if inStream could not be closed. 
+        throw new BuildFailureException("???? Could not write config file '" + fileName + 
+          "' or could not close in-stream. ", ioe);
       }
     }
   }
