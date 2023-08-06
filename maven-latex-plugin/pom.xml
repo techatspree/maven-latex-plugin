@@ -723,13 +723,6 @@
 									</includes>
 									<filtering>true</filtering>
 								</resource>
-								<resource>
-									<directory>src/main/resources</directory>
-									<includes>
-										<include>version.properties</include>
-									</includes>
-									<filtering>true</filtering>
-								</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -798,14 +791,6 @@
 								<include>buildParams.tex</include>
 								<include>instVScode4tex.sh</include>
 								<!--include>pom4pdf.xml</include-->
-							</includes>
-						</fileset>
-
-						<fileset>
-							<directory>src/site/resources/fromMain</directory>
-							<includes>
-								<include>pom4pdf.xml</include>
-								<include>version.properties</include>
 							</includes>
 						</fileset>
 
