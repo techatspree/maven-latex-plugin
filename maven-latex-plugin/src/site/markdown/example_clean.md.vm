@@ -1,0 +1,50 @@
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
+
+# Clean
+
+In general, 
+this software after a run deletes all files not present before that run. 
+That way an explicit goal `clean` is superfluous. 
+
+This changes if `cleanUp` which is `true` by default, 
+is set to `false` as shown in the next snippet of a pom. 
+
+```[xml]
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
+                <version>${project.version}</version>
+                <inherited>false</inherited>
+                <configuration>
+                  <settings>
+                    <targets>pdf, html</targets>
+                    <cleanUp>false</cleanUp>
+                  </settings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+With that configuration, intermediate auxiliary files, 
+as e.g. log files are not deleted. 
+This may make sense for debugging, 
+e.g. searching for the reason of an error 
+or when eliminating bad boxes. 
+
+Auxiliary files which are created by other software but this one 
+is also not deleted, independent of the value of `cleanUp`. 
+But in the course of debugging it is sometimes a good idea 
+to use more low level tools compared to this one. 
+
+In these cases, for cleanup the goal `clr` is used. 
+It is then necessary to ensure 
+that the runs are independent and thus reproducible. 
+
+<!-- the link is very instable -->
+<!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->

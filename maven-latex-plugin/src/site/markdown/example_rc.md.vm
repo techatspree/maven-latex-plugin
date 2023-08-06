@@ -1,0 +1,56 @@
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
+
+# Create RC files 
+
+The goal `dvl` creates config files 
+`.latexmkrc` and `.chktexrc` 
+in folder `texSrcDirectory` 
+which defaults to `src/site/tex`. 
+
+The config files are synchronized with the configuration. 
+For the following  snippet of a pom we specify `xelatex` 
+instead of the default `lualatex`. 
+
+```[xml]
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
+                <version>${project.version}</version>
+                <inherited>false</inherited>
+                <configuration>
+                  <settings>
+                    <latex2pdfCommand>xelatex</latex2pdfCommand>
+                  </settings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+Goal `dvl` creates in particular `.latexmkrc` 
+which invokes `xelatex` in place of `lualatex`. 
+This is true only, if `.latexmkrc` need not be overwritten, 
+i.e. there is no such file at the beginning of the run, 
+or the file can be proved to be created by this software. 
+Then it is overwritten. 
+
+After having created `.latexmkrc`, 
+one can command `cd src/site/tex` 
+and run `latexmk` there. 
+Then `latexmk` runs with the generated config file. 
+For other folders, the author suggests using links 
+to the central `.latexmkrc`. 
+
+Since `.latexmkrc` is synchronized 
+with the configuration of this software, 
+the resulting artifacts are the same whether created with `latexmk` 
+or with this software. 
+Likewise for `chktex` related with goal `chk`. 
+
+<!-- the link is very instable -->
+<!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->
