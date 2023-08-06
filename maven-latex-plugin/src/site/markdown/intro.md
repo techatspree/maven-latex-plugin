@@ -123,3 +123,16 @@ The following goals are not directly related with building of artifacts.
   [source repository](./scm.html) 
   and will find supplementary information in the
   [guide to helping with Maven](https://maven.apache.org/guides/development/guide-helping.html). 
+
+  ## Examples 
+
+  To provide you with better understanding 
+  on some usages of this plugin, 
+  you can take a look into the following examples: 
+
+  - a very simple configuration 
+   [to create PDF files](./example_simple.md.vm)
+  - a configuration specifying the [target formats](./example_targets.md.vm)
+  - a [typical configuration](./example_typical.html) 
+    taking other tools and debugging into account 
+  - a configuration with [all settings](./example_complex.html) set. 
