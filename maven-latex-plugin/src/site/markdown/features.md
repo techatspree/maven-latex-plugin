@@ -3,24 +3,27 @@
 
 # Features
 
-- Transform LaTeX documents into PDF and/or HTML 
-  during the maven site phase by calling the standard LaTeX scripts
-- Find TeX main documents underneath a TEX directory 
-- in the maven site (e.g. `src/site/tex/doc/Doc.tex`)
-- Goal to create PDF or DVI files in the target folder, 
-  e.g. `target/site/doc/Doc.pdf`
-- Goal to create HTML files using tex4ht in the target folder, 
-  e.g. `target/site/doc/Doc.html`
-- Configurable, for which level of sections 
-  a separate HTML file will be created (multipage / single-page)
-- Using CSS stylesheets.
-- Dynamic execution of the latex operations 
-  by analyzing log information created by the LaTeX scripts
-- Execute latex as many times as needed
-- Execute bibtex if needed
+- Supports many output formats like PDF, DVI, HTML, DOCX, RTF, TXT and others. 
+- Perform checks with `chktex` and logs the result. 
+- Supports many graphical input formats like PNG, MP, FIG, gnuplot. 
+  Also provides a separate goal creating them, `grp`. 
+- Support of bibliography, index, glossary and embedded code. 
+  In particular supports split index. 
+- Performs version checks on used tools. 
+- Perform checks on sources and results and log files. 
+- Orchestration of various tools detecting need for execution 
+  e.g. of `bibtex` including rerunfilecheck for `lualatex` and friends. 
+- Offers check whether a document could have been reproduced 
 
 # Planned Features
 
-- Execute `makeindex` if needed
+- Support `biber` replacing `bibtex` as preferred tool
+- Support `xindy` replacing `makeindex` as preferred tool
+- Support `bib2gls` replacing `makeglossary` as preferred tool
 - Execute `glosstex` if needed
 - Usage of the `multibib` macros
+- ...
+
+# Feature Requests 
+
+Feature requests from users are always welcome: [write me](rei3ner@arcor.de). 
