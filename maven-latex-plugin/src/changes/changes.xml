@@ -611,9 +611,24 @@ spellcheck, 27
 
   <!-- fig2dev: maybe lange mp (metapost) is superior to mixed latex and pdf -->
 
+  <!-- https://plantuml.com/command-line describes a command line tool, 
+    which may convert puml files into latex files using tikz. 
+    This would be a valuable feature since these files can also be used in markdown. 
+    Good idea would be if they offer that tool in an installable way. -->
+
+  <!-- https://stackoverflow.com/questions/76815594/maven-plugins-access-to-nested-configuration-in-help-plugin 
+  is on two subjects: help plugin and automatted site generation. 
+In both cases, it seems as if nested parameters are not so well supported. 
+So we have to defer using the techniques described there. 
+As a consequence, we made only a minimal site. 
+If this technique can be used, this offers the chance to make the manual shorter 
+and also to come close to single source principle as regards documentation of parameters. 
+Currently: pom, manual, apidoc, 
+whereas the techniques mentioned above all derive vital information from apidoc only.  -->
+
   <release  version="1.8"
   date="2022-04-20"
-      description="Essentially, made all documents compilable with latexmk">
+      description="Essentially, added support for xdv format. ">
       <action dev='reissner' type='fix'>
         goal vrs works again. 
       </action>
