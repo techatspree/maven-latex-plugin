@@ -28,7 +28,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 // documentation occurs in latex:help
 /**
- * Build documents in msword formats, above all docx from LaTeX sources. 
+ * Builds documents in msword formats, above all docx from LaTeX sources. 
  */
 @Mojo(name = "docx")
 public class DocxMojo extends CfgLatexMojo {

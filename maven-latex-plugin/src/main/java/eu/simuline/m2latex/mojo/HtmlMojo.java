@@ -28,7 +28,7 @@ import java.util.TreeSet;
 
 // documentation occurs in latex:help
 /**
- * Build HTML documents and XHTML documents from LaTeX sources. 
+ * Builds HTML documents and XHTML documents from LaTeX sources. 
  */
 @Mojo(name = "html")
 public class HtmlMojo extends CfgLatexMojo {
