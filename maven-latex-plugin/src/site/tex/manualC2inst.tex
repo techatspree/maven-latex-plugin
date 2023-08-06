@@ -407,6 +407,7 @@ There are more settings for treating tools.
 It is the experience of the author, that hardly any explicit setting is necessary at all. 
 If a setting is made explicitly then because of special environment 
 for which the default does not fit or a special taste the default is not compatible with either. 
+Chapter~\ref{chap:settings} describes the complete set of settings. 
 
 
 \begin{lstlisting}[language=xml, basicstyle=\footnotesize,
@@ -657,11 +658,9 @@ but also to update them, it is convenient to have the script at hand.
 Project \url{https://github.com/Reissner/QMngMnt} 
 uses the script for automation of installation and update. 
 
-In the next \texttt{artifactItem} extracts \texttt{.latexmkrc} and \texttt{.chktexrc} 
-into the latex directory. 
-It comes in handy to place the configuration files centrally 
-and then either link for each relevant subfolder where needed 
-or use according command line options. 
+
+For document development the tool \texttt{latexmk} is a valuable build tool. 
+Also, a linter like \texttt{chktex} is helpful. 
 
 
 As described in~\cite{LatexMk23}, 
@@ -697,6 +696,25 @@ or just use the \texttt{-r}.
 Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
 in which the configuration file given by the option \texttt{-r} is read in. 
 
+This maven plugin offers a goal \texttt{dvl} (``development'') 
+to create the configuration files \texttt{.latexmkrc} and \texttt{.chktexrc} 
+both in the latex source directory. 
+In particular \texttt{.latexmkrc} is adapted to the current settings of this plugin. 
+That way, \texttt{latexmk} behave the same as does this plugin. 
+Similarly, for \texttt{chktex}. 
+Note that these files are written only if either no file is overwritten 
+or only files are overwritten which were written by this plugin. 
+Self-written files are recognized by the headline. 
+If this cannot be read or in some other exotic conditions, 
+it cannot be ensured that the files are written by this software, 
+and so they are not overwritten. 
+In case of a doubt, a warning is displayed. 
+
+Likewise, goal \texttt{clr} deletes these configuration files 
+if they were definitively written by this plugin. 
+If this is proved to be false or a proof is not possible, 
+the configuration files are not deleted. 
+As for goal \texttt{dvl}, in case of a doubt, a warning is displayed. 
 
 
 
@@ -731,35 +749,6 @@ in which the configuration file given by the option \texttt{-r} is read in.
       <includes>instVScode4tex.sh</includes>
       <fileMappers>
         <org.codehaus.plexus.components.io.filemappers.IdentityMapper/>
-      </fileMappers>
-    </artifactItem>
-
-    <artifactItem>
-      <groupId>eu.simuline.m2latex</groupId>
-      <artifactId>latex-maven-plugin</artifactId>
-      <version>2.0</version>
-      <type>jar</type>
-      <overWrite>true</overWrite>
-      <outputDirectory>${latexDir}</outputDirectory>
-      <includes>.latexmkrc, .chktexrc</includes>
-      <fileMappers>
-        <org.codehaus.plexus.components.io.filemappers.IdentityMapper/>
-      </fileMappers>
-    </artifactItem>
-
-    <artifactItem>
-      <groupId>eu.simuline.m2latex</groupId>
-      <artifactId>latex-maven-plugin</artifactId>
-      <version>2.0</version>
-      <type>jar</type>
-      <overWrite>true</overWrite>
-      <outputDirectory>src/main/resources</outputDirectory>
-      <includes>.latexmkrc.raw</includes>
-      <fileMappers><!-- hack! -->
-        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
-          <pattern>c.raw$</pattern>
-          <replacement>c</replacement>
-        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
       </fileMappers>
     </artifactItem>
   </artifactItems>
