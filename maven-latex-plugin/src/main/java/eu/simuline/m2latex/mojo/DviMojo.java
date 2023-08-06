@@ -28,7 +28,8 @@ import java.util.TreeSet;
 
 // documentation occurs in latex:help
 /**
- * Builds DVI documents from LaTeX sources. 
+ * Builds DVI/XDV documents from LaTeX sources. 
+ * Generically DVI is created but `xelatex` creates XDV instead. 
  */
 @Mojo(name = "dvi")
 public class DviMojo extends CfgLatexMojo {
