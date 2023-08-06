@@ -1,0 +1,26 @@
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
+
+# Creating graphic files only  
+
+The goal `grp` creates graphic files only. 
+Graphic files are created also in the course of goal `cfg`, 
+but this section is on creating graphic files only. 
+
+The use case is to run a latex converter like `lualatex` 
+and auxiliary tools like `bibtex` standalone. 
+If no graphic files are present, this causes an error. 
+
+Also when building with `latexmk` this may result in an error. 
+It is quite[1] save if using the config file created by goal `dvl`. 
+But the number of runs required may be very high. 
+
+So there are cases where the goal `grp` makes sense. 
+
+[^1]: What may happen is that `latexmk` needs more 
+runs than maximally specified. 
+This results in a currupt artifact. 
+
+
+<!-- the link is very instable -->
+<!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->
