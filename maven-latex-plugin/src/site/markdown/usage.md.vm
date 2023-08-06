@@ -3,6 +3,30 @@
 
 # Usage
 
+The latex maven plugin is to create artifacts of various formats 
+from latex sources. 
+Also graphic files with a broad variety of formats can be included, 
+but these are auto-detected. 
+The same is true for bibliographies, indices, glossaries and embedded code. 
+
+So the user has to specify only the desired output formats.
+As illustrated by [example](./example_targets.html), 
+with the goal `cfg` artifacts with more than one output format 
+can be created from a single source. 
+
+Goals `dvi`, `pdf`, `xdoc`, `rtf`, `odt`, `html` and `txt` 
+are specialized to the according output format. 
+A special role plays goal `chk` 
+which performs a check only and creates nothing but a log file 
+which is of course not deployed. 
+
+Goals `clr` to cleanup, `dvl` to create config files 
+and `grp` to create graphic files 
+are useful in conjunction with other tools and with debugging 
+as illustrated for [cleanup](./example_clean.html) 
+for [creating `.latexmkrc`](./example_rc.html) 
+and for [creating graphic files](./example_grp.html). 
+
 ## Source code repository
 
 ```
