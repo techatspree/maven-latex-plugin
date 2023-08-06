@@ -1,0 +1,29 @@
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
+
+# Specifying Output Formats
+
+The following configuration shows, how to specify the output formats PDF and HTML for target `cfg`. 
+
+```[xml]
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
+                <version>${project.version}</version>
+                <inherited>false</inherited>
+                <configuration>
+                  <settings>
+                    <targets>pdf, html</targets>
+                  </settings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+<!-- the link is very instable -->
+For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). 

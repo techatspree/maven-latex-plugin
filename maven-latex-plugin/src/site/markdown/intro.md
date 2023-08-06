@@ -24,8 +24,8 @@ and [let me know](mailto:rei3ner@arcor.de).
 The `latex-maven-plugin` translates LaTeX documents into PDF,
 HTML or other LaTeX output formats like DVI or Postscript,
 during the maven site lifecycle.
-Internally, the plugin calls the standard LaTeX macros,
-like `lualatex` for PDF and tex4ht for HTML output.
+Internally, the plugin calls the standard LaTeX tools,
+like `lualatex` for PDF and `tex4ht` for HTML output.
 Hence, a LaTeX distribution has to be installed on the
 computer running the maven build.
 
@@ -38,7 +38,7 @@ Thus, other maven site artifacts (like HTML pages build from apt files)
 may link to them.
 
 The `maven-latex-plugin` tries to be smart
-by analyzing the LaTeX macros' output and running the macros as often
+by analyzing the LaTeX converter's output and running the converter as often
 as needed (running LaTeX more than once is needed when 
 e.g. building a table of contents or when using `bibtex`
 to maintain a bibliography and citations). 
@@ -47,7 +47,7 @@ to maintain a bibliography and citations).
 
 Most of the goals are on creating output in a given format 
 
-- `latex:cfg` creates output in the list of formats configured as a `target` 
+- [`latex:cfg`](./cfg-mojo.html) creates output in the list of formats configured as a `target` 
   as shown in (example_targets.html)[]. 
 
 
