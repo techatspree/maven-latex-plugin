@@ -13,7 +13,11 @@
 - Perform checks on sources and results and log files. 
 - Orchestration of various tools detecting need for execution 
   e.g. of `bibtex` including rerunfilecheck for `lualatex` and friends. 
-- Offers check whether a document could have been reproduced 
+- Supports document development, mainly by cooperating with editor, viewer 
+  and with other tools in the build chain. 
+  Offers [installation script](./fromMain/instVScode4tex.sh) 
+  for extensions of VS Code. 
+- Offers check whether a document could have been reproduced. 
 
 # Planned Features
 
