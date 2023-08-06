@@ -30,4 +30,5 @@
 
 # Feature Requests 
 
-Feature requests from users are always welcome: [write me](rei3ner@arcor.de). 
+Feature requests from users are always welcome: 
+[write me](mailto:rei3ner@arcor.de). 
