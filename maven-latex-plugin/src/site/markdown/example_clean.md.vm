@@ -46,5 +46,7 @@ In these cases, for cleanup the goal `clr` is used.
 It is then necessary to ensure 
 that the runs are independent and thus reproducible. 
 
+CAUTION: `clr` cannot be used as a target. 
+
 <!-- the link is very instable -->
 <!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->
