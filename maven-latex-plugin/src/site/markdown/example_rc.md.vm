@@ -38,6 +38,10 @@ i.e. there is no such file at the beginning of the run,
 or the file can be proved to be created by this software. 
 Then it is overwritten. 
 
+For default configuration, 
+the config files are [`.latexmkrc`](./fromMain/.latexmkrc) 
+and [`.chktexrc`](./fromMain/.chktexrc). 
+
 After having created `.latexmkrc`, 
 one can command `cd src/site/tex` 
 and run `latexmk` there. 
