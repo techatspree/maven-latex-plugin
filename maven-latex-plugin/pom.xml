@@ -126,7 +126,7 @@
       scm:git:https://github.com/Reissner/latex-maven-plugin.git
 		</developerConnection>
 		<url>https://github.com/Reissner/latex-maven-plugin</url>
-		<tag>latex-maven-plugin-1.3</tag>
+		<!--tag>latex-maven-plugin-1.3</tag-->
 	</scm>
 
 	<distributionManagement>		<!-- For authentication see ~/.m2/settings.xml -->
