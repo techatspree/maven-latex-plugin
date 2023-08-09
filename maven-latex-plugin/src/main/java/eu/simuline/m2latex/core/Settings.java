@@ -251,6 +251,9 @@ public class Settings {
   // FIXME: not only on this pattern: 
   // Matching is line by line which is inappropriate. 
   // pattern is to be applied to the start of the tex-file 
+  // FIXME: I have the impression that the concept we use is not very good. 
+  // Maybe one has to use a magic comment to identify latex main files. 
+  // There is a tendency to allow even more in the header with coming releases of latex 
   @RuntimeParameter
   @Parameter(name = "patternLatexMainFile")
   private String patternLatexMainFile = "\\A(\\\\RequirePackage\\s*" + // RequirePackage 
@@ -260,8 +263,9 @@ public class Settings {
       "\\\\PassOptionsToPackage\\s*" + // PassOptionsToPackage
       /**/"\\{\\w+\\}\\s*" + // {options}
       /**/"\\{(\\w|-)\\}|" + // {packagename}
-      "%.*$|" + // comments 
       "\\\\input\\{[^{}]*\\}|" + // inputs 
+      "\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
+      "\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
       "\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
       "\\\\(documentstyle|documentclass)";
 
