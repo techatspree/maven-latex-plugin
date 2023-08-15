@@ -731,7 +731,7 @@ public class Settings {
    * because they are automatically added by the software 
    * or are in conflict with automatically added options: 
    * <ul>
-   * <li><code>--export-filename==FILENAME</code>
+   * <li><code>--export-filename=FILENAME</code>
    * <li><code>--export-type=type</code> 
    * <ul>
    *
@@ -739,7 +739,8 @@ public class Settings {
    * <code>--export-area-drawing --export-latex</code>. 
    */
   @RuntimeParameter
-  @Parameter(name = "svg2devOptions", defaultValue = "-D --export-latex")
+  @Parameter(name = "svg2devOptions",
+     defaultValue = "--export-area-drawing --export-latex")
   private String svg2devOptions = "--export-area-drawing --export-latex";
 
   /**
@@ -2594,7 +2595,7 @@ public class Settings {
     this.svg2devCommand = svg2devCommand;
   }
 
-  public void setSvg2devOptions(String svg2dev) {
+  public void setSvg2devOptions(String svg2devOptions) {
     this.svg2devOptions = beautifyOptions(svg2devOptions);
   }
 
