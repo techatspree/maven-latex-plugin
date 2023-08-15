@@ -54,21 +54,21 @@
 \ifpdf%
 \usepackage{xcolor}  % [pdftex]  
 \usepackage{graphicx}% [pdftex] 
-\usepackage{hyperref}% driver [hpdftex] is autodetected 
+\usepackage[destlabel]{hyperref}% driver [hpdftex] is autodetected 
 \usepackage{transparent}% sometimes comes in with svg import 
 % warning transparent package: loading aborted if not pdf-mode 
 \else
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
 \ifthenelse{\boolean{texFhtLoaded}}{%
-  % \usepackage[tex4ht]{hyperref}
+  % \usepackage[tex4ht, destlabel]{hyperref}
 \newcommand{\url}[1]{\texttt{#1}}% not active, replacement for hyperref
 \newcommand{\href}[2]{\texttt{#2}}% not active, replacement for hyperref
 }{%
 \ifxetex%
-\usepackage{hyperref}
+\usepackage[destlabel]{hyperref}
 \else
-  \usepackage[dvipdfmx]{hyperref}%[dvipdfmx]
+  \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
 \fi
 }% tex4ht not loaded 
 
