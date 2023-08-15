@@ -3113,10 +3113,6 @@ public class Settings {
           assert matcher.groupCount() >= 1;
 
           // group zero is the whole, and it is not in the goup count 
-          if (matcher.group(1).equals("version")) {
-            writer.println(strLine);
-            break;
-          }
           assert props.containsKey(matcher.group(1)) : "Key '"
               + matcher.group(1) + "' not found. ";
           strLine = matcher.replaceFirst(props.get(matcher.group(1)));

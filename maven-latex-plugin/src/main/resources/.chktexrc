@@ -1,5 +1,5 @@
 # config file for chktex 
-# adapted to latex-maven-plugin and to the according ant task version ${version}
+# adapted to latex-maven-plugin and to the according ant task 
 
 # LTeX: SETTINGS enabled=false
 

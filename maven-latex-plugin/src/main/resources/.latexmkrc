@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 
 # .latexmkrc adapted to the configurability of the latex-maven-plugin and its ant task 
-# version ${version}
 
 # This is to check whether the pom really overwrites the settings in defaultSettingsAs.properties
 # ${chkTexOptions}<chkTexOptions>-q -b0 -L -H1</chkTexOptions>
