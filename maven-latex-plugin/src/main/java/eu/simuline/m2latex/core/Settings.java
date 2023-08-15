@@ -3085,10 +3085,14 @@ public class Settings {
    *   Refers to the file in folder 
    *   given by the parameter {@link #texSrcDirectory} 
    *   with the same name as the resource defining <code>inStream</code>. 
+   * @param version
+   *   the version of this software.
    * @throws IOException
    *   May occur if reading a line but not if writing a line. 
    */
-  public void filterRcFile(InputStream inStream, PrintStream writer)
+  public void filterRcFile(InputStream inStream,
+                           PrintStream writer,
+                           String version)
       throws IOException {//
     BufferedReader bufReader =
         new BufferedReader(new InputStreamReader(inStream));
@@ -3099,7 +3103,7 @@ public class Settings {
     // the headline shows that the file is generated 
     // and may thus be overwritten and erased. 
     // throws IOExeption if an IO error occurs
-    writer.println(TexFileUtils.HEADLINE_GEN);
+    writer.println(TexFileUtils.HEADLINE_GEN+version);
 
     // Read File Line By Line
     Matcher matcher;

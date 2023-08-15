@@ -728,6 +728,21 @@ public class MetaInfo {
 		}
 	} // class VersionInterval
 
+  /**
+   * Represents the maven coordinates of this maven plugin. 
+   */
+  static class Coordinates {
+    final String groupId;
+    final String artifactId;
+    final String version;
+
+    Coordinates(String groupId, String artifactId, String version) {
+      this.groupId = groupId;
+      this.artifactId = artifactId;
+      this.version = version;
+    }
+  } // class Coordinates 
+
 	/**
 	 * The name of the file containing the version properties.
 	 * For each {@link Converter}, the range of possible versions is given
@@ -789,18 +804,20 @@ public class MetaInfo {
    * Returns the coordinates of this maven plugin as a properties. 
    *
    * @return
-   *   The coordinates of this plugin as properties with keys 
+   *   The coordinates of this plugin with fields 
    *   'groupId', 'artifactId', 'version'. 
    * @throws BuildFailureException
    *   TMI01 if the stream to the according properties file could not be created 
    *   TMI02 if the properties could not be read. 
    */
-  Properties getCoordinates() throws BuildFailureException {
+  Coordinates getCoordinates() throws BuildFailureException {
     // may throw TMI01
     Properties properties = getProperties(COORDINATE_PROPERTY_FILE_NAME);
 		assert "[groupId, artifactId, version]".equals(properties
 					.stringPropertyNames().toString()) : "Found unexpected properties ";
-    return properties;
+    return new Coordinates(properties.getProperty("groupId"),
+                           properties.getProperty("artifactId"),
+                           properties.getProperty("version"));
   }
 
 	// CAUTION, depends on the maven-jar-plugin and its version 
@@ -857,10 +874,10 @@ public class MetaInfo {
 			//		+ "latex-maven-plugin/" + "pom.properties";
 			this.log.info("pom properties: coordinates");
       // may throw TMI01, TMI02
-			Properties coords = getCoordinates();
-			this.log.info("groupId:    '" + coords.getProperty("groupId") + "'");
-			this.log.info("artifactId: '" + coords.getProperty("artifactId") + "'");
-			this.log.info("version:    '" + coords.getProperty("version") + "'");
+			Coordinates coords = getCoordinates();
+			this.log.info("groupId:    '" + coords.groupId + "'");
+			this.log.info("artifactId: '" + coords.artifactId + "'");
+			this.log.info("version:    '" + coords.version + "'");
 
 			//	propertyFileName = "META-INF/"
 			//	    + "maven/"

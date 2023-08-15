@@ -342,7 +342,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
           File diffRootDir =
               this.settings.getDiffDirectoryFile().getAbsoluteFile();
           File artifactBaseDir = this.settings.getOutputDirectoryFile();
-          assert targetFiles.size() == 1;
+          assert targetFiles.size() == 1
+            : "Expected one target file, found " + targetFiles + ". ";
           File pdfFileAct = targetFiles.iterator().next();
           this.log.debug(String.format("act file %s", pdfFileAct));
           File pdfFileCmp = TexFileUtils.getPdfFileDiff(pdfFileAct,
@@ -2339,7 +2340,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
           // or if some error occurs when creating or opening for writing 
           PrintStream writer = new PrintStream(outFile);
           // may throw IOException: readline. 
-          this.settings.filterRcFile(inStream, writer);
+          String version = this.metaInfo.getCoordinates().version;
+          this.settings.filterRcFile(inStream, writer, version);
         }
         // may throw IOExeption 
         inStream.close();
