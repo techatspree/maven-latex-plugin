@@ -519,7 +519,7 @@ class TexFileUtils {
     try {
       // may throw FileNotFoundException < IOExcption 
       FileReader reader = new FileReader(srcFile);
-      // BufferedReader for perfromance and to be able to read a line
+      // BufferedReader for performance and to be able to read a line
       bufferedReader = new BufferedReader(reader);
 
       // may throw IOExcption 
@@ -537,8 +537,9 @@ class TexFileUtils {
 
       // third line must be changed. 
       line = bufferedReader.readLine();
-      line = line.replace(bareFileName + epsSuffix
-          + "' (pdf, eps, ps)", bareFileName + ".pdf/eps/ps'\n");
+      line = line.replace(
+        bareFileName + epsSuffix + "' (pdf, eps, ps)",
+        bareFileName + ".pdf/eps/ps'\n");
       writer.write(line);
 
       // readLine may throw IOException
@@ -1032,7 +1033,8 @@ class TexFileUtils {
         String headline = reader.readLine();
         // may throw IOException 
         reader.close();
-        if (HEADLINE_GEN.equals(headline)) {
+        // headline is null iff the aFile is empty 
+        if (headline != null && headline.startsWith(HEADLINE_GEN)) {
           return true;
         }
       }
