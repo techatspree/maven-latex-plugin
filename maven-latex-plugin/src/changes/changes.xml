@@ -171,12 +171,7 @@ Also: meta-uml, with documentation
 	For 4.x: 
 	 - further output formats: xml from latexml, epub. 
 	   in manual: flow oriented vs page oriented. 
-	   Flow oriented: html, ... epub, ... 
-	   Page oriented: pdf, latex (dvi), office (odt, xdoc, ...)
-	   Take multipubguide.pdf into account.
-	 - Further exporters with config to access them 
-	   besides latex2ht also latexml, pandoc 
-	   Have a look at texnische komoedie, pdf checked in. 
+	   A lot is written in html.md
 	 - take pylatex into account: can there be a relation.
 	 - take pythontex into account: 
 	   maybe according support in separate release 
@@ -210,8 +205,6 @@ Also: meta-uml, with documentation
 	 For x.y: 
 	 - meta info for this software including own version 
 	   git interface 
-	 - awareness of version of converters, both expected and actual 
-	   Add also according testcases 
 	 - this software offered also as a standalone application 
 	   and as an api to integrate everywhere. 
 	 - also for documentation, meta information 
@@ -224,13 +217,7 @@ Also: meta-uml, with documentation
      An alternative: texlive and just the version of that, 
      no additional packages or versioning only of those packages. 
      This must be evaluated... maybe difficult to handle and overkill. 
-	 - include docs in jar.
-	 - redesign: Target s are creational ones.
-	   In mojos we also have creational ones and others.
-	   The method AbstractLatexMojo.getTargetSet()
-           is appropriate for creational targets only.
-	   Maybe rename Target-{}->CreationalTarget,
-	   and redesign: CreationalMojo.getTargetSet().
+	 - include docs in site.
 	 - There must be a mojo for phase validate or initialize
 	   checking the most important things:
 	 - Whether the converters mentioned are registered.
@@ -361,8 +348,9 @@ Also: meta-uml, with documentation
 		On the other hand, this behavior is not so easily understood. 
 		It looks as some files persist while others disappear quite randomly. 
 		Thus in the manual in section on document development, 
-		we need the advise to command `mvn latex:grp` if the graphics shall be needed for further development. 
-		This is the sole target without cleanup. 
+		we need the advise to command `mvn latex:grp` and `mvn latex:dvl` 
+    if the graphics shall be needed for further development. 
+		The target `grp` is the sole target without cleanup. 
 		This shall be done in particular when using vscode/latexworkshop 
 		because otherwise, the build process fails. 
 		Another option is to set in the settings <cleanUp>false</cleanUp>. 
@@ -415,7 +403,7 @@ here is a bug affecting goal odt:
 also modification of working directory with \setpythontexworkingdir is not supported. 
 -->
 
-<!-- speedup of tests: use html instead of pdf. 
+<!-- speedup of tests: use html or epub instead of pdf. 
 This may be faster because not so many reruns are necessary. -->
 <!-- speedup of creation: if -recorder switch is used, 
 rerun only if artifact is outdated. -->
@@ -426,7 +414,7 @@ rerun only if artifact is outdated. -->
 	We need a way to register a converter for a ConverterCategory. 
 	I think, we shall copy technique of javaoctave. -->
 
-	<!-- unlike othe converters, pythontex does not always update its result files. 
+	<!-- unlike other converters, pythontex does not always update its result files. 
 		Normally, there is a check that the result files changed. 
 		It must be possible to pypass that. 
 		A hack is to check the plg file. 
@@ -609,7 +597,7 @@ spellcheck, 27
 
   <!-- xelatex support; better read available options -->
 
-  <!-- fig2dev: maybe lange mp (metapost) is superior to mixed latex and pdf -->
+  <!-- fig2dev: maybe output language mp (metapost) is superior to mixed latex and pdf -->
 
   <!-- https://plantuml.com/command-line describes a command line tool, 
     which may convert puml files into latex files using tikz. 
@@ -625,6 +613,11 @@ If this technique can be used, this offers the chance to make the manual shorter
 and also to come close to single source principle as regards documentation of parameters. 
 Currently: pom, manual, apidoc, 
 whereas the techniques mentioned above all derive vital information from apidoc only.  -->
+
+<!-- evaluate pdfinfo 
+provide a mechanism to create meta data maybe structure -->
+
+
 
   <release  version="1.8"
   date="2022-04-20"
