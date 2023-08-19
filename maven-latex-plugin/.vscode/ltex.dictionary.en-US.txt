@@ -31,6 +31,7 @@ Bezier
 metapost
 MetaPost
 MetaUML
+TikZ
 TikZ-UML
 bmpsize
 TEXworks
