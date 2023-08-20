@@ -20,7 +20,7 @@ and also to support development of the \LaTeX{} sources.
 Accordingly, this chapter has Section~\ref{sec:sources}
 devoted to the form of the sources, including directory structure,
 \LaTeX-files and others, mainly graphic files included
-and a Section~\ref{sec:stableUsage} on exporting into various formats.
+and a Section~\ref{sec:outputFormats} on exporting into various formats.
 
 There is a very special usage, called development of documents,
 which means while the document is under construction.
@@ -164,7 +164,7 @@ Bibliographies in bib-files.
 This software treats them automatically. 
 
 
-\section{Exporting in various formats}\label{sec:stableUsage}
+\section{Exporting in various formats}\label{sec:outputFormats}
 
 
 After having added the configuration of the plugin to the \texttt{pom.xml},
@@ -520,7 +520,7 @@ Of course, if further software is used which creates additional files,
 like Emacs creates a folder \texttt{auto}, 
 these files cannot be removed by this maven-plugin or this ant-task.
 Note that \texttt{latex:clr}
-also removes exported files as listed in Section~\ref{sec:stableUsage}
+also removes exported files as listed in Section~\ref{sec:outputFormats}
 from the target folder. 
 
 During development of a \LaTeX-main file, 

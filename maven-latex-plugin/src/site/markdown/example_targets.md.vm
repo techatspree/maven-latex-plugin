@@ -25,5 +25,6 @@ how to specify the output formats PDF and HTML for target `cfg`.
 </project>
 ```
 
-<!-- the link is very instable -->
-For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). 
+<!-- the link is very instable. TBD: organize a better solution and switch PDF->HTML. -->
+<!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->
+For details, see [manual Section 3.2](manualLMP.pdf#sec:outputFormats). 
