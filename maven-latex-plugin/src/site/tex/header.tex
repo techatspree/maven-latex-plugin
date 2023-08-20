@@ -52,6 +52,8 @@
 % graphics 
 
 \ifpdf%
+%\usepackage{luatex85} % for accessability with luatex
+%\usepackage[tagged, highstructure]{accessibility}% compiles for xelatex only 
 \usepackage{xcolor}  % [pdftex]  
 \usepackage{graphicx}% [pdftex] 
 \usepackage[destlabel]{hyperref}% driver [hpdftex] is autodetected 
@@ -61,12 +63,10 @@
 \usepackage[dvipdfmx]{xcolor}
 \usepackage[dvipdfmx]{graphicx}
 \ifthenelse{\boolean{texFhtLoaded}}{%
-  % \usepackage[tex4ht, destlabel]{hyperref}
-\newcommand{\url}[1]{\texttt{#1}}% not active, replacement for hyperref
-\newcommand{\href}[2]{\texttt{#2}}% not active, replacement for hyperref
+  \usepackage[tex4ht, destlabel]{hyperref}
 }{%
 \ifxetex%
-\usepackage[destlabel]{hyperref}
+  \usepackage[destlabel]{hyperref}
 \else
   \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
 \fi
