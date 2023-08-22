@@ -170,6 +170,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- checked during validation -->
 		<versionMvn>3.9.2</versionMvn>
+    <versionJava>17</versionJava>
 		<versionTestPlugins>3.0.0</versionTestPlugins>
 		<versionJunit5>5.8.2</versionJunit5>
 		<!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
@@ -540,7 +541,7 @@
 							</message>
 						</requireMavenVersion>
 						<requireJavaVersion>
-							<version>17</version>
+							<version>versionJava</version>
 						</requireJavaVersion>
 						<dependencyConvergence/>
 					</rules>
@@ -838,8 +839,8 @@
 						<arg>-g</arg>
 						<arg>-Xlint:unchecked</arg>
 					</compilerArgs>
-					<source>17</source>
-					<target>17</target>
+					<source>${versionJava}</source>
+					<target>${versionJava}</target>
 				</configuration>
 			</plugin>
 
@@ -972,7 +973,7 @@
 				<configuration>
 					<breakiterator>true</breakiterator>
 					<show>private</show>
-					<source>17</source>
+					<source>${versionJava}</source>
 				</configuration>
 			</plugin>
 
