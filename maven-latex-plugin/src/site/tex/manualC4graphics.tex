@@ -139,28 +139,29 @@ may be included as is.
 \section{Inclusion of PDF files}\label{sec:figpdf}
 
 Modern \LaTeX{} implementations directly create PDF files. 
-Thus, it makes sense, to allow including graphics as PDF files 
-in \LaTeX-files. 
+Thus, it makes sense, 
+to allow including graphics as PDF files in \LaTeX-files. 
 This is done in PDF mode 
 by the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx}. 
 In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}-format 
 which is still used to create \gls{html}-output, 
-this is not supported by the default driver, 
-Instead it shall be used the driver \texttt{dvipdfmx}. 
+this is not supported by the default driver. 
+Instead, it shall be used the driver \texttt{dvipdfmx}. 
 To obtain a \LaTeX-file which works both for creating PDF and HTML, 
 insert in the header of the \LaTeX{} main file
 given by Listing~\ref{lst:header}. 
 %
 %\lstset{language=tex, basicstyle=\small}
 % FIXME\@: nag complains for htlatex 
-\lstinputlisting[firstline=20, lastline=22,
+\lstinputlisting[linerange={54-58,62-64,76},
 language=TeX, basicstyle=\small,
 float, captionpos=b, label={lst:header}, 
 caption={From the header of the tex-source of this manual}]%
 {header.tex}
 
+
 An alternative, which we do not use 
-is replacing the pdf by an \gls{eps} via configuration file \texttt{myxhtml.cfg} 
+is replacing the \gls{pdf} by an \gls{eps} via configuration file \texttt{myxhtml.cfg} 
 which is given by Listing~\ref{lst:xhtml}. 
 %
 %\lstset{language=tex, basicstyle=\scriptsize}

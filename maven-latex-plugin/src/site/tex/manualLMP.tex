@@ -8,72 +8,73 @@
 \newif\iflatextortf% false for latex but set true for latex2rtf internally 
 
 \input{header.tex}
+\input{headerManual.tex}
 \input{buildParams.tex}
 
 \ifpdf%
-\ifLuaTeX%
-% for lualatex
-\pdfvariable minorversion=7% chktex 1
-% omit CreationDate and ModDate keys.
-\pdfvariable suppressoptionalinfo 767% chktex 1
-% no adding to the trailer dictionary.
-\pdfvariable trailerid{}% chktex 1
-\pdfvariable suppressoptionalinfo -1% chktex 1
-\else
-\ifXeTeX%
-% for xelatex
-\special{pdf:minorversion 7}
-% TBD: find a way to express pdfinfoomitdate: necessary? 
-\special{pdf:trailerid []}
-\else
-\ifPDFTeX%
-\pdfminorversion=7         % for pdflatex
-% omit CreationDate and ModDate keys.
-% not before pdfTeX 3.14159265-2.6-1.40.17
-\pdfinfoomitdate=1                   % for pdflatex
-% no adding to the trailer dictionary.
-%\pdftrailer=0                        % for pdflatex
-\pdftrailerid{}                       % for pdflatex
-\pdfsuppressptexinfo=-1               % for pdflatex
-\else
-% Here, the tex processor is unknown. 
-\fi%pdftex
-\fi%xetex
-\fi%luatex
+  \ifLuaTeX%
+    % for lualatex
+    \pdfvariable minorversion=7% chktex 1
+    % omit CreationDate and ModDate keys.
+    \pdfvariable suppressoptionalinfo 767% chktex 1
+    % no adding to the trailer dictionary.
+    \pdfvariable trailerid{}% chktex 1
+    \pdfvariable suppressoptionalinfo -1% chktex 1
+  \else
+    \ifXeTeX%
+      % for xelatex
+      \special{pdf:minorversion 7}
+      % TBD: find a way to express pdfinfoomitdate: necessary? 
+      \special{pdf:trailerid []}
+    \else
+      \ifPDFTeX%
+        \pdfminorversion=7         % for pdflatex
+        % omit CreationDate and ModDate keys.
+        % not before pdfTeX 3.14159265-2.6-1.40.17
+        \pdfinfoomitdate=1                   % for pdflatex
+        % no adding to the trailer dictionary.
+        %\pdftrailer=0                        % for pdflatex
+        \pdftrailerid{}                       % for pdflatex
+        \pdfsuppressptexinfo=-1               % for pdflatex
+      \else
+        % Here, the tex processor is unknown. 
+      \fi%pdftex
+    \fi%xetex
+  \fi%luatex
 
 
 
-% 1 -> PTEX.Fullbanner
-% 2 -> PTEX.FileName
-% 4 -> PTEX.PageNumber
-% 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
-% The following is to control metadata: 
-% - erase docdata and set the ones needed thereafter
-% - erase trailer to make repreoducible 
-%   CAUTION: This is not recommended as the docs are no longer individual. 
+  % 1 -> PTEX.Fullbanner
+  % 2 -> PTEX.FileName
+  % 4 -> PTEX.PageNumber
+  % 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
+  % The following is to control metadata: 
+  % - erase docdata and set the ones needed thereafter
+  % - erase trailer to make repreoducible 
+  %   CAUTION: This is not recommended as the docs are no longer individual. 
 
 
-%\pdfinfo{
-%   /Author (Ernst Reissner)
-%   /Title  (Maven plugin and ant-task to process latex)
-%   /CreationDate (unknown)
-%   /ModDate (unknown)
-%   /Subject (latex plugin for maven and latex task for ant)
-%   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
-%}
+  %\pdfinfo{
+  %   /Author (Ernst Reissner)
+  %   /Title  (Maven plugin and ant-task to process latex)
+  %   /CreationDate (unknown)
+  %   /ModDate (unknown)
+  %   /Subject (latex plugin for maven and latex task for ant)
+  %   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
+  %}
 
-\hypersetup{
-  pdfinfo={
-    Author      ={Ernst Reissner},
-    Title       ={Maven plugin and ant-task to process latex},
-    CreationDate={unknown},
-    ModDate     ={unknown},
-    Producer    ={unknown},
-    Subject     ={latex plugin for maven and latex task for ant},
-    Keywords    ={svg;png;metapost;PDF;LaTeX;maven;ant}
+  \hypersetup{
+    pdfinfo={
+      Author      ={Ernst Reissner},
+      Title       ={Maven plugin and ant-task to process latex},
+      CreationDate={unknown},
+      ModDate     ={unknown},
+      Producer    ={unknown},
+      Subject     ={latex plugin for maven and latex task for ant},
+      Keywords    ={svg;png;metapost;PDF;LaTeX;maven;ant}
+    }
   }
-}
-% TBD: check of resulting pdf with exif unveils a warning duplicate author 
+  % TBD: check of resulting pdf with exif unveils a warning duplicate author 
 \else%ifpdf
 \fi%ifpdf
 

@@ -1,5 +1,5 @@
-% !TEX root = manualLMP.tex
-\listfiles
+
+%\listfiles
 \synctex=1
 
 \usepackage{etoolbox}%for buildParams to check empty
@@ -12,10 +12,10 @@
 \usepackage{ifthen}
 
 \iftutex%
-\usepackage{fontspec}
+  \usepackage{fontspec}
 \else
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
 \fi
 %\usepackage{textalpha}
 
@@ -25,18 +25,18 @@
 % only with pdflatex, warnings for xelatex and for lualatex 
 % ifxetex, ifluatex, ifpdf
 \ifpdf%
-%\usepackage{mlmodern}
+  %\usepackage{mlmodern}
 \else
-\makeatletter
-\@ifpackageloaded{tex4ht}{%
-  \setboolean{texFhtLoaded}{true}
-}{%
-}% tex4ht not loaded 
-\makeatother
+  \makeatletter
+  \@ifpackageloaded{tex4ht}{%
+    \setboolean{texFhtLoaded}{true}
+  }{%
+  }% tex4ht not loaded 
+  \makeatother
 \fi
 
 
-\usepackage[a4paper, showframe]{geometry}% option , showframe
+\usepackage[a4paper]{geometry}% option , showframe
 %\usepackage{showframe} as an alternative 
 \usepackage{microtype}
 \usepackage{textcomp}
@@ -52,28 +52,28 @@
 % graphics 
 
 \ifpdf%
-%\usepackage{luatex85} % for accessability with luatex
-%\usepackage[tagged, highstructure]{accessibility}% compiles for xelatex only 
-\usepackage{xcolor}  % [pdftex]  
-\usepackage{graphicx}% [pdftex] 
-\usepackage[destlabel]{hyperref}% driver [hpdftex] is autodetected 
-\usepackage{transparent}% sometimes comes in with svg import 
-% warning transparent package: loading aborted if not pdf-mode 
+  %\usepackage{luatex85} % for accessability with luatex
+  %\usepackage[tagged, highstructure]{accessibility}% compiles for xelatex only 
+  \usepackage{xcolor}  % [pdftex]  
+  \usepackage{graphicx}% [pdftex] 
+  \usepackage[destlabel]{hyperref}% driver [hpdftex] is autodetected 
+  \usepackage{transparent}% sometimes comes in with svg import 
+  % warning transparent package: loading aborted if not pdf-mode 
 \else
-\usepackage[dvipdfmx]{xcolor}
-\usepackage[dvipdfmx]{graphicx}
-\ifthenelse{\boolean{texFhtLoaded}}{%
-  \usepackage[tex4ht, destlabel]{hyperref}
-}{%
-\ifxetex%
-  \usepackage[destlabel]{hyperref}
-\else
-  \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
-\fi
-}% tex4ht not loaded 
+  \usepackage[dvipdfmx]{xcolor}
+  \usepackage[dvipdfmx]{graphicx}
+  \ifthenelse{\boolean{texFhtLoaded}}{%
+    \usepackage[tex4ht, destlabel]{hyperref}
+  }{%
+    \ifxetex%
+      \usepackage[destlabel]{hyperref}
+    \else
+      \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
+    \fi
+  }% tex4ht not loaded 
 
-%\usepackage{bmpsize}% not for xelatex 
-\fi
+  %\usepackage{bmpsize}% not for xelatex 
+\fi%ifpdf
 
 \ifluatex%
   \usepackage{luamplib}
@@ -125,7 +125,7 @@
 
 % index and glossary
 \ifthenelse{\boolean{texFhtLoaded}}{%
-\newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
+  \newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
 }{
   \usepackage{splitidx}%[split]
 %  \usepackage{makeidx}
@@ -145,16 +145,6 @@
 %\makeglossary% for rerunfilecheck 
 
 %\usepackage{etexcmds} %still later 
-
-\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
-
-\newcommand{\pdflatex}{\texttt{pdflatex}}
-\newcommand{\lualatex}{\texttt{lualatex}}
-\newcommand{\xelatex}{\texttt{xelatex}}
-
-
-\newcommand{\texlive}{\TeX~Live}
-\newcommand{\miktex}{MiKTeX}
 
 
 
