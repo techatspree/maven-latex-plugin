@@ -5,17 +5,17 @@
 % TBD: in the long run: plugin, task and standalone, or as a dependency
 This software offers both, a maven plugin and an according ant task,
 but the emphasis is on the maven plugin.
-Thus, all sections of this chapter are either general
-or apply to the maven plugin.
-Only Section~\ref{sec:usageAntTask} specifically refer to the ant task. 
+Thus, the sections of this chapter are either general
+or apply to the maven plugin;
+only Section~\ref{sec:usageAntTask} specifically refers to the ant task. 
 Usage presupposes installation as described in Chapter~\ref{chap:install}
 including settings in \texttt{pom.xml} 
 as described in Section~\ref{sec:xmlPom} for the maven plugin 
 and the settings in \texttt{build.xml} 
 as described in Section~\ref{sec:xmlBuild} for the ant task.
 
-This plugin may be used both if the \LaTeX-sources are finished 
-to create the output described by them 
+This plugin may be used both if the \LaTeX-sources are ready 
+to create 'final' output from them 
 and also to support development of the \LaTeX{} sources. 
 Accordingly, this chapter has Section~\ref{sec:sources}
 devoted to the form of the sources, including directory structure,
@@ -38,9 +38,9 @@ or when development finished at a stage.
 \section{The source files}\label{sec:sources}
 
 The \LaTeX-files and also files included via \cmd{input}{} 
-are in the \emph{TEX source directory}, 
+are searched in the \emph{TEX source directory} and subdirectories recursively. 
 \index{TEX source directory}% chktex 24
-which is by default \texttt{./src/site/tex}, 
+By default, this is \texttt{./src/site/tex}, 
 where ``\texttt{.}'' is the \emph{base directory} of this maven-project. 
 \index{base directory}% chktex 24
 The \LaTeX-files to be compiled top level, 
@@ -49,17 +49,17 @@ are called \emph{\LaTeX{} main files}.
 As an example, 
 in the \emph{TEX source directory} of this software, 
 \texttt{manualLMP.tex} is a \LaTeX{} main file, 
-whereas the file \texttt{header.tex} is not although also a \LaTeX-file. 
+whereas the file \texttt{header.tex} is not, although also a \LaTeX-file. 
 % identification of the latex main file?
 \LaTeX{} main files are detected automatically. 
 \index{latex main file}% chktex 24
 
-The included files may be again \LaTeX-files, but also bibliography files, 
+The included files may be again be \LaTeX-files, but also bibliography files, 
 listings included by package \pkg{listings}, verbatim text included with \pkg{verbatim} 
-and maybe soon even code files to be executed via the package \pkg{pythontex}. 
+and may be even code files to be executed via the package \pkg{pythontex}. 
 \index{pythontex}% chktex 24
 The great bulk of input files however, are graphic files in various formats. 
-As regards the way their files are included in \LaTeX-files, 
+As regards the way the according files are included in \LaTeX-files, 
 there are the following kinds of graphic formats, 
 all included in the TEX source directory. 
 %
@@ -90,24 +90,24 @@ We have chosen
 %
 \begin{itemize}
 \item
-the \gls{fig}-format described in~\cite{XFigF}
-because of its simplicity, 
+  the \gls{fig}-format described in~\cite{XFigF}
+  because of its simplicity, 
 \item
-the gnuplot format, described in~\cite{GnuPlot}, 
-because it allows computation of function plots, 
+  the gnuplot format, described in~\cite{GnuPlot}, 
+  because it allows computation of function plots, 
 \item
-  scalable vector graphics svg format specified in~\cite{Svg11} 
+  scalable vector graphics \gls{svg}-format specified in~\cite{Svg11}\footnote%
+  { As the specification is hard to digest,
+  we refer to the tutorial~\cite{SvgTut}. } 
   as it is important for construction and the counterpart of pixel oriented
-  formats.
-  As the specification is hard to digest,
-  we refer to the tutorial~\cite{SvgTut}. 
+  formats,
 \item
   likewise, metapost (\gls{mp}-format),
   described in~\cite{MPost} because it is native to \LaTeX{} 
-  and quite versatile. 
+  and quite versatile 
 \end{itemize}
 \item\label{it:transImp}
-the fourth kind of graphics formats 
+The fourth kind of graphics formats 
 has to be transformed into one of the kinds one or two 
 but unlike in type three, this is not done explicitly 
 by an external tool but by a latex-package during the \LaTeX-run. 
@@ -131,14 +131,14 @@ In the long run it seems a good idea, to extend \pkg{pythontex}
 to read in code files, e.g.~in python directly. 
 \end{enumerate}
 
-The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
-are assumed to be in one single folder. 
-If one file is included by two different main files, 
-a link shall be used.
+% The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
+% are assumed to be in one single folder. 
+% If one file is included by two different main files, 
+% a link shall be used.
 %TBC: True???
 
-Note that unlike former version, 
-the current version of this software does not create a working directory 
+Note that unlike former versions of this software, 
+the current version does not create a working directory 
 by cloning the TEX source directory. 
 Instead, it operates directly on the TEX source directory 
 also creating intermediate files.
@@ -164,22 +164,23 @@ Bibliographies in bib-files.
 This software treats them automatically. 
 
 
-\section{Exporting in various formats}\label{sec:outputFormats}
+\section{Checking and Exporting in various formats}\label{sec:outputFormats}
 
 
 After having added the configuration of the plugin to the \texttt{pom.xml},
-minimally the one given in Section~\ref{sec:xmlPom},
+minimally the one given in Listing~\ref{lst:coords},
 it can be used directly invoking maven through 
 \texttt{mvn latex:cfg}. 
 Here \texttt{latex} is the (short) name of the plugin 
 and \texttt{cfg} is the goal. 
 It can also be interpreted as \texttt{mvn $<$source$>$:$<$target$>$}: 
-The source files are in \texttt{latex}-format and the target-formats 
+The source files are in \texttt{latex}-format and the target 
 are read from the \emph{configuration} in the pom 
-(\emph{configuration} is what \texttt{cfg} stands for). 
+(\emph{configuration} is what \texttt{cfg} stands for) 
+which is illustrated in Listing~\ref{lst:coordsConfig}. 
 % TBD: clarify what about the ant task 
 
-By default, the target formats are \texttt{pdf} and \texttt{html}. 
+By default, the targets are \texttt{pdf} and \texttt{html}. 
 The following Listing~\ref{lst:targetsAll} shows a configuration 
 with the full range of output formats including in addition 
 the OpenOffice document format \texttt{odt}, 
@@ -824,6 +825,9 @@ This ensures, that the converters are checked for correct version
 before being used. 
 Note that by default, \texttt{mvn latex:vrs} displays complete version info,
 whereas \texttt{mvn validate} only displays warnings if appropriate. 
+This is, because in the first case the plugin runs with the default \texttt{versionsWarnOnly=true} 
+whereas in the second case, is configured with \texttt{versionsWarnOnly=false} 
+as in Listing~\ref{lst:executions}. 
 
 
 
