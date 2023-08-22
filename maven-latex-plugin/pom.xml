@@ -26,7 +26,7 @@
 	<name>LaTeX Maven Plugin</name>
 	<description>
     Automatically create documents 
-    in formats PDF, XDOC, ODT, TXT, HTML and others 
+    in formats PDF, DVI, XDV, (X)DOC, ODT, TXT, (X)HTML and others 
     from LaTeX sources during the Maven site phase
     allowing typical graphic formats native 
     to tex (like eps and metapost) or to the package graphicx.
