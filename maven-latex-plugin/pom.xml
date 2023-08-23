@@ -176,7 +176,7 @@
 		<!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
 		<versionJunit4>4.13.2</versionJunit4>
 		<versionItf>0.11.0</versionItf>
-		<versionAnt>1.10.13</versionAnt>
+		<versionAnt>1.10.14</versionAnt>
 		<versionSlf4j>2.0.7</versionSlf4j>
 		<versionStripped>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}</versionStripped>
 		<urlSite>https://www.simuline.eu/LatexMavenPlugin/</urlSite>
@@ -356,7 +356,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.4.0</version>
+			<version>5.5.0</version>
 			<!--scope>test</scope-->
 		</dependency>
 
