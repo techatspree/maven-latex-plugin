@@ -201,16 +201,15 @@ public class Settings {
       new File(this.baseDirectory, this.diffDirectory);
 
   /**
-   * A comma separated list of targets 
-   * returned as a set by {@link #getTargetSet()}. 
+   * A comma separated list of targets without blanks 
+   * returned as a set by {@link #getTargets()}. 
    * For allowed values see {@link Target}. 
-   * Note that if {@link #latex2pdfCommand} is set to <code>xelatex</code>, 
-   * the format 'dvi' and what is based on it are not supported. 
-   * The default value is <code>pdf, html</code>. 
+   * The default value is <code>chk,pdf,html</code>. 
    */
   @RuntimeParameter
-  @Parameter(name = "targets", defaultValue = "pdf, html")
-  private String targets = "pdf, html";
+  @Parameter(name = "targets", defaultValue = "chk,pdf,html")
+  private SortedSet<Target> targets;
+  // TBD: clarify whether it isnt better to specify the init valu by annotation
 
   /**
    * A comma separated list of excluded {@link Converter}s 
@@ -1895,33 +1894,9 @@ public class Settings {
    *    TSS04 if the target set is not a subset
    *    of the set given by {@link Target}.
    */
-  public SortedSet<Target> getTargetSet() throws BuildFailureException {
-    // TreeSet is sorted. maybe this determines ordering of targets. 
-    SortedSet<Target> targetSet = new TreeSet<Target>();
-    if (this.targets.isEmpty()) {
-      return targetSet;
-    }
-    String[] targetSeq = this.targets.split(" *, *");
-    Target target;
-    for (int idx = 0; idx < targetSeq.length; idx++) {
-      try {
-        assert targetSeq[idx] != null;
-        target = Target.valueOf(targetSeq[idx]);
-      } catch (IllegalArgumentException ae) {
-        assert Target.class.isEnum();
-        // Here, targetSeq[idx] is no name in Target 
-        // TBD: find substring(1, and construct separate util method. 
-        String setOfAllowedTargets = Arrays.asList(Target.values()).toString();
-        setOfAllowedTargets =
-            setOfAllowedTargets.substring(1, setOfAllowedTargets.length() - 1);
-        // TBD: reformulate all 'but is not': the target set is expected to be a subset... but is ... 
-        throw new BuildFailureException("TSS04: The target set '" + this.targets
-            + "' should be a subset of the registered targets '"
-            + setOfAllowedTargets + "', but is not. ");
-      }
-      targetSet.add(target);
-    }
-    return targetSet;
+  // TBD: ordering must be clarified 
+  public SortedSet<Target> getTargets() throws BuildFailureException {
+    return targets;
   }
 
   // TBD: maybe better: store allowed converters. 
@@ -2447,8 +2422,9 @@ public class Settings {
     this.diffDirectoryFile = new File(this.baseDirectory, this.diffDirectory);
   }
 
-  public void setTargets(String targets) {
-    this.targets = targets.trim();
+  // TBD: check which of these setters are really necessary 
+  public void setTargets(SortedSet<Target> targets) {
+    this.targets = targets;
   }
 
   public void setConvertersExcluded(String convertersExcluded) {
