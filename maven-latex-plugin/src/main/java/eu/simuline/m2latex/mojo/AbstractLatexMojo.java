@@ -66,22 +66,6 @@ abstract class AbstractLatexMojo extends AbstractMojo
 
 
   /**
-   * Indicates whether the {@link VersionMojo} displays warnings only; 
-   * else also creates infos. 
-   * Infos refer to the version of this plugin, 
-   * but also on the versions of the converters found 
-   * and on the converters excluded. 
-   * Warnings are emitted e.g. if a version does not fit the expectations. 
-   * This defaults to <code>false</code> displaying also info. 
-   * The latter is appropriate for using in command line 
-   * <code>mvn latex:vrs</code>, whereas in builds by default 
-   * the pom overwrites this to have output only 
-   * in case something goes wrong. 
-   */
-  @Parameter(name = "versionsWarnOnly", defaultValue = "false")
-  private boolean versionsWarnOnly;
-
-  /**
    * Comprises all parameters for executing this maven plugin. 
    * If not set in the pom prior to execution, 
    * is set in {@link #initialize()}. 
@@ -95,29 +79,6 @@ abstract class AbstractLatexMojo extends AbstractMojo
   // set by {@link #initialize()}. 
   protected LatexProcessor latexProcessor;
 
-
-  /**
-   * Returns whether the {@link VersionMojo} displays warnings only; 
-   * else also creates infos. 
-   *
-   * @return
-   *    whether the {@link VersionMojo} displays warnings only; 
-   *    lse also creates infos. 
-   */
-  public boolean getVersionsWarnOnly() {
-    return this.versionsWarnOnly;
-  }
-
-  /**
-   * Sets whether {@link VersionMojo} displays warnings only; 
-   * else also creates infos. 
-   *
-   * @param versionsWarnOnly
-   *    whether the {@link VersionMojo} shall display warnings only. 
-   */
-  public void setVersionsWarnOnly(boolean versionsWarnOnly) {
-    this.versionsWarnOnly = versionsWarnOnly;
-  }
 
   // api-docs inherited from ParameterAdapter 
   public final void initialize() {

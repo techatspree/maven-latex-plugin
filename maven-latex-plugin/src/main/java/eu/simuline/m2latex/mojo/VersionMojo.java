@@ -21,6 +21,7 @@ package eu.simuline.m2latex.mojo;
 import eu.simuline.m2latex.core.BuildFailureException;
 
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 
 import org.apache.maven.plugin.MojoFailureException;
@@ -34,6 +35,45 @@ import org.apache.maven.plugin.MojoFailureException;
 // TBD: maybe verify
 // in fact, Metainfo can give more info than just versioning 
 public class VersionMojo extends AbstractLatexMojo {
+
+  /**
+   * Indicates whether the {@link VersionMojo} displays warnings only; 
+   * else also creates infos. 
+   * Infos refer to the version of this plugin, 
+   * but also on the versions of the converters found 
+   * and on the converters excluded. 
+   * Warnings are emitted e.g. if a version does not fit the expectations. 
+   * This defaults to <code>false</code> displaying also info. 
+   * The latter is appropriate for using in command line 
+   * <code>mvn latex:vrs</code>, whereas in builds by default 
+   * the pom overwrites this to have output only 
+   * in case something goes wrong. 
+   */
+  @Parameter(name = "versionsWarnOnly", defaultValue = "false")
+  private boolean versionsWarnOnly;
+
+  /**
+   * Returns whether the {@link VersionMojo} displays warnings only; 
+   * else also creates infos. 
+   *
+   * @return
+   *    whether the {@link VersionMojo} displays warnings only; 
+   *    lse also creates infos. 
+   */
+  public boolean getVersionsWarnOnly() {
+    return this.versionsWarnOnly;
+  }
+
+  /**
+   * Sets whether {@link VersionMojo} displays warnings only; 
+   * else also creates infos. 
+   *
+   * @param versionsWarnOnly
+   *    whether the {@link VersionMojo} shall display warnings only. 
+   */
+  public void setVersionsWarnOnly(boolean versionsWarnOnly) {
+    this.versionsWarnOnly = versionsWarnOnly;
+  }
 
   /**
    * Prints meta information, mainly version information 
