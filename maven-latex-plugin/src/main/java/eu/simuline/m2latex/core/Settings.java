@@ -3047,8 +3047,8 @@ public class Settings {
    * In contrast to the resources plugin, 
    * the names refer to settings not to parameters, e.g. given in the pom. 
    * <p>
-   * This is applied to record files, 
-   * currently <code>.latexmkrc</code> and <code>.chktexrc</code>. 
+   * This is applied e.g. to record files, 
+   * <code>.latexmkrc</code> and <code>.chktexrc</code>. 
    * That way, <code>latexmk</code> and <code>chktex</code> 
    * run with the according configuration 
    * are aligned with the current settings of this plugin. 
@@ -3062,7 +3062,10 @@ public class Settings {
    *   given by the parameter {@link #texSrcDirectory} 
    *   with the same name as the resource defining <code>inStream</code>. 
    * @param version
-   *   the version of this software.
+   *   the version of this softwaregoing into the headline.
+   * @param inj
+   *   The injection which determines the comment indentifier 
+   *   and whether there is a hashbanb. 
    * @throws IOException
    *   May occur if reading a line but not if writing a line. 
    */
@@ -3077,14 +3080,22 @@ public class Settings {
     Pattern pattern = Pattern.compile("\\$\\{(\\w+)\\}");
     Map<String, String> props = this.getProperties();
 
+    String strLine;
+    if (inj.hasShebang()) {
+      strLine = bufReader.readLine();
+      // this is because strLine is the shebang line. 
+      assert strLine != null;
+      // write shebang line as is 
+      writer.println(strLine);
+    }
     // the headline shows that the file is generated 
     // and may thus be overwritten and erased. 
-    // throws IOExeption if an IO error occurs
-    writer.println(inj.commentStr() + TexFileUtils.HEADLINE_GEN+version);
+    // throws IOExeption if an IO error occurs 
+    writer.println(inj.commentStr() + TexFileUtils.HEADLINE_GEN + version);
 
     // Read File Line By Line
     Matcher matcher;
-    String strLine;
+
     // throws IOExeption if an IO error occurs
     while ((strLine = bufReader.readLine()) != null) {
       // filter until no variable in strLine found 

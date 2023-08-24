@@ -1004,7 +1004,8 @@ class TexFileUtils {
   // and since this fits layered architecture, we decided to put it here. 
   /**
    * Returns whether the given file is created by this software. 
-   * This is assumed if the first line is {@link #HEADLINE_GEN}. 
+   * This is assumed if the comment character followed by {@link #HEADLINE_GEN} 
+   * is the first line if no shebang is expected else the first line. 
    * It is assumed that the file exists. 
    * 
    * Warnings: 
@@ -1016,7 +1017,7 @@ class TexFileUtils {
    *   the file to be considered. 
    * @param inj
    *   the injection for which the file is created. 
-   *   What is used is merely the comment character. 
+   *   What is used is merely the comment character and whether there is a shebang line. 
    * @return
    *   whether the first line of the given file is proved to be is {@link #HEADLINE_GEN}. 
    *   If and only if false, an warning is emitted. 
@@ -1035,6 +1036,9 @@ class TexFileUtils {
         // TBD: treat IOException better 
         // may throw IOException if an IO error occurs 
         String headline = reader.readLine();
+        if (inj.hasShebang()) {
+          headline = reader.readLine();
+        }
         // may throw IOException 
         reader.close();
         // headline is null iff the aFile is empty 
