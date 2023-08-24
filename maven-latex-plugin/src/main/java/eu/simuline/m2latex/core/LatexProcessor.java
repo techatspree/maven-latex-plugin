@@ -2330,7 +2330,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
       try {
         // isCreatedByMyself may emit warnings WFU10, WFU11 
-        if (!outFile.exists() || this.fileUtils.isCreatedByMyself(outFile)) {
+        if (!outFile.exists() || this.fileUtils.isCreatedByMyself(outFile, inj)) {
           // Here, outFile does not exist or is a regular file. 
 
           // may throw FileNotFoundException and so IOException: 
@@ -2340,7 +2340,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
           PrintStream writer = new PrintStream(outFile);
           // may throw IOException: readline. 
           String version = this.metaInfo.getCoordinates().version;
-          this.settings.filterRcFile(inStream, writer, version);
+          this.settings.filterInjection(inStream, writer, version, inj);
         }
         // may throw IOExeption 
         inStream.close();
@@ -2367,7 +2367,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     for (Injection inj : Injection.values()) {
       File outFile = this.settings.rcResourceToFile(inj.getFileName());
         // isCreatedByMyself may emit warnings WFU10, WFU11 
-      if (outFile.exists() && this.fileUtils.isCreatedByMyself(outFile)) {
+      if (outFile.exists() && this.fileUtils.isCreatedByMyself(outFile, inj)) {
         // could emit EFU05
         this.fileUtils.deleteOrError(outFile, false);
       }

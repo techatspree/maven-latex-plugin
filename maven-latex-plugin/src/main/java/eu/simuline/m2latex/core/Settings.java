@@ -3066,9 +3066,10 @@ public class Settings {
    * @throws IOException
    *   May occur if reading a line but not if writing a line. 
    */
-  public void filterRcFile(InputStream inStream,
+  public void filterInjection(InputStream inStream,
                            PrintStream writer,
-                           String version)
+                           String version,
+                           Injection inj)
       throws IOException {//
     BufferedReader bufReader =
         new BufferedReader(new InputStreamReader(inStream));
@@ -3079,7 +3080,7 @@ public class Settings {
     // the headline shows that the file is generated 
     // and may thus be overwritten and erased. 
     // throws IOExeption if an IO error occurs
-    writer.println(TexFileUtils.HEADLINE_GEN+version);
+    writer.println(inj.commentStr() + TexFileUtils.HEADLINE_GEN+version);
 
     // Read File Line By Line
     Matcher matcher;

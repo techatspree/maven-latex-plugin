@@ -987,16 +987,17 @@ class TexFileUtils {
   }
 
 
-    /**
-   * The headline of generated config files. 
-   * Used for .latexmkrc and for .chktex. 
+  /**
+   * The part of the headline of generated files for injections 
+   * after the comment symbol. 
+   * Used e.g. for .latexmkrc and for .chktex. 
    * This headline signifies, 
    * that the file was created by this software. 
    * As a consequence, 
    * it may be deleted or overwritten by this software. 
    * Else this is not done. 
    */
-  static final String HEADLINE_GEN = "# rcfile written by latex plugin ";
+  static final String HEADLINE_GEN = " injection file written by latex plugin ";
 
   // Could be in LatexProcessor or here in TexFileUtils. 
   // Since it does logging and LatexProcessor does none so far 
@@ -1013,11 +1014,14 @@ class TexFileUtils {
    *
    * @param aFile
    *   the file to be considered. 
+   * @param inj
+   *   the injection for which the file is created. 
+   *   What is used is merely the comment character. 
    * @return
    *   whether the first line of the given file is proved to be is {@link #HEADLINE_GEN}. 
    *   If and only if false, an warning is emitted. 
    */
-  boolean isCreatedByMyself(File aFile) {
+  boolean isCreatedByMyself(File aFile, Injection inj) {
     assert aFile.exists() : "File " + aFile + " expected to exist. ";
     // to be checked whether it shall be overwritten 
     try {
@@ -1034,7 +1038,7 @@ class TexFileUtils {
         // may throw IOException 
         reader.close();
         // headline is null iff the aFile is empty 
-        if (headline != null && headline.startsWith(HEADLINE_GEN)) {
+        if (headline != null && headline.startsWith(inj.commentStr() + HEADLINE_GEN)) {
           return true;
         }
       }
