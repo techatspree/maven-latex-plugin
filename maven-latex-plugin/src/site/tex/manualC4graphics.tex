@@ -156,7 +156,7 @@ given by Listing~\ref{lst:header}.
 \lstinputlisting[linerange={54-58,62-64,76},
 language=TeX, basicstyle=\small,
 float, captionpos=b, label={lst:header}, 
-caption={From the header of the tex-source of this manual}]%
+caption={From the header of the TEX-source of this manual}]%
 {header.tex}
 
 
@@ -765,7 +765,10 @@ from the main document to the proper figure.
 
 With \lualatex{} this can be reached for MetaPost also using package \pkg{luamplib} 
 %
-\lstinputlisting[language=TeX, basicstyle=\scriptsize, linerange={78-82}]{header.tex}
+\lstinputlisting[language=TeX, basicstyle=\scriptsize, linerange={78-82},
+float, captionpos=b, label={lst:luamplib},
+caption={Package \texttt{luamplib} and how to use it}]
+{header.tex}
 
 The package itself provides an environment \texttt{mplibcode}. 
 Essentially, \lualatex{} interprets all code 
