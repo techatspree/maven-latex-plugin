@@ -37,7 +37,7 @@ import org.apache.maven.plugin.MojoFailureException;
 public class VersionMojo extends AbstractLatexMojo {
 
   /**
-   * Indicates whether the {@link VersionMojo} displays warnings only; 
+   * Indicates whether the goal <code>vrs</code> displays warnings only; 
    * else also creates infos. 
    * Infos refer to the version of this plugin, 
    * but also on the versions of the converters found 
