@@ -1026,7 +1026,7 @@
 						<!--chkDiff>true</chkDiff-->
 						<!--targets>dvi</targets-->
 						<!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
-						<targets>chk, pdf, html</targets>
+						<!--targets>chk,pdf,html</targets-->
 						<mainFilesIncluded>manualLMP</mainFilesIncluded>
 						<mainFilesExcluded>test</mainFilesExcluded>
 						<pythontexCommand>pythontexW:pythontex</pythontexCommand>
