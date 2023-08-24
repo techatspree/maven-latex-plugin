@@ -5,7 +5,7 @@ package eu.simuline.m2latex.core;
 /**
  * Represents a file to be injected in goal <code>inj</code>. 
  * Injection means that it is a resource of this software 
- * but can be inserted (injected) at {@link Settings#texSourceDirectory}. 
+ * but can be inserted (injected) at {@link Settings#texSrcDirectory}. 
  * It is not injected if there is already a file with this name 
  * and it cannot be ensured that it is this software which wrote it. 
  * The mechanism to find out whether this is true is: reading the headline. 
@@ -98,7 +98,7 @@ public enum Injection {
    * Returns whether this file must be filtered before being injected. 
    * @return
    *   whether this file must be filtered before being injected. 
-   *   This is <code>false</code>, except for {@link latexmkrc#doFilter()}. 
+   *   This is <code>false</code>, except for {@link Injection#latexmkrc}. 
    */
   boolean doFilter() {
     return false;

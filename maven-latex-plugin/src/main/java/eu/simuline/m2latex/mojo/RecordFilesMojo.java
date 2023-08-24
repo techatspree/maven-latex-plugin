@@ -19,6 +19,7 @@
 package eu.simuline.m2latex.mojo;
 
 import eu.simuline.m2latex.core.BuildFailureException;
+import eu.simuline.m2latex.core.Settings;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -39,7 +40,7 @@ public class RecordFilesMojo extends AbstractLatexMojo {
   /**
    * Creates rc file <code>.latexmkrc</code> for latexmk 
    * and <code>.chktexrc</code> for chktex 
-   * and moves to base directory of tex sources {@link Settings#texSourceDirectory}. 
+   * and moves to base directory of tex sources {@link Settings#texSrcDirectory}. 
    *
    * @throws MojoFailureException
    *    <ul>

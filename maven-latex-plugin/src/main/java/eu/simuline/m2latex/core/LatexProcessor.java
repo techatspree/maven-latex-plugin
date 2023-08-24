@@ -2295,7 +2295,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * <li> The sources are loaded as a resource by the classloader 
    * by name <code>.latexmkrc</code> and <code>.chktexrc</code>, respectively. 
    * They are a kind of templates containing parameter names 
-   * and the target is a file in the folder given by {@link Settings#getTexSrcDirectory()}. 
+   * and the target is a file in the folder given by {@link Settings#getTexSrcDirectoryFile()}. 
    * This file contains the values of the parameters, finally. 
    * </ul>
    * 
@@ -2352,7 +2352,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
   /**
    * Deletes <code>.latexmkrc</code> and <code>.chktexrc</code> 
-   * in {@link Settings#getTexSrcDirectory()} if written by this software if possible. 
+   * in {@link Settings#getTexSrcDirectoryFile()} if written by this software if possible. 
    * 
    * WFU10, WFU11: if a config file is not written by this software or it is not clear or the reader cannot close. 
    * EFU05: if the config file shall be deleted but this coes not work. 
