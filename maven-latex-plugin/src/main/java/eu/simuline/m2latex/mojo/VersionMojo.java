@@ -53,29 +53,6 @@ public class VersionMojo extends AbstractLatexMojo {
   private boolean versionsWarnOnly;
 
   /**
-   * Returns whether the {@link VersionMojo} displays warnings only; 
-   * else also creates infos. 
-   *
-   * @return
-   *    whether the {@link VersionMojo} displays warnings only; 
-   *    lse also creates infos. 
-   */
-  public boolean getVersionsWarnOnly() {
-    return this.versionsWarnOnly;
-  }
-
-  /**
-   * Sets whether {@link VersionMojo} displays warnings only; 
-   * else also creates infos. 
-   *
-   * @param versionsWarnOnly
-   *    whether the {@link VersionMojo} shall display warnings only. 
-   */
-  public void setVersionsWarnOnly(boolean versionsWarnOnly) {
-    this.versionsWarnOnly = versionsWarnOnly;
-  }
-
-  /**
    * Prints meta information, mainly version information 
    * on this software and on the converters used. 
    * <p>
@@ -98,7 +75,7 @@ public class VersionMojo extends AbstractLatexMojo {
     try {
       // warnings: WMI01, WMI02, 
       // may throw build failure exception TSS05
-      this.latexProcessor.printMetaInfo(!this.getVersionsWarnOnly());
+      this.latexProcessor.printMetaInfo(!this.versionsWarnOnly);
     } catch (BuildFailureException e) {
       // may throw Exception TMI01, TMI02, TSS05
       throw new MojoFailureException(e.getMessage(), e.getCause());
