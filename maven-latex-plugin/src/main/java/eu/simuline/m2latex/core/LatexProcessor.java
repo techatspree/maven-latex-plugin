@@ -326,7 +326,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
           Set<File> targetFiles = this.fileUtils
               .copyOutputToTargetFolder(texFile, fileFilter, targetDir);
 
-
           this.log.debug(String.format("target %s has difftool %s", target,
               target.hasDiffTool()));
           if (!target.hasDiffTool()) {
@@ -2286,14 +2285,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
     return returnCode == 0;
   }
 
-  /**
-   * The list of config files 
-   * created by goal dvl via {@link #processRcFiles()}
-   * and deleted by goal clr via {@link #clearRcFiles()} 
-   * under certain circumstances. 
-   */
-  static final String[] RC_FILE_NAMES =
-      new String[] {".latexmkrc", ".chktexrc"};
 
   /**
    * Processes files <code>.latexmkrc</code> and <code>.chktexrc</code> 
@@ -2324,10 +2315,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
     //this.settings.getProperties();
     // TBD: centralize this because also needed for goal clr
 
-    for (String fileName : RC_FILE_NAMES) {
+    for (Injection inj : Injection.values()) {
+      String fileName = inj.getFileName();
       // may throw TMI01
       InputStream inStream = MetaInfo.getStream(fileName);
       File outFile = this.settings.rcResourceToFile(fileName);
+      outFile.setExecutable(false, false);
 
       try {
         // isCreatedByMyself may emit warnings WFU10, WFU11 
@@ -2365,8 +2358,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * EFU05: if the config file shall be deleted but this coes not work. 
    */
   private void clearRcFiles() {
-    for (String fileName : RC_FILE_NAMES) {
-      File outFile = this.settings.rcResourceToFile(fileName);
+    for (Injection inj : Injection.values()) {
+      File outFile = this.settings.rcResourceToFile(inj.getFileName());
         // isCreatedByMyself may emit warnings WFU10, WFU11 
       if (outFile.exists() && this.fileUtils.isCreatedByMyself(outFile)) {
         // could emit EFU05

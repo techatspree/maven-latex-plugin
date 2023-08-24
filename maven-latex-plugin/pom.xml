@@ -678,7 +678,6 @@
 									<directory>src/main/resources/</directory>
 									<includes>
 										<include>buildParams.tex</include>
-										<include>instVScode4tex.sh</include>
 									</includes>
 									<filtering>true</filtering>
 								</resource>
@@ -790,7 +789,6 @@
 							<directory>src/site/tex</directory>
 							<includes>
 								<include>buildParams.tex</include>
-								<include>instVScode4tex.sh</include>
 							</includes>
 						</fileset>
 
