@@ -39,7 +39,7 @@ import java.util.SortedSet;
 public class CfgLatexMojo extends AbstractLatexMojo {
 
   public SortedSet<Target> getTargetSet() throws BuildFailureException {
-    return this.settings.getTargetSet();
+    return this.settings.getTargets();
   }
 
   /**
