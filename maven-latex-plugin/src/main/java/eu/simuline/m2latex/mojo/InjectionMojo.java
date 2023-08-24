@@ -19,11 +19,13 @@
 package eu.simuline.m2latex.mojo;
 
 import eu.simuline.m2latex.core.BuildFailureException;
+import eu.simuline.m2latex.core.Injection;
 import eu.simuline.m2latex.core.Settings;
 
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
-
+import java.util.Set;
 import org.apache.maven.plugin.MojoFailureException;
 
 // documentation occurs in latex:help
@@ -35,7 +37,18 @@ import org.apache.maven.plugin.MojoFailureException;
 @Mojo(name = "dvl", defaultPhase = LifecyclePhase.VALIDATE)
 // TBD: maybe verify
 // in fact, Metainfo can give more info than just versioning 
-public class RecordFilesMojo extends AbstractLatexMojo {
+public class InjectionMojo extends AbstractLatexMojo {
+
+  /**
+   * Indicates the files {@link InjectionMojo} injects. 
+   * This is a comma separated list of {@link Injections}s 
+   * without blanks. 
+   * <p>
+   * The default value is <code>atexmkrc,chktexrc</code>. 
+   */
+  @Parameter(name = "injections", defaultValue = "latexmkrc,chktexrc")
+  private Set<Injection> injections;
+
 
   /**
    * Creates rc file <code>.latexmkrc</code> for latexmk 
@@ -55,7 +68,7 @@ public class RecordFilesMojo extends AbstractLatexMojo {
       // TBD: update 
       // warnings: WMI01, WMI02, 
       // may throw build failure exception TLP03, TMI01
-      this.latexProcessor.processRcFiles();
+      this.latexProcessor.processFileInjections(this.injections);
     } catch (BuildFailureException e) {
       // may throw Exception TBD
       throw new MojoFailureException(e.getMessage(), e.getCause());

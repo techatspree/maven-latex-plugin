@@ -2287,9 +2287,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 
   /**
-   * Processes files <code>.latexmkrc</code> and <code>.chktexrc</code> 
-   * performing filtering similar to the resources plugin, 
-   * with two differences: 
+   * Processes injection of files like <code>.latexmkrc</code> and <code>.chktexrc</code> 
+   * as described by <code>injections</code>, e.g. 
+   * <ul>
+   * <li> performing filtering similar to the resources plugin, </li>
+   * <li> turning the result into an executable file, 
+   * </ul>
+   * Filtering differs from the mechanism of the resources plugin in two respects: 
    * <ul>
    * <li> The names are those of parameters in settings, not properties in the pom. </li>
    * <li> The sources are loaded as a resource by the classloader 
@@ -2299,6 +2303,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * This file contains the values of the parameters, finally. 
    * </ul>
    * 
+   * @param injections
+   *   define the files to be injected and how injection is done. 
    * @throws BuildFailureException
    *   <ul>
    *   <li>
@@ -2311,11 +2317,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *   </ul>
    */
   //      
-  public void processRcFiles() throws BuildFailureException {
+  public void processFileInjections(Set<Injection> injections) throws BuildFailureException {
     //this.settings.getProperties();
     // TBD: centralize this because also needed for goal clr
 
-    for (Injection inj : Injection.values()) {
+    for (Injection inj : injections) {
       String fileName = inj.getFileName();
       // may throw TMI01
       InputStream inStream = MetaInfo.getStream(fileName);

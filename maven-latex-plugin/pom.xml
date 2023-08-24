@@ -1063,6 +1063,9 @@
             <goals>
               <goal>dvl</goal>
             </goals>
+            <configuration>
+							<injections>latexmkrc,chktexrc,vscodeExt</injections>
+						</configuration>
           </execution>
 					<execution>
 						<?m2e execute onConfiguration?>
