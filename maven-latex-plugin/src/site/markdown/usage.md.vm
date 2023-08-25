@@ -13,19 +13,31 @@ So the user has to specify only the desired output formats.
 As illustrated by [example](./example_targets.html), 
 with the goal `cfg` artifacts with more than one output format 
 can be created from a single source. 
+To that end the `targets` must be specified. 
+For each of these targets there is a goal with the same name 
+which represent a single target. 
 
 Goals `dvi`, `pdf`, `xdoc`, `rtf`, `odt`, `html` and `txt` 
 are specialized to the according output format. 
+Note that goal 
+
+- `dvi` is to create `DVI` files except for `xelatex` which creates `XDV` file instead. 
+- `xdoc` cannot only create `XDOC` files but also files in the older `DOC` format. 
+- `html` can create besides `HTML` files also `XHTML` files. 
+
 A special role plays goal `chk` 
 which performs a check only and creates nothing but a log file 
 which is of course not deployed. 
 
-Goals `clr` to cleanup, `dvl` to create config files 
-and `grp` to create graphic files 
-are useful in conjunction with other tools and with debugging 
-as illustrated for [cleanup](./example_clean.html) 
-for [creating `.latexmkrc`](./example_rc.html) 
-and for [creating graphic files](./example_grp.html). 
+The other goals, which cannot serve as target, 
+are useful in conjunction with tools external to this software and with debugging or document development 
+
+- Goal `clr` to cleanup as illustrated for [cleanup](./example_clean.html). 
+- Goal `inj` serve to inject files, above all config files. 
+  The various fields of applications are explained in [creating `.latexmkrc`](./example_rc.html) 
+- Goal `grp` is to create graphic files [creating graphic files](./example_grp.html). 
+- Goal `vrs` to check versions of the tools to be invoked 
+  as described in [creating graphic files](./example_vrs.html). 
 
 ## Source code repository
 

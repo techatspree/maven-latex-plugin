@@ -1,0 +1,111 @@
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
+
+# Checking versions
+
+The author uses a rolling distribution 
+so tools invoked by this software may change in version 
+and sometimes the changes are breaking. 
+It is quite difficult to find out the reason. 
+
+Thus it is recommended, to have an execution as described below 
+
+
+```[xml]
+<project>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <id>validate-converters</id>
+            <goals><goal>vrs</goal></goals>
+            <configuration>
+              <versionsWarnOnly>true</versionsWarnOnly>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+
+This validates the versions of the converters at each run in phase `validate`. 
+The `versionsWarnOnly` is set to just display a warning if the version of some tool 
+is out of the expected range. 
+This does not mean that it does not work properly 
+but if something goes wrong this could give some indication. 
+
+
+If `versionsWarnOnly` is set to false, which is the default, then a long list of converters is given, 
+with their current versions, allowed versions and 
+warning if the current version is not in the set of allowed versions. 
+
+The user may invoke the goal `vrs` also from the command line 
+and there, a long list is appropriate. 
+So invoking `mvn latex:vrs` without further configuration yields something like the following 
+
+```
+[INFO] --- latex:2.0:vrs (default-cli) @ latex-maven-plugin ---
+[INFO] Manifest properties: 
+[INFO] MANIFEST: (1.0)
+[INFO]        Implementation-Version: '2.0'
+[INFO] PackageImplementation-Version: '2.0'
+[INFO] pom properties: coordinates
+[INFO] groupId:    'eu.simuline.m2latex'
+[INFO] artifactId: 'latex-maven-plugin'
+[INFO] version:    '2.0'
+[INFO] git properties: 
+[INFO] build version:  '2.0'
+[INFO] commit id desc: 'latex-maven-plugin-1.8-355-g060563f-dirty'
+[INFO] buildTime:      '2023-08-25T20:30:13+0200'
+[INFO] tool versions: 
+[INFO] ?warn?    command             'actual version'(not)in[expected version interval]
+[INFO]           pdflatex:           '1.40.25'in[1.40.21;1.40.25]
+[INFO]           lualatex:           '1.17.0'in[1.12.0;1.17.0]
+[INFO]           xelatex:            '0.999995'in[0.999992;0.999995]
+[INFO]           latex2rtf:          '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
+[INFO]           odt2doc:            '0.9.0'in[0.9.0]
+[INFO]           pdftotext:          '23.07.0'in[21.04.0;23.07.0]
+[INFO]           dvips:              '2023.1'in[2020.1;2023.1]
+[INFO]           dvipdfm:            '20220710'in[20210318;20220710]
+[INFO]           dvipdfmx:           '20220710'in[20200315;20220710]
+[INFO]           xdvipdfmx:          '20220710'in[20200315;20220710]
+[INFO]           dvipdft:            '20090604.0046'in[20090604.0046]
+[INFO]           gs:                 '9.56.1'in[9.52.0;9.56.1]
+[INFO]           chktex:             '1.7.8'in[1.7.8]
+[INFO]           diff-pdf-visually:  '1.7.0'in[1.6.4;1.7.0]
+[INFO]           diff-pdf:           '300'in[300]
+[INFO]           diff:               '3.10'in[3.8;3.10]
+[INFO]           pdfinfo:            '23.07.0'in[22.01.0;23.07.0]
+[INFO]           exiftool:           '12.65'in[12.39;12.65]
+[INFO]           bibtex:             '0.99d'in[0.99d]
+[INFO]           bibtexu:            '4.00'in[4.00;4.00]
+[INFO]           bibtex8:            '4.00'in[4.00;4.00]
+[INFO]           makeindex:          '2.17'in[2.15;2.17]
+[INFO]           splitindex:         '0.1'in[0.1]
+[INFO]           makeglossaries:     '4.51'in[4.45;4.51]
+[INFO]           pythontex:          '0.18'in[0.17;0.18]
+[INFO]           depythontex:        '0.18'in[0.17;0.18]
+[INFO]           latexmk:            '4.79'in[4.70b;4.79]
+[INFO]           mpost:              '2.02'in[2.00;2.02]
+[INFO]           ebb:                '20220710'in[20200315;20220710]
+[INFO]           gnuplot:            '5.4 patchlevel 8'in[5.4 patchlevel 0;5.4 patchlevel 8]
+[INFO]           inkscape:           '1.3'in[1.0.2;1.3]
+[INFO]           fig2dev:            '3.2.8b'in[3.2.7b;3.2.8b]
+[INFO] tools excluded: 
+[INFO] upmendex, xindy
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+```
+
+This indicates the actual version of the included tools and the admissible range of versions. 
+In addition, tools may be excluded. 
+This means that they are not invoked and so their version is irrelevant. 
+
+The typical use case would be to use the goal in an execution to just give a warning in case some version is out of range. 
+If something goes wrong, the goal is invoked to get the full information. 

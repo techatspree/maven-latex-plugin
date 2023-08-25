@@ -93,7 +93,8 @@ The following goals are not directly related with building of artifacts.
   Some use cases are [mentioned](./example_grp.html) but without aiming completeness. 
 - [`latex:vrs`](./vrs-mojo.html) displays tools used, 
   their actual version and the allowed versions. 
-  A warning is emitted if the actual version is not allowed. 
+  A warning is emitted if the actual version is not intended. 
+  This is discussed also in more [detail](./example_vrs.html). 
 
 
 # Usage 
