@@ -12,7 +12,7 @@ and auxiliary tools like `bibtex` standalone.
 If no graphic files are present, this causes an error. 
 
 Also when building with `latexmk` this may result in an error. 
-It is quite[1] save if using the config file created by goal `dvl`. 
+It is quite[1] save if using the config file created by goal `inj`. 
 But the number of runs required may be very high. 
 
 So there are cases where the goal `grp` makes sense. 

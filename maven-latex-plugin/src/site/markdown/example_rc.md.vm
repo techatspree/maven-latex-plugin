@@ -3,7 +3,7 @@
 
 # Create RC files 
 
-The goal `dvl` creates config files 
+The goal `inj` creates by default config files 
 `.latexmkrc` and `.chktexrc` 
 in folder `texSrcDirectory` 
 which defaults to `src/site/tex`. 
@@ -31,7 +31,7 @@ instead of the default `lualatex`.
 </project>
 ```
 
-Goal `dvl` creates in particular `.latexmkrc` 
+Goal `inj` creates in particular `.latexmkrc` 
 which invokes `xelatex` in place of `lualatex`. 
 This is true only, if `.latexmkrc` need not be overwritten, 
 i.e. there is no such file at the beginning of the run, 

@@ -262,7 +262,7 @@ Also: meta-uml, with documentation
 		that Settings can create all this and the process goes in opposite direction. 
 	-->
 
-  <!-- goal dvl: introduced @RuntimeParameter. 
+  <!-- goal inj: introduced @RuntimeParameter. 
       Maybe in the long run back to @Parameter: write a feature request. 
       Advisible: not add manually to @Parameter's in Settings, 
     but by ASM or something. 
@@ -348,7 +348,7 @@ Also: meta-uml, with documentation
 		On the other hand, this behavior is not so easily understood. 
 		It looks as some files persist while others disappear quite randomly. 
 		Thus in the manual in section on document development, 
-		we need the advise to command `mvn latex:grp` and `mvn latex:dvl` 
+		we need the advise to command `mvn latex:grp` and `mvn latex:inj` 
     if the graphics shall be needed for further development. 
 		The target `grp` is the sole target without cleanup. 
 		This shall be done in particular when using vscode/latexworkshop 
