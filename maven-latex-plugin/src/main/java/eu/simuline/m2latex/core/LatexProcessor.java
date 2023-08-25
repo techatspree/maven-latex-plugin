@@ -2308,10 +2308,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * @throws BuildFailureException
    *   <ul>
    *   <li>
-   *   TLP03: Failure while writing config file '...' or closing in-stream. 
-   *   Means that the config file <code>.latexmkrc</code> and <code>.chktexrc</code> 
-   *   could not be written. 
-   *   Each is created from a template replacing parameter names by their actual values. 
+   *   TLP03: Failure while writing file '...' or closing in-stream. 
+   *   The file is created from a template replacing parameter names by their actual values. 
    *   A reason may be that the template cannot be read or its in-stream cannot be closed. </li>
    *   <li> TMI01 if the stream to the template cannot be read. </li>
    *   </ul>
@@ -2349,7 +2347,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // THis is true not only when the Print stream cannot be created, 
         // but also if the resource cannot be read in filterRcFile. 
         // To be strict, one could go on even if inStream could not be closed. 
-        throw new BuildFailureException("TLP03 Failure while writing config file '" + fileName + 
+        throw new BuildFailureException("TLP03 Failure while writing file '" + fileName + 
           "' or closing in-stream. ", ioe);
       }
     }

@@ -990,12 +990,17 @@ class TexFileUtils {
   /**
    * The part of the headline of generated files for injections 
    * after the comment symbol. 
-   * Used e.g. for .latexmkrc and for .chktex. 
+   * Used e.g. 
+   * for <code>.latexmkrc</code> and for <code>.chktex</code>. 
    * This headline signifies, 
    * that the file was created by this software. 
    * As a consequence, 
    * it may be deleted or overwritten by this software. 
    * Else this is not done. 
+   * Note that the headline is the first line, 
+   * except the file has a shebang like code>.latexmkrc</code>. 
+   * Since the shebang must be in the first line and must be preserved, 
+   * the headline is the second line if a shebang is present. 
    */
   static final String HEADLINE_GEN = " injection file written by latex plugin ";
 
@@ -1005,7 +1010,7 @@ class TexFileUtils {
   /**
    * Returns whether the given file is created by this software. 
    * This is assumed if the comment character followed by {@link #HEADLINE_GEN} 
-   * is the first line if no shebang is expected else the first line. 
+   * is the first line if no shebang is expected else the second line. 
    * It is assumed that the file exists. 
    * 
    * Warnings: 
@@ -1019,7 +1024,12 @@ class TexFileUtils {
    *   the injection for which the file is created. 
    *   What is used is merely the comment character and whether there is a shebang line. 
    * @return
-   *   whether the first line of the given file is proved to be is {@link #HEADLINE_GEN}. 
+   *   whether the given file is created by this software. 
+   *   This is assumed if it can be proved that 
+   *   the first line starts with the comment symbol 
+   *   followed by {@link #HEADLINE_GEN}, 
+   *   except if the file has a shebang in the first line, 
+   *   then the second line takes the role of the headline. 
    *   If and only if false, an warning is emitted. 
    */
   boolean isCreatedByMyself(File aFile, Injection inj) {
@@ -1048,13 +1058,13 @@ class TexFileUtils {
       }
       // Here, the file was not written by this software 
       // so it shall not be overwritten 
-      this.log.warn("WFU10: Cannot overwrite/clean config file '" + aFile
+      this.log.warn("WFU10: Cannot overwrite/clean file '" + aFile
           + "' because it is not self-created. ");
       return false;
 
     } catch (IOException ioe) {
       // In both cases: could not read headline 
-      this.log.warn("WFU11: Refuse to overwrite/clean config file '" + aFile
+      this.log.warn("WFU11: Refuse to overwrite/clean file '" + aFile
           + "' because it may be not self-created or has dangling reader. ");
       return false;
     }
