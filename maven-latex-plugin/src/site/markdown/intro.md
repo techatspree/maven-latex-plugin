@@ -45,6 +45,15 @@ to maintain a bibliography and citations).
 
 ## Goals Overview 
 
+Before describing the individual goals, 
+be warned that the according parameters are not given very explicitly. 
+This is due to the fact, that we use a general object as parameter 
+and this documentation treats that as a single `settings` parameter, 
+not caring about its fields which are the proper parameters. 
+For now, we overcome this problem 
+pointing the reader to the Parameter section in the 
+[PDF manual](http://www.simuline.eu/LatexMavenPlugin/manualLMP.pdf#chap:settings). 
+
 Most of the goals are on creating output in a given format. 
 
 - [`latex:cfg`](./cfg-mojo.html) creates output 
