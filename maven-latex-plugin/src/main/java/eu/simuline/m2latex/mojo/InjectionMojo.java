@@ -31,24 +31,30 @@ import org.apache.maven.plugin.MojoFailureException;
 // documentation occurs in latex:help
 /**
  * Creates rc file <code>.latexmkrc</code> for latexmk 
- * and <code>.chktexrc</code> for chktex. 
+ * and <code>.chktexrc</code> for chktex and further files for various use cases. 
  * The goal is tied to the lifecycle phase <code>validate</code> by default.  
  */
-@Mojo(name = "dvl", defaultPhase = LifecyclePhase.VALIDATE)
+@Mojo(name = "inj", defaultPhase = LifecyclePhase.VALIDATE)
 // TBD: maybe verify
 // in fact, Metainfo can give more info than just versioning 
 public class InjectionMojo extends AbstractLatexMojo {
 
   /**
-   * Indicates the files {@link InjectionMojo} injects. 
+   * Indicates the files injected by the goal <code>inj</code>. 
    * This is a comma separated list of {@link Injections}s 
    * without blanks. 
+   * The possible injections are: 
+   * <ul>
+   * <li><code>latexmkrc</code> represents the file <code>.latexmkrc</code></li>
+   * <li><code>chktexrc</code> represents the file <code>.chktexrc</code></li>
+   * <li><code>vscodeExt</code> represents the file <code>instVScode4tex.sh</code></li>
+   * </ul>
    * <p>
-   * The default value is <code>atexmkrc,chktexrc</code>. 
+   * The default value is <code>latexmkrc,chktexrc</code>. 
    */
-  @Parameter(name = "injections", defaultValue = "latexmkrc,chktexrc")
+  @Parameter(name = "injections", defaultValue = "latexmkrc,chktexrc",
+      property = "latex.injections")
   private Set<Injection> injections;
-
 
   /**
    * Creates rc file <code>.latexmkrc</code> for latexmk 
