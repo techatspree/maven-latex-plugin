@@ -212,7 +212,7 @@ TBD
 May occur if a file, e.g. \texttt{.latexmkrc} is present in the latex source directory 
 and is not created by this software. 
 To avoid the risk of overwriting or deleting user-written files, 
-only config files written by this software can be overwritten in goal \texttt{dvl} 
+only config files written by this software can be overwritten in goal \texttt{inj} 
 or deleted in goal \texttt{clr}. 
 \end{minipage} 
 } \\
@@ -225,7 +225,7 @@ this software checks whether it was this software which wrote the files
 by reading the headline. 
 If this is not possible or if the reader to read that headline could not be closed after reading, 
 this warning is emitted. 
-Neither is the file overwritten in goal \texttt{dvl} nor is it deleted in goal \texttt{clr}. 
+Neither is the file overwritten in goal \texttt{inj} nor is it deleted in goal \texttt{clr}. 
 \end{minipage}
 }
 \end{longtable}
@@ -513,7 +513,7 @@ This is mainly because of writing permissions.
   & \texttt{\footnotesize  Failure while writing file '\$fileName' or closing in-stream.  }  \\
   \multicolumn2{|l|}{
   \begin{minipage}{0.95\linewidth}
-  Failure while performing goal \texttt{dvl} while writing file '\texttt{\$fileName}' or closing in-stream. 
+  Failure while performing goal \texttt{inj} while writing file '\texttt{\$fileName}' or closing in-stream. 
   The file is created from a template replacing parameter names by their actual values. 
   A reason may be that the template cannot be read or its in-stream cannot be closed. 
   The result is written into the latex source directory. 

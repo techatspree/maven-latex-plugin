@@ -1059,9 +1059,9 @@
           </execution>
           <execution>
             <?m2e execute onConfiguration?>
-            <id>create-rc-files</id>
+            <id>inject-files</id>
             <goals>
-              <goal>dvl</goal>
+              <goal>inj</goal>
             </goals>
             <configuration>
               <injections>latexmkrc,chktexrc,vscodeExt</injections>

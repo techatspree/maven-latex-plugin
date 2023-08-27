@@ -509,9 +509,9 @@ Both tools have a configuration file,
 which is \texttt{.latexmkrc} and \texttt{.chktexrc}, respectively. 
 In particular, \texttt{.latexmkrc} 
 shall be kept synchronized with the settings of this plugin. 
-To this end, there is a goal \texttt{dvl} (for development), 
-which creates the configuration files. 
-This can be done invoking \texttt{mvn latex:dvl} 
+This is one application of goal \texttt{inj}, 
+which injects files into the working directory \texttt{texSrcDirectory}. 
+This can be done invoking \texttt{mvn latex:inj} 
 but also by means of an execution for each run 
 as illustrated in Listing~\ref{lst:executions}. 
 The latter is preferable, because the configuration files 
@@ -527,7 +527,7 @@ This may happen if other tools are used in conjunction with this plugin.
 Nevertheless, cleanup is recommended to make the individual runs of this plugin independent.
 Thus, for document development, there is a dedicated goal \texttt{clr} 
 to clean up the source directory in phase \texttt{clean}. 
-Note that also the configuration files created by goal \texttt{dvl} are cleared. 
+Note that also the configuration files created by goal \texttt{inj} are cleared. 
 
 Finally, it is recommended to add a check of the converter versions
 right in the phase \texttt{validate} via goal \texttt{vrs}.
@@ -545,7 +545,7 @@ as displayed in Listing~\ref{lst:vrsOut}.
 In the course of a build run, this seems too much information, 
 but in fact, it is just a matter of taste. 
 
-For details on executions of goals \texttt{dvl}, \texttt{clr} and \texttt{vrs} 
+For details on executions of goals \texttt{inj}, \texttt{clr} and \texttt{vrs} 
 see Section~\ref{sec:devel}. 
 % TBD: check and make the reference more precise. 
 
@@ -580,8 +580,8 @@ caption={The executions of this plugin}]
     </execution>
     <execution>
       <?m2e execute onConfiguration?>
-      <id>create-rc-files</id>
-      <goals><goal>dvl</goal></goals>
+      <id>inject-files</id>
+      <goals><goal>inj</goal></goals>
       <!-- phase>validate</phase-->
     </execution>
     <execution>
@@ -601,14 +601,14 @@ for mavens default lifecycle.
 Typically, this maven plugin is used in the site lifecycle, 
 which does not contain the phase \texttt{validate}, 
 but accordingly \texttt{pre-site}. 
-As a consequence, goals \texttt{dvl} and \texttt{vrs} are not invoked. 
+As a consequence, goals \texttt{inj} and \texttt{vrs} are not invoked. 
 To get around, 
 one could specify the phase \texttt{pre-site} in the execution explicitly. 
 The author uses the \texttt{maven-jxr-plugin} 
 as illustrated in Listing~\ref{lst:forkJxr}, 
 which, as a side effect, forks the lifecycle 
 and includes phase \texttt{validate} of the default lifecycle 
-and in particular goals \texttt{dvl} and texttt{vrs}. 
+and in particular goals \texttt{inj} and \texttt{vrs}. 
 
 
 \begin{lstlisting}[language=XML, basicstyle=\footnotesize,
@@ -644,6 +644,11 @@ In addition, Chapter~\ref{chap:settings} describes each setting individually.
 
 \subsection{Injections}\label{subsec:xmlPomInjections}
 
+This section must be rewritten: 
+In the long run, here the goal \texttt{inj} is described 
+and this is part of document development. 
+Do not forget the command line usage with property. 
+
 At this point, this software can be used in full functionality as a maven plugin, 
 but in fact it offers more than functionality, it also offers configuration. 
 Table~\ref{tab:cfgFilesLink} indicates the configuration files 
@@ -651,14 +656,14 @@ and the URL where it can be found on the generated site.
 
 \begin{table}[htb]
   \centering
-  \begin{tabular}{ll}
+  \begin{tabular}{lll}
     \toprule
-    File & Link\\
+    File & injection Link\\
     \midrule{}
-    \texttt{instVScode4tex.sh} & \href{\urlSite fromMain/instVScode4tex.sh}{instVScode4tex.sh} \\
-    \texttt{.latexmkrc}        & \href{\urlSite fromMain/.latexmkrc}{.latexmkrc} \\ % TBD: maybe new text 
-    \texttt{.chktexrc}         & \href{\urlSite fromMain/.chktexrc}{.chktexrc} \\
-    \texttt{pom4pdf.xml}       & \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} \\
+    \texttt{instVScode4tex.sh} & \texttt{vscodeExt} & \href{\urlSite fromMain/instVScode4tex.sh}{instVScode4tex.sh} \\
+    \texttt{.latexmkrc}        & \texttt{latexmkrc} & \href{\urlSite fromMain/.latexmkrc}{.latexmkrc} \\ % TBD: maybe new text 
+    \texttt{.chktexrc}         & \texttt{chktexrc}  & \href{\urlSite fromMain/.chktexrc}{.chktexrc} \\
+    \texttt{pom4pdf.xml}       & -- & \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} \\
     \bottomrule
   \end{tabular}
   \caption{\label{tab:cfgFilesLink} The configuration files and their links}
@@ -751,11 +756,11 @@ or just use the \texttt{-r}.
 Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
 in which the configuration file given by the option \texttt{-r} is read in. 
 
-This maven plugin offers a goal \texttt{dvl} (``development'') 
-to create the configuration files \texttt{.latexmkrc} and \texttt{.chktexrc} 
-both in the latex source directory. 
+This maven plugin offers a goal \texttt{inj} 
+to create the configuration files \texttt{.latexmkrc}, \texttt{.chktexrc} and further files, 
+all in the latex source directory. 
 In particular \texttt{.latexmkrc} is adapted to the current settings of this plugin. 
-That way, \texttt{latexmk} behave the same as does this plugin. 
+That way, \texttt{latexmk} behaves the same as does this plugin. 
 Similarly, for \texttt{chktex}. 
 Note that these files are written only if either no file is overwritten 
 or only files are overwritten which were written by this plugin. 
@@ -769,7 +774,7 @@ Likewise, goal \texttt{clr} deletes these configuration files
 if they were definitively written by this plugin. 
 If this is proved to be false or a proof is not possible, 
 the configuration files are not deleted. 
-As for goal \texttt{dvl}, in case of a doubt, a warning is displayed. 
+As for goal \texttt{inj}, in case of a doubt, a warning is displayed. 
 
 
 

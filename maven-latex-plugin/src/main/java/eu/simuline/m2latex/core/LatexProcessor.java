@@ -2343,7 +2343,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // may throw IOExeption 
         inStream.close();
       } catch (IOException ioe) {
-        // Here, the goal dvl must be aborted, or inStream could not be closed. 
+        // Here, the goal inj must be aborted, or inStream could not be closed. 
         // THis is true not only when the Print stream cannot be created, 
         // but also if the resource cannot be read in filterRcFile. 
         // To be strict, one could go on even if inStream could not be closed. 

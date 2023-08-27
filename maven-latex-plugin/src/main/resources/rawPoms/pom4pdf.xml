@@ -1170,9 +1170,9 @@ avoiding verbose output and backing up the output log-file. -->
           </execution>
           <?m2e execute onConfiguration?>
           <execution>
-            <id>create-rc-files</id>
+            <id>inject-files</id>
             <goals>
-              <goal>dvl</goal>
+              <goal>inj</goal>
             </goals>
           <!-- tied implicitly to phase validate -->
         </execution>
