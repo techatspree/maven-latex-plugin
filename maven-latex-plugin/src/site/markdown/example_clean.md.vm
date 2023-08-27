@@ -1,13 +1,13 @@
 <!-- markdownlint-disable no-trailing-spaces -->
 <!-- markdownlint-disable no-inline-html -->
 
-# Clean
+# Cleaning the texSrcDirectory with goal `clr`
 
 In general, 
 this software after a run deletes all files not present before that run. 
 That way an explicit goal `clean` is superfluous. 
 
-This changes if `cleanUp` which is `true` by default, 
+This changes if `cleanUp`, which is `true` by default, 
 is set to `false` as shown in the next snippet of a pom. 
 
 ```[xml]
@@ -21,7 +21,7 @@ is set to `false` as shown in the next snippet of a pom.
                 <inherited>false</inherited>
                 <configuration>
                   <settings>
-                    <targets>pdf, html</targets>
+                    <targets>pdf,html</targets>
                     <cleanUp>false</cleanUp>
                   </settings>
                 </configuration>
@@ -45,8 +45,10 @@ to use more low level tools compared to this one.
 In these cases, for cleanup the goal `clr` is used. 
 It is then necessary to ensure 
 that the runs are independent and thus reproducible. 
+The goal `clr` is tied to lifecycle phase `clean` by default. 
+<!-- must be explained why this works also for site lifecycle -->
 
 CAUTION: `clr` cannot be used as a target. 
 
-<!-- the link is very instable -->
-<!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->
+<!-- TBD: replace by link on html -->
+<!-- For details, see [manual Section 3.2](manualLMP.pdf#). -->

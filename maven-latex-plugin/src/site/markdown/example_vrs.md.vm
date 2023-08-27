@@ -1,7 +1,7 @@
 <!-- markdownlint-disable no-trailing-spaces -->
 <!-- markdownlint-disable no-inline-html -->
 
-# Checking versions
+# Checking versions with goal `vrs` 
 
 The author uses a rolling distribution 
 so tools invoked by this software may change in version 
