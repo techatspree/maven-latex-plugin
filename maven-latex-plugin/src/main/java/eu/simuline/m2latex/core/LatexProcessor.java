@@ -2324,7 +2324,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
       // may throw TMI01
       InputStream inStream = MetaInfo.getStream(fileName);
       File outFile = this.settings.rcResourceToFile(fileName);
-      outFile.setExecutable(false, false);
+      outFile.setExecutable(inj.setExecutable(), false);
 
       try {
         // isCreatedByMyself may emit warnings WFU10, WFU11 
