@@ -311,6 +311,39 @@ Also: meta-uml, with documentation
 			This is not very convenient. 
 			Instead, version shall be 'none'. -->
 
+      <!-- https://stackoverflow.com/questions/76996016/maven-plugin-parameter-as-field-in-object-does-not-work-properly
+      
+
+I have written a plugin for maven, https://github.com/Reissner/latex-maven-plugin. It uses one parameter in the InjectionMojo
+
+  @Parameter(name = "injections", defaultValue = "latexmkrc,chktexrc",
+      property = "latex.injections")
+  private Set<Injection> injections;`
+
+which works just fine. I can use the default and also he property from the command line. The command line setting overwrites all.
+
+Then I have another parameter which is part of the CfgLatexMojo:
+
+  @Parameter(name = "settings")
+  protected Settings settings;
+
+The class Settings itself has a parameter
+
+@Parameter(name = "targets", defaultValue = "chk,pdf,html", property = "latex.targets")//
+  //private SortedSet<Target> targets;
+  private String targets = "chk,pdf,html";
+
+And here I observe strange things: If I don't initialize targets = "chk,pdf,html" i get a NullPointerException, although defaultValue = "chk,pdf,html" should be sufficient.
+
+Also the property does not work.. Or maybe I don't know how to invoke properly.
+
+There are further strange effects, but let us concentrate on these first.
+
+Even worse, I wanted to replace the String by a SortedSet. 
+This yields even more problems. 
+
+-->
+
     <!-- partially still in 
 	 https://www.simuline.eu/RepositoryMaven/
 	 de/akquinet/jbosscc/latex/latex-maven-plugin/1.5-SNAPSHOT/ 

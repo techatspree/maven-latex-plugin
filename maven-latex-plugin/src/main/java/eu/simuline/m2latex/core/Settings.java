@@ -207,9 +207,19 @@ public class Settings {
    * The default value is <code>chk,pdf,html</code>. 
    */
   @RuntimeParameter
-  @Parameter(name = "targets", defaultValue = "chk,pdf,html")
-  private SortedSet<Target> targets;
-  // TBD: clarify whether it isnt better to specify the init valu by annotation
+  @Parameter(name = "targets", defaultValue = "chk,pdf,html", property = "latex.targets")//
+  //private SortedSet<Target> targets;
+  private String targets = "chk,pdf,html";
+  // TBD: clarify why the following initialization causes that no goal descriptors are found. 
+  // = new TreeSet<Target>(Arrays.asList(new Target[] {Target.chk, Target.pdf, Target.html}));
+  // TBD: publish that giving the default value in the annotation works only within the lifecycle. 
+  // In contrast, if running on the command line as mvn latex:cfg, this does not work: no init: nullpointer. 
+  // maybe then we need as latex.targets 
+  // TBD: clarify whether it isn't better to specify the init value by annotation
+  // In old times targets was just a string and conversion to enum set was done internally. 
+  // TBD: clarify why latex.targets does not work either. 
+  // Thus the user cannot command `mvn latex:cfg -Dlatex.targets=pdf`: also nullpointer 
+  // maybe because inside the Settings. 
 
   /**
    * A comma separated list of excluded {@link Converter}s 
@@ -1896,8 +1906,37 @@ public class Settings {
    */
   // TBD: ordering must be clarified 
   public SortedSet<Target> getTargets() throws BuildFailureException {
-    return targets;
+    // TreeSet is sorted. maybe this determines ordering of targets. 
+    SortedSet<Target> targetSet = new TreeSet<Target>();
+    if (this.targets.isEmpty()) {
+      return targetSet;
+    }
+    String[] targetSeq = this.targets.split(" *, *");
+    Target target;
+    for (int idx = 0; idx < targetSeq.length; idx++) {
+      try {
+        assert targetSeq[idx] != null;
+        target = Target.valueOf(targetSeq[idx]);
+      } catch (IllegalArgumentException ae) {
+        assert Target.class.isEnum();
+        // Here, targetSeq[idx] is no name in Target 
+        // TBD: find substring(1, and construct separate util method. 
+        String setOfAllowedTargets = Arrays.asList(Target.values()).toString();
+        setOfAllowedTargets =
+            setOfAllowedTargets.substring(1, setOfAllowedTargets.length() - 1);
+        // TBD: reformulate all 'but is not': the target set is expected to be a subset... but is ... 
+        throw new BuildFailureException("TSS04: The target set '" + this.targets
+            + "' should be a subset of the registered targets '"
+            + setOfAllowedTargets + "', but is not. ");
+      }
+      targetSet.add(target);
+    }
+    return targetSet;
+
   }
+  // public SortedSet<Target> getTargets() throws BuildFailureException {
+  //   return this.targets;
+  // }
 
   // TBD: maybe better: store allowed converters. 
   // TBD: maybe better: cache converters read. 
@@ -2423,9 +2462,12 @@ public class Settings {
   }
 
   // TBD: check which of these setters are really necessary 
-  public void setTargets(SortedSet<Target> targets) {
-    this.targets = targets;
+  public void setTargets(String targets) {
+    this.targets = targets.trim();
   }
+  // public void setTargets(SortedSet<Target> targets) {
+  //   this.targets = targets;
+  // }
 
   public void setConvertersExcluded(String convertersExcluded) {
     this.convertersExcluded = convertersExcluded.trim();
