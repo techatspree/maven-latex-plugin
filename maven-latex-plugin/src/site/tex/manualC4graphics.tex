@@ -150,13 +150,15 @@ Instead, it shall be used the driver \texttt{dvipdfmx}.
 To obtain a \LaTeX-file which works both for creating PDF and HTML, 
 insert in the header of the \LaTeX{} main file
 given by Listing~\ref{lst:header}. 
+Note that also the package \pkg{hyperref} needs adaption of its options 
+depending on the use case. 
 %
 %\lstset{language=tex, basicstyle=\small}
 % FIXME\@: nag complains for htlatex 
-\lstinputlisting[linerange={54-58,62-64,76},
+\lstinputlisting[linerange={63-87},
 language=TeX, basicstyle=\small,
 float, captionpos=b, label={lst:header}, 
-caption={From the header of the TEX-source of this manual}]%
+caption={Loading packages adapted to the output format}]%
 {header.tex}
 
 
@@ -765,7 +767,7 @@ from the main document to the proper figure.
 
 With \lualatex{} this can be reached for MetaPost also using package \pkg{luamplib} 
 %
-\lstinputlisting[language=TeX, basicstyle=\scriptsize, linerange={78-82},
+\lstinputlisting[language=TeX, basicstyle=\scriptsize, linerange={89-93},
 float, captionpos=b, label={lst:luamplib},
 caption={Package \texttt{luamplib} and how to use it}]
 {header.tex}
@@ -888,7 +890,7 @@ To include \texttt{xxx.pdf}
 of course the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx} 
 are required. 
 Moreover, it may happen that the \LaTeX-package \pkg{transparent} 
-is required also, depending on the features used in\texttt{xxx.svg}. 
+is required also, depending on the features used in \texttt{xxx.svg}. 
 
 As indicated in~\cite{SvgP}, Section~1, 
 the \pkg{svg}-package delegates the transformation 
