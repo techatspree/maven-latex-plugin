@@ -15,7 +15,6 @@
 % is used to integrate html production with tex4ht and pdf production
 % used to define texFhtLoaded
 % maybe this is not really absolute necessary 
-\usepackage{ifthen}
 
 \iftutex%
   \usepackage{fontspec}
@@ -25,6 +24,7 @@
 \fi
 %\usepackage{textalpha}
 
+\usepackage{ifthen}
 \newboolean{texFhtLoaded}
 \setboolean{texFhtLoaded}{false}
 
