@@ -776,10 +776,8 @@ provide a mechanism to create meta data maybe structure -->
         support xdv format. 
         In particular added warning WLP07. 
       </action>
-  </release>
-  <release  version="1.7"
-      date="2022-04-19"
-      description="Essentially, made all documents compilable with latexmk">
+    </release>
+    <release version="1.7" date="2022-04-19" description="Essentially, made all documents compilable with latexmk">
       <action dev='reissner' type='fix'>
         Extracted chapters from manual, renamed manual: 
         shorter name, now pythontex works with latexmk. 
@@ -793,12 +791,12 @@ provide a mechanism to create meta data maybe structure -->
       <action dev='reissner' type='fix'>
         Eliminated bad boxes
       </action>
-       <action dev='reissner' type='update'>
+      <action dev='reissner' type='update'>
         In .gitignore eliminated files created by pythontex 
         which were silently vital for success of tests. 
         Not before now we have quality assured. 
       </action>
-       <action dev='reissner' type='update'>
+      <action dev='reissner' type='update'>
         Eliminated dependency on emacs and auctex. 
         This affects also .gitignore. 
       </action>
@@ -807,9 +805,7 @@ provide a mechanism to create meta data maybe structure -->
         including pythontex. 
       </action>
     </release>
-	  <release  version="1.6"
-		date="2022-04-16"
-		description="Main feature: minimum support for pythontex. 
+    <release version="1.6" date="2022-04-16" description="Main feature: minimum support for pythontex. 
 		Added support for unregistred converters. 
 		Added inclusion/exclusion of latex main files.">
       <action dev='reissner' type='add'>
@@ -844,7 +840,7 @@ provide a mechanism to create meta data maybe structure -->
       </action>
       <action dev='reissner' type='add'>
 			added document recorder.tex and its artifact. 
-			</action>
+      </action>
       <action dev='reissner' type='add'>
         added document latexEngines.tex and its artifact. 
         Gained an overview over the tex engines above all xelatex
@@ -853,141 +849,139 @@ provide a mechanism to create meta data maybe structure -->
 				added documentation for pythontex and depythontex 
 				going beyond the manual but needed for implementation of this software. 
 				Added references to original software by Poore
-				</action>
-				<action dev='reissner' type='add'>
+      </action>
+      <action dev='reissner' type='add'>
 				added BuildFailureException TLP02
-			</action>
-			<action dev='reissner' type='add'>
+      </action>
+      <action dev='reissner' type='add'>
 				added latexmkrc to support document development better. 
-			</action>
-			<action dev='reissner' type='add'>
+      </action>
+      <action dev='reissner' type='add'>
 				added invocation of pythontex (depythontex not yet) 
 				including documentation. 
 				This is the core functionality for this release. 
-			</action>
-			<action dev='reissner' type='add'>
+      </action>
+      <action dev='reissner' type='add'>
 				added converter depythontex (pythontex was added already.)
-			</action>
-			<action dev='reissner' type='fix'>
+      </action>
+      <action dev='reissner' type='fix'>
 				Generalized default value for patternLatexMainFile
 				taking package names into account which contain `-` in addition to letters.
-			</action>
-			<action dev='reissner' type='update'>
+      </action>
+      <action dev='reissner' type='update'>
 				Turned lualatex into the default.
 				This is a kind of update because the former default pdflatex starts to outdate.
 				Nevertheless, a strong motivation is pythontex:
 				I want to create figures without memory restrictions, which is offered by lualatex.
-			</action>
-			<action dev='reissner' type='update'>
+      </action>
+      <action dev='reissner' type='update'>
 				Updated versions, version patterns and strings, also form e.g. inkscape, pdftotext, pdfinfo, exiftool, gnuplot.
-			</action>
-			<action dev='reissner' type='add'>
+      </action>
+      <action dev='reissner' type='add'>
 				Added support for unregistered converters specifying their category for safety.
 				This is needed for the moment for (de-)pythontex.
 				Although removed in later releases is useful in its own right.
-			</action>
-			<action dev='reissner' type='add'>
+      </action>
+      <action dev='reissner' type='add'>
 				Added parameters 'mainFilesIncluded' and 'mainFilesExcluded' 
 				and added according warnings WPP05, WPP06 and WPP07. 
-			</action>
-		</release>
+      </action>
+    </release>
 
-    <release version="1.5"
-	     date="2022-05-03"
-	     description="First release with change management. 
+    <release version="1.5" date="2022-05-03" description="First release with change management. 
 			  This includes version of this software 
 			  but also of the converters used.">
-			 <action dev='reissner' type='add'>
+      <action dev='reissner' type='add'>
 				 Added check for reproducibility. 
 				 This is a step towards a clean release management 
 				 as this shall remove the dependency of this plugin to itself, 
 				 potentially the same version. 
-			 </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 Added VersionMojo to phase validate.
 	 To that end, added configuration versionsWarnOnly
 	 and convertersExcluded.
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          Added validity checks on converters: registered, in correct category.
 	 In the course of this, added a lot of exceptions:
 	 TSS05, TSS06, TSS07 and TSS08
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
           Prepared for check in phase validate or initialize:
 	  Added a way to exclude converters.
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          Added rudimentary change management. 
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          Added a readme.md file. 
-       </action>
-       <action dev="reissner" type="update">
+      </action>
+      <action dev="reissner" type="update">
          Converter gnuplot from gp to pdf changed version
 		 and command line interface.
 		 Likewise for inkscape, the converter from svn to pdf.
 		 Added according manuals.
 		 Updated converters again and again. 
-       </action>
-       <action dev="reissner" type="fix">
+      </action>
+      <action dev="reissner" type="fix">
          Aligned licenses: eliminated contradictions:
 		 License delivered is what is given top level on github. 
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          Handling of versions: now in a separate resource file
 		 for access from markdown, latex and java (the latter to come). 
 		 Also updated several times
 		 and proved for now that the format is useful.
 		 Among the changes: 
-       </action>
-       <action dev="reissner" type="update">
+      </action>
+      <action dev="reissner" type="update">
          Updated a lot of versions in pom. 
-       </action>
-       <action dev="reissner" type="fix">
+      </action>
+      <action dev="reissner" type="fix">
          Eliminated most of the javadoc failures. 
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          Use maven enforcer plugin. 
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          added docs for various packages. 
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          added goal vrs displaying versions also of the converters 
          and whether they are valid. 
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
          added exception TSS04 checking validity of targets.
-       </action>
+      </action>
 
       <!-- somehwere in the intro of tikz manual, it is said that metafont is now part of luatex. 
 				This may mean that no two compilation steps are required. 
 				Please check -->
-			 <!-- this package shall provide a default .latexmkrc file 
+      <!-- this package shall provide a default .latexmkrc file 
 			and also a default input file loading all required packages. 
 			Both shall be appropriate for the default config, i.e. using lualatex, biber... 
 			but also for all relevant documentclasses
 		See the twoPager in L2R for class leaflet: package geometry shall not be loaded. -->
-       <!-- in manual fix underfull boxes and pdf version -->
-       <!-- change name of plugin: latex-maven-plugin
+      <!-- in manual fix underfull boxes and pdf version -->
+      <!-- change name of plugin: latex-maven-plugin
 	    This is not completed. Shall be set up both in folder structure 
 	    and in github url given by pom.       -->
-       <!-- further actions are given in the Readme.md -->
-       <!-- TBD: include also hints in the manual. -->
-       <!-- to offer standalone application: 
+      <!-- further actions are given in the Readme.md -->
+      <!-- TBD: include also hints in the manual. -->
+      <!-- to offer standalone application: 
 	    have a look at maven-jar-plugin documentation 
 	    still commented out to make the jar executable. -->
-       <!-- update to newer java version. e.g. define modules, packagedocs -->
-       <!-- on site http://www.simuline.eu/LatexMavenPlugin 
+      <!-- update to newer java version. e.g. define modules, packagedocs -->
+      <!-- on site http://www.simuline.eu/LatexMavenPlugin 
 	    set up a download area. 
 	    Some of them are written by myself as xfig and dvi. 
 	    For these the reference howpublished in lit.bib must be updated. 
        -->
-       <!-- manual on dvi file format requires rework: 
+      <!-- manual on dvi file format requires rework: 
 	    no word about version and no word about dvitype program. 
 	    Partially german english. -->
-       <!-- test pandoc - -bibliography - -toc -s -R
+      <!-- test pandoc - -bibliography - -toc -s -R
 	    s stands for standalone 
 	    R stands for resolve, also try without 
 	    and try to find a solution for indices and glossaries 
@@ -1031,120 +1025,116 @@ provide a mechanism to create meta data maybe structure -->
 	    Partially apt seems superior to markdown. 
 	    On the other hand, unification is necessary. 
 	    Also important: does the site plugin support markdown? -->
-       <!-- TBD: complete rework for ant users: 
+      <!-- TBD: complete rework for ant users: 
 	    starting from how to google and how to find sites. 
 	    Are all references present? 
 	    Does the software work properly? -->
-       <!-- TBD: add this plugin to mavencentral 
+      <!-- TBD: add this plugin to mavencentral 
 	    This allows some simplification, also to documentation -->
-       <!-- TBD: collect Todos given in manual -->
-       <!-- TBD: eliminate underfull \vbox es in manual -->
-       <!-- TBD: eliminate warning: pdflatex found version 1.7 
+      <!-- TBD: collect Todos given in manual -->
+      <!-- TBD: eliminate underfull \vbox es in manual -->
+      <!-- TBD: eliminate warning: pdflatex found version 1.7 
 	    allowed 1.5 only -->
-       <!-- TBD: goal vrs can give more than versioning info, 
+      <!-- TBD: goal vrs can give more than versioning info, 
 	    as e.g. vendor and things like that. -->
-       <!-- TBD: vrs may be tied to lifecycle phase 
+      <!-- TBD: vrs may be tied to lifecycle phase 
 	    validate or better pre-site. 
 	    but then it must be possible to choose the converters active. -->
-       <!-- TBD: if the active converters are configurable, 
+      <!-- TBD: if the active converters are configurable, 
 	    then one has to ensure that only the configured are used. -->
-       <!-- TBD: fill in the gap given by tool makeindex: 
+      <!-- TBD: fill in the gap given by tool makeindex: 
 	    does not allow to get its version without breaking it 
 	    or applying it on a file. 
 	    Maybe the solution is to replace it by upmendex -->
-       <!-- TBD: goal latex:vrs 
+      <!-- TBD: goal latex:vrs 
 	    shall work even if not all converters are installed. 
 	    Problem: MetaInfo.Version constructor: 
 	    executor then throws BuildFailureException -->
-       <!-- TBD: maybe vrs shall be included in phase validate. -->
-       <!-- TBD: ant-task: somehow synchronize coordinates with pom: 
+      <!-- TBD: maybe vrs shall be included in phase validate. -->
+      <!-- TBD: ant-task: somehow synchronize coordinates with pom: 
 	    name, version -->
 
-       <!-- setting readTexSrcProcDirRec seems to refer to processing graphics only. 
+      <!-- setting readTexSrcProcDirRec seems to refer to processing graphics only. 
 	    Check whether this is appropriate. -->
-       <!-- TBD: rework on Converter.java: diff-pdf has pseudo version only. -->
-       <!-- TBD: Converter.java: there is an unspecific ConverterCategory: eliminate. -->
-       
-			 <!-- TBD: reproducible runs: take other output formats into account also: 
+      <!-- TBD: rework on Converter.java: diff-pdf has pseudo version only. -->
+      <!-- TBD: Converter.java: there is an unspecific ConverterCategory: eliminate. -->
+
+      <!-- TBD: reproducible runs: take other output formats into account also: 
 				at least html. -->
-     </release>
+    </release>
 
 
-     
-     <!-- Here starts version 1.4 -->
-     <!-- Re-hosted in 
+
+    <!-- Here starts version 1.4 -->
+    <!-- Re-hosted in 
 	  https://www.simuline.eu/RepositoryMaven/
 	  de/akquinet/jbosscc/latex/latex-maven-plugin/ -->
-     <release version="1.4" 
-	     date="2018-06-19" 
-	     description="TBD">
+    <release version="1.4" date="2018-06-19" description="TBD">
       <action dev="reissner" type="add">
         added goal help
-       </action>
+      </action>
       <action dev="reissner" type="update">
         email address: ernst.reissner@simuline.eu,
 	site org.m2latex --> eu.simuline.m2latex also repo
-       </action>
-      </release>
+      </action>
+    </release>
 
-     <!-- 1.3 does not exist!!! -->
-     <!-- Re-hosted in 
+    <!-- 1.3 does not exist!!! -->
+    <!-- Re-hosted in 
 	  https://www.simuline.eu/RepositoryMaven/
 	  de/akquinet/jbosscc/latex/latex-maven-plugin/ -->
-      <release version="1.3" 
-	      date="2016-09-09" 
-	      description="Renamed plugin">
-       <action dev="reissner" type="update">
+    <release version="1.3" date="2016-09-09" description="Renamed plugin">
+      <action dev="reissner" type="update">
          Renamed plugin due to new convention into latex-maven-plugin
 	 and changed version. (without release plugin)
 	 CAUTION: Thus no snapshot release was created
 	 and so there is more than one checkin with a release version,
 	 i.e. no snapshot. 
-       </action>
-       <action dev="reissner" type="update">
+      </action>
+      <action dev="reissner" type="update">
          Updated java version to 1.5,
 	 replaced javadoc tags by annotations,
 	 updated junit to 4.12,
 	 replaced easymock by mockito,
 	 updated all to eu.simuline.m2latex
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 Made rerun mechanism configurable:
 	 added parameter patternNeedAnotherLatexRun
 	 containing a pattern to regocnize need to rerun from log file
 	 and added parameter maxNumReruns signifying a maximum number of reruns.
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added parameter tex4htOutputDirectory
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added conversion to rtf via latex2rtf and parameter latex2rtfCommand
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added conversion to odt and docx also via htlatex and dot2doc
 	 adding parameter odt2docCommand
-       </action>
+      </action>
       <action dev="reissner" type="add">
 	added conversion of document to dvi and ps and
 	conversion of graphic to eps besides pdf 
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added conversion to txt via pdftotext with parameter pdf2txtCommand
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added support for makeindes along the same lines as bibtex
 	 also multiple indices and split ones.
 	 added glossaries 
 	 adding parameters makeIndexCommand
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 now in one run conversion in many formats can be done
 	 and made configurable through the parameter targets.
 	 There are goals to create a specified output format
 	 e.g running mvn latex:pdf
 	 or all formats configured by mvn latex:cfg
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added detection of failures and warnings for latex, htlatex
 	 auxiliary programs like bibtex.
 	 In particular added parameters patternErrLatex,
@@ -1157,35 +1147,35 @@ provide a mechanism to create meta data maybe structure -->
 	 TBD: just mere existence, but could be also modification time.
 
 	 Added warnings on files skipped. 
-       </action>
-        <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added handling of toc, listoffigures, listoftables, listoflistings 
-       </action>
-       
-       <action dev="reissner" type="add">
+      </action>
+
+      <action dev="reissner" type="add">
 	 added support for new graphic formats fig, gnuplot, jpg, png, svg 
 	 with parameters fig2devCommand, 
-       </action>
+      </action>
       <action dev="reissner" type="add">
 	 added selection of latex documents from all files with ending .tex
-       </action>
-       <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
 	 added javadoc plugin 
-       </action>
+      </action>
       <action dev="reissner" type="add">
 	added ant tasks besides the maven plugin
 	dividing the software in mojos defining a mavan plugin,
 	ant tasks and core classes in separate packages. 
-       </action>
-     <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
        added a manual written in tex and to be compiled
        by this plugin and by ant task defined  here. 
-       </action>
-     <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
        added documentation of latex pacakges, tools,
        and file formats including self written ones on fig and dvi. 
-       </action>
-    <action dev="reissner" type="add">
+      </action>
+      <action dev="reissner" type="add">
        processing in source directories
        which is considered the working directory
        and move of results into target directory.
