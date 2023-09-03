@@ -30,20 +30,20 @@
 \ifpdf
   \usepackage{xcolor}  % [pdftex]
   \usepackage{graphicx}% [pdftex] 
-  \usepackage{hyperref}% driver [hpdftex] is autodetected 
+  \usepackage[destlabel]{hyperref}% driver [hpdftex] is autodetected 
 \else
   \usepackage[dvipdfmx]{xcolor}
   \usepackage[dvipdfmx]{graphicx}
   \@ifpackageloaded{tex4ht}{%
-    \usepackage[tex4ht]{hyperref}
+    \usepackage[tex4ht, destlabel]{hyperref}
     \renewcommand{\url}[1]{\texttt{#1}}% not active, replacement for hyperref
     \setboolean{texFhtLoaded}{true}%
   }{%
     %\usepackage[dvipdfmx]{hyperref}%
     \ifXeTeX%
-      \usepackage{hyperref}
+      \usepackage[destlabel]{hyperref}
     \else
-      \usepackage[dvipdfmx]{hyperref}
+      \usepackage[dvipdfmx, destlabel]{hyperref}
       % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
       % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
       % with [dvipdfmx] all works fine 
