@@ -29,8 +29,12 @@
 \usepackage[aux]{rerunfilecheck}
 
 \ifpdf%
+  \usepackage{xcolor}  % [pdftex]  
+  \usepackage{graphicx}% [pdftex] 
   \usepackage[destlabel]{hyperref}
 \else
+  \usepackage[dvipdfmx]{xcolor}
+  \usepackage[dvipdfmx]{graphicx}
   \ifXeTeX%
     \usepackage[destlabel]{hyperref}
   \else
@@ -40,6 +44,12 @@
   % with [dvipdfmx] all works fine 
   \fi%ifXeTeX
 \fi%ifpdf
+
+\ifluatex%
+  \usepackage{luamplib}
+  \newcommand*\inputmpcode[1]{\begin{mplibcode}input #1\end{mplibcode}}
+\else
+\fi
 
 \ifpdf%
   \ifLuaTeX%
