@@ -61,6 +61,13 @@
   %\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
 \fi%ifpdf
 
+\usepackage{import}
+%\usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
+
+
+
+%\usepackage{latex-bnf}
+
 \ifpdf%
   \ifLuaTeX%
     % for lualatex
@@ -106,12 +113,7 @@
 \else
 \fi%ifpdf
 
-\usepackage{import}
-%\usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
 
-
-
-%\usepackage{latex-bnf}
 \title{Special and common aspects of pdf/dvi/xdvi generators }
 \author{Ernst Reissner (rei3ner@arcor.de)}
 \date{}
