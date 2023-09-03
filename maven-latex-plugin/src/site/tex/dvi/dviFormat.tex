@@ -15,6 +15,18 @@
 
 \usepackage[nottoc,numindex,numbib]{tocbibind}
 \usepackage[a4paper]{geometry}% option , showframe, showcrop 
+%\usepackage{showframe} as an alternative 
+\usepackage{microtype}
+% special characters
+\usepackage{textcomp}
+%\usepackage{anyfontsize}
+%\usepackage{cleveref}
+
+
+% used by hyperref and also to update index and glossary 
+% to avoid clash because of loading with different options: 
+% declare first 
+\usepackage[aux]{rerunfilecheck}
 
 \ifpdf%
   \usepackage[destlabel]{hyperref}
