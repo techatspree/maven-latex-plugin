@@ -39,15 +39,7 @@
 \usepackage[aux]{rerunfilecheck}
 
 
-\usepackage{listings}
-\usepackage{longtable}
 
-\usepackage{booktabs}
-\aboverulesep=0ex
-\belowrulesep=0ex
-
-% graphics 
-%\makeatletter
 
 \ifpdf%
 \usepackage{xcolor}  % [pdftex]
@@ -118,6 +110,14 @@
 }
 %\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
 \fi
+
+\usepackage{listings}
+\usepackage{longtable}
+
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
+
 
 \usepackage{import}
 \usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
