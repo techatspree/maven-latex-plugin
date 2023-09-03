@@ -647,14 +647,128 @@ and also to come close to single source principle as regards documentation of pa
 Currently: pom, manual, apidoc, 
 whereas the techniques mentioned above all derive vital information from apidoc only.  -->
 
-<!-- evaluate pdfinfo 
+    <!-- evaluate pdfinfo 
 provide a mechanism to create meta data maybe structure -->
 
 
+    <release version="2.0" date="2023-08-28" description="">
 
-  <release  version="1.8"
-  date="2022-04-20"
-      description="Essentially, added support for xdv format. ">
+      <action dev='reissner' type='fix'>
+        in LatexProcessor.runDiffPdf concerning return values. 
+      </action>
+      <action dev='reissner' type='fix'>
+        in goal vrs generalized patterns for versions 
+        to make correct for general texlive. 
+        and took into account that a tool may be never used and thus not installed. 
+      </action>
+      <action dev='reissner' type='fix'>
+        interpretation of return code (triggered by fix with with runDiffPdf 
+        and by introducing chktex)
+      </action>
+      <action dev='reissner' type='fix'>
+        Design: e.g. 
+        - core package cannot depend on mojo package
+        - layered architecture with low level services TexFileUtils
+        - eliminated getTargetSet()
+      </action>
+      <action dev='reissner' type='fix'>
+        could update maven plugin framework because could find the critical code 
+        causing errors in class Target. 
+      </action>
+      <action dev='reissner' type='fix'>
+        eliminated lot of warnings, also from ltex, extended dictionary 
+      </action>
+      <action dev='reissner' type='add'>
+        XXXXXXXXXXpartial support for destlabel. Would be good for HMTL and docs there. 
+      </action>
+      <action dev='reissner' type='add'>
+        XXXXXXXXXXadd header.tex to inj goal. 
+      </action>
+      <action dev='reissner' type='add'>
+        documentation on the web site.. before it was mainly the manual in PDF format. 
+        Now replace apt by md and md.vm 
+        unify. 
+        Used automatic generation of documentation. 
+        Had to adapt apidocs of Mojos. 
+        Added a lot of examples. 
+      </action>
+      <action dev='reissner' type='add'>
+        to prepare place in maven central: added gpg plugin and issue management. 
+      </action>
+      <action dev='reissner' type='add'>
+        For document development: support include instead of input 
+        and use this in the manual. 
+        That speeds up the pdf conversion and requires just removal of additional aux files. 
+      </action>
+      <action dev='reissner' type='add'>
+        for tool ebb: 
+        add parameter createBoundingBoxes and added explanation of fine type xbb and bb
+      </action>
+      <action dev='reissner' type='add'>
+        rework on mpost: much better and also simpler results and better documentation. 
+        In particular, read log files and scan for warnings and errors. 
+        luamplib, documentation 
+      </action>
+      <action dev='reissner' type='add'>
+        added items to backlog. 
+      </action>
+      <action dev='reissner' type='add'>
+        updated parameters of inkscape: long form. 
+      </action>
+      <action dev='reissner' type='add'>
+        goal inj with parameter: injecting files .latexmkrc, .chktexrc, instVScode4tex.sh. 
+        To that end, added @RuntimeParameter, which unlike @Parameter persists at runtime 
+        In Settings: toString now based on reflection. 
+        In Settings: introduced filtering omg. 
+        Also extended clr cleaning all what inj creates
+        added parameter injections and added property latex.injections for command line use 
+      </action>
+
+      <action dev='reissner' type='add'>
+      Added a lot of literature. 
+      </action>
+      <action dev='reissner' type='add'>
+        In manual added a lot of text on document development. 
+      </action>
+      <action dev='reissner' type='add'>
+        added instVScoce4tex.sh to resources. 
+      </action>
+      <action dev='reissner' type='add'>
+        undergo buildParams.tex and pom4pdf.xml 
+        a filter inserting settings of this plugin.
+      </action>
+      <action dev='reissner' type='add'>
+      modified .latexmkrc and the headers so 
+      that latexmk with that file yields the same result 
+      as this software with default settings. 
+      This is a bunch of changes. 
+      Also added bib2gls so that also with bib2gls this works as we want for this software 
+      (prepare release 2.1)
+      Turned .latexmkrc into a resource and added to pom accordingly. 
+      Let .latexmkrc  undergo a filter inserting settings of this plugin.
+      This is to synchronize. 
+      Note that this is not completed. 
+      Correct .latexmkrc creating figures from mpost. 
+      Added to site 
+      </action>
+      <action dev='reissner' type='add'>
+        took chktex into account; 
+        added also lots of warnings based on the return value 
+        in particular introduced .chktexrc as a resource 
+        added goal chk and added to targets and to the default set. 
+        Note that chk does not emit output files. 
+      </action>
+      <action dev='reissner' type='update'>
+        updated versions of converters, dependencies and plugins, java, ... 
+        parameterized a lot of versions. 
+        Replaced default pdflatex by lualatex 
+        updated logging mechanism. 
+      </action>
+    </release>
+
+
+
+    <release version="1.8" date="2022-04-20" description="Essentially, added support for xdv format. ">
       <action dev='reissner' type='fix'>
         goal vrs works again. 
       </action>
