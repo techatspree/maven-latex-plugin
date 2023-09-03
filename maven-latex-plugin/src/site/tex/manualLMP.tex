@@ -7,6 +7,11 @@
 \documentclass[12pt]{book}
 \newif\iflatextortf% false for latex but set true for latex2rtf internally 
 
+% for buildParams to check empty: \ifdefempty
+\usepackage{etoolbox}
+% for buildParams: \verbdef 
+\usepackage{newverbs}
+
 \input{header.tex}
 \input{headerManual.tex}
 \input{buildParams.tex}
