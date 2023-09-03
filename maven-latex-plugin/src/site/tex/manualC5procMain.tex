@@ -1022,8 +1022,8 @@ but eliminating is necessary because it is incompatible with reproducibility.
 Note that \xelatex{} seems not to write PTEX keys at all 
 so only the \texttt{pdftrailerid} has to be eliminated or fixed. 
 
-Unfortunately, the commands required to make a pdf file reproducible 
-is not uniform among the tex to pdf converters. 
+Unfortunately, the commands required to make a PDF file reproducible 
+is not uniform among the TEX to PDF converters. 
 In fact, it works best with \lualatex{} and sufficiently for \pdflatex{} 
 but support seems incomplete with \xelatex. 
 
@@ -1108,11 +1108,11 @@ and \texttt{\textbackslash ifPDFTeX} as illustrated in Listing~\ref{lst:reprPdfE
 and adapt the code to the engine. 
 
 \lstinputlisting[language={[LaTeX]TeX}, basicstyle=\footnotesize,
-firstline=14, lastline=42, 
+firstline=19, lastline=48, 
 breaklines,
 %float, 
 captionpos=b, label={lst:reprPdfEngines},
-caption={Create reproducible pdf files for various engines}]%
+caption={Create reproducible PDF files for various engines}]%
 {./manualLMP.tex}
 
 
