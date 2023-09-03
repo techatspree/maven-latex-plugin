@@ -52,6 +52,16 @@
   %\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
 \fi%ifpdf
 
+\ifluatex%
+  \usepackage{luamplib}
+  \newcommand*\inputmpcode[1]{\begin{mplibcode}input #1\end{mplibcode}}
+\else
+\fi
+
+\usepackage{import}
+\usepackage{amsmath}
+
+
 
 \usepackage{fancyvrb}
 
