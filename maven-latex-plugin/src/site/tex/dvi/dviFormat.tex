@@ -5,10 +5,10 @@
 \usepackage{iftex}
 
 \iftutex%
-\usepackage{fontspec}
+  \usepackage{fontspec}
 \else
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
 \fi
 
 \usepackage{fancyvrb}
@@ -16,77 +16,77 @@
 \usepackage[nottoc,numbib]{tocbibind}
 
 \ifpdf%
-\usepackage{hyperref}
+  \usepackage{hyperref}
 
 
-\ifLuaTeX%
-% for lualatex
-\pdfvariable minorversion=7
-% omit CreationDate and ModDate keys.
-\pdfvariable suppressoptionalinfo 767% chktex 1
-% no adding to the trailer dictionary.
-\pdfvariable trailerid{}% chktex 1
-\pdfvariable suppressoptionalinfo -1% chktex 1
-\else
-\ifXeTeX%
-% for xelatex
-\special{pdf:minorversion 7}
-% TBD: find a way to express pdfinfoomitdate: necessary? 
-\special{pdf:trailerid []}
-\else
-\ifPDFTeX%
-\pdfminorversion=7         % for pdflatex
-% omit CreationDate and ModDate keys.
-% not before pdfTeX 3.14159265-2.6-1.40.17
-%\pdfinfoomitdate=1                   % for pdflatex
-% no adding to the trailer dictionary.
-%\pdftrailer=0                        % for pdflatex
-\pdftrailerid{}                       % for pdflatex
-\pdfsuppressptexinfo=-1               % for pdflatex
-\else
-% Here, the tex processor is unknown. 
-\fi%pdftex
-\fi%xetex
-\fi%luatex
+  \ifLuaTeX%
+    % for lualatex
+    \pdfvariable minorversion=7
+    % omit CreationDate and ModDate keys.
+    \pdfvariable suppressoptionalinfo 767% chktex 1
+    % no adding to the trailer dictionary.
+    \pdfvariable trailerid{}% chktex 1
+    \pdfvariable suppressoptionalinfo -1% chktex 1
+  \else
+    \ifXeTeX%
+      % for xelatex
+      \special{pdf:minorversion 7}
+      % TBD: find a way to express pdfinfoomitdate: necessary? 
+      \special{pdf:trailerid []}
+    \else
+      \ifPDFTeX%
+        \pdfminorversion=7         % for pdflatex
+        % omit CreationDate and ModDate keys.
+        % not before pdfTeX 3.14159265-2.6-1.40.17
+        %\pdfinfoomitdate=1                   % for pdflatex
+        % no adding to the trailer dictionary.
+        %\pdftrailer=0                        % for pdflatex
+        \pdftrailerid{}                       % for pdflatex
+        \pdfsuppressptexinfo=-1               % for pdflatex
+      \else
+        % Here, the tex processor is unknown. 
+      \fi%pdftex
+    \fi%xetex
+  \fi%luatex
 
-% removes the /CreationDate and /ModDate 
-% superfluous as we override anyway
-%\pdfinfoomitdate1 
-% pdfsuppressptexinfo-1 is the same as pdfsuppressptexinfo15
-% 1 -> PTEX.Fullbanner
-% 2 -> PTEX.FileName
-% 4 -> PTEX.PageNumber
-% 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
-% The following is to control metadata: 
-% - erase docdata and set the ones needed thereafter
-% - erase trailer to make repreoducible 
-%\pdfsuppressptexinfo-1
-% CAUTION: This is not recommended as the docs are no longer individual. 
-%\pdftrailerid{}% removed by nopdftrailerid
+  % removes the /CreationDate and /ModDate 
+  % superfluous as we override anyway
+  %\pdfinfoomitdate1 
+  % pdfsuppressptexinfo-1 is the same as pdfsuppressptexinfo15
+  % 1 -> PTEX.Fullbanner
+  % 2 -> PTEX.FileName
+  % 4 -> PTEX.PageNumber
+  % 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
+  % The following is to control metadata: 
+  % - erase docdata and set the ones needed thereafter
+  % - erase trailer to make repreoducible 
+  %\pdfsuppressptexinfo-1
+  % CAUTION: This is not recommended as the docs are no longer individual. 
+  %\pdftrailerid{}% removed by nopdftrailerid
 
-\hypersetup{
-  pdfinfo={
-    Author      ={Ernst Reissner},
-    Title       ={The dvi-format and the program dvitype},
-    CreationDate={unknown},
-    ModDate     ={unknown},
-    Producer    ={unknown},
-    Subject     ={dvi and dvitype},
-    Keywords    ={LaTeX;dvi;dvitype}
+  \hypersetup{
+    pdfinfo={
+      Author      ={Ernst Reissner},
+      Title       ={The DVI-format and the program dvitype},
+      CreationDate={unknown},
+      ModDate     ={unknown},
+      Producer    ={unknown},
+      Subject     ={DVI and dvitype},
+      Keywords    ={LaTeX;dvi;dvitype}
+    }
   }
-}
 \else
-\ifXeTeX%
-\usepackage{hyperref}
-\else
-\usepackage[dvipdfmx]{hyperref}
-% lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-% pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-% with [dvipdfmx] all works fine 
-\fi%
+  \ifXeTeX%
+    \usepackage{hyperref}
+  \else
+    \usepackage[dvipdfmx]{hyperref}
+    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+    % with [dvipdfmx] all works fine 
+  \fi%
 \fi%ifpdf
 
-\title{The dvi-format and the program dvitype}
+\title{The DVI-format and the program \texttt{dvitype}}
 \author{Ernst Reissner (rei3ner@arcor.de)}
 \date{}
 
@@ -96,13 +96,13 @@
 \tableofcontents
 
 \section{Introduction}
-This document describes the dvi file format 
+This document describes the DVI file format 
 traditionally used by \LaTeX{} 
 and still in use with \texttt{htlatex} and that like. 
 
 This self written document is strictly speaking obsolete: 
-The ultimative reference is~\cite{DviType}. 
-This document may serve as a description of a very simple subset of the language. 
+The ultimate reference is~\cite{DviType}. 
+Nevertheless, this document may serve as a description of a very simple subset of the language. 
 
 A \texttt{DVI} file is a stream of 8-bit bytes, which may be regarded as a
 series of commands in a machine-like language. The first byte of each command
@@ -111,7 +111,7 @@ that provide parameters to the command. The parameters themselves may consist
 of several consecutive bytes; 
 for example, the `\texttt{set\_rule}' command has two
 parameters, each of which is four bytes long. Parameters are usually
-regarded as nonnegative integers; but four-byte-long parameters,
+regarded as non-negative integers; but four-byte-long parameters,
 and shorter parameters that denote distances, can be
 either positive or negative. Such parameters are given in two's complement
 notation. For example, a two-byte-long distance parameter has a value between
@@ -170,7 +170,7 @@ this value is changed only by \texttt{fnt} and \texttt{fnt\_num} commands.
 The current position on the page 
 is given by two numbers called the horizontal and vertical coordinates,
 $h$ and $v$. 
-Both coordinates are zero at the upper left corner of the page; 
+Both coordinates are zero in the upper left corner of the page; 
 moving to the right corresponds to increasing the horizontal coordinate, and
 moving down corresponds to increasing the vertical coordinate. 
 Thus, the coordinates are essentially Cartesian, 
@@ -291,9 +291,9 @@ Set $h:=h+b$, i.e., move right $b$ units.
 The parameter is a signed number in two's complement notation; 
 if $b<0$, the reference point actually moves left.
 
-\item[147] \texttt{w0 $147$ }. 
+\item[147] \texttt{w0 $147$}. 
 Set $h:=h+w$; i.e., move right $w$ units. With luck,
-this parameterless command will usually suffice, because the same kind of motion
+this parameter-less command will usually suffice, because the same kind of motion
 will occur several times in succession; the following commands explain how
 $w$ gets particular values. 
 
@@ -322,7 +322,7 @@ if $a<0$, the reference point actually moves up.
 
 \item[161] \texttt{y0 $161$}. 
 Set $v:=v+y$; i.e., move down $y$ units. 
-With luck, this parameterless command will usually suffice, 
+With luck, this parameter-less command will usually suffice, 
 because the same kind of motion will occur several times in succession.
 
 \item[162--165] \texttt{y$<d>$ $161+d$ $a[d]$} where $d\in\{1,\dots,4\}$. 
@@ -332,7 +332,7 @@ This command changes the current $y$~spacing and moves down by $a$.
 
 \item[166] \texttt{z0 $166$}. 
 Set $v:=v+z$; i.e., move down $z$ units. 
-With luck, this parameterless command will usually suffice, 
+With luck, this parameter-less command will usually suffice, 
 because the same kind of motion will occur several times in succession.
 The `\texttt{z}' commands are like the `\texttt{y}' commands 
 except that they involve $z$ instead of $y$. 
@@ -484,7 +484,7 @@ and the top.
 Experience has shown that it is unwise to design \texttt{DVI}-to-printer
 software that attempts cleverly to center the output; a fixed position of
 the upper left corner is easiest for users to understand and to work with.
-Therefore $l$ and~$u$ are often ignored.
+Therefore, $l$ and~$u$ are often ignored.
 
 Parameter $s$ is the maximum stack depth 
 (i.e., 
