@@ -17,8 +17,18 @@
 
 \ifpdf%
   \usepackage{hyperref}
+\else
+  \ifXeTeX%
+    \usepackage{hyperref}
+  \else
+    \usepackage[dvipdfmx]{hyperref}
+    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+  % with [dvipdfmx] all works fine 
+  \fi%ifXeTeX
+\fi%ifpdf
 
-
+\ifpdf%
   \ifLuaTeX%
     % for lualatex
     \pdfvariable minorversion=7
@@ -76,14 +86,6 @@
     }
   }
 \else
-  \ifXeTeX%
-    \usepackage{hyperref}
-  \else
-    \usepackage[dvipdfmx]{hyperref}
-    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-    % with [dvipdfmx] all works fine 
-  \fi%
 \fi%ifpdf
 
 \title{The DVI-format and the program \texttt{DVItype}}
