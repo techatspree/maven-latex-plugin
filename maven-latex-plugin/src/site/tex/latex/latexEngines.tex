@@ -11,6 +11,18 @@
   \usepackage[T1]{fontenc}
 \fi
 
+% absolutely necessary. 
+% for document development add certain options. 
+% Then remove headline and prevent this plugin from overwriting. 
+\usepackage[a4paper]{geometry}% option , showframe, showcrop 
+%\usepackage{showframe} as an alternative 
+\usepackage{microtype}
+% special characters
+\usepackage{textcomp}
+%\usepackage{anyfontsize}
+%\usepackage{cleveref}
+
+
 \usepackage{fancyvrb}
 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
@@ -28,7 +40,6 @@
 \aboverulesep=0ex
 \belowrulesep=0ex
 
-\usepackage[a4paper]{geometry}
 \usepackage{listings}
 \usepackage{longtable}
 % used by hyperref and also to update index and glossary 
