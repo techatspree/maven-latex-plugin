@@ -22,26 +22,6 @@
 %\usepackage{anyfontsize}
 %\usepackage{cleveref}
 
-
-\usepackage{fancyvrb}
-
-\usepackage[nottoc, numindex, numbib]{tocbibind}
-
-%%\pdfinfoomitdate1
-%\pdfsuppressptexinfo-1
-%\pdftrailerid{}
-
-
-\usepackage{ifthen}
-\newboolean{texFhtLoaded}
-\setboolean{texFhtLoaded}{false}
-
-\usepackage{booktabs}
-\aboverulesep=0ex
-\belowrulesep=0ex
-
-\usepackage{listings}
-\usepackage{longtable}
 % used by hyperref and also to update index and glossary 
 % to avoid clash because of loading with different options: 
 % declare first 
@@ -71,6 +51,29 @@
   }
   %\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
 \fi%ifpdf
+
+
+\usepackage{fancyvrb}
+
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+
+%%\pdfinfoomitdate1
+%\pdfsuppressptexinfo-1
+%\pdftrailerid{}
+
+
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
+
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
+
+\usepackage{listings}
+\usepackage{longtable}
+
+
 
 \usepackage{import}
 %\usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
