@@ -81,6 +81,8 @@
       \usepackage[destlabel]{hyperref}
     \else
       \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
+      % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+      % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
     \fi
   }% tex4ht not loaded 
   %\usepackage{bmpsize}% not for xelatex 
