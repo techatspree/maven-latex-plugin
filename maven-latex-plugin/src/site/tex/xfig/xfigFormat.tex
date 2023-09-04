@@ -16,6 +16,17 @@
 \newboolean{texFhtLoaded}
 \setboolean{texFhtLoaded}{false}
 
+% absolutely necessary. 
+% for document development add certain options. 
+% Then remove headline and prevent this plugin from overwriting. 
+\usepackage[a4paper]{geometry}% option , showframe, showcrop 
+%\usepackage{showframe} as an alternative 
+\usepackage{microtype}
+% special characters
+\usepackage{textcomp}
+%\usepackage{anyfontsize}
+%\usepackage{cleveref
+
 \usepackage{fancyvrb}
 
 \usepackage{booktabs}
