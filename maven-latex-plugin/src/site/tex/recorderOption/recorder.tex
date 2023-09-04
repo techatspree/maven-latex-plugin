@@ -11,6 +11,10 @@
   \usepackage[T1]{fontenc}
 \fi
 
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
+
 \ifpdf%
   \usepackage{hyperref}
 \else
@@ -23,6 +27,54 @@
     % with [dvipdfmx] all works fine 
   \fi%
 \fi%ifpdf
+
+\usepackage{import}
+\usepackage{amsmath}
+
+% synchronization between tex and pdf 
+%\usepackage[active]{srcltx}
+\usepackage{longtable}
+\usepackage{listings}
+% this is a workaround for including listings with latexmk.. 
+% This can be fixed 
+% - as shown below 
+% - patch in package listings 
+% - patch in latexmk 
+% I would prefer the latter. 
+\usepackage{xpatch}
+\makeatletter
+\newcommand*{\NewLine}{^^J}%
+\xpatchcmd{\lst@MissingFileError}
+{Package Listings Error: File `#1(.#2)' not found.}
+{LaTeX Error: File `#1.#2' not found.\NewLine}{%
+  \typeout{File ending patch for \string\lst@MissingFileError\space done.}%
+}{%
+  \typeout{File ending patch for \string\lst@MissingFileError\space failed.}%
+}
+\makeatother
+
+\usepackage{fancyvrb}
+
+
+% index and glossary
+\ifthenelse{\boolean{texFhtLoaded}}{%
+  \newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
+}{
+  \usepackage{splitidx}%[split]
+%  \usepackage{makeidx}
+%  \usepackage{showidx}
+  \makeindex
+  \usepackage[toc]{glossaries}%,automake
+  % , xindy or even [xindy={language=english,codepage=utf8}]
+  % mainly for index and glossaries 
+  %\makeglossaries% TBD: activate later
+  \newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}} % TBD: this must be extracted 
+  }
+
+% high quality tables 
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
 
 \usepackage[nottoc, numindex, numbib]{tocbibind}
 
@@ -70,8 +122,6 @@
   }
 \else
 \fi%ifpdf
-
-
 
 
 \title{The recorder option for latex processors and its applications}
