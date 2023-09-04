@@ -4,11 +4,12 @@
 \usepackage{iftex}
 
 \iftutex%
-\usepackage{fontspec}
+  \usepackage{fontspec}
 \else
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
 \fi
+
 \usepackage{fancyvrb}
 
 
@@ -27,80 +28,81 @@
 
 \usepackage[aux]{rerunfilecheck}
 
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+
 % graphics 
 \makeatletter
 
 \ifpdf%
-\usepackage{xcolor}  % [pdftex]
-\usepackage{graphicx}% [pdftex] 
-\usepackage{hyperref}% driver [hpdftex] is autodetected 
+  \usepackage{xcolor}  % [pdftex]
+  \usepackage{graphicx}% [pdftex] 
+  \usepackage{hyperref}% driver [hpdftex] is autodetected 
 
-\ifLuaTeX%
-% for lualatex
-\pdfvariable minorversion=7% chktex 1
-% omit CreationDate and ModDate keys.
-\pdfvariable suppressoptionalinfo 767% chktex 1
-% no adding to the trailer dictionary.
-\pdfvariable trailerid{}% chktex 1
-\pdfvariable suppressoptionalinfo -1% chktex 1
-\else
-\ifXeTeX%
-% for xelatex
-\special{pdf:minorversion 7}
-% TBD: find a way to express pdfinfoomitdate: necessary? 
-\special{pdf:trailerid []}
-\else
-\ifPDFTeX%
-\pdfminorversion=7         % for pdflatex
-% omit CreationDate and ModDate keys.
-% not before pdfTeX 3.14159265-2.6-1.40.17
-\pdfinfoomitdate=1                   % for pdflatex
-% no adding to the trailer dictionary.
-%\pdftrailer=0                        % for pdflatex
-\pdftrailerid{}                       % for pdflatex
-\pdfsuppressptexinfo=-1               % for pdflatex
-\else
-% Here, the tex processor is unknown. 
-\fi%pdftex
-\fi%xetex
-\fi%luatex
+    \ifLuaTeX%
+      % for lualatex
+      \pdfvariable minorversion=7% chktex 1
+      % omit CreationDate and ModDate keys.
+      \pdfvariable suppressoptionalinfo 767% chktex 1
+      % no adding to the trailer dictionary.
+      \pdfvariable trailerid{}% chktex 1
+      \pdfvariable suppressoptionalinfo -1% chktex 1
+    \else
+      \ifXeTeX%
+      % for xelatex
+      \special{pdf:minorversion 7}
+      % TBD: find a way to express pdfinfoomitdate: necessary? 
+      \special{pdf:trailerid []}
+    \else
+      \ifPDFTeX%
+        \pdfminorversion=7         % for pdflatex
+        % omit CreationDate and ModDate keys.
+        % not before pdfTeX 3.14159265-2.6-1.40.17
+        \pdfinfoomitdate=1                   % for pdflatex
+        % no adding to the trailer dictionary.
+        %\pdftrailer=0                        % for pdflatex
+        \pdftrailerid{}                       % for pdflatex
+        \pdfsuppressptexinfo=-1               % for pdflatex
+      \else
+        % Here, the tex processor is unknown. 
+      \fi%pdftex
+    \fi%xetex
+  \fi%luatex
 
 
 
-\hypersetup{
-  pdfinfo={
-    Author      ={Ernst Reissner},
-    Title       ={The xfig file format for xfig 3.2},
-    CreationDate={unknown},
-    ModDate     ={unknown},
-    Producer    ={unknown},
-    Subject     ={xfig files},
-    Keywords    ={LaTeX;xfig}
+  \hypersetup{
+    pdfinfo={
+      Author      ={Ernst Reissner},
+      Title       ={The xfig file format for xfig 3.2},
+      CreationDate={unknown},
+      ModDate     ={unknown},
+      Producer    ={unknown},
+        Subject     ={xfig files},
+      Keywords    ={LaTeX;xfig}
+    }
   }
-}
-
 
 \else
-\usepackage[dvipdfmx]{xcolor}
-\usepackage[dvipdfmx]{graphicx}
-\@ifpackageloaded{tex4ht}{%
-  % \usepackage[tex4ht]{hyperref}
-  \setboolean{texFhtLoaded}{true}
-}{%
-%\usepackage[dvipdfmx]{hyperref}
-\ifXeTeX%
-\usepackage{hyperref}
-\else
-\usepackage[dvipdfmx]{hyperref}
-% lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-% pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-% with [dvipdfmx] all works fine 
-\fi%
-}
-%\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
+  \usepackage[dvipdfmx]{xcolor}
+  \usepackage[dvipdfmx]{graphicx}
+  \@ifpackageloaded{tex4ht}{%
+    % \usepackage[tex4ht]{hyperref}
+    \setboolean{texFhtLoaded}{true}
+  }{%
+    %\usepackage[dvipdfmx]{hyperref}
+    \ifXeTeX%
+      \usepackage{hyperref}
+    \else
+      \usepackage[dvipdfmx]{hyperref}
+      % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+      % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+      % with [dvipdfmx] all works fine 
+    \fi%
+  }
+  %\usepackage{bmpsize}% not for xelatex; lualatex and newer pdflatex
 \fi
 
-\usepackage[nottoc, numindex, numbib]{tocbibind}
+
 
 %\usepackage{latex-bnf}
 \title{The xfig file format for xfig 3.2 }
