@@ -69,10 +69,26 @@
 
 
 \usepackage{import}
+\usepackage{amsmath}
 
 
 \usepackage{longtable}
 \usepackage{listings}
+
+\usepackage{xpatch}
+\makeatletter
+\newcommand*{\NewLine}{^^J}%
+\xpatchcmd{\lst@MissingFileError}
+{Package Listings Error: File `#1(.#2)' not found.}
+{LaTeX Error: File `#1.#2' not found.\NewLine}{%
+  \typeout{File ending patch for \string\lst@MissingFileError\space done.}%
+}{%
+  \typeout{File ending patch for \string\lst@MissingFileError\space failed.}%
+}
+\makeatother
+
+\usepackage{fancyvrb}
+
 
 \usepackage{booktabs}
 \aboverulesep=0ex
