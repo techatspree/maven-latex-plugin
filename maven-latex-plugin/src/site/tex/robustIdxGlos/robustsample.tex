@@ -2,13 +2,53 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass{book}
 
+\synctex=1% maybe security issue: draft only? 
+\usepackage{iftex}
+
+\iftutex%
+  \usepackage{fontspec}
+\else
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+\fi
+%\usepackage{textalpha}
+
+\usepackage{ifthen}
+\newboolean{texFhtLoaded}
+\setboolean{texFhtLoaded}{false}
+
+% for document development add certain options. 
+% Then remove headline and prevent this plugin from overwriting. 
+\usepackage[a4paper]{geometry}% option , showframe, showcrop 
+%\usepackage{showframe} as an alternative 
+\usepackage{microtype}
+% special characters
+\usepackage{textcomp}
+%\usepackage{anyfontsize}
+%\usepackage{cleveref}
+
+
+
+
 \usepackage{makeidx}
 \usepackage{robustindex}
 \usepackage{robustglossary}
-\usepackage{iftex}
+
+
+\ifpdf%
+  \usepackage[plainpages=false,hyperindex=false]{hyperref}  
+\else
+  \ifXeTeX%
+    \usepackage[plainpages=false,hyperindex=false]{hyperref}
+  \else
+    \usepackage[dvipdfmx,plainpages=false,hyperindex=false]{hyperref}
+    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+    % with [dvipdfmx] all works fine 
+  \fi%
+\fi
 
 \ifpdf
-  \usepackage[plainpages=false,hyperindex=false]{hyperref}
   %\pdfinfoomitdate1
   %\pdfsuppressptexinfo-1
   %\pdftrailerid{}
@@ -54,14 +94,6 @@
     }
   }
 \else
-  \ifXeTeX%
-    \usepackage[plainpages=false,hyperindex=false]{hyperref}
-  \else
-    \usepackage[dvipdfmx,plainpages=false,hyperindex=false]{hyperref}
-    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-    % with [dvipdfmx] all works fine 
-  \fi%
 \fi%ifpdf
 
 \title{A latex file with robust index}
