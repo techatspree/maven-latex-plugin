@@ -1,70 +1,71 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[a4paper]{article}
+
 \synctex=1
 \usepackage{iftex}
 
 \iftutex%
-\usepackage{fontspec}
+  \usepackage{fontspec}
 \else
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
 \fi
 
 %\pdfinfoomitdate1
 %\pdfsuppressptexinfo-1
 %\pdftrailerid{}
 \ifpdf%
-\usepackage{hyperref}
-\ifLuaTeX%
-% for lualatex
-\pdfvariable minorversion=7% chktex 1
-% omit CreationDate and ModDate keys.
-\pdfvariable suppressoptionalinfo 767% chktex 1
-% no adding to the trailer dictionary.
-\pdfvariable trailerid{}% chktex 1
-\pdfvariable suppressoptionalinfo -1% chktex 1
-\else
-\ifXeTeX%
-% for xelatex
-\special{pdf:minorversion 7}
-% TBD: find a way to express pdfinfoomitdate: necessary? 
-\special{pdf:trailerid []}
-\else
-\ifPDFTeX%
-\pdfminorversion=7         % for pdflatex
-% omit CreationDate and ModDate keys.
-% not before pdfTeX 3.14159265-2.6-1.40.17
-\pdfinfoomitdate=1                   % for pdflatex
-% no adding to the trailer dictionary.
-%\pdftrailer=0                        % for pdflatex
-\pdftrailerid{}                       % for pdflatex
-\pdfsuppressptexinfo=-1               % for pdflatex
-\else
-% Here, the tex processor is unknown. 
-\fi%pdftex
-\fi%xetex
-\fi%luatex
+  \usepackage{hyperref}
+  \ifLuaTeX%
+    % for lualatex
+    \pdfvariable minorversion=7% chktex 1
+    % omit CreationDate and ModDate keys.
+    \pdfvariable suppressoptionalinfo 767% chktex 1
+    % no adding to the trailer dictionary.
+    \pdfvariable trailerid{}% chktex 1
+    \pdfvariable suppressoptionalinfo -1% chktex 1
+  \else
+    \ifXeTeX%
+      % for xelatex
+      \special{pdf:minorversion 7}
+      % TBD: find a way to express pdfinfoomitdate: necessary? 
+      \special{pdf:trailerid []}
+    \else
+      \ifPDFTeX%  
+        \pdfminorversion=7         % for pdflatex
+        % omit CreationDate and ModDate keys.
+        % not before pdfTeX 3.14159265-2.6-1.40.17
+        \pdfinfoomitdate=1                   % for pdflatex
+        % no adding to the trailer dictionary.
+        %\pdftrailer=0                        % for pdflatex
+        \pdftrailerid{}                       % for pdflatex
+        \pdfsuppressptexinfo=-1               % for pdflatex
+      \else
+        % Here, the tex processor is unknown. 
+      \fi%pdftex
+    \fi%xetex
+  \fi%luatex
 
-\hypersetup{
-  pdfinfo={
-    Author      ={Ernst Reissner},
-    Title       ={The recorder option for latex processors and its applications},
-    CreationDate={unknown},
-    ModDate     ={unknown},
-    Producer    ={unknown},
-    Subject     ={dependency management in latex documents},
-    Keywords    ={LaTeX;latexmk}
+  \hypersetup{
+    pdfinfo={
+      Author      ={Ernst Reissner},
+      Title       ={The recorder option for latex processors and its applications},
+      CreationDate={unknown},
+      ModDate     ={unknown},
+      Producer    ={unknown},
+      Subject     ={dependency management in latex documents},
+      Keywords    ={LaTeX;latexmk}
+    }
   }
-}
 \else
-\ifXeTeX%
-\usepackage{hyperref}
-\else
-\usepackage[dvipdfmx]{hyperref}
-% lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-% pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-% with [dvipdfmx] all works fine 
-\fi%
+  \ifXeTeX%
+    \usepackage{hyperref}
+  \else
+    \usepackage[dvipdfmx]{hyperref}
+    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+    % with [dvipdfmx] all works fine 
+  \fi%
 \fi%ifpdf
 
 
