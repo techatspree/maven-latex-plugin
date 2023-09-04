@@ -68,6 +68,17 @@
 \fi
 
 
+\usepackage{listings}
+\usepackage{longtable}
+
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
+
+
+\usepackage{import}
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+
 
 \ifpdf%
   \ifLuaTeX%
@@ -113,17 +124,6 @@
   }
 \else
 \fi
-
-\usepackage{listings}
-\usepackage{longtable}
-
-\usepackage{booktabs}
-\aboverulesep=0ex
-\belowrulesep=0ex
-
-
-\usepackage{import}
-\usepackage[nottoc, numindex, numbib]{tocbibind}
 
 
 \usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
