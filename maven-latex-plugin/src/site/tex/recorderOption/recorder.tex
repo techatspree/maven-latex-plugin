@@ -11,11 +11,22 @@
   \usepackage[T1]{fontenc}
 \fi
 
-%\pdfinfoomitdate1
-%\pdfsuppressptexinfo-1
-%\pdftrailerid{}
 \ifpdf%
   \usepackage{hyperref}
+\else
+  \ifXeTeX%
+    \usepackage{hyperref}
+  \else
+    \usepackage[dvipdfmx]{hyperref}
+    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+    % with [dvipdfmx] all works fine 
+  \fi%
+\fi%ifpdf
+
+\usepackage[nottoc, numindex, numbib]{tocbibind}
+
+\ifpdf%=
   \ifLuaTeX%
     % for lualatex
     \pdfvariable minorversion=7% chktex 1
@@ -58,18 +69,10 @@
     }
   }
 \else
-  \ifXeTeX%
-    \usepackage{hyperref}
-  \else
-    \usepackage[dvipdfmx]{hyperref}
-    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-    % with [dvipdfmx] all works fine 
-  \fi%
 \fi%ifpdf
 
 
-\usepackage[nottoc, numindex, numbib]{tocbibind}
+
 
 \title{The recorder option for latex processors and its applications}
 
