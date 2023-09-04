@@ -6,61 +6,62 @@
 \usepackage{robustindex}
 \usepackage{robustglossary}
 \usepackage{iftex}
-\ifpdf
-\usepackage[plainpages=false,hyperindex=false]{hyperref}
-%\pdfinfoomitdate1
-%\pdfsuppressptexinfo-1
-%\pdftrailerid{}
-\ifLuaTeX
-% for lualatex
-%\pdfvariable minorversion=7
-% omit CreationDate and ModDate keys.
-\pdfvariable suppressoptionalinfo 767
-% no adding to the trailer dictionary.
-\pdfvariable trailerid{}
-\pdfvariable suppressoptionalinfo -1
-\else
-\ifXeTeX
-% for xelatex
-%\special{pdf:minorversion 7}
-% TBD: find a way to express pdfinfoomitdate: necessary? 
-\special{pdf:trailerid []}
-\else
-\ifPDFTeX
-%\pdfminorversion=7         % for pdflatex
-% omit CreationDate and ModDate keys.
-% not before pdfTeX 3.14159265-2.6-1.40.17
-\pdfinfoomitdate=1                   % for pdflatex
-% no adding to the trailer dictionary.
-%\pdftrailer=0                        % for pdflatex
-\pdftrailerid{}                       % for pdflatex
-\pdfsuppressptexinfo=-1               % for pdflatex
-\else
-% Here, the tex processor is unknown. 
-\fi%pdftex
-\fi%xetex
-\fi%luatex
 
-\hypersetup{
-  pdfinfo={
-    Author      ={Ernst Reissner},
-    Title       ={A latex file with robust index},
-    CreationDate={unknown},
-    ModDate     ={unknown},
-    Producer    ={unknown},
-    Subject     ={robust index in latex},
-    Keywords    ={LaTeX;index;makeidx;robustindex;robustglossary}
+\ifpdf
+  \usepackage[plainpages=false,hyperindex=false]{hyperref}
+  %\pdfinfoomitdate1
+  %\pdfsuppressptexinfo-1
+  %\pdftrailerid{}
+  \ifLuaTeX
+    % for lualatex
+    %\pdfvariable minorversion=7
+    % omit CreationDate and ModDate keys.
+    \pdfvariable suppressoptionalinfo 767
+    % no adding to the trailer dictionary.
+    \pdfvariable trailerid{}
+    \pdfvariable suppressoptionalinfo -1
+  \else
+    \ifXeTeX
+      % for xelatex
+      %\special{pdf:minorversion 7}
+      % TBD: find a way to express pdfinfoomitdate: necessary? 
+      \special{pdf:trailerid []}
+    \else
+      \ifPDFTeX
+        %\pdfminorversion=7         % for pdflatex
+        % omit CreationDate and ModDate keys.
+        % not before pdfTeX 3.14159265-2.6-1.40.17
+        \pdfinfoomitdate=1                   % for pdflatex
+        % no adding to the trailer dictionary.
+        %\pdftrailer=0                        % for pdflatex
+        \pdftrailerid{}                       % for pdflatex
+        \pdfsuppressptexinfo=-1               % for pdflatex
+      \else
+        % Here, the tex processor is unknown. 
+      \fi%pdftex
+    \fi%xetex
+  \fi%luatex
+
+  \hypersetup{
+    pdfinfo={
+      Author      ={Ernst Reissner},
+      Title       ={A latex file with robust index},
+      CreationDate={unknown},
+      ModDate     ={unknown},
+      Producer    ={unknown},
+      Subject     ={robust index in latex},
+      Keywords    ={LaTeX;index;makeidx;robustindex;robustglossary}
+    }
   }
-}
 \else
-\ifXeTeX%
-\usepackage[plainpages=false,hyperindex=false]{hyperref}
-\else
-\usepackage[dvipdfmx,plainpages=false,hyperindex=false]{hyperref}
-% lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-% pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-% with [dvipdfmx] all works fine 
-\fi%
+  \ifXeTeX%
+    \usepackage[plainpages=false,hyperindex=false]{hyperref}
+  \else
+    \usepackage[dvipdfmx,plainpages=false,hyperindex=false]{hyperref}
+    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+    % with [dvipdfmx] all works fine 
+  \fi%
 \fi%ifpdf
 
 \title{A latex file with robust index}
