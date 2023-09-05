@@ -48,6 +48,7 @@ public class InjectionMojo extends AbstractLatexMojo {
    * <li><code>latexmkrc</code> represents the file <code>.latexmkrc</code></li>
    * <li><code>chktexrc</code> represents the file <code>.chktexrc</code></li>
    * <li><code>vscodeExt</code> represents the file <code>instVScode4tex.sh</code></li>
+   * <li><code>header</code> represents the file <code>header.tex</code></li>
    * </ul>
    * <p>
    * The default value is <code>latexmkrc,chktexrc</code>. 
