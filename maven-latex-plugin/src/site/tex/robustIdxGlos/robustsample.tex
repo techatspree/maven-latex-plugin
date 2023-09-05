@@ -17,6 +17,19 @@
 \newboolean{texFhtLoaded}
 \setboolean{texFhtLoaded}{false}
 
+% only with pdflatex, warnings for xelatex and for lualatex 
+% ifxetex, ifluatex, ifpdf
+\ifpdf%
+  %\usepackage{mlmodern}
+\else
+  \makeatletter
+  \@ifpackageloaded{tex4ht}{%
+    \setboolean{texFhtLoaded}{true}
+  }{%
+  }% tex4ht not loaded 
+  \makeatother
+\fi
+
 % for document development add certain options. 
 % Then remove headline and prevent this plugin from overwriting. 
 \usepackage[a4paper]{geometry}% option , showframe, showcrop 
@@ -36,16 +49,20 @@
 
 
 \ifpdf%
-  \usepackage[plainpages=false,hyperindex=false]{hyperref}  
+  \usepackage[destlabel, plainpages=false, hyperindex=false]{hyperref} %
 \else
-  \ifXeTeX%
-    \usepackage[plainpages=false,hyperindex=false]{hyperref}
-  \else
-    \usepackage[dvipdfmx,plainpages=false,hyperindex=false]{hyperref}
-    % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-    % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
-    % with [dvipdfmx] all works fine 
-  \fi%
+  \ifthenelse{\boolean{texFhtLoaded}}{%
+    \usepackage[tex4ht, destlabel, plainpages=false, hyperindex=false]{hyperref}
+  }{%
+    \ifXeTeX%
+      \usepackage[destlabel, plainpages=false, hyperindex=false]{hyperref}%[plainpages=false,hyperindex=false]
+    \else%[plainpages=false,hyperindex=false]
+      \usepackage[dvipdfmx, destlabel, plainpages=false,hyperindex=false]{hyperref}
+      % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
+      % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+      % with [dvipdfmx] all works fine 
+    \fi%
+  }
 \fi
 
 \ifpdf
@@ -84,7 +101,7 @@
 
   \hypersetup{
     pdfinfo={
-      Author      ={Ernst Reissner},
+      Author      ={Wilberd van der Kallen},
       Title       ={A latex file with robust index},
       CreationDate={unknown},
       ModDate     ={unknown},
@@ -135,11 +152,11 @@ This preface has an \emph{indexed term}.\index{indexed term}
 \addtocounter{page}{-2}% Just to get overlap in roman and arabic page numbers.
 This introduction has another indexed term\index{other term!cited twice on same page}
 as well as the old indexed term.\index{indexed term}
-The page number is again 5, but now in arabic.
+The page number is again 5, but now in Arabic.
 If you index the same term twice on the same page, then one simply gets
 a repeat in the index.\index{other term!cited twice on same page}
 That is inherent in our method.
-Indeed we had to disable the implicit page range formation of makeindex.
+Indeed, we had to disable the implicit page range formation of makeindex.
 % Let us pretend this page explains $H^0(X,\mathcal L)$.
 %\glossary{$H^0(X,\mathcal L)$&the sections of the vector bundle
 %$\mathcal L|_X$ over $X$}
@@ -152,13 +169,13 @@ page~\pageref{range}, which also use several fonts in their page numbers.
 Traditionally page ranges and fonts for page numbers could be done with the
 encapsulating construction of makeindex, but that construction is broken by our
 package.
-(The encapsulating construction uses the encap character $|$ in the argument of
+(The encapsulating construction uses the encapsulating character $|$ in the argument of
 \verb|\index|.)
 We have restored it to some extent, sufficient for common practice,
 but our rules are more naive than those of makeindex.
 See the file \verb|robustsample.tex| for details.
 
-Subentries are still supported. We illustrate this in
+Sub-entries are still supported. We illustrate this in
 \verb|robustsample.tex| and Appendix~\ref{appendix} with alpha, beta and gamma.
 This also illustrates the use of \verb|\gobblepageref|.%
 \index{alpha!see beta}%
@@ -173,8 +190,8 @@ For instance, do not use \verb|\includeonly|.
 Say we wish the index to occur in the table of contents.
 We then give the command \verb|\indexincontents| before the index.
 
-The package \verb|hyperref| may break our code. Therefore
-one must use the option
+The package \verb|hyperref| may break our code. 
+Therefore, one must use the option
 \verb|hyperindex=false|, as in
 \verb|\usepackage[hyperindex=false]{hyperref}|.
 Note that \verb|robustindex| already puts
@@ -280,8 +297,8 @@ commands, does one have to run makeindex. But then it is important that you
 do run makeindex, even when no warning is issued. The robustness has its
 limits.
 \item The \texttt{theindex} environment lacks a destination for hyperlinks.
-That is a nuisance when one wants add the index to
-the bookmarks or to the table of contents in a pdf file: When one clicks on the
+That is a nuisance when one wants to add the index to
+the bookmarks or to the table of contents in a PDF file: When one clicks on the
 link that displays the word Index, one wants to end up in the index.
 \end{itemize}
 

@@ -58,3 +58,4 @@
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe documentmetadata-support code\\E$"}
 
 
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QWilberd van der Kallen\\E$"}
