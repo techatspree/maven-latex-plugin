@@ -36,6 +36,7 @@ public enum Injection {
     boolean doFilter() {
       return true;
     }
+
     boolean hasShebang() {
       return true;
     }
@@ -49,6 +50,7 @@ public enum Injection {
     String getFileName() {
       return ".chktexrc";
     }
+
     boolean hasShebang() {
       return false;
     }
@@ -68,6 +70,32 @@ public enum Injection {
 
     boolean hasShebang() {
       return true;
+    }
+  },
+  /**
+   * The general header file mostly loading packages. 
+   * Various main files may require additional headers 
+   * but this is currently the minimum, 
+   * so to speak the smallest common multiple. 
+   */
+  header {
+    String getFileName() {
+      return "header.tex";
+    }
+
+    /**
+     * The comment string which is that of tex. 
+     */
+    String commentStr() {
+      return "%";
+    }
+
+    boolean doFilter() {
+      return false;
+    }
+
+    boolean hasShebang() {
+      return false;
     }
   };
 

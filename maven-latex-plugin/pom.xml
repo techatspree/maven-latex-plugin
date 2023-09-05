@@ -470,6 +470,7 @@
           <!-- rc-files: filtered at runtime: fill in current parameter values -->
           <include>.latexmkrc</include>
           <include>.chktexrc</include>
+          <include>header.tex</include>
         </includes>
         <filtering>false</filtering>
       </resource>
@@ -1064,7 +1065,7 @@
               <goal>inj</goal>
             </goals>
             <configuration>
-              <injections>latexmkrc,chktexrc,vscodeExt</injections>
+              <injections>latexmkrc,chktexrc,vscodeExt,header</injections>
             </configuration>
           </execution>
           <execution>
