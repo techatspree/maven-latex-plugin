@@ -650,6 +650,12 @@ whereas the techniques mentioned above all derive vital information from apidoc 
     <!-- evaluate pdfinfo 
 provide a mechanism to create meta data maybe structure -->
 
+<!-- the log file provides information about the packages loaded 
+  and about their versions. 
+  One could add a check whether the packges are registered 
+  and whether their versions are allowed. 
+  Maybe better check statically as for tools. -->
+
 
     <release version="2.0" date="2023-08-28" description="">
 
