@@ -33,7 +33,8 @@ This can be used during development of documents
 but is more appropriate for small changes
 or when development finished at a stage. 
 
-
+%TBD: add links to all sections 
+% also mention where the individual goals are treated. 
 
 \section{The source files}\label{sec:sources}
 
@@ -164,7 +165,7 @@ Bibliographies in bib-files.
 This software treats them automatically. 
 
 
-\section{Checking and Exporting in various formats}\label{sec:outputFormats}
+\section{Exporting in various formats and checking sources}\label{sec:outputFormats}
 
 
 After having added the configuration of the plugin to the \texttt{pom.xml},
@@ -180,7 +181,7 @@ are read from the \emph{configuration} in the pom
 which is illustrated in Listing~\ref{lst:coordsConfig}. 
 % TBD: clarify what about the ant task 
 
-By default, the targets are \texttt{pdf} and \texttt{html}. 
+By default, the targets are \texttt{cfg}, \texttt{pdf} and \texttt{html}. 
 The following Listing~\ref{lst:targetsAll} shows a configuration 
 with the full range of output formats including in addition 
 the OpenOffice document format \texttt{odt}, 
@@ -207,11 +208,15 @@ caption={Configuration with full range output formats}]
 	
   <configuration>
     <settings>
-      <targets>pdf, dvi, html, odt, docx, rtf, txt</targets>
+      <targets>chk,pdf,dvi,html,odt,docx,rtf,txt</targets>
     </settings>
   </configuration>
 </plugin>
 \end{lstlisting}
+
+Somehow special is the target \texttt{chk} 
+which is mere checking without resulting output file. 
+It just displays a warning if a rule is violated. 
 
 The resulting files in the given output formats 
 are copied to the site directory, 
@@ -224,6 +229,9 @@ In particular, one may write \texttt{mvn latex:pdf} to create documentation
 in PDF-format only.
 Likewise, command \texttt{mvn latex:dvi} to get good old dvi/xdv files
 or even \texttt{mvn latex:txt} for plain text, just as examples. 
+Accordingly, \texttt{mvn latex:chk} performs a pure check. 
+This occurs preferably in the context of documentation development. 
+In particular, checking is treated separately in Section~\ref{subsec:develCheck}. 
 
 Note that the \texttt{-X} switch activates debugging 
 which results in a more verbose output. 
@@ -250,20 +258,7 @@ Example: \texttt{mvn -X latex:cfg}.
 % 
 % Same is true for target clr. 
 
-For creating the graphic files in the TEX source directory, 
-there is a goal \emph{graphics}, invoked by \texttt{mvn latex:grp}. 
-This goal does not create any output in the site directory. 
-Instead, it populates the source directories 
-with graphic files which can be directly included into the \LaTeX-file 
-and so it allows to run the \LaTeX-compiler on the latex main files 
-from within a development environment. 
-Thus, the goal \emph{graphics} is thus a vital feature 
-for development of documents. 
 
-
-Finally, there is another target for clearing the TEX source directory 
-recursively, invoked by \texttt{mvn latex:clr}. 
-For more details on the last three goals, see Section~\ref{sec:devel}. 
 
 In a standard maven project, 
 the above minimal configuration should be sufficient. 
@@ -286,12 +281,16 @@ Example: \texttt{ant -d latex:cfg}.
 
 Whereas by default the target directory and in particular 
 the target site directory with all output of this plugin is deleted 
-in maven's \texttt{clean} life-cycle. 
-As is described in more detail in Section~\ref{sec:devel}, 
-this software creates target documents and also intermediate files 
-in the tex source directory, at least with cleanup disabled. 
-To eliminate the created files from the source directory, 
-just type \texttt{mvn latex:clr}. 
+in maven's \texttt{clean} life-cycle, 
+the tools invoked by this software also create intermediate files 
+in the source directory. 
+By default, i.e. for setting \texttt{<cleanUp>true</cleanUp>}, 
+all files created in the source directory in the last run are cleaned. 
+Nevertheless, for document development intermediate files are vital 
+and so cleanup is frequently set to false. 
+In this case, cleanup must be done in a separate goal, 
+described in Section~\ref{subsec:develClean}. 
+
 By default, the goal \texttt{clr} 
 is also executed in maven's \texttt{clear} life-cycle. 
 
@@ -302,34 +301,158 @@ This can be fixed only by properties.
 Another problem is, to provide a complete subset of parameters 
 which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively. 
 
-If this ant-task is used in an ant project 
-with folder structure conforming with a maven project 
-and if the \LaTeX{} sources do not require a special configuration, 
-the above configuration is sufficient. 
-Otherwise, parameters have to be given explicitly 
-overwriting the default values. 
+\section{Checking versions of converters}\label{sec:chkVersions}
 
-\section{Development of Documents}\label{sec:devel}
+\section{Injection of files}\label{sec:injFiles}
+
+Mainly needed in the context of document development as described in 
+
+
+
+If the editor VS Code is already installed, the script \texttt{instVScode4tex.sh} 
+also given by Listing~\ref{lst:instVScode}, 
+installs and updates all extensions the author used to write \LaTeX-code. 
+
+\lstinputlisting[
+language=bash, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:instVScode}, 
+caption={Install script for extensions of VS Code. }]%
+{instVScode4tex.sh}
+
+Pasting \texttt{.latexmkrc}, which is just Perl code, 
+into VS Code one can see the highlighting, and a preview, 
+of course provided the extensions given by Listing~\ref{lst:instVScode} are installed; 
+The Perl script \texttt{.latexmkrc} is in fact the configuration file 
+for the development tool \texttt{latexmk}. 
+
+The file \texttt{.latexmkrc} comes in two versions, 
+one is ready to use and creates PDF the same files as this maven plugin, 
+provided the default settings are used. 
+The experience of the author is, that this is sufficient in most cases. 
+In contrast, the raw version contains several variables. 
+If these are set as properties in the \texttt{pom.xml}, 
+the variables are replaced by their values by filtering. 
+The same properties must be used to configure this plugin in the pom. 
+
+The file \texttt{.chktexrc} is to configure \texttt{chktex}. 
+Its current state is given in Listing~\ref{lst:chktexrc}. 
+The user is kindly asked to help to improve it. 
+Finally, \texttt{pom4pdf.xml} is a pom containing a full setting for this plugin 
+with comments and default settings. 
+
+\lstinputlisting[basicstyle=\scriptsize,
+float, captionpos=b, label={lst:chktexrc}, 
+caption={The config file \texttt{.chktexrc} to check this manual. }]%
+{.chktexrc}
+
+
+
+All these files are not only provided in the project site, 
+but also by the injection goal of this plugin. 
+
+Thus, they are available in a project using this latex plugin using the dependency plugin. 
+The first \texttt{artifactItem} extracts \texttt{instVScode4tex.sh}. 
+Since \texttt{instVScode4tex.sh} is not only to install extensions in VS Code 
+but also to update them, it is convenient to have the script at hand. 
+Project \url{https://github.com/Reissner/QMngMnt} 
+uses the script for automation of installation and update. 
+
+
+For document development the tool \texttt{latexmk} is a valuable build tool. 
+Also, a linter like \texttt{chktex} is helpful. 
+
+
+As described in~\cite{LatexMk23}, 
+Section~``CONFIGURATION/INITIALIZATION (RC) FILES'', 
+There are various configuration files \texttt{latexmkrc} or \texttt{.latexmkrc}, 
+among these a global one, a local one referring to the enclosing folder 
+and finally one specified by the command line option \texttt{-r}. 
+
+Likewise, \cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
+has a global configuration file \texttt{chktexrc} 
+and a local one \texttt{.chktexrc} or \texttt{chktexrc}, 
+depending on the operating system. 
+Finally, a configuration file can be specified with the option \texttt{-l}, 
+according to \cite{ChkTeX22}, Section 6.1.1. 
+Unfortunately, the ordering in which the configuration file given by option 
+is read in compared to the other, is not clearly specified. 
+
+For sake of reproducibility, we recommend restricting to the global configuration file 
+which is tied to the installation and to a local file either respected because it is in the local folder 
+or because it is given via a command line option. 
+
+Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
+as described, the local configuration file fits only for UNIX-like operating systems. 
+For Windows and that like, \texttt{chktexrc} is expected. 
+This can be realized with a link. 
+For sake of reproducibility, we recommend only global config files, 
+a local one in the current directory and maybe another one 
+specified with the option \texttt{-r} as described below. 
+In order to have the same \texttt{.chktexrc} for all main files in different folders, 
+one shall use a central \texttt{.chktexrc}, e.g. \texttt{src/site/tex/.chktexrc}, 
+and then either set a link to it from all folders with latex main files 
+or just use the \texttt{-r}. 
+Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
+in which the configuration file given by the option \texttt{-r} is read in. 
+
+This maven plugin offers a goal \texttt{inj} 
+to create the configuration files \texttt{.latexmkrc}, \texttt{.chktexrc} and further files, 
+all in the latex source directory. 
+In particular \texttt{.latexmkrc} is adapted to the current settings of this plugin. 
+That way, \texttt{latexmk} behaves the same as does this plugin. 
+Similarly, for \texttt{chktex}. 
+Note that these files are written only if either no file is overwritten 
+or only files are overwritten which were written by this plugin. 
+Self-written files are recognized by the headline. 
+If this cannot be read or in some other exotic conditions, 
+it cannot be ensured that the files are written by this software, 
+and so they are not overwritten. 
+In case of a doubt, a warning is displayed. 
+
+
+
+
+
+
+
+
+As mentioned above, the intention behind is, 
+to keep \texttt{latexmk} and this latex plugin synchronized 
+by providing properties in the pom and using them as settings when configuring the latex plugin 
+and at the same time to filter the raw \texttt{.latexmkrc}. 
+Currently, not all possible settings of this plugin 
+are taken into account in the raw \texttt{.latexmkrc}. 
+It is advisable, to use a raw \texttt{.latexmkrc} taking only parameters into account, 
+which are explicitly configured for the latex plugin. 
+So the given raw \texttt{.latexmkrc} is no more than a hint. 
+
+
+
+
+
+\section{Development of documents}\label{sec:devel}
 
 The term ``development of documents'' is coined by the author 
 and reflects that writing a document 
 resembles developing software 
 in that it is an iterative process consisting in producing, 
 checking, modifying, correcting, erasing, checking again\dots. 
-After initial creation, is like a dialog between the author and its work. 
+After initial creation, is an iterative process 
+like a dialog between the author and its work. 
 
 This is true of course independent of the tools used, 
 but some tools support this process better than others. 
 For document development the ideal are WYSIWYG (``what you see is what you get'') editors, 
 which should maybe be better called WYRIWYR (``what you write is what you read''), 
 or, taking also drawings into account, IisO (``input is output''). %TBD: maybe better glossary 
-For software development these are prototyping languages, interpreted at least. 
+For software development the ideal languages are prototyping languages, interpreted at least. 
 
 From that point of view, \LaTeX{} and friends is the worst conceivable choice: 
 %
 \begin{itemize}
   \item
   You write in an editor, but you read off from a viewer. 
+  So you must permanently switch your attention. 
   \item
   You write a sequence of commands, but you read text, formulae, drawings. 
   In a sense you program the appearance of a page or site. 
@@ -340,18 +463,47 @@ From that point of view, \LaTeX{} and friends is the worst conceivable choice:
   You cannot just see instantly the result of your work; 
   first you have to trigger a compilation process and wait some time. 
   So, besides an editor and a viewer you also need some kind of console. 
-  It is even worse: typically, you need more than one 
+  It is even worse: 
+  Typically, based on the console output you must either rerun the compiler 
+  or run some auxiliary program, even more of them 
+  and then again the compiler, maybe several times. 
+  The decision whether the viewer shows the final result already, 
+  or whether another command has to be issued and if so which one, 
+  is based on the console output. 
+  So part of your attention must be on the console also. 
+  The console is also used to issue the next command. 
   \item 
   The compilation process may go wrong or be in a sense deficient, 
   so what you need is observing logs, either on the console or in a log file. 
+  Even if the input is accepted by build tools even without warning, 
+  still there may be something wrong. 
+  The \LaTeX{} tools do not include any spell checking or grammar checking. 
+  Since \LaTeX{} documents are in a sense programmed, 
+  an additional burden is the need for a kind of linting, which is done, e.g. by \texttt{chktex}. 
+  This must be invoked manually and yields another log file, 
+  although no output. 
 \end{itemize}
+
+The situation is visualized in Figure~\ref{fig:docDevelBase}. 
+It is no UML diagram although using elements of UML. 
+The developer of the document is visualized as a stick figure 
+and the tools used for development are the boxes surrounding it,
+resembling instances in a UML class diagram. 
+Besides the tool under consideration, the according files are shown. 
+The console is to invoke conversion commands like \lualatex. 
+This shows already, that the user does not face a single counterpart, 
+but has to juggle with a bunch of tools at once. 
+The arrows represent data flows and this data is commands at least partially, 
+if the lines are solid, else they are dotted. 
 
 This explains the need for tools and techniques to mitigate the situation. 
 
 Seemingly, this \LaTeX-builder is not to contribute to document development, 
-because this is used after the end of the development process, 
+because it is used after the end of the development process, 
 automating the compilation process. 
 But since compilation may fail and because it is also a checker tool, 
+supervising even warnings, e.g. on bad boxes, and by default invoking \texttt{chktex} 
+and monitoring its log file, 
 it may be the start point for another loop in the development process. 
 
 Before describing the contribution of this \LaTeX-builder 
@@ -361,11 +513,35 @@ in particular the other tools supporting document development and their interact
 With this background in mind, it is easy to describe the role of the \LaTeX-builder 
 in the team of development tools. 
 
-\subsection{Tools supporting document development}
+\begin{figure}
+  \centering
+\ifthenelse{\boolean{texFhtLoaded}}{
+should be a picture 
+}{ 
+%\includegraphics{F4_05someMetapost1.mps}
+\includegraphics{F3_01texUsagePlain.mps}
+}
+  \caption{\label{fig:docDevelBase}Document development with base tools}
+\end{figure}
+
+\subsection{Editors, viewers and \LaTeX}
+
+The author recommends using VS Code to write \LaTeX{} documents 
+and to view the results on \texttt{okular}. 
+
 
 Editor VS Code with extensions in conjunction with viewer. 
 Mention also Emacs with AUC\TeX. 
 Point to installation script for extensions described in Section~\ref{subsec:develConfig}. 
+
+  For viewer, we use \texttt{okular}. 
+  Settings is settings configure okular. 
+  Then in tab \texttt{General} we 
+  %
+  \begin{itemize}
+    \item deselect show backend selection dialog 
+    \item select reload document on file change 
+  \end{itemize}
 
 Describe forward search and backward search. 
 Also mention clean goal described in more detail in Section~\ref{subsec:develClean}
@@ -397,16 +573,95 @@ and it can be run in nonstopmode.
 Still, \LaTeX-builder has its place in conjunction with \texttt{latexmk}. 
 
 
+\subsection{Goal Graphics}\label{subsec:develGraph}
+
+Hint to relation with latexmk. 
+needs mvn validate\& mvn latex:grp. 
+
+For creating the graphic files in the TEX source directory, 
+there is a goal \emph{graphics}, invoked by \texttt{mvn latex:grp}. 
+This goal does not create any output in the site directory. 
+Instead, it populates the source directories 
+with graphic files which can be directly included into the \LaTeX-file 
+and so it allows to run the \LaTeX-compiler on the latex main files 
+from within a development environment. 
+Thus, the goal \emph{graphics} is thus a vital feature 
+for development of documents. 
+
+
+
+
+\subsection{Goal Check}\label{subsec:develCheck}
+
+
 \subsection{Goal Clean}\label{subsec:develClean}
 
 Maybe the material is not enough for a separate section. 
 Important to ensure independence. 
 
+Finally, there is another target for clearing the TEX source directory 
+recursively, invoked by \texttt{mvn latex:clr}. 
+For more details on the last three goals, see Section~\ref{sec:devel}. 
+
+Hint to goal graphic. 
+
+As is described in more detail in Section~\ref{sec:devel}, 
+this software creates target documents and also intermediate files 
+in the TEX source directory, at least with cleanup disabled. 
+To eliminate the created files from the source directory, 
+just type \texttt{mvn latex:clr}. 
+
+cleanup refers also to injections. 
+
+Likewise, goal \texttt{clr} deletes these configuration files 
+if they were definitively written by this plugin. 
+If this is proved to be false or a proof is not possible, 
+the configuration files are not deleted. 
+As for goal \texttt{inj}, in case of a doubt, a warning is displayed. 
+
+
+
+
+
 
 \subsection{Installation and Configuration}\label{subsec:develConfig}
 
+TBD: rework: maybe better describe the goal \texttt{inj}. 
+The goal \texttt{inj} is to create a set of files, 
+partially adapted to the current configuration. 
+
+A first description of the injection goal is given by 
+%
+\begin{verbatim}
+mvn latex:help -Ddetail -Dgoal=inj
+\end{verbatim}
+%
+which yields a list of files which can be injected. 
+
+By default, it is tied to lifecycle phase \texttt{validate} 
+and comprises the set of injections \texttt{latexmkrc,chktexrc}. 
+
+The first we treat is injection \texttt{vscodeExt} 
+injecting a file \texttt{instVScode4tex.sh} in the TEX source directory. 
+Typically, this is not injected during a lifecycle, 
+but when installing or updating extensions for VS Code 
+used during document development. 
+Thus, typically it is invoked in the form 
+%
+\begin{verbatim}
+  mvn latex:inj -Dlatex.injections=vscodeExt
+\end{verbatim}
+
+In the default configuration, 
+this creates an executable file \texttt{src/site/tex/instVScode4tex.sh} 
+using bash shell. 
+The extensions 
+
+
+
 Install script for installing extensions for VS Code 
 helping in developing \LaTeX{} documents. 
+
 
 In addition, configuration scripts for \texttt{latexmk} and \texttt{chktex}. 
 Also describe how to use. 
@@ -793,6 +1048,13 @@ Of course this procedure is quite time-consuming, so an alternative is required.
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
 
+TBD: add goal inj. 
+Also, this section must preceed the one on development. 
+There must be a hint towards invocation 
+mvn latex:inj -Dlatex.injections=vscodeExt
+used preferred in document development. 
+
+
 The goal \texttt{latex:cfg} exporting in the formats configured
 is tied to the lifecycle phase \texttt{site} so is invoked
 when commanding
@@ -834,5 +1096,28 @@ as in Listing~\ref{lst:executions}.
 
 \section{The ant-tasks}\label{sec:usageAntTask}
 
-This section is missing.
-What has to be described are the two tasks. 
+
+Section~\ref{sec:outputFormats} treats goal \texttt{cfg} 
+to create output from one source in various formats 
+and also check which is without output. 
+The target formats and also the checks are specified in the parameter \texttt{targets}. 
+
+There is an according ant task \texttt{cfg} doing the same also based on parameter \texttt{targets}. 
+Whereas the maven plugin provides separate goals for each target, 
+the ant-task has no such convenience feature. 
+Section~\ref{sec:outputFormats} briefly mentions goal \texttt{clr} 
+used for cleanup. 
+There is an according ant-task relying on according parameters. 
+Note that the ant task does not support very much of document development, 
+but it is likely, that the user performs document development 
+and runs other programs than the ant task on the sources. 
+In this case, the \texttt{clr} task is vital. 
+
+
+If this ant-task is used in an ant project 
+with folder structure conforming with a maven project 
+and if the \LaTeX{} sources do not require a special configuration, 
+the above configuration is sufficient. 
+Otherwise, parameters have to be given explicitly 
+overwriting the default values. 
+
