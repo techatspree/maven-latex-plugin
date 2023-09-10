@@ -41,7 +41,7 @@ public class InjectionMojo extends AbstractLatexMojo {
 
   /**
    * Indicates the files injected by the goal <code>inj</code>. 
-   * This is a comma separated list of {@link Injections}s 
+   * This is a comma separated list of {@link Injection}s 
    * without blanks. 
    * The possible injections are: 
    * <ul>
