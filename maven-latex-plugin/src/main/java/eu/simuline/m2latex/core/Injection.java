@@ -124,6 +124,8 @@ public enum Injection {
 
   /**
    * Returns whether this file must be filtered before being injected. 
+   * By default this is <code>false</code> and is overwritten by need. 
+   * 
    * @return
    *   whether this file must be filtered before being injected. 
    *   This is <code>false</code>, except for {@link Injection#latexmkrc}. 
@@ -132,6 +134,13 @@ public enum Injection {
     return false;
   }
 
+  /**
+   * Returns whether the according injection shall be executable. 
+   * By default this is <code>false</code> and is overwritten by need. 
+   * 
+   * @return
+   *    whether the according injection shall be executable. 
+   */
   boolean setExecutable() {
     return false;
   }
