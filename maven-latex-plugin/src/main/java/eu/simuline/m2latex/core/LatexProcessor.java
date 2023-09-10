@@ -2324,7 +2324,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
       // may throw TMI01
       InputStream inStream = MetaInfo.getStream(fileName);
       File outFile = this.settings.rcResourceToFile(fileName);
-      outFile.setExecutable(inj.setExecutable(), false);
 
       try {
         // isCreatedByMyself may emit warnings WFU10, WFU11 
@@ -2350,6 +2349,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         throw new BuildFailureException("TLP03 Failure while writing file '" + fileName + 
           "' or closing in-stream. ", ioe);
       }
+
+      boolean success = outFile.setExecutable(inj.setExecutable(), false);
+      assert success || !inj.setExecutable();
     }
   }
 
