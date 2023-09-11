@@ -67,10 +67,14 @@
   %\usepackage[tagged, highstructure]{accessibility}
   \usepackage{xcolor}  % [pdftex]  
   \usepackage{graphicx}% [pdftex] 
-  \usepackage[destlabel]{hyperref}% driver [hpdftex] is autodetected 
-  \usepackage{transparent}% sometimes comes in with svg import 
-  % warning transparent package: loading aborted if not pdf-mode 
-  % strange: according to documentation not for xelatex; seems to work anyway 
+  % driver [hpdftex] is autodetected 
+  \usepackage[destlabel]{hyperref}
+  % sometimes comes in with svg import 
+  \usepackage{transparent}
+  % warning transparent package: 
+  % loading aborted if not pdf-mode 
+  % strange: according to documentation not for xelatex; 
+  % seems to work anyway 
   % can be extended using l3opacity
 \else
   % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
@@ -83,8 +87,10 @@
       \usepackage[destlabel]{hyperref}
     \else
       \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
-      % lualatex: without [dvipdfmx] option did not find converter dvi to pdf or to ps
-      % pdflatex: without [dvipdfmx] option dvips still works, but no converter for pdf
+      % lualatex: without [dvipdfmx] option did not find 
+      % converter dvi to pdf or to ps
+      % pdflatex: without [dvipdfmx] option dvips still works, 
+      % but no converter for pdf
     \fi
   }% tex4ht not loaded 
   %\usepackage{bmpsize}% not for xelatex 
