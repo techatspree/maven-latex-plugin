@@ -968,7 +968,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.6.0</version>
         <configuration>
           <breakiterator>true</breakiterator>
           <show>private</show>
@@ -1002,11 +1002,14 @@
       </plugin>
 
 
-      <!-- version 4.0.0-M4 and above require site.vm and still it does not work -->
+      <!-- version 4.0.0-M4 and above require site.vm 
+        and still it does not work -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>4.0.0-M3</version>
+        <!-- newest 4.0.0-M9 does not work 
+             intermediate 4.0.0-M8 works -->
+        <version>4.0.0-M8</version>
         <configuration>
           <locales>en</locales>
         </configuration>
