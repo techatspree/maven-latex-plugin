@@ -15,9 +15,15 @@
   e.g. of `bibtex` including rerunfilecheck for `lualatex` and friends. 
 - Supports document development, mainly by cooperating with editor, viewer 
   and with other tools in the build chain. 
-  Offers [installation script](./fromMain/instVScode4tex.sh) 
-  for extensions of VS Code. 
-- Offers check whether a document could have been reproduced. 
+  - Offers [installation script](./fromTex/instVScode4tex.sh) 
+    for extensions of VS Code. 
+  - Offers configuration file [`.chktexrc`](./fromTex/.chktexrc) 
+    for `chktex`. 
+  - Can create configuration file [`.latexmkrc`](./fromTex/.chktexrc) 
+    for `latexmk` synchronized with the configuration. 
+  - Offers a common header file [`header.tex`](./fromTex/header.tex) 
+    to unify packages loaded by latex main files. 
+- Allows check whether a document could have been reproduced. 
 
 # Planned Features
 

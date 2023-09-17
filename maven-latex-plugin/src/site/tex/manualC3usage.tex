@@ -307,9 +307,11 @@ which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively.
 
 Mainly needed in the context of document development as described in 
 
+TBD: rework: needed at first a table of possible injections with their files. 
+At best link to the according setting. 
 
-
-If the editor VS Code is already installed, the script \texttt{instVScode4tex.sh} 
+If the editor VS Code is already installed, 
+the script \texttt{instVScode4tex.sh} 
 also given by Listing~\ref{lst:instVScode}, 
 installs and updates all extensions the author used to write \LaTeX-code. 
 
@@ -319,29 +321,45 @@ float, captionpos=b, label={lst:instVScode},
 caption={Install script for extensions of VS Code. }]%
 {instVScode4tex.sh}
 
-Pasting \texttt{.latexmkrc}, which is just Perl code, 
+Pasting \href{\urlSite fromTex/.latexmkrc}{.latexmkrc}, 
+which is just Perl code, 
 into VS Code one can see the highlighting, and a preview, 
 of course provided the extensions given by Listing~\ref{lst:instVScode} are installed; 
 The Perl script \texttt{.latexmkrc} is in fact the configuration file 
 for the development tool \texttt{latexmk}. 
-
-The file \texttt{.latexmkrc} comes in two versions, 
-one is ready to use and creates PDF the same files as this maven plugin, 
-provided the default settings are used. 
-The experience of the author is, that this is sufficient in most cases. 
-In contrast, the raw version contains several variables. 
-If these are set as properties in the \texttt{pom.xml}, 
-the variables are replaced by their values by filtering. 
-The same properties must be used to configure this plugin in the pom. 
+It is adapted to the settings of this plugin. 
+Thus, by default it is created with each run if not present 
+and is erased when cleaning. 
 
 The file \texttt{.chktexrc} is to configure \texttt{chktex}. 
-Its current state is given in Listing~\ref{lst:chktexrc}. 
+Its current state is given in Listing~\ref{lst:chktexrc} 
+and \href{\urlSite fromTex/.chktexrc}{online}. 
 The user is kindly asked to help to improve it. 
 
 \lstinputlisting[basicstyle=\scriptsize,
 float, captionpos=b, label={lst:chktexrc}, 
 caption={The config file \texttt{.chktexrc} to check this manual. }]%
 {.chktexrc}
+
+It is observed that the packages loaded by various \LaTeX{} files 
+have a huge overlap and that at the same time, although rare, 
+exotic packages are loaded which may be replaced by standard ones. 
+This hurts single source principle 
+and at the same times makes it almost impossible 
+for a build tool as this one, 
+to make guarantees that it works still with the unexpected packages. 
+This is, e.g. because a package may write warnings 
+in an unexpected way into some log file. 
+
+Thus, a quite generic header file 
+\href{\urlSite fromTex/header.tex}{header.tex} 
+is also provided. 
+It is written in a way, that it works for various generators, 
+not only for \lualatex. 
+With some restrictions it supports generation 
+not only of PDF files but also of HTML. 
+There would be a lot more to say, 
+but have a look at it yourself. 
 
 
 

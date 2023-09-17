@@ -24,7 +24,7 @@ and setting the latex command to the non-standard value `xelatex`.
           <execution>
             <goals><goal>inj</goal></goals>
             <configuration>
-              <injections>latexmkrc,chktexrc,vscodeExt</injections>
+              <injections>latexmkrc,chktexrc,vscodeExt,header</injections>
             </configuration>
           </execution>
         </executions>
@@ -46,7 +46,9 @@ That way, `inj` never overwrites files hand crafted by the user.
 The above configuration gives the full range of injections 
 but by default only config files 
 `.latexmkrc` and `.chktexrc` are written. 
-Note that the names of the injections are not precisely the names of the files written. 
+Note that the names of the injections 
+are not precisely the names of the files written 
+as will be shown below. 
 
 
 ## The injections latexmkrc and chktexrc 
@@ -55,7 +57,8 @@ For injection `latexmkrc`,
 the config file `.latexmkrc` is synchronized with the configuration. 
 In particular, setting the latex command to `xelatex` 
 instead of the default `lualatex` is reflected in `.latexmkrc`. 
-If running `latexmk` in folder `texSrcDirectory` it uses `xelatex` in place of `lualatex` also. 
+If running `latexmk` in folder `texSrcDirectory` 
+it uses `xelatex` in place of `lualatex` also. 
 More general, the resulting artifacts are the same 
 whether created with `latexmk` without options using the injected `.latexmkrc`
 or with this software. 
@@ -70,24 +73,28 @@ For other folders, the author suggests using links
 to the central `.chktexrc`. 
 The only difference is, that `.chktexrc` does not depend on the configuration. 
 
-The config files are [`.chktexrc`](./fromMain/.chktexrc) 
-and for default configuration [`.latexmkrc`](./fromMain/.latexmkrc). 
+The config files are [`.chktexrc`](./fromTex/.chktexrc) 
+and for default configuration [`.latexmkrc`](./fromTex/.latexmkrc). 
 
 
-## Extensions for VS Code 
+## Injection to install extensions for VS Code 
 
-Another application of goal `inj` is injection of an install script for extensions of VS Code 
+Another application of goal `inj` 
+is injection of an install script for extensions of VS Code 
 recommended for document development. 
 It is assumed that VS code is already installed. 
-In the above pom snippet there is an injection `vscodeExt` injecting a file `instVScode4tex.sh`. 
-This injection is not in the default set and it is more likely that this injection is performed 
+In the above pom snippet there is an injection `vscodeExt` 
+injecting a file `instVScode4tex.sh`. 
+This injection is not in the default set 
+and it is more likely that this injection is performed 
 invoking maven from the base folder on the command line like so: 
 
 ```
 mvn latex:inj -Dlatex.injections=vscodeExt
 ```
 
-With the default settings, this creates an executable `./src/site/tex/instVScode4tex.sh` 
+With the default settings, 
+this creates an executable `./src/site/tex/instVScode4tex.sh` 
 and running 
 
 ```
@@ -95,10 +102,29 @@ and running
 ```
 
 installs the recommented extensions or, if already installed, updates them. 
-The file `instVScode4tex.sh` can also be copy and pasted from this [site](./fromMain/instVScode4tex.sh) 
+The file `instVScode4tex.sh` can also be copy and pasted 
+from this [site](./fromTex/instVScode4tex.sh) 
 and be made executable. 
 
 Note: This is developed under linux but windows user shall know how to get that functionality. 
 
 <!-- the link is very instable -->
 <!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->
+
+## Injection of a generic header 
+
+
+For injection `header`, 
+the TEX file `header.tex` is created in the latex source directory and, 
+although currently not needed, synchronized with the configuration. 
+The header essentially loads packages 
+and the intention is to unify the set of packages loaded. 
+To that end, all latex main files input this header. 
+This shall be the general usage, 
+but there are cases where one must deviate from that rule. 
+For the manual of this software, 
+the latex main file [robustsample.tex](./robustIdxGlos/robustsample.tex) 
+shall illustrate a techniqe to create a robust index 
+which in general is not used. 
+Thus the standard header is not appropriate. 
+
