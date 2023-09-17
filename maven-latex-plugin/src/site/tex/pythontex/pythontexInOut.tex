@@ -227,13 +227,13 @@ then follow, separated by \texttt\# symbols
 %
 \begin{itemize}
   \item the family, i.e.~the interpreter, here \texttt{py} representing python, 
-  coming from the command \texttt{\textbackslash pys}; 
+  coming from the command \cmd{pys}; 
   accordingly for environments, 
   \item the session, here \texttt{sname}, 
   which is the optional parameter of the command, 
   \item next suspected the restart identifier, seemingly always \texttt{default}
   \item the command, here \texttt{s}, 
-  also determined by the command \texttt{\textbackslash pys}, 
+  also determined by the command \cmd{pys}, 
   \item the context which is empty, % TBD: clarify 
   \item arguments which are empty here, 
   \item the number of the instance, which runs from 0 to the number of commands minus one 
@@ -400,7 +400,7 @@ Also, they are non-fatal because they don't lead to an immediate exit with failu
   1696 & error  & Cannot find dependency. It belongs to \dots                    & e   \\%errors += 1
   1765 & error  & Missing stderr file for \dots                                  & e   \\%errors += 1
   1960 & error  & Line number xxx could not be synced with the document \dots    & e   \\%errors += 1
-  2343 & error  & An error occurred but no error messages were identified. \dots & e   \\
+  2343 & error  & An error occurred but no error messages were identified.~\dots & e   \\
   2422 & error  & Could not find external file xxx The file was not pygmentized  & --- \\ % TBD: ask whether correct. 
 \end{longtable}
 } % \small 
@@ -538,7 +538,7 @@ So we arrive at the following pattern, where the dots must be replaced by the ab
 \\* PythonTeX error|...
 \end{Verbatim}
 
-For warnings we can use the same but do not need the bugfix. 
+For warnings, we can use the same but do not need the bugfix. 
 The result is 
 %
 \begin{Verbatim}[showspaces=true, fontsize=\small]

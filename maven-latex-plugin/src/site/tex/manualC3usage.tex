@@ -15,7 +15,7 @@ and the settings in \texttt{build.xml}
 as described in Section~\ref{sec:xmlBuild} for the ant task.
 
 This plugin may be used both if the \LaTeX-sources are ready 
-to create 'final' output from them 
+to create ``final'' output from them 
 and also to support development of the \LaTeX{} sources. 
 Accordingly, this chapter has Section~\ref{sec:sources}
 devoted to the form of the sources, including directory structure,
@@ -284,7 +284,7 @@ the target site directory with all output of this plugin is deleted
 in maven's \texttt{clean} life-cycle, 
 the tools invoked by this software also create intermediate files 
 in the source directory. 
-By default, i.e. for setting \texttt{<cleanUp>true</cleanUp>}, 
+By default, i.e.\@ for setting \texttt{<cleanUp>true</cleanUp>}, 
 all files created in the source directory in the last run are cleaned. 
 Nevertheless, for document development intermediate files are vital 
 and so cleanup is frequently set to false. 
@@ -307,7 +307,7 @@ which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively.
 
 Mainly needed in the context of document development as described in 
 
-TBD: rework: needed at first a table of possible injections with their files. 
+TBD\@: rework: needed at first a table of possible injections with their files. 
 At best link to the according setting. 
 
 If the editor VS Code is already installed, 
@@ -348,7 +348,7 @@ This hurts single source principle
 and at the same times makes it almost impossible 
 for a build tool as this one, 
 to make guarantees that it works still with the unexpected packages. 
-This is, e.g. because a package may write warnings 
+This is, e.g.\@ because a package may write warnings 
 in an unexpected way into some log file. 
 
 Thus, a quite generic header file 
@@ -357,7 +357,7 @@ is also provided.
 It is written in a way, that it works for various generators, 
 not only for \lualatex. 
 With some restrictions it supports generation 
-not only of PDF files but also of HTML. 
+not only of PDF files but also of HTML\@. 
 There would be a lot more to say, 
 but have a look at it yourself. 
 
@@ -384,12 +384,12 @@ There are various configuration files \texttt{latexmkrc} or \texttt{.latexmkrc},
 among these a global one, a local one referring to the enclosing folder 
 and finally one specified by the command line option \texttt{-r}. 
 
-Likewise, \cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
+Likewise,~\cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
 has a global configuration file \texttt{chktexrc} 
 and a local one \texttt{.chktexrc} or \texttt{chktexrc}, 
 depending on the operating system. 
 Finally, a configuration file can be specified with the option \texttt{-l}, 
-according to \cite{ChkTeX22}, Section 6.1.1. 
+according to~\cite{ChkTeX22}, Section 6.1.1. 
 Unfortunately, the ordering in which the configuration file given by option 
 is read in compared to the other, is not clearly specified. 
 
@@ -405,7 +405,7 @@ For sake of reproducibility, we recommend only global config files,
 a local one in the current directory and maybe another one 
 specified with the option \texttt{-r} as described below. 
 In order to have the same \texttt{.chktexrc} for all main files in different folders, 
-one shall use a central \texttt{.chktexrc}, e.g. \texttt{src/site/tex/.chktexrc}, 
+one shall use a central \texttt{.chktexrc}, e.g.\@ \texttt{src/site/tex/.chktexrc}, 
 and then either set a link to it from all folders with latex main files 
 or just use the \texttt{-r}. 
 Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
@@ -474,7 +474,7 @@ From that point of view, \LaTeX{} and friends is the worst conceivable choice:
   In a sense you program the appearance of a page or site. 
 
   This discrepancy becomes particularly apparent if creating a drawing in \LaTeX, 
-  e.g. with TikZ, because even drawings are described or programmed quite formally. 
+  e.g.\@ with TikZ, because even drawings are described or programmed quite formally. 
   \item
   You cannot just see instantly the result of your work; 
   first you have to trigger a compilation process and wait some time. 
@@ -495,13 +495,14 @@ From that point of view, \LaTeX{} and friends is the worst conceivable choice:
   still there may be something wrong. 
   The \LaTeX{} tools do not include any spell checking or grammar checking. 
   Since \LaTeX{} documents are in a sense programmed, 
-  an additional burden is the need for a kind of linting, which is done, e.g. by \texttt{chktex}. 
+  an additional burden is the need for a kind of linting, 
+  which is done, e.g.\@ by \texttt{chktex}. 
   This must be invoked manually and yields another log file, 
   although no output. 
 \end{itemize}
 
 The situation is visualized in Figure~\ref{fig:docDevelBase}. 
-It is no UML diagram although using elements of UML. 
+It is no UML diagram although using elements of UML\@. 
 The developer of the document is visualized as a stick figure 
 and the tools used for development are the boxes surrounding it,
 resembling instances in a UML class diagram. 
@@ -518,7 +519,7 @@ Seemingly, this \LaTeX-builder is not to contribute to document development,
 because it is used after the end of the development process, 
 automating the compilation process. 
 But since compilation may fail and because it is also a checker tool, 
-supervising even warnings, e.g. on bad boxes, and by default invoking \texttt{chktex} 
+supervising even warnings, e.g.\@ on bad boxes, and by default invoking \texttt{chktex} 
 and monitoring its log file, 
 it may be the start point for another loop in the development process. 
 
@@ -642,7 +643,7 @@ As for goal \texttt{inj}, in case of a doubt, a warning is displayed.
 
 \subsection{Installation and Configuration}\label{subsec:develConfig}
 
-TBD: rework: maybe better describe the goal \texttt{inj}. 
+TBD\@: rework: maybe better describe the goal \texttt{inj}. 
 The goal \texttt{inj} is to create a set of files, 
 partially adapted to the current configuration. 
 
@@ -668,8 +669,12 @@ Thus, typically it is invoked in the form
   mvn latex:inj -Dlatex.injections=vscodeExt
 \end{verbatim}
 
-In the default configuration, 
-this creates an executable file \texttt{src/site/tex/instVScode4tex.sh} 
+In the default configuration, this creates an executable file 
+%
+\begin{verbatim}
+  src/site/tex/instVScode4tex.sh
+\end{verbatim}
+%
 using bash shell. 
 The extensions 
 
@@ -1064,7 +1069,7 @@ Of course this procedure is quite time-consuming, so an alternative is required.
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
 
-TBD: add goal inj. 
+TBD\@: add goal inj. 
 Also, this section must preceed the one on development. 
 There must be a hint towards invocation 
 mvn latex:inj -Dlatex.injections=vscodeExt

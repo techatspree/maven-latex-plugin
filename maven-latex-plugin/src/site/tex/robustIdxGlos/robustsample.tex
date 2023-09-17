@@ -65,26 +65,26 @@
   }
 \fi
 
-\ifpdf
+\ifpdf%
   %\pdfinfoomitdate1
   %\pdfsuppressptexinfo-1
   %\pdftrailerid{}
-  \ifLuaTeX
+  \ifLuaTeX%
     % for lualatex
     %\pdfvariable minorversion=7
     % omit CreationDate and ModDate keys.
-    \pdfvariable suppressoptionalinfo 767
+    \pdfvariable suppressoptionalinfo 767% chktex 1
     % no adding to the trailer dictionary.
-    \pdfvariable trailerid{}
-    \pdfvariable suppressoptionalinfo -1
+    \pdfvariable trailerid{}% chktex 1
+    \pdfvariable suppressoptionalinfo -1% chktex 1
   \else
-    \ifXeTeX
+    \ifXeTeX%
       % for xelatex
       %\special{pdf:minorversion 7}
       % TBD: find a way to express pdfinfoomitdate: necessary? 
       \special{pdf:trailerid []}
     \else
-      \ifPDFTeX
+      \ifPDFTeX%
         %\pdfminorversion=7         % for pdflatex
         % omit CreationDate and ModDate keys.
         % not before pdfTeX 3.14159265-2.6-1.40.17
@@ -133,15 +133,11 @@
 \addcontentsline{toc}{chapter}{Preface}
 \markboth{Preface}{Preface}
 We will recall the purpose of \verb|robustindex.sty| in Appendix~\ref{purpose}.
-
 Although this is not a book, we have chosen the book style for illustration.
-
 If you want to see how \verb|robustindex.sty| may be used, compare the file
 \verb|robustsample.tex| or Appendix~\ref{appendix} with the output.
-
-If you are interested in our usage of \verb|robustglossary.sty|, you must read
-the file \verb|robustsample.tex|.
-
+If you are interested in our usage of \verb|robustglossary.sty|, 
+you must read the file \verb|robustsample.tex|.
 This preface has an \emph{indexed term}.\index{indexed term}
 
 % Let us pretend this page explains $\mathrm{Ext}^i_B(M,N)$.
@@ -181,8 +177,8 @@ This also illustrates the use of \verb|\gobblepageref|.%
 \index{alpha!see beta}%
 \index{alpha!see also gamma\gobblepageref}
 
-After running \LaTeX\ on \textit{filename\/} 
-one must run makeindex on \textit{filename\/} to get the index entries in \textit{filename}.\texttt{ind}.
+After running \LaTeX\ on \textit{filename} 
+one must run makeindex on \textit{filename} to get the index entries in \textit{filename}.\texttt{ind}.
 Before this there may be error messages about labels or names.
 Do not exclude any relevant files. 
 For instance, do not use \verb|\includeonly|.
@@ -191,7 +187,7 @@ Say we wish the index to occur in the table of contents.
 We then give the command \verb|\indexincontents| before the index.
 
 The package \verb|hyperref| may break our code. 
-Therefore, one must use the option
+Thus, one must use the option
 \verb|hyperindex=false|, as in
 \verb|\usepackage[hyperindex=false]{hyperref}|.
 Note that \verb|robustindex| already puts
@@ -225,7 +221,7 @@ because of the roman page numbers in the beginning.
 % but " can no longer be used to escape |. One must simply replace | with
 % \vert, when | is not intended to start encapsulation. Here is an example:
 %
-\index{page range!risky@this $\vert$is$\vert$ complicated|(textbf}%
+\index{page range!risky@this $\vert$is$\vert$ complicated|(textbf}% chktex 24
 % The "(" means that this starts a page range, and "textbf" means that
 % one wants to apply \textbf to the page number that starts the range.
 % The name "risky" of the subentry is used for sorting by makeindex, and will
@@ -276,7 +272,7 @@ because of the roman page numbers in the beginning.
 
 % continuation of encapsulating
 %
-\index{page range!risky@this $\vert$is$\vert$ complicated|)textit}
+\index{page range!risky@this $\vert$is$\vert$ complicated|)textit}% chktex 24
 % encapsulating to be continued below
 
 \chapter{Purpose of \texttt{robustindex.sty}}\label{purpose}
@@ -304,7 +300,7 @@ link that displays the word Index, one wants to end up in the index.
 
 % continuation of encapsulating
 %
-\index{page range|)textit}%
+\index{page range|)textit}% chktex 24
 \index{page range!risky@this $\vert$is$\vert$ complicated|texttt}%
 %
 \index{page range!with risky label\label{range}}%
@@ -326,16 +322,16 @@ link that displays the word Index, one wants to end up in the index.
 
 \def\itemamp#1&#2{%
    \mbox{%
-      \hbox to 10em{%
+      \hbox to 10em{% chktex 1
          #1%        the formula
-         \hss
+         \hss%
       }%
    }%
      #2%        its explanation
 }%
 
 \def\glossaryentry#1#2{%
-   {\itemamp #1{\unskip, #2}%
+   {\itemamp #1{\unskip, #2}% chktex 1
    }\par
 }%
 
