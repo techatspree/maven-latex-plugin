@@ -1772,8 +1772,8 @@ public class Settings {
   // -b: toggle creation of backup file: with -o: yes, additional -b: no 
   //     explicitly as -b0 and -b1, respectively. 
   @RuntimeParameter
-  @Parameter(name = "chkTexOptions", defaultValue = "")
-  private String chkTexOptions = "-q -b0";
+  @Parameter(name = "chkTexOptions", defaultValue = "-q -b0")
+  private String chkTexOptions;// = "-q -b0"
 
   /**
    * The diff-command for diffing pdf-files strictly or just visually 
