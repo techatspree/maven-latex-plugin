@@ -341,7 +341,6 @@ configuration settings to obtain behavior deviating from the default
 as sketched in Section~\ref{subsec:xmlPomSettings} 
 and finally executions to integrate this plugin in the lifecycle 
 as described in Section~\ref{subsec:xmlPomExecutions}. 
-The last Section,~\ref{subsec:xmlPomInjections}, is to be eliminated. 
 
 \subsection{Basic setup}\label{subsec:xmlPomBasic}
 
@@ -426,9 +425,26 @@ as described in Section~\ref{sec:devel},
 one of these is \texttt{cleanUp}: setting this to \texttt{false} 
 keeps intermediate files, in particular log files available 
 which helps to find errors and in locating the sources of warnings. 
-There are further situations where the user is grateful of being able to configure this software, 
+There are further situations where the user is grateful 
+of being able to configure this software, 
 or even where it is not usable with default settings. 
 Chapter~\ref{chap:settings} describes the complete set of settings. 
+The same pieces of information 
+is given in the \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} 
+used to test this plugin. 
+Although each setting takes its default value, 
+it is given explicitly and is endowed with a comment 
+describing it in detail as in Chapter~\ref{chap:settings}. 
+Since this pom is quite long, it is not part of this manual 
+but is given by reference on the project site. 
+% TBD: the explanations are in three places: 
+% javadoc comments, pom and chapter {chap:settings}. 
+% If it were possible to display apidocs also nested config 
+% by latex:help, 
+% javadoc comments alone would be sufficient. 
+% This would realize single source principle 
+% and would make a shorter manual which also compiles much faster. 
+
 
 % TBD: analysis when configuration must be made explicit at all. 
 %
@@ -649,34 +665,6 @@ gives an example pom using this latex plugin
 with full configuration with default values and executions.
 In addition, Chapter~\ref{chap:settings} describes each setting individually. 
 \medskip
-
-\subsection{Injections}\label{subsec:xmlPomInjections}
-
-This section must be rewritten: 
-In the long run, here the goal \texttt{inj} is described 
-and this is part of document development. 
-Do not forget the command line usage with property. 
-
-At this point, this software can be used in full functionality as a maven plugin, 
-but in fact it offers more than functionality, it also offers configuration. 
-Table~\ref{tab:cfgFilesLink} indicates the configuration files 
-and the URL where it can be found on the generated site. 
-
-\begin{table}[htb]
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    File & injection Link\\
-    \midrule{}
-    \texttt{instVScode4tex.sh} & \texttt{vscodeExt} & \href{\urlSite fromMain/instVScode4tex.sh}{instVScode4tex.sh} \\
-    \texttt{.latexmkrc}        & \texttt{latexmkrc} & \href{\urlSite fromMain/.latexmkrc}{.latexmkrc} \\ % TBD: maybe new text 
-    \texttt{.chktexrc}         & \texttt{chktexrc}  & \href{\urlSite fromMain/.chktexrc}{.chktexrc} \\
-    \texttt{pom4pdf.xml}       & -- & \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} \\
-    \bottomrule
-  \end{tabular}
-  \caption{\label{tab:cfgFilesLink} The configuration files and their links}
-\end{table}
-
 
 
 
