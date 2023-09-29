@@ -8,10 +8,17 @@ Silent {
 }
 
 WipeArg {
-  \lstinputlisting:[]{}
+  \lstinputlisting:[]{} \lstset:{}
 }
 
 VerbEnvir
 {
   Verbatim lstlisting
+}
+
+CmdLine {
+  --nowarn 3 --nowarn 17
+}
+
+UserWarn={
 }
