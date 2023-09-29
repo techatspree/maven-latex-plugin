@@ -1313,7 +1313,7 @@ public class Settings {
    */
   @RuntimeParameter
   @Parameter(name = "splitIndexOptions", defaultValue = "-V")
-  private String splitIndexOptions = "splitindexOptions";
+  private String splitIndexOptions = "-V";
 
   // parameters for glossary 
 
@@ -1774,7 +1774,7 @@ public class Settings {
   //     explicitly as -b0 and -b1, respectively. 
   @RuntimeParameter
   @Parameter(name = "chkTexOptions", defaultValue = "-q -b0")
-  private String chkTexOptions;// = "-q -b0"
+  private String chkTexOptions = "-q -b0";
 
   /**
    * The diff-command for diffing pdf-files strictly or just visually 
