@@ -414,13 +414,14 @@ public class Settings {
   private String patternCreatedFromLatexMain =
       // besides T$T.xxx, with xxx not containing ., 
       // we allow T$T.synctex.gz and T$T.out.ps 
-      "^(T$T(\\.([^.]*|synctex\\.gz(\\(busy\\))?|out\\.ps)|" +
+      "^(T$T(\\.([^.]*|synctex(\\(busy\\))?(\\.gz)?|" +  // synctex
+      "out\\.ps|run\\.xml|depytx(\\\\.tex)?)|" + // out? beamer, pythontex 
       // tex4ht creates files T$Tyy.(x)htm(l)... 
           "(-|ch|se|su|ap|li)?\\d+\\.x?html?|" +
           // ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 
           "\\d+x\\.x?bb|" + "\\d+x?\\.png|" + "-\\d+\\.svg|" +
           // by (splitidx and) splitindex 
-          "-.+\\.(idx|ind|ilg)|" + "\\.(pytxcode|plg|dplg|depytx(\\.tex)?)" + // regular files from package pythontex
+          "-.+\\.(idx|ind|ilg)|" +
           ")|" + // end all patterns starting with T$T
           // created by pythontex
           "pythontex-files-T$T|" + // folders from package pythontex
@@ -428,8 +429,8 @@ public class Settings {
           "zzT$T\\.e?ps|" +
           // ... and scripts cmsy....png 
           "(cmsy)\\d+(-c)?-\\d+c?\\.png|" +
-          // The following occurs sporadic 
-          "(pdf)?latex\\d+\\.fls)$";
+          // The following occurs sporadic when using latexmk 
+          "(pdf|xe|lua)?latex\\d+\\.fls)$";
 
 
   // parameters for graphics preprocessing 

@@ -539,18 +539,49 @@ and in the TEX-files inputted.
 The default value 
 `\texttt{\^{}T\$T\textbackslash.$[$\^{}.$]*$}' 
 is appropriate for most parameters and packages: 
-most packages create files with names only 
+Most packages create files with names only 
 which coincide with the name of the latex main file, except the suffix. 
 This is all sufficient even for programs doing post-processing 
 such as \texttt{bibtex}, \texttt{makeindex}, \texttt{xindy} and 
 \texttt{makeglossaries}. 
-The only exception is \texttt{splitindex} 
-which requires in addition 
-`\texttt{\^{}T\$T\textbackslash-.+\.(idx|ind|ilg)}'. 
 
-Package `\pkg{srcltx}' requires in addition 
-`\texttt{\^{}T\$T\textbackslash.synctex\textbackslash.gz}' 
-and finally package `\pkg{tex4ht}' is for all the rest. 
+% TBD: take bib2gls into account 
+The program \texttt{splitindex} requires in addition 
+`\texttt{\^{}T\$T-.+\textbackslash.(idx|ind|ilg)}'. 
+
+The utility \texttt{pythontex} requires 
+`\texttt{\^{}T\$T\.depytx(\textbackslash.tex)?}' 
+and creates a bunch of further files all in a folder of the form 
+`\texttt{pythontex-files-T\$T}' which must also be added to the regular expression. 
+
+Whereas typically \texttt{latexmk} creates only `\texttt{\^{}T\$T\.fdb\_latexmk}' 
+which is included in the very first expression, 
+during its run it creates `\texttt{\^{}(pdf|xe|lua)?latex\textbackslash d+\textbackslash.fls}', 
+where the digits represent the process number. 
+If interrupting \texttt{latexmk}, these files may remain, 
+so it is appropriate to add them to the regular expression. 
+
+Package `\pkg{srcltx}' or also \texttt{synctex} requires in addition 
+`\texttt{\^{}T\$T\textbackslash.synctex(\textbackslash.gz)?}' depending on the setting 
+\texttt{synctex=1} or \texttt{synctex=-1}. 
+For long files the synctex may create a busy file 
+`\texttt{\^{}T\$T\textbackslash.synctex\textbackslash(busy\textbackslash)?}'. 
+Even if the \LaTeX{} process is interrupted regularly, 
+at the end the busy file is erased, 
+but still if interrupted from outside it may remain, 
+so we add also the busy variant to the regular expression. 
+Strictly speaking, 
+`\texttt{\^{}T\$T\textbackslash.synctex(\textbackslash(busy\textbackslash))?(\textbackslash.gz)?}' 
+is not precisely what may occur, but is a good approximation. 
+
+% TBD: clarify out\\.ps 
+The class beamer creates a lot of additional files 
+but finally in addition to what we already have, 
+it needs an additional \texttt{\^{}T\$T\textbackslash.run\textbackslash.xml}. 
+
+Finally, package `\pkg{tex4ht}' is for all the rest of the cases, created by packages. 
+
+
 The pattern is designed 
 to match quite exactly the created files, 
 not much more and at any case not less. 
@@ -559,6 +590,7 @@ In particular, it has to comprise the files matching pattern
 Nevertheless, since any new package may break the pattern, 
 and not every package is well documented, 
 this pattern cannot be guaranteed to be final. 
+% TBD: This is one of the places where normation of packages comes into the game. 
 
 If the current default value is not appropriate, 
 please overwrite it in the configuration 
@@ -568,14 +600,18 @@ The default value for this pattern is currently:
 %
 \begin{verbatim}
 ^(
-T$T             (\.([^.]*|synctex\.gz|out\.ps)|
-   (-|ch|se|su|ap|li)?\d+\.x?html?|
-             \d+x\.x?bb|
-             \d+x?\.png|
-             -\d+\.svg)|
-zzT$T\.e?ps|
-(cmsy)\d+(-c)?-\d+c?\.png|
-(pdf)?latex\d+\.fls)$
+T$T                      (\.([^.]*|
+                             synctex(\(busy\))?(\.gz)?|
+                             out\.ps|run\.xml|depytx(\.tex)?)|
+    (-|ch|se|su|ap|li)?\d+\.x?html?|
+                      \d+x\.x?bb|
+                     \d+x?\.png|
+                      -\d+\.svg|
+                       -.+\.(idx|ind|ilg))|
+      pythontex-files-T$T|
+      zzT$T\.e?ps|
+      (cmsy)\d+(-c)?-\d+c?\.png|
+      (pdf|xe|lua)?latex\d+\.fls)$
 \end{verbatim}
 
 
@@ -2243,7 +2279,8 @@ ranging from byte equivalence to some kind of visual equivalence.
     both implementing a visual diff. 
     Note that unlike for other tools, no options can be passed in this case explicitly. 
   \end{minipage}
-  } \\\end{longtable}
+  } \\
+\end{longtable}
 
 The options of \texttt{chktex} are described in detail 
 in~\cite{ChkTeX22}, Section 6.1.2. % chktex 17 bug: rest but in 1674
