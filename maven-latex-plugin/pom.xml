@@ -542,7 +542,7 @@
               </message>
             </requireMavenVersion>
             <requireJavaVersion>
-              <version>versionJava</version>
+              <version>${versionJava}</version>
             </requireJavaVersion>
             <dependencyConvergence/>
           </rules>
@@ -676,7 +676,7 @@
               <outputDirectory>src/site/tex</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/resources/</directory>
+                  <directory>src/main/resources</directory>
                   <includes>
                     <include>buildParams.tex</include>
                   </includes>
@@ -1116,7 +1116,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
         <!-- TBD: uniform version -->
-        <version>2.16.0</version>
+        <version>2.16.1</version>
         <reportSets>
           <reportSet>
             <reports>
