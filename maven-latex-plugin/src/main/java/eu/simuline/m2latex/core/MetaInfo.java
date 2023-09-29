@@ -571,6 +571,7 @@ public class MetaInfo {
 			// TBD: unoconv is an example where 0.9 and 0.9.0 occur, 
 			// in different distributions but both versions identical 
 			// This must be taken into account 
+      // For fig2dev with verions 3.2.7x and 3.2.8, this seems ok. 
 			return getSegments().size() - other.getSegments().size();
 		}
 

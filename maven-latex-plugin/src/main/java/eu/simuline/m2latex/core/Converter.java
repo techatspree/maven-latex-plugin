@@ -779,6 +779,7 @@ enum Converter {
 
     String getVersionOption() {
       return "-V";
+      // now works also --version but only from verison 3.2.9 on
     }
 
     String getHelpOption() {
@@ -786,7 +787,7 @@ enum Converter {
     }
 
     String getVersionPattern() {
-      return "(([0-9]+)\\.([0-9]+)\\.([0-9]+)([a-z]))";
+      return "(([0-9]+)\\.([0-9]+)\\.([0-9]+)([a-z])?)";
     }
 
     String getVersionEnvironment() {
