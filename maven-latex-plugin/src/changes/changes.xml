@@ -658,6 +658,33 @@ provide a mechanism to create meta data maybe structure -->
 
   <!-- the site shall have a bibliography again and an index and a glossary -->
 
+  <!-- bug in chktex: \lstset{%
+escapeinside=`',% chktex 34
+texcl=true}% chktex 34 needs chktex 34, 
+although in chkterc we have \lstset in WipeArg -->
+
+<!-- in project java in octave document on filters 
+  a lot of svg files are created. 
+  Why? how to avoid, because svg is treated as source format. 
+-->
+
+<!-- mention that fig2dev version 3.2.9 yields slightly different output 
+  than previous versions above all the fonts. 
+  Also the form of the fig file is a bit different. 
+This has impact of reproduction of pdf files 
+and should thus be mentioned at according place in the manual. -->
+
+<!-- bugix: whereas version of fig2dev 3.2.8b is less than 3.2.9 
+  but this is less 3.2.9a. -->
+
+  <!-- add an index of used packages. 
+  Each element contains a short description, and a link to the reference. 
+  There it shall be also a link to the original document. 
+  Further details are in which injection it is loaded. -->
+
+  <!-- in 
+    https://mvnrepository.com/artifact/eu.simuline.m2latex/latex-maven-plugin
+    see e.g. vulnerabilities -->
 
     <release version="2.0" date="2023-08-28" description="">
 
