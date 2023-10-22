@@ -47,9 +47,10 @@
 \usepackage[a4paper]{geometry}% option , showframe, showcrop 
 %\usepackage{showframe} as an alternative 
 \usepackage{microtype}
+%\usepackage[indent,skip=0]{parskip}% used by pandoc but not good 
 % special characters
 \usepackage{textcomp}
-%\usepackage{anyfontsize}
+\usepackage{anyfontsize}% important e.g. for beamer class 
 %\usepackage{cleveref}
 
 
@@ -163,6 +164,8 @@
 \usepackage{booktabs}
 \aboverulesep=0ex
 \belowrulesep=0ex
+
+\usepackage{xurl}
 
 %\makeglossary% for rerunfilecheck 
 
