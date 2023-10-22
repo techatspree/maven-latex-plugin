@@ -1028,17 +1028,17 @@
             <!--pdfViaDvi>true</pdfViaDvi-->
             <cleanUp>false</cleanUp>
             <!--chkDiff>true</chkDiff-->
-            <!--targets>dvi</targets-->
+            <targets>chk, pdf</targets>
             <!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
             <!--targets>chk,pdf,html</targets-->
-            <mainFilesIncluded>manualLMP</mainFilesIncluded>
+            <!--mainFilesIncluded>manualLMP</mainFilesIncluded-->
             <mainFilesExcluded>test</mainFilesExcluded>
             <pythontexCommand>pythontexW:pythontex</pythontexCommand>
             <pythontexOptions>--rerun=always</pythontexOptions>
             <!--patternErrPyTex>\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\(s\), [0-9]+ warning\(s\)</patternErrPyTex-->
             <!--patternWarnPyTex>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\(s\), [1-9][0-9]* warning\(s\)</patternWarnPyTex-->
             <!--depythontexCommand>depythontexW</depythontexCommand-->
-            <chkTexOptions>-q -b0 -L</chkTexOptions>
+            <!--chkTexOptions>-q -b0</chkTexOptions--><!-- BUG: does not do without -->
           </settings>
         </configuration>
 
