@@ -305,18 +305,76 @@ which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively.
 
 \section{Injection of files}\label{sec:injFiles}
 
-Mainly needed in the context of document development as described in 
+The goal \texttt{inj} is to inject files 
+into the working directory \texttt{texSrcDirectory}. 
 
-TBD\@: rework: needed at first a table of possible injections with their files. 
-At best link to the according setting. 
+\begin{longtable}{|l|ll|}
+  \toprule
+  Name & File & explanation \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:injections} Overview over all injections }
+  \endlastfoot%
+  latexmkrc   & \texttt{.latexmkrc}        & config file for \texttt{latexmk}   \\
+  chktexrc    & \texttt{.chktexrc}         & config file for \texttt{chktex}         \\
+  header      & \texttt{header.tex}        & header file for latex sources      \\
+  vscodeExt   & \texttt{instVScode4tex.sh} & shell script to install VS Code extensions \\
+  \end{longtable}
 
+Table~\ref{tab:injections} shows the possible injections 
+and the ones really to be performed are given in the configuration \texttt{injections}. 
+The configuration is described in Table~\ref{tab:paramMisc} on page \pageref{tab:paramMisc}. 
+It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}. 
+
+The file \texttt{.latexmkrc} tied to the injection \texttt{latexmkrc} 
+is the configuration file for the build tool \texttt{latexmk} 
+and likewise \texttt{.chktexrc} tied to the injection \texttt{chktexrc} 
+is the configuration file for the style check tool \texttt{chktex}. 
+Both tools are mainly used in document development 
+as described in Sections~\ref{subsec:latexmk} and~\ref{subsec:develCheck}, 
+but both tools may be used in a regular build also. 
+So their respective configuration files must be injected 
+in the build process before the \LaTeX{} build tools are invoked. 
+Thus, goal \texttt{inj} has default phase \texttt{validate}. 
+Note that \texttt{.latexmkrc} is adapted to the configuration of the current build, 
+so that build with this software has the same result as direct invocation of \texttt{latexmk}. 
+In the current version of this software, 
+the injected \texttt{.latexmkrc} is not completely adapted to the configuration, 
+and it is only intended to create PDF files. 
+% TBD
+In the future this shall change. 
+
+The injection \texttt{header} is tied to the file \texttt{header.tex} 
+which is intended to be included in each \LaTeX{} main file. 
+Essentially it includes packages always needed. 
+It is inspired by the packages \texttt{pandoc} includes by default 
+according to \url{https://pandoc.org/MANUAL.html#creating-a-pdf}. 
+As the configuration files described above, 
+it is intended to be injected in phase \texttt{validate}. 
+
+In the long run it could be adapted to the configuration as \texttt{.latexmkrc}, 
+but currently it detects the use case as the latex converter or the target format 
+and loads the according packages. 
+Unlike \texttt{.latexmkrc}, it is not restricted to creating PDF. 
+It is checked in conjunction with document classes \texttt{book} and \texttt{article}. 
+**** TBD: mention also beamer class. **** 
+
+The injections described so far are intended to be performed in phase \texttt{validate}  
+as illustrated in Listing~\ref{lst:executions}. 
+This is preferable, because the configuration files 
+are adapted to the settings in each run. 
+
+The last injection, \texttt{vscodeExt} injecting the file \texttt{instVScode4tex.sh} 
+is used in a completely different way. 
 If the editor VS Code is already installed, 
 the script \texttt{instVScode4tex.sh} 
 also given by Listing~\ref{lst:instVScode}, 
 installs and updates all extensions the author used to write \LaTeX-code. 
 
 \lstinputlisting[
-language=bash, basicstyle=\scriptsize,
+language=bash, basicstyle=\tiny,
 float, captionpos=b, label={lst:instVScode}, 
 caption={Install script for extensions of VS Code. }]%
 {instVScode4tex.sh}
