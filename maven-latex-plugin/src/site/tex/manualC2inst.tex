@@ -526,23 +526,16 @@ It is perfectly ok to stick to a single format like \texttt{pdf}
 and configure \texttt{target} accordingly. 
 
 Alternatively, one may define an execution with the required goals like \texttt{pdf}, 
-but then the phase must be specified explicitly. 
+but then the phase must be specified explicitly, because there is no default phase. 
 Of course, then no additional check is performed. 
 
-During document development, described in Section~\ref{sec:devel}, 
-one may invoke \texttt{latexmk} or \texttt{chktex} explicitly 
-or \texttt{latexmk} invokes \texttt{chktex}. 
-Both tools have a configuration file, 
-which is \texttt{.latexmkrc} and \texttt{.chktexrc}, respectively. 
-In particular, \texttt{.latexmkrc} 
-shall be kept synchronized with the settings of this plugin. 
-This is one application of goal \texttt{inj}, 
-which injects files into the working directory \texttt{texSrcDirectory}. 
-This can be done invoking \texttt{mvn latex:inj} 
-but also by means of an execution for each run 
-as illustrated in Listing~\ref{lst:executions}. 
-The latter is preferable, because the configuration files 
-are adapted to the settings in each run. 
+The goal \texttt{inj} injects files into the working directory \texttt{texSrcDirectory} 
+as described in detail in Section~\ref{sec:injFiles}. 
+For some files it makes sense to do this independent of the build process 
+e.g. by invoking \texttt{mvn latex:inj}, 
+but in general it is preferable to perform the injection each build process anew 
+because that way the injected file can be adapted 
+to the current configuration of this plugin. 
 
 Normally, all created files in the source directory are removed 
 after the output has been copied to the target, 
