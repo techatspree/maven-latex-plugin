@@ -509,8 +509,8 @@ So the given raw \texttt{.latexmkrc} is no more than a hint.
 The term ``development of documents'' is coined by the author 
 and reflects that writing a document 
 resembles developing software 
-in that it is an iterative process consisting in producing, 
-checking, modifying, correcting, erasing, checking again\dots. 
+in that it is an iterative process consisting in producing pieces of information, 
+checking, modifying, correcting, erasing it, checking again\dots. 
 After initial creation, is an iterative process 
 like a dialog between the author and its work. 
 
@@ -583,7 +583,7 @@ it may be the start point for another loop in the development process.
 
 Before describing the contribution of this \LaTeX-builder 
 to the process of document development, 
-let us describe this process in more detail, 
+let us describe the process of document development in more detail, 
 in particular the other tools supporting document development and their interaction. 
 With this background in mind, it is easy to describe the role of the \LaTeX-builder 
 in the team of development tools. 
@@ -599,15 +599,47 @@ should be a picture
   \caption{\label{fig:docDevelBase}Document development with base tools}
 \end{figure}
 
-\subsection{Editors, viewers and \LaTeX}
+The minimum needed to develop a document in \LaTeX{} 
+are an editor, an according viewer and the \LaTeX{} tools for build and check 
+as described in Section~\ref{subsec:editViewLatex}. 
+As described above, using this basic tools directly 
+distracts much of the attention of the author/developer 
+from the content. 
+Thus, it is a good idea to use a tool to orchestrate the \LaTeX{} tools. 
+The author of this software prefers the orchestration tool \texttt{latexmk} 
+which is described in Section~\ref{subsec:latexmk}. 
+
+The check tool \texttt{chktex} and the according goal \texttt{chk} 
+are already described in Section~\ref{sec:outputFormats}. 
+Nevertheless, the aspects of checking 
+in the context of document development is treated separately 
+in Section~\ref{subsec:develCheck}. 
+
+The goals \texttt{grp} and \texttt{clr} 
+described in Sections~\ref{subsec:develGraph} and~\ref{subsec:develClean} 
+make sense only in the context of document development. 
+For details see these sections. 
+
+Finally, Section~\ref{subsec:develConfig} 
+is on installing extensions for document development on the editor VS Code. 
+To that end, this software provides an installation script. 
+
+
+
+
+
+
+\subsection{Editors, viewers and \LaTeX}\label{subsec:editViewLatex}
 
 The author recommends using VS Code to write \LaTeX{} documents 
 and to view the results on \texttt{okular}. 
 
-
 Editor VS Code with extensions in conjunction with viewer. 
 Mention also Emacs with AUC\TeX. 
 Point to installation script for extensions described in Section~\ref{subsec:develConfig}. 
+Extensions of VS Code are mainly to highlight the code of the various file types, 
+but the central extension is \texttt{james-yu.latex-workshop} 
+which also provides build functionality. 
 
   For viewer, we use \texttt{okular}. 
   Settings is settings configure okular. 
@@ -643,15 +675,55 @@ There is another tool doing this work, \texttt{latexmk}.
 Essentially, it is better suited to document development, 
 because it allows easily to build a single document only and is considerably faster 
 because no overhead from maven or ant, 
-and it can be run in nonstopmode. 
+and it can be run in \texttt{nonstopmode}. 
 
 Still, \LaTeX-builder has its place in conjunction with \texttt{latexmk}. 
 
 
-\subsection{Goal Graphics}\label{subsec:develGraph}
+\subsection{The build tool \texttt{latexmk}}\label{subsec:latexmk}
+
+TBD: Describe the build tool \texttt{latexmk} but also its deficiencies, 
+i.e. what this \LaTeX-builder offers in addition. 
+Essentially, there are two aspects: 
+The build processes are different and the \LaTeX-builder is much faster 
+in conjunction with certain graphics 
+as used e.g. in this manual. 
+The main aspect is supervision of the build process: 
+\texttt{latexmk} focuses on mere build success, 
+but does not notify of warnings. 
+So the build process may complete, but the result may be inappropriate. 
+
+Here also links to goal \texttt{grp} creating graphics files 
+described in Section~\ref{subsec:develGraph} 
+and to Section~\ref{sec:injFiles} on file injection are in place. 
+Also link on goal \texttt{clr} to clear created files 
+described in Section~\ref{subsec:develClean}. 
+
+\subsection{Checks in the context of document development}\label{subsec:develCheck}
+
+TBD: rework 
+
+target and goal \texttt{chk} just invoke the tool \texttt{chktex} 
+and checks for a finding. 
+That way it is a quality control in the course of the build process, 
+but also the entry point for further development. 
+
+As described in Section~\ref{sec:injFiles}, 
+the configuration file \texttt{.chktecrc} for \texttt{chktex} is injected. 
+
+In case of findings, a log file is written which can be analyzed. 
+Then alternately the source can be corrected 
+and \texttt{chktex} can be invoked directly. 
+Since the configuration file is as in the build run, 
+the results are the same. 
+
+
+
+
+\subsection{Goal Graphics \texttt{grp}}\label{subsec:develGraph}
 
 Hint to relation with latexmk. 
-needs mvn validate\& mvn latex:grp. 
+needs mvn validate \& mvn latex:grp. 
 
 For creating the graphic files in the TEX source directory, 
 there is a goal \emph{graphics}, invoked by \texttt{mvn latex:grp}. 
@@ -664,12 +736,13 @@ Thus, the goal \emph{graphics} is thus a vital feature
 for development of documents. 
 
 
+Note that in general \texttt{mvn clean validate latex:grp} 
+creates all files necessary to compile with a latex converter like \lualatex{} 
+and also to compile smoothly with \texttt{latexmk}. 
 
 
-\subsection{Goal Check}\label{subsec:develCheck}
 
-
-\subsection{Goal Clean}\label{subsec:develClean}
+\subsection{Goal Clear \texttt{clr}}\label{subsec:develClean}
 
 Maybe the material is not enough for a separate section. 
 Important to ensure independence. 
@@ -693,7 +766,6 @@ if they were definitively written by this plugin.
 If this is proved to be false or a proof is not possible, 
 the configuration files are not deleted. 
 As for goal \texttt{inj}, in case of a doubt, a warning is displayed. 
-
 
 
 
@@ -747,7 +819,7 @@ Also describe how to use.
 
 
 
-\subsection{Miscellaneous}% This is to be removed in the long run. 
+\subsection{Miscellaneous}% TBD: This is to be removed in the long run. 
 
 
 
@@ -1127,13 +1199,6 @@ Of course this procedure is quite time-consuming, so an alternative is required.
 
 \section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
 
-TBD\@: add goal inj. 
-Also, this section must preceed the one on development. 
-There must be a hint towards invocation 
-mvn latex:inj -Dlatex.injections=vscodeExt
-used preferred in document development. 
-
-
 The goal \texttt{latex:cfg} exporting in the formats configured
 is tied to the lifecycle phase \texttt{site} so is invoked
 when commanding
@@ -1153,8 +1218,10 @@ when commanding
 mvn clean
 \end{Verbatim}
 
-Finally, the goal \texttt{latex:vrs} displaying versions of converters
-is tied to the phase \texttt{validate}. 
+Finally, the goal \texttt{latex:vrs} displaying versions of converters 
+and the goal \texttt{latex:inj} injecting a set of files 
+depending on the configuration 
+are tied to the phase \texttt{validate}. 
 Thus, it is thus invoked when commanding
 %
 \begin{Verbatim}[fontsize=\scriptsize]
