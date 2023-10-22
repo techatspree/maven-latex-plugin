@@ -415,7 +415,7 @@ public class Settings {
       // besides T$T.xxx, with xxx not containing ., 
       // we allow T$T.synctex.gz and T$T.out.ps 
       "^(T$T(\\.([^.]*|synctex(\\(busy\\))?(\\.gz)?|" +  // synctex
-      "out\\.ps|run\\.xml|depytx(\\\\.tex)?)|" + // out? beamer, pythontex 
+      "out\\.ps|run\\.xml|\\d+\\.vrb|depytx(\\\\.tex)?)|" + // out? beamer, pythontex 
       // tex4ht creates files T$Tyy.(x)htm(l)... 
           "(-|ch|se|su|ap|li)?\\d+\\.x?html?|" +
           // ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 

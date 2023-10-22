@@ -572,7 +572,8 @@ is not precisely what may occur, but is a good approximation.
 % TBD: clarify out\\.ps 
 The class beamer creates a lot of additional files 
 but finally in addition to what we already have, 
-it needs an additional \texttt{\^{}T\$T\textbackslash.run\textbackslash.xml}. 
+it needs an additional \texttt{\^{}T\$T\textbackslash.run\textbackslash.xml} 
+and at times \texttt{\^{}T\$T\textbackslash.\textbackslash d+\textbackslash.vrb}. 
 
 Finally, package `\pkg{tex4ht}' is for all the rest of the cases, created by packages. 
 
@@ -597,7 +598,8 @@ The default value for this pattern is currently:
 ^(
 T$T                      (\.([^.]*|
                              synctex(\(busy\))?(\.gz)?|
-                             out\.ps|run\.xml|depytx(\.tex)?)|
+                             out\.ps|run\.xml|\d+\.vrb|
+                             depytx(\.tex)?)|
     (-|ch|se|su|ap|li)?\d+\.x?html?|
                       \d+x\.x?bb|
                      \d+x?\.png|
