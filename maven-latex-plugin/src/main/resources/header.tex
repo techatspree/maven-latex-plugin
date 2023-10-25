@@ -11,18 +11,11 @@
 % iftutex test is true for XeTeX and LuaTeX, 
 % and an ifpdf test is provided to test the PDF or DVI output mode.
 \usepackage{iftex}
+
 % provides \newboolean, \setboolean 
 % is used to integrate html production with tex4ht and pdf production
-% used to define texFhtLoaded
+% used to define texFhtLoaded and beamerLoaded 
 % maybe this is not really absolute necessary 
-
-\iftutex%
-  \usepackage{fontspec}
-\else
-  \usepackage[utf8]{inputenc}
-  \usepackage[T1]{fontenc}
-\fi
-%\usepackage{textalpha}
 
 \usepackage{ifthen}
 \newboolean{texFhtLoaded}
@@ -41,10 +34,40 @@
   \makeatother
 \fi
 
+
+\newboolean{beamerLoaded}
+\makeatletter
+\@ifclassloaded{beamer}{%
+  \setboolean{beamerLoaded}{true}
+}{
+  \setboolean{beamerLoaded}{false}
+}
+\makeatother
+
+
+
+\iftutex%
+  \usepackage{fontspec}
+\else
+  % this seems to work with beamer also 
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+\fi
+%\usepackage{textalpha}
+
+
 % absolutely necessary. 
 % for document development add certain options. 
 % Then remove headline and prevent this plugin from overwriting. 
-\usepackage[a4paper]{geometry}% option , showframe, showcrop 
+
+\ifthenelse{\boolean{beamerLoaded}}{
+  % here nothing to do. 
+  % beamer loads geometry itself. 
+  % The option a4paper does not make sense; 
+  % one may set aspectratio in \documentclass
+}{
+  \usepackage[a4paper]{geometry}% option , showframe, showcrop 
+}
 %\usepackage{showframe} as an alternative 
 \usepackage{microtype}
 %\usepackage[indent,skip=0]{parskip}% used by pandoc but not good 
@@ -171,7 +194,13 @@
 %\makeglossary% for rerunfilecheck 
 
 %\usepackage{etexcmds} %still later 
-\usepackage[nottoc, numindex, numbib]{tocbibind}
+\ifthenelse{\boolean{beamerLoaded}}{
+  % TBD: clarify this case. 
+  % maybe beamer does not support indices or glossaries. 
+  % 
+}{
+  \usepackage[nottoc, numindex, numbib]{tocbibind}
+}
 
 %\usepackage{latex-bnf}
 
