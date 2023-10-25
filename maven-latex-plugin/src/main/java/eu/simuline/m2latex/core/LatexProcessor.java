@@ -350,7 +350,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
           this.log.debug(String.format("cmp file %s", pdfFileCmp));
           if (!pdfFileCmp.exists()) {
             throw new BuildFailureException("TLP02: No file '" + pdfFileCmp
-                + "' to compare with artifact from'" + texFile + "'. ");
+                + "' to compare with artifact from '" + texFile + "'. ");
           }
           assert pdfFileCmp.exists();
           assert pdfFileAct.exists();// TBD: ensure that this file really exists. 
