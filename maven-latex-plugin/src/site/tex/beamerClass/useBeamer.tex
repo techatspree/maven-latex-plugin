@@ -1,37 +1,184 @@
+%\input{header.tex}
+\input{../header.tex}
+
+\ifpdf%
+  \ifLuaTeX%
+    % for lualatex
+    \pdfvariable minorversion=7% chktex 1
+    % omit CreationDate and ModDate keys.
+    \pdfvariable suppressoptionalinfo 767% chktex 1
+    % no adding to the trailer dictionary.
+    \pdfvariable trailerid{}% chktex 1
+    \pdfvariable suppressoptionalinfo -1% chktex 1
+  \else
+    \ifXeTeX%
+      % for xelatex
+      \special{pdf:minorversion 7}
+      % TBD: find a way to express pdfinfoomitdate: necessary? 
+      \special{pdf:trailerid []}
+    \else
+      \ifPDFTeX%
+        \pdfminorversion=7         % for pdflatex
+        % omit CreationDate and ModDate keys.
+        % not before pdfTeX 3.14159265-2.6-1.40.17
+        \pdfinfoomitdate=1                   % for pdflatex
+        % no adding to the trailer dictionary.
+        %\pdftrailer=0                        % for pdflatex
+        \pdftrailerid{}                       % for pdflatex
+        \pdfsuppressptexinfo=-1               % for pdflatex
+      \else
+        % Here, the tex processor is unknown. 
+      \fi%pdftex
+    \fi%xetex
+  \fi%luatex
+
+  \hypersetup{
+    pdfinfo={
+      Author      ={Ernst Reissner},
+      Title       ={Presentation with/of the latex-maven-plugin },
+      CreationDate={unknown},
+      ModDate     ={unknown},
+      Producer    ={unknown},
+      Subject     ={presentations with beamer},
+      Keywords    ={LaTeX;beamer}
+    }
+  }
+\else
+\fi%ifpdf
+
+% TBD: clarify what to do if no pdf is created. 
+% As soon as this question comes up in the course of new development, 
+% this will be compiled as html by accident. 
+% The we can see, how well this works. 
+
 \usetheme{Berlin}
-\title{Presentation of the \texttt{latex-maven-plugin}}
+\title{Presentation with/of the \texttt{latex-maven-plugin}}
 \author{E. Reissner}
 \date{\today}
 
-\usepackage{xurl}
+
 
 
 \begin{document}
 
 \begin{frame}
-\titlepage%
+  \titlepage%
 \end{frame}
 
 \section*{Outline}
 
 \begin{frame}
-\tableofcontents
+  \tableofcontents
+\makeatletter
+  a.\@ifclassloaded{beamer}{a}{b}
+  \makeatother
 \end{frame}
 
 \section{Introduction and Purpose}
 
 \begin{frame}
   \frametitle{Purpose}
-  The purpose is twofold: 
+  The purpose is twofold:
   %
   \begin{itemize}
-    \item Give an overview over the plugin 
-    \item Demonstrate that the plugin can compile the beamer class 
+    \item Give an overview over the plugin
+    \item Demonstrate that the plugin can compile the beamer class
   \end{itemize}
-  The purpose is not to replace the manual~\cite{LatexPlugin}. 
+  The purpose is not to replace the manual~\cite{LatexPlugin}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Purpose}
+  Automatically create documents from LaTeX sources during the Maven site phase
+  %
+  \begin{itemize}
+    \item
+          Output formats comprise PDF, DVI, XDV, (X)DOC, ODT, TXT and (X)HTML% chktex 36 
+    \item
+          Allows typical graphic formats native to TEX (like EPS and metapost)
+          or to the package graphicx.
+    \item
+          Includes bibliography, indices, glossaries and execution of program code.
+    \item
+          Furthermore, displays warnings if there is a hint that the result is not optimal.
+          In particular checks for rerun, warnings and under/overfull boxes.
+  \end{itemize}
 \end{frame}
 
 \section{Features}
+
+\subsection{Realized Features}
+
+\begin{frame}
+  \frametitle{Ant and Maven}
+  Automatically create documents from LaTeX sources during the Maven site phase 
+  and in an ant run. 
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Supported IO}
+
+  \begin{itemize}
+    \item
+          Supports many output formats like PDF, DVI, HTML, DOCX, RTF, TXT and others.
+    \item
+          Supports many graphical input formats like PNG, MP, FIG, gnuplot. 
+          Also provides a separate goal creating them, \texttt{grp}.
+    \item
+          Support of bibliography, index, glossary and embedded code. 
+          In particular supports split index.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Checks}
+  Automatically create documents from LaTeX sources during the Maven site phase
+  %
+  \begin{itemize}
+    \item
+          Perform checks with \texttt{chktex} and logs the result.
+    \item
+          Performs version checks on used tools.
+    \item
+          Perform checks on sources and results and log files.
+    \item
+          Allows check whether a document could have been reproduced.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Orchestration and document development}
+  Orchestration of various tools detecting need for execution e.g.
+  of bibtex including rerunfilecheck for lualatex and friends.
+
+  Supports document development, mainly by cooperating with editor, viewer and with other tools in the build chain.
+  \begin{itemize}
+    \item Offers installation script for extensions of VS Code.
+    \item Offers configuration file \texttt{.chktexrc} for \texttt{chktex}.
+    \item Can create configuration file \texttt{.latexmkrc} 
+    for \texttt{latexmk} synchronized with the configuration.
+    \item Offers a common header file \texttt{header.tex} 
+    to unify packages loaded by latex main files.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Planned Features}
+
+\begin{frame}
+  \frametitle{Planned Features}
+  \begin{itemize}
+  
+    \item Support \texttt{biber} replacing \texttt{bibtex} as preferred tool
+  \item Support \texttt{xindy} replacing \texttt{makeindex} as preferred tool
+    \item Support \texttt{bib2gls} replacing \texttt{makeglossary} as preferred tool
+    \item Execute \texttt{glosstex} if needed
+    \item Usage of the \texttt{multibib} macros
+    \item \dots
+  \end{itemize}
+\end{frame}
 
 \section{Installation}
 
