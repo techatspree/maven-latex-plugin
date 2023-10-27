@@ -18,31 +18,31 @@
 % maybe this is not really absolute necessary 
 
 \usepackage{ifthen}
-\newboolean{texFhtLoaded}
-\setboolean{texFhtLoaded}{false}
+% \newboolean{texFhtLoaded}
+% \setboolean{texFhtLoaded}{false}
 
 % only with pdflatex, warnings for xelatex and for lualatex 
 % ifxetex, ifluatex, ifpdf
 \ifpdf%
   %\usepackage{mlmodern}
 \else
-  \makeatletter
-  \@ifpackageloaded{tex4ht}{%
+  %\makeatletter
+  \IfPackageLoadedTF{tex4ht}{%
     \setboolean{texFhtLoaded}{true}
   }{%
   }% tex4ht not loaded 
-  \makeatother
+  %\makeatother
 \fi
 
 
-\newboolean{beamerLoaded}
-\makeatletter
-\@ifclassloaded{beamer}{%
-  \setboolean{beamerLoaded}{true}
-}{
-  \setboolean{beamerLoaded}{false}
-}
-\makeatother
+% \newboolean{beamerLoaded}
+% %\makeatletter
+% \IfClassLoadedTF{beamer}{%
+%   \setboolean{beamerLoaded}{true}
+% }{
+%   \setboolean{beamerLoaded}{false}
+% }
+% %\makeatother
 
 
 
@@ -60,7 +60,7 @@
 % for document development add certain options. 
 % Then remove headline and prevent this plugin from overwriting. 
 
-\ifthenelse{\boolean{beamerLoaded}}{
+\IfClassLoadedTF{beamer}{
   % here nothing to do. 
   % beamer loads geometry itself. 
   % The option a4paper does not make sense; 
@@ -105,7 +105,7 @@
   % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
   \usepackage[dvipdfmx]{xcolor}
   \usepackage[dvipdfmx]{graphicx}
-  \ifthenelse{\boolean{texFhtLoaded}}{%
+  \IfPackageLoadedTF{tex4ht}{%
     \usepackage[tex4ht, destlabel]{hyperref}
   }{%
     \ifxetex%
@@ -170,7 +170,7 @@
 
 
 % index and glossary
-\ifthenelse{\boolean{texFhtLoaded}}{%
+\IfPackageLoadedTF{tex4ht}{
   \newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
 }{
   \usepackage{splitidx}%[split]
@@ -194,7 +194,7 @@
 %\makeglossary% for rerunfilecheck 
 
 %\usepackage{etexcmds} %still later 
-\ifthenelse{\boolean{beamerLoaded}}{
+\IfClassLoadedTF{beamer}{
   % TBD: clarify this case. 
   % maybe beamer does not support indices or glossaries. 
   % 

@@ -383,7 +383,7 @@ which is typeset with a postscript font to make the difference visible.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F4_01fig2dev.ptx}
@@ -539,7 +539,7 @@ and embedded in this \LaTeX-file.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F4_02gp2pdf.ptx}
@@ -550,7 +550,7 @@ into pdf-, eps- and ptx-files with inclusions}
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F4_03someGnuplot.ptx}
@@ -731,7 +731,7 @@ this is not created if there is no such text.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F4_04mp2mps.ptx}
@@ -751,7 +751,7 @@ As for inclusion of fig-files, the package \pkg{graphicx} is needed.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{ 
 %\includegraphics{F4_05someMetapost1.mps}
@@ -797,7 +797,7 @@ that the redefinition really influences rendering in the MetaPost file.
 
 \begin{figure}[htb]
   \centering
-  \ifthenelse{\boolean{texFhtLoaded}}{
+  \IfPackageLoadedTF{tex4ht}{%
   should be a picture 
   }{
   \ifluatex%
@@ -977,7 +977,7 @@ to avoid this workaround in future.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F4_06svg2pdf.ptx}%
@@ -990,7 +990,7 @@ into pdf-, eps- and ptx-files with inclusions}
 \begin{figure}[htb]
 \centering
 %\def\svgwidth{0.5\textwidth}
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
   \import{}{F4_07someSvg.ptx}% this should be the standard
@@ -1069,7 +1069,7 @@ This list may be incomplete.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \setkeys{Gin}{width=0.9\textwidth}
@@ -1086,7 +1086,7 @@ FIXME\@: At the moment, \texttt{htlatex} does not work with pictures at all.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \includegraphics[width=0.9\textwidth]
@@ -1105,7 +1105,7 @@ In contrast, \texttt{lualatex} and \texttt{pdflatex} can not.
 
 % \begin{figure}[htb]
 %   \centering
-%   \ifthenelse{\boolean{texFhtLoaded}}{
+%   \IfPackageLoadedTF{tex4ht}{%
 %   should be a picture 
 %   }{
 %   \includegraphics[width=0.9\textwidth]

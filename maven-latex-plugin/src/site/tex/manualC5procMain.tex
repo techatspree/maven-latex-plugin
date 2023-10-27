@@ -202,7 +202,7 @@ and of the \LaTeX-processor \texttt{latex2pdf} may be necessary.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_01tex2pdf.ptx}
@@ -261,7 +261,7 @@ whether \texttt{bibtex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_02aux2bbl.ptx}
@@ -372,7 +372,7 @@ whether \texttt{makeindex} emitted an error or warnings.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_03idx2ind.ptx}
@@ -382,7 +382,7 @@ should be a picture
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_04idx2indMult.ptx}
@@ -393,7 +393,7 @@ Not supported: Conversion of \gls{idx}-files into ind-files}
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_05idx2indSplit.ptx}
@@ -607,7 +607,7 @@ This is illustrated in Figure~\ref{fig:glo2gls}.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_06glo2gls.ptx}
@@ -806,7 +806,7 @@ To use another language, the according interpreter must be installed in addition
 
 \begin{figure}[!htb]
   \centering
-  \ifthenelse{\boolean{texFhtLoaded}}{
+  \IfPackageLoadedTF{tex4ht}{%
   should be a picture 
   }{
   \import{}{F5_07py2dir.ptx}
@@ -823,7 +823,7 @@ To use another language, the according interpreter must be installed in addition
 
   \begin{figure}[!htb]
     \centering
-    \ifthenelse{\boolean{texFhtLoaded}}{
+    \IfPackageLoadedTF{tex4ht}{%
     should be a picture 
     }{
     \import{}{F5_08depy2out.ptx}
@@ -1208,7 +1208,7 @@ through the ``\cmd{Needs\{\ldots\}}'' command.
 
 \begin{figure}[!htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_09tex2xml.ptx}
@@ -1459,7 +1459,7 @@ which is illustrated in Figure~\ref{fig:tex2doc}.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_10tex2doc.ptx}
@@ -1494,7 +1494,7 @@ Figure~\ref{fig:tex2txt} illustrates the translation process.
 
 \begin{figure}[htb]
 \centering
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
 should be a picture 
 }{
 \import{}{F5_11tex2txt.ptx}

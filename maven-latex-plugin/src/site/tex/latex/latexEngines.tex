@@ -80,7 +80,7 @@ PDF%
 DVI% TBD: take XDV into account also 
 \fi.
 The package \texttt{tex4ht} 
-is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
+is \IfPackageLoadedTF{tex4ht}{}{not} loaded. 
 
 This document is about features the three generators on latex, 
 \pdflatex, \lualatex{} and \xelatex{} have in common 

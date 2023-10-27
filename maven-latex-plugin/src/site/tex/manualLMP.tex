@@ -86,7 +86,7 @@
 \else%ifpdf
 \fi%ifpdf
 
-\ifthenelse{\boolean{texFhtLoaded}}{%
+\IfPackageLoadedTF{tex4ht}{%
   % no glossaries and no index with tex4ht 
   \newcommand{\gls}[1]{#1}
   \renewcommand{\index}[1]{}
@@ -571,7 +571,7 @@ defined by invocation of auxiliary applications for index, glossary, \dots
 \bibliographystyle{alpha}
 \bibliography{lit}{}
 
-\ifthenelse{\boolean{texFhtLoaded}}{
+\IfPackageLoadedTF{tex4ht}{%
   % no index and no glossaries with tex4ht 
 }{
 %\chapter{Indices}

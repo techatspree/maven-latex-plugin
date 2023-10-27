@@ -8,7 +8,7 @@ pdf%
 dvi%
 \fi.
 The package \pkg{tex4ht} 
-is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
+is \IfPackageLoadedTF{tex4ht}{}{not} loaded. 
 
 \LaTeX{} is a beautiful way to create printable documents, 
 in our days preferably as \gls{pdf}-files, 
