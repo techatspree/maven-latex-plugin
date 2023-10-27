@@ -70,7 +70,7 @@ pdf%
 dvi%
 \fi.
 The package \texttt{tex4ht} 
-is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
+is \IfPackageLoadedTF{tex4ht}{}{not} loaded. 
 
 This document describes the grammar 
 of the native file format of the xfig graphic program version 3.2. 
