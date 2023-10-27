@@ -51,7 +51,7 @@
 \ifpdf%
   \usepackage[destlabel, plainpages=false, hyperindex=false]{hyperref} %
 \else
-  \ifthenelse{\boolean{texFhtLoaded}}{%
+  \IfPackageLoadedTF{tex4ht}{%
     \usepackage[tex4ht, destlabel, plainpages=false, hyperindex=false]{hyperref}
   }{%
     \ifXeTeX%

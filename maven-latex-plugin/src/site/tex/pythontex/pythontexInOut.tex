@@ -89,7 +89,7 @@ PDF%
 DVI% TBD: take XDV into account also 
 \fi.
 The package \texttt{tex4ht} 
-is \ifthenelse{\boolean{texFhtLoaded}}{}{not} loaded. 
+is \IfPackageLoadedTF{tex4ht}{}{not} loaded. 
 
 The \pytexP{} together with the auxiliary program with the same name \pytex{}, 
 allows including code, e.g.~in Python into a \LaTeX{} document. 
@@ -157,7 +157,7 @@ Under these assumptions, Figure~\ref{fig:py2dir} shows the input and output file
 
 \begin{figure}[htb]
   \centering
-  \ifthenelse{\boolean{texFhtLoaded}}{
+  \IfPackageLoadedTF{tex4ht}{%
   should be a picture
   }{
   \import{}{F5_07py2dir.ptx}
@@ -553,7 +553,7 @@ The result is
 
 \begin{figure}[htb]
   \centering
-  \ifthenelse{\boolean{texFhtLoaded}}{
+  \IfPackageLoadedTF{tex4ht}{
   should be a picture 
   }{
   \import{}{F5_08depy2out.ptx}
