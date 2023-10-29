@@ -848,35 +848,37 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * </ul>
    *
    * @param another
-   *                whether it is requested whether another run (a 'rerun') is
+   *    whether it is requested whether another run (a 'rerun') is
    *                required.
    *                If false, just a run is required
    * @param cmdStr
-   *                Determines the command string of the application to be rerun.
-   *                This may be of category {@link ConverterCategory#LaTeX},
-   *                {@link ConverterCategory#MakeIndex}
-   *                but also {@link ConverterCategory#BibTeX}.
-   * @param logFile
-   *                the log file which determines
-   *                whether to rerun <code>cmdStr</code>.
+   *    Determines the command string of the application to be rerun.
+   *    This may be of category {@link ConverterCategory#LaTeX},
+   *    {@link ConverterCategory#MakeIndex}
+   *    but also {@link ConverterCategory#BibTeX}.
+   * @param logAuxFile
+   *    the log file or aux file which determines
+   *    whether to rerun <code>cmdStr</code>.
    * @param pattern
-   *                the pattern in the <code>logFile</code>
-   *                which determines whether to rerun <code>cmdStr</code>.
+   *    the pattern in the <code>logFile</code>
+   *    which determines whether to rerun <code>cmdStr</code>.
    * @return
-   *         whether <code>cmdStr</code> needs to be rerun
-   *         based on a pattern <code>pattern</code>
-   *         matching in the log file <code>logFile</code>.
+   *    whether <code>cmdStr</code> needs to be rerun
+   *    based on a pattern <code>pattern</code>
+   *    matching in the log file <code>logFile</code>.
    * @see TexFileUtils#matchInFile(File, String)
    */
   // used in processLatex2devCore and in runBibtexByNeed only
   // TBD: eliminate Converter again and replace by ConverterCategory
   // including also the rerun pattern.
-  private boolean needRun(boolean another, String cmdStr, File logFile,
+  private boolean needRun(boolean another, String cmdStr, File logAuxFile,
       String pattern) {
     // may log warning WFU03: cannot close
-    Boolean needRun = this.fileUtils.matchInFile(logFile, pattern);
+    Boolean needRun = this.fileUtils.matchInFile(logAuxFile, pattern);
     if (needRun == null) {
-      this.log.warn("WLP02: Cannot read log file '" + logFile.getName() + "'; "
+      this.log.warn("WLP02: Cannot read "
+          + TexFileUtils.getSuffix(logAuxFile, false) + " file '"
+          + logAuxFile.getName() + "'; "
           + cmdStr + " may require " + (another ? "re" : "") + "run. ");
       return false;
     }

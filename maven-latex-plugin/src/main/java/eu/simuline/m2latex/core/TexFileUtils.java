@@ -614,9 +614,19 @@ class TexFileUtils {
   // One may ensure that this does not happen via an assertion 
   // and by modifying getFilesRec in a way that hidden files are skipped 
   static String getSuffix(File file) {
+    return getSuffix(file, true);
+  }
+
+  static String getSuffix(File file, boolean withDot) {
     String nameFile = file.getName();
     int idxDot = nameFile.lastIndexOf(".");
-    return idxDot == -1 ? "" : nameFile.substring(idxDot, nameFile.length());
+    if (idxDot == -1) {
+      return "";
+    }
+    if (!withDot) {
+      idxDot++;
+    }
+    return nameFile.substring(idxDot, nameFile.length());
   }
 
   // logFile may be .log or .blg or something 
