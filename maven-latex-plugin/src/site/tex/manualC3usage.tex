@@ -52,8 +52,49 @@ in the \emph{TEX source directory} of this software,
 \texttt{manualLMP.tex} is a \LaTeX{} main file, 
 whereas the file \texttt{header.tex} is not, although also a \LaTeX-file. 
 % identification of the latex main file?
-\LaTeX{} main files are detected automatically. 
+\LaTeX{} main files are detected automatically 
 \index{latex main file}% chktex 24
+by fitting the regular expression \texttt{patternLatexMainFile} 
+described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+
+Note that the pattern ends with \texttt{documentclass} or the outdated \texttt{documentstyle}. 
+This software is tested with document classes \texttt{article}, \texttt{book} 
+and \texttt{beamer}, which is for presentations. 
+
+For all document classes, it is recommended to load \pkg{nag} before 
+using 
+%
+\begin{Verbatim}
+  \RequirePackage[l2tabu, orthodox]{nag}
+\end{Verbatim}
+
+What is special for beamer presentations is, 
+that in general two documents with the same identifier, e.g. title are created, 
+the proper presentation, e.g. 
+%
+\begin{Verbatim}
+\RequirePackage[l2tabu, orthodox]{nag}
+\documentclass[10pt,hyperref=destlabel]{beamer}
+\mode<presentation>%
+
+\input{useBeamer}
+\end{Verbatim}
+%
+and the corresponding handout 
+%
+\begin{Verbatim}
+  \RequirePackage[l2tabu, orthodox]{nag}
+
+  \documentclass{article}
+  \usepackage{beamerarticle}
+  \input{useBeamer}
+\end{Verbatim}
+%
+both including the same piece of code which is included from file \texttt{useBeamer.tex}. 
+The author recommends to stick to this convention. 
+As an example document may serve~\ref{PresBeamer} 
+which is a presentation of this software and illustrates the use of the beamer class. 
+
 
 The included files may be again be \LaTeX-files, but also bibliography files, 
 listings included by package \pkg{listings}, verbatim text included with \pkg{verbatim} 
@@ -340,6 +381,7 @@ in the build process before the \LaTeX{} build tools are invoked.
 Thus, goal \texttt{inj} has default phase \texttt{validate}. 
 Note that \texttt{.latexmkrc} is adapted to the configuration of the current build, 
 so that build with this software has the same result as direct invocation of \texttt{latexmk}. 
+In particular, \texttt{.latexmkrc} works for various \LaTeX{} generators. 
 In the current version of this software, 
 the injected \texttt{.latexmkrc} is not completely adapted to the configuration, 
 and it is only intended to create PDF files. 
@@ -354,7 +396,18 @@ according to \url{https://pandoc.org/MANUAL.html#creating-a-pdf}.
 As the configuration files described above, 
 it is intended to be injected in phase \texttt{validate}. 
 
-In the long run it could be adapted to the configuration as \texttt{.latexmkrc}, 
+Note that \texttt{header.tex} is intended for use of 
+%
+\begin{itemize}
+  \item various \LaTeX{} converters, \lualatex, \xelatex{} and \pdflatex 
+  \item various document classes, specifically \texttt{article}, \texttt{book} 
+  and \texttt{beamer}, which is for presentations 
+  \item for creating PDF files but also other formats created with \pkg{tex4ht} 
+\end{itemize}
+
+This is realized with a bunch of if-constructs. 
+
+In the long run \texttt{header.tex} could be adapted to the configuration as \texttt{.latexmkrc}, 
 but currently it detects the use case as the latex converter or the target format 
 and loads the according packages. 
 Unlike \texttt{.latexmkrc}, it is not restricted to creating PDF. 
