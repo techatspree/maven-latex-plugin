@@ -17,22 +17,22 @@
 % used to define texFhtLoaded and beamerLoaded 
 % maybe this is not really absolute necessary 
 
-\usepackage{ifthen}
+%\usepackage{ifthen}
 % \newboolean{texFhtLoaded}
 % \setboolean{texFhtLoaded}{false}
 
-% only with pdflatex, warnings for xelatex and for lualatex 
-% ifxetex, ifluatex, ifpdf
-\ifpdf%
-  %\usepackage{mlmodern}
-\else
-  %\makeatletter
-  \IfPackageLoadedTF{tex4ht}{%
-    \setboolean{texFhtLoaded}{true}
-  }{%
-  }% tex4ht not loaded 
-  %\makeatother
-\fi
+% % only with pdflatex, warnings for xelatex and for lualatex 
+% % ifxetex, ifluatex, ifpdf
+% \ifpdf%
+%   %\usepackage{mlmodern}
+% \else
+%   %\makeatletter
+%   % \IfPackageLoadedTF{tex4ht}{%
+%   %   \setboolean{texFhtLoaded}{true}
+%   % }{%
+%   % }% tex4ht not loaded 
+%   %\makeatother
+% \fi
 
 
 % \newboolean{beamerLoaded}
