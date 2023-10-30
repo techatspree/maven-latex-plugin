@@ -632,7 +632,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *    dvi.
    *    See {@link LatexDev#getLatexOutputFormat()}.
    * @return
-   *    the number of LaTeX runs required
+   *    the number of LaTeX runs required after invocation of this method 
    *    because bibtex, makeindex or makeglossaries had been run
    *    or to update a table of contents or a list figures or tables.
    *    <ul>
@@ -715,9 +715,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // depending on whether a toc, lof or lot exists
 
     boolean needLatexReRun =
-        hasToc || hasPyCode || desc.withSuffix(SUFFIX_LOF).exists()
-            || desc.withSuffix(SUFFIX_LOT).exists()
-            || desc.withSuffix(SUFFIX_LOL).exists();
+        hasToc || hasPyCode 
+        || desc.withSuffix(SUFFIX_LOF).exists()
+        || desc.withSuffix(SUFFIX_LOT).exists()
+        || desc.withSuffix(SUFFIX_LOL).exists();
 
     return needLatexReRun ? 1 : 0;
   }
@@ -828,7 +829,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
       runLatex2dev(desc, dev);
       needLatexReRun = needRun(true, latexCmd, desc.logFile,
           this.settings.getPatternReRunLatex());
-    }
+    } // for 
     this.log.warn("WLP01: LaTeX requires rerun but maximum number "
         + maxNumReruns + " reached. ");
   }
@@ -910,15 +911,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * </ul>
    *
    * @param desc
-   *             the description of a latex main file <code>texFile</code>
-   *             to be processed.
+   *    the description of a latex main file <code>texFile</code>
+   *    to be processed.
    * @param dev
-   *             the device describing the output format which is either pdf or
-   *             dvi.
-   *             See {@link LatexDev#getLatexOutputFormat()}.
+   *    the device describing the output format which is either pdf or dvi.
+   *    See {@link LatexDev#getLatexOutputFormat()}.
    * @throws BuildFailureException
-   *                               TEX01 as for
-   *                               {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)}.
+   *    TEX01 as for
+   *    {@link #processLatex2devCore(LatexProcessor.LatexMainDesc, LatexDev)}.
    * @see #needRun(boolean, String, File, String)
    * @see Target#pdf
    */
