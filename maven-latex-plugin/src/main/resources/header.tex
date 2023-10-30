@@ -12,39 +12,6 @@
 % and an ifpdf test is provided to test the PDF or DVI output mode.
 \usepackage{iftex}
 
-% provides \newboolean, \setboolean 
-% is used to integrate html production with tex4ht and pdf production
-% used to define texFhtLoaded and beamerLoaded 
-% maybe this is not really absolute necessary 
-
-%\usepackage{ifthen}
-% \newboolean{texFhtLoaded}
-% \setboolean{texFhtLoaded}{false}
-
-% % only with pdflatex, warnings for xelatex and for lualatex 
-% % ifxetex, ifluatex, ifpdf
-% \ifpdf%
-%   %\usepackage{mlmodern}
-% \else
-%   %\makeatletter
-%   % \IfPackageLoadedTF{tex4ht}{%
-%   %   \setboolean{texFhtLoaded}{true}
-%   % }{%
-%   % }% tex4ht not loaded 
-%   %\makeatother
-% \fi
-
-
-% \newboolean{beamerLoaded}
-% %\makeatletter
-% \IfClassLoadedTF{beamer}{%
-%   \setboolean{beamerLoaded}{true}
-% }{
-%   \setboolean{beamerLoaded}{false}
-% }
-% %\makeatother
-
-
 
 \iftutex%
   \usepackage{fontspec}
@@ -81,7 +48,13 @@
 % to avoid clash because of loading with different options: 
 % declare first 
 % Note that documentation is wrong: [aux] is the strictest check 
-\usepackage[aux]{rerunfilecheck}% TBD: adapt to class beamer 
+\IfClassLoadedTF{beamer}{
+  % beamer loads rerunfilecheck with empty options. 
+  % TBD: check whether this is appropriate (maybe no index and glossary, well)
+}{
+  \usepackage[aux]{rerunfilecheck}
+}
+
 
 % graphics 
 
