@@ -30,10 +30,10 @@
 \IfClassLoadedTF{beamer}{
   % here nothing to do. 
   % beamer loads geometry itself. 
-  % The option a4paper does not make sense; 
-  % one may set aspectratio in \documentclass
+  % \documentclass passes option aspectratio to package geometry
 }{
-  \usepackage[a4paper]{geometry}% option , showframe, showcrop 
+  % \documentclass passes options like a4paper to package geometry
+  \usepackage{geometry}% no option a4paper, but showframe, showcrop 
 }
 %\usepackage{showframe} as an alternative 
 \usepackage{microtype}
