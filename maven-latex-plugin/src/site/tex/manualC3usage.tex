@@ -402,34 +402,147 @@ and the ones really to be performed are given in the configuration \texttt{injec
 The configuration is described in Table~\ref{tab:paramMisc} on page \pageref{tab:paramMisc}. 
 It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}. 
 
+As described in Section~\ref{subsec:xmlPomExecutions}, 
+by default the goal \texttt{inj} is tied to the phase \texttt{validate}, 
+but it can be also invoked by command line via \texttt{mvn latex:inj} 
+with the default injections or, with given list of injections, 
+e.g.\@ some injections via 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=latexmkrc,chktexrc,header
+\end{Verbatim}
+
+Now let us treat the injections individually. 
+
+
+\subsection{The configuration files \texttt{.latexmkrc} and \texttt{.chktexrc}}\label{subsec:latChkRc}
+
+For document development the tool \texttt{latexmk} is a valuable build tool. 
+Also, a linter like \texttt{chktex} is helpful 
+both for end control and for document development. 
+
 The file \texttt{.latexmkrc} tied to the injection \texttt{latexmkrc} 
 is the configuration file for the build tool \texttt{latexmk} 
 and likewise \texttt{.chktexrc} tied to the injection \texttt{chktexrc} 
 is the configuration file for the style check tool \texttt{chktex}. 
-Both tools are mainly used in document development 
-as described in Sections~\ref{subsec:latexmk} and~\ref{subsec:develCheck}, 
-but both tools may be used in a regular build also. 
-So their respective configuration files must be injected 
-in the build process before the \LaTeX{} build tools are invoked. 
-Thus, goal \texttt{inj} has default phase \texttt{validate}. 
-Note that \texttt{.latexmkrc} is adapted to the configuration of the current build, 
-so that build with this software has the same result as direct invocation of \texttt{latexmk}. 
-In particular, \texttt{.latexmkrc} works for various \LaTeX{} generators. 
-In the current version of this software, 
-the injected \texttt{.latexmkrc} is not completely adapted to the configuration, 
-and it is only intended to create PDF files. 
-% TBD
-In the future this shall change. 
+The configuration files determine the behavior of the two tools without further options. 
 
-The injection \texttt{header} is tied to the file \texttt{header.tex} 
+Ideally, the injected \texttt{.latexmkrc} is adapted to the current settings of this plugin 
+and so invoking \texttt{latexmk} invoked with its configuration file 
+behaves like this latex plugin. 
+Currently, not all possible settings of this plugin 
+are taken into account in the \texttt{.latexmkrc}. 
+Nevertheless, for the default settings, 
+this maven plugin and \texttt{latexmk} create the same PDF files. 
+
+At time of this writing, \texttt{.latexmkrc} works for various \LaTeX{} generators 
+but is only usable to create PDF files. 
+
+Accordingly, a sensible config file \texttt{.chktexrc} mainly depends on the packages loaded. 
+In Section~\ref{subsec:header} we suggest injecting also a header file \texttt{header.tex} 
+loading packages. 
+The config file \texttt{.chktexrc} is adapted to the header file \texttt{header.tex}. 
+The current state of the injected \texttt{.chktexrc} is given in Listing~\ref{lst:chktexrc} 
+and \href{\urlSite fromTex/.chktexrc}{online}. 
+The user is kindly asked to help to improve it.
+
+\lstinputlisting[basicstyle=\scriptsize,
+float, captionpos=b, label={lst:chktexrc}, 
+caption={The config file \texttt{.chktexrc} to check this manual. }]%
+{.chktexrc}
+
+
+As described in Sections~\ref{subsec:develLatexmk} and~\ref{subsec:develCheck}, 
+both tools are invoked directly by the user in the course of document development, 
+but they may be invoked by this \LaTeX{} builder in the course of a regular build, 
+i.e. for maven goal \texttt{cfg} also. 
+% TBD: and ant task with the same name ... well, this will not work 
+% maybe when the ant task is adapted accordingly, including injections. 
+So their respective configuration files must be injected 
+in the maven build process before the \LaTeX{} build tools are invoked, 
+i.e. prior to the phase \texttt{site}. 
+Thus, goal \texttt{inj} has default phase \texttt{validate}. 
+
+
+As described in~\cite{LatexMk23}, 
+Section~``CONFIGURATION/INITIALIZATION (RC) FILES'', 
+there are various configuration files \texttt{latexmkrc} or \texttt{.latexmkrc}, 
+among these a global one, a local one referring to the enclosing folder 
+and finally one specified by the command line option \texttt{-r} 
+which is described in~\cite{LatexMk23}, 
+Section~``LATEXMK OPTIONS AND ARGUMENTS ON COMMAND LINE''. 
+
+Likewise,~\cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
+has a global configuration file \texttt{chktexrc} 
+and a local one \texttt{.chktexrc} or \texttt{chktexrc}, 
+depending on the operating system. 
+Finally, a configuration file can be specified with the option \texttt{-l}, 
+according to~\cite{ChkTeX22}, Section 6.1.1. 
+Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
+in which the configuration file given by the option \texttt{-l} is read in. 
+
+For sake of reproducibility, we recommend restricting to the global configuration file 
+which is tied to the installation and to a local file, specific to the latex source directory 
+which shall be valid for all latex main files in that directory. 
+
+Goal \texttt{inj} injects the configuration files \texttt{.latexmkrc}, \texttt{.chktexrc} 
+and further files, 
+all in the latex source directory. 
+It is natural to use each as the local configuration file. 
+
+Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
+as described, the local configuration file fits only for UNIX-like operating systems. 
+For Windows and that like, \texttt{chktexrc} is expected instead of \texttt{.chktexrc}. 
+Uniformity with respect to the operating systems can be realized 
+with a link to \texttt{chktexrc} named \texttt{.chktexrc}. 
+That way independent of the operating system, 
+the configuration files \texttt{.latexmkrc} and \texttt{.chktexrc} are sufficient. 
+
+It is important that there is a unique central configuration file 
+applying to all latex main files. 
+There is the choice between at least two mechanisms to ensure this: 
+Either \texttt{latexmk} and \texttt{chktex} 
+are invoked with options \texttt{-r} and \texttt{-l}, respectively, 
+specifying the configuration file explicitly 
+or for each folder containing a latex main file 
+there must be a link named \texttt{.latexmkrc} and \texttt{.chktexrc}, respectively, 
+to the according central configuration file. 
+
+We recommend using links because then \texttt{latexmk} and \texttt{chktex} 
+can be used on the command line without further options. 
+This is convenient for the user when invoking the tools directly 
+which is the typical usage for document development. 
+
+
+\subsection{A generic header file \texttt{header.tex}}\label{subsec:header}
+
+It is observed that the headers of various \LaTeX{} files are quite similar. 
+In particular the packages loaded 
+have a huge overlap and at the same time, although rare, 
+exotic packages are loaded which may be replaced by standard ones. 
+This hurts single source principle 
+and at the same times makes it almost impossible 
+for a build tool as this one, 
+to make guarantees that it works still with the unexpected packages. 
+This is, e.g.\@ because a package may write warnings 
+in an unexpected format into some log file. 
+
+The injection \texttt{header} given by \href{\urlSite fromTex/header.tex}{header.tex}, 
+is tied to the file \texttt{header.tex} 
 which is intended to be included in each \LaTeX{} main file. 
 Essentially it includes packages always needed. 
 It is inspired by the packages \texttt{pandoc} includes by default 
 according to \url{https://pandoc.org/MANUAL.html#creating-a-pdf}. 
+
+Besides loading packages it also sets \texttt{synctex} 
+which is crucial for synchronizing TEX files and according PDF files 
+via forward search and backward search as described in Section~\ref{subsec:editViewLatex}. 
+% TBD \listfiles to check loaded packages 
+
 As the configuration files described above, 
 it is intended to be injected in phase \texttt{validate}. 
 
-Note that \texttt{header.tex} is intended for use of 
+Note that \texttt{header.tex} is written for use of 
 %
 \begin{itemize}
   \item various \LaTeX{} converters, \lualatex, \xelatex{} and \pdflatex 
@@ -439,13 +552,13 @@ Note that \texttt{header.tex} is intended for use of
 \end{itemize}
 
 This is realized with a bunch of if-constructs. 
-
-In the long run \texttt{header.tex} could be adapted to the configuration as \texttt{.latexmkrc}, 
+In the long run, \texttt{header.tex} could be adapted 
+to the configuration as \texttt{.latexmkrc}, 
 but currently it detects the use case as the latex converter or the target format 
 and loads the according packages. 
-Unlike \texttt{.latexmkrc}, it is not restricted to creating PDF. 
-It is checked in conjunction with document classes \texttt{book} and \texttt{article}. 
-**** TBD: mention also beamer class. **** 
+It is also conceivable to create different headers, one for each document class. 
+
+\subsection{An install script for VS Code Extensions }\label{subsec:instExtVsCode}
 
 The injections described so far are intended to be performed in phase \texttt{validate}  
 as illustrated in Listing~\ref{lst:executions}. 
@@ -454,10 +567,13 @@ are adapted to the settings in each run.
 
 The last injection, \texttt{vscodeExt} injecting the file \texttt{instVScode4tex.sh} 
 is used in a completely different way. 
-If the editor VS Code is already installed, 
+If the editor VS Code is assumed to be already installed, 
 the script \texttt{instVScode4tex.sh} 
 also given by Listing~\ref{lst:instVScode}, 
-installs and updates all extensions the author used to write \LaTeX-code. 
+installs and updates all extensions of VS Code the author used to write \LaTeX-code. 
+Project \url{https://github.com/Reissner/QMngMnt} 
+uses the script for automation of installation and update. 
+It is the only injected file which is executable. 
 
 \lstinputlisting[
 language=bash, basicstyle=\tiny,
