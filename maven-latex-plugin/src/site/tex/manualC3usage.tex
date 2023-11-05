@@ -57,9 +57,11 @@ whereas the file \texttt{header.tex} is not, although also a \LaTeX-file.
 by fitting the regular expression \texttt{patternLatexMainFile} 
 described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
 
-Note that the pattern ends with \texttt{documentclass} or the outdated \texttt{documentstyle}. 
+Note that the pattern ends with the recommended \texttt{documentclass} 
+or with the outdated \texttt{documentstyle}. 
 This software is tested with document classes \texttt{article}, \texttt{book} 
-and \texttt{beamer}, which is for presentations. 
+and \texttt{beamer}, which is for presentations as described in~\cite{Beamer}. 
+Currently, this software has not been tested on KOMA Scripts treated in~\cite{KomaAnl}. 
 
 For all document classes, it is recommended to load \pkg{nag} before 
 using 
@@ -85,15 +87,16 @@ and the corresponding handout
 \begin{Verbatim}
   \RequirePackage[l2tabu, orthodox]{nag}
 
-  \documentclass{article}
+  \documentclass[a4paper]{article}
   \usepackage{beamerarticle}
   \input{useBeamer}
 \end{Verbatim}
 %
 both including the same piece of code which is included from file \texttt{useBeamer.tex}. 
 The author recommends to stick to this convention. 
-As an example document may serve~\ref{PresBeamer} 
-which is a presentation of this software and illustrates the use of the beamer class. 
+As an example document may serve~\cite{PresBeamer} 
+which is a presentation of this software including the handout 
+and illustrates the use of the beamer class. 
 
 
 The included files may be again be \LaTeX-files, but also bibliography files, 

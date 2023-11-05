@@ -843,11 +843,11 @@ sorting, unifying and formatting the entries.
 This is always done by an external program. 
 
 In the next step the \LaTeX{} processor must read in the unified entries again. 
-Whereas a \LaTeX-run does not affect neither the bibliography nor python code, 
+Whereas a \LaTeX-run affects neither the bibliography nor python code, 
 it may well invalidate the page numbers 
 of the entries of the index or of the glossary. 
 %Also within a glossary entry, further glossary entries may be included. 
-Thus, the sorted index and glossary must be rebuild 
+Thus, the sorted index and glossary must be rebuilt 
 before the next \LaTeX{} run makes them visible in the PDF file. 
 
 To that end, we use the package \pkg{rerunfilecheck}. 
@@ -871,7 +871,7 @@ in particular before \cmd{makeindex}{} and \cmd{makeglossaries}.
 
 Note that the package \pkg{hyperref} already loads \pkg{rerunfilecheck} 
 but with the wrong options. 
-Thus the above declaration must come before 
+Thus, the above declaration must come before 
 %
 \begin{lstlisting}[language=TeX]
 \usepackage[...]{hyperref}
@@ -882,7 +882,6 @@ to avoid error
 \begin{verbatim}
 Option clash for package rerunfilecheck
 \end{verbatim}
-
 
 Package \pkg{rerunfilecheck} detects almost safely 
 changes of the raw index file writing an according message 
@@ -959,17 +958,19 @@ this would require a change in this software.
 
 \section{Checking reproducibility}\label{sec:chkReprod}
 
-There are use cases, where on the one hand side we want to deliver the sources 
+There are use cases, where on the one hand side we want to deliver the sources, 
 but it is extremely important that the according artifacts are really reproducible. 
 One obvious case is integration test for this software 
-by ensuring that the created artifacts 
-is equivalent with with a confirmed version. 
+by ensuring that each artifact created 
+is equivalent with a confirmed version. 
+Details are given in Section~\ref{chap:tests}. 
 
 
-Currently, this is done for pdf files only. 
+
+Currently, this is done for PDF files only. 
 % TBD: change that 
-The problem with pdf files is, that besides visible contents 
-it contains also meta-data (see~\cite{pdf17}, Section 14.3), 
+The problem with PDF files is, that besides visible contents 
+they contain also meta-data (see~\cite{pdf17}, Section 14.3), 
 which depends on the run of the conversion. 
 For example the timestamp of conversion goes into and so do many more aspects. 
 
@@ -977,25 +978,25 @@ There are two strategies to deal with the problem:
 %
 \begin{itemize}
   \item 
-  make the build process reproducible. 
-  The advantage of this is that diffing is quite simple, fast and reproducible: 
+  Make the build process reproducible. 
+  The advantage of this approach is that diffing is quite simple, fast and reproducible: 
   it is byte by byte. 
   This is easily done with a fixed installation but tends to break with update of tools. 
   % TBD: allow own version check. 
-  Also at time of this writing, the different latex engines cannot be treated uniformly. 
+  Also, at time of this writing, the different latex engines cannot be treated uniformly. 
   % TBD: a feature request to hyperref is already posted. 
   % let us keep an eye on that. 
   \item 
-  use diff tools implementing a weaker notion of equivalence, 
+  Use diff tools implementing a weaker notion of equivalence, 
   in a sense visibility equivalence of some degree. 
 \end{itemize}
 
 We support both approaches. 
-The first one imposes requirements on the tex source file. 
+The first one imposes requirements on the TEX source file. 
 It excludes that one displays a creation date changing each run. 
 Listing~\ref{lst:designMeta} lower part illustrates that: 
 We replaced the creation date by a ``version date''. 
-A date can be only date of checkin of a version control system or that like. 
+A date can be only date of check in of a version control system or that like. 
 As an alternative, one could also refrain from using dates altogether. 
 In the \texttt{\textbackslash date} command 
 one could display also other pieces of information identifying the document. 
@@ -1013,8 +1014,8 @@ one could eliminate \texttt{CreationDate} and \texttt{ModDate}.
 For newer versions of \pdflatex{} this can be done alternatively 
 with \texttt{\textbackslash pdfinfoomitdate1}. 
 
-The metadata which can be eliminated only in a engine specific way 
-are the PTEX keys including the banner, and the \texttt{pdftrailerid}. 
+The metadata which can be eliminated only in an engine specific way 
+are the PTEX\index{PTEX} keys including the banner, and the \texttt{pdftrailerid}. 
 Note that the latter is \emph{intentionally} 
 a unique identifier for the individual document 
 and so strictly speaking it is not advised to eliminate this 
@@ -1023,7 +1024,7 @@ Note that \xelatex{} seems not to write PTEX keys at all
 so only the \texttt{pdftrailerid} has to be eliminated or fixed. 
 
 Unfortunately, the commands required to make a PDF file reproducible 
-is not uniform among the TEX to PDF converters. 
+are not uniform among the TEX to PDF converters. 
 In fact, it works best with \lualatex{} and sufficiently for \pdflatex{} 
 but support seems incomplete with \xelatex. 
 
@@ -1121,12 +1122,12 @@ For convenience also \texttt{pdfprivacy} described in~\cite{PdfPriv} can be used
 \medskip
 
 
-Now that we have described how to ensure reproducible pdf artifacts, 
-just by designing the tex source appropriately, 
+Now that we have described how to ensure reproducible PDF artifacts, 
+just by designing the TEX source appropriately, 
 we have to explain how to check that a newly created artifact 
 coincides with a blueprint provided a priori. 
-First of all, note that currently such a check is performed 
-only if the result is in pdf format. 
+First, note that currently such a check is performed 
+only if the result is in PDF format. 
 Even then the check is performed only if configured so. 
 Then the actual artifacts are compared to predefined artifacts 
 using the configured diff-tool. 
@@ -1139,7 +1140,7 @@ The configurations related with diff check are collected in Section~\ref{sec:par
 
 \section{Creating hypertext}\label{sec:tex2html}
 
-To create html and xhtml from TEX files (more precise from \LaTeX{} files), 
+To create HTML and XHTML from TEX files (more precise from \LaTeX{} files), 
 a \texttt{tex4htCommand}-command is used 
 Together with its parameters, 
 it is described in Section!\ref{sec:settingsLatex2Html}. 
