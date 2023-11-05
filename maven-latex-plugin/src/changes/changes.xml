@@ -51,7 +51,12 @@
       - TeX Live, at the moment the suse version, this shall change. 
       - maven plugin, not ant task 
       - config in the pom.xml
-      - only certain document classes (maybe we add some)
+      - only certain document classes 
+        currently all of the following are preferred: 
+        - book represented by the manual 
+        - article represented by most other supervised documents 
+        - beamer represented by useBeamerPres 
+        - (maybe we add some)
       Details on xelatex: it works only for pdf created directly and this only 
       because `-output-format=pdf` is not recognized and `-no-pdf` is not set. 
       For dvi, it does not work for several reasons: 
@@ -217,6 +222,10 @@ Also: meta-uml, with documentation
      An alternative: texlive and just the version of that, 
      no additional packages or versioning only of those packages. 
      This must be evaluated... maybe difficult to handle and overkill. 
+     Note that \listfiles (in current header.tex injected) 
+     displays the packages loaded and also mostly hm.. the version and date. 
+   - maybe version also of the classes used. 
+     Needed is a standardization of the supervised classes. 
 	 - include docs in site.
 	 - There must be a mojo for phase validate or initialize
 	   checking the most important things:
