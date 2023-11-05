@@ -347,10 +347,40 @@ which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively.
 
 \section{Checking versions of converters}\label{sec:chkVersions}
 
+The goal \texttt{vrs} is to check the versions of the converters. 
+Since its description is quite involved, and it is planned 
+to replace it partially by a version check when a converter is invoked first, 
+we just mention that it can be invoked through \texttt{mvn latex:vrs}. 
+
+
 \section{Injection of files}\label{sec:injFiles}
 
 The goal \texttt{inj} is to inject files 
 into the working directory \texttt{texSrcDirectory}. 
+
+Note that these files are written only 
+if it is guaranteed that this overwrites only files written by this plugin. 
+This is the case, if no file is overwritten at all 
+or if the file to be overwritten is recognized to start with a comment 
+indicating that this file is written by this plugin. 
+Of course the guarantee holds only if the headline does not tell a lie. 
+
+If the headline cannot be read or in some other exotic conditions, 
+it cannot be ensured that the files are written by this software, 
+and so they are not overwritten by goal \texttt{inj} 
+and by the way not erased by goal \texttt{clr} as described in Section~\ref{subsec:develClear}. 
+In case of such a doubt, a warning is displayed. 
+
+That way, injected files written by the plugin can be updated each run 
+but according files written e.g. by the user are protected. 
+
+A first description of the goal \texttt{inj} is given by 
+%
+\begin{verbatim}
+mvn latex:help -Ddetail -Dgoal=inj
+\end{verbatim}
+%
+which yields a list of files which can be injected. 
 
 \begin{longtable}{|l|ll|}
   \toprule
