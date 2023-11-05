@@ -1002,17 +1002,25 @@
       </plugin>
 
 
-      <!-- version 4.0.0-M4 and above require site.vm 
-        and still it does not work -->
+      <!-- creates site, here from markdown -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <!-- newest 4.0.0-M9 does not work 
-             intermediate 4.0.0-M8 works -->
+             intermediate 4.0.0-M8 works, newest is M11 -->
         <version>4.0.0-M8</version>
-        <configuration>
-          <locales>en</locales>
-        </configuration>
+        <!-- maven-site=plugin:4.0.0-M11,doxia-module-markdown:2.0.0-M8:    warning  -->
+        <!-- maven-site=plugin:4.0.0-M8, doxia-module-markdown:2.0.0-M8: no warning  -->
+        <!-- maven-site=plugin:4.0.0-M9, doxia-module-markdown:2.0.0-M8:    warning  -->
+       <!-- maven-site=plugin:4.0.0-M10,doxia-module-markdown:2.0.0-M8:     warning  -->
+        <dependencies>
+          <!-- Add doxia-module-markdown as dependency for the plugin -->
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-module-markdown</artifactId>
+            <version>2.0.0-M8</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!-- create html and pdf and other formats from latex -->
