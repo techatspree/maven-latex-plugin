@@ -81,3 +81,5 @@ WYRIWYR
 IisO
 postamble
 Postamble
+IllO
+SuSE
