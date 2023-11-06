@@ -71,8 +71,8 @@ using
 \end{Verbatim}
 
 What is special for beamer presentations is, 
-that in general two documents with the same identifier, e.g. title are created, 
-the proper presentation, e.g. 
+that in general two documents with the same identifier, e.g.\@ title are created, 
+the proper presentation, e.g.\@ 
 %
 \begin{Verbatim}
 \RequirePackage[l2tabu, orthodox]{nag}
@@ -372,7 +372,7 @@ and by the way not erased by goal \texttt{clr} as described in Section~\ref{subs
 In case of such a doubt, a warning is displayed. 
 
 That way, injected files written by the plugin can be updated each run 
-but according files written e.g. by the user are protected. 
+but according files written e.g.\@ by the user are protected. 
 
 A first description of the goal \texttt{inj} is given by 
 %
@@ -399,7 +399,7 @@ which yields a list of files which can be injected.
 
 Table~\ref{tab:injections} shows the possible injections 
 and the ones really to be performed are given in the configuration \texttt{injections}. 
-The configuration is described in Table~\ref{tab:paramMisc} on page \pageref{tab:paramMisc}. 
+The configuration is described in Table~\ref{tab:paramMisc} on page~\pageref{tab:paramMisc}. 
 It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}. 
 
 As described in Section~\ref{subsec:xmlPomExecutions}, 
@@ -455,12 +455,12 @@ caption={The config file \texttt{.chktexrc} to check this manual. }]%
 As described in Sections~\ref{subsec:develLatexmk} and~\ref{subsec:develCheck}, 
 both tools are invoked directly by the user in the course of document development, 
 but they may be invoked by this \LaTeX{} builder in the course of a regular build, 
-i.e. for maven goal \texttt{cfg} also. 
+i.e.\@ for maven goal \texttt{cfg} also. 
 % TBD: and ant task with the same name ... well, this will not work 
 % maybe when the ant task is adapted accordingly, including injections. 
 So their respective configuration files must be injected 
 in the maven build process before the \LaTeX{} build tools are invoked, 
-i.e. prior to the phase \texttt{site}. 
+i.e.\@ prior to the phase \texttt{site}. 
 Thus, goal \texttt{inj} has default phase \texttt{validate}. 
 
 
@@ -545,7 +545,7 @@ it is intended to be injected in phase \texttt{validate}.
 Note that \texttt{header.tex} is written for use of 
 %
 \begin{itemize}
-  \item various \LaTeX{} converters, \lualatex, \xelatex{} and \pdflatex 
+  \item various \LaTeX{} converters, \lualatex, \xelatex{} and \pdflatex{} 
   \item various document classes, specifically \texttt{article}, \texttt{book} 
   and \texttt{beamer}, which is for presentations 
   \item for creating PDF files but also other formats created with \pkg{tex4ht} 
@@ -766,7 +766,7 @@ the according position on the viewer must easily be found
 and vice versa. 
 Even better would be if moving in the editor selects the according site at the viewer 
 and the other way round. 
-These two features are called {\em forward search} and {\em backward search}, respectively. 
+These two features are called \emph{forward search} and \emph{backward search}, respectively. 
 If the latex main file has a setting \texttt{synchtex=1} or \texttt{synchtex=-1}, 
 then the created PDF has the according information. 
 Then for VS Code with \LaTeX{} Workshop offers forward search: 
@@ -993,7 +993,7 @@ Maybe they are removed by cleaning.
 
 The 
 
-TBD: check whether this is really needed: is also described in section on latexmk. 
+TBD\@: check whether this is really needed: is also described in section on latexmk. 
 Maybe we need a section on this plugin describing grp and clr uniformly. 
 Maybe also first write on chktex and its relation to this plugin. 
 
@@ -1044,7 +1044,7 @@ Clearing comprises files created by the goal \texttt{grp} and by any other goals
 Note that AUX files are deleted if they belong to a latex main file or to an included file. 
 
 The most interesting files are those created by injection, 
-i.e. by goal \texttt{inj} like \texttt{.latexmkrc}: 
+i.e.\@ by goal \texttt{inj} like \texttt{.latexmkrc}: 
 As pointed out in Section~\ref{sec:injFiles}, 
 each of the files in question is deleted only 
 if they were definitively written by this plugin. 

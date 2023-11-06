@@ -398,11 +398,10 @@ and notify the developer of this plugin of the deficiency.
   or also creates pieces of info. 
   Info refers to the version of this plugin and also on its git commit, 
   but also on the versions of the converters found 
-  and lists the converters excluded, i.e.\@ those not used
-  and thus not tested on version.
+  and lists the converters excluded, 
+  i.e.\@ those not used and thus not tested on version.
   
-  Warnings are emitted e.g. 
-  if the version of a converter does not fit the expectations,
+  Warnings are emitted e.g.\@ if the version of a converter does not fit the expectations,
   the version of a converter could not be retrieved,
   e.g.\@ because it is not installed 
   or if the converter specified is unknown altogether. 
@@ -542,22 +541,22 @@ such as \texttt{bibtex}, \texttt{makeindex}, \texttt{xindy} and
 
 % TBD: take bib2gls into account 
 The program \texttt{splitindex} requires in addition 
-`\texttt{\^{}T\$T-.+\textbackslash.(idx|ind|ilg)}'. 
+`\texttt{\^{}T\$T-.+\textbackslash.(idx|ind|ilg)}'. % chktex 36 
 
 The utility \texttt{pythontex} requires 
-`\texttt{\^{}T\$T\.depytx(\textbackslash.tex)?}' 
+`\texttt{\^{}T\$T\.depytx(\textbackslash.tex)?}' % chktex 36 
 and creates a bunch of further files all in a folder of the form 
 `\texttt{pythontex-files-T\$T}' which must also be added to the regular expression. 
 
 Whereas typically \texttt{latexmk} creates only `\texttt{\^{}T\$T\.fdb\_latexmk}' 
 which is included in the very first expression, 
-during its run it creates `\texttt{\^{}(pdf|xe|lua)?latex\textbackslash d+\textbackslash.fls}', 
+during its run it creates `\texttt{\^{}(pdf|xe|lua)?latex\textbackslash d+\textbackslash.fls}', % chktex 36 
 where the digits represent the process number. 
 If interrupting \texttt{latexmk}, these files may remain, 
 so it is appropriate to add them to the regular expression. 
 
 Package `\pkg{srcltx}' or also \texttt{synctex} requires in addition 
-`\texttt{\^{}T\$T\textbackslash.synctex(\textbackslash.gz)?}' depending on the setting 
+`\texttt{\^{}T\$T\textbackslash.synctex(\textbackslash.gz)?}' depending on the setting % chktex 36 
 \texttt{synctex=1} or \texttt{synctex=-1}. 
 For long files the synctex may create a busy file 
 `\texttt{\^{}T\$T\textbackslash.synctex\textbackslash(busy\textbackslash)?}'. 
@@ -566,7 +565,7 @@ at the end the busy file is erased,
 but still if interrupted from outside it may remain, 
 so we add also the busy variant to the regular expression. 
 Strictly speaking, 
-`\texttt{\^{}T\$T\textbackslash.synctex(\textbackslash(busy\textbackslash))?(\textbackslash.gz)?}' 
+`\texttt{\^{}T\$T\textbackslash.synctex(\textbackslash(busy\textbackslash))?(\textbackslash.gz)?}' % chktex 36 
 is not precisely what may occur, but is a good approximation. 
 
 % TBD: clarify out\\.ps 
