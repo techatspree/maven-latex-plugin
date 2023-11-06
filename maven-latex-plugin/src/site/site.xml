@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project
-  xmlns="http://maven.apache.org/DECORATION/1.6.0"
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<site
+  xmlns="http://maven.apache.org/SITE/2.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd"
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd"
   name="maven-latex-plugin">  <!-- maybe without name, check -->
 
   <!--bannerRight>
@@ -12,10 +12,12 @@
   </bannerRight-->
 
   <poweredBy>
-    <logo name="Github" href="http://github.com/"
-          img="http://github.com/images/modules/header/logov3.png"/>
-    <logo name="Maven" href="http://maven.apache.org/"
-          img="http://maven.apache.org/images/logos/maven-feather.png"/>
+    <logo name="Github" href="http://github.com/">
+      <image src="http://github.com/images/modules/header/logov3.png"/>
+    </logo>
+    <logo name="Maven" href="http://maven.apache.org/">
+      <image src="http://maven.apache.org/images/logos/maven-feather.png"/>
+    </logo>
   </poweredBy>
 
   <!-- 2.0.0-M6 works 2.0.0-M7 does not work, 2.0.0-M8 is newest-->
@@ -41,4 +43,4 @@
     </menu>
     <menu ref="reports"/>
   </body>
-</project>
+</site>

@@ -1008,7 +1008,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <!-- newest 4.0.0-M9 to M11 does not work 
              intermediate 4.0.0-M8 works, newest is M11 -->
-        <version>4.0.0-M8</version>
+        <version>4.0.0-M11</version>
         <!-- maven-site=plugin:4.0.0-M11,doxia-module-markdown:2.0.0-M8:    warning  -->
         <!-- maven-site=plugin:4.0.0-M8, doxia-module-markdown:2.0.0-M8: no warning  -->
         <!-- maven-site=plugin:4.0.0-M9, doxia-module-markdown:2.0.0-M8:    warning  -->
