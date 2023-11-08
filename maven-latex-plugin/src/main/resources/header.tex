@@ -50,7 +50,7 @@
 % Note that documentation is wrong: [aux] is the strictest check 
 \IfClassLoadedTF{beamer}{
   % beamer loads rerunfilecheck with empty options. 
-  % TBD: check whether this is appropriate (maybe no index and glossary, well)
+  % TBD: check whether this is appropriate (acknowledged no index or glossary but bibliography)
 }{
   \usepackage[aux]{rerunfilecheck}
 }
@@ -168,8 +168,8 @@
 
 %\usepackage{etexcmds} %still later 
 \IfClassLoadedTF{beamer}{
-  % TBD: clarify this case. 
-  % maybe beamer does not support indices or glossaries. 
+  % we may want an entry for bibliography, maybe not numbered, 
+  % (acknowledged no index or glossary but bibliography)
   % 
 }{
   \usepackage[nottoc, numindex, numbib]{tocbibind}
