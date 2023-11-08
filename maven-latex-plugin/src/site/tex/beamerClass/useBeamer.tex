@@ -1,5 +1,5 @@
-%\input{header.tex}
-\input{../header.tex}
+
+\input{../header}
 
 \ifpdf%
   \ifLuaTeX%
@@ -57,9 +57,14 @@
 \date{\today}
 
 
-
-
+\hypersetup{colorlinks,linkcolor=,urlcolor=blue,citecolor=yellow}%
+%\hypersetup{frenchlinks}
 \begin{document}
+ 
+\mode<article>{\maketitle}
+
+
+
 
 \begin{frame}
   \titlepage%
@@ -69,41 +74,44 @@
 
 \begin{frame}
   \tableofcontents
-\makeatletter
-  a.\@ifclassloaded{beamer}{a}{b}
-  \makeatother
 \end{frame}
 
 \section{Introduction and Purpose}
 
-\begin{frame}
-  \frametitle{Purpose}
-  The purpose is twofold:
-  %
-  \begin{itemize}
-    \item Give an overview over the plugin
-    \item Demonstrate that the plugin can compile the beamer class
-  \end{itemize}
-  The purpose is not to replace the manual~\cite{LatexPlugin}.
-\end{frame}
+This is some additional text 
 
 \begin{frame}
-  \frametitle{Purpose}
-  Automatically create documents from LaTeX sources during the Maven site phase
+  \frametitle{Purpose of these documents }
+  The purpose of this document is twofold:
   %
   \begin{itemize}
-    \item
-          Output formats comprise PDF, DVI, XDV, (X)DOC, ODT, TXT and (X)HTML% chktex 36 
-    \item
-          Allows typical graphic formats native to TEX (like EPS and metapost)
-          or to the package graphicx.
-    \item
-          Includes bibliography, indices, glossaries and execution of program code.
-    \item
-          Furthermore, displays warnings if there is a hint that the result is not optimal.
-          In particular checks for rerun, warnings and under/overfull boxes.
+    \item Give an overview over the plugin. 
+    \alert{But: }
+    %
+    \begin{itemize}
+      \item The single official description of the plugin is the manual~\cite{LatexPlugin}.
+      \item The 
+      \href{http://simuline.eu/LatexMavenPlugin/index.html}{project site} 
+      gives already an overview. 
+      \item 
+      The content of this presentation is updated only by need. 
+    \end{itemize}
+    
+    \item Demonstrate that the plugin can compile a presentation using the \texttt{beamer} class 
+    and a handout written as \texttt{beamerarticle}. 
+
+    \begin{itemize}
+      \item In fact, when citing this presentation as~\cite{PresBeamer}, 
+      this refers to both. 
+      \item The presentation is about the plugin 
+      \item The handout adds information on how to write a beamer presentation. 
+      \item Both documents turn \texttt{beamer} class and package \texttt{beamerarticle} into preferred usage 
+      ensuring tests. 
+    \end{itemize}
   \end{itemize}
+  
 \end{frame}
+
 
 \section{Features}
 
@@ -111,47 +119,49 @@
 
 \begin{frame}
   \frametitle{Ant and Maven}
-  Automatically create documents from LaTeX sources during the Maven site phase 
+  Automatically creates documents from LaTeX sources during the Maven \texttt{site} phase 
   and in an ant run. 
+
+  This comprises running basic tools like \texttt{lualatex} and \texttt{bibtex} 
+  and rerunning them by need. 
 
 \end{frame}
 
 \begin{frame}
   \frametitle{Supported IO}
-
+  Supports 
   \begin{itemize}
     \item
-          Supports many output formats like PDF, DVI, HTML, DOCX, RTF, TXT and others.
+    many output formats like PDF, DVI, HTML, DOCX, RTF, TXT and others
     \item
-          Supports many graphical input formats like PNG, MP, FIG, gnuplot. 
-          Also provides a separate goal creating them, \texttt{grp}.
+    many graphical input formats like PNG, MP, FIG, gnuplot; 
+    also provides a separate goal creating them, \texttt{grp} 
     \item
-          Support of bibliography, index, glossary and embedded code. 
-          In particular supports split index.
+    bibliography, index, glossary and embedded code; in particular split index
   \end{itemize}
 \end{frame}
 
 
 \begin{frame}
   \frametitle{Checks}
-  Automatically create documents from LaTeX sources during the Maven site phase
+  Check 
   %
   \begin{itemize}
     \item
-          Perform checks with \texttt{chktex} and logs the result.
+    sources with \texttt{chktex} and logs the results in target and goal \texttt{chk} 
     \item
-          Performs version checks on used tools.
+    versions of used tools via goal \texttt{vrs} 
     \item
-          Perform checks on sources and results and log files.
+    log files detecting errors and warnings 
     \item
-          Allows check whether a document could have been reproduced.
+    whether a document could have been reproduced, by demand 
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Orchestration and document development}
   Orchestration of various tools detecting need for execution e.g.
-  of bibtex including rerunfilecheck for lualatex and friends.
+  of \texttt{bibtex} including \texttt{rerunfilecheck} for \texttt{lualatex} and friends.
 
   Supports document development, mainly by cooperating with editor, viewer and with other tools in the build chain.
   \begin{itemize}
@@ -170,30 +180,65 @@
 \begin{frame}
   \frametitle{Planned Features}
   \begin{itemize}
-  
-    \item Support \texttt{biber} replacing \texttt{bibtex} as preferred tool
+  \item Support \texttt{biber} replacing \texttt{bibtex} as preferred tool
   \item Support \texttt{xindy} replacing \texttt{makeindex} as preferred tool
-    \item Support \texttt{bib2gls} replacing \texttt{makeglossary} as preferred tool
-    \item Execute \texttt{glosstex} if needed
-    \item Usage of the \texttt{multibib} macros
-    \item \dots
+  \item Support \texttt{bib2gls} replacing \texttt{makeglossary} as preferred tool
+  \item Execute \texttt{glosstex} if needed
+  \item Usage of the \texttt{multibib} macros
+  \item \dots
   \end{itemize}
 \end{frame}
 
-\section{Installation}
+% \section{Installation}
 
 \section{Goals}
 
-\section{Usage}
+\begin{frame}
+  \frametitle{Goals}
 
-\section{Examples}
+  An overview is on the 
+  \href{http://simuline.eu/LatexMavenPlugin/plugin-info.html}{goals page}. 
+  
+  \setbeamercolor{alerted text}{fg=blue}
+  Besides goals referring to creating output of a given type 
+  like \alert{\texttt{pdf}}, \alert{\texttt{odt}} and \alert{\texttt{html}}, 
+  there is a goal \alert{\texttt{cfg}}, 
+  which allows \setbeamercolor{alerted text}{fg=red}
+  \alert con\alert fi\alert guring various output formats as \texttt{targets}. % chktex 1
+  
+  \setbeamercolor{alerted text}{fg=blue}
+  One further goal, \alert{\texttt{chk}} to perform a check with \texttt{chktex} 
+  is allowed among the \texttt{targets}. 
 
-\section{References}
-\bibliographystyle{alpha}
+  The other goals cannot serve as targets: 
+  %
+  \begin{description}
+    \item[\texttt{vrs}] to check versions of tools, 
+    \item[\texttt{grp}] to create graphic files speeding up use of \texttt{latexmk} 
+    and 
+    \item[\texttt{inj}] to inject useful files like headers or config files 
+    like \texttt{.latexmkrc}. 
+  \end{description}
+  
+
+\end{frame}
+
+% \section{Usage}
+
+% \section{Examples}
+
+\mode<presentation>
+\section{References}% if with star not in toc 
+
 
 \begin{frame}[allowframebreaks]
   \frametitle{References}
+  \bibliographystyle{alpha}
   \bibliography{../lit}{}
 \end{frame}
+
+\mode<article>
+\bibliographystyle{alpha}
+\bibliography{../lit}{}
 
 \end{document}
