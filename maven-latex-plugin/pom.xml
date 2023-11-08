@@ -1034,7 +1034,7 @@
             <!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
             <!--targets>chk,pdf,html</targets-->
             <!--mainFilesIncluded>manualLMP</mainFilesIncluded-->
-            <mainFilesExcluded>test</mainFilesExcluded>
+            <mainFilesExcluded>test useBeamerHandout</mainFilesExcluded>
             <pythontexCommand>pythontexW:pythontex</pythontexCommand>
             <pythontexOptions>--rerun=always</pythontexOptions>
             <!--patternErrPyTex>\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\(s\), [0-9]+ warning\(s\)</patternErrPyTex-->
@@ -1046,11 +1046,11 @@
 
         <executions>
           <!--execution>
-						<id>process-latex-sources-pdf</id>
-						<goals>
-							<goal>pdf</goal>
-						</goals>
-					</execution-->
+            <id>process-latex-sources-pdf</id>
+            <goals>
+              <goal>pdf</goal>
+            </goals>
+          </execution-->
           <execution>
             <id>process-latex-sources</id>
             <goals>
