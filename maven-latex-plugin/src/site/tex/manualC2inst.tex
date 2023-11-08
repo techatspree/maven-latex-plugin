@@ -69,7 +69,7 @@ Should be made configurable.
 
 To edit metapost, the mode built-in mode \texttt{Metamode} is used. 
 
-Built-in mode \texttt{Docview} to view pdf, ps and dvi. 
+Built-in mode \texttt{Docview} to view PDF, PS and DVI. 
 
 latexmk
 
@@ -97,7 +97,7 @@ Strictly speaking, only the latter functionality is required here.
 \item
 To convert \gls{mp}-files into \gls{eps}-files, 
 the interpreter \texttt{mpost}\index{mpost}\index{metapost} or equivalent is required. 
-This comes with a standard tex-installation. 
+This comes with a standard \TeX{} installation. 
 With the standard configuration, 
 the resulting EPS-file can be viewed with \texttt{ghostscript} 
 and for developing it is recommended to have \texttt{ghostscript} installed. 
@@ -207,38 +207,31 @@ an according properties file
 There are also several \LaTeX-packages needed or at least recommended. 
 The recommended ones are 
 %
-\begin{itemize}
-\item
-\pkg{geometry} described in~\cite{GeomP} 
+\begin{description}
+\item[\pkg{geometry}] described in~\cite{GeomP} 
 to control page layout. 
-\item
-\pkg{microtype} described in~\cite{MicroTyP} improve readability 
+\item[\pkg{microtype}] described in~\cite{MicroTyP} improve readability 
 and make the document look nicer. 
 It also helps to avoid bad boxes. 
-\item
-\pkg{hyperref} described in~\cite{HyperTextP} 
+\item[\pkg{hyperref}] described in~\cite{HyperTextP} 
 to insert hypertext marks, which I do not want to miss in larger documents. 
 % FIXME: with latex2rtf: 
 %\newif\iflatextortf% false for latex but set true for latex2rtf internally 
 %\iflatextortf\else\usepackage{hyperref}\fi % includes hyperrefss if not rtf
 %\iflatextortf\else\begin{appendix}\fi
 %\iflatextortf\else\end{appendix}\fi
-\item
-\pkg{srcltx} described in~\cite{SrcLtxP} 
+\item[\pkg{srcltx}] described in~\cite{SrcLtxP} 
 which allows jumping from the DVI file to the TEX source and back.
 % TBD: indicate as deprecated. 
-\item
-\pkg{showframe} 
+\item[\pkg{showframe}] 
 if \pkg{geometry} is not used with option \pkg{showframe}. 
 There seems to be no package documentation for package \pkg{showframe}. 
-\item
-\pkg{booktabs} described in~\cite{BooktP} 
+\item[\pkg{booktabs}] described in~\cite{BooktP} 
 
-\item
-\pkg{fix-cm} described in~\cite{FixCmP} and 
-\pkg{anyfontsize} described in~\cite{AnyfontsizeP} 
+\item[\pkg{anyfontsize}] described in~\cite{AnyfontsizeP} 
 to allow arbitrary font sizes, eliminating certain warnings. 
-\end{itemize}
+An alternative may be \pkg{fix-cm} described in~\cite{FixCmP}. 
+\end{description}
 
 \noindent
 Almost required are 
