@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -1188,9 +1189,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 
 	/**
-	 * Returns whether <code>texFile</code> is a latex main file,
-	 * provided it is readable.
-	 * Otherwise logs a warning and returns <code>false</code>.
+	 * Returns an optional covering a <code>LatexMainDesc</code> 
+   * if and only if <code>texFile</code> is recognized 
+   * as latex main file which includes that it is readable.
+	 * If it is not readable, this method logs a warning 
+   * and returns an empty optional.
 	 * <p>
 	 * Logging:
 	 * <ul>
@@ -1199,15 +1202,17 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <ul>
 	 *
 	 * @param texFile
-	 *    the tex-file to decide on whether it is a latex main file.
+	 *    the tex-file to decide on whether it is a latex main file. 
 	 * @return
-	 *    whether <code>texFile</code> is definitively a latex main file.
-	 *    If this is not readable, <code>false</code>.
+   *    An optional containing a {@link LatexMainDesc} if and only if 
+   *    <code>texFile</code> is definitively a latex main file 
+   *    in particular it is readable. 
+   *    This can be asked by {@link Optional#isPresent()}. 
 	 */
 	// used
 	// by addIfLatexMain(File, Collection) and
 	// by clearTargetTexIfLatexMain(File)
-	private boolean isLatexMainFile(File texFile) {
+	private Optional<LatexMainDesc> isLatexMainFile(File texFile) {
 		assert texFile.exists() && !texFile.isDirectory()
 				: "Expected existing regular tex file " + texFile;
 		// may log WFU03 cannot close
@@ -1216,9 +1221,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		if (res == null) {
 			this.log.warn("WPP02: Cannot read tex file '" + texFile +
 					"'; may bear latex main file. ");
-			return false;
+			return Optional.empty();
 		}
-		return res;
+		return res 
+      ? Optional.of(new LatexMainDesc(texFile))
+      : Optional.empty();
 	}
 
 	/**
@@ -1240,7 +1247,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// invoked only by tex.procSrc(File, LatexPreProcessor)
 	private void addIfLatexMain(File texFile, Collection<File> latexMainFiles) {
 		// may log WFU03, WPP02
-		if (isLatexMainFile(texFile)) {
+		if (isLatexMainFile(texFile).isPresent()) {
 			this.log.info("Detected latex-main-file '" + texFile + "'. ");
 			latexMainFiles.add(texFile);
 		}
@@ -1268,7 +1275,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	private boolean clearTargetTexIfLatexMain(File texFile) {
 		// exclude files which are no latex main files
 		// may log WFU03, WPP02
-		if (!isLatexMainFile(texFile)) {
+		if (isLatexMainFile(texFile).isEmpty()) {
 			return false;
 		}
 		this.log.info("Deleting targets of latex main file '" +
