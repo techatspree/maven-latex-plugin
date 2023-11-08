@@ -299,10 +299,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
       // log warning WFU03, WPP02, WPP03,
       // EEX01, EEX02, EEX03, WEX04, WEX05, EFU07, EFU08, EFU09: if filtering a file
       // fails.
-      Collection<File> latexMainFiles =
+      Collection<LatexMainDesc> latexMainDescs =
           this.preProc.processGraphicsSelectMain(texProcDir, node);
 
-      for (File texFile : latexMainFiles) {
+      for (LatexMainDesc desc : latexMainDescs) {
+        File texFile = desc.texFile;
         // throws BuildFailureException TFU01
         // if targetDir would be an existing non-directory
         File targetDir = this.fileUtils.getTargetDirectory(texFile, texDir,
@@ -317,7 +318,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
         for (Target target : targetSet) {
           // may throw BuildFailureException TEX01,
           // log warning EEX01, EEX02, EEX03, WEX04, WEX05
-          target.processSource(this, getLatexMainDesc(texFile));
+          target.processSource(this, desc);
+          //target.processSource(this, getLatexMainDesc(texFile));
           FileFilter fileFilter = TexFileUtils.getFileFilter(texFile,
               target.getPatternOutputFiles(this.settings), false);
           // may throw BuildFailureException
@@ -586,11 +588,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
   // FIXME: determine whether to use latexmk makes sense
 
-
-
-  private LatexMainDesc getLatexMainDesc(File texFile) {
-    return new LatexMainDesc(texFile);
-  }
 
   /**
    * Runs LaTeX on on the latex main file <code>texFile</code>

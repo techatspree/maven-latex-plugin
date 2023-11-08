@@ -1252,10 +1252,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		if (optTexFileDesc.isPresent()) {
 			this.log.info("Detected latex-main-file '" + texFile + "'. ");
 			latexMainDescs.add(optTexFileDesc.get());
-		} else {
-      System.out.println("no latex main file: " + texFile);
-    }
-	}
+		}
+  }
 
 	/**
 	 * Deletes the files
@@ -1305,7 +1303,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * are converted into formats which can be inputed or included directly
 	 * into a latex file.
 	 * <li>
-	 * returns the set of latex main files.
+	 * returns the set of descriptions of latex main files.
 	 * </ul>
 	 * <p>
 	 * Logging:
@@ -1326,7 +1324,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * @param node
 	 *    a node associated with <code>dir</code>.
 	 * @return
-	 *    the collection of latex main files.
+	 *    the collection of descriptions of latex main files.
 	 * @throws BuildFailureException
 	 *    TEX01 invoking
 	 * {@link #processGraphicsSelectMain(File, DirNode, Collection, Collection)}
@@ -1334,7 +1332,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// used in LatexProcessor.create()
 	// and in LatexProcessor.processGraphics() only
 	// where 'node' represents the tex source directory
-	Collection<File> processGraphicsSelectMain(File dir, DirNode node)
+	Collection<LatexMainDesc> processGraphicsSelectMain(File dir, DirNode node)
 			throws BuildFailureException {
 
 		Collection<String>       skippedSuffixes = new TreeSet<String>();
@@ -1356,22 +1354,20 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					skippedSuffixes + ". ");
 		}
 
-		Map<String, File> name2file = new HashMap<String, File>();
-		File oldValue;
+		Map<String, LatexMainDesc> name2desc = new HashMap<String, LatexMainDesc>();
+		LatexMainDesc oldValue;
 		Set<String> keysOverwritten = new HashSet<String>();
 		String key;
 		for (LatexMainDesc mainDesc : latexMainDescs) {
-      File mainFile = mainDesc.texFile;
-			key = TexFileUtils.getFileNameWithoutSuffix(mainFile);
-      assert key.equals(mainDesc.xxxFile.getName());
-			oldValue = name2file.put(key, mainFile);
+			key = mainDesc.xxxFile.getName();
+			oldValue = name2desc.put(key, mainDesc);
 			if (oldValue != null) {
 					keysOverwritten.add(key);
 			}
 		}
 
 		// original latexMainFiles, not modified by inclusion and exclusion 
-		Set<String> keySetOrg = new HashSet<String>(name2file.keySet());
+		Set<String> keySetOrg = new HashSet<String>(name2desc.keySet());
 
 		Set<String> mainFilesIncluded = this.settings.getMainFilesIncluded();
 		if (!mainFilesIncluded.isEmpty()) {
@@ -1383,7 +1379,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				this.log.warn("WPP05: Included latex files which are not latex main files: " +
 											includedNotMainFiles + ". ");
 			}
-			name2file.keySet().retainAll(mainFilesIncluded);
+			name2desc.keySet().retainAll(mainFilesIncluded);
 		}
 
 
@@ -1396,7 +1392,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			this.log.warn("WPP06: Excluded latex files which are not latex main files: " +
 			excludedNotMainFiles + ". ");
 		}
-		name2file.keySet().removeAll(mainFilesExcluded);
+		name2desc.keySet().removeAll(mainFilesExcluded);
 
 		if (!(mainFilesIncluded.isEmpty() && mainFilesExcluded.isEmpty())) {
 			Set<String> inclExcl = new HashSet<String>(mainFilesIncluded);
@@ -1406,10 +1402,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				this.log.warn("WPP07: Included/Excluded latex main files not identified by their name: " +
 											inclExcl + ". ");
 			}
-			this.log.info("After inclusion/exclusion latex main files are " + name2file.keySet() + ". ");
+			this.log.info("After inclusion/exclusion latex main files are " + name2desc.keySet() + ". ");
 		}
 
-		return name2file.values();
+		return name2desc.values();
 	}
 
 	/**
