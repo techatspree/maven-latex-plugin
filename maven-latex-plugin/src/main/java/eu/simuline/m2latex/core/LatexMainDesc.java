@@ -6,7 +6,7 @@ import java.io.File;
  * Container which comprises, besides the latex main file
  * also several files creation of which shall be done once for ever.
  */
-class LatexMainDesc {
+class LatexMainDesc implements Comparable<LatexMainDesc> {
     final File texFile;
     final File pdfFile;
     final File dviFile;
@@ -46,5 +46,13 @@ class LatexMainDesc {
 
     File withSuffix(String suffix) {
         return TexFileUtils.appendSuffix(this.xxxFile, suffix);
+    }
+
+    public int compareTo(LatexMainDesc other) {
+      return this.texFile.compareTo(other.texFile);
+    }
+
+    public String toString() {
+      return "<LatexMainDesc>" + this.texFile.getName() + "</LatexMainDesc>";
     }
 } // class LatexMainDesc

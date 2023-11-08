@@ -278,10 +278,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			void scheduleProcSrc(File file,
 					Map<File, SuffixHandler> file2handler,
 					LatexPreProcessor proc,
-					Collection<File> latexMainFiles) {
+					Collection<LatexMainDesc> latexMainDescs) {
 				file2handler.put(file, this);// super
 				// may log WFU03, WPP02
-				proc.addIfLatexMain(file, latexMainFiles);
+				proc.addIfLatexMain(file, latexMainDescs);
 			}
 
 			void procSrc(File file, LatexPreProcessor proc) {
@@ -336,7 +336,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		void scheduleProcSrc(File file,
 				Map<File, SuffixHandler> file2handler,
 				LatexPreProcessor proc,
-				Collection<File> latexMainFiles) {
+				Collection<LatexMainDesc> latexMainDescs) {
 			file2handler.put(file, this);
 		}
 
@@ -1204,7 +1204,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * @param texFile
 	 *    the tex-file to decide on whether it is a latex main file. 
 	 * @return
-   *    An optional containing a {@link LatexMainDesc} if and only if 
+   *    An {@link Optional} containing a {@link LatexMainDesc} if and only if 
    *    <code>texFile</code> is definitively a latex main file 
    *    in particular it is readable. 
    *    This can be asked by {@link Optional#isPresent()}. 
@@ -1212,7 +1212,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// used
 	// by addIfLatexMain(File, Collection) and
 	// by clearTargetTexIfLatexMain(File)
-	private Optional<LatexMainDesc> isLatexMainFile(File texFile) {
+	private Optional<LatexMainDesc> optLatexMainFile(File texFile) {
 		assert texFile.exists() && !texFile.isDirectory()
 				: "Expected existing regular tex file " + texFile;
 		// may log WFU03 cannot close
@@ -1230,7 +1230,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 
 	/**
 	 * If the tex-file <code>texFile</code> is a latex main file,
-	 * add it to <code>latexMainFiles</code>.
+	 * add the according description to <code>latexMainFiles</code>.
 	 * <p>
 	 * Logging:
 	 * <ul>
@@ -1239,18 +1239,22 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 * <ul>
 	 *
 	 * @param texFile
-	 *    the tex-file to be added to <code>latexMainFiles</code>
-	 *    if it is a latex main file.
-	 * @param latexMainFiles
-	 *    the collection of latex main files found so far.
+	 *    the tex-file the description of which 
+   *    is to be added to <code>latexMainDescs</code>
+	 *    if <code>texFile</code> is a latex main file.
+	 * @param latexMainDescs
+	 *    the collection of descriptions of latex main files found so far.
 	 */
 	// invoked only by tex.procSrc(File, LatexPreProcessor)
-	private void addIfLatexMain(File texFile, Collection<File> latexMainFiles) {
+	private void addIfLatexMain(File texFile, Collection<LatexMainDesc> latexMainDescs) {
 		// may log WFU03, WPP02
-		if (isLatexMainFile(texFile).isPresent()) {
+    Optional<LatexMainDesc> optTexFileDesc = optLatexMainFile(texFile);
+		if (optTexFileDesc.isPresent()) {
 			this.log.info("Detected latex-main-file '" + texFile + "'. ");
-			latexMainFiles.add(texFile);
-		}
+			latexMainDescs.add(optTexFileDesc.get());
+		} else {
+      System.out.println("no latex main file: " + texFile);
+    }
 	}
 
 	/**
@@ -1275,7 +1279,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	private boolean clearTargetTexIfLatexMain(File texFile) {
 		// exclude files which are no latex main files
 		// may log WFU03, WPP02
-		if (isLatexMainFile(texFile).isEmpty()) {
+		if (optLatexMainFile(texFile).isEmpty()) {
 			return false;
 		}
 		this.log.info("Deleting targets of latex main file '" +
@@ -1333,18 +1337,18 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	Collection<File> processGraphicsSelectMain(File dir, DirNode node)
 			throws BuildFailureException {
 
-		Collection<String> skippedSuffixes = new TreeSet<String>();
-		Collection<File>    latexMainFiles = new TreeSet<File>();
+		Collection<String>       skippedSuffixes = new TreeSet<String>();
+		Collection<LatexMainDesc> latexMainDescs = new TreeSet<LatexMainDesc>();
 		if (this.settings.getReadTexSrcProcDirRec()) {
 			// may throw BuildFailureException TEX01,
 			// may log EEX01, EEX02, EEX03,
 			// WEX04, WEX05, WFU03, WPP02, EFU06
-			processGraphicsSelectMainRec(dir, node, skippedSuffixes, latexMainFiles);
+			processGraphicsSelectMainRec(dir, node, skippedSuffixes, latexMainDescs );
 		} else {
 			// may throw BuildFailureException TEX01,
 			// may log EEX01, EEX02, EEX03,
 			// WEX04, WEX05, WFU03, WPP02, EFU07, EFU08, EFU09
-			processGraphicsSelectMain(dir, node, skippedSuffixes, latexMainFiles);
+			processGraphicsSelectMain(dir, node, skippedSuffixes, latexMainDescs );
 		}
 
 		if (!skippedSuffixes.isEmpty()) {
@@ -1356,8 +1360,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		File oldValue;
 		Set<String> keysOverwritten = new HashSet<String>();
 		String key;
-		for (File mainFile : latexMainFiles) {
+		for (LatexMainDesc mainDesc : latexMainDescs) {
+      File mainFile = mainDesc.texFile;
 			key = TexFileUtils.getFileNameWithoutSuffix(mainFile);
+      assert key.equals(mainDesc.xxxFile.getName());
 			oldValue = name2file.put(key, mainFile);
 			if (oldValue != null) {
 					keysOverwritten.add(key);
@@ -1425,8 +1431,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	 *    the collection of suffixes of files with handling skipped so far
 	 *    because there is no handler.
 	 *    FIXME: interesting for files without suffix or for hidden files.
-	 * @param latexMainFiles
-	 *    the collection of latex main files found so far.
+	 * @param latexMainDescs
+	 *    the collection of descriptions of latex main files found so far.
 	 * @throws BuildFailureException
 	 *    TEX01 invoking
 	 *    {@link LatexPreProcessor.SuffixHandler#procSrc(File, LatexPreProcessor)}
@@ -1438,7 +1444,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	private void processGraphicsSelectMain(File dir,
 			DirNode node,
 			Collection<String> skippedSuffixes,
-			Collection<File> latexMainFiles)
+			Collection<LatexMainDesc> latexMainDescs)
 			throws BuildFailureException {
 
 		assert node.isValid();// i.e. node.regularFile != null
@@ -1450,7 +1456,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		File file;
 		String suffix;
 		SuffixHandler handler;
-		Collection<File> latexMainFilesLocal = new TreeSet<File>();
+		Collection<LatexMainDesc> latexMainDescsLocal = new TreeSet<LatexMainDesc>();
 		Map<File, SuffixHandler> file2handler = new TreeMap<File, SuffixHandler>();
 		for (String fileName : node.getRegularFileNames()) {
 			file = new File(dir, fileName);
@@ -1477,10 +1483,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			// may log EEX01, EEX02, EEX03, WEX04, WEX05
 			// WFU03, WPP02
 			handler.scheduleProcSrc(file, file2handler,
-					this, latexMainFilesLocal);
+					this, latexMainDescsLocal);
 		} // for
 
-		latexMainFiles.addAll(latexMainFilesLocal);
+		latexMainDescs.addAll(latexMainDescsLocal);
 
 		// From now on it is about processing graphic files 
 		// and to message bib-files (for bibliography and for glossary)
@@ -1489,7 +1495,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// remove sources from file2handler.keySet()
 		// if created by local latex main files
 		FileFilter filter;
-		for (File lmFile : latexMainFilesLocal) {
+		for (LatexMainDesc lmDesc : latexMainDescsLocal) {
+      File lmFile = lmDesc.texFile;
 			filter = TexFileUtils.getFileFilter(lmFile,
 					this.settings.getPatternCreatedFromLatexMain(),
 					false);
@@ -1534,9 +1541,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	private void processGraphicsSelectMainRec(File dir,
 			DirNode node,
 			Collection<String> skipped,
-			Collection<File> latexMainFiles)
+			Collection<LatexMainDesc> latexMainDescs)
 			throws BuildFailureException {
-		processGraphicsSelectMain(dir, node, skipped, latexMainFiles);
+		processGraphicsSelectMain(dir, node, skipped, latexMainDescs);
 
 		// go on recursively with subdirectories
 		for (Map.Entry<String, DirNode> entry : node.getSubdirs().entrySet()) {
@@ -1546,7 +1553,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			processGraphicsSelectMainRec(new File(dir, entry.getKey()),
 					entry.getValue(),
 					skipped,
-					latexMainFiles);
+					latexMainDescs);
 		}
 	}
 
