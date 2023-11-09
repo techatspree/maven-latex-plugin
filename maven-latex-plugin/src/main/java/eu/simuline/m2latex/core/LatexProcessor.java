@@ -318,6 +318,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
         for (Target target : targetSet) {
           // may throw BuildFailureException TEX01,
           // log warning EEX01, EEX02, EEX03, WEX04, WEX05
+
+          if (desc.docClass.equals("beamer")) {
+            // TBD: rework 
+            if (!(target == Target.chk || target == Target.pdf)) {
+              System.out.println("For beamer skip target "+target);
+              continue;
+            }
+          }
           target.processSource(this, desc);
           //target.processSource(this, getLatexMainDesc(texFile));
           FileFilter fileFilter = TexFileUtils.getFileFilter(texFile,

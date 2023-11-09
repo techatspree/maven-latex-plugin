@@ -707,7 +707,7 @@ class TexFileUtils {
           Matcher matcher = pattern.matcher(lines);
           if (matcher.find()) {
             if (groupName != null) {
-              System.out.println("found class: " + matcher.group(groupName));
+              return FileMatch.matches(matcher.group(groupName));
             }
             return FileMatch.matches(true);
           }

@@ -1224,7 +1224,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			return Optional.empty();
 		}
     return fileMatch.matches()
-      ? Optional.of(new LatexMainDesc(texFile))
+      ? Optional.of(new LatexMainDesc(texFile, fileMatch.group()))
       : Optional.empty();
     }
 
@@ -1250,8 +1250,11 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		// may log WFU03, WPP02
     Optional<LatexMainDesc> optTexFileDesc = optLatexMainFile(texFile);
 		if (optTexFileDesc.isPresent()) {
-			this.log.info("Detected latex-main-file '" + texFile + "'. ");
-			latexMainDescs.add(optTexFileDesc.get());
+      LatexMainDesc desc = optTexFileDesc.get();
+			this.log.info("Detected latex-main-file '"
+        + texFile + "' of class '"
+        + desc.docClass + "'. ");
+			latexMainDescs.add(desc);
 		}
   }
 

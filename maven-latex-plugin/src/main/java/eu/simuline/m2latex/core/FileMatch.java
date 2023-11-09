@@ -23,6 +23,27 @@ public class FileMatch {
   } // FileMatchReadable 
 
 
+  static class FileMatchGrouped extends FileMatch {
+
+    String grpString;
+
+    FileMatchGrouped(String grpString) {
+      this.grpString = grpString;
+    }
+
+    boolean isFileReadable() {
+      return true;
+    }
+
+    boolean matches() {
+      return true;
+    }
+
+    String group() {
+      return this.grpString;
+    }
+
+  } // class FileMatchGrouped 
 
   private FileMatch() {}
 
@@ -34,6 +55,10 @@ public class FileMatch {
     return new FileMatchReadable(matches);
   }
 
+    static FileMatch matches(String grpString) {
+    return new FileMatchGrouped(grpString);
+  }
+
   // to be overwritten 
   boolean isFileReadable() {
     return false;
@@ -43,4 +68,7 @@ public class FileMatch {
     throw new IllegalStateException("Unreadable cannot be asked for match. ");
   }
 
+  String group() {
+    throw new IllegalStateException("No group matched. ");
+  }
 }
