@@ -250,18 +250,22 @@ and of course they are not allowed to be used.
 \texttt{patternLatexMainFile} & see Section~\ref{subsec:patternLatexMainFile}\\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The pattern to be applied to the contents of tex-files 
-which identifies a \LaTeX{} main file. 
+The pattern to be applied to the beginning of the contents of TEX-files 
+which identifies a \LaTeX{} main file and which extracts the document class 
+if the file is really a \LaTeX{} main file. 
+The default value is chosen to match quite exactly the start of 
+the \LaTeX{} main files. 
 Here we assume that the latex main file should contain 
 the declaration ``\cmd{documentclass}'' 
 or the old-fashioned ``\cmd{documentstyle}'' 
-preceded by a few constructs. 
-Strictly speaking, this is not necessary. 
+preceded by a few constructs and followed by the document class. 
+
+Strictly speaking, a tight match is not necessary, 
+only separation of \LaTeX{} main files from other files is 
+and so is extraction of the document class. 
 For a more thorough discussion, 
 and for an alternative approach, consult the manual. 
 
-The default value is chosen to match quite exactly 
-the latex main files, no more no less. 
 Since the pattern is chosen 
 according to documentation collected from the internet, 
 one can never be sure whether the pattern is perfect. 
@@ -269,6 +273,8 @@ one can never be sure whether the pattern is perfect.
 If the current default value is not appropriate, 
 please overwrite it in the configuration 
 and notify the developer of this plugin of the deficiency. 
+In any case, matching of the group named \texttt{class} must be retained 
+so that the document class is matched. 
 \end{minipage}
 } \\
 \texttt{mainFilesIncluded}          &  empty string        \\
@@ -429,27 +435,32 @@ For further description see Section~\ref{sec:injFiles}.
 The default pattern for identifying a \LaTeX{} main file 
 is given by Listing~\ref{lst:patternLatexMainFile}.
 
-\lstinputlisting[language=XML, basicstyle=\footnotesize,
-firstline=141, lastline=148,
+\lstinputlisting[language=XML, basicstyle=\scriptsize,
+linerange={157-162}, % chktex 8 TBD: why is this nost covered by .chktexrc? 
 breaklines,
 %float,
 captionpos=b, label={lst:patternLatexMainFile},
 caption={The default pattern of the latex main file in a form as in a pom configuration}]
 {../../main/resources/rawPoms/pom4pdf.xml}% chktex 11 
 
-% \begin{Verbatim}[fontsize=\footnotesize]
-% \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{\w+\}\s*(\[(\d|\.)+\])?|
-% \\PassOptionsToPackage\s*\{\w+\}\s*\{\w+\}|
+% \begin{Verbatim}[fontsize=\scriptsize]
+% \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
 % %.*$|
-% \\input\{[^{}]*\}|
-% \s*)*
-% \\(documentstyle|documentclass)
+% \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
+% \\input\s*\{[^{}]*\}|
+% \s)*
+% \\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;class&gt;[^}]+)\}
 % \end{Verbatim}
 
-This means that the latex main file is the one 
-containing \cmd{documentclass}{} for modern classes 
-and \cmd{documentstyle}{} for old-fashioned ones. 
-This may be preceded only by 
+In view of the last line, this means that the latex main file is the one 
+containing \cmd{documentclass} for modern classes 
+and \cmd{documentstyle} for old-fashioned ones. 
+This is followed by optional options and above all by a named group \texttt{class} 
+matching the document class. 
+Matching the class name is the sole hard requirement. 
+
+The \cmd{documentclass} or \cmd{documentstyle} 
+may be preceded only by 
 %
 \begin{itemize}
 \item
@@ -457,31 +468,58 @@ the command \cmd{RequirePackage},
 \item
 the command \cmd{PassOptionsToPackage}, 
 \item
-by comment lines, 
+comment lines, 
 \item
-by \cmd{input}, and 
+\cmd{input}, and 
 \item
-by space. 
+space. 
 \end{itemize}
 %
-Note that \cmd{A}{} represents the beginning of the stream. 
+Note that \cmd{A} represents the beginning of the stream. 
+
+From the point of view of the \LaTeX{} converter, 
+\cmd{documentclass} is not required in the main file, 
+it could be hidden in some \cmd{input}-file. 
+If we stick to the wise convention to open and to close the same environment 
+in the same file and to have \cmd{documentclass}, 
+\cmd{begin\{document\}} and \cmd{end\{document\}} 
+in the same file also, 
+then a latex main file without \cmd{documentclass} 
+cannot contain very much material. 
+
+So it is almost no restriction to the user to have \cmd{documentclass} 
+declared in the latex main file. 
+As explained above, this is necessary for this \LaTeX{} builder to find out the document class. 
+% TBD: explain why: link to support of various classes. 
+% Partially, this is not yet documented. 
+
 
 Strictly speaking, also \cmd{(re)newcommands} % chktex 36
 and other constructs are possible but not allowed here. 
-Strictly speaking also \cmd{documentclass}{} is not required, 
-it could be hidden in some \cmd{input}-file. 
-If we stick to the wise convention to open and close the same environment 
-in the same file and to have \cmd{documentclass}, 
-\cmd{begin\{document\}}{} and \cmd{end\{document\}}{} 
-in the same file also, 
-then a latex main file without \cmd{documentclass}{} 
-cannot contain very much material. 
+In the long run it must be thought of weakening the pattern: 
+It is not necessary, that exactly the correct files are parsed, 
+because incorrect files are detected by the \LaTeX{} converter anyway. 
+Instead, among the correct files the latex main files shall be detected. 
+Also, if one wants to have a solution not relying on a tool-chain 
+not even on \LaTeX{} tools, 
+One could use a convention, e.g.~marking main files with first line \texttt{\%~!MAIN FILE}, 
+which makes parsing quite fast. 
+But this technique requires the user to declare main files explicitly. 
 
-So we ask the user to have \cmd{documentclass}{} 
-declared in the latex main file. 
+The latex extension latex workshop for VS Code offers two similar 
+\href{https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile#multi-file-projects}{alternatives}: 
+Occurrence of \cmd{documentclass} and 
+absence of first line \texttt{\%~!TEX root=} declaring a TEX file as depending on a latex main file 
+which must be given explicitly. 
+The first alternative risks that a TEX file is recognized as main file, 
+just because it deals with document classes, 
+whereas the second alternative is inconvenient 
+and does not work if a file has two potential latex main files 
+as is suggested for \texttt{beamer} presentations in Section~\ref{sec:sources} 
+and realised in~\cite{PresBeamer}. 
 
-For users of Emacs with package auctex, there is a valuable alternative: 
-
+Emacs with package auctex, uses an alternative
+to the current technique to determine the latex main files: 
 Latex main files are marked with an end section as this file: 
 %
 \begin{Verbatim}[fontsize=\footnotesize]
@@ -505,22 +543,10 @@ explicitly as the following one from \texttt{header.tex}:
 %%% End:
 \end{verbatim}
 
-So a pattern for latex main files could also be 
-%
-\begin{verbatim}
-^%%% Local Variables: $
-^%%% TeX-master: t$
-^%%% End: ^
-\s*
-\end{verbatim}
+Since this \LaTeX{} builder still has to determine the document class, 
+which is at the beginning of the main file, 
+when sticking to regular expressions the whole file must be parsed. 
 
-For users of visual code/latex workshop, there is another alternative: 
-Absence of first line \texttt{\%~!TEX root}. 
-
-Also, if one wants to have a solution not relying on a tool-chain 
-not even on \LaTeX{} tools, 
-One could use a convention, e.g.~marking main files with first line \texttt{\% MAIN FILE}, 
-which makes parsing quite fast. 
 
 
 \subsection{The parameter \texttt{patternCreatedFromLatexMain}}%

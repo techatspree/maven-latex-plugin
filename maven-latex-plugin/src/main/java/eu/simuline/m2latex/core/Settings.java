@@ -235,20 +235,22 @@ public class Settings {
   private String convertersExcluded = "";
 
   /**
-   * The pattern to be applied to the beginning of the contents of tex-files 
-   * which identifies a latex main file. 
-   * The default value is chosen to match quite exactly 
+   * The pattern to be applied to the beginning of the contents of TEX-files 
+   * which identifies a latex main file and which extracts the document class 
+   * if the file is really a latex main file. 
+   * The default value is chosen to match quite exactly the start of 
    * the latex main files. 
    * Here we assume that the latex main file should contain 
    * the declaration `\documentclass' 
-   * or the old fashioned `documentstyle' 
-   * preceeded by a few constucts. 
-   * Strictly speaking, this is not necessary. 
+   * or the old fashioned `\documentstyle' 
+   * preceeded by a few constructs and followed by the documen class. 
+   * <p>
+   * Strictly speaking, a tight match is not necessary, 
+   * only separation of latex main files from other files is 
+   * and so is extraction of the document class. 
    * For a more thorough discussion, 
    * and for an alternative approach, consult the manual. 
    * <p>
-   * The default value is chosen to match quite exactly 
-   * the latex main files, no more no less. 
    * Since the pattern is chosen 
    * according to documentation collected from the internet, 
    * one can never be sure whether the pattern is perfect. 
@@ -256,27 +258,29 @@ public class Settings {
    * If the current default value is not appropriate, 
    * please overwrite it in the configuration 
    * and notify the developer of this plugin of the deficiency. 
+   * In any case, matching of the group named <code>class</code> must be retained 
+   * so that the document class is matched. 
    */
   // FIXME: not only on this pattern: 
   // Matching is line by line which is inappropriate. 
   // pattern is to be applied to the start of the tex-file 
-  // FIXME: I have the impression that the concept we use is not very good. 
+  // FIXME: I have the impression, that the concept we use is not very good. 
   // Maybe one has to use a magic comment to identify latex main files. 
   // There is a tendency to allow even more in the header with coming releases of latex 
   @RuntimeParameter
   @Parameter(name = "patternLatexMainFile")
   private String patternLatexMainFile = "\\A(\\\\RequirePackage\\s*" + // RequirePackage 
   /**/"(\\[(\\s|\\w|,)*\\])?\\s*" + // [options]
-  /**/"\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}version
+  /**/"\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}[version]
       "%.*$|" + // comments 
       "\\\\PassOptionsToPackage\\s*" + // PassOptionsToPackage
       /**/"\\{\\w+\\}\\s*" + // {options}
       /**/"\\{(\\w|-)\\}|" + // {packagename}
-      "\\\\input\\{[^{}]*\\}|" + // inputs 
+      "\\\\input\\s*\\{[^{}]*\\}|" + // inputs 
       //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
       //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
       "\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
-      "\\\\(documentstyle|documentclass)(\\[[^]]*\\])?\\{(?<class>[^}]+)\\}";//
+      "\\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<class>[^}]+)\\}";//
 
   /**
    * The list of names of latex main files 
