@@ -163,7 +163,26 @@ so that the document class is matched.  -->
             </patternLatexMainFile>
 
 
-<!-- 
+            <!--  Assigns to document classes their allowed 'targets'. 
+The map expression is a list of chunks separated by a single blank. 
+Each chunk is divided by a single colon 
+in a comma separated list of document classes, and a comma separated list of targets. 
+A chunk means that all document classes are compiled for the given targets. 
+The document classes of the chunks may not overlap. 
+A document of a class is compiled for a target if this is specified so by a chunk. 
+
+As a side effect, compilation of document classes cause warnings if not registered here. 
+The default value consists of two chunks: 
+
+- 'article,book:chk,dvi,pdf,html,odt,docx,rtf,txt' 
+  ensures that article and book allow all targets. 
+- 'beamer:chk,pdf,txt' beamer allows mainly pdf and derived from that txt. 
+  Checking with chk does not depend on the document class. -->
+            <docClassesToTargets>
+article,book:chk,dvi,pdf,html,odt,docx,rtf,txt beamer:chk,pdf,txt
+            </docClassesToTargets>
+
+            <!-- 
     The list of names of latex main files 
     without extension '.tex' separated by whitespace 
     which shall be included for creating targets, 
@@ -176,10 +195,10 @@ so that the document class is matched.  -->
     even if in different directories. 
     The empty string is the default, i.e. including all. 
     See mainFilesExcluded -->
-    <mainFilesIncluded></mainFilesIncluded>
+            <mainFilesIncluded></mainFilesIncluded>
 
 
-    <!-- 
+            <!-- 
     The list of names of latex main files 
     without extension '.tex' 
     separated by whitespace 
@@ -198,7 +217,7 @@ so that the document class is matched.  -->
     The empty string is the default, i.e. excluding no file. 
     See #mainFilesIncluded
     -->
-    <mainFilesExcluded>test useBeamerHandout</mainFilesExcluded>
+            <mainFilesExcluded>test useBeamerHandout</mainFilesExcluded>
 
             <!-- Path to the TeX scripts or null. 
 In the latter case, the scripts must be on the system path. 
@@ -449,7 +468,7 @@ The default value is the minimal value,
 '- -export-area-drawing - -export-latex'. -->
             <svg2devOptions>${svg2devOptions}</svg2devOptions>
 
-<!--
+            <!--
    Whether for pixel formats like jpg and png 
    command '$ebbCommand' is invoked to determine the bounding box. 
    This is relevant, if at all, only in dvi mode. 
@@ -464,7 +483,7 @@ The default value is the minimal value,
    nor 'ebb'. 
    This alone requires to switch off invocation of 'ebb' by default. 
    So the default value is 'false'. -->
-<createBoundingBoxes>false</createBoundingBoxes>
+            <createBoundingBoxes>false</createBoundingBoxes>
 
             <!-- The command to create bounding box information 
 from jpg-files and from png-files. 
@@ -526,21 +545,15 @@ pdf-pictures in dvi-mode and pdf-pictures in pdf-mode.
 </ul>
 
 Among the options which are not allowed are the following: 
--draftmode              switch on draft mode (generates no output PDF) 
--output-directory=dir   to specify the output dir 
--aux-directory=dir      to specify the output aux-dir 
--job-name=name          effectively changes the output file name 
+-draftmode              switch on draft mode (generates no output PDF) -output-directory=dir   to specify the output dir -aux-directory=dir      to specify the output aux-dir -job-name=name          effectively changes the output file name 
 -quiet                  makes the log quiet and 
                  so circumvents error and warning detection 
--no-file-line-error     disable/enable file:line:error style messages 
--fmt=FMTNAME            use FMTNAME instead of program name or a %& line 
--progname=STRING        set program (and fmt) name to STRING
+-no-file-line-error     disable/enable file:line:error style messages -fmt=FMTNAME            use FMTNAME instead of program name or a %& line -progname=STRING        set program (and fmt) name to STRING
                  only names also without -progname are possible 
 -help                   display this help and exit
 -version                output version information and exit
 
-Also not allowed because format is determined by this software
--output-format=FORMAT   use FORMAT for job output; FORMAT is `dvi' or `pdf'
+Also not allowed because format is determined by this software -output-format=FORMAT   use FORMAT for job output; FORMAT is `dvi' or `pdf'
                  pdf is the only allowed... 
 -no-pdf          generate XDV (extended DVI) output rather than PDF
                 This is supported by 'xelatex' only. 
@@ -1176,9 +1189,9 @@ avoiding verbose output and backing up the output log-file. -->
             <goals>
               <goal>inj</goal>
             </goals>
-          <!-- tied implicitly to phase validate -->
-        </execution>
-        <execution>
+            <!-- tied implicitly to phase validate -->
+          </execution>
+          <execution>
             <id>validate-converters</id>
             <goals>
               <goal>vrs</goal>

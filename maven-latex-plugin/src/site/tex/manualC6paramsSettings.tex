@@ -277,6 +277,29 @@ In any case, matching of the group named \texttt{class} must be retained
 so that the document class is matched. 
 \end{minipage}
 } \\
+\texttt{docClassesToTargets} & see description below  \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Assigns to document classes their allowed `\texttt{targets}'. 
+The map expression is a list of chunks separated by a single blank. 
+Each chunk is divided by a single colon 
+in a comma separated list of document classes, and a comma separated list of targets. 
+A chunk means that all document classes are compiled for the given targets. 
+The document classes of the chunks may not overlap. 
+A document of a class is compiled for a target if this is specified so by a chunk. 
+
+As a side effect, compilation of document classes cause warnings if not registered here. 
+The default value consists of two chunks: 
+\begin{itemize}
+  \item
+  ` \texttt{article,book:chk,dvi,pdf,html,odt,docx,rtf,txt}'
+  ensures that article and book allow all targets. 
+  \item
+  ` \texttt{beamer:chk,pdf,txt}' beamer allows mainly \texttt{pdf} and derived from that \texttt{txt}.  
+  Checking with \texttt{chk} does not depend on the document class. 
+\end{itemize}
+\end{minipage}
+} \\
 \texttt{mainFilesIncluded}          &  empty string        \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}

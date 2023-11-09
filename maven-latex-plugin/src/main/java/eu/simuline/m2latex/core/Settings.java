@@ -37,6 +37,7 @@ import java.util.LinkedHashMap;
 // import java.util.TreeMap;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -207,7 +208,8 @@ public class Settings {
    * The default value is <code>chk,pdf,html</code>. 
    */
   @RuntimeParameter
-  @Parameter(name = "targets", defaultValue = "chk,pdf,html", property = "latex.targets")//
+  @Parameter(name = "targets", defaultValue = "chk,pdf,html",
+      property = "latex.targets") //
   //private SortedSet<Target> targets;
   private String targets = "chk,pdf,html";
   // TBD: clarify why the following initialization causes that no goal descriptors are found. 
@@ -280,7 +282,30 @@ public class Settings {
       //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
       //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
       "\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
-      "\\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<class>[^}]+)\\}";//
+      "\\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<class>[^}]+)\\}";
+
+  /**
+   * Assigns to document classes their allowed {@link #targets}. 
+   * The map expression is a list of chunks separated by a single blank. 
+   * Each chunk is divided by a single colon 
+   * in a comma separated list of document classes, and a comma separated list of targets. 
+   * A chunk means that all document classes are compiled for the given targets. 
+   * The document classes of the chunks may not overlap. 
+   * A document of a class is compiled for a target if this is specified so by a chunk. 
+   * <p>
+   * As a side effect, compilation of document classes cause warnings if not registered here. 
+   * The default value consists of two chunks: 
+   * <ul>
+   * <li><tt>article,book:chk,dvi,pdf,html,odt,docx,rtf,txt</tt> 
+   * ensures that article and book allow all targets. </li>
+   * <li><tt>beamer:chk,pdf,txt</tt> beamer allows mainly pdf and derived from that txt. 
+   * Checking with chk does not depend on the document class. 
+   * </ul>
+   */
+  @RuntimeParameter
+  @Parameter(name = "docClassesToTargets")
+  private String docClassesToTargets =
+      "article,book:chk,dvi,pdf,html,odt,docx,rtf,txt beamer:chk,pdf,txt";
 
   /**
    * The list of names of latex main files 
@@ -418,15 +443,14 @@ public class Settings {
   private String patternCreatedFromLatexMain =
       // besides T$T.xxx, with xxx not containing ., 
       // we allow T$T.synctex.gz and T$T.out.ps 
-      "^(T$T(\\.([^.]*|synctex(\\(busy\\))?(\\.gz)?|" +  // synctex
-      "out\\.ps|run\\.xml|\\d+\\.vrb|depytx(\\\\.tex)?)|" + // out? beamer, pythontex 
-      // tex4ht creates files T$Tyy.(x)htm(l)... 
+      "^(T$T(\\.([^.]*|synctex(\\(busy\\))?(\\.gz)?|" + // synctex
+          "out\\.ps|run\\.xml|\\d+\\.vrb|depytx(\\\\.tex)?)|" + // out? beamer, pythontex 
+          // tex4ht creates files T$Tyy.(x)htm(l)... 
           "(-|ch|se|su|ap|li)?\\d+\\.x?html?|" +
           // ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 
           "\\d+x\\.x?bb|" + "\\d+x?\\.png|" + "-\\d+\\.svg|" +
           // by (splitidx and) splitindex 
-          "-.+\\.(idx|ind|ilg)|" +
-          ")|" + // end all patterns starting with T$T
+          "-.+\\.(idx|ind|ilg)|" + ")|" + // end all patterns starting with T$T
           // created by pythontex
           "pythontex-files-T$T|" + // folders from package pythontex
           // ... and xxT$T.eps... 
@@ -754,7 +778,7 @@ public class Settings {
    */
   @RuntimeParameter
   @Parameter(name = "svg2devOptions",
-     defaultValue = "--export-area-drawing --export-latex")
+      defaultValue = "--export-area-drawing --export-latex")
   private String svg2devOptions = "--export-area-drawing --export-latex";
 
   /**
@@ -2058,6 +2082,36 @@ public class Settings {
     return this.patternLatexMainFile;
   }
 
+  // TBD: add warnings. 
+  public Map<String, Set<Target>> getDocClassesToTargets() {
+    Map<String, Set<Target>> result = new TreeMap<String, Set<Target>>();
+    String[] chunks = this.docClassesToTargets.trim().split(" ");
+    int idxCol1, idxCol2;
+    String[] classes, targets;
+    Set<Target> targetSet, oldTargetSet;
+    for (String chunk : chunks) {
+      idxCol1 = chunk.indexOf(':');
+      idxCol2 = chunk.lastIndexOf(':');
+      assert idxCol1 != -1 && idxCol2 != -1
+          && idxCol1 == idxCol2 : "Syntax error in chunk '" + chunk + "'. ";//; ignoring
+      classes = chunk.substring(0, idxCol1).split(",");
+      targets = chunk.substring(idxCol1 + 1).split(",");
+      targetSet = new TreeSet<Target>();
+      for (String target : targets) {
+        // TBD: handle IllegalArgumentException on target: no valid target 
+        targetSet.add(Enum.valueOf(Target.class, target));
+      }
+      for (String cls : classes) {
+        oldTargetSet = result.put(cls, targetSet);
+        assert oldTargetSet == null : "For document class '" + cls
+            + "' specifying target set twice; overriding. ";
+      }
+    }
+    return result;
+  }
+
+
+
   public Set<String> getMainFilesIncluded() {
     return this.mainFilesIncluded.isEmpty() ? new HashSet<String>()
         : new HashSet<String>(Arrays.asList(this.mainFilesIncluded.split(" ")));
@@ -2499,6 +2553,10 @@ public class Settings {
       Settings.this.setPatternLatexMainFile(pattern);
     }
   } // class PatternLatexMainFile
+
+  public void setDocClassesToTargets(String docClassesToTargets) {
+    this.docClassesToTargets = docClassesToTargets;
+  }
 
   public void setMainFilesIncluded(String mainFilesIncluded) {
     this.mainFilesIncluded =
@@ -3053,9 +3111,9 @@ public class Settings {
       if (Modifier.isStatic(mod)) {
         continue;
       }
-      assert !Modifier.isStatic (mod) : "found parameter which is static. ";
-      assert !Modifier.isFinal  (mod) : "found parameter which is final. ";
-      assert  Modifier.isPrivate(mod) : "found parameter which is not private. ";
+      assert !Modifier.isStatic(mod) : "found parameter which is static. ";
+      assert !Modifier.isFinal(mod) : "found parameter which is final. ";
+      assert Modifier.isPrivate(mod) : "found parameter which is not private. ";
 
       name = field.getName();
       //assert annot.name().equals(name) : "Parameter name shall be fieldname. ";
@@ -3116,11 +3174,8 @@ public class Settings {
    * @throws IOException
    *   May occur if reading a line but not if writing a line. 
    */
-  public void filterInjection(InputStream inStream,
-                           PrintStream writer,
-                           String version,
-                           Injection inj)
-      throws IOException {//
+  public void filterInjection(InputStream inStream, PrintStream writer,
+      String version, Injection inj) throws IOException {//
     BufferedReader bufReader =
         new BufferedReader(new InputStreamReader(inStream));
 
