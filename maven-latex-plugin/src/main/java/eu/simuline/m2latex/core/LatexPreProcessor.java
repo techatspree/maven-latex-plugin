@@ -1217,7 +1217,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 				: "Expected existing regular tex file " + texFile;
 		// may log WFU03 cannot close
 		Boolean res = this.fileUtils.matchInFile(texFile,
-				this.settings.getPatternLatexMainFile());
+				this.settings.getPatternLatexMainFile(), "class");// TBD: eliminate literal 
 		if (res == null) {
 			this.log.warn("WPP02: Cannot read tex file '" + texFile +
 					"'; may bear latex main file. ");
