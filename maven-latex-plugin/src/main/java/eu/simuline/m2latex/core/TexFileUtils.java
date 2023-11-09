@@ -662,7 +662,7 @@ class TexFileUtils {
     FileMatch fileMatch = matchInFile(file, regex, null);// TBD: eliminate null 
     // Idea is to allow more than one group name... could be an array. 
     if (fileMatch.isFileReadable()) {
-      return fileMatch.matches();
+      return fileMatch.doesExprMatch();
     }
     // TBD: eliminate hack: just to avoid warnings. 
     //return null;

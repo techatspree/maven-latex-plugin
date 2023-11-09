@@ -1186,7 +1186,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     return;
 	}
 
-
+  final static String GRP_NAME_DOCCLASS = "class";
 
 	/**
 	 * Returns an optional covering a <code>LatexMainDesc</code> 
@@ -1217,14 +1217,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		 		: "Expected existing regular tex file " + texFile;
 		// may log WFU03 cannot close
 		FileMatch fileMatch = this.fileUtils.matchInFile(texFile,
-		 		this.settings.getPatternLatexMainFile(), "class");// TBD: eliminate literal 
+		 		this.settings.getPatternLatexMainFile(), GRP_NAME_DOCCLASS);
 		if (!fileMatch.isFileReadable()) {
 			this.log.warn("WPP02: Cannot read tex file '" + texFile +
 					"'; may bear latex main file. ");
 			return Optional.empty();
 		}
-    return fileMatch.matches()
-      ? Optional.of(new LatexMainDesc(texFile, fileMatch.group()))
+    return fileMatch.doesExprMatch()
+      ? Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch()))
       : Optional.empty();
     }
 
@@ -1251,9 +1251,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     Optional<LatexMainDesc> optTexFileDesc = optLatexMainFile(texFile);
 		if (optTexFileDesc.isPresent()) {
       LatexMainDesc desc = optTexFileDesc.get();
-			this.log.info("Detected latex-main-file '"
-        + texFile + "' of class '"
-        + desc.docClass + "'. ");
+			this.log.info("Detected " + desc.docClass + "-file '" + texFile + "'. ");
 			latexMainDescs.add(desc);
 		}
   }
