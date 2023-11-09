@@ -661,8 +661,8 @@ class TexFileUtils {
   Boolean matchInFile(File file, String regex) {
     FileMatch fileMatch = matchInFile(file, regex, null);// TBD: eliminate null 
     // Idea is to allow more than one group name... could be an array. 
-    if (fileMatch.isFileReadable) {
-      return fileMatch.matches;
+    if (fileMatch.isFileReadable()) {
+      return fileMatch.matches();
     }
     // TBD: eliminate hack: just to avoid warnings. 
     //return null;

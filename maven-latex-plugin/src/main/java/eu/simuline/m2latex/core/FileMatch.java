@@ -4,8 +4,8 @@ package eu.simuline.m2latex.core;
  * Describes a match in a file. 
  */
 public class FileMatch {
-  final boolean isFileReadable;
-  final boolean matches;
+  private final boolean isFileReadable;
+  private final boolean matches;
 
   private FileMatch(boolean isFileReadable, boolean matches) {
     this.isFileReadable = isFileReadable;
@@ -18,6 +18,14 @@ public class FileMatch {
 
   static FileMatch matches(boolean matches) {
     return new FileMatch(true, matches);
+  }
+
+  boolean isFileReadable() {
+    return this.isFileReadable;
+  }
+
+  boolean matches() {
+    return this.matches;
   }
 
 }

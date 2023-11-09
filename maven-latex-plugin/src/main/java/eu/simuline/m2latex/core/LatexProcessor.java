@@ -873,8 +873,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
       String pattern) {
     // may log warning WFU03: cannot close
     FileMatch fileMatch = this.fileUtils.matchInFile(logAuxFile, pattern, null);
-    if (fileMatch.isFileReadable) {
-      return fileMatch.matches;
+    if (fileMatch.isFileReadable()) {
+      return fileMatch.matches();
     }
     this.log.warn("WLP02: Cannot read "
         + TexFileUtils.getSuffix(logAuxFile, false) + " file '"
