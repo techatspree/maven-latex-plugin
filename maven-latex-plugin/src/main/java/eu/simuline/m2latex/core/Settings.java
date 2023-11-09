@@ -273,10 +273,10 @@ public class Settings {
       /**/"\\{\\w+\\}\\s*" + // {options}
       /**/"\\{(\\w|-)\\}|" + // {packagename}
       "\\\\input\\{[^{}]*\\}|" + // inputs 
-      "\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
-      "\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
+      //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
+      //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
       "\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
-      "\\\\(documentstyle|documentclass)";
+      "\\\\(documentstyle|documentclass)(\\[[^]]*\\])?\\{(?<class>[^}]+)\\}";//
 
   /**
    * The list of names of latex main files 

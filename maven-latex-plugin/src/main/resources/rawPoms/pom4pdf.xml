@@ -157,7 +157,7 @@ and notify the developer of this plugin of the deficiency. -->
 %.*$|
 \\input\{[^{}]*\}|
 \s)*
-\\(documentstyle|documentclass)
+\\(documentstyle|documentclass)(\[[^]]*\])?\{(?&lt;class&gt;[^}]+)\}
             </patternLatexMainFile>
 
 
