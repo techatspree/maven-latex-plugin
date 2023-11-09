@@ -1214,19 +1214,19 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 	// by clearTargetTexIfLatexMain(File)
 	private Optional<LatexMainDesc> optLatexMainFile(File texFile) {
 		assert texFile.exists() && !texFile.isDirectory()
-				: "Expected existing regular tex file " + texFile;
+		 		: "Expected existing regular tex file " + texFile;
 		// may log WFU03 cannot close
-		Boolean res = this.fileUtils.matchInFile(texFile,
-				this.settings.getPatternLatexMainFile(), "class");// TBD: eliminate literal 
-		if (res == null) {
+		FileMatch fileMatch = this.fileUtils.matchInFile(texFile,
+		 		this.settings.getPatternLatexMainFile(), "class");// TBD: eliminate literal 
+		if (!fileMatch.isFileReadable) {
 			this.log.warn("WPP02: Cannot read tex file '" + texFile +
 					"'; may bear latex main file. ");
 			return Optional.empty();
 		}
-		return res 
+    return fileMatch.matches
       ? Optional.of(new LatexMainDesc(texFile))
       : Optional.empty();
-	}
+    }
 
 	/**
 	 * If the tex-file <code>texFile</code> is a latex main file,

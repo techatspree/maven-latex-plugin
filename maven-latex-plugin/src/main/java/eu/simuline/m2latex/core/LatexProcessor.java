@@ -872,15 +872,15 @@ public class LatexProcessor extends AbstractLatexProcessor {
   private boolean needRun(boolean another, String cmdStr, File logAuxFile,
       String pattern) {
     // may log warning WFU03: cannot close
-    Boolean needRun = this.fileUtils.matchInFile(logAuxFile, pattern);
-    if (needRun == null) {
-      this.log.warn("WLP02: Cannot read "
-          + TexFileUtils.getSuffix(logAuxFile, false) + " file '"
-          + logAuxFile.getName() + "'; "
-          + cmdStr + " may require " + (another ? "re" : "") + "run. ");
-      return false;
+    FileMatch fileMatch = this.fileUtils.matchInFile(logAuxFile, pattern, null);
+    if (fileMatch.isFileReadable) {
+      return fileMatch.matches;
     }
-    return needRun;
+    this.log.warn("WLP02: Cannot read "
+        + TexFileUtils.getSuffix(logAuxFile, false) + " file '"
+        + logAuxFile.getName() + "'; "
+        + cmdStr + " may require " + (another ? "re" : "") + "run. ");
+    return false;
   }
 
   /**

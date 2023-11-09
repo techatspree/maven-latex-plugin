@@ -148,13 +148,13 @@ abstract class AbstractLatexProcessor {
         assert logFile.exists() && !logFile.isDirectory()
                 : "Expected existing (regular) log file " + logFile;
         // may log warning WFU03 cannot close
-        Boolean res = this.fileUtils.matchInFile(logFile, pattern);
-        if (res == null) {
-            this.log.warn("WAP04: Cannot read log file '" + logFile.getName() +
-                    "'; may hide warnings/errors. ");
-            return false;
+        FileMatch fileMatch = this.fileUtils.matchInFile(logFile, pattern, null);
+        if (fileMatch.isFileReadable) {
+          return fileMatch.matches;
         }
-        return res;
+        this.log.warn("WAP04: Cannot read log file '" + logFile.getName() +
+                      "'; may hide warnings/errors. ");
+        return false;
     }
 
     // for both LatexProcessor and LatexPreProcessor 

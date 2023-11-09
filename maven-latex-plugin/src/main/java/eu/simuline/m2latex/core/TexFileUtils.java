@@ -657,12 +657,19 @@ class TexFileUtils {
   // LatexPreProcessor.isLatexMainFile(File)
   // LatexProcessor.needRun(...)
   // AbstractLatexProcessor.hasErrsWarns(File, String)
+  // CAUTION: only in tests 
   Boolean matchInFile(File file, String regex) {
-    return matchInFile(file, regex, null);// TBD: eliminate null 
+    FileMatch fileMatch = matchInFile(file, regex, null);// TBD: eliminate null 
     // Idea is to allow more than one group name... could be an array. 
+    if (fileMatch.isFileReadable) {
+      return fileMatch.matches;
+    }
+    // TBD: eliminate hack: just to avoid warnings. 
+    //return null;
+    return false;
   }
 
-  Boolean matchInFile(File file, String regex, String groupName) {
+  FileMatch matchInFile(File file, String regex, String groupName) {
     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);//
     boolean fromStart = regex.startsWith("\\A");
     String lines = "";
@@ -700,15 +707,15 @@ class TexFileUtils {
           Matcher matcher = pattern.matcher(lines);
           if (matcher.find()) {
             if (groupName != null) {
-            System.out.println("found class: " + matcher.group(groupName));
+              System.out.println("found class: " + matcher.group(groupName));
             }
-            return true;
+            return FileMatch.matches(true);
           }
         }
-        return false;
+        return FileMatch.matches(false);
       } catch (IOException ioe) {
         // Error/Warning must be issued by invoking method 
-        return null;
+        return FileMatch.unreadable();
       } finally {
         // Here, an IOException may have occurred 
         // may log warning WFU03
@@ -716,7 +723,7 @@ class TexFileUtils {
       }
     } catch (FileNotFoundException ffe) {
       // Error/Warning must be issued by invoking method 
-      return null;
+      return FileMatch.unreadable();
     }
   }
 
