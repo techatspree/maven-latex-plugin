@@ -2082,8 +2082,9 @@ public class Settings {
     return this.patternLatexMainFile;
   }
 
-  // TBD: add warnings. 
-  public Map<String, Set<Target>> getDocClassesToTargets() {
+  // WSS01: syntax error in docClassesToTargets
+  // WSS02: for one document class specified targets twice 
+  public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log) {
     Map<String, Set<Target>> result = new TreeMap<String, Set<Target>>();
     String[] chunks = this.docClassesToTargets.trim().split(" ");
     int idxCol1, idxCol2;
@@ -2092,19 +2093,37 @@ public class Settings {
     for (String chunk : chunks) {
       idxCol1 = chunk.indexOf(':');
       idxCol2 = chunk.lastIndexOf(':');
-      assert idxCol1 != -1 && idxCol2 != -1
-          && idxCol1 == idxCol2 : "Syntax error in chunk '" + chunk + "'. ";//; ignoring
-      classes = chunk.substring(0, idxCol1).split(",");
+      if (idxCol1 == -1 || idxCol2 == -1 || idxCol1 != idxCol2) {
+        log.warn("WSS01: Syntax error in chunk '" + chunk
+            + "'; maybe ignoring targets. ");
+        continue;
+      }
+
       targets = chunk.substring(idxCol1 + 1).split(",");
       targetSet = new TreeSet<Target>();
+      boolean isDisjoint = true;
       for (String target : targets) {
-        // TBD: handle IllegalArgumentException on target: no valid target 
-        targetSet.add(Enum.valueOf(Target.class, target));
+        try {
+          isDisjoint &= targetSet.add(Enum.valueOf(Target.class, target));
+        } catch (IllegalArgumentException iae) {
+          log.error("ESS01: Possible target '"
+          + target + "' for document classes is unknown; ignoring. ");
+        }
       }
+      if (isDisjoint) {
+        log.warn("WSS02: List '"
+        + targets + "' repeats possible target for document classes. ");
+      }
+
+      classes = chunk.substring(0, idxCol1).split(",");
       for (String cls : classes) {
         oldTargetSet = result.put(cls, targetSet);
-        assert oldTargetSet == null : "For document class '" + cls
-            + "' specifying target set twice; overriding. ";
+        if (oldTargetSet != null) {
+          log.warn("WSS03: For document class '" + cls
+              + "' specifying target set again; merging. ");
+          targetSet.addAll(oldTargetSet);
+          result.put(cls, targetSet);
+        }
       }
     }
     return result;
