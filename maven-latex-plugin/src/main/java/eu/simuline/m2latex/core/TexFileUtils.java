@@ -658,6 +658,11 @@ class TexFileUtils {
   // LatexProcessor.needRun(...)
   // AbstractLatexProcessor.hasErrsWarns(File, String)
   Boolean matchInFile(File file, String regex) {
+    return matchInFile(file, regex, null);// TBD: eliminate null 
+    // Idea is to allow more than one group name... could be an array. 
+  }
+
+  Boolean matchInFile(File file, String regex, String groupName) {
     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);//
     boolean fromStart = regex.startsWith("\\A");
     String lines = "";
@@ -692,7 +697,11 @@ class TexFileUtils {
           // but this seems a bug in java's regex engine 
 
           lines = fromStart ? lines += "\n" + line : line;
-          if (pattern.matcher(lines).find()) {
+          Matcher matcher = pattern.matcher(lines);
+          if (matcher.find()) {
+            if (groupName != null) {
+            System.out.println("found class: " + matcher.group(groupName));
+            }
             return true;
           }
         }
