@@ -896,6 +896,19 @@ Note that warnings can be declared as simple messages
 and thus cause neither a warning nor an error. 
 \end{minipage}
 } \\
+\texttt{\footnotesize WLP09} 
+& \texttt{\footnotesize WLP09: Found file '\$texFile' with unknown document class '\$docClass'. } \\
+\multicolumn2{|l|}{
+\begin{minipage}{0.95\linewidth}
+Indicates that the latex main file \texttt{\$texFile} 
+has a document class other than one specified in parameter \texttt{docClassesToTargets} 
+described in Table~\ref{tab:paramGen}. 
+Since no restriction on targets are known, 
+\texttt{\$texFile} is compiled for all targets given in \texttt{\$targets} 
+given also in Table~\ref{tab:paramGen}. 
+To avoid this warning, just add \texttt{\$docClass} to \texttt{docClassesToTargets}. 
+\end{minipage}
+} \\
 
 \end{longtable}
 

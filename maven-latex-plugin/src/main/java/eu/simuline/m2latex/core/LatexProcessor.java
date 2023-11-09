@@ -25,8 +25,10 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 // TBD: all this must be eliminated.
 // import eu.simuline.m2latex.antTask.LatexCfgTask;
@@ -280,6 +282,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     this.log.info("-----------create-------------");
     this.log.debug("Settings: " + this.settings.toString());
 
+    // 
+    Map<String, Set<Target>> docClasses2Targets = this.settings.getDocClassesToTargets();
+
     // may throw BuildFailureException TSS01
     File texDir = this.settings.getTexSrcDirectoryFile();
     assert texDir.exists()
@@ -314,18 +319,29 @@ public class LatexProcessor extends AbstractLatexProcessor {
             || targetDir.isDirectory() : "Expected target folder " + targetDir
                 + " folder if exists. ";
 
+        Set<Target> reachableTargets;
+        Set<Target> possibleTargets = docClasses2Targets.get(desc.docClass);
+        if (possibleTargets == null) {
+          this.log.warn("WLP09: Found file '"
+          + desc.texFile + "' with unknown document class '" + desc.docClass + "'. ");
+          reachableTargets = targetSet;
+        } else {
+        Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
+        unreachableTargets.removeAll(possibleTargets);
+        if (!unreachableTargets.isEmpty()) {
+          this.log.info("Skipping targets "
+           + unreachableTargets + " for document '" + desc.texFile + "'. ");
+        }
+
+        reachableTargets = new TreeSet<Target>(targetSet);
+        reachableTargets.retainAll(possibleTargets);
+        }
+
         // may throw BuildFailureException TSS04
-        for (Target target : targetSet) {
+        for (Target target : reachableTargets) {
           // may throw BuildFailureException TEX01,
           // log warning EEX01, EEX02, EEX03, WEX04, WEX05
 
-          if (desc.docClass.equals("beamer")) {
-            // TBD: rework 
-            if (!(target == Target.chk || target == Target.pdf)) {
-              System.out.println("For beamer skip target "+target);
-              continue;
-            }
-          }
           target.processSource(this, desc);
           //target.processSource(this, getLatexMainDesc(texFile));
           FileFilter fileFilter = TexFileUtils.getFileFilter(texFile,
@@ -720,10 +736,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // depending on whether a toc, lof or lot exists
 
     boolean needLatexReRun =
-        hasToc || hasPyCode 
-        || desc.withSuffix(SUFFIX_LOF).exists()
-        || desc.withSuffix(SUFFIX_LOT).exists()
-        || desc.withSuffix(SUFFIX_LOL).exists();
+        hasToc || hasPyCode || desc.withSuffix(SUFFIX_LOF).exists()
+            || desc.withSuffix(SUFFIX_LOT).exists()
+            || desc.withSuffix(SUFFIX_LOL).exists();
 
     return needLatexReRun ? 1 : 0;
   }
@@ -882,12 +897,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // may log warning WFU03: cannot close
     FileMatch fileMatch = this.fileUtils.matchInFile(logAuxFile, pattern, null);
     if (fileMatch.isFileReadable()) {
-      return fileMatch.matches();
+      return fileMatch.doesExprMatch();
     }
-    this.log.warn("WLP02: Cannot read "
-        + TexFileUtils.getSuffix(logAuxFile, false) + " file '"
-        + logAuxFile.getName() + "'; "
-        + cmdStr + " may require " + (another ? "re" : "") + "run. ");
+    this.log
+        .warn("WLP02: Cannot read " + TexFileUtils.getSuffix(logAuxFile, false)
+            + " file '" + logAuxFile.getName() + "'; " + cmdStr
+            + " may require " + (another ? "re" : "") + "run. ");
     return false;
   }
 
@@ -2322,7 +2337,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *   </ul>
    */
   //      
-  public void processFileInjections(Set<Injection> injections) throws BuildFailureException {
+  public void processFileInjections(Set<Injection> injections)
+      throws BuildFailureException {
     //this.settings.getProperties();
     // TBD: centralize this because also needed for goal clr
 
@@ -2334,7 +2350,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
       try {
         // isCreatedByMyself may emit warnings WFU10, WFU11 
-        if (!outFile.exists() || this.fileUtils.isCreatedByMyself(outFile, inj)) {
+        if (!outFile.exists()
+            || this.fileUtils.isCreatedByMyself(outFile, inj)) {
           // Here, outFile does not exist or is a regular file. 
 
           // may throw FileNotFoundException and so IOException: 
@@ -2353,8 +2370,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
         // THis is true not only when the Print stream cannot be created, 
         // but also if the resource cannot be read in filterRcFile. 
         // To be strict, one could go on even if inStream could not be closed. 
-        throw new BuildFailureException("TLP03 Failure while writing file '" + fileName + 
-          "' or closing in-stream. ", ioe);
+        throw new BuildFailureException("TLP03 Failure while writing file '"
+            + fileName + "' or closing in-stream. ", ioe);
       }
 
       boolean success = outFile.setExecutable(inj.setExecutable(), false);
@@ -2373,7 +2390,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
   private void clearRcFiles() {
     for (Injection inj : Injection.values()) {
       File outFile = this.settings.rcResourceToFile(inj.getFileName());
-        // isCreatedByMyself may emit warnings WFU10, WFU11 
+      // isCreatedByMyself may emit warnings WFU10, WFU11 
       if (outFile.exists() && this.fileUtils.isCreatedByMyself(outFile, inj)) {
         // could emit EFU05
         this.fileUtils.deleteOrError(outFile, false);
