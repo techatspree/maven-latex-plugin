@@ -4,28 +4,43 @@ package eu.simuline.m2latex.core;
  * Describes a match in a file. 
  */
 public class FileMatch {
-  private final boolean isFileReadable;
-  private final boolean matches;
 
-  private FileMatch(boolean isFileReadable, boolean matches) {
-    this.isFileReadable = isFileReadable;
-    this.matches = matches;
-  }
-  
+  static class FileMatchReadable extends FileMatch {
+    private final boolean matches;
+
+    private FileMatchReadable(boolean matches) {
+
+      this.matches = matches;
+    }
+
+    boolean isFileReadable() {
+      return true;
+    }
+
+    boolean matches() {
+      return this.matches;
+    }
+  } // FileMatchReadable 
+
+
+
+  private FileMatch() {}
+
   static FileMatch unreadable() {
-    return new FileMatch(false, false);
+    return new FileMatch();
   }
 
   static FileMatch matches(boolean matches) {
-    return new FileMatch(true, matches);
+    return new FileMatchReadable(matches);
   }
 
+  // to be overwritten 
   boolean isFileReadable() {
-    return this.isFileReadable;
+    return false;
   }
 
   boolean matches() {
-    return this.matches;
+    throw new IllegalStateException("Unreadable cannot be asked for match. ");
   }
 
 }
