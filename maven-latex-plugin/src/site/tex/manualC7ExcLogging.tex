@@ -401,6 +401,68 @@ which are not excluded, i.e.~listed in configuration in section \texttt{converte
   with category \texttt{notCat} not coinciding with \texttt{cat} as required. 
  \end{minipage}
  } \\
+
+
+
+
+
+ \texttt{\footnotesize WLP09} 
+ & \texttt{\footnotesize Found file '\$texFile' with unknown document class '\$docClass'. } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+ Indicates that the latex main file \texttt{\$texFile} 
+ has a document class other than one specified in parameter \texttt{docClassesToTargets} 
+ described in Table~\ref{tab:paramGen}. 
+ Since no restriction on targets are known, 
+ \texttt{\$texFile} is compiled for all targets given in \texttt{\$targets} 
+ given also in Table~\ref{tab:paramGen}. 
+ To avoid this warning, just add \texttt{\$docClass} to \texttt{docClassesToTargets}. 
+ \end{minipage}
+ } \\
+ \texttt{\footnotesize ESS01} 
+ & \texttt{\footnotesize Possible target '\$target' for document classes is unknown; ignoring. } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+ Indicates that a possible target \texttt{\$target} in parameter \texttt{docClassesToTargets} 
+ is not defined, e.g.\@ misspelled and must thus be ignored. 
+ \end{minipage}
+ } \\
+ 
+ 
+ \texttt{\footnotesize WSS01} 
+ & \texttt{\footnotesize Syntax error in chunk '\$chunk'; maybe ignoring targets. } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+ Indicates that the chunk \texttt{\$chunk} in parameter \texttt{docClassesToTargets} 
+ is syntactically not allowed. 
+ Since it is intended to define allowed targets for document classes, 
+ it is likely that some target intended by the user is not processed. 
+ \end{minipage}
+ } \\
+ \texttt{\footnotesize WSS02} 
+ & \texttt{\footnotesize List '\$targets' repeats possible target for document classes. } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+ Indicates that the list of targets \texttt{\$targets} 
+ in a chunk in parameter \texttt{docClassesToTargets} mentions one target more than once. 
+ This merely reduces clarity.  
+ \end{minipage}
+ } \\
+ \texttt{\footnotesize WSS03} 
+ & \texttt{\footnotesize For document class '\$cls' specifying target set again; adding.  } \\
+ \multicolumn2{|l|}{
+ \begin{minipage}{0.95\linewidth}
+ Indicates that in parameter \texttt{docClassesToTargets} a c;ass
+ is syntactically not allowed. 
+ Since it is intended to define allowed targets for document classes, 
+ it is likely that some target intended by the user is not processed. 
+ \end{minipage}
+ } \\
+ 
+
+
+
+
 \end{longtable}
 
 
@@ -894,58 +956,6 @@ Implicitly it means that no error was found
 since this would cause EPL02. 
 Note that warnings can be declared as simple messages 
 and thus cause neither a warning nor an error. 
-\end{minipage}
-} \\
-\texttt{\footnotesize WLP09} 
-& \texttt{\footnotesize Found file '\$texFile' with unknown document class '\$docClass'. } \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Indicates that the latex main file \texttt{\$texFile} 
-has a document class other than one specified in parameter \texttt{docClassesToTargets} 
-described in Table~\ref{tab:paramGen}. 
-Since no restriction on targets are known, 
-\texttt{\$texFile} is compiled for all targets given in \texttt{\$targets} 
-given also in Table~\ref{tab:paramGen}. 
-To avoid this warning, just add \texttt{\$docClass} to \texttt{docClassesToTargets}. 
-\end{minipage}
-} \\
-\texttt{\footnotesize ESS01} 
-& \texttt{\footnotesize Possible target '\$target' for document classes is unknown; ignoring. } \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Indicates that a possible target \texttt{\$target} in parameter \texttt{docClassesToTargets} 
-is not defined, e.g.\@ misspelled and must thus be ignored. 
-\end{minipage}
-} \\
-
-
-\texttt{\footnotesize WSS01} 
-& \texttt{\footnotesize Syntax error in chunk '\$chunk'; maybe ignoring targets. } \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Indicates that the chunk \texttt{\$chunk} in parameter \texttt{docClassesToTargets} 
-is syntactically not allowed. 
-Since it is intended to define allowed targets for document classes, 
-it is likely that some target intended by the user is not processed. 
-\end{minipage}
-} \\
-\texttt{\footnotesize WSS02} 
-& \texttt{\footnotesize List '\$targets' repeats possible target for document classes. } \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Indicates that the list of targets \texttt{\$targets} 
-in a chunk in parameter \texttt{docClassesToTargets} mentions one target more than once. 
-This merely reduces clarity.  
-\end{minipage}
-} \\
-\texttt{\footnotesize WSS03} 
-& \texttt{\footnotesize For document class '\$cls' specifying target set again; adding.  } \\
-\multicolumn2{|l|}{
-\begin{minipage}{0.95\linewidth}
-Indicates that in parameter \texttt{docClassesToTargets} a c;ass
-is syntactically not allowed. 
-Since it is intended to define allowed targets for document classes, 
-it is likely that some target intended by the user is not processed. 
 \end{minipage}
 } \\
 \end{longtable}
