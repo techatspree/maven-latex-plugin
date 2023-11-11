@@ -233,6 +233,11 @@ but can also be configured to mean DOC\@.
 Independent of the order given, the given targets are created 
 in an internal ordering. 
 
+Caution: These targets are the default targets for any latex main file, 
+but depending on the document class, there may be further restrictions 
+given by 'docClassesToTargets'. 
+Currently, only the class 'beamer' has restrictions. 
+
 %The default value is '\texttt{chk, pdf, html}'. 
 \end{minipage}
 } \\

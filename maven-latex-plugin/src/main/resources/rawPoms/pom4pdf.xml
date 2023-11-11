@@ -113,6 +113,14 @@ depending on the configuration:
 - target html may represent formats html or xhtml. 
 - target xdoc may mean format xdoc or the old doc format. 
 
+Independent of the order given, the given targets are created 
+in an internal ordering. 
+
+Caution: These targets are the default targets for any latex main file, 
+but depending on the document class, there may be further restrictions 
+given by 'docClassesToTargets'. 
+Currently, only the class 'beamer' has restrictions. 
+
 The default value is <code>chk,pdf,html</code>. 
         -->
 
@@ -124,6 +132,7 @@ returned as a set by {@link #getConvertersExcluded()}.
 Excluded converters need not be installed but their names must be known. 
 They don't show up in the version check of target 'vrs' 
 and of course they are not allowed to be used. 
+
 By default, this list is empty. -->
             <convertersExcluded></convertersExcluded>
             <!--convertersExcluded>xindy, upmendex</convertersExcluded-->

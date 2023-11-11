@@ -205,6 +205,15 @@ public class Settings {
    * A comma separated list of targets without blanks 
    * returned as a set by {@link #getTargets()}. 
    * For allowed values see {@link Target}. 
+   * <p>
+   * Independent of the order given, the given targets are created 
+   * in an internal ordering. 
+   * <p>
+   * Caution: These targets are the default targets for any latex main file, 
+   * but depending on the document class, there may be further restrictions 
+   * given by {@link #docClassesToTargets}. 
+   * Currently, only the class <code>beamer</code> has restrictions. 
+   * <p>
    * The default value is <code>chk,pdf,html</code>. 
    */
   @RuntimeParameter
