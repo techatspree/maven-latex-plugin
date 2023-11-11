@@ -324,8 +324,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         Set<Target> reachableTargets;
         Set<Target> possibleTargets = docClasses2Targets.get(desc.docClass);
         if (possibleTargets == null) {
-          this.log.warn("WLP09: Found file '"
-          + desc.texFile + "' with unknown document class '" + desc.docClass + "'. ");
+          this.log.warn("WLP09: For file '"
+          + desc.texFile + "' targets are not restricted by unknown document class '"
+          + desc.docClass + "'. ");
           reachableTargets = targetSet;
         } else {
         Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
