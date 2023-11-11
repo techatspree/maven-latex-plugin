@@ -1030,7 +1030,7 @@
             <!--pdfViaDvi>true</pdfViaDvi-->
             <cleanUp>false</cleanUp>
             <!--chkDiff>true</chkDiff-->
-            <targets>chk, pdf</targets>
+            <targets>chk,pdf</targets>
             <!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
             <!--targets>chk,pdf,html</targets-->
             <!--mainFilesIncluded>manualLMP</mainFilesIncluded-->

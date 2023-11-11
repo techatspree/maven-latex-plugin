@@ -100,7 +100,7 @@ The default value is '.'.  -->
      The default value is <code>.</code>. -->
             <diffDirectory>src/main/resources/docsCmp</diffDirectory>
 
-            <!-- A comma separated list of targets to be stored in '\$targetSet'. 
+            <!-- A comma separated list of targets without blanks to be stored in '\$targetSet'. 
 Allowed values are 'chk', 'dvi', 'pdf', 'html', 
 'odt', 'docx', 'rtf' and 'txt'. 
 

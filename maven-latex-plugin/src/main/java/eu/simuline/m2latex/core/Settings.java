@@ -1949,7 +1949,7 @@ public class Settings {
     if (this.targets.isEmpty()) {
       return targetSet;
     }
-    String[] targetSeq = this.targets.split(" *, *");
+    String[] targetSeq = this.targets.split(",");
     Target target;
     for (int idx = 0; idx < targetSeq.length; idx++) {
       try {
