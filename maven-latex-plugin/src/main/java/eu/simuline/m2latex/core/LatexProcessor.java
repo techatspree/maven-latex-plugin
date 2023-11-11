@@ -273,6 +273,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *    <li>WPP05: Included tex files which are no latex main files 
    *    <li>WPP06: Included tex files which are no latex main files 
    *    <li>WPP07: inluded/excluded files not identified by their names.
+   *    <li>WSS01: syntax error in docClassesToTargets
+   *    <li>WSS02: for one document class specified targets twice 
    *    </ul>
    */
   public void create(SortedSet<Target> targetSet) throws BuildFailureException {
@@ -282,8 +284,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
     this.log.info("-----------create-------------");
     this.log.debug("Settings: " + this.settings.toString());
 
-    // 
-    Map<String, Set<Target>> docClasses2Targets = this.settings.getDocClassesToTargets();
+    // may emit WSS01, WSS02 TBD: correct 
+    Map<String, Set<Target>> docClasses2Targets = this.settings.getDocClassesToTargets(this.log);
 
     // may throw BuildFailureException TSS01
     File texDir = this.settings.getTexSrcDirectoryFile();
