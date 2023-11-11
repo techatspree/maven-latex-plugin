@@ -288,8 +288,15 @@ so that the document class is matched.
 Assigns to document classes their allowed `\texttt{targets}'. 
 The map expression is a list of chunks separated by a single blank. 
 Each chunk is divided by a single colon 
-in a comma separated list of document classes, and a comma separated list of targets. 
-A chunk means that all document classes are compiled for the given targets. 
+in a comma separated list of document classes, 
+and a comma separated list of targets. 
+
+A chunk means that all given document classes are compiled for the given targets. 
+Thus, the set of document classes may not be empty, 
+i.e. the colon may not be at the first place of its chunk. 
+In contrast, a colon at the last place of a chunk indicates an empty target set, 
+meaning that documents of the given class are not processed at all. 
+
 The document classes of the chunks may not overlap. 
 A document of a class is compiled for a target if this is specified so by a chunk. 
 

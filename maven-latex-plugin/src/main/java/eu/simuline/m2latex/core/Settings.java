@@ -297,8 +297,15 @@ public class Settings {
    * Assigns to document classes their allowed {@link #targets}. 
    * The map expression is a list of chunks separated by a single blank. 
    * Each chunk is divided by a single colon 
-   * in a comma separated list of document classes, and a comma separated list of targets. 
-   * A chunk means that all document classes are compiled for the given targets. 
+   * in a comma separated list of document classes, 
+   * and a comma separated list of targets. 
+   * <p>
+   * A chunk means that all given document classes are compiled for the given targets. 
+   * Thus, the set of document classes may not be empty, 
+   * i.e. the colon may not be at the first place of its chunk. 
+   * In contrast, a colon at the last place of a chunk indicates an empty target set, 
+   * meaning that documents of the given class are not processed at all. 
+   * <p>
    * The document classes of the chunks may not overlap. 
    * A document of a class is compiled for a target if this is specified so by a chunk. 
    * <p>
@@ -2091,9 +2098,17 @@ public class Settings {
     return this.patternLatexMainFile;
   }
 
-  // WSS01: syntax error in docClassesToTargets
-  // WSS02: for one document class specified targets twice 
-  public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log) {
+  /**
+   * 
+   * @param log
+   * @return
+   * @throws BuildFailureException
+   *    <ul>
+   *    <li>
+   *    <ul>
+   */
+  public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log) 
+      throws BuildFailureException {
     Map<String, Set<Target>> result = new TreeMap<String, Set<Target>>();
     String[] chunks = this.docClassesToTargets.trim().split(" ");
     int idxCol1, idxCol2;
@@ -2102,10 +2117,16 @@ public class Settings {
     for (String chunk : chunks) {
       idxCol1 = chunk.indexOf(':');
       idxCol2 = chunk.lastIndexOf(':');
-      if (idxCol1 == -1 || idxCol2 == -1 || idxCol1 != idxCol2) {
-        log.warn("WSS01: Syntax error in chunk '" + chunk
-            + "'; maybe ignoring targets. ");
-        continue;
+      if (idxCol1 == -1 || idxCol1 == 0 || idxCol1 != idxCol2) {
+        // Here, either 
+        // - no colon exists (idxCol1 == -1 (which implies also idxCol2 == -1)) 
+        // - or more than one colon exists (idxCol1 != idxCol2)
+        // - or the colon is at the the 0th place (idxCol1 == 0)
+        // Note that the colon may be at the last place 
+        // indicating that the given document classes (preceding the colon) 
+        // are not processed at all. 
+        throw new BuildFailureException("TSS12: Syntax error in chunk '" + chunk
+            + "' mapping document classes to targets. ");
       }
 
       targets = chunk.substring(idxCol1 + 1).split(",");
