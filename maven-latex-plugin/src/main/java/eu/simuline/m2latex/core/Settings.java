@@ -1958,6 +1958,7 @@ public class Settings {
     }
     String[] targetSeq = this.targets.split(",");
     Target target;
+    boolean isNew;
     for (int idx = 0; idx < targetSeq.length; idx++) {
       try {
         assert targetSeq[idx] != null;
@@ -1974,8 +1975,12 @@ public class Settings {
             + "' should be a subset of the registered targets '"
             + setOfAllowedTargets + "', but is not. ");
       }
-      targetSet.add(target);
-    }
+      isNew = targetSet.add(target);
+      if (!isNew) {
+        throw new BuildFailureException("TSSXX: The target set '" + this.targets
+            + "' repeats at least one target. ");
+      }
+    } // for 
     return targetSet;
 
   }
@@ -2098,6 +2103,7 @@ public class Settings {
     return this.patternLatexMainFile;
   }
 
+  // TBD: invocation at the wrong place: thus is invoked for each target anew. 
   /**
    * 
    * @param log
@@ -2107,14 +2113,23 @@ public class Settings {
    *    <li>
    *    <ul>
    */
-  public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log) 
+  public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log)
       throws BuildFailureException {
+
+    try {
+      throw new IllegalStateException("location of getDocClasses");
+    } catch (IllegalStateException e) {
+      System.out.println("getDocClassesToTargets: stacktrace");
+      e.printStackTrace();
+    }
     Map<String, Set<Target>> result = new TreeMap<String, Set<Target>>();
-    String[] chunks = this.docClassesToTargets.trim().split(" ");
+    System.out.println("doc: '" + docClassesToTargets + "'");
+    String[] chunks = this.docClassesToTargets.trim().split("\\s");
     int idxCol1, idxCol2;
-    String[] classes, targets;
+    String classesStr;
     Set<Target> targetSet, oldTargetSet;
     for (String chunk : chunks) {
+      System.out.println("chunk: '" + chunk + "'");
       idxCol1 = chunk.indexOf(':');
       idxCol2 = chunk.lastIndexOf(':');
       if (idxCol1 == -1 || idxCol1 == 0 || idxCol1 != idxCol2) {
@@ -2125,28 +2140,38 @@ public class Settings {
         // Note that the colon may be at the last place 
         // indicating that the given document classes (preceding the colon) 
         // are not processed at all. 
-        throw new BuildFailureException("TSS12: Syntax error in chunk '" + chunk
+        //throw new BuildFailureException
+        log.error("TSS12: Syntax error in chunk '" + chunk
             + "' mapping document classes to targets. ");
       }
 
-      targets = chunk.substring(idxCol1 + 1).split(",");
+      String targetsStr = chunk.substring(idxCol1 + 1);
+      System.out.println("targetsStr: '" + targetsStr + "'");
       targetSet = new TreeSet<Target>();
-      boolean isDisjoint = true;
-      for (String target : targets) {
-        try {
-          isDisjoint &= targetSet.add(Enum.valueOf(Target.class, target));
-        } catch (IllegalArgumentException iae) {
-          log.error("ESS01: Possible target '"
-          + target + "' for document classes is unknown; ignoring. ");
+      // If emtpy, targetSet is correct already 
+      if (!targetsStr.isEmpty()) {
+        Target target = null;// TBD: eliminate this assignment 
+        boolean isNew;
+        for (String targetStr : targetsStr.split(",")) {
+          try {
+            target = Enum.valueOf(Target.class, targetStr);
+          } catch (IllegalArgumentException iae) {
+            log.error("ESS01: Possible target '" + targetStr
+              + "' for document classes is unknown; ignoring. ");
+              continue;// TBD: eliminate later 
+          }
+          isNew = targetSet.add(target);
+          if (!isNew) {
+            log.warn("WSS02: List '" + targetsStr
+                + "' repeats possible target for document classes. ");
+          }
         }
       }
-      if (isDisjoint) {
-        log.warn("WSS02: List '"
-        + targets + "' repeats possible target for document classes. ");
-      }
+      // Here, targetSet is set correctly 
 
-      classes = chunk.substring(0, idxCol1).split(",");
-      for (String cls : classes) {
+      classesStr = chunk.substring(0, idxCol1);
+      System.out.println("classesStr: '" + classesStr + "'");
+      for (String cls : classesStr.split(",")) {
         oldTargetSet = result.put(cls, targetSet);
         if (oldTargetSet != null) {
           log.warn("WSS03: For document class '" + cls
@@ -2154,8 +2179,8 @@ public class Settings {
           targetSet.addAll(oldTargetSet);
           result.put(cls, targetSet);
         }
-      }
-    }
+     } // chunks 
+
     return result;
   }
 
