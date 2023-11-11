@@ -2120,7 +2120,7 @@ public class Settings {
         oldTargetSet = result.put(cls, targetSet);
         if (oldTargetSet != null) {
           log.warn("WSS03: For document class '" + cls
-              + "' specifying target set again; merging. ");
+              + "' specifying target again; adding. ");
           targetSet.addAll(oldTargetSet);
           result.put(cls, targetSet);
         }
