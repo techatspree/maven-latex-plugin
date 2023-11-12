@@ -2144,20 +2144,12 @@ public class Settings {
   public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log)
       throws BuildFailureException {
 
-    try {
-      throw new IllegalStateException("location of getDocClasses");
-    } catch (IllegalStateException e) {
-      System.out.println("getDocClassesToTargets: stacktrace");
-      e.printStackTrace();
-    }
     Map<String, Set<Target>> result = new TreeMap<String, Set<Target>>();
-    System.out.println("doc: '" + docClassesToTargets + "'");
     String[] chunks = this.docClassesToTargets.trim().split("\\s");
     int idxCol1, idxCol2;
     String classesStr;
     Set<Target> targetsSet, oldTargetSet;
     for (String chunk : chunks) {
-      System.out.println("chunk: '" + chunk + "'");
       idxCol1 = chunk.indexOf(':');
       idxCol2 = chunk.lastIndexOf(':');
       if (idxCol1 == -1 || idxCol1 == 0 || idxCol1 != idxCol2) {
@@ -2168,13 +2160,11 @@ public class Settings {
         // Note that the colon may be at the last place 
         // indicating that the given document classes (preceding the colon) 
         // are not processed at all. 
-        //throw new BuildFailureException
-        log.error("TSS12: Invalid mapping '" + chunk
+        throw new BuildFailureException("TSS12: Invalid mapping '" + chunk
             + "' of document classes to targets. ");
       }
 
       String targetsStr = chunk.substring(idxCol1 + 1);
-      System.out.println("targetsStr: '" + targetsStr + "'");
       targetsSet = new TreeSet<Target>();
       // If emtpy, targetSet is correct already 
       if (!targetsStr.isEmpty()) {
@@ -2186,14 +2176,15 @@ public class Settings {
       // Here, targetSet is set correctly 
 
       classesStr = chunk.substring(0, idxCol1);
-      System.out.println("classesStr: '" + classesStr + "'");
+      //System.out.println("classesStr: '" + classesStr + "'");
+      // TBD: check maven bug MNG-7927 still present. 
+      // For details search through the manual. 
       for (String cls : classesStr.split(",")) {
         oldTargetSet = result.put(cls, targetsSet);
         if (oldTargetSet != null) {
-          log.warn("WSS03: For document class '" + cls
-              + "' specifying target again; adding. ");
-          targetsSet.addAll(oldTargetSet);
-          result.put(cls, targetsSet);
+          throw new BuildFailureException
+          ("TSS13: For document class '" + cls
+              + "' target set is not unique. ");
         }
       }
      } // chunks 

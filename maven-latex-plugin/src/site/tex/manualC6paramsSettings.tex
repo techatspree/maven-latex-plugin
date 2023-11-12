@@ -310,6 +310,10 @@ The default value consists of two chunks:
   ` \texttt{beamer:chk,pdf,txt}' beamer allows mainly \texttt{pdf} and derived from that \texttt{txt}.  
   Checking with \texttt{chk} does not depend on the document class. 
 \end{itemize}
+
+CAUTION\@: Due to a 
+\href{https://issues.apache.org/jira/projects/MNG/issues/MNG-7927?filter=reportedbyme}{bug in maven}, 
+setting this to the empty string is ignored. 
 \end{minipage}
 } \\
 \texttt{mainFilesIncluded}          &  empty string        \\
