@@ -706,14 +706,9 @@ class TexFileUtils {
           lines = fromStart ? lines += "\n" + line : line;
           Matcher matcher = pattern.matcher(lines);
           if (matcher.find()) {
-            // if (groupName != null) {
-            //   return FileMatch.matches(matcher.group(groupName));
-            // }
-            // return FileMatch.matches(true);
             return FileMatch.matches(matcher);
           }
         }
-        //return FileMatch.matches(false);
         return FileMatch.noMatch();
       } catch (IOException ioe) {
         // Error/Warning must be issued by invoking method 

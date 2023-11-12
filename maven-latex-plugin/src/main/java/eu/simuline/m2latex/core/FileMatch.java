@@ -1,5 +1,7 @@
 package eu.simuline.m2latex.core;
 
+import java.util.regex.Matcher;
+
 /**
  * Describes a match in a file. 
  * The first question is whether the file is readable 
@@ -24,33 +26,27 @@ package eu.simuline.m2latex.core;
  */
 public class FileMatch {
 
-  /**
-   * Represents 
-   */
-  static class FileMatchReadable extends FileMatch {
-    private final boolean matches;
+  static class FileMatchReadableNoMatch extends FileMatch {
 
-    private FileMatchReadable(boolean matches) {
 
-      this.matches = matches;
-    }
+    private FileMatchReadableNoMatch() {}
 
     boolean isFileReadable() {
       return true;
     }
 
     boolean doesExprMatch() {
-      return this.matches;
+      return false;
     }
   } // FileMatchReadable 
 
+  static class FileMatchWithMatcher extends FileMatch {
 
-  static class FileMatchGrouped extends FileMatch {
+    private final Matcher matcher;
 
-    String grpString;
-
-    FileMatchGrouped(String grpString) {
-      this.grpString = grpString;
+    FileMatchWithMatcher(Matcher matcher) {
+      assert matcher.matches();
+      this.matcher = matcher;
     }
 
     boolean isFileReadable() {
@@ -62,14 +58,15 @@ public class FileMatch {
     }
 
     String groupMatch() {
-      return this.grpString;
+      return this.matcher.group(LatexPreProcessor.GRP_NAME_DOCCLASS);
     }
 
-  } // class FileMatchGrouped 
+
+  } // class FileMatchWithMatcher 
 
   private final static FileMatch UNREADABLE = new FileMatch();
-  private final static FileMatch DO_MATCH = new FileMatchReadable(true);
-  private final static FileMatch NO_MATCH = new FileMatchReadable(false);
+
+  private final static FileMatch NO_MATCH = new FileMatchReadableNoMatch();
 
   private FileMatch() {}
 
@@ -82,27 +79,21 @@ public class FileMatch {
   }
 
   /**
-   * Represents a match with a pattern in a readable file but without matching groups. 
-   * 
-   * @param matches
-   *    whether this matches. 
-   * @return
-   *    Either {@link #DO_MATCH} or {@link #NO_MATCH}, depending on <code>matches</code>. 
+   * Returns a file match with readable file but without match. 
    */
-  static FileMatch matches(boolean matches) {
-    return matches ? DO_MATCH : NO_MATCH;
+  static FileMatch noMatch() {
+    return NO_MATCH;
   }
 
   /**
-   * Represents a match with a pattern with at least one named group 
-   * in a readable file. 
-   * @param grpString
-   *    the string matched in the named group. 
-   * @return
-   *    a match as described above as an instance of {@link FileMatch.FileMatchGrouped}. 
+   * Returns a file match with the given matcher. 
+   * In particular, the file is readable and matches. 
+   * 
+   * @param matcher
+   *    The matcher of this file. 
    */
-  static FileMatch matches(String grpString) {
-    return new FileMatchGrouped(grpString);
+  static FileMatch matches(Matcher matcher) {
+    return new FileMatchWithMatcher(matcher);
   }
 
   // to be overwritten 
@@ -129,7 +120,7 @@ public class FileMatch {
     throw new IllegalStateException("Unreadable cannot be asked for match. ");
   }
 
- // to be overwritten 
+  // to be overwritten 
   /**
    * Returns the string matching with the group if any. 
    * 
@@ -143,7 +134,7 @@ public class FileMatch {
    *    <li>if the pattern has no named group. 
    *    </ul>
    */
- String groupMatch() {
+  String groupMatch() {
     throw new IllegalStateException("No group matched. ");
   }
 }
