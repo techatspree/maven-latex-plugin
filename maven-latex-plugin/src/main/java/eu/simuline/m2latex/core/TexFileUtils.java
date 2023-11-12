@@ -659,7 +659,7 @@ class TexFileUtils {
   // AbstractLatexProcessor.hasErrsWarns(File, String)
   // CAUTION: only in tests 
   Boolean matchInFile(File file, String regex) {
-    FileMatch fileMatch = getMatchInFile(file, regex, null);// TBD: eliminate null 
+    FileMatch fileMatch = getMatchInFile(file, regex);// TBD: eliminate null 
     // Idea is to allow more than one group name... could be an array. 
     if (fileMatch.isFileReadable()) {
       return fileMatch.doesExprMatch();
@@ -669,7 +669,7 @@ class TexFileUtils {
     return false;
   }
 
-  FileMatch getMatchInFile(File file, String regex, String groupName) {
+  FileMatch getMatchInFile(File file, String regex) {
     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);//
     boolean fromStart = regex.startsWith("\\A");
     String lines = "";

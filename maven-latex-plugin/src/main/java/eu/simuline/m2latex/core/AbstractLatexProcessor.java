@@ -148,7 +148,7 @@ abstract class AbstractLatexProcessor {
         assert logFile.exists() && !logFile.isDirectory()
                 : "Expected existing (regular) log file " + logFile;
         // may log warning WFU03 cannot close
-        FileMatch fileMatch = this.fileUtils.getMatchInFile(logFile, pattern, null);
+        FileMatch fileMatch = this.fileUtils.getMatchInFile(logFile, pattern);
         if (fileMatch.isFileReadable()) {
           return fileMatch.doesExprMatch();
         }

@@ -1217,14 +1217,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 		 		: "Expected existing regular tex file " + texFile;
 		// may log WFU03 cannot close
 		FileMatch fileMatch = this.fileUtils.getMatchInFile(texFile,
-		 		this.settings.getPatternLatexMainFile(), GRP_NAME_DOCCLASS);
+		 		this.settings.getPatternLatexMainFile());
 		if (!fileMatch.isFileReadable()) {
 			this.log.warn("WPP02: Cannot read tex file '" + texFile +
 					"'; may bear latex main file. ");
 			return Optional.empty();
 		}
     return fileMatch.doesExprMatch()
-      ? Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch()))
+      ? Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch()))//, GRP_NAME_DOCCLASS
       : Optional.empty();
     }
 
