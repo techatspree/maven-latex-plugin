@@ -659,7 +659,7 @@ class TexFileUtils {
   // AbstractLatexProcessor.hasErrsWarns(File, String)
   // CAUTION: only in tests 
   Boolean matchInFile(File file, String regex) {
-    FileMatch fileMatch = matchInFile(file, regex, null);// TBD: eliminate null 
+    FileMatch fileMatch = getMatchInFile(file, regex, null);// TBD: eliminate null 
     // Idea is to allow more than one group name... could be an array. 
     if (fileMatch.isFileReadable()) {
       return fileMatch.doesExprMatch();
@@ -669,7 +669,7 @@ class TexFileUtils {
     return false;
   }
 
-  FileMatch matchInFile(File file, String regex, String groupName) {
+  FileMatch getMatchInFile(File file, String regex, String groupName) {
     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);//
     boolean fromStart = regex.startsWith("\\A");
     String lines = "";
@@ -706,13 +706,15 @@ class TexFileUtils {
           lines = fromStart ? lines += "\n" + line : line;
           Matcher matcher = pattern.matcher(lines);
           if (matcher.find()) {
-            if (groupName != null) {
-              return FileMatch.matches(matcher.group(groupName));
-            }
-            return FileMatch.matches(true);
+            // if (groupName != null) {
+            //   return FileMatch.matches(matcher.group(groupName));
+            // }
+            // return FileMatch.matches(true);
+            return FileMatch.matches(matcher);
           }
         }
-        return FileMatch.matches(false);
+        //return FileMatch.matches(false);
+        return FileMatch.noMatch();
       } catch (IOException ioe) {
         // Error/Warning must be issued by invoking method 
         return FileMatch.unreadable();

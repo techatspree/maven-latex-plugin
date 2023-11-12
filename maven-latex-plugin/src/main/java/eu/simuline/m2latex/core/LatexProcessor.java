@@ -898,7 +898,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
   private boolean needRun(boolean another, String cmdStr, File logAuxFile,
       String pattern) {
     // may log warning WFU03: cannot close
-    FileMatch fileMatch = this.fileUtils.matchInFile(logAuxFile, pattern, null);
+    FileMatch fileMatch = this.fileUtils.getMatchInFile(logAuxFile, pattern, null);
     if (fileMatch.isFileReadable()) {
       return fileMatch.doesExprMatch();
     }
