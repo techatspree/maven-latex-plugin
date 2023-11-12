@@ -1960,7 +1960,7 @@ public class Settings {
     for (int idx = 0; idx < targetSeq.length; idx++) {
       assert targetSeq[idx] != null;
       // may throw BuildFailureException TSS04 and TSS11 
-      readTargetChecked(targetSeq[idx], targetsSet, this.targets);
+      readTargetChecked(targetSeq[idx], targetsSet, this.targets, true);
     } // for 
     return targetsSet;
   }
@@ -1970,16 +1970,20 @@ public class Settings {
    * and adds it to <code>targetSet</code> if possible. 
    * An exception is thrown if <code>targetStr</code> is either no valid target 
    * or if it is a target already in <code>targetSet</code>. 
-   * In the latter case, <code>targetsStr</code> is used 
-   * to create the message of the exception thrown. 
+   * Parameter <code>targetsStr</code> is only used 
+   * to create the message of the exceptions thrown. 
    * 
    * @param targetStr
    *    The target to be added 
    * @param targetsSet
    *    The target set the target to <code>targetStr</code> must be added. 
-   * @param targetsStr
+   * @param targetsChunksStr
    *    The target string of all targets: <code>targetStr</code> is part. 
    *    This is needed for the message of the exception. 
+   * @param isTarget
+   *    specified whether <code>targetsChunksStr</code> is a target set; 
+   *    else it is a chunk. 
+   *    This affects also the message if an exception is thrown. 
    * @throws BuildFailureException
    *    <ul>
    *    <li>TSS04 if targetStr is invalid 
@@ -1988,19 +1992,24 @@ public class Settings {
    */
   private void readTargetChecked(String targetStr,
                                  Set<Target> targetsSet, 
-                                 String targetsStr) throws BuildFailureException {
+                                 String targetsChunksStr, 
+                                 boolean isTarget) throws BuildFailureException {
     try {
       Target target = Target.valueOf(targetStr);
       // may not throw an IllegalArgumentException
       boolean isNew = targetsSet.add(target);
       if (!isNew) {
-        throw new BuildFailureException("TSS11: The target set '" + targetsStr
+        throw new BuildFailureException("TSS11: The "
+        + (isTarget ? "target set" : "chunk")
+        + " '" + targetsChunksStr
             + "' repeats target '" + target + "'. ");
       }
     } catch (IllegalArgumentException ae) {
       // Here, targetStr does not contain the name of a Target 
       assert Target.class.isEnum();
-      throw new BuildFailureException("TSS04: The target set '" + targetsStr
+      throw new BuildFailureException("TSS04: The "
+          + (isTarget ? "target set" : "chunk")
+          + " '" + targetsChunksStr
           + "' contains the invalid target '" + targetStr + "'. ");
     } // catch 
   }
@@ -2130,9 +2139,7 @@ public class Settings {
    * @param log
    * @return
    * @throws BuildFailureException
-   *    <ul>
-   *    <li>
-   *    <ul>
+   *    TSS01, TSS11
    */
   public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log)
       throws BuildFailureException {
@@ -2148,7 +2155,7 @@ public class Settings {
     String[] chunks = this.docClassesToTargets.trim().split("\\s");
     int idxCol1, idxCol2;
     String classesStr;
-    Set<Target> targetSet, oldTargetSet;
+    Set<Target> targetsSet, oldTargetSet;
     for (String chunk : chunks) {
       System.out.println("chunk: '" + chunk + "'");
       idxCol1 = chunk.indexOf(':');
@@ -2168,37 +2175,25 @@ public class Settings {
 
       String targetsStr = chunk.substring(idxCol1 + 1);
       System.out.println("targetsStr: '" + targetsStr + "'");
-      targetSet = new TreeSet<Target>();
+      targetsSet = new TreeSet<Target>();
       // If emtpy, targetSet is correct already 
       if (!targetsStr.isEmpty()) {
-        Target target = null;// TBD: eliminate this assignment 
-        boolean isNew;
         for (String targetStr : targetsStr.split(",")) {
-          try {
-            target = Enum.valueOf(Target.class, targetStr);
-          } catch (IllegalArgumentException iae) {
-            log.error("ESS01: Possible target '" + targetStr
-              + "' for document classes is unknown; ignoring. ");
-              continue;// TBD: eliminate later 
-          }
-          isNew = targetSet.add(target);
-          if (!isNew) {
-            log.warn("WSS02: List '" + targetsStr
-                + "' repeats possible target for document classes. ");
-          }
-        }
+          // may throw BuildFailureException TSS04 and TSS11 
+          readTargetChecked(targetStr, targetsSet, chunk, false);
+        } // for 
       } // if(!isEmpty)
       // Here, targetSet is set correctly 
 
       classesStr = chunk.substring(0, idxCol1);
       System.out.println("classesStr: '" + classesStr + "'");
       for (String cls : classesStr.split(",")) {
-        oldTargetSet = result.put(cls, targetSet);
+        oldTargetSet = result.put(cls, targetsSet);
         if (oldTargetSet != null) {
           log.warn("WSS03: For document class '" + cls
               + "' specifying target again; adding. ");
-          targetSet.addAll(oldTargetSet);
-          result.put(cls, targetSet);
+          targetsSet.addAll(oldTargetSet);
+          result.put(cls, targetsSet);
         }
       }
      } // chunks 
