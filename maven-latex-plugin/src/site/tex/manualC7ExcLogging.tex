@@ -329,19 +329,22 @@ with default value \texttt{./target/site/.}.
 The output directory is where the result of the goal/task 
 are copied to. 
 If it does not yet exist, it is created 
-but if it exists and is a regular file, it cannot be created any more. 
+but if it exists and is a regular file, it cannot be created anymore. 
 \end{minipage}
 } \\
-\texttt{\footnotesize TSS04}  & \texttt{\footnotesize The target set '\$targets' } \\
-& \texttt{\footnotesize should be a subset of the registered targets '\ldots', but is not. } \\
+\texttt{\footnotesize TSS04}  & \texttt{\footnotesize The target set '\$targetsStr' } \\
+                              & \texttt{\footnotesize contains the invalid target '\$targetStr'.  } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-The target set is given in the pom/build-file 
-with default value \texttt{pdf, html}. 
-A single target can be given on the command line
+The target set is given as a setting as described in Table~\ref{tab:paramGen}. 
+The exception is thrown if a given target is unknown, e.g.\@ because it is misspelled. 
+See also the Exception \texttt{TSS11} in this table. 
+
+For each target, there is an according goal 
+and so it can be given on the command line
 as e.g.~via \texttt{mvn latex:pdf} and also in this case,
 the validity of the target is checked, so that e.g.~\texttt{mvn latex:invalid}
-throws an exception, but the mechanism relies directly on mavens ability
+throws an exception, but the mechanism relies directly on maven's ability
 to check the targets of this plugin. 
 \end{minipage}
 } \\
@@ -403,24 +406,35 @@ which are not excluded, i.e.~listed in configuration in section \texttt{converte
  } \\
 
 
-
-
-
- 
-
- 
- \texttt{\footnotesize ESS01} % TSS11
- & \texttt{\footnotesize Possible target '\$target' for document classes is unknown; ignoring. } \\
+ \texttt{\footnotesize TSS11}
+ & \texttt{\footnotesize The target set '\$targetsStr' repeats target '\$target'. } \\
  \multicolumn2{|l|}{
  \begin{minipage}{0.95\linewidth}
- Indicates that a possible target \texttt{\$target} in parameter \texttt{docClassesToTargets} 
- is not defined, e.g.\@ misspelled and must thus be ignored. 
+ Indicates that in a target set a target is repeated. 
+Sets contain elements only once. 
+See also the Exception \texttt{TSS04} in this table. 
+ %\texttt{\$target} in parameter \texttt{docClassesToTargets} 
+% is not defined, e.g.\@ misspelled and must thus be ignored. 
  \end{minipage}
  } \\
+
+
+
+ 
+
+ 
+%  \texttt{\footnotesize ESS01} % TSS11
+%  & \texttt{\footnotesize Possible target '\$target' for document classes is unknown; ignoring. } \\
+%  \multicolumn2{|l|}{
+%  \begin{minipage}{0.95\linewidth}
+%  Indicates that a possible target \texttt{\$target} in parameter \texttt{docClassesToTargets} 
+%  is not defined, e.g.\@ misspelled and must thus be ignored. 
+%  \end{minipage}
+%  } \\
  
  
 \texttt{\footnotesize TSS12} 
-& \texttt{\footnotesize Syntax error in chunk '\$chunk' mapping document classes to targets. } \\
+& \texttt{\footnotesize Invalid mapping '\$chunk' of document classes to targets. } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 Indicates that the chunk \texttt{\$chunk} in parameter \texttt{docClassesToTargets} 

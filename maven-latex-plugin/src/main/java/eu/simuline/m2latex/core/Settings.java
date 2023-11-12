@@ -1952,38 +1952,59 @@ public class Settings {
   // TBD: ordering must be clarified 
   public SortedSet<Target> getTargets() throws BuildFailureException {
     // TreeSet is sorted. maybe this determines ordering of targets. 
-    SortedSet<Target> targetSet = new TreeSet<Target>();
+    SortedSet<Target> targetsSet = new TreeSet<Target>();
     if (this.targets.isEmpty()) {
-      return targetSet;
+      return targetsSet;
     }
     String[] targetSeq = this.targets.split(",");
-    Target target;
-    boolean isNew;
     for (int idx = 0; idx < targetSeq.length; idx++) {
-      try {
-        assert targetSeq[idx] != null;
-        target = Target.valueOf(targetSeq[idx]);
-      } catch (IllegalArgumentException ae) {
-        assert Target.class.isEnum();
-        // Here, targetSeq[idx] is no name in Target 
-        // TBD: find substring(1, and construct separate util method. 
-        String setOfAllowedTargets = Arrays.asList(Target.values()).toString();
-        setOfAllowedTargets =
-            setOfAllowedTargets.substring(1, setOfAllowedTargets.length() - 1);
-        // TBD: reformulate all 'but is not': the target set is expected to be a subset... but is ... 
-        throw new BuildFailureException("TSS04: The target set '" + this.targets
-            + "' should be a subset of the registered targets '"
-            + setOfAllowedTargets + "', but is not. ");
-      }
-      isNew = targetSet.add(target);
-      if (!isNew) {
-        throw new BuildFailureException("TSSXX: The target set '" + this.targets
-            + "' repeats at least one target. ");
-      }
+      assert targetSeq[idx] != null;
+      // may throw BuildFailureException TSS04 and TSS11 
+      readTargetChecked(targetSeq[idx], targetsSet, this.targets);
     } // for 
-    return targetSet;
-
+    return targetsSet;
   }
+
+  /**
+   * Converts <code>targetStr</code> into a {@link Target} 
+   * and adds it to <code>targetSet</code> if possible. 
+   * An exception is thrown if <code>targetStr</code> is either no valid target 
+   * or if it is a target already in <code>targetSet</code>. 
+   * In the latter case, <code>targetsStr</code> is used 
+   * to create the message of the exception thrown. 
+   * 
+   * @param targetStr
+   *    The target to be added 
+   * @param targetsSet
+   *    The target set the target to <code>targetStr</code> must be added. 
+   * @param targetsStr
+   *    The target string of all targets: <code>targetStr</code> is part. 
+   *    This is needed for the message of the exception. 
+   * @throws BuildFailureException
+   *    <ul>
+   *    <li>TSS04 if targetStr is invalid 
+   *    <li>TSS11 if target for targetStr already in targetsSet
+   *    </ul>
+   */
+  private void readTargetChecked(String targetStr,
+                                 Set<Target> targetsSet, 
+                                 String targetsStr) throws BuildFailureException {
+    try {
+      Target target = Target.valueOf(targetStr);
+      // may not throw an IllegalArgumentException
+      boolean isNew = targetsSet.add(target);
+      if (!isNew) {
+        throw new BuildFailureException("TSS11: The target set '" + targetsStr
+            + "' repeats target '" + target + "'. ");
+      }
+    } catch (IllegalArgumentException ae) {
+      // Here, targetStr does not contain the name of a Target 
+      assert Target.class.isEnum();
+      throw new BuildFailureException("TSS04: The target set '" + targetsStr
+          + "' contains the invalid target '" + targetStr + "'. ");
+    } // catch 
+  }
+
   // public SortedSet<Target> getTargets() throws BuildFailureException {
   //   return this.targets;
   // }
@@ -2141,8 +2162,8 @@ public class Settings {
         // indicating that the given document classes (preceding the colon) 
         // are not processed at all. 
         //throw new BuildFailureException
-        log.error("TSS12: Syntax error in chunk '" + chunk
-            + "' mapping document classes to targets. ");
+        log.error("TSS12: Invalid mapping '" + chunk
+            + "' of document classes to targets. ");
       }
 
       String targetsStr = chunk.substring(idxCol1 + 1);
@@ -2166,7 +2187,7 @@ public class Settings {
                 + "' repeats possible target for document classes. ");
           }
         }
-      }
+      } // if(!isEmpty)
       // Here, targetSet is set correctly 
 
       classesStr = chunk.substring(0, idxCol1);
@@ -2179,12 +2200,11 @@ public class Settings {
           targetSet.addAll(oldTargetSet);
           result.put(cls, targetSet);
         }
+      }
      } // chunks 
 
     return result;
   }
-
-
 
   public Set<String> getMainFilesIncluded() {
     return this.mainFilesIncluded.isEmpty() ? new HashSet<String>()
