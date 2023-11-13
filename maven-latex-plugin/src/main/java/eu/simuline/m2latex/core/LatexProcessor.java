@@ -322,11 +322,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 + " folder if exists. ";
 
         Set<Target> reachableTargets;
-        Set<Target> possibleTargets = docClasses2Targets.get(desc.docClass);
+        String docClass = desc.groupMatch(LatexMainParameterNames.docClass);
+        Set<Target> possibleTargets = docClasses2Targets.get(docClass);
         if (possibleTargets == null) {
           this.log.warn("WLP09: For file '"
           + desc.texFile + "' targets are not restricted by unknown document class '"
-          + desc.docClass + "'. ");
+          + docClass + "'. ");
           reachableTargets = targetSet;
         } else {
         Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);

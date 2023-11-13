@@ -2,6 +2,8 @@ package eu.simuline.m2latex.core;
 
 import java.io.File;
 
+import java.util.regex.Matcher;
+
 /**
  * Container which comprises, besides the latex main file
  * also several files creation of which shall be done once for ever.
@@ -26,10 +28,12 @@ class LatexMainDesc implements Comparable<LatexMainDesc> {
 
   final File parentDir;
 
-  final String docClass;
+  //final String docClass;
 
-  LatexMainDesc(File texFile, String docClass) {
-    this.docClass = docClass;
+  private final Matcher matcher;
+
+  LatexMainDesc(File texFile, Matcher matcher) {
+    this.matcher = matcher;
     this.texFile = texFile;
     this.xxxFile =
         TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
@@ -46,6 +50,24 @@ class LatexMainDesc implements Comparable<LatexMainDesc> {
     this.gloFile = withSuffix(LatexProcessor.SUFFIX_GLO);
     this.glgFile = withSuffix(LatexProcessor.SUFFIX_GLG);
     this.parentDir = this.texFile.getParentFile();
+  }
+
+  /**
+   * Returns the content of the group of the name specified, 
+   * if matched, else <code>null</code>. 
+   * 
+   * @param groupName
+   *    a representation of the name of a group in a regular expression. 
+   * @return
+   *    the text matched in the group or <code>null</code>, 
+   *    the latter if the pattern has the group but nothing matches, 
+   *    e.g. because of an alternative like <code>(?&lt;name&gt;x)?</code>. 
+   * @throws IllegalArgumentException
+   *    If the matching pattern has no capturing group with the given name. 
+   */
+  String groupMatch(LatexMainParameterNames groupName) {
+    // formally this may throw a IllegalStateException, but this is excluded. 
+    return this.matcher.group(groupName.toString());
   }
 
   File withSuffix(String suffix) {

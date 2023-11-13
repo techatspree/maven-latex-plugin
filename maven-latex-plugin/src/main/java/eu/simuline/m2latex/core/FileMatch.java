@@ -28,7 +28,6 @@ public class FileMatch {
 
   static class FileMatchReadableNoMatch extends FileMatch {
 
-
     private FileMatchReadableNoMatch() {}
 
     boolean isFileReadable() {
@@ -55,10 +54,6 @@ public class FileMatch {
 
     boolean doesExprMatch() {
       return true;
-    }
-
-    String groupMatch(LatexMainParameterNames groupName) {
-      return this.matcher.group(groupName.toString());
     }
 
     Matcher getMatcher() {
@@ -125,28 +120,19 @@ public class FileMatch {
 
   // to be overwritten 
   /**
-   * Returns the string matching with the group if any. 
+   * Returns a matcher if there is one. 
    * 
-   * @param groupName
-   *    the name of a group in a regular expression. 
    * @return
-   *    the text matched in the group or <code>null</code>, 
-   *    the latter if the pattern has the group but nothing matches, 
-   *    e.g. because of an alternative like <code>(?&lt;name&gt;x)?</code>. 
+   *    the matcher if the file is readable and matches the regular expression. 
    * @throws IllegalStateException
    *    if 
    *    <ul>
    *    <li>the file is unreadable or 
-   *    <li>the patter does ot match or 
-   *    <li>if the pattern has no named group. 
+   *    <li>the patter does not match 
    *    </ul>
    * @throws IllegalArgumentException
-   *    If no IllegalStateException but there is no group with the given name 
+   *    If no IllegalStateException but there is no group matched. 
    */
-  String groupMatch(LatexMainParameterNames groupName) {
-    throw new IllegalStateException("No group matched. ");
-  }
-
   Matcher getMatcher() {
     throw new IllegalStateException("No group matched. ");
   }

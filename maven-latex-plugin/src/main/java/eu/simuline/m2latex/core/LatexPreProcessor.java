@@ -1222,22 +1222,13 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 			return Optional.empty();
 		}
     if (fileMatch.doesExprMatch()) {
-//       String matchStr, groupName;
-//       groupName = "docClassMagic";
-//       matchStr = fileMatch.groupMatch(groupName);
-
-// System.out.println("group " + groupName + "='"+matchStr+"' ");//+(matchStr ==null ? "" : matchStr.length()));
-//       groupName = "targetsMagic";
-//       matchStr = fileMatch.groupMatch(groupName);
-// System.out.println("group " + groupName + "='"+matchStr+"' ");//+(matchStr ==null ? "" : matchStr.length()));
-
-      return Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch(LatexMainParameterNames.docClass)));
+      return Optional.of(new LatexMainDesc(texFile, fileMatch.getMatcher()));
     } else {
       return Optional.empty();
     }
     
     // return fileMatch.doesExprMatch()
-    //   ? Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch(GRP_NAME_DOCCLASS)))//, 
+    //   ? Optional.of(new LatexMainDesc(texFile, fileMatch.getMatcher()))
     //   : Optional.empty();
     }
 
@@ -1264,7 +1255,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     Optional<LatexMainDesc> optTexFileDesc = optLatexMainFile(texFile);
 		if (optTexFileDesc.isPresent()) {
       LatexMainDesc desc = optTexFileDesc.get();
-			this.log.info("Detected " + desc.docClass + "-file '" + texFile + "'. ");
+			this.log.info("Detected "
+       + desc.groupMatch(LatexMainParameterNames.docClass)
+       + "-file '" + texFile + "'. ");
 			latexMainDescs.add(desc);
 		}
   }
