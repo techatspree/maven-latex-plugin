@@ -281,7 +281,8 @@ public class Settings {
   @RuntimeParameter
   @Parameter(name = "patternLatexMainFile")
   private String patternLatexMainFile = "\\A"
-  + "(%! LMP( class=(?<classMagic>[^} ]+))?( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?"
+  + "(%! LMP( class=(?<classMagic>[^} ]+))?"
+  + "( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?"
   + "(\\\\RequirePackage\\s*" + // RequirePackage 
   /**/"(\\[(\\s|\\w|,)*\\])?\\s*" + // [options]
   /**/"\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}[version]
@@ -293,7 +294,7 @@ public class Settings {
       //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
       //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
       "\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
-      "\\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<class>[^}]+)\\}";
+      "\\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<class>[^} ]+)\\}";
 
   /**
    * Assigns to document classes their allowed {@link #targets}. 
