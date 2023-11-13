@@ -479,7 +479,9 @@ public class Settings {
           // ... and scripts cmsy....png 
           "(cmsy)\\d+(-c)?-\\d+c?\\.png|" +
           // The following occurs sporadic when using latexmk 
-          "(pdf|xe|lua)?latex\\d+\\.fls)$";
+          "(pdf|xe|lua)?latex\\d+\\.fls|" +
+          // Seemingly for errors 
+          "texput\\.(fls|log))$";
 
 
   // parameters for graphics preprocessing 
