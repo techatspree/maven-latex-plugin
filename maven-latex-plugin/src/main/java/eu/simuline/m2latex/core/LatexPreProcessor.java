@@ -1186,8 +1186,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     return;
 	}
 
-  final static String GRP_NAME_DOCCLASS = "docClass";
-
 	/**
 	 * Returns an optional covering a <code>LatexMainDesc</code> 
    * if and only if <code>texFile</code> is recognized 
@@ -1232,8 +1230,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 //       groupName = "targetsMagic";
 //       matchStr = fileMatch.groupMatch(groupName);
 // System.out.println("group " + groupName + "='"+matchStr+"' ");//+(matchStr ==null ? "" : matchStr.length()));
-assert LatexMainParameterNames.docClass.toString().equals(GRP_NAME_DOCCLASS);
-      return Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch(GRP_NAME_DOCCLASS)));
+
+      return Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch(LatexMainParameterNames.docClass)));
     } else {
       return Optional.empty();
     }

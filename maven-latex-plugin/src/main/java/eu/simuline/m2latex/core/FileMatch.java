@@ -57,10 +57,13 @@ public class FileMatch {
       return true;
     }
 
-    String groupMatch(String groupName) {
-      return this.matcher.group(groupName);
+    String groupMatch(LatexMainParameterNames groupName) {
+      return this.matcher.group(groupName.toString());
     }
 
+    Matcher getMatcher() {
+      return this.matcher;
+    }
 
   } // class FileMatchWithMatcher 
 
@@ -140,7 +143,11 @@ public class FileMatch {
    * @throws IllegalArgumentException
    *    If no IllegalStateException but there is no group with the given name 
    */
-  String groupMatch(String groupName) {
+  String groupMatch(LatexMainParameterNames groupName) {
+    throw new IllegalStateException("No group matched. ");
+  }
+
+  Matcher getMatcher() {
     throw new IllegalStateException("No group matched. ");
   }
 }
