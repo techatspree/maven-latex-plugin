@@ -1186,7 +1186,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     return;
 	}
 
-  final static String GRP_NAME_DOCCLASS = "class";
+  final static String GRP_NAME_DOCCLASS = "docClass";
 
 	/**
 	 * Returns an optional covering a <code>LatexMainDesc</code> 
@@ -1223,9 +1223,24 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					"'; may bear latex main file. ");
 			return Optional.empty();
 		}
-    return fileMatch.doesExprMatch()
-      ? Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch()))//, GRP_NAME_DOCCLASS
-      : Optional.empty();
+    if (fileMatch.doesExprMatch()) {
+//       String matchStr, groupName;
+//       groupName = "docClassMagic";
+//       matchStr = fileMatch.groupMatch(groupName);
+
+// System.out.println("group " + groupName + "='"+matchStr+"' ");//+(matchStr ==null ? "" : matchStr.length()));
+//       groupName = "targetsMagic";
+//       matchStr = fileMatch.groupMatch(groupName);
+// System.out.println("group " + groupName + "='"+matchStr+"' ");//+(matchStr ==null ? "" : matchStr.length()));
+assert LatexMainParameterNames.docClass.toString().equals(GRP_NAME_DOCCLASS);
+      return Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch(GRP_NAME_DOCCLASS)));
+    } else {
+      return Optional.empty();
+    }
+    
+    // return fileMatch.doesExprMatch()
+    //   ? Optional.of(new LatexMainDesc(texFile, fileMatch.groupMatch(GRP_NAME_DOCCLASS)))//, 
+    //   : Optional.empty();
     }
 
 	/**

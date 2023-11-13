@@ -57,8 +57,8 @@ public class FileMatch {
       return true;
     }
 
-    String groupMatch() {
-      return this.matcher.group(LatexPreProcessor.GRP_NAME_DOCCLASS);
+    String groupMatch(String groupName) {
+      return this.matcher.group(groupName);
     }
 
 
@@ -124,8 +124,12 @@ public class FileMatch {
   /**
    * Returns the string matching with the group if any. 
    * 
+   * @param groupName
+   *    the name of a group in a regular expression. 
    * @return
-   *    whether the pattern matches. 
+   *    the text matched in the group or <code>null</code>, 
+   *    the latter if the pattern has the group but nothing matches, 
+   *    e.g. because of an alternative like <code>(?&lt;name&gt;x)?</code>. 
    * @throws IllegalStateException
    *    if 
    *    <ul>
@@ -133,8 +137,10 @@ public class FileMatch {
    *    <li>the patter does ot match or 
    *    <li>if the pattern has no named group. 
    *    </ul>
+   * @throws IllegalArgumentException
+   *    If no IllegalStateException but there is no group with the given name 
    */
-  String groupMatch() {
+  String groupMatch(String groupName) {
     throw new IllegalStateException("No group matched. ");
   }
 }
