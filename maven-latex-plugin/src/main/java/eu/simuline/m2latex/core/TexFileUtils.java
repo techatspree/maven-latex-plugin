@@ -703,7 +703,7 @@ class TexFileUtils {
           // FIXME: seemingly, find may not terminate in case ^(\s*)* but with ^s* 
           // but this seems a bug in java's regex engine 
 
-          lines = fromStart ? lines += "\n" + line : line;
+          lines = fromStart ? lines += line + "\n" : line;
           Matcher matcher = pattern.matcher(lines);
           if (matcher.find()) {
             return FileMatch.matches(matcher);

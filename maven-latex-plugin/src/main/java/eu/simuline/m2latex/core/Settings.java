@@ -280,7 +280,9 @@ public class Settings {
   // There is a tendency to allow even more in the header with coming releases of latex 
   @RuntimeParameter
   @Parameter(name = "patternLatexMainFile")
-  private String patternLatexMainFile = "\\A(\\\\RequirePackage\\s*" + // RequirePackage 
+  private String patternLatexMainFile = "\\A"
+  + "(%! LMP( class=(?<classMagic>[^} ]+))?( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?"
+  + "(\\\\RequirePackage\\s*" + // RequirePackage 
   /**/"(\\[(\\s|\\w|,)*\\])?\\s*" + // [options]
   /**/"\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}[version]
       "%.*$|" + // comments 
@@ -466,7 +468,11 @@ public class Settings {
           // ... and T$Tddx.(x)bb, T$Tddx.png and T$T-dd.svg... 
           "\\d+x\\.x?bb|" + "\\d+x?\\.png|" + "-\\d+\\.svg|" +
           // by (splitidx and) splitindex 
-          "-.+\\.(idx|ind|ilg)|" + ")|" + // end all patterns starting with T$T
+          // TBD: check: formerly was ...ilg)| which allows also T$T itself! 
+          // If a file test.tex is a latex main file and there is a folder with the same name, 
+          // then the folder is deleted even if not empty. 
+          // Thus removed the trailing '|'
+          "-.+\\.(idx|ind|ilg)" + ")|" + // end all patterns starting with T$T
           // created by pythontex
           "pythontex-files-T$T|" + // folders from package pythontex
           // ... and xxT$T.eps... 

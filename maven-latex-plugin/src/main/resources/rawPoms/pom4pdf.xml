@@ -163,12 +163,14 @@ and notify the developer of this plugin of the deficiency.
 In any case, matching of the group named 'class' must be retained 
 so that the document class is matched.  -->
             <patternLatexMainFile>
-\A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
+\A(
+(%! LMP( class=(?&lt;classMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
+\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
 %.*$|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
 \\input\s*\{[^{}]*\}|
 \s)*
-\\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;class&gt;[^}]+)\}
+\\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;class&gt;[^} ]+)\}
             </patternLatexMainFile>
 
 
