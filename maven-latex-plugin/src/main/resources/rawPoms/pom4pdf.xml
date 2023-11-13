@@ -126,9 +126,9 @@ The default value is <code>chk,pdf,html</code>.
 
             <targets>pdf</targets>            <!-- chk,pdf,html -->
 
-            <!-- A comma separated list of excluded {@link Converter}s 
-given by their command, i.e. by {@link Converter#getCommand()}
-returned as a set by {@link #getConvertersExcluded()}. 
+            <!-- A comma separated list of excluded Converters 
+given by their command, i.e. by Converter.getCommand()
+returned as a set by getConvertersExcluded(). 
 Excluded converters need not be installed but their names must be known. 
 They don't show up in the version check of target 'vrs' 
 and of course they are not allowed to be used. 
@@ -251,10 +251,10 @@ The default value is null. -->
 
 
             <!-- Indicates whether after creating artifacts 
-						 and copying them to the output directory {@link #outputDirectoryFile} 
+						 and copying them to the output directory 'outputDirectoryFile' 
 						 the artifacts are checked by diffing them against preexisting artifacts 
-						 in {@link #diffDirectoryFile} 
-						 using the diff command given by {@link #diffPdfCommand}. 
+						 in 'diffDirectoryFile' 
+						 using the diff command given by 'diffPdfCommand'. 
 						 Note that currently, only pdf files are checkd. 
 						 This is <code>false</code> by default and is set to <code>true</code> only 
 						 in the context of tests. -->
