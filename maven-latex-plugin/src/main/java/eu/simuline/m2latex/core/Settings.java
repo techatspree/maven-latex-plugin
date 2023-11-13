@@ -280,21 +280,19 @@ public class Settings {
   // There is a tendency to allow even more in the header with coming releases of latex 
   @RuntimeParameter
   @Parameter(name = "patternLatexMainFile")
-  private String patternLatexMainFile = "\\A"
-  + "(%! LMP( class=(?<classMagic>[^} ]+))?"
-  + "( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?"
-  + "(\\\\RequirePackage\\s*" + // RequirePackage 
-  /**/"(\\[(\\s|\\w|,)*\\])?\\s*" + // [options]
-  /**/"\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|" + // {name}[version]
-      "%.*$|" + // comments 
-      "\\\\PassOptionsToPackage\\s*" + // PassOptionsToPackage
-      /**/"\\{\\w+\\}\\s*" + // {options}
-      /**/"\\{(\\w|-)\\}|" + // {packagename}
-      "\\\\input\\s*\\{[^{}]*\\}|" + // inputs 
-      //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
-      //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
-      "\\s)*" + // spaces FIXME: quicker were \s* but BUG IN MATCHER 
-      "\\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<class>[^} ]+)\\}";
+  private String patternLatexMainFile =
+  """
+  \\A\
+  (%! LMP( class=(?<docClassMagic>[^} ]+))?( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?\
+  (\\\\RequirePackage\\s*(\\[(\\s|\\w|,)*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|\
+  %.*$|\
+  \\\\PassOptionsToPackage\\s*\\{\\w+\\}\\s*\\{(\\w|-)\\}|\
+  \\\\input\\s*\\{[^{}]*\\}|\
+  \\s)*\
+  \\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<docClass>[^} ]+)\\}\
+  """;
+  //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
+  //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
 
   /**
    * Assigns to document classes their allowed {@link #targets}. 
