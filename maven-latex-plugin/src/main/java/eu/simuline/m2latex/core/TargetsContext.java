@@ -19,7 +19,7 @@ public enum TargetsContext {
    */
   inChunkSetting {
     String context() {
-      return "chunk";
+      return "a chunk of setting 'docClassesToTargets'";
     }
   },
   /**
@@ -29,7 +29,7 @@ public enum TargetsContext {
    */
   targetsMagic {
     String context() {
-      return "magic comment";
+      return "magic comment 'targets'";
     }
   };
 

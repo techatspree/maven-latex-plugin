@@ -348,7 +348,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
         } else {
           this.log.info("Found targets " + targetsMagic
            + " for document '" + desc.texFile + "' in magic comment. ");
-          reachableTargets = Settings.getTargets(targetsMagic);
+          reachableTargets = Settings
+            .getTargets(targetsMagic,TargetsContext.targetsMagic);
         }
 
         // may throw BuildFailureException TSS04

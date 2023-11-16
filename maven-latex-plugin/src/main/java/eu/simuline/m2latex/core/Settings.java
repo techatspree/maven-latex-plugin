@@ -1958,11 +1958,35 @@ public class Settings {
    */
   // TBD: ordering must be clarified 
   public SortedSet<Target> getTargets() throws BuildFailureException {
-    return getTargets(this.targets);
+    return getTargets(this.targets, TargetsContext.targetsSetting);
   }
 
-  // TBD: parameter isTarget of readTargetChecked
-  static SortedSet<Target> getTargets(String targetsChunksStr)
+  /**
+   * Returns the targets given by the string <code>targetsChunkStr</code> 
+   * as a set of {@link Target}s. 
+   * If the target string is invalid an exception is thrown 
+   * with a message influenced by <code>targetContext</code> 
+   * which depends on the context in which this method is invoked. 
+   * 
+   * @param targetsChunksStr
+   *    The target string of all targets. 
+   *    TBD: simplify name. 
+   * @param targetContext
+   *    specifies the context in which this method is invoked 
+   *    and contributes this context to the message of a thrown exception, if any. 
+   *    Else this value has no effect. 
+   * @return
+   *     The set of targets given by <code>targetsChunksStr</code>.
+   * @throws BuildFailureException
+   *    <ul>
+   *    <li>TSS04 if <code>targetsChunkStr</code> is invalid 
+   *    <li>TSS11 if a target in <code>targetsChunkStr</code> occurs more than once 
+   *    </ul>
+   * @see #getTargets()
+   * @see #getDocClassesToTargets()
+   * @see LatexProcessor#create(SortedSet)
+   */
+  static SortedSet<Target> getTargets(String targetsChunksStr, TargetsContext targetContext)
       throws BuildFailureException {
 
     // TreeSet is sorted. maybe this determines ordering of targets. 
@@ -1975,7 +1999,7 @@ public class Settings {
       assert targetSeq[idx] != null;
       String targetStr = targetSeq[idx];
       // may throw BuildFailureException TSS04 and TSS11 
-      readTargetChecked(targetStr, targetsSet, targetsChunksStr, TargetsContext.targetsSetting);
+      readTargetChecked(targetStr, targetsSet, targetsChunksStr, targetContext);
     } // for 
     return targetsSet;
   }
@@ -1995,7 +2019,7 @@ public class Settings {
    * @param targetsChunksStr
    *    The target string of all targets: <code>targetStr</code> is part. 
    *    This is needed for the message of the exception. 
-   * @param targetContext
+   * @param targetsContext
    *    specifies the context in which this method is invoked 
    *    and contributes this context to the message of a thrown exception, if any. 
    *    Else this value has no effect. 
@@ -2008,22 +2032,23 @@ public class Settings {
   private static void readTargetChecked(String targetStr,
                                         Set<Target> targetsSet, 
                                         String targetsChunksStr, 
-                                        TargetsContext targetContext) throws BuildFailureException {
+                                        TargetsContext targetsContext)
+                throws BuildFailureException {
     try {
       Target target = Target.valueOf(targetStr);
       // may not throw an IllegalArgumentException
       boolean isNew = targetsSet.add(target);
       if (!isNew) {
-        throw new BuildFailureException("TSS11: The " + targetContext.context()
-        + " '" + targetsChunksStr
-            + "' repeats target '" + target + "'. ");
+        throw new BuildFailureException("TSS11: The target '" + targetsChunksStr
+          + "' in " + targetsContext.context()
+          + " repeats target '" + target + "'. ");
       }
     } catch (IllegalArgumentException ae) {
       // Here, targetStr does not contain the name of a Target 
       assert Target.class.isEnum();
-      throw new BuildFailureException("TSS04: The " + targetContext.context()
-          + " '" + targetsChunksStr
-          + "' contains the invalid target '" + targetStr + "'. ");
+      throw new BuildFailureException("TSS04: The target '" + targetsChunksStr
+          + "' in " + targetsContext.context()
+          + " contains the invalid target '" + targetStr + "'. ");
     } // catch 
   }
 
@@ -2177,7 +2202,7 @@ public class Settings {
       }
 
       String targetsStr = chunk.substring(idxCol1 + 1);
-      targetsSet = getTargets(targetsStr);
+      targetsSet = getTargets(targetsStr, TargetsContext.inChunkSetting);
 
 
       classesStr = chunk.substring(0, idxCol1);
