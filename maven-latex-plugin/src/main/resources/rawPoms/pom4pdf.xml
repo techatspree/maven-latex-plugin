@@ -163,9 +163,9 @@ and notify the developer of this plugin of the deficiency.
 In any case, matching of the group named 'class' must be retained 
 so that the document class is matched.  -->
             <patternLatexMainFile>
-\A(
-(%! LMP( docClass=(?&lt;classMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
-\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
+\A
+(%! LMP( docClass=(?&lt;docClassMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
+(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
 %.*$|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
 \\input\s*\{[^{}]*\}|
@@ -234,7 +234,7 @@ article,book:chk,dvi,pdf,html,odt,docx,rtf,txt beamer:chk,pdf,txt
     and e.g. because for a site one needs all documents, 
     but with the software only the manual is shipped. 
     The empty string is the default, i.e. excluding no file. 
-    See #mainFilesIncluded
+    See 'mainFilesIncluded'
     -->
             <mainFilesExcluded>test useBeamerHandout</mainFilesExcluded>
 
@@ -244,11 +244,6 @@ Note that in the pom, <texPath />
 and even <texPath>    </texPath> represent the null-File. 
 The default value is null. -->
             <texPath/>
-
-
-
-
-
 
             <!-- Indicates whether after creating artifacts 
 						 and copying them to the output directory 'outputDirectoryFile' 

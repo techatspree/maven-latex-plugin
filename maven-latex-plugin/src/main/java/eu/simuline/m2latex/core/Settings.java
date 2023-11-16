@@ -283,10 +283,10 @@ public class Settings {
   private String patternLatexMainFile =
   """
   \\A\
-  (%! LMP( class=(?<docClassMagic>[^} ]+))?( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?\
+  (%! LMP( docClass=(?<docClassMagic>[^} ]+))?( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?\
   (\\\\RequirePackage\\s*(\\[(\\s|\\w|,)*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|\
   %.*$|\
-  \\\\PassOptionsToPackage\\s*\\{\\w+\\}\\s*\\{(\\w|-)\\}|\
+  \\\\PassOptionsToPackage\\s*\\{\\w+\\}\\s*\\{(\\w|-)+\\}|\
   \\\\input\\s*\\{[^{}]*\\}|\
   \\s)*\
   \\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<docClass>[^} ]+)\\}\
