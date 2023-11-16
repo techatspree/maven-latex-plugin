@@ -1221,15 +1221,9 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
 					"'; may bear latex main file. ");
 			return Optional.empty();
 		}
-    if (fileMatch.doesExprMatch()) {
-      return Optional.of(new LatexMainDesc(texFile, fileMatch.getMatcher()));
-    } else {
-      return Optional.empty();
-    }
-    
-    // return fileMatch.doesExprMatch()
-    //   ? Optional.of(new LatexMainDesc(texFile, fileMatch.getMatcher()))
-    //   : Optional.empty();
+    return fileMatch.doesExprMatch()
+      ? Optional.of(new LatexMainDesc(texFile, fileMatch.getMatcher()))
+      : Optional.empty();
     }
 
 	/**
