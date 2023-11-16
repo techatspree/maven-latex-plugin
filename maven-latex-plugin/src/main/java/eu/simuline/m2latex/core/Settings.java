@@ -1958,16 +1958,24 @@ public class Settings {
    */
   // TBD: ordering must be clarified 
   public SortedSet<Target> getTargets() throws BuildFailureException {
+    return getTargets(this.targets);
+  }
+
+  // TBD: parameter isTarget of readTargetChecked
+  static SortedSet<Target> getTargets(String targetsChunkStr)
+      throws BuildFailureException {
+
     // TreeSet is sorted. maybe this determines ordering of targets. 
     SortedSet<Target> targetsSet = new TreeSet<Target>();
-    if (this.targets.isEmpty()) {
+    if (targetsChunkStr.isEmpty()) {
       return targetsSet;
     }
-    String[] targetSeq = this.targets.split(",");
+    String[] targetSeq = targetsChunkStr.split(",");
     for (int idx = 0; idx < targetSeq.length; idx++) {
       assert targetSeq[idx] != null;
+      String targetStr = targetSeq[idx];
       // may throw BuildFailureException TSS04 and TSS11 
-      readTargetChecked(targetSeq[idx], targetsSet, this.targets, true);
+      readTargetChecked(targetStr, targetsSet, targetsChunkStr, true);
     } // for 
     return targetsSet;
   }
@@ -1997,10 +2005,10 @@ public class Settings {
    *    <li>TSS11 if target for targetStr already in targetsSet
    *    </ul>
    */
-  private void readTargetChecked(String targetStr,
-                                 Set<Target> targetsSet, 
-                                 String targetsChunksStr, 
-                                 boolean isTarget) throws BuildFailureException {
+  private static void readTargetChecked(String targetStr,
+                                        Set<Target> targetsSet, 
+                                        String targetsChunksStr, 
+                                        boolean isTarget) throws BuildFailureException {
     try {
       Target target = Target.valueOf(targetStr);
       // may not throw an IllegalArgumentException
@@ -2171,15 +2179,8 @@ public class Settings {
       }
 
       String targetsStr = chunk.substring(idxCol1 + 1);
-      targetsSet = new TreeSet<Target>();
-      // If emtpy, targetSet is correct already 
-      if (!targetsStr.isEmpty()) {
-        for (String targetStr : targetsStr.split(",")) {
-          // may throw BuildFailureException TSS04 and TSS11 
-          readTargetChecked(targetStr, targetsSet, chunk, false);
-        } // for 
-      } // if(!isEmpty)
-      // Here, targetSet is set correctly 
+      targetsSet = getTargets(targetsStr);
+
 
       classesStr = chunk.substring(0, idxCol1);
       //System.out.println("classesStr: '" + classesStr + "'");

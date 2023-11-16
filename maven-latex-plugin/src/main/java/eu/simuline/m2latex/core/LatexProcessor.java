@@ -246,6 +246,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * @param targetSet
    *    the set of targets to be created. 
    *    The target 'chk' does not create artifacts except the log file clg. 
+   *    The target set may have a single entry coming from the goal 
+   *    or, for goal {@link CfgMojo} may be given by {@link Settings#getTargets()}. 
    * @throws BuildFailureException 
    *    <ul>
    *    <li> TSS01 if 
@@ -323,23 +325,30 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 + " folder if exists. ";
 
         Set<Target> reachableTargets;
-        String docClass = desc.groupMatch(LatexMainParameterNames.docClass);
-        Set<Target> possibleTargets = docClasses2Targets.get(docClass);
-        if (possibleTargets == null) {
-          this.log.warn("WLP09: For file '"
-          + desc.texFile + "' targets are not restricted by unknown document class '"
-          + docClass + "'. ");
-          reachableTargets = targetSet;
+        String targetsMagic =
+            desc.groupMatch(LatexMainParameterNames.targetsMagic);
+        if (targetsMagic == null) {
+          String docClass = desc.groupMatch(LatexMainParameterNames.docClass);
+          Set<Target> possibleTargets = docClasses2Targets.get(docClass);
+          if (possibleTargets == null) {
+            this.log.warn("WLP09: For file '" + desc.texFile
+                + "' targets are not restricted by unknown document class '"
+                + docClass + "'. ");
+            reachableTargets = targetSet;
+          } else {
+            Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
+            unreachableTargets.removeAll(possibleTargets);
+            if (!unreachableTargets.isEmpty()) {
+              this.log.info("Skipping targets " + unreachableTargets
+                  + " for document '" + desc.texFile + "'. ");
+            }
+            reachableTargets = new TreeSet<Target>(targetSet);
+            reachableTargets.retainAll(possibleTargets);
+          }
         } else {
-        Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
-        unreachableTargets.removeAll(possibleTargets);
-        if (!unreachableTargets.isEmpty()) {
-          this.log.info("Skipping targets "
-           + unreachableTargets + " for document '" + desc.texFile + "'. ");
-        }
-
-        reachableTargets = new TreeSet<Target>(targetSet);
-        reachableTargets.retainAll(possibleTargets);
+          this.log.info("Found targets " + targetsMagic
+           + " for document '" + desc.texFile + "' in magic comment. ");
+          reachableTargets = Settings.getTargets(targetsMagic);
         }
 
         // may throw BuildFailureException TSS04
