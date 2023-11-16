@@ -1962,20 +1962,20 @@ public class Settings {
   }
 
   // TBD: parameter isTarget of readTargetChecked
-  static SortedSet<Target> getTargets(String targetsChunkStr)
+  static SortedSet<Target> getTargets(String targetsChunksStr)
       throws BuildFailureException {
 
     // TreeSet is sorted. maybe this determines ordering of targets. 
     SortedSet<Target> targetsSet = new TreeSet<Target>();
-    if (targetsChunkStr.isEmpty()) {
+    if (targetsChunksStr.isEmpty()) {
       return targetsSet;
     }
-    String[] targetSeq = targetsChunkStr.split(",");
+    String[] targetSeq = targetsChunksStr.split(",");
     for (int idx = 0; idx < targetSeq.length; idx++) {
       assert targetSeq[idx] != null;
       String targetStr = targetSeq[idx];
       // may throw BuildFailureException TSS04 and TSS11 
-      readTargetChecked(targetStr, targetsSet, targetsChunkStr, true);
+      readTargetChecked(targetStr, targetsSet, targetsChunksStr, TargetsContext.targetsSetting);
     } // for 
     return targetsSet;
   }
@@ -1995,10 +1995,10 @@ public class Settings {
    * @param targetsChunksStr
    *    The target string of all targets: <code>targetStr</code> is part. 
    *    This is needed for the message of the exception. 
-   * @param isTarget
-   *    specified whether <code>targetsChunksStr</code> is a target set; 
-   *    else it is a chunk. 
-   *    This affects also the message if an exception is thrown. 
+   * @param targetContext
+   *    specifies the context in which this method is invoked 
+   *    and contributes this context to the message of a thrown exception, if any. 
+   *    Else this value has no effect. 
    * @throws BuildFailureException
    *    <ul>
    *    <li>TSS04 if targetStr is invalid 
@@ -2008,22 +2008,20 @@ public class Settings {
   private static void readTargetChecked(String targetStr,
                                         Set<Target> targetsSet, 
                                         String targetsChunksStr, 
-                                        boolean isTarget) throws BuildFailureException {
+                                        TargetsContext targetContext) throws BuildFailureException {
     try {
       Target target = Target.valueOf(targetStr);
       // may not throw an IllegalArgumentException
       boolean isNew = targetsSet.add(target);
       if (!isNew) {
-        throw new BuildFailureException("TSS11: The "
-        + (isTarget ? "target set" : "chunk")
+        throw new BuildFailureException("TSS11: The " + targetContext.context()
         + " '" + targetsChunksStr
             + "' repeats target '" + target + "'. ");
       }
     } catch (IllegalArgumentException ae) {
       // Here, targetStr does not contain the name of a Target 
       assert Target.class.isEnum();
-      throw new BuildFailureException("TSS04: The "
-          + (isTarget ? "target set" : "chunk")
+      throw new BuildFailureException("TSS04: The " + targetContext.context()
           + " '" + targetsChunksStr
           + "' contains the invalid target '" + targetStr + "'. ");
     } // catch 
