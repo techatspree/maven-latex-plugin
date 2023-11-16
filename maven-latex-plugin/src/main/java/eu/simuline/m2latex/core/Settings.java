@@ -2143,12 +2143,11 @@ public class Settings {
   // TBD: invocation at the wrong place: thus is invoked for each target anew. 
   /**
    * 
-   * @param log
    * @return
    * @throws BuildFailureException
    *    TSS01, TSS11
    */
-  public Map<String, Set<Target>> getDocClassesToTargets(LogWrapper log)
+  public Map<String, Set<Target>> getDocClassesToTargets()
       throws BuildFailureException {
 
     Map<String, Set<Target>> result = new TreeMap<String, Set<Target>>();

@@ -285,7 +285,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     // may emit WSS01, WSS02 TBD: correct 
     // may throw BuildFailureException TSS04, TSS11, TBD: complete. 
-    Map<String, Set<Target>> docClasses2Targets = this.settings.getDocClassesToTargets(this.log);
+    Map<String, Set<Target>> docClasses2Targets =
+        this.settings.getDocClassesToTargets();
 
     // may throw BuildFailureException TSS01
     File texDir = this.settings.getTexSrcDirectoryFile();
