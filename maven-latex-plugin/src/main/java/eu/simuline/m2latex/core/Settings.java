@@ -2039,14 +2039,14 @@ public class Settings {
       // may not throw an IllegalArgumentException
       boolean isNew = targetsSet.add(target);
       if (!isNew) {
-        throw new BuildFailureException("TSS11: The target '" + targetsChunksStr
+        throw new BuildFailureException("TSS11: The target set '" + targetsChunksStr
           + "' in " + targetsContext.context()
           + " repeats target '" + target + "'. ");
       }
     } catch (IllegalArgumentException ae) {
       // Here, targetStr does not contain the name of a Target 
       assert Target.class.isEnum();
-      throw new BuildFailureException("TSS04: The target '" + targetsChunksStr
+      throw new BuildFailureException("TSS04: The target set '" + targetsChunksStr
           + "' in " + targetsContext.context()
           + " contains the invalid target '" + targetStr + "'. ");
     } // catch 
