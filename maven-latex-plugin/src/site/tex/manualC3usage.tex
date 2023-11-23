@@ -36,39 +36,98 @@ or when development finished at a stage.
 %TBD: add links to all sections 
 % also mention where the individual goals are treated. 
 
-\section{The source files}\label{sec:sources}
+\section{The source files and their directories}\label{sec:sources}
 
-The \LaTeX-files and also files included via \cmd{input}{} 
-are searched in the \emph{TEX source directory} and subdirectories recursively. 
-\index{TEX source directory}% chktex 24
+The \LaTeX-files and all other files contributing to creating documentation 
+from \LaTeX-files in the build process 
+are searched in the \emph{\TeX{} source directory} and subdirectories recursively. 
+\index{\TeX{} source directory}% chktex 24
 By default, this is \texttt{./src/site/tex}, 
-where ``\texttt{.}'' is the \emph{base directory} of this maven-project. 
+where ``\texttt{.}'' is the \emph{base directory} of this maven/ant-project. 
+This structure complies with conventions in maven-projects. 
 \index{base directory}% chktex 24
+
+
+
+START 
+
+Source files are files contributing to creating documentation 
+from \LaTeX-files in the build process 
+which are not themselves created in the build process. 
+They are searched in the \emph{\TeX{} source directory} and subdirectories recursively. 
+\index{\TeX{} source directory}% chktex 24
+By default, this is \texttt{./src/site/tex}, 
+where ``\texttt{.}'' is the \emph{base directory} of this maven/ant-project. 
+This structure complies with conventions in maven-projects. 
+\index{base directory}% chktex 24
+
+Note that, against the convention of maven-projects, 
+the \TeX{} source directory may contain also files created during the build process. 
+By default, after the build process is finished, they are removed again. 
+For some background on this see Section~\ref{subsec:sourceCreated}. 
+
+Source files may be TEX files treated in Section\ref{subsec:sourcesLatex} 
+and various kinds of graphic files described in Section~\ref{subsec:sourcesGraphic}, 
+but may include also 
+%
+\begin{itemize}
+\item 
+verbatim text embedded into TEX files with \pkg{verbatim}, 
+\item 
+BIB files typically describing a bibliography,  or, %TBD: support of biblatex 
+not yet supported, a glossary or that like, % TBD: check when supported, mention glossaries-extra
+\item 
+program files, either included as a listing by package \pkg{listings} 
+or executed via the package \pkg{pythontex}. \index{pythontex}% chktex 24
+\end{itemize}
+
+
+\subsection{\LaTeX{} main files and other latex files}\label{subsec:sourcesLatex}
+
+The TEX files are special in that only part of them is processed explicitly 
+invoking a compiler like \lualatex{} on them, 
+part is just included via \cmd{input} or \cmd{include}. 
 The \LaTeX-files to be compiled top level, 
-typically not inputted anywhere via \cmd{input}, 
 are called \emph{\LaTeX{} main files}. 
 As an example, 
 in the \emph{TEX source directory} of this software, 
 \texttt{manualLMP.tex} is a \LaTeX{} main file, 
-whereas the file \texttt{header.tex} is not, although also a \LaTeX-file. 
+whereas the file \texttt{header.tex} is not, although also a \LaTeX-file; 
+it is intended to be input in another TEX file, in this case \texttt{manualLMP.tex}. 
+
+
 % identification of the latex main file?
 \LaTeX{} main files are detected automatically 
 \index{latex main file}% chktex 24
 by fitting the regular expression \texttt{patternLatexMainFile} 
-described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+described in detail in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}, 
+and in the reference given there, 
+whereas the description here is quite high level. 
 
-Note that the pattern ends with the recommended \texttt{documentclass} 
-or with the outdated \texttt{documentstyle}. 
+As a first approximation, a latex main file is one invoking 
+the command \cmd{documentclass} 
+or with the outdated \cmd{documentstyle} both specifying the document class. 
+It must be excluded that the pattern matches a textual occurrence of \cmd{documentclass}, 
+which just occurs because the document is on \LaTeX{} 
+and mentions the command \cmd{documentclass}. 
+This is quite easy, since there is little allowed preceding these commands. 
+
+Consequently, the pattern matches the region from the start of the file 
+to and including the \cmd{documentclass} or \cmd{documentstyle} command. 
+
 This software is tested with document classes \texttt{article}, \texttt{book} 
 and \texttt{beamer}, which is for presentations as described in~\cite{Beamer}. 
 Currently, this software has not been tested on KOMA Scripts treated in~\cite{KomaAnl}. 
 
-For all document classes, it is recommended to load \pkg{nag} before 
-using 
+For all document classes, it is recommended to load \pkg{nag} 
+before \cmd{documentclass} using 
 %
 \begin{Verbatim}
   \RequirePackage[l2tabu, orthodox]{nag}
 \end{Verbatim}
+%
+Thus the pattern \texttt{patternLatexMainFile} 
+allows \cmd{RequirePackage} with its options preceding \cmd{documentclass}. 
 
 What is special for beamer presentations is, 
 that in general two documents with the same identifier, e.g.\@ title are created, 
@@ -97,6 +156,90 @@ The author recommends to stick to this convention.
 As an example document may serve~\cite{PresBeamer} 
 which is a presentation of this software including the handout 
 and illustrates the use of the beamer class. 
+Observe, that both documents use \texttt{header.tex} injected 
+as described in Section~\ref{subsec:header} loading various packages. 
+To avoid option clash, document class \texttt{beamer} must specify \texttt{hyperref=destlabel}. 
+Also, all documents but beamer documents 
+must specify the paper size globally via \cmd{documentclass}. 
+Beamer documents may specify accordingly \texttt{aspectratio}. 
+All this must be allowed for \LaTeX{} main files. 
+
+It also makes sense to allow comments, 
+i.e. text from unescaped \texttt{\%} to the end of the line, 
+and also magic comments. 
+A magic comment, as all comments, is invisible to the \LaTeX{} compilers 
+but give hints to more high level tools 
+like IDEs or build tools like this \LaTeX{} builder. 
+Typically, it is a comment comprising a whole line and starting with \texttt{\% !}, 
+maybe followed by an identifier of the tool it refers to 
+or by an identifier referring to TEX files in general. 
+For example latex workshop and \TeX{}shop support the magic comment \texttt{\% !TEX root} 
+and this must be essentially in the first line. 
+The magic comments for this tool may be preceded by other magic comments 
+and starts with \texttt{\% !LMP} which is short for ``latex maven plugin`'. 
+This is not completely correct but easy to remember. 
+
+
+Since the pattern \texttt{patternLatexMainFile} may never be appropriate for all situations 
+to match the document class in \cmd{documentclass} 
+and not all users are familiar with regular expressions to adapt by need, 
+marking a \LaTeX{} main file by specifying its document class like in 
+\texttt{\% !LMP class=\dots} is an easy workaround. 
+
+As will be explained in detail in Section~\ref{sec:outputFormats}, 
+the explicit document class is only used 
+to restrict the targets for which to compile a \LaTeX{} main file. 
+The targets can be specified for each \LaTeX{} main file individually 
+using \texttt{\% !LMP targets=\dots}. 
+In fact specifying targets marks a TEX file as a \LaTeX{} main file also 
+making specification of the class as \texttt{\% !LMP class=\dots} superfluous. 
+Nevertheless, \texttt{\% !LMP class=\dots\ targets=\dots} is allowed. 
+
+This \LaTeX{} builder is designed to cooperate with other tools. 
+The magic comments of the other tools as described in various places in Section~\ref{sec:devel} 
+on document development and in particular in Section~\ref{subsec:develLatexmk}. 
+Thus, if appropriate, also magic comments of other tools are read, 
+except Auc\TeX{}, because this places magic comments at the end of file, 
+forcing the build software to read all. 
+All other tools including latex workshop for VS Code 
+support a subset of what is 
+\href{http://transit.iut2.upmf-grenoble.fr/doc/texstudio/html/usermanual_en.html#TEXCOM}%
+{defined by \TeX{}studio}. 
+From all magic comments in the context of signifying \LaTeX{} main files 
+only \texttt{program} and \texttt{root} are relevant. 
+If a root is given, then the file is no \LaTeX{} main file 
+and, provided the feature is used, also the converse is true. 
+Since this software shall not rely on further tooling, 
+\texttt{root} is not used. 
+
+In contrast, magic comments like \texttt{\% !TeX program=\dots} 
+specifying the \LaTeX{} converter signify a \LaTeX{} main file in any case. 
+It overwrites also the converter 
+given in the general setting \texttt{latex2pdfCommand} 
+specified in Table~\ref{tab:paramLatex2pdf} on page~\pageref{tab:paramLatex2pdf}. 
+A magic comment specifying the converter does not specify, 
+neither the target directly nor via the document class. 
+
+
+The pattern \texttt{patternLatexMainFile} matches comments and in particular magic comments, 
+but it is written also to extract the parameters in magic comments described above 
+as it extracts the document class from the \cmd{documentclass} command. 
+In fact more than that: 
+It matches if the magic comment indicates 
+that the file under consideration is a \LaTeX{} main file 
+or if the presence of a \cmd{documentclass} command signifies this. 
+
+If the magic comment of this tool specifies the document class or the target set, 
+it is considered a \LaTeX{} main file, even if no \texttt{documentclass} is matched. 
+In fact, it does not make sense to specify both in the magic comment, 
+the document class and the target set, 
+because the document class is used only to determine the target set. 
+Typically, the document class is given as a magic comment, 
+if it is not easy to get the pattern for the specific document right, 
+maybe because the user is not so familiar with the technique, so it is a fallback. 
+In contrast, the target set is given in the magic comment 
+if it shall be specified individually for the given \LaTeX{} main file. 
+
 
 Note that documents of the beamer class can essentially only be compiled into a PDF, 
 and maybe further to a TXT file. 
@@ -114,11 +257,16 @@ on page~\pageref{tab:WarnLPP} is displayed.
 
 
 
-The included files may be again be \LaTeX-files, but also bibliography files, 
-listings included by package \pkg{listings}, verbatim text included with \pkg{verbatim} 
-and may be even code files to be executed via the package \pkg{pythontex}. 
-\index{pythontex}% chktex 24
-The great bulk of input files however, are graphic files in various formats. 
+
+
+
+\subsection{Source graphic files}\label{subsec:sourcesGraphic}
+
+The great bulk of file types occurring as sources, 
+are graphic files in various formats. 
+Note that this section is not about intermediate file types like PDF or MPS 
+used to include the original file types into the target. 
+
 As regards the way the according files are included in \LaTeX-files, 
 there are the following kinds of graphic formats, 
 all included in the TEX source directory. 
@@ -197,34 +345,55 @@ to read in code files, e.g.~in python directly.
 % a link shall be used.
 %TBC: True???
 
-Note that unlike former versions of this software, 
+
+
+\subsection{Created files in the \TeX{} source directory}\label{subsec:sourceCreated}
+
+Note that against maven convention and unlike former versions of this software, 
 the current version does not create a working directory 
 by cloning the TEX source directory. 
 Instead, it operates directly on the TEX source directory 
-also creating intermediate files.
+also creating intermediate files, 
+deleting them again by default after the build process.
 The advantage of processing that way is,
 that this allows cooperation between this software
 and other tool chains which are better suited for developing latex files.
-Details are described in Section~\ref{sec:devel}.
+Details are described in Section~\ref{sec:devel} an in particular in Section~\ref{subsec:develLatexmk}.
 
 The downside is that a file residing in the TEX source directory 
-risks being overwritten by this software, 
+risks being overwritten or deleted by this software, 
 if it does not stick to the rules. 
 The rules are simple: 
-For each graphic file, being transformed, 
+%
+\begin{itemize}
+\item
+For each graphic file being transformed, 
 i.e.~of types~\ref{it:transExp} or~\ref{it:transImp} above, 
 additional files are created with the same name up to the suffix. 
 Thus, for these graphic files no file with the same name 
 up to the ending is allowed. 
-The same is true for the \LaTeX{} main files.
+\item
+For \LaTeX{} main files more general files are created, 
+but they all must match those in pattern \texttt{patternCreatedFromLatexMain} 
+described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+So it is save to add files not matching this pattern. 
+\end{itemize}
 
-Besides the \LaTeX-files and the graphics files
-there is a third kind of file supported:
-Bibliographies in bib-files.
-This software treats them automatically. 
+
+Note Section~\ref{sec:injFiles}  which is on goal \texttt{inj} 
+injecting diles in the \TeX{} source directory and 
+Section~\ref{subsec:develGraph} on goal \texttt{grp} 
+processing graphic files which creates intermediate files therein also. 
+
+To get rid of intermediate files, there is a separate goal \texttt{clr} 
+described in Section~\ref{subsec:develClear}. 
+
+
 
 
 \section{Exporting in various formats and checking sources}\label{sec:outputFormats}
+
+% TBD: magic comment to specify converter name and its options. 
 
 
 After having added the configuration of the plugin to the \texttt{pom.xml},
@@ -233,14 +402,17 @@ it can be used directly invoking maven through
 \texttt{mvn latex:cfg}. 
 Here \texttt{latex} is the (short) name of the plugin 
 and \texttt{cfg} is the goal. 
-It can also be interpreted as \texttt{mvn $<$source$>$:$<$target$>$}: 
-The source files are in \texttt{latex}-format and the target 
+It can also be interpreted as \texttt{mvn $<$source$>$:$<$targets$>$}: 
+The source files are in \texttt{latex}-format and the \texttt{targets} 
 are read from the \emph{configuration} in the pom 
 (\emph{configuration} is what \texttt{cfg} stands for) 
 which is illustrated in Listing~\ref{lst:coordsConfig}. 
+For a detailed description of the setting \texttt{targets} 
+see Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+Here only an overview is given. 
 % TBD: clarify what about the ant task 
 
-By default, the targets are \texttt{cfg}, \texttt{pdf} and \texttt{html}. 
+By default, the targets configured are \texttt{chk}, \texttt{pdf} and \texttt{html}. 
 The following Listing~\ref{lst:targetsAll} shows a configuration 
 with the full range of output formats including in addition 
 the OpenOffice document format \texttt{odt}, 
@@ -274,7 +446,8 @@ caption={Configuration with full range output formats}]
 \end{lstlisting}
 
 Somehow special is the target \texttt{chk} 
-which is mere checking without resulting output file. 
+which is mere checking by invoking \texttt{chktex} 
+without resulting output file. 
 It just displays a warning if a rule is violated. 
 
 The resulting files in the given output formats 
@@ -295,6 +468,38 @@ In particular, checking is treated separately in Section~\ref{subsec:develCheck}
 Note that the \texttt{-X} switch activates debugging 
 which results in a more verbose output. 
 Example: \texttt{mvn -X latex:cfg}. 
+
+Although the possible targets can be configured globally 
+via the setting \texttt{targets}, 
+the possible targets may depend on the document class of the latex main file. 
+At time of this writing, 
+all document classes in preferred usage as defined in Chapter~\ref{chap:tests} 
+support all targets with one exception: 
+Besides checking (target \texttt{chk}) for obvious reasons 
+the beamer class directly supports only target \texttt{pdf} 
+and because texts are created from PDF files, also target \texttt{txt}. 
+The mapping from document classes to allowed targets 
+is given in setting \texttt{docClassesToTargets} given in 
+Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+This parameter restricts the targets given in parameter \texttt{targets}. 
+As explained in detail in  Section~\ref{subsec:sourcesLatex}, 
+if a document class cannot be identified by the command \texttt{documentclass} 
+or the outdated \texttt{documentstyle}, 
+it can be specified by a magic comment directly. 
+
+Finally, the targets can be specified individually for each latex main file 
+using a magic comment as described in Section~\ref{subsec:sourcesLatex}. 
+A target specification in a magic comment overwrites all settings in 
+\texttt{targets} and in \texttt{docClassesToTargets}. 
+If a magic comment specifies the targets directly, 
+the document class need not be known. 
+In particular, a magic comment only specifying targets identifies already a \LaTeX{} main file 
+as specified in Section~\ref{subsec:sourcesLatex}. 
+
+As a magic comment can be used to specify the target formats for a latex main file individually, 
+Section~\ref{subsec:sourcesLatex} shows how to specify the latex converter to be used for this file 
+overwriting the general setting \texttt{latex2pdfCommand} in the pom 
+given in Table~\ref{tab:paramLatex2pdf} on page~\pageref{subsec:sourcesLatex}. 
 
 % The code shows that allowed is only what is defined in enum Target. 
 % Thus chk, which is a goal, is not output format. 
@@ -350,15 +555,15 @@ and so cleanup is frequently set to false.
 In this case, cleanup must be done in a separate goal, 
 described in Section~\ref{subsec:develClear}. 
 
-By default, the goal \texttt{clr} 
-is also executed in maven's \texttt{clear} life-cycle. 
+% By default, the goal \texttt{clr} 
+% is also executed in maven's \texttt{clear} life-cycle. 
 
-There is an according ant-task \texttt{latex:cfg} 
-which can be invoked via \texttt{ant -d latex:cfg}. 
-FIXME\@: ant  \texttt{latex:clr} has duplicate parameters. 
-This can be fixed only by properties. 
-Another problem is, to provide a complete subset of parameters 
-which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively. 
+% There is an according ant-task \texttt{latex:cfg} 
+% which can be invoked via \texttt{ant -d latex:cfg}. 
+% FIXME\@: ant  \texttt{latex:clr} has duplicate parameters. 
+% This can be fixed only by properties. 
+% Another problem is, to provide a complete subset of parameters 
+% which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively. 
 
 \section{Checking versions of converters}\label{sec:chkVersions}
 
@@ -795,25 +1000,26 @@ and pressing shift plus mouse left key.
 This software supports forward and backward search 
 in that it offers injection of a header file \texttt{header.tex} 
 which sets \texttt{synchtex=1} 
-and offers injection of an install script \texttt{instVScode4tex.sh} 
+and offers injection of an installation script \texttt{instVScode4tex.sh} 
 which allows installation of the relevant extensions of VS Code. 
 \medskip
 
 
-Besides the separation of editor and viewer the time delay between writing and reading 
+Besides the separation of editor and viewer, 
+the time delay between writing and reading 
 disturbs document development. 
 \LaTeX{} has a way to speed up compilation: 
 compiling only parts of a longer document 
 which are under construction and which may thus change. 
 These parts must be in separate TEX files 
-and must be included with \texttt{\textbackslash include} 
-not just input using \texttt{\textbackslash input}. 
-With the command \texttt{\textbackslash includeonly} 
+and must be included with \cmd{include} 
+not just input using \cmd{input}. 
+With the command \cmd{includeonly} 
 one can specify the files to be recompiled. 
 This works particularly well for document class \texttt{book} 
 when including chapters because each chapter starts with a new page, 
 so, page breaks are the same whether 
-compiling a chapter with \texttt{\textbackslash includeonly} 
+compiling a chapter with \cmd{includeonly} 
 or compiling the whole document. 
 
 This plugin supports partial compilation 
@@ -892,9 +1098,7 @@ To understand the build process from scratch,
 erase all created files by \texttt{latexmk -C} 
 or all intermediate files by \texttt{latexmk -c}, which does not erase the resulting PDF file, 
 before using the basic tools. 
-
-
-
+\medskip
 
 
 
@@ -919,9 +1123,10 @@ This is appropriate for a maven plugin but destroys log files containing vital i
 if the build goes wrong. 
 Still if a file is interesting it may be created by touch or by some basic latex tool 
 as \lualatex{} or \texttt{makeindex} 
-and then a build done by this plugin will pertain that file. 
+and then a build done by this plugin will pertain the file updated by the build process. 
 For document development, 
-the parameter \texttt{cleanUp} can be set to \texttt{false} 
+the parameter \texttt{cleanUp}, which is \texttt{true} by default, 
+can be set to \texttt{false} 
 so that no file in the latex directory is deleted. 
 
 So, it is clear that this plugin is for final global build with a lot of supervision 

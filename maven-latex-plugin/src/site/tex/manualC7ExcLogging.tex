@@ -336,8 +336,11 @@ but if it exists and is a regular file, it cannot be created anymore.
                               & \texttt{\footnotesize contains the invalid target '\$targetStr'.  } \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
-Indicates that a target in a target set given by setting \texttt{\$target} 
-or in a chunk in setting \texttt{\$docClassesToTargets} is unknown, e.g.\@ because it is misspelled. 
+Indicates that a target \texttt{\$targetStr} in a target set given in a context \texttt{\$context} 
+is unknown, e.g.\@ because it is misspelled. 
+The context is either the setting \texttt{\$targets} 
+or the target set in a chunk of setting \texttt{\$docClassesToTargets} 
+or in a magic comment specifying \texttt{\$targets}. 
 
 For a description of the settings see Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
 See also the Exception \texttt{TSS11} in this table. 
@@ -407,12 +410,16 @@ which are not excluded, i.e.~listed in configuration in section \texttt{converte
  \end{minipage}
  } \\
  \texttt{\footnotesize TSS11}
- & \texttt{\footnotesize The target set/chunk '\$targetsChunkStr' repeats target '\$target'. } \\
+ & \texttt{\footnotesize The target set '\$targetsStr' in \$context } \\
+ & \texttt{\footnotesize repeats target '\$target'.  } \\
  \multicolumn2{|l|}{
  \begin{minipage}{0.95\linewidth}
- Indicates that a target in a target set given by setting \texttt{\$target} 
- or in a chunk in setting \texttt{\$docClassesToTargets} is repeated, 
- despite sets contain elements only once. 
+ Indicates that a target \texttt{\$targetStr} in a target set given in a context \texttt{\$context} 
+ is repeated,  despite sets contain elements only once. 
+ The context is either the setting \texttt{\$targets} 
+ or the target set in a chunk of setting \texttt{\$docClassesToTargets} 
+ or in a magic comment specifying \texttt{\$targets}. 
+ 
 
 For a description of the settings see Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
 See also the Exception \texttt{TSS04} in this table. 

@@ -602,7 +602,7 @@ The preferred usage is defined as follows:
   In particular, the latex processor is \lualatex. 
   \item Document classes are \texttt{book}, \texttt{article} and \texttt{beamer}. 
   For beamer documents, preferred usage are both, the presentation and the handout 
-  as described in Section~\ref{sec:sources}. 
+  as described in Section~\ref{subsec:sourcesLatex}. 
   Note that, unlike most other aspects of preferred usage, 
   this is not tested through this manual 
   but with the beamer presentation and handout given by~\cite{PresBeamer}. 
@@ -757,7 +757,13 @@ Nevertheless, close to release for site creation,
 In \texttt{2.2.1} then \texttt{2.2.0} can be used for site creation invoking \texttt{bib2gls} directly. 
 
 
-
+Note that the test concept based on preferred usage has a considerable weakness: 
+It cannot test warnings, errors and exceptions 
+because they are not preferred usage. 
+On the other hand, it is an important design goal, 
+that the result of this software is trustable if no warning, error or exception occurs. 
+This requires extensive tests also on imperfect runs. 
+These must be supplemented in future. 
 
 FIXME\@: this chapter describes the tests to be performed. 
 

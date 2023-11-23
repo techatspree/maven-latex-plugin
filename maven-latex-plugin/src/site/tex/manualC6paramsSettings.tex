@@ -256,14 +256,19 @@ and of course they are not allowed to be used.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern to be applied to the beginning of the contents of TEX-files 
-which identifies a \LaTeX{} main file and which extracts the document class 
-if the file is really a \LaTeX{} main file. 
-The default value is chosen to match quite exactly the start of 
+which identifies a \LaTeX{} main file, i.e. a file to be compiled. 
+If the file is really a \LaTeX{} main file, 
+the pattern contributes to finding the targets for compilation. 
+This may be done either directly via a magic comment 
+or via the document class. 
+
+The default value for the pattern is chosen to match quite exactly the start of 
 the \LaTeX{} main files. 
 Here we assume that the latex main file should contain 
 the declaration ``\cmd{documentclass}'' 
 or the old-fashioned ``\cmd{documentstyle}'' 
 preceded by a few constructs and followed by the document class. 
+Among the few constructs are also comments and in particular magic comments. 
 
 Strictly speaking, a tight match is not necessary, 
 only separation of \LaTeX{} main files from other files is 
@@ -418,6 +423,9 @@ may create files with names matching its own patterns
 and so any new package may break completeness. 
 Nevertheless, the default value aims completeness 
 while be tight enough not to match names of files not created. 
+% TBD: link to injected header.tex also backlink: 
+% if header.tex is injected, and no further package is loaded, 
+% then this guarantees that this pattern is appropriate 
 
 If the current default value is not appropriate, 
 please overwrite it in the configuration 
@@ -471,11 +479,17 @@ For further description see Section~\ref{sec:injFiles}.
 \subsection{The parameter \texttt{patternLatexMainFile}}%
 \label{subsec:patternLatexMainFile}
 
-The default pattern for identifying a \LaTeX{} main file 
-is given by Listing~\ref{lst:patternLatexMainFile}.
+This pattern identifies files to be compiled, the so called \LaTeX{} main files, 
+and contributes to finding the targets for which they are compiled. 
+
+The default pattern for identifying a 
+i.e. a file to be compiled 
+and for
+is given by Listing~\ref{lst:patternLatexMainFile}. 
+
 
 \lstinputlisting[language=XML, basicstyle=\scriptsize,
-linerange={157-162}, % chktex 8 TBD: why is this nost covered by .chktexrc? 
+linerange={166-173}, % chktex 8 TBD: why is this not covered by .chktexrc? 
 breaklines,
 %float,
 captionpos=b, label={lst:patternLatexMainFile},
@@ -483,22 +497,48 @@ caption={The default pattern of the latex main file in a form as in a pom config
 {../../main/resources/rawPoms/pom4pdf.xml}% chktex 11 
 
 % \begin{Verbatim}[fontsize=\scriptsize]
-% \A(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
-% %.*$|
-% \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
-% \\input\s*\{[^{}]*\}|
-% \s)*
-% \\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;class&gt;[^}]+)\}
+  % \A
+  % (%\s*!\s*LMP( docClass=(?&lt;docClassMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
+  % (\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
+  % %.*$|
+  % \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
+  % \\input\s*\{[^{}]*\}|
+  % \s)*
+  % \\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;docClass&gt;[^} ]+)\}
 % \end{Verbatim}
 
-In view of the last line, this means that the latex main file is the one 
-containing \cmd{documentclass} for modern classes 
-and \cmd{documentstyle} for old-fashioned ones. 
-This is followed by optional options and above all by a named group \texttt{class} 
-matching the document class. 
-Matching the class name is the sole hard requirement. 
+The first line, the \texttt{\textbackslash A} indicates the start of the file. 
 
-The \cmd{documentclass} or \cmd{documentstyle} 
+The most important line in this pattern is the last one. 
+Taking its core alone, it means that a \LaTeX{} main file is one 
+containing \cmd{documentclass} for modern documents 
+and \cmd{documentstyle} for old-fashioned ones. 
+This is followed by optional options and above all by a named capturing group \texttt{docClass} 
+matching the document class. 
+
+The next important line is the second one, describing a magic comment. 
+A magic comment is a comment hiding information from one tool in a comment 
+but exposing it to another tool 
+Whereas comments start with \texttt\%, magic comments typically start with \texttt{\%!}, 
+followed by (a blank with) an identifier for the tool they are significant for. 
+In particular, the identifier for this \LaTeX{} builder is \texttt{LMP}, 
+which is short for latex maven plugin, which is not entirely correct but intuitive. 
+% TBD eliminate this duplicate. 
+As the command \cmd{documentclass}, 
+the magic comment can specify the document class with a capturing group 
+named \texttt{docClassMagic}. 
+It can also specify a target set specific for the document 
+via the capturing group \texttt{docClassMagic}. 
+As described in Section~\ref{subsec:sourcesLatex}, 
+the pattern \texttt{patternLatexMainFile} 
+must specify all these three capturing groups. 
+Whereas in regular expressions group names are enclosed between \texttt< and \texttt>, 
+these symbols must be escaped writing \texttt{\&lt;} and \texttt{\&gt;}, 
+respectively. 
+
+
+Besides the magic comments which are the start of the pattern, 
+\cmd{documentclass} or \cmd{documentstyle} 
 may be preceded only by 
 %
 \begin{itemize}
@@ -507,7 +547,7 @@ the command \cmd{RequirePackage},
 \item
 the command \cmd{PassOptionsToPackage}, 
 \item
-comment lines, 
+comment lines even magic comments, although for this tool they are ignored. 
 \item
 \cmd{input}, and 
 \item
@@ -541,7 +581,7 @@ because incorrect files are detected by the \LaTeX{} converter anyway.
 Instead, among the correct files the latex main files shall be detected. 
 Also, if one wants to have a solution not relying on a tool-chain 
 not even on \LaTeX{} tools, 
-One could use a convention, e.g.~marking main files with first line \texttt{\%~!MAIN FILE}, 
+One could use a convention, e.g.~marking main files with first line \texttt{\%~!MAIN FILE}, %TBD: eliminated: not typical for magic comments
 which makes parsing quite fast. 
 But this technique requires the user to declare main files explicitly. 
 
@@ -555,7 +595,7 @@ just because it deals with document classes,
 whereas the second alternative is inconvenient 
 and does not work if a file has two potential latex main files 
 as is suggested for \texttt{beamer} presentations in Section~\ref{sec:sources} 
-and realised in~\cite{PresBeamer}. 
+and realized in~\cite{PresBeamer}. 
 
 Emacs with package auctex, uses an alternative
 to the current technique to determine the latex main files: 
@@ -986,12 +1026,14 @@ Parameter        & Default  \\
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The \LaTeX{} command to create above all a PDF-file with. 
-Further formats are dvi and xdv and also other formats based on these. 
+Further formats are DVI and XDV and also other formats based on these. 
 Expected values are \lualatex, \xelatex{} and \pdflatex. 
+Caution: This setting may be overwritten for individual \LaTeX{} main files 
+using magic comments as described in Section~\ref{subsec:sourcesLatex}. 
 
 Note that for \xelatex{} dvi mode 
-(creating xdv-files instead of dvi-files) is not supported, 
-even not creating pdf or other formats via xdv. 
+(creating xdv-files instead of DVI-files) is not supported, 
+even not creating PDF or other formats via XDV. 
 See also the according options \texttt{\$latex2pdfOptions} and \texttt{\$pdfViaDvi}. 
 In particular, this maven plugin does not allow goal \texttt{dvi} and related 
 for \xelatex. 
