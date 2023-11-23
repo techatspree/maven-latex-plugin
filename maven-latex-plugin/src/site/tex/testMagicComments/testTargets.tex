@@ -1,0 +1,16 @@
+% !LMP docClass=bla targets=chk,html
+\documentclass{article}
+\usepackage{iftex}
+
+\begin{document}
+Tests magic comment: exclude target \texttt{pdf} individually. 
+If this is not excluded, an invisible \texttt{\textbackslash{}GenericError} 
+in an \texttt{\textbackslash{}ifpdf} construction throws an error leading to an error return code 
+of the late processor. 
+\ifpdf%
+  \GenericError{...}{Found this document to be converted into a PDF, although this is excluded}{}{} % chktex 11
+\else
+\fi
+If this does not work, a diff is initiated, but there is no comparison file, 
+which would result in an error. 
+\end{document}
