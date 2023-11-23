@@ -164,7 +164,7 @@ In any case, matching of the group named 'class' must be retained
 so that the document class is matched.  -->
             <patternLatexMainFile>
 \A
-(%! LMP( docClass=(?&lt;docClassMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
+(%\s*!\s*LMP( docClass=(?&lt;docClassMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
 (\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
 %.*$|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
@@ -515,13 +515,15 @@ which are added automatically.
 The default value is '-v'. -->
             <ebbOptions>${ebbOptions}</ebbOptions>
 
-            <!-- The LaTeX command to create above all a pdf-file with, 
-              but also dvi and other formats based on these. 
+            <!-- The LaTeX command to create above all a PDF-file with. 
+Further formats are DVI and XDV and also other formats based on these. 
 Expected values are 'lualatex' 'xelatex', and 'pdflatex'. 
+Caution: This setting may be overwritten for individual LaTeX main files 
+using magic comments as described in the manual. 
 
 Note that for 'xelatex' dvi mode 
-(creating xdv-files instead of dvi-files) is not supported, 
-even not creating pdf or other formats via xdv. 
+(creating XDV-files instead of DVI-files) is not supported, 
+even not creating pdf or other formats via XDV. 
 See also the according options '$latex2pdfOptions' and '$pdfViaDvi'. 
 In particular, this maven plugin does not allow goal 'dvi' and related 
 for 'xelatex'. 
