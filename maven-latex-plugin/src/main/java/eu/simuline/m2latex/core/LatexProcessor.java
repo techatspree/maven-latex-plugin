@@ -328,14 +328,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
         String targetsMagic =
             desc.groupMatch(LatexMainParameterNames.targetsMagic);
         if (targetsMagic == null) {
+          // Here, the targets are not given by a magic comment 
+          // Thus they come from the setting targets 
+          // combined with the targets giben by docClasses2Targets and docClass 
           String docClass = desc.groupMatch(LatexMainParameterNames.docClass);
           Set<Target> possibleTargets = docClasses2Targets.get(docClass);
           if (possibleTargets == null) {
+            // Here, to docClass no restriction is attached 
             this.log.warn("WLP09: For file '" + desc.texFile
                 + "' targets are not restricted by unknown document class '"
                 + docClass + "'. ");
             reachableTargets = targetSet;
           } else {
+            // Here, targetSet must be intersected with the targets possible for the docClass 
             Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
             unreachableTargets.removeAll(possibleTargets);
             if (!unreachableTargets.isEmpty()) {
@@ -1103,16 +1108,19 @@ public class LatexProcessor extends AbstractLatexProcessor {
    * @see #runLatex2html(LatexProcessor.LatexMainDesc)
    * @see Target#html
    */
+  // TBD: check: is it really sensible to do preprocessing? 
+  // TBD: also inconsistency: preprocessing with lualatex, xelatex, pdflatex
+  // whereas processing is done with htlatex and with xtlatex... no lualatex involved. 
   void processLatex2html(LatexMainDesc desc) throws BuildFailureException {
     this.log.info("Converting into html: LaTeX file '" + desc.texFile + "'. ");
     // may throw BuildFailureException TEX01,
     // log warning EAP01, EAP02, WLP04, WLP05, WAP04, WLP02, WFU03,
     // EEX01, EEX02, EEX03, WEX04, WEX05
-    preProcessLatex2dev(desc, this.settings.getPdfViaDvi());
+    preProcessLatex2dev(desc, LatexDev.devViaDvi(true));
     // may throw BuildFailureException TEX01,
     // log warning EEX01, EEX02, EEX03, WEX04, WEX05
     runLatex2html(desc);
-  }
+    }
 
   /**
    * Runs conversion of <code>texFile</code>
