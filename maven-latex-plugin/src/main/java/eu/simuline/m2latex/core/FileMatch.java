@@ -41,6 +41,7 @@ public class FileMatch {
 
   static class FileMatchWithMatcher extends FileMatch {
 
+    //private final MatchResult matcher;
     private final Matcher matcher;
 
     FileMatchWithMatcher(Matcher matcher) {
@@ -57,9 +58,9 @@ public class FileMatch {
     }
 
     Matcher getMatcher() {
+      //MatchResult getMatchResult() {
       return this.matcher;
     }
-
   } // class FileMatchWithMatcher 
 
   private final static FileMatch UNREADABLE = new FileMatch();
@@ -133,7 +134,9 @@ public class FileMatch {
    * @throws IllegalArgumentException
    *    If no IllegalStateException but there is no group matched. 
    */
+  //MatchResult getMatchResult() {
   Matcher getMatcher() {
     throw new IllegalStateException("No group matched. ");
   }
+
 }
