@@ -59,3 +59,4 @@
 
 
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QWilberd van der Kallen\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qmaybe followed by an identifier of the tool it refers to.\\E$"}
