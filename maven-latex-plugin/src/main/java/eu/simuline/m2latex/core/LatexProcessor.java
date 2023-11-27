@@ -230,7 +230,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     //       + "' targets are not restricted by unknown document class. ");
     //   reachableTargets = targetSet;
     // } else {
-    Set<Target> reachableTargets;
+
     String docClass = desc.getDocClass();
     Set<Target> possibleTargets = docClasses2Targets.get(docClass);
     if (possibleTargets == null) {
@@ -238,7 +238,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
       this.log.warn("WLP09: For file '" + desc.texFile
           + "' targets are not restricted by document class '" + docClass
           + "'. ");
-      reachableTargets = targetSet;
+      return targetSet;
     } else {
       // Here, targetSet must be intersected with the targets possible for the docClass 
       Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
@@ -247,11 +247,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
         this.log.info("Skipping targets " + unreachableTargets
             + " for document '" + desc.texFile + "'. ");
       }
-      reachableTargets = new TreeSet<Target>(targetSet);
+      Set<Target> reachableTargets = new TreeSet<Target>(targetSet);
       reachableTargets.retainAll(possibleTargets);
+      return reachableTargets;
     }
     //}
-    return reachableTargets;
   }
 
   // TBD: rework 
