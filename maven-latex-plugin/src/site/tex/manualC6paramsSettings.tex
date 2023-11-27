@@ -479,17 +479,59 @@ For further description see Section~\ref{sec:injFiles}.
 \subsection{The parameter \texttt{patternLatexMainFile}}%
 \label{subsec:patternLatexMainFile}
 
-This pattern identifies files to be compiled, the so called \LaTeX{} main files, 
-and contributes to finding the targets for which they are compiled. 
+Before reading the details given in this section, 
+the user is advised to at least skim 
+through Section~\ref{subsec:sourcesLatex} and \ref{sec:outputFormats} 
+for intuitive understanding. 
 
-The default pattern for identifying a 
-i.e. a file to be compiled 
-and for
+The regular expression pattern \texttt{patternLatexMainFile} 
+matches exactly the files to be compiled, 
+the so called \LaTeX{} main files, and for latex main files 
+it extracts the following pieces of information, 
+all by named capturing groups which have the form \texttt{(!<name>pattern)} 
+but in the pom \texttt{<} and \texttt{>} must be escaped 
+and so capturing groups take the form \texttt{(!\&lt;name\&gt;pattern)}. 
+The capturing group named \texttt{docClass} extracts the document class 
+from the command \cmd{documentclass}. 
+If \texttt{patternLatexMainFile} matches, 
+then also capturing group \texttt{docClass} must match, 
+so that for latex main files the document class is always known. 
+All other capturing groups are defined though magic comments. 
+They may not match anything, 
+which means that the according piece of information is not available. 
+
+Whether a capturing group must match or not, 
+the regular expression pattern \texttt{patternLatexMainFile} 
+must contain each of the following named capturing groups, 
+because the software asks for it. 
+
+\emph{The above conditions are to be satisfied also for any pattern defined by the user. }
+
+\begin{description}
+  \item[docClass] the document class given by the command \cmd{documentclass}. 
+  \item[programMagic] the \LaTeX{} converter to be used 
+  specifically for the according document. 
+  This is optional and is intended to be specified only 
+  if the required converter for the given document deviates 
+  from what is specified 
+  globally as setting \texttt{latex2pdfCommand} described in 
+  Table~\ref{tab:paramLatex2pdf} on page~\pageref{tab:paramLatex2pdf}. 
+  \item[targetsMagic] the targets to be built. 
+  This is optional and is intended to be specified only 
+  if the targets for the given document deviate from what is specified 
+  globally as setting \texttt{targets} and \texttt{docClassesToTargets}, 
+  both given in 
+  Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+\end{description}
+
+The default pattern for identifying \LaTeX{} main files 
+and to extract the above pieces of information 
 is given by Listing~\ref{lst:patternLatexMainFile}. 
 
 
 \lstinputlisting[language=XML, basicstyle=\scriptsize,
-linerange={166-173}, % chktex 8 TBD: why is this not covered by .chktexrc? 
+numbers={left}, %stepnumber={5},
+linerange={166-176}, % chktex 8 TBD: why is this not covered by .chktexrc? 
 breaklines,
 %float,
 captionpos=b, label={lst:patternLatexMainFile},
@@ -507,39 +549,36 @@ caption={The default pattern of the latex main file in a form as in a pom config
   % \\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;docClass&gt;[^} ]+)\}
 % \end{Verbatim}
 
-The first line, the \texttt{\textbackslash A} indicates the start of the file. 
-
-The most important line in this pattern is the last one. 
-Taking its core alone, it means that a \LaTeX{} main file is one 
-containing \cmd{documentclass} for modern documents 
-and \cmd{documentstyle} for old-fashioned ones. 
-This is followed by optional options and above all by a named capturing group \texttt{docClass} 
-matching the document class. 
-
-The next important line is the second one, describing a magic comment. 
-A magic comment is a comment hiding information from one tool in a comment 
-but exposing it to another tool 
-Whereas comments start with \texttt\%, magic comments typically start with \texttt{\%!}, 
-followed by (a blank with) an identifier for the tool they are significant for. 
-In particular, the identifier for this \LaTeX{} builder is \texttt{LMP}, 
-which is short for latex maven plugin, which is not entirely correct but intuitive. 
-% TBD eliminate this duplicate. 
-As the command \cmd{documentclass}, 
-the magic comment can specify the document class with a capturing group 
-named \texttt{docClassMagic}. 
-It can also specify a target set specific for the document 
-via the capturing group \texttt{docClassMagic}. 
-As described in Section~\ref{subsec:sourcesLatex}, 
-the pattern \texttt{patternLatexMainFile} 
-must specify all these three capturing groups. 
-Whereas in regular expressions group names are enclosed between \texttt< and \texttt>, 
-these symbols must be escaped writing \texttt{\&lt;} and \texttt{\&gt;}, 
-respectively. 
+Let us trace through line by line: 
+%
+\begin{description}
+  \item[1] The \texttt{\textbackslash A} indicates the start of the file. 
+  \item[2-4] These lines match magic comments \texttt{\% !TEX}, 
+  which are used by other tools. 
+  Line 3 extracts \texttt{programMagic} 
+  from the first magic comment of the form \texttt{\% !TEX program=\dots}. 
+  This is the behavior of the other tools also. 
+  The other lines are to skip information from magic comments \texttt{\% !TEX} 
+  which are not needed. 
+  \item[5] This line matches a sole magic comment \texttt{\% !LMP} 
+  which is specific for this software. 
+  It defines optionally \texttt{docClassMagic} and \texttt{targetMagic}. 
+  \item[6-10] Except for magic comments, 
+  this defines material which may precede the command \cmd{documentclass}. 
+  Besides lines with specific commands, it matches empty lines and comment lines. 
+  Also, a line may start with whitespace may contain a command and end in a comment. 
+  This section is likely to be modified by the user. 
+  This segment is the only one without a magic comment. 
+  \item[11] Matches the command \cmd{documentclass} 
+  and extracts \texttt{docClass}. 
+\end{description}
 
 
-Besides the magic comments which are the start of the pattern, 
+
+
+Between magic comments and 
 \cmd{documentclass} or \cmd{documentstyle} 
-may be preceded only by 
+only the following material is allowed: 
 %
 \begin{itemize}
 \item
@@ -547,47 +586,56 @@ the command \cmd{RequirePackage},
 \item
 the command \cmd{PassOptionsToPackage}, 
 \item
-comment lines even magic comments, although for this tool they are ignored. 
+the command \cmd{input}, and 
 \item
-\cmd{input}, and 
-\item
-space. 
+whitespace, empty lines, comment lines even magic comments, 
+although for this tool they are ignored. 
 \end{itemize}
 %
-Note that \cmd{A} represents the beginning of the stream. 
+This may be too restrictive and here is the point, 
+where the use has freedom to change the pattern. 
+On the other hand, \cmd{input} offers a quick workaround 
+to add material if a user is not familiar with regular expressions. 
 
-From the point of view of the \LaTeX{} converter, 
-\cmd{documentclass} is not required in the main file, 
-it could be hidden in some \cmd{input}-file. 
-If we stick to the wise convention to open and to close the same environment 
-in the same file and to have \cmd{documentclass}, 
-\cmd{begin\{document\}} and \cmd{end\{document\}} 
-in the same file also, 
-then a latex main file without \cmd{documentclass} 
-cannot contain very much material. 
-
-So it is almost no restriction to the user to have \cmd{documentclass} 
-declared in the latex main file. 
-As explained above, this is necessary for this \LaTeX{} builder to find out the document class. 
-% TBD: explain why: link to support of various classes. 
-% Partially, this is not yet documented. 
-
-
-Strictly speaking, also \cmd{(re)newcommands} % chktex 36
-and other constructs are possible but not allowed here. 
 In the long run it must be thought of weakening the pattern: 
 It is not necessary, that exactly the correct files are parsed, 
 because incorrect files are detected by the \LaTeX{} converter anyway. 
 Instead, among the correct files the latex main files shall be detected. 
-Also, if one wants to have a solution not relying on a tool-chain 
-not even on \LaTeX{} tools, 
-One could use a convention, e.g.~marking main files with first line \texttt{\%~!MAIN FILE}, %TBD: eliminated: not typical for magic comments
-which makes parsing quite fast. 
-But this technique requires the user to declare main files explicitly. 
+
+As a workaround for very special \LaTeX{} main files, 
+it is a good idea to let it indicate in a magic comment. 
+Then the pattern as a whole must match, even not matching a \cmd{documentclass}. 
+From the point of view of this software, 
+it makes sense to specify the document type in the magic comment then. 
+Thinking one step further, also specifying the target 
+or the latex converter in a magic comment 
+indicates already a latex main file. 
+Whereas the target set makes the document class superfluous, 
+this is not the case for the magic comment specifying the latex converter. 
+
+
+% From the point of view of the \LaTeX{} converter, 
+% \cmd{documentclass} is not required in the main file, 
+% it could be hidden in some \cmd{input}-file. 
+% If we stick to the wise convention to open and to close the same environment 
+% in the same file and to have \cmd{documentclass}, 
+% \cmd{begin\{document\}} and \cmd{end\{document\}} 
+% in the same file also, 
+% then a latex main file without \cmd{documentclass} 
+% cannot contain very much material. 
+
+% So it is almost no restriction to the user to have \cmd{documentclass} 
+% declared in the latex main file. 
+% As explained above, this is necessary for this \LaTeX{} builder to find out the document class. 
+% % TBD: explain why: link to support of various classes. 
+% % Partially, this is not yet documented. 
+
+
 
 The latex extension latex workshop for VS Code offers two similar 
-\href{https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile#multi-file-projects}{alternatives}: 
-Occurrence of \cmd{documentclass} and 
+\href{https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile#multi-file-projects}%
+{alternatives to identify \LaTeX{} main files}: 
+Occurrence of \cmd{documentclass} without checking preceding material and 
 absence of first line \texttt{\%~!TEX root=} declaring a TEX file as depending on a latex main file 
 which must be given explicitly. 
 The first alternative risks that a TEX file is recognized as main file, 
@@ -596,8 +644,10 @@ whereas the second alternative is inconvenient
 and does not work if a file has two potential latex main files 
 as is suggested for \texttt{beamer} presentations in Section~\ref{sec:sources} 
 and realized in~\cite{PresBeamer}. 
+Although presence of \texttt{\%~!TEX root=} indicates that the according file 
+is no \LaTeX{} main file, this software ignores this magic comment. 
 
-Emacs with package auctex, uses an alternative
+Emacs with package \auctex, uses an alternative
 to the current technique to determine the latex main files: 
 Latex main files are marked with an end section as this file: 
 %
@@ -622,9 +672,16 @@ explicitly as the following one from \texttt{header.tex}:
 %%% End:
 \end{verbatim}
 
-Since this \LaTeX{} builder still has to determine the document class, 
-which is at the beginning of the main file, 
-when sticking to regular expressions the whole file must be parsed. 
+Unlike the document class to be extracted from \cmd{documentclass} 
+and unlike other magic comments to be taken into account, 
+those of \auctex{} are at the end of the file. 
+
+Although the author considers this approach charming, 
+this software ignores \auctex-style magic comments, 
+since otherwise the whole file is to be parsed. 
+Sticking to regular expressions, 
+the parsing engine must then keep the whole file in memory. 
+All this would push down performance. 
 
 
 
