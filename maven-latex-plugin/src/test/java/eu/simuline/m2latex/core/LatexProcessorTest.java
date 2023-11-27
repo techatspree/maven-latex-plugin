@@ -693,7 +693,7 @@ public class LatexProcessorTest {
 		// FIXME: should work also in order. 
 		//this.inOrder.
 		verify(this.executor, atLeastOnce()).execute(eq(WORKING_DIR), isNull(),
-				eq(this.settings.getCommand(ConverterCategory.LaTeX)),
+				eq(this.settings.getCommand(ConverterCategory.LaTeX)),/// TBD: LatexProcessor.getLatex2pdfCommand()
 				aryEq(LatexProcessor.buildLatexArguments(this.settings,
 						this.settings.getPdfViaDvi(), this.texFile, false)),
 				eq(this.dviPdfFile));
