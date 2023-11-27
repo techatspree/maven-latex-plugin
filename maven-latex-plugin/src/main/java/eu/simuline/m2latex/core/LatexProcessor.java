@@ -180,6 +180,16 @@ public class LatexProcessor extends AbstractLatexProcessor {
    */
   private final MetaInfo metaInfo;
 
+  /**
+   * An <code>Optional</code> which contains the name of a latex2pdf converter 
+   * while processing a latex file specifying such a converter 
+   * in a magic comment. 
+   * Else this <code>Optional</code> is empty. 
+   */
+  private Optional<String> latex2PdfCmdMagic = Optional.empty();
+
+
+
   // also for tests
   LatexProcessor(Settings settings, CommandExecutor executor, LogWrapper log,
       TexFileUtils fileUtils, ParameterAdapter paramAdapt) {
@@ -188,6 +198,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     this.preProc = new LatexPreProcessor(this.settings, this.executor, this.log,
         this.fileUtils);
     this.metaInfo = new MetaInfo(this.executor, this.log);
+    this.latex2PdfCmdMagic = Optional.empty();
   }
 
   /**
@@ -397,6 +408,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 + " folder if exists. ";
 
         Set<Target> targetsForBuild = getTargetsForBuild(desc, docClasses2Targets, targetSet);
+        this.latex2PdfCmdMagic = desc.groupMatch(LatexMainParameterNames.programMagic);
+        if (this.latex2PdfCmdMagic.isPresent()) {
+          this.log.info("Using " + this.latex2PdfCmdMagic.get()
+            + " to process '" + desc.texFile + "'. ");
+        }
 
         // may throw BuildFailureException TSS04
         for (Target target : targetsForBuild) {
@@ -460,6 +476,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
       }
       this.log.debug(this.settings.isCleanUp() ? ("cleanup: " + texProcDir)
           : "No cleanup");
+      this.latex2PdfCmdMagic = Optional.empty();// superfluous
     }
   }
 
@@ -673,6 +690,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
   // FIXME: determine whether to use latexmk makes sense
 
+  public String getLatex2pdfCommand() throws BuildFailureException {
+    return this.latex2PdfCmdMagic.orElse(this.settings.getCommand(ConverterCategory.LaTeX));
+  }
+
 
   /**
    * Runs LaTeX on on the latex main file <code>texFile</code>
@@ -864,7 +885,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // EEX01, EEX02, EEX03, WEX04, WEX05
     int numLatexReRuns = preProcessLatex2dev(desc, dev);
 
-    String latexCmd = this.settings.getCommand(ConverterCategory.LaTeX);
+    String latexCmd = getLatex2pdfCommand();
 
     assert numLatexReRuns == 0 || numLatexReRuns == 1 || numLatexReRuns == 2;
     if (numLatexReRuns > 0) {
@@ -1012,7 +1033,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     // emit warnings (errors are emitted by runLatex2dev and that like.)
     // may log warnings WFU03, WAP04, WLP03, WLP04
-    logWarns(desc.logFile, this.settings.getCommand(ConverterCategory.LaTeX));
+    logWarns(desc.logFile, getLatex2pdfCommand());
   }
 
   void processLatex2dvi(LatexMainDesc desc) throws BuildFailureException {
@@ -1903,10 +1924,14 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
     File texFile = desc.texFile;
     // FIXME: wrong name; better is latex2dev
-    String command = this.settings.getCommand(ConverterCategory.LaTeX);
+    String command = getLatex2pdfCommand();
     this.log.debug("Running " + command + " on '" + texFile.getName() + "'. ");
+    // TBD: this is not completely correct. 
+    // A wrapper of xelatex would not be recognized. 
+    // boolean isTypeXelatex =
+    //     Converter.XeLatex.getCommand().equals(settings.getLatex2pdfCommand());
     boolean isTypeXelatex =
-        Converter.XeLatex.getCommand().equals(settings.getLatex2pdfCommand());
+        Converter.XeLatex.getCommand().equals(command);
     String[] args =
         buildLatexArguments(this.settings, dev, texFile, isTypeXelatex);
     // may throw BuildFailureException TEX01,

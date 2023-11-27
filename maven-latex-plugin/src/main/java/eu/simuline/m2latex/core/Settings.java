@@ -2323,10 +2323,6 @@ public class Settings {
     return this.ebbOptions;
   }
 
-  // for ant task only 
-  public String getLatex2pdfCommand() throws BuildFailureException {
-    return getCommand(ConverterCategory.LaTeX);
-  }
 
   // FIXME: to be renamed: texOptions 
   public String getLatex2pdfOptions() {
@@ -2648,8 +2644,21 @@ public class Settings {
   // setter method for patternLatexMainFile in maven 
   // trims parameter before setting 
   public void setPatternLatexMainFile(String patternLatexMainFile) {
-    this.patternLatexMainFile =
-        patternLatexMainFile.replaceAll("(\t|\n)+", "").trim();
+    // System.out.println("set pattern");
+    // patternLatexMainFile = patternLatexMainFile.replaceAll("(\t|\n)+", "").trim();
+    // System.out.println("lengths "+this.patternLatexMainFile.length()+" "+patternLatexMainFile.length());
+    // int min = Math.min(this.patternLatexMainFile.length(),patternLatexMainFile.length());
+    // for (int i = 0; i<min;i++) {
+    //   if (this.patternLatexMainFile.codePointAt(i) != patternLatexMainFile.codePointAt(i)) {
+    //     System.out.println("common prefix is |"+patternLatexMainFile.substring(0,i)+"|");
+    //     System.out.println("then |"+this.patternLatexMainFile.codePointAt(i)
+    //     +"| replaced by |"+patternLatexMainFile.codePointAt(i));
+    //     break;
+    //   }
+    // }
+    // this.patternLatexMainFile = patternLatexMainFile;
+
+    this.patternLatexMainFile = patternLatexMainFile.replaceAll("(\t|\n)+", "").trim();
   }
 
   // method introduces patternLatexMainFile in ant 

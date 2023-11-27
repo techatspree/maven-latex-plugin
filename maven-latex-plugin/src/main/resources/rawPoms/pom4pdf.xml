@@ -164,12 +164,15 @@ In any case, matching of the group named 'class' must be retained
 so that the document class is matched.  -->
             <patternLatexMainFile>
 \A
-(%\s*!\s*LMP( docClass=(?&lt;docClassMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
-(\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
-%.*$|
+(%\s*!\s*T[eE]X (TXS|spellcheck|encoding|root).*\R)*
+(%\s*!\s*T[eE]X program\s*=\s*(?&lt;programMagic&gt;[^} ]+)\R)?
+(%\s*!\s*T[eE]X .*\R)*
+(%\s*!\s*LMP targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+)\R)?
+(\s*(
+\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|[.-/])+\])?|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
-\\input\s*\{[^{}]*\}|
-\s)*
+\\input\s*\{[^{}]*\}
+)?\s*(%.*)?\R)*
 \\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;docClass&gt;[^} ]+)\}
             </patternLatexMainFile>
 
