@@ -199,7 +199,7 @@ This \LaTeX{} builder is designed to cooperate with other tools.
 The magic comments of the other tools as described in various places in Section~\ref{sec:devel} 
 on document development and in particular in Section~\ref{subsec:develLatexmk}. 
 Thus, if appropriate, also magic comments of other tools are read, 
-except Auc\TeX{}, because this places magic comments at the end of file, 
+except \auctex, because this places magic comments at the end of file, 
 forcing the build software to read all. 
 All other tools including latex workshop for VS Code 
 support a subset of what is 
@@ -936,7 +936,7 @@ To that end, this software provides an installation script.
 
 \subsection{Editors, viewers and \LaTeX}\label{subsec:editViewLatex}
 
-Although there are alternatives like Emacs with extension AUC\TeX, 
+Although there are alternatives like Emacs with extension \auctex, 
 the author recommends using VS Code in conjunction with extensions 
 to write and build \LaTeX{} documents 
 and to view the results on \texttt{okular}. 
@@ -1443,9 +1443,9 @@ is for:
 It creates all graphic files required to compile the \LaTeX-main files. 
 
 Still this does not create a bibliography, an index or a glossary. 
-With \emph{auctex}\index{auctex}, an Emacs-package for editing \LaTeX, 
+With \auctex\index{auctex}, an Emacs-package for editing \LaTeX, 
 bibliography and index are well-supported. 
-To create a glossary, auctex has to be modified a little. 
+To create a glossary, \auctex{} has to be modified a little. 
 
 %FIXME\@: include this into auctex. 
 
@@ -1626,7 +1626,7 @@ caption={Output of goal \texttt{latex:vrs}}]
 Another aspect of document development is integration with other tools. 
 
 Document development starts with the editor. 
-Above the Emacs editor enhanced with auctex was mentioned. 
+Above the Emacs editor enhanced with \auctex{} was mentioned. 
 We recommend VS Code in conjunction with several extensions. 
 If VS Code itself is already installed 
 the script in Listing~\ref{lst:instVScode} on page~\pageref{lst:instVScode}  
