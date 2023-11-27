@@ -283,12 +283,15 @@ public class Settings {
   private String patternLatexMainFile =
   """
   \\A\
-  (%\\s*!\\s*LMP( docClass=(?<docClassMagic>[^} ]+))?( targets=(?<targetsMagic>(\\p{Lower}|,)+))?\\R)?\
-  (\\\\RequirePackage\\s*(\\[(\\s|\\w|,)*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|\\.)+\\])?|\
-  %.*$|\
+  (%\\s*!\\s*T[eE]X (TXS|spellcheck|encoding|root).*\\R)*\
+  (%\\s*!\\s*T[eE]X program\\s*=\\s*(?<programMagic>[^} ]+)\\R)?\
+  (%\\s*!\\s*T[eE]X .*\\R)*\
+  (%\\s*!\\s*LMP targets=(?<targetsMagic>(\\p{Lower}|,)+)\\R)?\
+  (\\s*(\
+  \\\\RequirePackage\\s*(\\[(\\s|\\w|,)*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|[.-/])+\\])?|\
   \\\\PassOptionsToPackage\\s*\\{\\w+\\}\\s*\\{(\\w|-)+\\}|\
-  \\\\input\\s*\\{[^{}]*\\}|\
-  \\s)*\
+  \\\\input\\s*\\{[^{}]*\\}\
+  )?\\s*(%.*)?\\R)*\
   \\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<docClass>[^} ]+)\\}\
   """;
   //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
