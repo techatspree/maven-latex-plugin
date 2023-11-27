@@ -207,7 +207,31 @@ public class LatexProcessor extends AbstractLatexProcessor {
         paramAdapt);
   }
 
-  Set<Target> getReachableTargets(LatexMainDesc desc,
+  /**
+   * Returns the set of targets to be built. 
+   * If <code>desc</code> indicates 
+   * that the TEX file specifies targets via a magic comment, 
+   * then this is the build target to be returned. 
+   * <p>
+   * Else, the target set from the configuration, <code>targetSet/code> 
+   * is the base. 
+   * If <code>docClasses2Targets</code> excludes targets 
+   * for the document class specified by <code>desc</code>, 
+   * this must be taken into account also. 
+   * @param desc
+   *    the description of the main file to be built. 
+   *    In this context, the document class is relevant 
+   *    and optionally the targets. 
+   * @param docClasses2Targets
+   *    reflects the according setting. 
+   * @param targetSet
+   *    reflects the setting 'targets' for goal <code>cfg</code> 
+   *    or the one element target set given by the goal directly. 
+   * @return 
+   *    the set of targets to be built. 
+   * @throws BuildFailureException
+   */
+  Set<Target> getTargetsForBuild(LatexMainDesc desc,
                                   Map<String, Set<Target>> docClasses2Targets,
                                   SortedSet<Target> targetSet)
       throws BuildFailureException {
@@ -239,18 +263,18 @@ public class LatexProcessor extends AbstractLatexProcessor {
           + "' targets are not restricted by document class '" + docClass
           + "'. ");
       return targetSet;
-    } else {
-      // Here, targetSet must be intersected with the targets possible for the docClass 
-      Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
-      unreachableTargets.removeAll(possibleTargets);
-      if (!unreachableTargets.isEmpty()) {
-        this.log.info("Skipping targets " + unreachableTargets
-            + " for document '" + desc.texFile + "'. ");
-      }
-      Set<Target> reachableTargets = new TreeSet<Target>(targetSet);
-      reachableTargets.retainAll(possibleTargets);
-      return reachableTargets;
     }
+    // Here, targetSet must be intersected with the targets possible for the docClass 
+    Set<Target> unreachableTargets = new TreeSet<Target>(targetSet);
+    unreachableTargets.removeAll(possibleTargets);
+    if (!unreachableTargets.isEmpty()) {
+      this.log.info("Skipping targets " + unreachableTargets + " for document '"
+          + desc.texFile + "'. ");
+    }
+    Set<Target> reachableTargets = new TreeSet<Target>(targetSet);
+    reachableTargets.retainAll(possibleTargets);
+    return reachableTargets;
+
     //}
   }
 
@@ -372,10 +396,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
             || targetDir.isDirectory() : "Expected target folder " + targetDir
                 + " folder if exists. ";
 
-        Set<Target> reachableTargets = getReachableTargets(desc, docClasses2Targets, targetSet);
+        Set<Target> targetsForBuild = getTargetsForBuild(desc, docClasses2Targets, targetSet);
 
         // may throw BuildFailureException TSS04
-        for (Target target : reachableTargets) {
+        for (Target target : targetsForBuild) {
           // may throw BuildFailureException TEX01,
           // log warning EEX01, EEX02, EEX03, WEX04, WEX05
 
