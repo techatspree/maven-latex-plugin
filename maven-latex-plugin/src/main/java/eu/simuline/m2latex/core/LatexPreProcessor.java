@@ -1245,9 +1245,8 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     //System.out.println("is main file: "+optTexFileDesc.isPresent()+" "+texFile);
     if (optTexFileDesc.isPresent()) {
       LatexMainDesc desc = optTexFileDesc.get();
-      this.log
-          .info("Detected " + desc.groupMatch(LatexMainParameterNames.docClass)
-              + "-file '" + texFile + "'. ");
+      String docClass = desc.getDocClass();
+      this.log.info("Detected " + docClass + "-file '" + texFile + "'. ");
       latexMainDescs.add(desc);
     }
   }
