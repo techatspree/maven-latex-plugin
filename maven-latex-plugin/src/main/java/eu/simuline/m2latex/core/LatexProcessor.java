@@ -210,7 +210,6 @@ public class LatexProcessor extends AbstractLatexProcessor {
   Set<Target> getReachableTargets(LatexMainDesc desc,
             Map<String, Set<Target>> docClasses2Targets,
             SortedSet<Target> targetSet) throws BuildFailureException {
-    Set<Target> reachableTargets;
     Optional<String> targetsMagic =
         desc.groupMatch(LatexMainParameterNames.targetsMagic);
     if (targetsMagic.isEmpty()) {
@@ -223,6 +222,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
       //       + "' targets are not restricted by unknown document class. ");
       //   reachableTargets = targetSet;
       // } else {
+      Set<Target> reachableTargets;
       String docClass = desc.getDocClass();
       Set<Target> possibleTargets = docClasses2Targets.get(docClass);
       if (possibleTargets == null) {
@@ -243,13 +243,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
         reachableTargets.retainAll(possibleTargets);
       }
       //}
+      return reachableTargets;
     } else {
       this.log.info("Found targets " + targetsMagic + " for document '"
           + desc.texFile + "' in magic comment. ");
-      reachableTargets =
-          Settings.getTargets(targetsMagic.get(), TargetsContext.targetsMagic);
+      return Settings.getTargets(targetsMagic.get(), TargetsContext.targetsMagic);
     }
-    return reachableTargets;
   }
 
   // TBD: rework 
