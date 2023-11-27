@@ -1212,7 +1212,10 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
     // }
 
     // return LatexMainDesc.getLatexMain(texFile, fileMatch.getMatcher());
-    return fileMatch.doesExprMatch()
+    // // return fileMatch.doesExprMatch()
+    // //   ? LatexMainDesc.getLatexMain(texFile, fileMatch.getMatcher())
+    // //   : Optional.empty();
+   return fileMatch.doesExprMatch()
       ? Optional.of(new LatexMainDesc(texFile, fileMatch.getMatcher()))
       : Optional.empty();
   }

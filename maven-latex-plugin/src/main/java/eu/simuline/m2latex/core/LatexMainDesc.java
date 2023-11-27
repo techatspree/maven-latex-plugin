@@ -1,8 +1,11 @@
 package eu.simuline.m2latex.core;
 
 import java.io.File;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 /**
  * Container which comprises, besides the latex main file
@@ -32,6 +35,36 @@ class LatexMainDesc implements Comparable<LatexMainDesc> {
 
   private final Matcher matcher;
 
+  // private static boolean matches(Matcher matcher,
+  //     LatexMainParameterNames name) {
+  //     return matcher.group(name.toString()) != null;
+  // }
+
+  // private static void printGroups(Matcher matcher) {
+  //   List<String> names = Arrays.asList(LatexMainParameterNames.values())
+  //   .stream().map(val -> val.toString()).collect(Collectors.toList());;
+  //   for (String name : names) {
+  //      System.out.println(name + " |" + matcher.group(name) + "|");
+  //   }
+  // }
+
+  // static Optional<LatexMainDesc> getLatexMain(File texFile, Matcher matcher) {
+  //   printGroups(matcher);
+
+  //   return (matches(matcher, LatexMainParameterNames.programMagic)
+  //        || matches(matcher, LatexMainParameterNames.targetsMagic)
+  //        || matches(matcher, LatexMainParameterNames.docClassMagic)
+  //        || matches(matcher, LatexMainParameterNames.docClass))
+  //           ? Optional.of(new LatexMainDesc(texFile, matcher))
+  //           : Optional.empty();
+  // }
+
+  // // TBD: eliminate
+  // // For tests only. 
+  // LatexMainDesc(File texFile) {
+  //   this(texFile, null);
+  // }
+
   LatexMainDesc(File texFile, Matcher matcher) {
     this.matcher = matcher;
     this.texFile = texFile;
@@ -59,16 +92,37 @@ class LatexMainDesc implements Comparable<LatexMainDesc> {
    * @param groupName
    *    a representation of the name of a group in a regular expression. 
    * @return
-   *    the text matched in the group or <code>null</code>, 
-   *    the latter if the pattern has the group but nothing matches, 
+   *    the text matched in the group as an optional, 
+   *    where empty optional indicates 
+   *    that the pattern has the group but nothing matches, 
    *    e.g. because of an alternative like <code>(?&lt;name&gt;x)?</code>. 
    * @throws IllegalArgumentException
    *    If the matching pattern has no capturing group with the given name. 
    */
-  String groupMatch(LatexMainParameterNames groupName) {
+  Optional<String> groupMatch(LatexMainParameterNames groupName) {
     // formally this may throw a IllegalStateException, but this is excluded. 
-    return this.matcher.group(groupName.toString());
+    return Optional.ofNullable(this.matcher.group(groupName.toString()));
   }
+
+  // Currently, document class is always defined. 
+  String getDocClass() {
+    String res = this.matcher.group(LatexMainParameterNames.docClass.toString());
+    assert res != null;
+    return res;
+  }
+
+  // Optional<String> getDocClass(LogWrapper log) {
+  //   String docClassMagic = groupMatch(LatexMainParameterNames.docClassMagic);
+  //   String docClass = groupMatch(LatexMainParameterNames.docClass);
+  //   if (docClassMagic != null) {
+  //     if (docClass != null) {
+  //       log.warn("XXXX: Doc class in magic comment '" + docClassMagic
+  //           + "'' overwrites '" + docClass + "' in documentclass/style. ");
+  //     }
+  //     return Optional.of(docClassMagic);
+  //   }
+  //   return Optional.ofNullable(docClass);
+  // }
 
   File withSuffix(String suffix) {
     return TexFileUtils.appendSuffix(this.xxxFile, suffix);

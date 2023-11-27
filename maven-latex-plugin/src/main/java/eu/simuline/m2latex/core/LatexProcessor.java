@@ -26,6 +26,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -325,18 +326,24 @@ public class LatexProcessor extends AbstractLatexProcessor {
                 + " folder if exists. ";
 
         Set<Target> reachableTargets;
-        String targetsMagic =
+        Optional<String> targetsMagic =
             desc.groupMatch(LatexMainParameterNames.targetsMagic);
-        if (targetsMagic == null) {
+        if (targetsMagic.isEmpty()) {
           // Here, the targets are not given by a magic comment 
           // Thus they come from the setting targets 
           // combined with the targets giben by docClasses2Targets and docClass 
-          String docClass = desc.groupMatch(LatexMainParameterNames.docClass);
+          //String docClassOpt = desc.getDocClass();
+          // if (docClassOpt.isEmpty()) {
+          //   this.log.warn("WLPXX: For file '" + desc.texFile
+          //       + "' targets are not restricted by unknown document class. ");
+          //   reachableTargets = targetSet;
+          // } else {
+          String docClass = desc.getDocClass();
           Set<Target> possibleTargets = docClasses2Targets.get(docClass);
           if (possibleTargets == null) {
             // Here, to docClass no restriction is attached 
             this.log.warn("WLP09: For file '" + desc.texFile
-                + "' targets are not restricted by unknown document class '"
+                + "' targets are not restricted by document class '"
                 + docClass + "'. ");
             reachableTargets = targetSet;
           } else {
@@ -350,11 +357,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
             reachableTargets = new TreeSet<Target>(targetSet);
             reachableTargets.retainAll(possibleTargets);
           }
+          //}
         } else {
           this.log.info("Found targets " + targetsMagic
            + " for document '" + desc.texFile + "' in magic comment. ");
           reachableTargets = Settings
-            .getTargets(targetsMagic,TargetsContext.targetsMagic);
+          .getTargets(targetsMagic.get(), TargetsContext.targetsMagic);
         }
 
         // may throw BuildFailureException TSS04
@@ -387,8 +395,8 @@ public class LatexProcessor extends AbstractLatexProcessor {
           File diffRootDir =
               this.settings.getDiffDirectoryFile().getAbsoluteFile();
           File artifactBaseDir = this.settings.getOutputDirectoryFile();
-          assert targetFiles.size() == 1
-            : "Expected one target file, found " + targetFiles + ". ";
+          assert targetFiles.size() == 1 : "Expected one target file, found "
+              + targetFiles + ". ";
           File pdfFileAct = targetFiles.iterator().next();
           this.log.debug(String.format("act file %s", pdfFileAct));
           File pdfFileCmp = TexFileUtils.getPdfFileDiff(pdfFileAct,
@@ -1120,7 +1128,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // may throw BuildFailureException TEX01,
     // log warning EEX01, EEX02, EEX03, WEX04, WEX05
     runLatex2html(desc);
-    }
+  }
 
   /**
    * Runs conversion of <code>texFile</code>
