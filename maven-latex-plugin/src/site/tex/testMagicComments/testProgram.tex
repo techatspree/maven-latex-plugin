@@ -3,42 +3,43 @@
 % \usepackage{iftex}
 % \usepackage{hyperref}
 \input{../header.tex}
+\input{../headerSuppressMetaPDF.tex}
 
 
 
 
-%\ifpdf%
-  \ifLuaTeX%
-    % for lualatex
-    \pdfvariable minorversion=7% chktex 1
-    % omit CreationDate and ModDate keys.
-    \pdfvariable suppressoptionalinfo 767% chktex 1
-    % no adding to the trailer dictionary.
-    \pdfvariable trailerid{}% chktex 1
-    \pdfvariable suppressoptionalinfo -1% chktex 1
-  \else
-    \ifXeTeX%
-      % for xelatex
-      \special{pdf:minorversion 7}% TBD: seems not to work 
-      % TBD: find a way to express pdfinfoomitdate: necessary? 
-      \special{pdf:trailerid []}
+% %\ifpdf%
+%   \ifLuaTeX%
+%     % for lualatex
+%     \pdfvariable minorversion=7% chktex 1
+%     % omit CreationDate and ModDate keys.
+%     \pdfvariable suppressoptionalinfo 767% chktex 1
+%     % no adding to the trailer dictionary.
+%     \pdfvariable trailerid{}% chktex 1
+%     \pdfvariable suppressoptionalinfo -1% chktex 1
+%   \else
+%     \ifXeTeX%
+%       % for xelatex
+%       \special{pdf:minorversion 7}% TBD: seems not to work 
+%       % TBD: find a way to express pdfinfoomitdate: necessary? 
+%       \special{pdf:trailerid []}
 
-      %\special{pdf:suppressoptionalinfo -1}
-    \else
-      \ifPDFTeX%
-        \pdfminorversion=7         % for pdflatex
-        % omit CreationDate and ModDate keys.
-        % not before pdfTeX 3.14159265-2.6-1.40.17
-        \pdfinfoomitdate=1                   % for pdflatex
-        % no adding to the trailer dictionary.
-        %\pdftrailer=0                        % for pdflatex
-        \pdftrailerid{}                       % for pdflatex
-        \pdfsuppressptexinfo=-1               % for pdflatex
-      \else
-        % Here, the tex processor is unknown. 
-      \fi%pdftex
-    \fi%xetex
-  \fi%luatex
+%       %\special{pdf:suppressoptionalinfo -1}
+%     \else
+%       \ifPDFTeX%
+%         \pdfminorversion=7         % for pdflatex
+%         % omit CreationDate and ModDate keys.
+%         % not before pdfTeX 3.14159265-2.6-1.40.17
+%         \pdfinfoomitdate=1                   % for pdflatex
+%         % no adding to the trailer dictionary.
+%         %\pdftrailer=0                        % for pdflatex
+%         \pdftrailerid{}                       % for pdflatex
+%         \pdfsuppressptexinfo=-1               % for pdflatex
+%       \else
+%         % Here, the tex processor is unknown. 
+%       \fi%pdftex
+%     \fi%xetex
+%   \fi%luatex
 
   % 1 -> PTEX.Fullbanner
   % 2 -> PTEX.FileName
