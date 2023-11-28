@@ -73,20 +73,23 @@
   %   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
   %}
 
-  \hypersetup{
-    pdfinfo={
-      Author      ={Ernst Reissner},
-      Title       ={Maven plugin and ant-task to process latex},
-      CreationDate={unknown},
-      ModDate     ={unknown},
-      Producer    ={unknown},
-      Subject     ={latex plugin for maven and latex task for ant},
-      Keywords    ={svg;png;metapost;PDF;LaTeX;maven;ant}
-    }
-  }
-  % TBD: check of resulting pdf with exif unveils a warning duplicate author 
+   % TBD: check of resulting pdf with exif unveils a warning duplicate author 
 \else%ifpdf
 \fi%ifpdf
+
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Maven plugin and ant-task to process latex},
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Producer    ={unknown},
+    Subject     ={latex plugin for maven and latex task for ant},
+    Keywords    ={svg;png;metapost;PDF;LaTeX;maven;ant}
+  }
+}
+
 
 \IfPackageLoadedTF{tex4ht}{%
   % no glossaries and no index with tex4ht 

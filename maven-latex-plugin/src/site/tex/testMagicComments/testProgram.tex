@@ -7,7 +7,7 @@
 
 
 
-\ifpdf%
+%\ifpdf%
   \ifLuaTeX%
     % for lualatex
     \pdfvariable minorversion=7% chktex 1
@@ -59,26 +59,36 @@
   %   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
   %}
 
-  \hypersetup{
-    pdfinfo={
-      Author      ={Ernst Reissner},
-      Title       ={Processing with xelatex: demand and test},
-      CreationDate={unknown},
-      ModDate     ={unknown},
-      Producer    ={unknown},
-      Subject     ={test file},
-      Keywords    ={xelatex;magic commands}
-    }
+  % \hypersetup{
+  %   pdfinfo={
+  %     Author      ={Ernst Reissner},
+  %     Title       ={Processing with xelatex: demand and test},
+  %     CreationDate={unknown},
+  %     ModDate     ={unknown},
+  %     Producer    ={unknown},
+  %     Subject     ={test file},
+  %     Keywords    ={xelatex;magic commands}
+  %   }
+  % }
+
+% \else%ifpdf
+% % \special{pdf:minorversion 6}
+% % % TBD: find a way to express pdfinfoomitdate: necessary? 
+% % \special{pdf:trailerid []}
+% \fi%ifpdf
+
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Processing with xelatex: demand and test},
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Producer    ={unknown},
+    Subject     ={test file},
+    Keywords    ={xelatex;magic commands}
   }
-% %   % TBD: check of resulting pdf with exif unveils a warning duplicate author 
-% \special{pdf:minorversion 7}
-% % TBD: find a way to express pdfinfoomitdate: necessary? 
-% \special{pdf:trailerid []}
-\else%ifpdf
-% \special{pdf:minorversion 6}
-% % TBD: find a way to express pdfinfoomitdate: necessary? 
-% \special{pdf:trailerid []}
-\fi%ifpdf
+}
 
 \title{Processing with \texttt{xelatex}: demand and test}
 \author{Ernst Reissner (rei3ner@arcor.de)}
@@ -94,17 +104,17 @@ Tests magic comment: overwrite default \LaTeX{} processor, which is \texttt{lual
 If this does not work, an invisible \texttt{\textbackslash{}GenericError} 
 in an \texttt{\textbackslash{}ifPDFTeX} construction throws an error leading to an error return code 
 of the late processor. 
-\ifPDFTeX%
-  % ok
-\else
-  \ifLuaTeX%
-    \GenericError{...}{Found this document to be converted with lualatex, although pdflatex is specified. }{}{} % chktex 11
-  \else
-    \ifXeTeX%
-      \GenericError{...}{Found this document to be converted with xelatex, although xelatex is specified. }{}{} % chktex 11
-    \else
-      \GenericError{...}{Found this document to be converted not with pdflatex, although this is specified. }{}{} % chktex 11
-    \fi
-  \fi
-\fi
+% \ifPDFTeX%
+%   % ok
+% \else
+%   \ifLuaTeX%
+%     \GenericError{...}{Found this document to be converted with lualatex, although pdflatex is specified. }{}{} % chktex 11
+%   \else
+%     \ifXeTeX%
+%       \GenericError{...}{Found this document to be converted with xelatex, although xelatex is specified. }{}{} % chktex 11
+%     \else
+%       \GenericError{...}{Found this document to be converted not with pdflatex, although this is specified. }{}{} % chktex 11
+%     \fi
+%   \fi
+% \fi
 \end{document}
