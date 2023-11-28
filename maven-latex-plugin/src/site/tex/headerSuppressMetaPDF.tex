@@ -1,3 +1,6 @@
+% presupposes hyperref (e.g. preload header.tex)
+
+
 \ifpdf%
   \ifLuaTeX%
     % for lualatex
@@ -53,4 +56,13 @@
    % TBD: check of resulting pdf with exif unveils a warning duplicate author 
 \else%ifpdf
 \fi%ifpdf
+
+\hypersetup{
+  pdfinfo={
+    CreationDate={unknown},
+    ModDate     ={unknown},
+    Producer    ={unknown}
+  }
+}
+
 
