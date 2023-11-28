@@ -1019,7 +1019,7 @@ are the PTEX\index{PTEX} keys including the banner, and the \texttt{pdftrailerid
 Note that the latter is \emph{intentionally} 
 a unique identifier for the individual document 
 and so strictly speaking it is not advised to eliminate this 
-but eliminating is necessary because it is incompatible with reproducibility. 
+but eliminating is necessary, because it is incompatible with reproducibility. 
 Note that \xelatex{} seems not to write PTEX keys at all 
 so only the \texttt{pdftrailerid} has to be eliminated or fixed. 
 
@@ -1089,7 +1089,7 @@ but support seems incomplete with \xelatex.
 %   /Keywords     (LaTeX;dvi;dvitype)
 %}
 % Replacing pdfinfoomitdate1 in conjunction with
-% usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
+% \usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
 % alternative 1 for pdftex only
 
 
@@ -1118,7 +1118,8 @@ caption={Create reproducible PDF files for various engines}]%
 
 
 % TBD: insert listings how this document is made. 
-For convenience also \texttt{pdfprivacy} described in~\cite{PdfPriv} can be used. 
+For convenience also \texttt{pdfprivacy} described in~\cite{PdfPriv} can be used, 
+at least for \pdflatex. 
 \medskip
 
 
