@@ -233,10 +233,12 @@ but can also be configured to mean DOC\@.
 Independent of the order given, the given targets are created 
 in an internal ordering. 
 
-Caution: These targets are the default targets for any latex main file, 
+CAUTION: These targets are the default targets for any latex main file, 
 but depending on the document class, there may be further restrictions 
 given by setting '\texttt{\$docClassesToTargets}'. 
 Currently, only the class \texttt{beamer} used for presentations has restrictions. 
+Moreover, these targets may be overwritten for individual \LaTeX{} main files 
+using magic comments as described in Section~\ref{subsec:sourcesLatex}. 
 
 %The default value is '\texttt{chk, pdf, html}'. 
 \end{minipage}
@@ -319,6 +321,9 @@ The default value consists of two chunks:
 CAUTION\@: Due to a 
 \href{https://issues.apache.org/jira/projects/MNG/issues/MNG-7927?filter=reportedbyme}{bug in maven}, 
 setting this to the empty string is ignored. 
+
+CAUTION\@: This setting is ignored, if targets are specified for individual \LaTeX{} main files 
+using magic comments as described in Section~\ref{subsec:sourcesLatex}. 
 \end{minipage}
 } \\
 \texttt{mainFilesIncluded}          &  empty string        \\
@@ -1085,7 +1090,7 @@ Parameter        & Default  \\
 The \LaTeX{} command to create above all a PDF-file with. 
 Further formats are DVI and XDV and also other formats based on these. 
 Expected values are \lualatex, \xelatex{} and \pdflatex. 
-Caution: This setting may be overwritten for individual \LaTeX{} main files 
+CAUTION\@: This setting may be overwritten for individual \LaTeX{} main files 
 using magic comments as described in Section~\ref{subsec:sourcesLatex}. 
 
 Note that for \xelatex{} dvi mode 
