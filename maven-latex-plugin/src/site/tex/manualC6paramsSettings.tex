@@ -256,7 +256,7 @@ and of course they are not allowed to be used.
 \multicolumn2{|l|}{
 \begin{minipage}{0.95\linewidth}
 The pattern to be applied to the beginning of the contents of TEX-files 
-which identifies a \LaTeX{} main file, i.e. a file to be compiled. 
+which identifies a \LaTeX{} main file, i.e.\@ a file to be compiled. 
 If the file is really a \LaTeX{} main file, 
 the pattern contributes to finding the targets for compilation. 
 This may be done either directly via a magic comment 
@@ -481,7 +481,7 @@ For further description see Section~\ref{sec:injFiles}.
 
 Before reading the details given in this section, 
 the user is advised to at least skim 
-through Section~\ref{subsec:sourcesLatex} and \ref{sec:outputFormats} 
+through Section~\ref{subsec:sourcesLatex} and~\ref{sec:outputFormats} 
 for intuitive understanding. 
 
 The regular expression pattern \texttt{patternLatexMainFile} 
@@ -553,17 +553,17 @@ Let us trace through line by line:
 %
 \begin{description}
   \item[1] The \texttt{\textbackslash A} indicates the start of the file. 
-  \item[2-4] These lines match magic comments \texttt{\% !TEX}, 
+  \item[2--4] These lines match magic comments \texttt{\%~!TEX}, 
   which are used by other tools. 
   Line 3 extracts \texttt{programMagic} 
-  from the first magic comment of the form \texttt{\% !TEX program=\dots}. 
+  from the first magic comment of the form \texttt{\%~!TEX program=\dots}. 
   This is the behavior of the other tools also. 
-  The other lines are to skip information from magic comments \texttt{\% !TEX} 
+  The other lines are to skip information from magic comments \texttt{\%~!TEX} 
   which are not needed. 
-  \item[5] This line matches a sole magic comment \texttt{\% !LMP} 
+  \item[5] This line matches a sole magic comment \texttt{\%~!LMP} 
   which is specific for this software. 
   It defines optionally \texttt{docClassMagic} and \texttt{targetMagic}. 
-  \item[6-10] Except for magic comments, 
+  \item[6--10] Except for magic comments, 
   this defines material which may precede the command \cmd{documentclass}. 
   Besides lines with specific commands, it matches empty lines and comment lines. 
   Also, a line may start with whitespace may contain a command and end in a comment. 
@@ -1090,7 +1090,7 @@ using magic comments as described in Section~\ref{subsec:sourcesLatex}.
 
 Note that for \xelatex{} dvi mode 
 (creating xdv-files instead of DVI-files) is not supported, 
-even not creating PDF or other formats via XDV. 
+even not creating PDF or other formats via XDV\@. 
 See also the according options \texttt{\$latex2pdfOptions} and \texttt{\$pdfViaDvi}. 
 In particular, this maven plugin does not allow goal \texttt{dvi} and related 
 for \xelatex. 

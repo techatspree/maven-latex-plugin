@@ -78,7 +78,7 @@ BIB files typically describing a bibliography,  or, %TBD: support of biblatex
 not yet supported, a glossary or that like, % TBD: check when supported, mention glossaries-extra
 \item 
 program files, either included as a listing by package \pkg{listings} 
-or executed via the package \pkg{pythontex}. \index{pythontex}% chktex 24
+or executed via the package \pkg{pythontex}\index{pythontex}. % chktex 24
 \end{itemize}
 
 
@@ -165,18 +165,18 @@ Beamer documents may specify accordingly \texttt{aspectratio}.
 All this must be allowed for \LaTeX{} main files. 
 
 It also makes sense to allow comments, 
-i.e. text from unescaped \texttt{\%} to the end of the line, 
+i.e.\@ text from unescaped \texttt{\%} to the end of the line, 
 and also magic comments. 
 A magic comment, as all comments, is invisible to the \LaTeX{} compilers 
 but give hints to more high level tools 
 like IDEs or build tools like this \LaTeX{} builder. 
-Typically, it is a comment comprising a whole line and starting with \texttt{\% !}, 
+Typically, it is a comment comprising a whole line and starting with \texttt{\%~!}, 
 maybe followed by an identifier of the tool it refers to 
 or by an identifier referring to TEX files in general. 
-For example latex workshop and \TeX{}shop support the magic comment \texttt{\% !TEX root} 
+For example latex workshop and \TeX{}shop support the magic comment \texttt{\%~!TEX root} 
 and this must be essentially in the first line. 
 The magic comments for this tool may be preceded by other magic comments 
-and starts with \texttt{\% !LMP} which is short for ``latex maven plugin`'. 
+and starts with \texttt{\%~!LMP} which is short for ``latex maven plugin''. 
 This is not completely correct but easy to remember. 
 
 
@@ -184,16 +184,16 @@ Since the pattern \texttt{patternLatexMainFile} may never be appropriate for all
 to match the document class in \cmd{documentclass} 
 and not all users are familiar with regular expressions to adapt by need, 
 marking a \LaTeX{} main file by specifying its document class like in 
-\texttt{\% !LMP class=\dots} is an easy workaround. 
+\texttt{\%~!LMP class=\dots} is an easy workaround. 
 
 As will be explained in detail in Section~\ref{sec:outputFormats}, 
 the explicit document class is only used 
 to restrict the targets for which to compile a \LaTeX{} main file. 
 The targets can be specified for each \LaTeX{} main file individually 
-using \texttt{\% !LMP targets=\dots}. 
+using \texttt{\%~!LMP targets=\dots}. 
 In fact specifying targets marks a TEX file as a \LaTeX{} main file also 
-making specification of the class as \texttt{\% !LMP class=\dots} superfluous. 
-Nevertheless, \texttt{\% !LMP class=\dots\ targets=\dots} is allowed. 
+making specification of the class as \texttt{\%~!LMP class=\dots} superfluous. 
+Nevertheless, \texttt{\%~!LMP class=\dots\ targets=\dots} is allowed. 
 
 This \LaTeX{} builder is designed to cooperate with other tools. 
 The magic comments of the other tools as described in various places in Section~\ref{sec:devel} 
@@ -212,7 +212,7 @@ and, provided the feature is used, also the converse is true.
 Since this software shall not rely on further tooling, 
 \texttt{root} is not used. 
 
-In contrast, magic comments like \texttt{\% !TeX program=\dots} 
+In contrast, magic comments like \texttt{\%~!TeX program=\dots} 
 specifying the \LaTeX{} converter signify a \LaTeX{} main file in any case. 
 It overwrites also the converter 
 given in the general setting \texttt{latex2pdfCommand} 
