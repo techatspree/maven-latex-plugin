@@ -1084,8 +1084,7 @@ public class Settings {
    * by default also pdf version 1.5 is created. 
    * For sake of uniformity, it is advisable to create pdf version 1.7 also. 
    * In future this will be done uniformly through <code>\DocumentMetadata</code> command. 
-   * TThe default value is <code>-V1.7</code> but will in future be the empty string again. 
-  
+   * The default value is <code>-V1.7</code> but will in future be the empty string again. 
    */
   @RuntimeParameter
   @Parameter(name = "dvi2pdfOptions", defaultValue = "")
