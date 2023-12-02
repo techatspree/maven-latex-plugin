@@ -82,16 +82,16 @@
 \hypersetup{
   pdfinfo={
     Author      ={Ernst Reissner},
-    Title       ={Processing with xelatex: demand and test},
+    Title       ={Processing with pdflatex: demand and test},
     CreationDate={unknown},
     ModDate     ={unknown},
     Producer    ={unknown},
     Subject     ={test file},
-    Keywords    ={xelatex;magic commands}
+    Keywords    ={magic comments}
   }
 }
 
-\title{Processing with \texttt{xelatex}: demand and test}
+\title{Processing with \texttt{pdflatex}: demand and test}
 \author{Ernst Reissner (rei3ner@arcor.de)}
 \date{}
 
@@ -105,17 +105,17 @@ Tests magic comment: overwrite default \LaTeX{} processor, which is \texttt{lual
 If this does not work, an invisible \texttt{\textbackslash{}GenericError} 
 in an \texttt{\textbackslash{}ifPDFTeX} construction throws an error leading to an error return code 
 of the late processor. 
-% \ifPDFTeX%
-%   % ok
-% \else
-%   \ifLuaTeX%
-%     \GenericError{...}{Found this document to be converted with lualatex, although pdflatex is specified. }{}{} % chktex 11
-%   \else
-%     \ifXeTeX%
-%       \GenericError{...}{Found this document to be converted with xelatex, although xelatex is specified. }{}{} % chktex 11
-%     \else
-%       \GenericError{...}{Found this document to be converted not with pdflatex, although this is specified. }{}{} % chktex 11
-%     \fi
-%   \fi
-% \fi
+\ifPDFTeX%
+  % ok
+\else
+  \ifLuaTeX%
+    \GenericError{...}{Found this document to be converted with lualatex, although pdflatex is specified. }{}{} % chktex 11
+  \else
+    \ifXeTeX%
+      \GenericError{...}{Found this document to be converted with xelatex, although xelatex is specified. }{}{} % chktex 11
+    \else
+      \GenericError{...}{Found this document to be converted not with pdflatex, although this is specified. }{}{} % chktex 11
+    \fi
+  \fi
+\fi
 \end{document}
