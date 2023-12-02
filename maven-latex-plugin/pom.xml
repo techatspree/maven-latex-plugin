@@ -13,6 +13,9 @@
   <packaging>maven-plugin</packaging>
 
   <prerequisites>
+    <!-- This is the minimum version. 
+      It must coincide with the minimum version 
+      in the interval in ./src/main/resources/version.properties -->
     <maven>3.9.1</maven>
   </prerequisites>
 
