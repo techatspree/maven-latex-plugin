@@ -283,12 +283,12 @@ The second one via the command \cmd{includegraphics}{}
 defined by the package \pkg{graphicx} 
 which is described in~\cite{GraX}. 
 Chapter 2 therein mentions the supported drivers, 
-among these are also \texttt{dvipdfm} and \texttt{dvipdfmx}. 
+among these are also \texttt{dvipdfm} and \texttt{dvipdfmx}, the latter is the default. 
 It is not the package but the driver 
 which decides on the support of graphic formats. 
-The dvipdfm user manual,~\cite{DviPdfMx} lists the allowed formats 
-MetaPost (i.e.~\gls{mps}), postscript, 
-\gls{pdf}, \gls{jpg} and \gls{png}. 
+The dvipdfmx user manual,~\cite{DviPdfMx}, Section 3.1.1 lists the allowed formats 
+MetaPost (i.e.~\gls{mps}), postscript (i.e.~\gls{eps}), 
+\gls{pdf}, \gls{jpg} including jpeg2000 and \gls{png}. 
 \item\label{it:transExp}
 The third one must be transformed into a graphics format 
 of one of the former two kinds using an external tool for transformation. 
