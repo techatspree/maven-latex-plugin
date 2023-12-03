@@ -28,7 +28,7 @@ $pdf_mode = 4;# specifies creation of pdf via lualatex
 # %O is the options (additional options passed by latexmk)
 # %S source file (maybe %A and %B more appropriate: without ending)
 #$lualatex = "${latex2pdfCommand} ${latex2pdfOptions} %O %S";
-$lualatex = "internal mylatex %O %S";
+$lualatex = "internal mylatex %O %A";
 
 sub mylatex {
   my @args = @_;
