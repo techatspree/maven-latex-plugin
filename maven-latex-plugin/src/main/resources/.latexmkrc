@@ -9,9 +9,10 @@
 #$pdflatex = 'lualatex -file-line-error %O %S';
 
 # PDF-generating modes are:
+# 0: do NOT generate a pdf version of the document. (default)
 # 1: pdflatex, as specified by $pdflatex variable (still largely in use)
-# 2: postscript conversion, as specified by the $ps2pdf variable (useless)
-# 3: dvi conversion, as specified by the $dvipdf variable (useless)
+# 2: via postscript conversion, as specified by the $ps2pdf variable (useless)
+# 3: via dvi conversion, as specified by the $dvipdf variable (useless)
 # 4: lualatex, as specified by the $lualatex variable (best)
 #    Note that we abuse that by replacing lualatex by a variable
 # 5: xelatex, as specified by the $xelatex variable (second best)
@@ -24,7 +25,25 @@ $pdf_mode = 4;# specifies creation of pdf via lualatex
 
 # note that -recorder is implicitly added by latexmk, 
 # so may be duplicated, but no disadvantage 
-$lualatex = "${latex2pdfCommand} ${latex2pdfOptions} %O %S";
+# %O is the options (additional options passed by latexmk)
+# %S source file (maybe %A and %B more appropriate: without ending)
+#$lualatex = "${latex2pdfCommand} ${latex2pdfOptions} %O %S";
+$lualatex = "internal mylatex %O %S";
+
+sub mylatex {
+  my @args = @_;
+  # Possible preprocessing here
+  # the options given by the LaTeX-Builder are in ${latex2pdfOptions}, 
+  # the options passed by latexmk were in %O and are thus part of @args 
+  # the last part of @args is passed also by latexmk as %S
+  print("args by latexmk: @args\n");
+  print("invoke: ${latex2pdfCommand} ${latex2pdfOptions} @args\n");
+  return system("${latex2pdfCommand} ${latex2pdfOptions} @args");
+}
+
+
+
+
 
 #$postscript_mode = $dvi_mode = 0;
 
