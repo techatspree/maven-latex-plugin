@@ -76,15 +76,20 @@
   % can be extended using l3opacity
 \else
   % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
-  \usepackage[dvipdfmx]{xcolor}
-  \usepackage[dvipdfmx]{graphicx}
+  %\usepackage[dvipdfmx]{xcolor}
   \IfPackageLoadedTF{tex4ht}{%
+    \usepackage[dvipdfmx]{graphicx}
+    \usepackage[dvipdfmx]{xcolor}
     \usepackage[tex4ht, destlabel]{hyperref}
   }{%
     \ifxetex%
       \usepackage[destlabel]{hyperref}
+      \usepackage{graphicx}
+      \usepackage{xcolor}
     \else
       \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
+      \usepackage[dvipdfmx]{graphicx}
+      \usepackage[dvipdfmx]{xcolor}
       % lualatex: without [dvipdfmx] option did not find 
       % converter dvi to pdf or to ps
       % pdflatex: without [dvipdfmx] option dvips still works, 
