@@ -28,17 +28,20 @@ $pdf_mode = 4;# specifies creation of pdf via lualatex
 # %O is the options (additional options passed by latexmk)
 # %S source file (maybe %A and %B more appropriate: without ending)
 #$lualatex = "${latex2pdfCommand} ${latex2pdfOptions} %O %S";
-$lualatex = "internal mylatex %O %A";
+$lualatex = "internal mylatex %A %O";
 
-sub mylatex {
-  my @args = @_;
+# superfluous for perl >=5.36 according to documentation, but does not work for me (perl 5.38?)
+use feature 'signatures';
+
+sub mylatex($fileName, @opts) {
+  #my @args = @_;
   # Possible preprocessing here
   # the options given by the LaTeX-Builder are in ${latex2pdfOptions}, 
   # the options passed by latexmk were in %O and are thus part of @args 
   # the last part of @args is passed also by latexmk as %S
-  print("args by latexmk: @args\n");
-  print("invoke: ${latex2pdfCommand} ${latex2pdfOptions} @args\n");
-  return system("${latex2pdfCommand} ${latex2pdfOptions} @args");
+  #print("args by latexmk: @args\n");
+  print("invoke: ${latex2pdfCommand} ${latex2pdfOptions} @opts $fileName\n");
+  return system("${latex2pdfCommand} ${latex2pdfOptions} @opts $fileName");
 }
 
 
