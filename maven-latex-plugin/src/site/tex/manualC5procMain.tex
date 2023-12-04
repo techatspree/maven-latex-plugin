@@ -69,7 +69,7 @@ master TEX files roughly have the form
 
 The core of conversion of a TEX file into a PDF file 
 is running a \LaTeX{}-to-pdf converter \texttt{latex2pdf} 
-to a master TEX file \texttt{xxx.tex}. 
+to a master TEX file \texttt{xxx.tex}.
 The \LaTeX-to-pdf converter \texttt{latex2pdf} 
 is configurable via the parameter \texttt{latex2pdfCommand}. 
 Possible values are \lualatex{}, \xelatex{} and \pdflatex, 
@@ -994,133 +994,61 @@ There are two strategies to deal with the problem:
 We support both approaches. 
 The first one imposes requirements on the TEX source file. 
 It excludes that one displays a creation date changing each run. 
-Listing~\ref{lst:designMeta} lower part illustrates that: 
-We replaced the creation date by a ``version date''. 
+For this manual, we replaced the creation date by a ``version date''. 
 A date can be only date of check in of a version control system or that like. 
 As an alternative, one could also refrain from using dates altogether. 
 In the \texttt{\textbackslash date} command 
 one could display also other pieces of information identifying the document. 
 
 But the visible date is not all we have to avoid. 
-Listing~\ref{lst:designMeta} shows how to eliminate metadata 
+Listing~\ref{lst:reprPdfEngines} shows how to eliminate metadata 
 and to replace with adequate one. 
 There is metadata which can be eliminated in a uniform way for all latex engines 
 using the package \texttt{hyperref} which the author generally advises. 
-Using \texttt{hyperref} with \texttt{\textbackslash hypersetup} 
+Using \texttt{hyperref} with \cmd{hypersetup} 
 one can set metadata such as author, title, subject and keyword 
 as described in~\cite{HyperTextP}, Section 5.8. 
-On the other hand, 
-one could eliminate \texttt{CreationDate} and \texttt{ModDate}. 
-For newer versions of \pdflatex{} this can be done alternatively 
-with \texttt{\textbackslash pdfinfoomitdate1}. 
+Here we eliminate creation date and modification date for sake of reproducibility, 
+and we also eliminate the producer for security reason. 
 
-The metadata which can be eliminated only in an engine specific way 
-are the PTEX\index{PTEX} keys including the banner, and the \texttt{pdftrailerid}. 
-Note that the latter is \emph{intentionally} 
-a unique identifier for the individual document 
-and so strictly speaking it is not advised to eliminate this 
-but eliminating is necessary, because it is incompatible with reproducibility. 
-Note that \xelatex{} seems not to write PTEX keys at all 
-so only the \texttt{pdftrailerid} has to be eliminated or fixed. 
-
-Unfortunately, the commands required to make a PDF file reproducible 
-are not uniform among the TEX to PDF converters. 
-In fact, it works best with \lualatex{} and sufficiently for \pdflatex{} 
-but support seems incomplete with \xelatex. 
-
-
-\begin{lstlisting}[language={[LaTeX]TeX}, basicstyle=\tiny,
-  escapechar=|,
-  float, captionpos=b, label={lst:designMeta}, 
-  caption={Specifying meta-data for PDF files}]
-
-% for pdflatex
-\pdfsuppressptexinfo-1
-% pdfsuppressptexinfo-1 is the same as pdfsuppressptexinfo15
-% 1 -> PTEX.Fullbanner
-% 2 -> PTEX.FileName
-% 4 -> PTEX.PageNumber
-% 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
-\pdftrailerid{}
-
-% for lualatex: 
-%   1 -> PTEX.FullBanner
-%   2 -> PTEX.FileName
-%   4 -> PTEX.PageNumber
-%   8 -> PTEX.InfoDict
-%  16 -> Creator
-%  32 -> CreationDate
-%  64 -> ModDate
-% 128 -> Producer
-% 256 -> Trapped
-% 512 -> ID
-\pdfvariable suppressoptionalinfo \numexpr32+64+512\relax
-
-% for xelatex
-\special{pdf:trailerid [
-    <00112233445566778899aabbccddeeff>
-    <00112233445566778899aabbccddeeff>
-]}
-
-% general
-\usepackage{hyperref}
-...
-\hypersetup{
-  pdfinfo={
-    Author      ={Ernst Reissner},
-    Title       ={The dvi-format and the program dvitype},
-    CreationDate={unknown},
-    ModDate     ={unknown},
-    Subject     ={dvi and dvitype},
-    Keywords    ={LaTeX;dvi;dvitype}
-  }
-}
-
-% alternative for pdftex only
-% \pdfinfoomitdate1
-% \pdfsuppressptexinfo-1
-% \pdftrailerid{}
-% \pdfinfo{
-%   /Author       (Ernst Reissner)
-%   /Title        (The dvi-format and the program dvitype)
-%   /CreationDate (unknown)
-%   /ModDate      (unknown)
-%   /Subject      (dvi and dvitype)
-%   /Keywords     (LaTeX;dvi;dvitype)
-%}
-% Replacing pdfinfoomitdate1 in conjunction with
-% \usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
-% alternative 1 for pdftex only
-
-
-\title{The dvi-format and the program dvitype}
-\author{Ernst Reissner (rei3ner@arcor.de)}
-\date{\versionDate}
-\end{lstlisting}
-
-
+Besides the date and time, there is another piece of metadata, the \texttt{trailerid}, 
+which is to ensure that each run of a \LaTeX{} to PDF compiler runs 
+different PDF files are produced. 
+This identifier can only be set in a way specific for the \LaTeX{} compiler. 
+Caution: \xelatex{} causes \cmd{ifpdf} to enter always the \texttt{else} branch. 
+Note that for \xelatex{} further techniques are required to reach reproducibility. 
+% TBD: make this more specific. 
+Except for \xelatex, Listing~\ref{lst:reprPdfEngines} provides means to eliminate all information 
+making the document reproducible also without \pkg{hyperref}, 
+but this applies only to newer versions. 
+Besides code the listing provides a lot of documentation. 
+In that for \pdflatex{} also the package \pkg{pdfprivacy} described in~\cite{PdfPriv} is mentioned 
+as a convenient alternative. 
 
 If a user renounces independence of the engine and sticks to \pdflatex{} only, 
 the package \texttt{hyperref} 
 could be replaced by specific commands. 
 Also, using the package \texttt{iftex} one can detect the used engine 
-via the macros \texttt{\textbackslash ifLuaTeX}, \texttt{\textbackslash ifXeTeX} 
-and \texttt{\textbackslash ifPDFTeX} as illustrated in Listing~\ref{lst:reprPdfEngines}
+via the macros \cmd{ifLuaTeX}, \cmd{ifXeTeX} 
+and \cmd{ifPDFTeX} as illustrated in Listing~\ref{lst:reprPdfEngines}
 and adapt the code to the engine. 
 
+% TBD: clarify: does hyperref replace the engine specific settings? 
+% I think no, because of the trailerid, it does not, so iftex is always needed. 
+% For pdftex I seem to do twice and once is sufficient. 
+% I have the impression some things i do not for reproducibility 
+% but I do for security. 
+% All in all, we need additional research to write this section in a competent way. 
+
 \lstinputlisting[language={[LaTeX]TeX}, basicstyle=\footnotesize,
-firstline=22, lastline=51, 
+firstline=3, 
 breaklines,
 %float, 
 captionpos=b, label={lst:reprPdfEngines},
 caption={Create reproducible PDF files for various engines}]%
-{./manualLMP.tex}
+{./headerSuppressMetaPDF.tex}
 
 
-% TBD: insert listings how this document is made. 
-For convenience also \texttt{pdfprivacy} described in~\cite{PdfPriv} can be used, 
-at least for \pdflatex. 
-\medskip
 
 
 Now that we have described how to ensure reproducible PDF artifacts, 
