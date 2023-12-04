@@ -149,7 +149,6 @@
 
 % index and glossary
 \IfPackageLoadedTF{tex4ht}{
-  \newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
 }{
   \usepackage{splitidx}%[split]
 %  \usepackage{makeidx}
@@ -159,8 +158,7 @@
   % , xindy or even [xindy={language=english,codepage=utf8}]
   % mainly for index and glossaries 
   %\makeglossaries% TBD: activate later
-  \newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}} % TBD: this must be extracted 
-  }
+}
 
 % high quality tables 
 \usepackage{booktabs}

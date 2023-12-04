@@ -1,5 +1,13 @@
 \newcommand{\cmd}[1]{\texttt{\textbackslash #1}}
 
+% For tex4ht packages splitindex and glossaries is not loaded, makeindex is not invoked. 
+\IfPackageLoadedTF{tex4ht}{
+  \newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
+}{
+  \newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}} % TBD: this must be extracted 
+}
+
+
 \newcommand{\pdflatex}{\cmd{pdflatex}}
 \newcommand{\lualatex}{\cmd{lualatex}}
 \newcommand{\xelatex}{\cmd{xelatex}}
