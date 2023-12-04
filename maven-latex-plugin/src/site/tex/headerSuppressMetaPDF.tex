@@ -1,4 +1,6 @@
-% presupposes hyperref (e.g. preload header.tex)
+% injection file written by latex plugin 2.0-SNAPSHOT
+
+% presupposes hyperref and iftex (e.g. preload header.tex)
 
 % xelatex enters always else branch of \ifpdf 
 % This is maybe because it always creates xdv 
@@ -7,6 +9,7 @@
 \ifXeTeX%
   % for xelatex
   % TBD: find a way to express pdfinfoomitdate: necessary? 
+  % provide valid trailerid 
   \special{pdf:trailerid [
     <00112233445566778899aabbccddeeff>
     <00112233445566778899aabbccddeeff>
@@ -14,31 +17,38 @@
 \else
   \ifpdf%
     \ifLuaTeX%
-      % for lualatex
-      % omit CreationDate and ModDate keys.
-      %\pdfvariable suppressoptionalinfo 767% chktex 1
-      % 767=512+0+128+64+...+1 this excludes all but 
+      % for lualatex 
       % no adding to the trailer dictionary.
       \pdfvariable trailerid{}% chktex 1
+
+      % omit only CreationDate and ModDate keys.
+      % \pdfvariable suppressoptionalinfo 767% chktex 1
+      % 767=512+0+128+64+...+1 this excludes all but 
+      % We decided to omit all information 
       \pdfvariable suppressoptionalinfo -1% chktex 1
-      % both described in luatex reference manual \cite{LuaTexRef}, Section 3.2.1. 
-% 0
-% + 1 % PTEX.FullBanner
-% + 2 % PTEX.FileName
-% + 4 % PTEX.PageNumber
-% + 8 % PTEX.InfoDict
-% + 16 % Creator
-% + 32 % CreationDate
-% + 64 % ModDate
-% + 128 % Producer
-% + 256 % Trapped
-% + 512 % ID
+      % The meaning of the bits are described in luatex reference manual 
+      % \cite{LuaTexRef}, Section 3.2.1. 
+      % 0
+      % + 1 % PTEX.FullBanner
+      % + 2 % PTEX.FileName
+      % + 4 % PTEX.PageNumber
+      % + 8 % PTEX.InfoDict
+      % + 16 % Creator
+      % + 32 % CreationDate
+      % + 64 % ModDate
+      % + 128 % Producer
+      % + 256 % Trapped
+      % + 512 % ID
     \else
       \ifPDFTeX%
+        % the following see pdftex user manual, \cite{PdfTexUsr}, Section 7.4
+        \pdftrailerid{}
+
         % omit CreationDate and ModDate keys.
         % not before pdfTeX 3.14159265-2.6-1.40.17
         % the following two see pdftex user manual, \cite{PdfTexUsr}, Section 7.4
-        \pdfinfoomitdate=1 % If nonzero, omitt he /CreationDate and /ModDate
+        \pdfinfoomitdate=1 % If nonzero, omit the /CreationDate and /ModDate
+        % we do even more for security reasons 
         \pdfsuppressptexinfo=-1
         % eliminates PTEX info: 
         % 1 -> PTEX.Fullbanner
@@ -46,8 +56,18 @@
         % 4 -> PTEX.PageNumber
         % 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
 
-        % the following see pdftex user manual, \cite{PdfTexUsr}, Section 7.4
-        \pdftrailerid{}
+        % Replacing pdfinfoomitdate1 in conjunction with
+        % \usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
+
+        % If doing without hyperref package (pdftex only): 
+        % \pdfinfo{
+        %   /Author       (Ernst Reissner)
+        %   /Title        (The dvi-format and the program dvitype)
+        %   /CreationDate (unknown)
+        %   /ModDate      (unknown)
+        %   /Subject      (dvi and dvitype)
+        %   /Keywords     (LaTeX;dvi;dvitype)
+        %}
       \else
         % Here, the tex processor is unknown. 
         \GenericError{...}{Tried compilation with unknown TeX compiler. }{}{} % chktex 11
@@ -56,22 +76,6 @@
   \else%ifpdf
   \fi%ifpdf
 \fi%xetex
-
-
-% The following is to control metadata: 
-% - erase docdata and set the ones needed thereafter
-% - erase trailer to make reproducible 
-%   CAUTION: This is not recommended as the docs are no longer individual. 
-
-
-%\pdfinfo{
-%   /Author (Ernst Reissner)
-%   /Title  (Maven plugin and ant-task to process latex)
-%   /CreationDate (unknown)
-%   /ModDate (unknown)
-%   /Subject (latex plugin for maven and latex task for ant)
-%   /Keywords (svg;png;metapost;PDF;LaTeX;maven;ant)
-%}
 
 % TBD: check of resulting pdf with exif unveils a warning duplicate author 
 
