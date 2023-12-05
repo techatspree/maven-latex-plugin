@@ -33,15 +33,35 @@ $lualatex = "internal mylatex %A %O";
 # superfluous for perl >=5.36 according to documentation, but does not work for me (perl 5.38?)
 use feature 'signatures';
 
+# Used in general to transform string representations from pom to perl specific representations 
+# maybe there are alternative: yes for true and no for false. Clarify. 
+my %boolStrToVal = (true => 1, false => 0);
+
+# TBD: not ideal foor pdfViaDvi=true: conversion dvi to pdf is needed only once at the end, 
+# whereas this method does conversion dvi to pdf each time also tex to dvi is performed. 
+# Thus in the long run only run dvi2pdf; the rest is done with rules. 
 sub mylatex($fileName, @opts) {
+ 
   #my @args = @_;
   # Possible preprocessing here
   # the options given by the LaTeX-Builder are in ${latex2pdfOptions}, 
   # the options passed by latexmk were in %O and are thus part of @args 
   # the last part of @args is passed also by latexmk as %S
   #print("args by latexmk: @args\n");
-  print("invoke: ${latex2pdfCommand} ${latex2pdfOptions} @opts $fileName\n");
-  return system("${latex2pdfCommand} ${latex2pdfOptions} @opts $fileName");
+  my $pdfViaDvi = $boolStrToVal{'${pdfViaDvi}'};
+  die "Error: Boolean expected but found '{$boolStrToVal}'. " unless exists($boolStrToVal{'${pdfViaDvi}'});
+  if ($pdfViaDvi) {
+    # note that exactly one of the two options -no-pdf -output-format=dvi applies; 
+    # the other is ignored. 
+    # TBD: eliminate: xelatex emits a warning because -output-format is unknown 
+    $resLatex    = system("${latex2pdfCommand} ${latex2pdfOptions} -no-pdf -output-format=dvi @opts $fileName");
+    $resDviToPdf = system("${dvi2pdfCommand}   ${dvi2pdfOptions}                                    $fileName");
+    return ($resLatex or $resDviToPdf)
+  } else {
+    return system("${latex2pdfCommand} ${latex2pdfOptions} @opts $fileName");
+  }
+  #print("invoke: ${latex2pdfCommand} ${latex2pdfOptions} @opts $fileName\n");
+  #return system("${latex2pdfCommand} ${latex2pdfOptions} @opts $fileName");
 }
 
 
@@ -138,7 +158,6 @@ sub fig2dev {
   my $ret1 = system(qq/${fig2devCommand} -L  pstex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.eps/);
   my $ret2 = system(qq/${fig2devCommand} -L pdftex   ${fig2devGenOptions} ${fig2devPdfEpsOptions}       $file.fig $file.pdf/);
   my $ret3 = system(qq/${fig2devCommand} -L pdftex_t ${fig2devGenOptions} ${fig2devPtxOptions} -p $file $file.fig $file.ptx/);
-
 
   return ($ret1 or $ret2 or $ret3);
 }
