@@ -1432,9 +1432,15 @@ By convention, a class emitting a warning identifies itself
 by its name \texttt{<name>}
 emitting a warning starting with \texttt{Class <name> Warning: }, 
 \item
-pdftex-warning 
+pdf\TeX-warning starting with \texttt{pdfTeX warning} 
+and being specific for the compiler \pdflatex, 
+\item 
+Warnings on inclusion of a PDF file, 
+e.g. inclusion of PDF files with incompatible version, 
+starting with \texttt{warning  (file <filename>) (pdf inclusion)}, 
 \item
-Fontspec warnings. Please note the leading character ``\texttt{*}''. 
+Font specification warnings starting with \texttt{* fontspec warning}\footnote%
+{Please note the leading character ``\texttt{*}''. }, 
 \item
 Further warnings not identifying themselves as warnings 
 as the word ``warning'' does not occur. 
@@ -1658,7 +1664,7 @@ the pattern is
 %$ for emacs only 
 
 
-\section{Parameters for creation of the Gglossary}%
+\section{Parameters for creation of the Glossary}%
 \label{sec:settingsMakeGlossaries}
 
 This section describes the parameters 

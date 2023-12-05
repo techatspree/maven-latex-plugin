@@ -965,18 +965,25 @@ public class Settings {
    */
   @RuntimeParameter
   @Parameter(name = "patternWarnLatex", defaultValue = "^(LaTeX Warning: |"
-      + "LaTeX Font Warning: |" + "(Package|Class) .+ Warning: |" +
+      + "LaTeX Font Warning: |"
+      + "(Package|Class) .+ Warning: |"
       // pdftex warning (ext4): destination with the same identifier
       // pdfTeX warning (dest): ... has been referenced ...
       // pdfTeX warning: pdflatex (file pdftex.map): cannot open font map file 
       // pdfTeX warning: Found pdf version 1.5, allowed maximum 1.4 
       // pdfTeX warning: pdflatex (file ./Carlito-Bold.pfb): glyph `index130' undefined
-      "pdfTeX warning( \\((\\d|\\w)+\\))?: |" + "\\* fontspec warning: |"
+      // warning  (pdf backend): unreferenced destination with name 'sth with glossary' 
+      + "pdfTeX warning( \\((\\d|\\w)+\\))?: |"
+      + "warning  \\(file .+\\) \\(pdf inclusion\\): PDF inclusion: |" // found PDF version TBD: rework for longer lines 
+      + "\\* fontspec warning: |"
       + "Missing character: There is no .* in font .*!$|"
       + "A space is missing\\. (No warning)\\.)")
   private String patternWarnLatex = "^(LaTeX Warning: |"
-      + "LaTeX Font Warning: |" + "(Package|Class) .+ Warning: |"
+      + "LaTeX Font Warning: |"
+      + "(Package|Class) .+ Warning: |"
       + "pdfTeX warning( \\((\\d|\\w)+\\))?: |" + "\\* fontspec warning: |"
+      + "warning  \\(file .+\\) \\(pdf inclusion\\): PDF inclusion: |" // found PDF version TBD: rework for longer lines 
+      + "\\* fontspec warning: |"
       + "Missing character: There is no .* in font .*!$|"
       + "A space is missing\\. (No warning)\\.)";
 

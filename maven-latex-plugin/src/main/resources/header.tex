@@ -178,6 +178,28 @@
   \usepackage[nottoc, numindex, numbib]{tocbibind}
 }
 
+% TBD: check: version 2.0 is already available, but seems no support to set the major version. 
+\newcommand{\setMinorVersionPdf}[1] {%
+  \ifXeTeX%
+    \special{pdf:minorversion #1}
+  \else
+    \ifpdf%
+      \ifPDFTeX%
+        \pdfminorversion=#1%
+      \else
+        \ifLuaTeX%
+        \pdfvariable minorversion=#1% chktex 1
+        \else
+          % Here, the tex processor is unknown. 
+          \GenericError{...}{Tried compilation with unknown TeX compiler. }{}{} % chktex 11
+        \fi
+      \fi
+    \else
+      % nothing to do: no pdf output 
+    \fi
+  \fi
+}
+
 %\usepackage{latex-bnf}
 
 

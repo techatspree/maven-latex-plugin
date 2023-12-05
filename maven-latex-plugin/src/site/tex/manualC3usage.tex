@@ -741,7 +741,7 @@ which is the typical usage for document development.
 It is observed that the headers of various \LaTeX{} files are quite similar. 
 In particular the packages loaded 
 have a huge overlap and at the same time, although rare, 
-exotic packages are loaded which may be replaced by standard ones. 
+exotic packages tend to be loaded which may be replaced by standard ones. 
 This hurts single source principle 
 and at the same times makes it almost impossible 
 for a build tool as this one, 
@@ -760,6 +760,14 @@ Besides loading packages it also sets \texttt{synctex}
 which is crucial for synchronizing TEX files and according PDF files 
 via forward search and backward search as described in Section~\ref{subsec:editViewLatex}. 
 % TBD \listfiles to check loaded packages 
+It also provides the command \cmd{setMinorVersionPdf} to set the minor version of the PDF file created. 
+This is mostly needed because some graphic tool creates PDF files with a newer PDF version 
+than the \LaTeX{} distribution does. 
+Setting the version avoids an according warning \texttt{WAP03} 
+listed in Table~\ref{tab:WarnALP} on page~\pageref{tab:WarnALP}. 
+The warning pattern is described in Section~\ref{subsec:patternWarnLatex} in detail. 
+
+
 
 As the configuration files described above, 
 it is intended to be injected in phase \texttt{validate}. 
