@@ -1,10 +1,11 @@
-% !LMP targets=chk
+% !LMP targets=chk,dvi
 % TBD: the setting targets=chk,html displays warnings 
 \documentclass{article}
-\usepackage{iftex}
+\input{../header.tex}
+%\usepackage{iftex}
 
 \begin{document}
-Tests magic comment: exclude target \texttt{pdf} individually specifying \texttt{chk} and \texttt{html}. 
+Tests magic comment: exclude target \texttt{pdf} individually specifying \texttt{chk} and \texttt{dvi}. 
 If this is not excluded, an invisible \texttt{\textbackslash{}GenericError} 
 in an \texttt{\textbackslash{}ifpdf} construction throws an error leading to an error return code 
 of the late processor. 
