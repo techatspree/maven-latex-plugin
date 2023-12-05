@@ -3331,18 +3331,21 @@ public class Settings {
       // filter until no variable in strLine found 
       while (true) {
         matcher = pattern.matcher(strLine);
-        if (matcher.find()) {
-          assert matcher.groupCount() >= 1;
-
-          // group zero is the whole, and it is not in the goup count 
-          assert props.containsKey(matcher.group(1)) : "Key '"
-              + matcher.group(1) + "' not found. ";
-          strLine = matcher.replaceFirst(props.get(matcher.group(1)));
-        } else {
+        if (!matcher.find()) {
           // Here, no variable in strLine found 
           writer.println(strLine);
           break;
         }
+        assert matcher.groupCount() >= 1;
+
+        // group zero is the whole, and it is not in the goup count 
+        // System.out.println("line: |"+strLine+"|");
+        // System.out.println("key: |"+matcher.group(1)+"|");
+        // System.out.println("val: |"+props.get(matcher.group(1))+"|");
+        assert props.containsKey(matcher.group(1)) : "Key '" + matcher.group(1)
+            + "' not found. ";
+        strLine = matcher.replaceFirst(props.get(matcher.group(1)));
+
         // filter next line 
       }
     }
