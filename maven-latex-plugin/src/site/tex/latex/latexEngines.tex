@@ -1,6 +1,18 @@
+%\DocumentMetadata{uncompress}%pdfversion=1.7,
 \RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[a4paper]{article}%scrartcl [12pt, a4paper]
-
+%\pdfvariable compresslevel 0
+%\pdfcompresslevel 0
+%\pdfobjcompresslevel 0
+% \usepackage{iftex}
+% \usepackage{longtable}
+% \usepackage{booktabs}
+% \usepackage{xurl}
+%\special{dvipdfmx:config z 0}
+% \special{pdf:trailerid [
+%   <00112233445566778899aabbccddeeff>
+%   <00112233445566778899aabbccddeeff>
+% ]}
 \input{../header.tex}
 \input{../headerSuppressMetaPDF.tex}
 
@@ -8,6 +20,22 @@
   pdfinfo={
     Author      ={Ernst Reissner},
     Title       ={Special and common aspects of pdf/dvi/xdvi generators },
+    % Creator     ={unknown}, 
+    % % LaTeX with hyperref; this is uniform for hyperref. 
+    % % except for beamer class, then it is LaTeX with Beamer class
+    % % else TeX for lua/pdflatex, but  XeTeX output 2023.12.06:0106 for xelatex 
+    % % thus it is advisable to eliminate this 
+    % % maybe security issue, but it is well visible. 
+    % % also corrupts reproducibility. 
+    % Producer    ={unknown},
+    % % xdvipdfmx with version and that like for dvi or xelatex; 
+    % % pdfTeX-1.40.25, LuaTeX-1.17.0 for pdf
+    % % This shall be eliminated. 
+    % CreationDate={unknown},
+    % ModDate     ={unknown},
+    % % these two are only overwritten to avoid wrong entry 
+    % % when using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}
+    % % This is recommended for tests, because else we cannot give a \date 
     Subject     ={pdf/dvi/xdvi generators},
     Keywords    ={LaTeX;pdflatex;xelatex;lualatex}
   }
@@ -15,11 +43,13 @@
 
 \title{Special and common aspects of pdf/dvi/xdvi generators }
 \author{Ernst Reissner (rei3ner@arcor.de)}
-\date{}
+\date{}%{\today}
 
 \newcommand{\pdflatex}{\texttt{pdflatex}}
 \newcommand{\lualatex}{\texttt{lualatex}}
 \newcommand{\xelatex}{\texttt{xelatex}}
+
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
 
 
 \newcommand{\texlive}{\TeX~Live}
@@ -56,15 +86,16 @@ for \texttt{xetex} a reference guide~\cite{XeTexRef}.
 
 The first aspect we cover are the options (among those to display the version). 
 It turns out, that the options are specific for the distribution. 
-Besides \texlive{} there is a second important distribution, \miktex, 
+Apart from \texlive{}, there is a second important distribution, \miktex, 
 which should also be treated. 
-
-
-
-
 
 We treat the options for \texlive{} in Section~\ref{sec:optionsTexlive} 
 and for \miktex{} in Section~\ref{sec:optionsMiktex}. 
+
+The second subject is treatment of metadata available for PDF files. 
+The motivation here is privacy as part of security 
+and creation of reproducible documents, e.g. for tests. 
+The results of our research is collected in Section~\ref{sec:metaPDF}. 
 
 \section{The options for \texlive}\label{sec:optionsTexlive}
 
@@ -425,11 +456,257 @@ These are always off.
 %   Same options as for \texlive, except \texttt{-etex} which is specific to \texlive. 
 
 
+
+\section{Treatment of metadata for the PDF format}\label{sec:metaPDF}
+
+TBD: rework: required is a link to \texttt{headerSuppressMetaPDF.tex}. 
+This is only possible after this is an injection. 
+Also use references to~\cite{LuaTexRef} and to~\cite{PdfTexUsr}. 
+
+Whereas \xelatex{} always produces a XDV file internally as an intermediate step, 
+when creating a PDF file, with the option \texttt{-no-pdf} 
+one can eliminate creation of the PDF file and writing of the intermediate XDV file instead. 
+For conversion, of the XDV file to PDF, the option \texttt{-output-driver=CMD} 
+is used which defaults to the command \texttt{xdvipdfmx}. 
+Besides direct creation of a PDF file, 
+we consider creation via XDV file using \texttt{xdvipdfmx}. 
+The XDV format is an extension and in fact a variant of the DVI format. 
+
+For the other compilers in contrast, the option \texttt{-output-format=dvi/pdf} 
+determines the output format which is PDF by default 
+and there is no intermediate format for PDF. 
+When creating DVI files instead, these files can be converted into PDF 
+by explicitly invoking something like 
+\texttt{dvipdfmx}, \texttt{dvipdfmx} or \texttt{xdvipdfmx}. 
+In my current distribution \texlive, 
+the programs \texttt{dvipdfm}, \texttt{dvipdfmx} and \texttt{xdvipdfmx} 
+are all binary identical. 
+
+Nevertheless, they turn out to yield different results. 
+One reason turning out later is, 
+that the name with which the program is invoked 
+goes into the result. 
+It is likely that this is the only reason. 
+
+As a consequence of the workflow of \xelatex, 
+\cmd{ifpdf} provided by package \texttt{iftex} 
+always enters the \cmd{else} branch for \xelatex. 
+
+To display metadata, we use \texttt{exiftool} and \texttt{pdfinfo}. 
+
+
+\subsection{Reproducibility}\label{subsec:reprod}
+
+The first observation is, that invocation of \texttt{xelatex latexEngines} 
+produces different PDF output for each run. 
+Likewise, \texttt{xelatex -no-pdf latexEngines} produces different XDV output for each run. 
+As turns out later, this is because the creation time goes into the result. 
+
+Thus, it is plausible that, to obtain reproducibility, we invoke the compiler as 
+%
+\begin{verbatim}
+  SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 xelatex         latexEngines
+  SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 xelatex -no-pdf latexEngines
+\end{verbatim}
+
+The second result is, that creating the PDF file and the XDV file that way is reproducible. 
+
+Now it is time to see differences directly and thus switch off compression 
+which is done independent of the compiler by an according header 
+%
+\begin{verbatim}
+  \DocumentMetadata{uncompress}
+\end{verbatim}
+%
+described in~\cite{DocMetaDataSuppCode}. 
+Seemingly, this writes additional info like metainfo date 
+but also resurrects all other dates and also influences trailerid in a way, 
+that the document is no longer reproducible, 
+even when specifying \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}. 
+
+TBD: file a bug report. 
+TBD: clarify whether this is true for other compilers also. 
+
+Thus, we take refuge to switching off compression via 
+%
+\begin{verbatim}
+  \special{dvipdfmx:config z 0}
+\end{verbatim}
+%
+This is specific for \xelatex, but it keeps reproducibility. 
+
+It turns out, that this compression setting does not refer to the XDV file, 
+which seems always compressed, but solely to the PDF file. 
+The PDF files differ mainly in the time stamp 
+but also in some hashes which may depend on the time stamp. 
+
+Now let us experiment with \texttt{xdvipdfmx}. 
+Even if we start with a reproducible XDV file, 
+the PDF file created by \texttt{xdvipdfmx} 
+changes with each invocation. 
+This changes when also \texttt{xdvipdfmx} is invoked with fixed time. 
+%
+\begin{verbatim}
+  SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 xdvipdfmx latexEngines
+\end{verbatim}
+
+As mentioned above, in the distribution \texlive{} current at time of this writing, 
+the programs \texttt{dvipdfm}, \texttt{dvipdfmx} and \texttt{xdvipdfmx} 
+are all binary identical. 
+Nevertheless, they seem to lead to different output. 
+Possibly, the invocation name goes into the result. 
+To find out, we do not allow compression. 
+It turns out that the names go into the result as the producer. 
+
+Using the package \texttt{hyperref}, 
+one can overwrite a lot of metadata. 
+Details are found in the manual~\cite{HyperTextP}, Section 5.10. 
+In particular, the producer can be set \texttt{unknown}. 
+As a result, the trailer identifier is the only remaining difference. 
+Seemingly, the producer goes into this whether displayed or not. 
+The trailer identifier cannot be overwritten by \texttt{hyperref}, 
+but only in a way specific for \xelatex: 
+%
+\begin{verbatim}
+  \special{pdf:trailerid [
+    <00112233445566778899aabbccddeeff>
+    <00112233445566778899aabbccddeeff>
+  ]}  
+\end{verbatim}
+%
+makes even the XDV to PDF converter transparent. 
+
+In~\cite{HyperTextP}, Section 5.10, also the creator is found, 
+which is \texttt{LaTeX with hyperref} independent of the \LaTeX{} compiler. 
+This shall be overwritten if there are security concerns. 
+
+
+
+As long as the tool chain and settings remain constant, 
+invocation of latex compiler \xelatex and backend XDV to PDF converter 
+specifying \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+suffices to guarantee reproducibility. 
+This setting refers to creation date \texttt{1970:01:01 01:00:00+01:00} 
+and if the file exist, this is the modification date. 
+From the point of view of reproducibility, 
+there is ok, but it is not the truth. 
+Thus, it makes sense to overwrite this with the string \texttt{unknown}. 
+If the file is overwritten, the same considerations apply to the modification date. 
+Both can be overwritten with package \texttt{hyperref}. 
+
+One question remains: how does \texttt{hyperref} manipulate the metadata 
+and in a second step, can we do this directly without using \texttt{hyperref}. 
+\medskip
+
+
+Now let us switch to the other two \LaTeX{} compilers. 
+Both write the banner information indicating 
+above all the type of compiler and the version. 
+As checked by switching compression of, \xelatex{} does not write any banner information. 
+Again, as long as the compiler does not change nor changes its version or its distribution, 
+the banner does not corrupt reproducibility. 
+On the other hand, removing it would stabilize and generalize reproducibility somewhat. 
+Also, privacy or security is an argument in favor of 
+The package \texttt{hyperref} offers no way to change the banner; 
+this can be done only in a machine specific way. 
+The details are described below. % TBD 
+The same is true for the trailer identifier. 
+The difference is that the trailer identifier 
+must be explicitly overwritten to obtain reproducibility for some reason. 
+Strictly speaking it need not be suppressed for reproducibility, 
+but to make the result independent of the DVI to PDF converter. 
+
+Creating DVI files with \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+yields reproducible results. 
+As expected, these settings are also necessary for translating DVI into PDF. 
+
+
+
+\subsection{Security and Stability of Reproducibility}\label{subsec:securityRep}
+
+Security is here privacy. 
+Hiding information makes attacks more difficult. 
+Stability of reproducibility consists in stability as regards new versions of the same tools 
+in the tool chain and the aspect of change of a tool. 
+
+From Section~\ref{subsec:reprod} come the recommendation 
+to set the following pieces of information to unknown: 
+%
+\begin{description}
+  \item[Creator] This is uniformly \texttt{LaTeX with hyperref} 
+  as long as \texttt{hyperref} is loaded. 
+  If not it is \TeX{} except for \xelatex which shows compiler, and creation date. 
+  Thus, it is advisable in general for security but without \texttt{hyperref} 
+  for sake of stability of reproducibility. 
+  \item[Producer] This is \texttt{xdvipdfmx} with version for creating DVIs 
+  and in general for \xelatex. 
+  For creating PDF with \pdflatex{} or with \lualatex, 
+  it is something like \texttt{pdfTeX-1.40.25} or \texttt{LuaTeX-1.17.0}. 
+  This shall be hidden for sake of security and stability of reproducibility. 
+  \item[CreationDate] This is wrong if using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+  and shall thus be hidden. 
+  \item[ModDate] same as \texttt{CreationDate}. 
+  \item[PTEX.Fullbanner] is not written by \xelatex, 
+  but both for \lualatex and for \pdflatex. 
+  It can be suppressed in a compiler specific way, 
+  but not through \texttt{hyperref}. 
+  The banner exposes tools, versions and distributions. 
+  Thus, it shall not be exposed for sake of security and stability of reproducibility. 
+  \item[trailer identifier]
+  Suppressing this is necessary for reproducibility, 
+  except for \xelatex. 
+  For \xelatex, it is just independence of the XDV to PDF converter 
+  and thus a matter of stability of reproducibility. 
+  It has only a very weak aspect of security. 
+  
+  The downside is that, 
+  even without setting \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}, 
+  created PDF files stop to be individual for each creation run 
+  as is intended for PDF files. 
+  We decided that the date offers enough individuality 
+  to refrain from the trailer identifier. 
+\end{description}
+
+
+\subsection{Reproducibility revisited}\label{subsec:reprod2}
+
+The next question is, 
+whether the setting \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+is really needed, if both \texttt{CreationDate} and \texttt{ModDate} are suppressed. 
+If a document contains a date inserted via command \cmd{date}, 
+then this is only reproducible 
+with setting \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}. 
+Even without \cmd{date}, \xelatex seems to use hashes depending on time 
+corrupting reproducibility. 
+To be more precise, creation of XDV is reproducible, 
+whereas conversion to PDF is not. 
+So, for sake of uniformity and stability of reproducibility, 
+these settings are heavily recommended, 
+both for the \LaTeX{} compiler and for the converter DVI/XDV to PDF. 
+
+If reproducibility is only required for tests, 
+then the date can be given; it is just neglected for tests. 
+For productive documents the date is important. 
+If reproducibility is an issue for productive documents, the date cannot be given. 
+
+\subsection{Security revisited}\label{subsec:security2}
+
+Both \lualatex{} and \pdflatex{} write the filename in \texttt{PTEX.FileName}. 
+This is a security issue, 
+whereas the number of pages, \texttt{PTEX.PageNumber} is not. 
+It is also useful. 
+
+For the \texttt{trapped} setting, the author wonders for \pdflatex, 
+how \texttt{hyperref} can switch this individually, whereas the compiler specific setting 
+allows only setting to \texttt{unknown} 
+in conjunction with other settings. 
+
+
 \section{To be clarified}\label{sec:TBC}
 
 Note that \xelatex{} works as the other engines for PDF, 
 whereas it has XDV instead of DVI as alternative format. 
-Thus the format DVI is ignored. 
+Thus, the format DVI is ignored. 
 See the manual. 
 
 
