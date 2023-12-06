@@ -32,7 +32,7 @@
       % + 1 % PTEX.FullBanner
       % + 2 % PTEX.FileName
       % + 4 % PTEX.PageNumber
-      % + 8 % PTEX.InfoDict
+      % + 8 % PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
       % + 16 % Creator
       % + 32 % CreationDate
       % + 64 % ModDate
@@ -79,11 +79,34 @@
 
 % TBD: check of resulting pdf with exif unveils a warning duplicate author 
 
+% TBD: there are ways to do without hypersetup. 
+
 \hypersetup{
+  % PTEX.InfoDict: (/Producer /Creator /CreationDate /ModDate /Trapped)
+  % Except Trapped, this is exactly PTEX.InfoDict. 
+  % TBD: deactivate this. 
+  % There are settings like the banner or the trailer id, 
+  % accessible only compile specific, 
+  % so we cannot do without. 
+  % Conversely, all accessible from hyperref and needed (consider xelatex) 
+  % are accessible compiler specific. 
+  % So this is not really needed. 
   pdfinfo={
-      CreationDate={unknown},
-      ModDate     ={unknown},
-      Producer    ={unknown}
+    Creator     ={unknown}, 
+    % LaTeX with hyperref; this is uniform for hyperref. 
+    % else TeX for lua/pdflatex, but  XeTeX output 2023.12.06:0106 for xelatex 
+    % thus it is advisable to eliminate this 
+    % maybe security issue, but it is well visible. 
+    % also corrupts reproducibility. 
+    Producer    ={unknown},
+    % xdvipdfmx with version and that like for dvi or xelatex; 
+    % pdfTeX-1.40.25, LuaTeX-1.17.0 for pdf
+    % This shall be eliminated. 
+    CreationDate={unknown},
+    ModDate     ={unknown}
+    % these two are only overwritten to avoid wrong entry 
+    % when using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}
+    % This is recommended for tests, because else we cannot give a \date 
     }
 }
 
