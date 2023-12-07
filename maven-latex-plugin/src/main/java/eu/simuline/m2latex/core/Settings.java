@@ -976,6 +976,7 @@ public class Settings {
       + "pdfTeX warning( \\((\\d|\\w)+\\))?: |"
       + "warning  \\(file .+\\) \\(pdf inclusion\\): PDF inclusion: |" // found PDF version TBD: rework for longer lines 
       + "\\* fontspec warning: |"
+      + "Non-PDF special ignored!|"
       + "Missing character: There is no .* in font .*!$|"
       + "A space is missing\\. (No warning)\\.)")
   private String patternWarnLatex = "^(LaTeX Warning: |"
@@ -984,6 +985,7 @@ public class Settings {
       + "pdfTeX warning( \\((\\d|\\w)+\\))?: |" + "\\* fontspec warning: |"
       + "warning  \\(file .+\\) \\(pdf inclusion\\): PDF inclusion: |" // found PDF version TBD: rework for longer lines 
       + "\\* fontspec warning: |"
+      + "Non-PDF special ignored!|"
       + "Missing character: There is no .* in font .*!$|"
       + "A space is missing\\. (No warning)\\.)";
 

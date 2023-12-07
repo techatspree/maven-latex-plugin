@@ -624,6 +624,7 @@ LaTeX Font Warning: |
 pdfTeX warning( \((\d|\w)+\))?: |
 warning  \(file .+\) \(pdf inclusion\): PDF inclusion: |
 \* fontspec warning: |
+Non-PDF special ignored!|
 Missing character: There is no .* in font .*!$|
 A space is missing\. (No warning)\.)
             </patternWarnLatex>

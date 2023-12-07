@@ -1444,6 +1444,8 @@ Font specification warnings starting with \texttt{* fontspec warning}\footnote%
 \item
 Further warnings not identifying themselves as warnings 
 as the word ``warning'' does not occur. 
+Still they are treated as warning 
+because they all indicate some imperfection in the output. 
 \end{itemize}
 
 The resulting default pattern is 
@@ -1454,6 +1456,7 @@ LaTeX Font Warning: |
 (Package|Class) .+ Warning: |
 pdfTeX warning( \((\d|\w)+\))?: |
 \* fontspec warning: |
+Non-PDF special ignored!|
 Missing character: There is no .* in font .*!$|
 A space is missing\. (No warning)\.)
 \end{Verbatim}
