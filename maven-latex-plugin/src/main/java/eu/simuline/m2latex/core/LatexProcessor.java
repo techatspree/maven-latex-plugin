@@ -690,10 +690,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
   // FIXME: determine whether to use latexmk makes sense
 
-  public String getLatex2pdfCommand() throws BuildFailureException {
-    return this.latex2PdfCmdMagic.orElse(this.settings.getCommand(ConverterCategory.LaTeX));
-  }
 
+  public String getLatex2pdfCommand() throws BuildFailureException {
+    return this.latex2PdfCmdMagic
+      .orElse(this.settings.getCommand(ConverterCategory.LaTeX));
+  }
 
   /**
    * Runs LaTeX on on the latex main file <code>texFile</code>
@@ -1938,6 +1939,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
     // CAUTION: an error also occurs if running xelatex in conjunction with dvi mode 
     // because this engine creates xdv instead of dvi 
+    if (this.settings.isChkDiff()) {
+      this.executor.setIsTimeless();
+    }
     this.executor.execute(desc.parentDir, // workingDir
         this.settings.getTexPath(), command, args,
         dev.latexTargetFile(desc, isTypeXelatex));
@@ -2010,6 +2014,9 @@ public class LatexProcessor extends AbstractLatexProcessor {
         buildArguments(this.settings.getDvi2pdfOptions(), desc.xxxFile);
     // may throw BuildFailureException TEX01,
     // may log warning EEX01, EEX02, EEX03, WEX04, WEX05
+    if (this.settings.isChkDiff()) {
+      this.executor.setIsTimeless();
+    }
     this.executor.execute(desc.parentDir, // workingDir
         this.settings.getTexPath(), command, args, desc.pdfFile);
     // FIXME: what about error logging?
