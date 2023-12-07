@@ -4,7 +4,7 @@ import java.io.File;
 
 import java.util.Optional;
 
-import com.florianingerl.util.regex.Matcher;
+import com.florianingerl.util.regex.MatchResult;
 
 /**
  * Container which comprises, besides the latex main file
@@ -30,9 +30,8 @@ class LatexMainDesc implements Comparable<LatexMainDesc> {
 
   final File parentDir;
 
-  //final String docClass;
 
-  private final Matcher matcher;
+  private final MatchResult matchRes;
 
   // private static boolean matches(Matcher matcher,
   //     LatexMainParameterNames name) {
@@ -64,8 +63,8 @@ class LatexMainDesc implements Comparable<LatexMainDesc> {
   //   this(texFile, null);
   // }
 
-  LatexMainDesc(File texFile, Matcher matcher) {
-    this.matcher = matcher;
+  LatexMainDesc(File texFile, MatchResult matchRes) {
+    this.matchRes = matchRes;
     this.texFile = texFile;
     this.xxxFile =
         TexFileUtils.replaceSuffix(texFile, LatexProcessor.SUFFIX_VOID);
@@ -100,12 +99,12 @@ class LatexMainDesc implements Comparable<LatexMainDesc> {
    */
   Optional<String> groupMatch(LatexMainParameterNames groupName) {
     // formally this may throw a IllegalStateException, but this is excluded. 
-    return Optional.ofNullable(this.matcher.group(groupName.toString()));
+    return Optional.ofNullable(this.matchRes.group(groupName.toString()));
   }
 
   // Currently, document class is always defined. 
   String getDocClass() {
-    String res = this.matcher.group(LatexMainParameterNames.docClass.toString());
+    String res = this.matchRes.group(LatexMainParameterNames.docClass.toString());
     assert res != null;
     return res;
   }

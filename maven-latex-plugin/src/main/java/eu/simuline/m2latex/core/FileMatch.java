@@ -1,6 +1,6 @@
 package eu.simuline.m2latex.core;
 
-import com.florianingerl.util.regex.Matcher;
+import com.florianingerl.util.regex.MatchResult;
 
 
 /**
@@ -42,12 +42,10 @@ public class FileMatch {
 
   static class FileMatchWithMatcher extends FileMatch {
 
-    //private final MatchResult matcher;
-    private final Matcher matcher;
+    private final MatchResult matchRes;
 
-    FileMatchWithMatcher(Matcher matcher) {
-      assert matcher.matches();
-      this.matcher = matcher;
+    FileMatchWithMatcher(MatchResult matchRes) {
+      this.matchRes = matchRes;
     }
 
     boolean isFileReadable() {
@@ -58,9 +56,8 @@ public class FileMatch {
       return true;
     }
 
-    Matcher getMatcher() {
-      //MatchResult getMatchResult() {
-      return this.matcher;
+    MatchResult getMatchResult() {
+      return this.matchRes;
     }
   } // class FileMatchWithMatcher 
 
@@ -89,11 +86,11 @@ public class FileMatch {
    * Returns a file match with the given matcher. 
    * In particular, the file is readable and matches. 
    * 
-   * @param matcher
-   *    The matcher of this file. 
+   * @param matchRes
+   *    The match result of an existing file. 
    */
-  static FileMatch matches(Matcher matcher) {
-    return new FileMatchWithMatcher(matcher);
+  static FileMatch matches(MatchResult matchRes) {
+    return new FileMatchWithMatcher(matchRes);
   }
 
   // to be overwritten 
@@ -135,8 +132,7 @@ public class FileMatch {
    * @throws IllegalArgumentException
    *    If no IllegalStateException but there is no group matched. 
    */
-  //MatchResult getMatchResult() {
-  Matcher getMatcher() {
+  MatchResult getMatchResult() {
     throw new IllegalStateException("No group matched. ");
   }
 

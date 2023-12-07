@@ -707,7 +707,7 @@ class TexFileUtils {
           lines = fromStart ? lines += line + "\n" : line;
           Matcher matcher = pattern.matcher(lines);
           if (matcher.find()) {
-            return FileMatch.matches(matcher);
+            return FileMatch.matches(matcher);// as match result TBD: .toMatchResult()
           }
         }
         return FileMatch.noMatch();
