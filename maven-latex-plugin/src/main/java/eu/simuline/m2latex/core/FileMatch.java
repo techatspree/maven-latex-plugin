@@ -1,6 +1,7 @@
 package eu.simuline.m2latex.core;
 
-import java.util.regex.Matcher;
+import com.florianingerl.util.regex.Matcher;
+
 
 /**
  * Describes a match in a file. 

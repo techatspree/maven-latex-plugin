@@ -1,11 +1,10 @@
 package eu.simuline.m2latex.core;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
+
+import com.florianingerl.util.regex.Matcher;
 
 /**
  * Container which comprises, besides the latex main file
