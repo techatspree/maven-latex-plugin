@@ -1572,7 +1572,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
    * Deletes all created files
    * in the directory represented by <code>node</code>, recursively.
    * In each directory, the sub-directories are not deleted themselves
-   * but cleaned recursively.
+   * but cleaned recursively, depth first.
    * The other files are cleaned, i.e.
    * their targets are deleted in an ordering reverse to creation
    * proceeding in the following steps:
@@ -1613,6 +1613,14 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
   private void clearCreated(File dir, DirNode node) {
     assert dir.isDirectory() : "Expected existing directory " + dir
         + " to be cleared. ";
+    // Clearing depth first is mandatory; else the above assertion is invalid 
+
+    // clear recursively depth first 
+    for (Map.Entry<String, DirNode> entry : node.getSubdirs().entrySet()) {
+      // may log WPP02, WFU01, WFU03, EFU05
+      clearCreated(new File(dir, entry.getKey()), entry.getValue());
+    }
+
     File file;
     SuffixHandler handler;
     Map<File, SuffixHandler> file2handler = new TreeMap<File, SuffixHandler>();
@@ -1633,12 +1641,6 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
       if (file.exists()) {
         entry.getValue().clearTarget(file, this);
       }
-    }
-
-    // clear recursively 
-    for (Map.Entry<String, DirNode> entry : node.getSubdirs().entrySet()) {
-      // may log WPP02, WFU01, WFU03, EFU05
-      clearCreated(new File(dir, entry.getKey()), entry.getValue());
     }
   }
 
