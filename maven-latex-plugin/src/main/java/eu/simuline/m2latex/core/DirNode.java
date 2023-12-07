@@ -2,6 +2,9 @@ package eu.simuline.m2latex.core;
 
 import java.io.File;
 
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map;
@@ -75,7 +78,10 @@ public class DirNode {
     this.name2node = new TreeMap<String, DirNode>();
     DirNode node;
     for (File file : files) {
-      assert file.exists() : "The file '" + file + "' does not exist. ";
+      // with link option because file.exists() is false 
+      // if link with non-existing target
+      assert Files.exists(file.toPath(), LinkOption.NOFOLLOW_LINKS)
+        : "The file '" + file + "' does not exist. ";
       if (file.isDirectory()) {
         // may log WFU01 Cannot read directory
         node = new DirNode(file, fileUtils);
