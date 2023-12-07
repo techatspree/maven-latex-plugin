@@ -759,15 +759,21 @@ according to \url{https://pandoc.org/MANUAL.html#creating-a-pdf}.
 Besides loading packages it also sets \texttt{synctex} 
 which is crucial for synchronizing TEX files and according PDF files 
 via forward search and backward search as described in Section~\ref{subsec:editViewLatex}. 
+
 % TBD \listfiles to check loaded packages 
+
 It also provides the command \cmd{setMinorVersionPdf} to set the minor version of the PDF file created. 
 This is mostly needed because some graphic tool creates PDF files with a newer PDF version 
 than the \LaTeX{} distribution does. 
-Setting the version avoids an according warning \texttt{WAP03} 
+Setting the version high enough, avoids an according warning \texttt{WAP03} 
 listed in Table~\ref{tab:WarnALP} on page~\pageref{tab:WarnALP}. 
 The warning pattern is described in Section~\ref{subsec:patternWarnLatex} in detail. 
-
-
+As described in \cite{DocMetaDataSuppCode}, Section 2 
+the recommended way to set major and minor version of the PDF output 
+like in \cmd{DocumentMetadata\{pdfversion=1.7\}}, 
+but due to a bug, any invocation of \cmd{DocumentMetadata} corrupts reproducibility of the created PDFs. 
+After this is fixed, the \cmd{setMinorVersionPdf} shall be removed again. 
+% TBD: check from time to time. 
 
 As the configuration files described above, 
 it is intended to be injected in phase \texttt{validate}. 
