@@ -8,7 +8,7 @@
 % \usepackage{longtable}
 % \usepackage{booktabs}
 % \usepackage{xurl}
-%\special{dvipdfmx:config z 0}
+%\special{dvipdfmx:config z 0}% refrain from compression 
 % \special{pdf:trailerid [
 %   <00112233445566778899aabbccddeeff>
 %   <00112233445566778899aabbccddeeff>
@@ -518,14 +518,15 @@ which is done independent of the compiler by an according header
   \DocumentMetadata{uncompress}
 \end{verbatim}
 %
-described in~\cite{DocMetaDataSuppCode}. 
-Seemingly, this writes additional info like metainfo date 
-but also resurrects all other dates and also influences trailerid in a way, 
+described in~\cite{DocMetaDataSuppCode}, Section 2. 
+Seemingly, this writes additional info like meta info date 
+but also resurrects all other dates and also influences trailer identifier in a way, 
 that the document is no longer reproducible, 
 even when specifying \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}. 
 
-TBD: file a bug report. 
-TBD: clarify whether this is true for other compilers also. 
+This is about to be fixed, 
+but essentially, it is just an inconvenience. 
+% TBD: check whether really fixed. 
 
 Thus, we take refuge to switching off compression via 
 %
@@ -580,8 +581,6 @@ In~\cite{HyperTextP}, Section 5.10, also the creator is found,
 which is \texttt{LaTeX with hyperref} independent of the \LaTeX{} compiler. 
 This shall be overwritten if there are security concerns. 
 
-
-
 As long as the tool chain and settings remain constant, 
 invocation of latex compiler \xelatex and backend XDV to PDF converter 
 specifying \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
@@ -605,16 +604,19 @@ above all the type of compiler and the version.
 As checked by switching compression of, \xelatex{} does not write any banner information. 
 Again, as long as the compiler does not change nor changes its version or its distribution, 
 the banner does not corrupt reproducibility. 
-On the other hand, removing it would stabilize and generalize reproducibility somewhat. 
-Also, privacy or security is an argument in favor of 
+On the other hand, removing it would stabilize and generalize reproducibility somewhat: 
+stabilize because the banner contains version information 
+and thus breaks reproducibility at version change, 
+and it breaks reproducibility when changing the compiler of course. 
+Also, privacy or security is an argument in favor of eliminating the banner. 
 The package \texttt{hyperref} offers no way to change the banner; 
 this can be done only in a machine specific way. 
 The details are described below. % TBD 
+
 The same is true for the trailer identifier. 
-The difference is that the trailer identifier 
-must be explicitly overwritten to obtain reproducibility for some reason. 
 Strictly speaking it need not be suppressed for reproducibility, 
-but to make the result independent of the DVI to PDF converter. 
+but to make the result independent of the DVI to PDF converter 
+as is explained in the context of \xelatex{} above. 
 
 Creating DVI files with \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
 yields reproducible results. 
@@ -634,8 +636,11 @@ to set the following pieces of information to unknown:
 %
 \begin{description}
   \item[Creator] This is uniformly \texttt{LaTeX with hyperref} 
-  as long as \texttt{hyperref} is loaded. 
-  If not it is \TeX{} except for \xelatex which shows compiler, and creation date. 
+  as long as \texttt{hyperref} is loaded, except for \texttt{beamer} class 
+  (which loads \texttt{hyperref} implicitly)
+  for which it is \texttt{LaTeX with Beamer class}. 
+  If \texttt{hyperref} is not loaded, 
+  the creator is \TeX{} except for \xelatex which shows compiler and creation date. 
   Thus, it is advisable in general for security but without \texttt{hyperref} 
   for sake of stability of reproducibility. 
   \item[Producer] This is \texttt{xdvipdfmx} with version for creating DVIs 
@@ -643,19 +648,19 @@ to set the following pieces of information to unknown:
   For creating PDF with \pdflatex{} or with \lualatex, 
   it is something like \texttt{pdfTeX-1.40.25} or \texttt{LuaTeX-1.17.0}. 
   This shall be hidden for sake of security and stability of reproducibility. 
-  \item[CreationDate] This is wrong if using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+  \item[CreationDate] Note that despite of its name, in fact it is both date and time. 
+  It is wrong if using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
   and shall thus be hidden. 
   \item[ModDate] same as \texttt{CreationDate}. 
   \item[PTEX.Fullbanner] is not written by \xelatex, 
-  but both for \lualatex and for \pdflatex. 
+  but for both \lualatex and \pdflatex. 
   It can be suppressed in a compiler specific way, 
   but not through \texttt{hyperref}. 
   The banner exposes tools, versions and distributions. 
   Thus, it shall not be exposed for sake of security and stability of reproducibility. 
   \item[trailer identifier]
-  Suppressing this is necessary for reproducibility, 
-  except for \xelatex. 
-  For \xelatex, it is just independence of the XDV to PDF converter 
+  Suppressing this is not necessary for reproducibility. 
+  It is just independence of the DVI/XDV to PDF converter 
   and thus a matter of stability of reproducibility. 
   It has only a very weak aspect of security. 
   
@@ -672,16 +677,34 @@ to set the following pieces of information to unknown:
 
 The next question is, 
 whether the setting \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
-is really needed, if both \texttt{CreationDate} and \texttt{ModDate} are suppressed. 
+is really needed for reproducibility, 
+if both \texttt{CreationDate} and \texttt{ModDate} are suppressed. 
+The answer is yes, because date and time go into the trailer identifier, 
+whether they are stored somewhere or not. 
+It is the intention of the trailer identifier to make PDFs distinguishable 
+when they stem from another build run even if the conditions are the same. 
+To turn it the other way round, the trailer identifier 
+is to corrupt reproducibility. 
+Since it is implemented through a time stamp, 
+setting \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+fixes the trailer identifier. 
+If we refrain from this setting, 
+still the trailer identifier can be set explicitly 
+and this must be done to ensure reproducibility. 
+As indicated in Section~\ref{subsec:securityRep}, 
+for \xelatex, even the creator may contain date and time information 
+and shall thus be eliminated. 
+
 If a document contains a date inserted via command \cmd{date}, 
+and the date is given by \cmd{today}, 
 then this is only reproducible 
-with setting \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}. 
-Even without \cmd{date}, \xelatex seems to use hashes depending on time 
+with setting \texttt{SOURCE\_DATE\_EPOCH} to some fixed value and \texttt{FORCE\_SOURCE\_DATE=1}. 
+Even without \cmd{date\{\cmd{today}\}}, \xelatex seems to use hashes depending on time 
 corrupting reproducibility. 
 To be more precise, creation of XDV is reproducible, 
 whereas conversion to PDF is not. 
 So, for sake of uniformity and stability of reproducibility, 
-these settings are heavily recommended, 
+these settings \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} are heavily recommended, 
 both for the \LaTeX{} compiler and for the converter DVI/XDV to PDF. 
 
 If reproducibility is only required for tests, 
