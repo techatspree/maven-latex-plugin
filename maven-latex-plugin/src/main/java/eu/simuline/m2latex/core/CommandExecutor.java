@@ -20,6 +20,9 @@ package eu.simuline.m2latex.core;
 
 import java.io.File;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import        org.codehaus.plexus.util.cli.CommandLineException;
 import        org.codehaus.plexus.util.cli.Commandline;// constructor
 import static org.codehaus.plexus.util.cli.CommandLineUtils.executeCommandLine;
@@ -129,9 +132,36 @@ class CommandExecutor {
   } // enum ReturnCodeChecker 
 
 
+  /**
+   * Maps names of environment variables to values. 
+   * Currently sets <code>SOURCE_DATE_EPOCH=0</code> 
+   * indicating the time 1970-01-01 midnight 
+   * and <code>FORCE_SOURCE_DATE=1</code> 
+   * forcing that setting. 
+   * <p>
+   * This is used to run commands always at the same time 
+   * contributing to reproducibility. 
+   */
+  private static final Map<String, String> TIMELESS_ENV;
+
+  static {
+    TIMELESS_ENV = new TreeMap<String, String>();
+    TIMELESS_ENV.put("SOURCE_DATE_EPOCH","0");
+    TIMELESS_ENV.put("FORCE_SOURCE_DATE","1");
+  }
+
+  /**
+   * Indicates whether the next invocation of 
+   * {@link #execute(File, File, String, ReturnCodeChecker, String[])} 
+   * invokes a command timeless, 
+   * i.e. with environment described by {@link #TIMELESS_ENV}. 
+   */
+  private boolean isTimeless;
+
   private final LogWrapper log;
 
   CommandExecutor(LogWrapper log) {
+    this.isTimeless = false;
     this.log = log;
   }
 
@@ -145,7 +175,10 @@ class CommandExecutor {
    * {@link #execute(File, File, String, ReturnCodeChecker, String[], File... )}, 
    * where the boolean signifies whether the return code is checked. 
    * This is set to <code>true</code> in this method. 
-   * 
+   * <p>
+   * Supports timeless execution as described in 
+   * {@link #execute(File, File, String, ReturnCodeChecker, String[]). 
+   * <p>
    * Logging: 
    * <ul>
    * <li> EEX01: return code other than 0. 
@@ -211,6 +244,10 @@ class CommandExecutor {
    * and logs if one of the expected target files 
    * given by <code>resFile</code> is not newly created, 
    * i.e. if it does not exist or is not updated. 
+   * <p>
+   * Supports timeless execution as described in 
+   * {@link #execute(File, File, String, ReturnCodeChecker, String[]). 
+   * <p>
    * Logging: 
    * <ul>
    * <li> EEX01: return code other than 0 and <code>checkReturnCode</code> is set. 
@@ -362,11 +399,39 @@ class CommandExecutor {
   }
 
   /**
+   * Turns the next command execution 
+   * into a timeless execution setting environment variables 
+   * according to {@link #TIMELESS_ENV}. 
+   * The execution happens by 
+   * direct or indirect invocation of 
+   * {@link #execute(File, File, String, ReturnCodeChecker, String[])}. 
+   * After executing a command, 
+   * this method this method reverts to execution in normal time. 
+   * <p>
+   * The method {@link #setIsTimeless()} is used to execute a latex compiler 
+   * or a DVI/XDV to PDF converter timeless. 
+   * Invocation is always via 
+   * {@link #execute(File, File, String, String[], File...)}. 
+   * 
+   * @see LatexProcessor#runLatex2Dev
+   * @see LatexProcessor#runDvi2Pdf
+   */
+  void setIsTimeless() {
+    this.isTimeless = true;
+  }
+
+  /**
    * Execute <code>command</code> with arguments <code>args</code> 
    * in the working directory <code>workingDir</code> 
    * and return the output. 
    * Here, <code>pathToExecutable</code> is the path 
    * to the executable. It may be null. 
+   * <p>
+   * If {@link #isTimeless} is set by {@link #setIsTimeless()}, 
+   * before invocation of this method, 
+   * the environment given by {@link #TIMELESS_ENV} is set 
+   * ensuring timeless execution. 
+   * As a side effect, {@link #isTimeless} is reset again. 
    * <p>
    * Logging: 
    * EEX01 for return code other than 0. 
@@ -417,6 +482,12 @@ class CommandExecutor {
     String executable = new File(pathToExecutable, command).getPath();
     Commandline cl = new Commandline(executable);
     cl.getShell().setQuotedArgumentsEnabled(true);
+    if (this.isTimeless) {
+      for (Map.Entry<String, String> entry : TIMELESS_ENV.entrySet()) {
+        cl.addEnvironment(entry.getKey(), entry.getValue());
+      }
+      this.isTimeless = false;
+    }
     cl.addArguments(args);
     if (workingDir != null) {
       cl.setWorkingDirectory(workingDir.getPath());
