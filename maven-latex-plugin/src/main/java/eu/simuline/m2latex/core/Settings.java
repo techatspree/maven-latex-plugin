@@ -1032,7 +1032,7 @@ public class Settings {
    * <p>
    * In the dvi-file for jpg, png and svg 
    * only some space is visible and only in the final step 
-   * performed by $dvi2pdfCommand, 
+   * performed by {@link #dvi2pdfCommand}, 
    * the pictures are included using the bounding boxes 
    * given by the .bb or the .xbb-file. 
    * These are both created by $ebbCommand. 
@@ -2358,10 +2358,6 @@ public class Settings {
     return LatexDev.devViaDvi(this.pdfViaDvi);
   }
 
-  // for ant task only 
-  public String getDvi2pdfCommand() throws BuildFailureException {
-    return getCommand(ConverterCategory.Dvi2Pdf);
-  }
 
   public String getDvi2pdfOptions() {
     return this.dvi2pdfOptions;
