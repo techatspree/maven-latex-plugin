@@ -40,8 +40,9 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.florianingerl.util.regex.Matcher;
+import com.florianingerl.util.regex.Pattern;
 
 // import java.lang.annotation.Annotation;
 
