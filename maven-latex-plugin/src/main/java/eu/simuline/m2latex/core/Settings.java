@@ -281,6 +281,9 @@ public class Settings {
   // There is a tendency to allow even more in the header with coming releases of latex 
   @RuntimeParameter
   @Parameter(name = "patternLatexMainFile")
+  // Note that \DocumentMetadata must be first of the commands 
+  // but this need not be reflected by this pattern. 
+  // This is an example for a recursive pattern 
   private String patternLatexMainFile =
   """
   \\A\
@@ -291,6 +294,7 @@ public class Settings {
   (\\s*(\
   \\\\RequirePackage\\s*(\\[(\\s|\\w|,)*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|[.-/])+\\])?|\
   \\\\PassOptionsToPackage\\s*\\{\\w+\\}\\s*\\{(\\w|-)+\\}|\
+  \\\\DocumentMetadata(?<brace>\\{(?:[^{}]|(?'brace'))*\\})|\
   \\\\input\\s*\\{[^{}]*\\}\
   )?\\s*(%.*)?\\R)*\
   \\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<docClass>[^} ]+)\\}\

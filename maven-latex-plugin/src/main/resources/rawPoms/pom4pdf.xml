@@ -171,6 +171,7 @@ so that the document class is matched.  -->
 (\s*(
 \\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|[.-/])+\])?|
 \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
+\\DocumentMetadata(?&lt;brace&gt;\{(?:[^{}]|(?'brace'))*\})|
 \\input\s*\{[^{}]*\}
 )?\s*(%.*)?\R)*
 \\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;docClass&gt;[^} ]+)\}

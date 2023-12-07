@@ -536,7 +536,7 @@ is given by Listing~\ref{lst:patternLatexMainFile}.
 
 \lstinputlisting[language=XML, basicstyle=\scriptsize,
 numbers={left}, %stepnumber={5},
-linerange={166-176}, % chktex 8 TBD: why is this not covered by .chktexrc? 
+linerange={166-177}, % chktex 8 TBD: why is this not covered by .chktexrc? 
 breaklines,
 %float,
 captionpos=b, label={lst:patternLatexMainFile},
@@ -545,12 +545,16 @@ caption={The default pattern of the latex main file in a form as in a pom config
 
 % \begin{Verbatim}[fontsize=\scriptsize]
   % \A
-  % (%\s*!\s*LMP( docClass=(?&lt;docClassMagic&gt;[^} ]+))?( targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+))?\R)?
-  % (\\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|\.)+\])?|
-  % %.*$|
+  % (%\s*!\s*T[eE]X (TXS|spellcheck|encoding|root).*\R)*
+  % (%\s*!\s*T[eE]X program\s*=\s*(?&lt;programMagic&gt;[^} ]+)\R)?
+  % (%\s*!\s*T[eE]X .*\R)*
+  % (%\s*!\s*LMP targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+)\R)?
+  % (\s*(
+  % \\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|[.-/])+\])?|
   % \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
-  % \\input\s*\{[^{}]*\}|
-  % \s)*
+  % \\DocumentMetadata(?&lt;brace&gt;\{(?:[^{}]|(?'brace'))*\})|
+  % \\input\s*\{[^{}]*\}
+  % )?\s*(%.*)?\R)*
   % \\(documentstyle|documentclass)\s*(\[[^]]*\])?\s*\{(?&lt;docClass&gt;[^} ]+)\}
 % \end{Verbatim}
 
@@ -568,7 +572,7 @@ Let us trace through line by line:
   \item[5] This line matches a sole magic comment \texttt{\%~!LMP} 
   which is specific for this software. 
   It defines optionally \texttt{docClassMagic} and \texttt{targetMagic}. 
-  \item[6--10] Except for magic comments, 
+  \item[6--11] Except for magic comments, 
   this defines material which may precede the command \cmd{documentclass}. 
   Besides lines with specific commands, it matches empty lines and comment lines. 
   Also, a line may start with whitespace may contain a command and end in a comment. 
@@ -590,6 +594,8 @@ only the following material is allowed:
 the command \cmd{RequirePackage}, 
 \item
 the command \cmd{PassOptionsToPackage}, 
+\item 
+the command \cmd{DocumentMetadata} allowing arbitrarily nested braces, 
 \item
 the command \cmd{input}, and 
 \item
