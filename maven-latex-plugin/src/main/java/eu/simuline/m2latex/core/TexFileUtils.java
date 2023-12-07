@@ -35,8 +35,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.florianingerl.util.regex.Matcher;
+import com.florianingerl.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 
@@ -1105,7 +1106,7 @@ class TexFileUtils {
 
 
     Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-    java.util.regex.Matcher matcher = pattern.matcher(text);
+    Matcher matcher = pattern.matcher(text);
     matcher.useAnchoringBounds(true);
     System.out.println("find:   " + matcher.find());
     System.out.println("hitEnd: " + matcher.hitEnd());
