@@ -73,10 +73,47 @@ public enum Injection {
     }
   },
   /**
+   * A header file used to hide metainfo in a PDF file. 
+   * This is mainly used for security, i.e. privacy reasons, 
+   * but the current header file makes a latex main file 
+   * which has no date in the text reproducible 
+   * at least for lualatex and for pdflatex, but not for xelatex. 
+   * <p>
+   * In the long run, this shall be filtered 
+   * to make the supression configurable. 
+   */
+  headerSuppressMetaPDF {
+    String getFileName() {
+      return "headerSuppressMetaPDF.tex";
+    }
+
+    /**
+     * The comment string which is that of tex. 
+     */
+    String commentStr() {
+      return "%";
+    }
+
+    // In the long run, the privacy settings are configurable 
+    boolean doFilter() {
+      return true;
+    }
+
+    boolean hasShebang() {
+      return false;
+    }
+  },
+  /**
    * The general header file mostly loading packages. 
    * Various main files may require additional headers 
    * but this is currently the minimum, 
    * so to speak the smallest common multiple. 
+   * It is inspired by pandoc and it is written to work 
+   * for all common latex compiler, 
+   * for direct creation of PDF or for creation of DVI/XDV, 
+   * as a final result or as an intermediate step, 
+   * for document classes including also <code>beamer</code>, 
+   * for package <code>tex4ht</code> and many other variants. 
    */
   header {
     String getFileName() {
