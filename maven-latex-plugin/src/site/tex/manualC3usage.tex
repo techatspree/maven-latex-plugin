@@ -613,10 +613,11 @@ which yields a list of files which can be injected.
   \bottomrule
   \caption{\label{tab:injections} Overview over all injections }
   \endlastfoot%
-  latexmkrc   & \texttt{.latexmkrc}        & config file for \texttt{latexmk}   \\
-  chktexrc    & \texttt{.chktexrc}         & config file for \texttt{chktex}         \\
-  header      & \texttt{header.tex}        & header file for latex sources      \\
-  vscodeExt   & \texttt{instVScode4tex.sh} & shell script to install VS Code extensions \\
+  latexmkrc             & \texttt{.latexmkrc}        & config file for \texttt{latexmk}   \\
+  chktexrc              & \texttt{.chktexrc}         & config file for \texttt{chktex}         \\
+  header                & \texttt{header.tex}        & basic header file for latex sources      \\
+  headerSuppressMetaPDF & \texttt{headerSuppressMetaPDF.tex} & header file to control PDF meta-info      \\
+  vscodeExt             & \texttt{instVScode4tex.sh} & shell script to install VS Code extensions \\
   \end{longtable}
 
 Table~\ref{tab:injections} shows the possible injections 
@@ -635,6 +636,15 @@ e.g.\@ some injections via
 \end{Verbatim}
 
 Now let us treat the injections individually. 
+
+% TBD: for injections allowing filtering, 
+% one must think carefully, what is wanted to be shown in this documentation: 
+% the filtered files are mere examples, whereas the raw ones are more informative 
+% but more difficult to understand. 
+% Many of the links of this manual do not point on the optimal kind of injection file. 
+% linking fromTex means filtered. This is appropriate if a file is not filtered at all. 
+% for headerSuppressMetPdf.tex, and for .chktexrc this may change. 
+% For .latexmkrc it is inappropriate to link to fromTex only. 
 
 
 \subsection{The configuration files \texttt{.latexmkrc} and \texttt{.chktexrc}}\label{subsec:latChkRc}
@@ -749,8 +759,7 @@ to make guarantees that it works still with the unexpected packages.
 This is, e.g.\@ because a package may write warnings 
 in an unexpected format into some log file. 
 
-The injection \texttt{header} given by \href{\urlSite fromTex/header.tex}{header.tex}, 
-is tied to the file \texttt{header.tex} 
+The injection \texttt{header} is tied to the file  \href{\urlSite fromTex/header.tex}{header.tex}, 
 which is intended to be included in each \LaTeX{} main file. 
 Essentially it includes packages always needed. 
 It is inspired by the packages \texttt{pandoc} includes by default 
@@ -793,6 +802,52 @@ to the configuration as \texttt{.latexmkrc},
 but currently it detects the use case as the latex converter or the target format 
 and loads the according packages. 
 It is also conceivable to create different headers, one for each document class. 
+
+\subsection{A header file to suppress meta-info for PDF files }\label{subsec:headerSuppressMetaPDF}
+
+Whereas the header file described in Section~\ref{subsec:header} is intended to be used 
+in merely any \LaTeX{} main file, 
+the one described here, is optional. 
+
+It refers to created PDF files only and does not influence the optical appearance 
+but suppresses writing certain meta-data. 
+The main motivation is security, i.e. privacy, 
+but it can also be used to turn the resulting PDF reproducible. 
+
+
+The injection \texttt{headerSuppressMetaPDF} 
+is tied to the file \href{\urlSite fromTex/headerSuppressMetaPDF.tex}{headerSuppressMetaPDF.tex}. 
+Above all, it suppresses information on creation and modification time, on the tool chain used 
+and the trailer identifier. 
+By intention the latter changes in each build run even if the sources are the same. 
+Typically, this is implemented merging the current time into the build process. 
+The trailer identifier is fixed by the header file 
+and so created PDF files created from the same sources are the same, 
+except if date and time are included manually, as e.g. by the command \cmd{today}, 
+except for \xelatex, which uses the system time to create further hash codes. 
+So, including \texttt{headerSuppressMetaPDF.tex} may serve to create reproducible PDF files. 
+As described in Section~\ref{sec:chkReprod}, 
+the mainstream technique to reach reproducibility 
+is via manipulating the system time, 
+but if an environment does not support this, 
+including \texttt{headerSuppressMetaPDF.tex} is a fallback strategy, 
+if not using \xelatex. 
+
+The extent to which meta info is suppressed is inspired by reproducibility 
+but above all, it is subjective. 
+It is planned to make it configurable, 
+i.e. the file \texttt{headerSuppressMetaPDF.tex} 
+is created according to security settings of this maven plugin. 
+
+For further information on meta info in PDF files 
+related with security and reproducibility 
+see~\cite{LatexGen}, Section 4 
+and how this software treats the handles the issues 
+see Section~\ref{sec:chkReprod}. 
+
+
+
+
 
 \subsection{An install script for VS Code Extensions }\label{subsec:instExtVsCode}
 
