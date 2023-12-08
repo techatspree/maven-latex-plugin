@@ -37,6 +37,7 @@
     </menu>
     <menu name="Examples">
       <item name="Simple Example" href="example_simple.html"/>
+      <!-- link broken -->
       <item name="Typical Example" href="example_typical.html"/>
       <item name="Complex Example" href="example_complex.html"/>
       <item name="Specify output formats" href="example_targets.html"/>

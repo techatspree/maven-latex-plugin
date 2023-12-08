@@ -37,7 +37,7 @@ are useful in conjunction with tools external to this software and with debuggin
   The various fields of applications are explained by [example](./example_inj.html). 
 - Goal `grp` is to create graphic files [creating graphic files](./example_grp.html). 
 - Goal `vrs` to check versions of the tools to be invoked 
-  as described in [creating graphic files](./example_vrs.html). 
+  as described in [displaying versions](./example_vrs.html). 
 
 ## Source code repository
 

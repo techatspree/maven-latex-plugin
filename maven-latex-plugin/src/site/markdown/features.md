@@ -42,6 +42,8 @@ Supports document development.
     for `latexmk` synchronized with the configuration. 
   - Offers a common header file [`header.tex`](./fromTex/header.tex) 
     to unify mainly packages loaded by latex main files. 
+  - Offers a common header file [`headerSuppressMetaPDF.tex`](./fromTex/headerSuppressMetaPDF.tex) 
+    to keep up security, i.e. privacy quite independent of the tool chain. 
 
 
 # Planned Features

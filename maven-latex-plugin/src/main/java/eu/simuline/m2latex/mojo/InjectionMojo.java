@@ -49,6 +49,7 @@ public class InjectionMojo extends AbstractLatexMojo {
    * <li><code>chktexrc</code> represents the file <code>.chktexrc</code></li>
    * <li><code>vscodeExt</code> represents the file <code>instVScode4tex.sh</code></li>
    * <li><code>header</code> represents the file <code>header.tex</code></li>
+   * <li><code>headerSuppressMetaPDF</code> represents the file <code>headerSuppressMetaPDF.tex</code></li>
    * </ul>
    * <p>
    * The default value is <code>latexmkrc,chktexrc</code>. 

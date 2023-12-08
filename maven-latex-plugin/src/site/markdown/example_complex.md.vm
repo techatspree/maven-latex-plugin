@@ -6,5 +6,5 @@
 Normally, configuration is used with its default value. 
 Nevertheless, it is a good thing to display a pom 
 with a latex plugin specified with a 
-[maximal configuration](./resources/fromMain/pom4pdf.xml), 
+[maximal configuration](./fromMain/pom4pdf.xml), 
 almost all with default values. 
