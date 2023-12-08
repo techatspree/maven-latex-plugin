@@ -13,8 +13,12 @@
 %   <00112233445566778899aabbccddeeff>
 %   <00112233445566778899aabbccddeeff>
 % ]}
+
+% for buildParams: \verbdef 
+\usepackage{newverbs}
 \input{../header.tex}
 \input{../headerSuppressMetaPDF.tex}
+\input{../buildParams.tex}
 
 \hypersetup{
   pdfinfo={
@@ -131,15 +135,15 @@ but it can also process the options if given with a single dash also.
 Conversely, converters other than \lualatex{} can also deal with options 
 starting with single dash. 
 Options unknown to a converter never result in an error or even a warning; 
-instead just a info message is displayed. 
+instead just an info message is displayed. 
 This allows to create a configuration which works for all converters. 
 
 In Table~\ref{tab:latexOptionsCommonTexlive} column ``included'', 
 each converter is represented by the starting letter of its name, 
 so for each option it is known which converters know about it 
-an conversely, which options each converter has. 
+and conversely, which options each converter has. 
 
-The table allows to furnish configurations working for all converters. 
+The table allows furnishing configurations working for all converters. 
 Some options are common to all converters
 
 
@@ -459,10 +463,6 @@ These are always off.
 
 \section{Treatment of metadata for the PDF format}\label{sec:metaPDF}
 
-TBD: rework: required is a link to \texttt{headerSuppressMetaPDF.tex}. 
-This is only possible after this is an injection. 
-Also use references to~\cite{LuaTexRef} and to~\cite{PdfTexUsr}. 
-
 Whereas \xelatex{} always produces a XDV file internally as an intermediate step, 
 when creating a PDF file, with the option \texttt{-no-pdf} 
 one can eliminate creation of the PDF file and writing of the intermediate XDV file instead. 
@@ -483,7 +483,7 @@ the programs \texttt{dvipdfm}, \texttt{dvipdfmx} and \texttt{xdvipdfmx}
 are all binary identical. 
 
 Nevertheless, they turn out to yield different results. 
-One reason turning out later is, 
+One reason found below is, 
 that the name with which the program is invoked 
 goes into the result. 
 It is likely that this is the only reason. 
@@ -526,7 +526,7 @@ even when specifying \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}.
 
 This is about to be fixed, 
 but essentially, it is just an inconvenience. 
-% TBD: check whether really fixed. 
+% TBD: check whether really fixed. and then rework this section 
 
 Thus, we take refuge to switching off compression via 
 %
@@ -611,7 +611,7 @@ and it breaks reproducibility when changing the compiler of course.
 Also, privacy or security is an argument in favor of eliminating the banner. 
 The package \texttt{hyperref} offers no way to change the banner; 
 this can be done only in a machine specific way. 
-The details are described below. % TBD 
+The details are described in Section~\ref{subsec:securityRep} below. 
 
 The same is true for the trailer identifier. 
 Strictly speaking it need not be suppressed for reproducibility, 
@@ -671,6 +671,28 @@ to set the following pieces of information to unknown:
   We decided that the date offers enough individuality 
   to refrain from the trailer identifier. 
 \end{description}
+
+All these pieces of information 
+and a bit more are suppressed 
+by including \href{\urlSite fromTex/headerSuppressMetaPDF.tex}{headerSuppressMetaPDF.tex}. 
+Observe that to that end the package \texttt{hyperref} is used 
+whenever possible because this technique is not specific for the latex compiler. 
+Only banner and trailer identifier are suppressed in a compiler specific way. 
+
+% TBD: in the long run, here must be included a description of the details 
+Besides code, \texttt{headerSuppressMetaPDF.tex} provides 
+additional info in the comments, 
+but for details specific for the individual compilers 
+see~\cite{LuaTexRef}, Section 3.2.2 for \lualatex, 
+\cite{PdfTexUsr}, Section 7.2 for \pdflatex{}. 
+Seemingly, \xelatex{} is quite different from the other compilers 
+and tends to write fewer pieces of information. 
+It uses an external XDV to PDF converter, \texttt{xdvipdfmx} by default. 
+By placing \cmd{special} commands in the TEX file, 
+the user can pass information to the XDV to PDF converter 
+also controlling meta info to some extent. 
+Some details are given in the 
+manual for \texttt{xdvipdfmx}, \cite{DviPdfMx}, Section 4.1.1. 
 
 
 \subsection{Reproducibility revisited}\label{subsec:reprod2}
