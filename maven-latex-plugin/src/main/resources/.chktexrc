@@ -8,7 +8,10 @@ Silent {
 }
 
 WipeArg {
+  # for package listings 
   \lstinputlisting:[]{} \lstset:{}
+  # for command \textTT defined in header.tex 
+  \textTT:{}
 }
 
 VerbEnvir

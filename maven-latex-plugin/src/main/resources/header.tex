@@ -116,16 +116,22 @@
 % \usepackage{hyperref}% driver [hpdftex] is autodetected 
 % }
 
-
 %\usepackage[clear,pdf,eps]{svg}
 
 \usepackage{import}
+% TBD: eliminate; but only after glossaries is deprecated. 
 \usepackage{amsmath}
 
 % synchronization between tex and pdf 
 %\usepackage[active]{srcltx}
 \usepackage{longtable}
 \usepackage{listings}
+\renewcommand{\lstlistoflistings}{\begingroup
+%\tocsection
+%\tocchapter
+\tocfile{List of \lstlistingname{}s}{lol}
+\endgroup}
+
 % this is a workaround for including listings with latexmk.. 
 % This can be fixed 
 % - as shown below 
@@ -146,7 +152,6 @@
 
 \usepackage{fancyvrb}
 
-
 % index and glossary
 \IfPackageLoadedTF{tex4ht}{
 }{
@@ -154,6 +159,7 @@
 %  \usepackage{makeidx}
 %  \usepackage{showidx}
   \makeindex
+  % TBD: eliminate; loads amsmath!!! 
   \usepackage[toc]{glossaries}%,automake
   % , xindy or even [xindy={language=english,codepage=utf8}]
   % mainly for index and glossaries 
@@ -200,7 +206,11 @@
   \fi
 }
 
+\newcommand{\textTT}[1]{\texttt{#1}}% in conjunction with .chktex: ignored 
+
 %\usepackage{latex-bnf}
+
+
 
 
 

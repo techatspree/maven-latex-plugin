@@ -159,7 +159,7 @@ depending on the use case.
 language=TeX, basicstyle=\small,
 float, captionpos=b, label={lst:header}, 
 caption={Loading packages adapted to the output format}]%
-{header.tex}
+{./header.tex}% listing 
 
 
 An alternative, which we do not use 
@@ -765,17 +765,13 @@ One of the descendants of MetaPost is TikZ (see introductory text~\cite{TikzIntr
 and one of the deficiencies resolved is that it allows passing information 
 from the main document to the proper figure. 
 
-With \lualatex{} this can be reached for MetaPost also using package \pkg{luamplib} 
-%
-\lstinputlisting[language=TeX, basicstyle=\scriptsize, linerange={103-107},
-float, captionpos=b, label={lst:luamplib},
-caption={Package \texttt{luamplib} and how to use it}]
-{header.tex}
-
+With \lualatex{} this can be reached for MetaPost also using package \pkg{luamplib}. 
 The package itself provides an environment \texttt{mplibcode}. 
 Essentially, \lualatex{} interprets all code 
 enclosed in the \texttt{mplibcode} environment as MetaPost. 
-The package is enhanced with the command \cmd{inputmpcode} 
+As described in Section~\ref{subsec:header}, 
+this software can inject a header which loads the header 
+and enhances it providing the additional command \cmd{inputmpcode} 
 which allows also load MetaPost from a file. 
 The latter is preferred to direct inclusion with the \texttt{mplibcode} environment, 
 e.g.\@ for sake of proper code highlighting. 

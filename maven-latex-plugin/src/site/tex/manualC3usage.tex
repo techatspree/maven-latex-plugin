@@ -626,7 +626,7 @@ The configuration is described in Table~\ref{tab:paramMisc} on page~\pageref{tab
 It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}. 
 
 As described in Section~\ref{subsec:xmlPomExecutions}, 
-by default the goal \texttt{inj} is tied to the phase \texttt{validate}, 
+by default the goal \texttt{inj} is tied to the maven phase \texttt{validate}, 
 but it can be also invoked by command line via \texttt{mvn latex:inj} 
 with the default injections or, with given list of injections, 
 e.g.\@ some injections via 
@@ -634,6 +634,20 @@ e.g.\@ some injections via
 \begin{Verbatim}
   mvn latex:inj -Dlatex.injections=latexmkrc,chktexrc,header
 \end{Verbatim}
+%
+In fact, only \texttt{vscodeExt} is intended for directly invoked injection, 
+whereas the others are intended for use in phase \texttt{validate}. 
+
+In the sequel, all these injections are described in detail separately, 
+but in fact they are all related. 
+Thus, it is generally advised to inject all in phase \texttt{validate}, 
+except \texttt{vscodeExt} which is not intended to be injected on command line 
+and maybe \texttt{headerSuppressMetaPDF} which has a quite special application 
+which is not generally needed. 
+So the advice is to use \texttt{latexmkrc,chktexrc,header} 
+instead of the default \texttt{latexmkrc,chktexrc}. 
+
+
 
 Now let us treat the injections individually. 
 
@@ -683,9 +697,37 @@ float, captionpos=b, label={lst:chktexrc},
 caption={The config file \texttt{.chktexrc} to check this manual. }]%
 {.chktexrc}
 
+Observe, that due to an incompatibility between \texttt{latexmk} and package \pkg{listings}, 
+this manual can only be compiled with \texttt{latexmk} 
+if \pkg{listings} is not only loaded but also patched 
+as done by \texttt{header.tex} and described in Section~\ref{subsec:header}. 
+With that patch, this software yields the same resulting PDF file 
+as compilation with \texttt{latexmk}. 
+
+Currently, \texttt{.chktexrc} serves only to suppress warnings, 
+mainly on material which is the argument of commands or the content of an environment. 
+What is really needed depends on the packages loaded 
+and on the commands and environments defined in addition. 
+
+Since basic packages are loaded and basic commands are defined 
+in the injected \texttt{header.tex} 
+which is described in Section~\ref{subsec:header}, 
+it makes sense, to synchronize \texttt{.chktex} and \texttt{header.tex}. 
+As an example, \texttt{header.tex} loads package \pkg{listings} 
+which provides the environment \texttt{lstlisting} and the command \cmd{listinputlisting}. 
+The content of both shall not be subject to checks via \texttt{chktex} 
+and must thus be excluded in \texttt{.chktexrc}. 
+
+
+All this together illustrates why it is recommended to inject 
+besides the default \texttt{.chktexrc} and \texttt{.latexmkrc} 
+also \texttt{header.tex}. 
+\medskip
+
 
 As described in Sections~\ref{subsec:develLatexmk} and~\ref{subsec:develCheck}, 
-both tools are invoked directly by the user in the course of document development, 
+both tools \texttt{chktex} and \texttt{latexmk} 
+are invoked directly by the user in the course of document development, 
 but they may be invoked by this \LaTeX{} builder in the course of a regular build, 
 i.e.\@ for maven goal \texttt{cfg} also. 
 % TBD: and ant task with the same name ... well, this will not work 
@@ -759,15 +801,49 @@ to make guarantees that it works still with the unexpected packages.
 This is, e.g.\@ because a package may write warnings 
 in an unexpected format into some log file. 
 
-The injection \texttt{header} is tied to the file  \href{\urlSite fromTex/header.tex}{header.tex}, 
+The injection \texttt{header} 
+is tied to the file \href{\urlSite fromTex/header.tex}{header.tex}, 
 which is intended to be included in each \LaTeX{} main file. 
 Essentially it includes packages always needed. 
+% and packages which are patched. 
 It is inspired by the packages \texttt{pandoc} includes by default 
 according to \url{https://pandoc.org/MANUAL.html#creating-a-pdf}. 
 
+Some loaded packages are also patched. 
+The patch for package \pkg{listings} is given in Listing~\ref{lst:fileIfExists}. 
+One modification is, redefinition of \cmd{lstlistoflistings} 
+to make the list of listings occur in the table of contents 
+and to rename the title so that it fits other lists as the list of figures.  
+The other point is modifying \pkg{listings}' output to make it digestible for \texttt{latexmk}. 
+For details see Section~\ref{subsec:develLatexmk}. 
+
+\lstinputlisting[linerange={129-153},
+language=tex, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:fileIfExists}, 
+caption={Patch of the \texttt{listings} package given by the header file. }]%
+{./header.tex}% listing 
+
+
+The other package patched is \pkg{luamplib}; the patch is given in Listing~\ref{lst:luamplib}. 
+As discussed in Section~\ref{sec:metapost}, 
+\pkg{luamplib} is available for \lualatex{} only. 
+It provides an environment texttt{mplibcode} to enclose literal MetaPost. 
+The enhancement is an additional command \cmd{inputmpcode} 
+which allows including MetaPost Files. 
+This functionality is analogous to package \pkg{listings} 
+which allows both literal listings and loading listings from files. 
+
+%
+\lstinputlisting[linerange={103-107},
+language=tex, basicstyle=\scriptsize, 
+float, captionpos=b, label={lst:luamplib},
+caption={Package \texttt{luamplib} and how to use it. }]
+{./header.tex}% listing 
+
 Besides loading packages it also sets \texttt{synctex} 
 which is crucial for synchronizing TEX files and according PDF files 
-via forward search and backward search as described in Section~\ref{subsec:editViewLatex}. 
+via forward search and backward search 
+as described in Section~\ref{subsec:editViewLatex}. 
 
 % TBD \listfiles to check loaded packages 
 
@@ -784,8 +860,14 @@ but due to a bug, any invocation of \cmd{DocumentMetadata} corrupts reproducibil
 After this is fixed, the \cmd{setMinorVersionPdf} shall be removed again. 
 % TBD: check from time to time. 
 
+Another command provided is \cmd{textTT} which sets the argument in typewriter font 
+just like \cmd{texttt} but for which checks by \texttt{chktex} are suppressed. 
+For details see Sections~\ref{subsec:latChkRc} and~\ref{subsec:develCheck}. 
+\medskip
+
+
 As the configuration files described above, 
-it is intended to be injected in phase \texttt{validate}. 
+\texttt{header.tex} is intended to be injected in phase \texttt{validate}. 
 
 Note that \texttt{header.tex} is written for use of 
 %
@@ -799,9 +881,11 @@ Note that \texttt{header.tex} is written for use of
 This is realized with a bunch of if-constructs. 
 In the long run, \texttt{header.tex} could be adapted 
 to the configuration as \texttt{.latexmkrc}, 
-but currently it detects the use case as the latex converter or the target format 
+but currently it detects the use case 
+as the latex converter or the target format 
 and loads the according packages. 
 It is also conceivable to create different headers, one for each document class. 
+
 
 \subsection{A header file to suppress meta-info for PDF files }\label{subsec:headerSuppressMetaPDF}
 
@@ -1220,9 +1304,11 @@ but the user may also use his/her own file \texttt{.latexmkrc}.
 There is a difference in the build process concerning mostly graphic files: 
 \texttt{latexmk} detects dependencies via the \texttt{-recorder} option of the latex generator 
 and creates or recreated what is new or changed. 
-This is more elegant than the idea of this plugin which is based on detecting hard coded set of files 
+This is more elegant than the idea of this plugin 
+which is based on detecting hard coded set of files 
 and tracing log files. 
-If there are a lot of graphic files \texttt{latexmk} may be forced to run the latex generator frequently, 
+If there are a lot of graphic files 
+\texttt{latexmk} may be forced to run the latex generator frequently, 
 whereas this plugin first creates all graphic files and then invokes the latex generator. 
 Nevertheless, the results shall be the same. 
 In the long run, it is planned that this plugin is enabled to build using \texttt{latexmk}. 
@@ -1251,6 +1337,63 @@ goal \texttt{clr} to clear created files is
 described in Section~\ref{subsec:develClear}. 
 
 
+A valuable standalone build tool is \texttt{latexmk}. 
+It can even run in background. 
+This manual can also be compiled with \texttt{latexmk} 
+but only with adapted configuration file \texttt{.latexmkrc}. 
+For details see Section~\ref{sec:xmlPom}. 
+\medskip
+
+
+
+Finally, we show how this plugin may support \texttt{latexmk}. 
+To understand in which sense, one must dive very deep. 
+In short, injection of a header patches package \pkg{listings} 
+in a way that saves performance of \texttt{latexmk}. 
+Let us elaborate. 
+
+This software and \texttt{latexmk} follow a different philosophy in finding dependencies: 
+Whereas this software creates image files in advance before invoking a latex converter, 
+\texttt{latexmk} first calls the latex converter in \texttt{nonstopmode} 
+to avoid a stop because of a missing file. 
+Then the file is created using the appropriate rule (hopefully unique) 
+and the converter is run again, 
+this time passing the inclusion of the first created files 
+failing at the next one. 
+This goes on that way until the last included file is created. 
+Then the latex converter runs through without failure caused by missing files. 
+
+There are two problems with this: 
+This yields a huge number of runs for the converter 
+which is time-consuming 
+and there is at least one kind of inclusion which does not work that way: 
+inclusion with \cmd{lstinputlisting} 
+provided by \pkg{listings}. 
+In fact, i have an email from J.~Hoffmann, author of \pkg{listings} 
+telling that there are more packages with the same problem. 
+To be checked: \pkg{fancyvrb} and \pkg{moreverb}. 
+Nevertheless, all other ways of inclusion \emph{used by this manual} 
+like the one with \cmd{import} seem to work fine. 
+
+The current workaround for the second problem 
+is by patching \pkg{listings} as described in Section~\ref{subsec:header}.
+
+The suggested workaround for the first problem is 
+creating graphic files using goal \texttt{grp} as described in Section~\ref{subsec:develGraph} 
+before invoking \texttt{latexmk}. 
+
+Still some generalization in \texttt{latexmk} could spare this modification. 
+
+Another point is, that currently for each file \texttt{latexmk} creates with a separate rule, 
+another run of the latex processor is required: 
+The initial run is interrupted with the first missing file. 
+Then that file is created by an appropriate rule and the latex processor is rerun 
+failing with the next missing file. 
+That way the process goes on until the last file is created with a rule. 
+Of course this procedure is quite time-consuming, so an alternative is required. 
+
+
+
 \subsection{Checks in the context of document development}\label{subsec:develCheck}
 
 The target \texttt{chk} just invoke the tool \texttt{chktex} and logs finding in a CLG file. 
@@ -1266,10 +1409,21 @@ or via the plugin in goal \texttt{chk}, the results are the same.
 In the wording coined in Section~\ref{subsec:develLatexmk}, 
 this plugin integrates \texttt{chktex} very much the same way as it integrates \texttt{latexmk} 
 namely by injection of a config file. 
+
 The config file \texttt{.chktexrc} in turn is adapted to the header \texttt{header.tex} 
 which is also injected. 
+In general, \texttt{.chktexrc} excludes content of environments 
+and of arguments of commands defined in packages loaded by \texttt{header.tex} 
+or defined therein directly. 
+A nice example of another kind of synergy is the command \cmd{textTT} 
+defined in \texttt{header.tex}. 
+Functionally, it is just \cmd{texttt} which sets the argument in typewriter font, 
+but in \texttt{.chktexrc} it is listed among the commands 
+the arguments of which shall not be checked by \texttt{chktex}. 
+\medskip
 
-After eliminating warnings until \texttt{chktex} displays no warnings, 
+
+After eliminating warnings until direct invocation of \texttt{chktex} displays no warnings, 
 one can be sure that also check with goal \texttt{chk} of this plugin does not yield warnings. 
 
 
@@ -1388,7 +1542,8 @@ Also describe how to use.
 
 
 
-\subsection{Miscellaneous}% TBD: This is to be removed in the long run. 
+\subsection{Miscellaneous}
+% TBD: This is to be (re-)moved in the long run. 
 
 
 
@@ -1707,59 +1862,6 @@ For details see Section~\ref{sec:xmlPom}.
 
 
 
-
-A valuable standalone build tool is \texttt{latexmk}. 
-It can even run in background. 
-This manual can also be compiled with \texttt{latexmk} 
-but only with adapted configuration file \texttt{.latexmkrc}. 
-For details see Section~\ref{sec:xmlPom}. 
-
-
-
-
-% to be included. 
-This software and \texttt{latexmk} follow a different philosophy in finding dependencies: 
-Whereas this software creates image files in advance before invoking a latex converter, 
-\texttt{latexmk} first calls the latex converter in nonstopmode 
-to avoid a stop because of a missing file. 
-Then the file is created using the appropriate rule (hopefully unique) 
-and the converter is run again, 
-this time passing the inclusion of the first created files 
-failing at the next one. 
-This goes on that way until the last included file is created. 
-Then the latex converter runs through without failure caused by missing files. 
-
-There are two problems with this: 
-This yields a huge number of runs for the converter 
-which is time-consuming 
-and there is at least one kind of inclusion which does not work that way: 
-inclusion with \texttt{\textbackslash{}lstinputlisting} 
-provided by \pkg{listings}. 
-In fact, i have an email from J. Hoffmann, author of listings 
-telling that there are more packages with the same problem. 
-To be checked: \pkg{fancyvrb} and \pkg{moreverb}. 
-Nevertheless, all other ways of inclusion \emph{used by this manual} 
-like the one with \texttt{\textbackslash{}import} 
-seem to work fine. 
-
-The current workaround is illustrated in Listing~\ref{lst:fileIfExists} 
-modifying \pkg{listings}' output to make it digestible for \texttt{latexmk}. 
-
-\lstinputlisting[linerange={129-146},
-language=tex, basicstyle=\scriptsize,
-float, captionpos=b, label={lst:fileIfExists}, 
-caption={Patch of the \texttt{listings} package given by the header file. }]%
-{header.tex}
-
-Still some generalization in \texttt{latexmk} could spare this modification. 
-
-Another point is, that currently for each file \texttt{latexmk} creates with a separate rule, 
-another run of the latex processor is required: 
-The initial run is interrupted with the first missing file. 
-Then that file is created by an appropriate rule and the latex processor is rerun 
-failing with the next missing file. 
-That way the process goes on until the last file is created with a rule. 
-Of course this procedure is quite time-consuming, so an alternative is required. 
 
 
 
