@@ -1141,6 +1141,7 @@ public class Settings {
       // ... 
       // default message in two lines for packages 
       // FIXME: would require parsing of more than one line 
+      "Package rerunfilecheck Info: Checksums for |" +
       "Package \\w+ Warning: .*$" + "^\\(\\w+\\) .*Rerun( .*|\\.)$|" +
       // works for 
       // Package natbib Warning: Citation\\(s\\) may have changed.
@@ -1179,6 +1180,7 @@ public class Settings {
           // Package hyperref Warning: Rerun to get outlines right (old hyperref)
           // ... 
           // default message in two lines for packages 
+          "Package rerunfilecheck Info: Checksums for |" +
           "Package \\w+ Warning: .*$" + "^\\(\\w+\\) .*Rerun( .*|\\.)$|" +
           // works for 
           // Package natbib Warning: Citation\\(s\\) may have changed.
