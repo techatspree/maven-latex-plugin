@@ -747,7 +747,7 @@ The default value is given below.
             <patternReRunLatex>
 ^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
 Package \w+ Warning: .*Rerun( .*|\.)$|
-Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+Package \w+ Warning: .*$^\(\w+\) .*Rerun( .*|\.)$|
 LaTeX Warning: Etaremune labels have changed\.$|
 \(rerunfilecheck\)                Rerun to get outlines right$|
 \(rerunfilecheck\)                Rerun LaTeX)

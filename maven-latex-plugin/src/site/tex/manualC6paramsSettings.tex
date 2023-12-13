@@ -561,7 +561,7 @@ caption={The default pattern of the latex main file in a form as in a pom config
 Let us trace through line by line: 
 %
 \begin{description}
-  \item[1] The \texttt{\textbackslash A} indicates the start of the file. 
+  \item[1] The \cmd{A} indicates the start of the file. 
   \item[2--4] These lines match magic comments \texttt{\%~!TEX}, 
   which are used by other tools. 
   Line 3 extracts \texttt{programMagic} 
@@ -1471,9 +1471,17 @@ A space is missing\. (No warning)\.)
 
 \subsection{The parameter \texttt{patternReRunLatex}}%
 \label{subsec:patternReRunLatex}
-TODO\@: add 
 
-The pattern to 
+TODO\@: rework based on comments in class Settings. 
+
+For the package \pkg{rerunfilecheck} an analysis of the code is possible, 
+and the warnings emitted by this package indicating the need for rerun 
+are taken into account for the pattern. 
+
+Besides this package, also other packages may require rerun, 
+but these are not analyzes systematically. 
+A first step would be to analyze those given in \texttt{header.tex} 
+created by injection. % TBD: add reference and some indication in that section 
 
 As a consequence, the pattern has a comprehensive default value 
 covering all warnings known to the author, 
@@ -1484,16 +1492,16 @@ Still the pattern has to be configurable
 to allow the user to overwrite the default value 
 not being forced to wait for the developer to change it. 
 
-For the current default value, we distinguish 
 
 The resulting default pattern is 
 %
 \begin{Verbatim}[fontsize=\scriptsize]
 ^(LaTeX Warning: Label\(s\) may have changed\. Rerun to get cross-references right\.$|
 Package \w+ Warning: .*Rerun( .*|\.)$|
-Package \w+ Warning: .*$^\(\w+\) .*Rerun .*$|
+Package \w+ Warning: .*$^\(\w+\) .*Rerun( .*|\.)$|
 LaTeX Warning: Etaremune labels have changed\.$|
-\(rerunfilecheck\)                Rerun to get outlines right$)
+\(rerunfilecheck\)                Rerun to get outlines right$|
+\(rerunfilecheck\)                Rerun LaTeX)
 \end{Verbatim}
 
 FIXME\@: There is a bug in this pattern. See Section~\ref{chap:bugs}. 

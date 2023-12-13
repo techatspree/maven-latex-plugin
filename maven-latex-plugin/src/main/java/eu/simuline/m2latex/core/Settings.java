@@ -1141,7 +1141,7 @@ public class Settings {
       // ... 
       // default message in two lines for packages 
       // FIXME: would require parsing of more than one line 
-      "Package \\w+ Warning: .*$" + "^\\(\\w+\\) .*Rerun .*$|" +
+      "Package \\w+ Warning: .*$" + "^\\(\\w+\\) .*Rerun( .*|\\.)$|" +
       // works for 
       // Package natbib Warning: Citation\\(s\\) may have changed.
       // (natbib)                Rerun to get citations correct.
@@ -1161,22 +1161,25 @@ public class Settings {
       //
       // from package rerunfilecheck used by other packages like new hyperref 
       // Package rerunfilecheck Warning: File `foo.out' has changed.
-      "\\(rerunfilecheck\\)                Rerun to get outlines right$)"
+      "\\(rerunfilecheck\\)                Rerun to get outlines right$|" +
+      // Rerun LaTeX/makeindex to get index right 
+      // Rerun LaTeX/makeindex to get glossary right (not makeglossary) 
+      "\\(rerunfilecheck\\)                Rerun LaTeX)"
   //  (rerunfilecheck)                or use package `bookmark'.
   )
   private String patternReRunLatex =
       // general message 
-      "^(LaTeX Warning: Label\\(s\\) may have changed. "
+      "^(LaTeX Warning: Label\\(s\\) may have changed\\. "
           + "Rerun to get cross-references right\\.$|" +
           // default message in one line for packages 
-          "Package \\w+ Warning: .*Rerun .*$|" +
+          "Package \\w+ Warning: .*Rerun( .*|\\.)$|" +
           // works for 
           // Package totcount Warning: Rerun to get correct total counts
           // Package longtable Warning: Table widths have changed. Rerun LaTeX ...
           // Package hyperref Warning: Rerun to get outlines right (old hyperref)
           // ... 
           // default message in two lines for packages 
-          "Package \\w+ Warning: .*$" + "^\\(\\w+\\) .*Rerun .*$|" +
+          "Package \\w+ Warning: .*$" + "^\\(\\w+\\) .*Rerun( .*|\\.)$|" +
           // works for 
           // Package natbib Warning: Citation\\(s\\) may have changed.
           // (natbib)                Rerun to get citations correct.
@@ -1189,7 +1192,10 @@ public class Settings {
           //
           // from package rerunfilecheck used by other packages like new hyperref 
           // Package rerunfilecheck Warning: File `foo.out' has changed.
-          "\\(rerunfilecheck\\)                Rerun to get outlines right$)";
+          "\\(rerunfilecheck\\)                Rerun to get outlines right$|" +
+          // Rerun LaTeX/makeindex to get index right
+          // Rerun LaTeX/makeindex to get glossary right (not makeglossary)
+          "\\(rerunfilecheck\\)                Rerun LaTeX)";
   // (rerunfilecheck)                or use package `xxx'.
 
   /**
