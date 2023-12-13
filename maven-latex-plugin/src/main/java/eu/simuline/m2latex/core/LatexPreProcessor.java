@@ -311,7 +311,7 @@ public class LatexPreProcessor extends AbstractLatexProcessor {
      */
     bib {
       void procSrc(File file, LatexPreProcessor proc) {
-        proc.log.info("Found bibliography file '" + file + "'. ");
+        proc.log.info("Found bib-file '" + file + "'. ");
       }
 
       void clearTarget(File file, LatexPreProcessor proc,
