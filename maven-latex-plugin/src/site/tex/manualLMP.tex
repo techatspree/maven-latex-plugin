@@ -531,7 +531,7 @@ The preferred usage is defined as follows:
   \item If \texttt{latexmk} is used, then with config file \texttt{.latexmkrc}, 
   whereas \texttt{chktex} is definitely used, 
   and it is configured with config file \texttt{.chktexrc}. 
-  Both config files are injected by \texttt{inj} described in Section~\ref{sec:injFiles}. 
+  Both config files are injected by \texttt{inj} described in Section~\ref{subsec:latChkRc}. 
   \item Neither \texttt{latexmk} nor \texttt{chktex} is used with options. 
   \item The maven plugin, rather than the ant task. 
   \item Configuration is the default setting of this plugin. 
@@ -543,7 +543,7 @@ The preferred usage is defined as follows:
   this is not tested through this manual 
   but with the beamer presentation and handout given by~\cite{PresBeamer}. 
   \item \LaTeX{} packages are those given by \texttt{header.tex} 
-  described in Section~\ref{sec:injFiles}. 
+  described in Section~\ref{subsec:header}. 
   \item Graphics are in the formats described and used in the manual. 
   \item Using tools pythontex, makeindex, splitindex, makeglossaries 
   belongs to the preferred usage. 
@@ -552,6 +552,13 @@ The preferred usage is defined as follows:
   \item Tools must be used with accepted version, 
   in the sense that \texttt{mvn latex:vrs} does not emit a warning. 
   \item The output format is PDF\@. 
+  \item The support of reproducible PDF files and here of the first kind: 
+  Reproducibility does not only refer to the visible aspects of the PDF file, 
+  but also to meta-data. 
+  \item Reproducibility is reached by manipulating the system time, 
+  although as an alternative method also suppressing writing meta-info into the PDF file is supported. 
+  \item 
+  Security issues are addressed by including a header described in Section~\ref{subsec:headerSuppressMetaPDF}. 
 \end{itemize}
 
 
@@ -699,7 +706,7 @@ because they are not preferred usage.
 On the other hand, it is an important design goal, 
 that the result of this software is trustable if no warning, error or exception occurs. 
 This requires extensive tests also on imperfect runs. 
-These must be supplemented in future. 
+These must be supplemented in the future. 
 
 FIXME\@: this chapter describes the tests to be performed. 
 

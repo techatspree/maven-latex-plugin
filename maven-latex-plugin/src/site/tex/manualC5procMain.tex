@@ -921,7 +921,7 @@ the index and the glossary are inserted.
 It takes a third run of \texttt{latex2pdf} 
 to include the bibliography the index and the glossary 
 into the table of contents. 
-Also it takes that third run to replace the citations 
+Also, it takes that third run to replace the citations 
 with the proper labels given in the bibliography. 
 
 Inserting the table of contents,
@@ -944,32 +944,32 @@ triggering another \texttt{latex2pdf} run.
 
 
 Note that there are several packages which require additional runs, 
-such as the longtable-package, 
+such as the package \pkg{longtable}, 
 which may vary dimensions of tables. 
 This software presupposes, that all these reruns 
 may be detected by matching a fixed pattern in the LOG file. 
 Since packages are frequently changed and new packages are written, 
 also the pattern cannot be fixed. 
-Thus it is configurable. 
+Thus, it is configurable. 
  
 Note that, if a package requires running other programs 
 between two runs of \texttt{latex2pdf}, 
 this would require a change in this software. 
 
-\section{Checking reproducibility}\label{sec:chkReprod}
+\section{Checking reproducibility }\label{sec:chkReprod}
 
-TBD: this is to be reworked. 
-
-There are use cases, where on the one hand side we want to deliver the sources, 
-but it is extremely important that the according artifacts are really reproducible. 
-One obvious case is integration test for this software 
+There are use cases, where it is extremely important 
+that the according artifacts are really reproducible. 
+One is when we have to deliver the sources 
+and the receiver has to reconstruct the artifacts. 
+Another obvious use case is integration test for this software 
 by ensuring that each artifact created 
-is equivalent with a confirmed version. 
+is equivalent with a confirmed version, 
+although this software changed. 
 Details are given in Section~\ref{chap:tests}. 
 
 
-
-Currently, this is done for PDF files only. 
+Currently, reproducibility checks are supported for PDF files only. 
 % TBD: change that 
 The problem with PDF files is, that besides visible contents 
 they contain also meta-data (see~\cite{pdf17}, Section 14.3), 
@@ -981,28 +981,69 @@ There are two strategies to deal with the problem:
 \begin{itemize}
   \item 
   Make the build process reproducible. 
-  The advantage of this approach is that diffing is quite simple, fast and reproducible: 
-  it is byte by byte. 
-  This is easily done with a fixed installation but tends to break with update of tools. 
+  The advantage of this approach is that diffing is quite simple, 
+  fast and reproducible: it is byte by byte. 
+  This is easily done with a fixed installation 
+  but tends to break with update of tools. 
   % TBD: allow own version check. 
-  Also, at time of this writing, the different latex engines cannot be treated uniformly. 
+  Also, at time of this writing, 
+  the different latex engines cannot be treated uniformly. 
   % TBD: a feature request to hyperref is already posted. 
   % let us keep an eye on that. 
   \item 
   Use diff tools implementing a weaker notion of equivalence, 
   in a sense visibility equivalence of some degree. 
-\end{itemize}
+\end{itemize}%
 
-We support both approaches. 
-The first one imposes requirements on the TEX source file. 
-It excludes that one displays a creation date changing each run. 
-For this manual, we replaced the creation date by a ``version date''. 
-A date can be only date of check in of a version control system or that like. 
-As an alternative, one could also refrain from using dates altogether. 
-In the \texttt{\textbackslash date} command 
-one could display also other pieces of information identifying the document. 
+We support both approaches, but the first one is the preferred one 
+in the sense understood in Chapter~\ref{chap:tests}. 
+As described in much detail in~\cite{LatexGen}, Section 4, 
+essentially, there are two ways to make the build process reproducible. 
 
-But the visible date is not all we have to avoid. 
+The simpler and again the preferred one, 
+is by setting the system time to a fixed value. 
+If the document contains a date created by \cmd{today}, 
+then this is according to the fixed value and thus wrong value. 
+We use reproducibility in that sense only for tests; thus this is acceptable. 
+If the PDF files are intended to be published, the date must be correct. 
+The idea is, to recompile with the correct date for publishing. 
+Then for tests a pom checking equality is used, 
+and for publishing another pom without this check. 
+The system time is manipulated only when performing equality tests. 
+
+Of course, other techniques are also conceivable, 
+but this is the one implemented at time of this writing. 
+One alternative would be to refrain from having a current date, 
+but some date changing not so frequently. 
+Still meta-data includes the trailer identifier 
+which is based on system time set. 
+As described in Section~\ref{subsec:headerSuppressMetaPDF}, 
+we could include a header suppressing a sufficient amount of meta-data, 
+at least the trailer identifier. 
+Then the resulting PDF files are reproducible, 
+provided \lualatex{} or \pdflatex{} is used, but not for \xelatex. 
+This lack of uniformity alone makes this approach inferior, 
+so we do not use for creating this manual. 
+
+What we do use is the header providing privacy, 
+to make it part of the preferred usage. 
+
+% Thus, a reproducibility check is advisable as described below. 
+% It is just by comparing the newly created PDF with an older version 
+% and the date shall be the modification date of this older version. 
+% The details are not yet implemented. 
+% %TBD do that 
+% Then the date shall be 
+
+% The first one imposes requirements on the TEX source file. 
+% It excludes that one displays a creation date changing each run. 
+% For this manual, we replaced the creation date by a ``version date''. 
+% A date can be only date of check in of a version control system or that like. 
+% As an alternative, one could also refrain from using dates altogether. 
+% In the \cmd{date} command 
+% one could display also other pieces of information identifying the document. 
+
+But the visible date is not all we have to care about. 
 Listing~\ref{lst:reprPdfEngines} shows how to eliminate metadata 
 and to replace with adequate one. 
 There is metadata which can be eliminated in a uniform way for all latex engines 
