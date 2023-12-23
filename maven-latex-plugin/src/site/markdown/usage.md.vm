@@ -47,17 +47,18 @@ https://github.com/Reissner/maven-latex-plugin
 
 ## Maven repository
 
+
 ```[xml]
 <project>
   <pluginRepositories>
-		<pluginRepository>
-			<id>latex-maven-plugin-repo</id>
-			<url>https://www.simuline.eu/RepositoryMaven</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-	</pluginRepositories>
+    <pluginRepository>
+      <id>latex-maven-plugin-repo</id>
+      <url>https://www.simuline.eu/RepositoryMaven</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
 ```
