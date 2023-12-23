@@ -6,7 +6,10 @@
 The features consist in support of various input and ability to create [various output](#input-and-output), 
 various [checks](#checks) and [orchestration and document development](#orchestration-and-document-development). 
 
+#[[##]]# Input and Output 
+
 ## Input and Output 
+
 
 Supports 
 
@@ -14,6 +17,8 @@ Supports
 - document classes including `book`, `article` and `beamer`; for the latter also `beamerarticle` 
 - many graphical input formats like PNG, MP, FIG, gnuplot and provides a separate goal creating them, `grp` 
 - bibliography, index, glossary and embedded code; in particular split index 
+
+#[[##]]#  Checks 
 
 ## Checks 
 
@@ -23,6 +28,8 @@ Checks
 - versions of used tools 
 - log files detecting errors and warnings 
 - whether a document could have been reproduced, by demand 
+
+#[[##]]# Orchestration and Document Development 
 
 ## Orchestration and Document Development 
 

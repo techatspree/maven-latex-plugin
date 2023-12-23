@@ -44,6 +44,7 @@ e.g. building a table of contents or when using `bibtex`
 to maintain a bibliography and citations). 
 
 ## Goals Overview 
+#[##]# Goals Overview 
 
 Before describing the individual goals, 
 be warned that the according parameters are not given very explicitly. 
@@ -137,6 +138,7 @@ The following goals are not directly related with building of artifacts.
   [guide to helping with Maven](https://maven.apache.org/guides/development/guide-helping.html). 
 
   ## Examples 
+#[##]# Examples 
 
   To provide you with better understanding 
   on some usages of this plugin, 

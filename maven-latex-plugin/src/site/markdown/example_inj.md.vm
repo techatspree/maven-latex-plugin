@@ -50,8 +50,9 @@ Note that the names of the injections
 are not precisely the names of the files written 
 as will be shown below. 
 
-
+#[[##]]# The injections latexmkrc and chktexrc 
 ## The injections latexmkrc and chktexrc 
+
 
 For injection `latexmkrc`, 
 the config file `.latexmkrc` is synchronized with the configuration. 
@@ -76,6 +77,8 @@ The only difference is, that `.chktexrc` does not depend on the configuration.
 The config files are [`.chktexrc`](./fromTex/.chktexrc) 
 and for default configuration [`.latexmkrc`](./fromTex/.latexmkrc). 
 
+
+#[[##]]# Injection to install extensions for VS Code 
 
 ## Injection to install extensions for VS Code 
 
@@ -111,6 +114,7 @@ Note: This is developed under linux but windows user shall know how to get that 
 <!-- the link is very instable -->
 <!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->
 
+#[[##]]# Injection of a generic header 
 ## Injection of a generic header 
 
 

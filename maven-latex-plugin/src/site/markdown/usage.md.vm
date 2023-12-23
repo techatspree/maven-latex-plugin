@@ -41,12 +41,15 @@ are useful in conjunction with tools external to this software and with debuggin
 
 ## Source code repository
 
+#[[##]]# Source code repository
+
 ```
 https://github.com/Reissner/maven-latex-plugin
 ```
 
 ## Maven repository
 
+#[[##]]# Maven repository
 
 ```[xml]
 <project>
@@ -64,6 +67,8 @@ https://github.com/Reissner/maven-latex-plugin
 ```
 
 ## Maven plugin dependency
+
+#[[##]]# Maven plugin dependency
 
 ```
 <project>[xml]
