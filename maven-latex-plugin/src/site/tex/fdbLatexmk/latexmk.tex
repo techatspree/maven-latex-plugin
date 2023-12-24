@@ -33,14 +33,23 @@ To that end, it invokes a bunch of more basic tools,
 most notably a \LaTeX{} compiler, and possibly more than once. 
 Among the most widely used build tools is \latexmk. 
 
+To find out whether a compilation process must be repeated, 
+\latexmk{} keeps track on whether a relevant file changed. 
+As indicated in \cite{LatexMk23}, Section ``Description'', 
+to that end, \latexmk{} uses a file \texttt{xxx.fdb\_latexmk}: 
+it writes information on dependencies 
+before compilation step and records changes after. 
+This is all information \cite{LatexMk23} contains 
+concerning \texttt{fdb\_latexmk} files. 
+
 % \cite{LatexMk23}, $analyze_input_log_always, when to analyze log files 
 % for contstructions <...> and (...)
 % interesting: lualatex fails to add lua files to fls files. 
 % \cite{LatexMk23}, $recorder [1]
 % there are cases where the file is named lualatex.fls or that like. 
 The manual~\cite{LatexMk23} gives only very few pieces information 
-on that file, because it is intended for internal use only; 
-some results of reverse engineering on that file format 
+on \texttt{xxx.fdb\_latexmk}, because it is intended for internal use only; 
+some results of reverse engineering on \texttt{xxx.fls} file format 
 is collected in~\cite{LatexRec}. 
 Also, there is some 
 \href%
@@ -52,15 +61,6 @@ so does the version number described below, so change is not without notificatio
 Since \texttt{latexmk} is quite mature, 
 the author of this description considers the risk as quite low. 
 
-
-To find out whether a compilation process must be repeated, 
-\latexmk{} keeps track on whether a relevant file changed. 
-As indicated in \cite{LatexMk23}, Section ``Description'', 
-to that end, \latexmk{} uses a file \texttt{xxx.fdb\_latexmk}: 
-it writes information on dependencies 
-before compilation step and records changes after. 
-This is all information \cite{LatexMk23} contains 
-concerning \texttt{fdb\_latexmk} files. 
 
 The understanding of the author of this document is, 
 that \texttt{latexmk} uses the file \texttt{xxx.fls}, 
@@ -103,7 +103,7 @@ A production describes a step of transformation of source files into target file
 
 The following listing is an example of a production. 
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\scriptsize]
 ["bibtex manualLMP"] 1702855070 "manualLMP.aux" "manualLMP.bbl" "manualLMP" 1702855080 0
   "./lit.bib" 1702001904 30636 95f3702a4882e2bee12e1804952c0464 ""
   "/usr/share/texmf/bibtex/bst/base/alpha.bst" 1292289607 23907 a5f93555796fb564b924339521f10a7c ""
