@@ -849,7 +849,7 @@ than the \LaTeX{} distribution does.
 Setting the version high enough, avoids an according warning \texttt{WAP03} 
 listed in Table~\ref{tab:WarnALP} on page~\pageref{tab:WarnALP}. 
 The warning pattern is described in Section~\ref{subsec:patternWarnLatex} in detail. 
-As described in \cite{DocMetaDataSuppCode}, Section 2 
+As described in~\cite{DocMetaDataSuppCode}, Section 2 
 the recommended way to set major and minor version of the PDF output 
 like in \cmd{DocumentMetadata\{pdfversion=1.7\}}, 
 but due to a bug, any invocation of \cmd{DocumentMetadata} corrupts reproducibility of the created PDFs. 
@@ -891,7 +891,7 @@ the one described here, is optional.
 
 It refers to created PDF files only and does not influence the optical appearance 
 but suppresses writing certain meta-data. 
-The main motivation is security, i.e. privacy, 
+The main motivation is security, i.e.\@ privacy, 
 but it can also be used to turn the resulting PDF reproducible. 
 
 
@@ -903,7 +903,7 @@ By intention the latter changes in each build run even if the sources are the sa
 Typically, this is implemented merging the current time into the build process. 
 The trailer identifier is fixed by the header file 
 and so created PDF files created from the same sources are the same, 
-except if date and time are included manually, as e.g. by the command \cmd{today}, 
+except if date and time are included manually, as e.g.\@ by the command \cmd{today}, 
 except for \xelatex, which uses the system time to create further hash codes. 
 So, including \texttt{headerSuppressMetaPDF.tex} may serve to create reproducible PDF files. 
 As described in Section~\ref{sec:chkReprod}, 
@@ -916,7 +916,7 @@ if not using \xelatex.
 The extent to which meta info is suppressed is inspired by reproducibility 
 but above all, it is subjective. 
 It is planned to make it configurable, 
-i.e. the file \texttt{headerSuppressMetaPDF.tex} 
+i.e.\@ the file \texttt{headerSuppressMetaPDF.tex} 
 is created according to security settings of this maven plugin. 
 
 For further information on meta info in PDF files 

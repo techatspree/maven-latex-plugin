@@ -82,7 +82,7 @@ indicates that \texttt{Xxx} had a warning.
 Essentially, there are two kinds of parameters: 
 Most are just passed to the converters invoked by this software. 
 The parameters of this software 
-are so that the choice of the converter, i.e.~the name of the application 
+are so that the choice of the converter, i.e.\@ the name of the application 
 can be configured, 
 and also each converter can be almost freely configured. 
 
@@ -100,7 +100,7 @@ means read and write the same files and,
 mostly but not strictly necessarily, have the same options. 
 For each category there is an option \texttt{xxxCommand}, 
 where \texttt{xxx} is the name of the category in lowercase letters\footnote%
-{In fact there are exceptions to this rule: E.g.~for category \texttt{LaTeX} 
+{In fact there are exceptions to this rule: E.g.\@ for category \texttt{LaTeX} 
 the command is called \texttt{latex2pdf} referring to the common output format \gls{pdf}, 
 although also \gls{dvi} and \gls{xdv} are possible}. 
 The value of the option is the command to invoke the converter of the category. 
@@ -120,7 +120,7 @@ In this case, the command name shall be given in the form
 \end{verbatim}
 %
 to make sure, that the user is really aware that the converter (s)he uses % chktex 36
-is in the correct category, i.e.~has the required interface. 
+is in the correct category, i.e.\@ has the required interface. 
 Since neither of the registered converters has a \texttt{:} in its name, 
 This form is identified by the occurrence of a colon. 
 Since the categories neither have colons in their names, 
@@ -136,11 +136,11 @@ one can specify command line options, specified in the form
 %
 In fact, only for \texttt{diffPdfCommand} there is no option at all, 
 and for some converters with more complex options, the options are split over more than one setting, 
-e.g.~for converter category \texttt{fig2dev} converting \gls{fig}-files, 
+e.g.\@ for converter category \texttt{fig2dev} converting \gls{fig}-files, 
 there are general settings given by \texttt{fig2devGenOptions}
 and settings specific for the output language: 
 \LaTeX{} (\texttt{fig2devPtxOptions}) and \gls{eps} (\texttt{fig2devPdfEpsOptions}. 
-In any case, options are trimmed, i.e.~leading and trailing white spaces are removed 
+In any case, options are trimmed, i.e.\@ leading and trailing white spaces are removed 
 before being processed. 
 There are cases, where the options as given are not directly passed to the converter 
 but is further processed. 
@@ -199,7 +199,7 @@ The default value is ``\texttt{.}''.
 \begin{minipage}{0.95\linewidth}
 Whether the tex source directory \texttt{\$texSrcProcDirectory} 
 shall be read recursively for creation of graphic files, 
-i.e.~including the sub-directories recursively. 
+i.e.\@ including the sub-directories recursively. 
 This is set to \texttt{false} only during development of documentation. 
 %The default value is 'true'.
 \end{minipage}
@@ -406,7 +406,7 @@ the result of graphic preprocessing.
 
 When clearing the \LaTeX{} source processing directory 
 \texttt{\$texSrcProcDirectory}, 
-i.e.~all generated files should be removed, 
+i.e.\@ all generated files should be removed, 
 first those created from latex main files. 
 As an approximation, 
 those are removed which match this pattern. 
@@ -1442,7 +1442,7 @@ pdf\TeX-warning starting with \texttt{pdfTeX warning}
 and being specific for the compiler \pdflatex, 
 \item 
 Warnings on inclusion of a PDF file, 
-e.g. inclusion of PDF files with incompatible version, 
+e.g.\@ inclusion of PDF files with incompatible version, 
 starting with \texttt{warning  (file <filename>) (pdf inclusion)}, 
 \item
 Font specification warnings starting with \texttt{* fontspec warning}\footnote%
@@ -2456,7 +2456,7 @@ ranging from byte equivalence to some kind of visual equivalence.
 		the artifacts are checked by diffing them against preexisting artifacts 
 		in \texttt{\$diffDirectory} 
 		using the diff command given by \texttt{\$diffPdfCommand}. 
-    If this is set, the system time is set to $0$ indicating 1970-01-01. 
+    If this is set, the system time is set to $0$ indicating 1970--01--01. 
 		Note that currently, only pdf files are checked. 
 		This is \texttt{false} by default and is set to \texttt{true} only 
 		in the context of tests. 
