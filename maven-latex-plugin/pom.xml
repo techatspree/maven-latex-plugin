@@ -697,6 +697,26 @@
             </configuration>
           </execution>
 
+          <execution>
+            <id>copyBib</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/site/tex</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/</directory>
+                  <includes>
+                    <include>litLMPpub.bib</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
           <!-- filter the full pom for integration tests -->
           <execution>
             <id>filterIntTestPoms</id>
@@ -801,6 +821,7 @@
               <directory>src/site/tex</directory>
               <includes>
                 <include>buildParams.tex</include>
+                <include>litLMPpub.bib</include>
               </includes>
             </fileset>
 
