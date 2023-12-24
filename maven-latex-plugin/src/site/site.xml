@@ -20,7 +20,6 @@
     </logo>
   </poweredBy>
 
-  <!-- 2.0.0-M6 works 2.0.0-M7 does not work, 2.0.0-M8 is newest-->
   <skin>
     <groupId>org.apache.maven.skins</groupId>
     <artifactId>maven-fluido-skin</artifactId>
