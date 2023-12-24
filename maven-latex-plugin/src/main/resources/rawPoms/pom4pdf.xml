@@ -240,7 +240,7 @@ article,book:chk,dvi,pdf,html,odt,docx,rtf,txt beamer:chk,pdf,txt
     The empty string is the default, i.e. excluding no file. 
     See 'mainFilesIncluded'
     -->
-            <mainFilesExcluded>test useBeamerHandout</mainFilesExcluded>
+            <mainFilesExcluded>useBeamerHandout</mainFilesExcluded>
 
             <!-- Path to the TeX scripts or null. 
 In the latter case, the scripts must be on the system path. 
