@@ -481,6 +481,7 @@
           <include>.latexmkrc</include>
           <include>.chktexrc</include>
           <include>header.tex</include>
+          <include>litLMPpub.bib</include>
           <include>headerSuppressMetaPDF.tex</include>
         </includes>
         <filtering>false</filtering>
