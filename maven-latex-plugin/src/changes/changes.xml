@@ -695,6 +695,99 @@ and should thus be mentioned at according place in the manual. -->
     https://mvnrepository.com/artifact/eu.simuline.m2latex/latex-maven-plugin
     see e.g. vulnerabilities -->
 
+    <!-- getDocClassesToTargets: turn warnings into exceptions.    -->
+
+    <!-- bugfix: <targets>chk,dvi,pdf,html,odt,docx,rtf,txt</targets> 
+    also with clr: all files removed? -->
+
+    <!-- readTaaragetChecked: all these warnings may come up even in a rhird context: 
+    targets parameter, chunk in docClassToTarget or in a magic comment, which is new -->
+
+    <!-- magic comments of other tools: 
+      https://tex.stackexchange.com/questions/78101/when-and-why-should-i-use-tex-ts-program-and-tex-encoding/84687#84687 -->
+
+    <!-- Found out that xelatex never is in the then branch of \ifpdf. 
+      Having a look at header.tex: 
+      TBD: clarify why xetex does not require or accept dvipdfmx 
+    -->
+
+    <!-- command latexindent: research -->
+
+    <!-- consider supervising dvi2pdf also by writing a log file. 
+      xdvipdfmx:warning: Trying to include PDF file with version (1.7), which is newer than current output PDF setting (1.5).
+][69][70
+xdvipdfmx:warning: Unknown token "fcp"
+xdvipdfmx:warning: Errors occured while interpreting MPS file.
+xdvipdfmx:warning: Try again with the distiller.
+    -->
+
+    <!-- In header.tex it is not clear whether the branch with tex4ht is correct. -->
+    <!-- texput.log and texput.pdf if input is by stin. 
+    How to treat? remove although cannot be created by this software normally 
+  /usr/share/texmf/tex/latex/tools/ contains files 
+  e.tex (batchmode), 
+  h.tex (file not found)
+  q.tex (batchmode), 
+  r.tex (nonstopmode), 
+  s.tex (scrollmode), 
+  x.tex (error batchmode). 
+the according log files may occur in the working folder. 
+Shall it be cleated? -->
+
+<!-- in testTargets.tex add target html again. 
+Currently this is deactivated because of warnings. -->
+
+<!-- in headerSuppressMedaPDF.tex: are there warnings because of invalid (empty) trailerid? -->
+
+<!-- see Settings.patternLatexMainFile: generalization of regular expressions. 
+This requires an entry in the manual. 
+-->
+
+<!-- eliminate \versionDate -->
+
+<!-- tests that all latex main files are recognized and created with correct settings. 
+Among these: the targets, the compiler, timeless or not, 
+well maybe via dvi also.. hm... to be extended. 
+
+Idea for realization: a logger class which can be written as xml file. 
+This is checked also versus an older version as PDF files are. 
+-->
+
+<!-- in site: search for typical example -->
+
+<!-- reproducibiliy check for PDF files for publication: 
+then the date must be correct. 
+Idea is to take the modification date of the PDF file used for comparison. 
+
+To go into more detail, if file.tex contains a date given by the command 
+\today which normally inserts the current time, 
+which which shall insert the modification date of file.pdf, 
+which is used for comparison with the PDF file created from file.tex. 
+
+It is quite hard to write such a command in tex. 
+Instead it is this plugin which writes the date into a configuration 
+when the latex main files are detected: 
+If src/site/tex/xx/.../file.tex is such a latex main file, 
+then the according artifact will be src/site/tex/xx/.../file.pdf 
+and it is easy to determine the path src/main/docCmp/xx/.../file.pdf 
+of the PDF file for comparison. 
+Its .... here one must think more carefully. 
+-->
+
+<!-- in header.tex 
+  \usepackage{splitidx} withouth [split]
+  ok for lualatex but for pdflatex needed; for arithintoctave manual. 
+  maybe in the long run totally different
+-->
+
+<!-- reconsider patternReRunLatex; eliminate hack. -->
+
+<!-- \RequirePackage[aux]{rerunfilecheck} for beamer allows to add glossary and index. 
+Add this to documentation; where? search for beamer -->
+
+<!-- in documentation search for beamer and add support for leaflet 
+must adapt header.tex -->
+
     <release version="2.0" date="2023-08-28" description="">
 
       <action dev='reissner' type='fix'>
