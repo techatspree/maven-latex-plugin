@@ -22,7 +22,7 @@ The manual itself provides any details a user may wish.
 Download the latest version under 
 [manualLMP.pdf](https://www.simuline.eu/LatexMavenPlugin/manualLMP.pdf).
 <!-- TBD: this will be created also as html and deployed to the website 
-and then linked also from this pla. -->
+and then linked also from this place. -->
 
 For pieces of information on installation and usage 
 specific for the maven plugin or for the ant tasks, 
