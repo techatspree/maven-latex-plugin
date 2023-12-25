@@ -157,6 +157,17 @@ enum ConverterCategory {
 		String getExtName() {
 			throw new UnsupportedOperationException();
 		}
+	},
+  /**
+   * Category of converters in an abstract sense 
+   * which are not configurable in the settings. 
+   * Currently, these are maven, ant and java itself. 
+   * Could be Environment. 
+   */
+  Unparametrized {
+		String getExtName() {
+			throw new UnsupportedOperationException();
+		}
 	};
 
 	// may throw UnsupportedOperationException
@@ -182,6 +193,8 @@ enum ConverterCategory {
    * 
    * @return
    *    the name under which the category occurs in the configuration. 
+   * @throws UnsupportedOperationException
+   *    For categories {@link #Unparametrized} and {@link #Unspecific}
    */
 	abstract String getExtName();
 

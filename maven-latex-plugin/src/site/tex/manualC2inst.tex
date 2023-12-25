@@ -619,6 +619,14 @@ which, as a side effect, forks the lifecycle
 and includes phase \texttt{validate} of the default lifecycle 
 and in particular goals \texttt{inj} and \texttt{vrs}. 
 
+It is planned to perform a version check in first usage of a tool, 
+except tools in the environment, i.e. build tools and programming languages. 
+This avoids check of tools which are not needed. 
+Also, for the generic user, no execution for goal \texttt{vrs} is needed any more; 
+by need it can be invoked from the command line as \texttt{mvn latex:vrs}. 
+Still the developer of this software will continue to specify that execution. 
+
+
 
 \begin{lstlisting}[language=XML, basicstyle=\footnotesize,
 escapechar=|,

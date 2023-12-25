@@ -565,10 +565,131 @@ described in Section~\ref{subsec:develClear}.
 
 \section{Checking versions of converters}\label{sec:chkVersions}
 
-The goal \texttt{vrs} is to check the versions of the converters. 
-Since its description is quite involved, and it is planned 
-to replace it partially by a version check when a converter is invoked first, 
-we just mention that it can be invoked through \texttt{mvn latex:vrs}. 
+The goal \texttt{vrs} is to display meta information, above all version information:
+% 
+\begin{Verbatim}
+mvn latex:vrs
+\end{Verbatim}
+%
+displays something like what is displayed in Listing~\ref{lst:vrsOut}. 
+Besides information on this software including version and even git commits, 
+there are information on so-called registered converters, 
+i.e.\@ converters intended to be invoked by this software. 
+
+The goal yields a full list of registered converters, 
+signifying which of them are excluded 
+according to parameter \texttt{convertersExcluded}, 
+which are not installed, 
+and for each of the rest, the actual version, the allowed range 
+and a warning if the actual version is out of range. 
+
+The parameter \texttt{convertersExcluded} 
+is described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+Excluded converters are prevented from being used: 
+if tried, Exception TSS07 
+described in Table~\ref{tab:TSS} on page~\pageref{tab:TSS} is thrown. 
+If a converter is not installed, but tired to be used, 
+this kind of failure is obvious. 
+Only if a converter is used with an unintended version bears some risk. 
+Note that also unregistered converters can be used; 
+but then the user is responsible to provide an appropriate version. 
+An example for an unregistered converter 
+is given in Table~\ref{tab:paramPythontex} on page~\pageref{tab:paramPythontex}: 
+\texttt{pythontexW:pythontex} 
+indicating the converter \texttt{pythontexW} with category \texttt{pythontex}. 
+
+
+As one can see, a warning WMI02 indicates 
+that the version of a converter is out of the intended range, 
+provided, the converter is installed, and it is not excluded 
+according to the configuration \texttt{convertersExcluded}.
+
+Note that in the given version and in the installation of the author,
+of course, all converters are installed and are up-to-date
+to be able to check validity.
+The according messages are forced for illustration only. 
+For a user of this software which does no development, 
+of course only converters need to be installed which are really needed. 
+% TBC: what is an interface of a converter?
+% Note that \texttt{makeindex} is not in the list.
+% This is because it is not possible
+% to regularly check the version of that application.
+% It may be an option to use \texttt{upmendex} instead,
+% although in beta state at time of this writing
+% and not completely compatible.
+% According to \cite{UpMendex}, \cite{MkIdxMoe}
+% and further research,
+% \texttt{upmendex} does not support options \texttt{-T} and \texttt{-L}
+% and does interprete \texttt{-g} differently,
+% namely as japanese instead of german. 
+
+
+% TBD: make this listing dynamic 
+% TBD: this is almost duplicate of lst:version.properites
+% maybe one shall be eliminated. 
+\begin{lstlisting}[basicstyle=\tiny,
+float, captionpos=b, label={lst:vrsOut}, 
+caption={Output of goal \texttt{latex:vrs}}]
+[INFO] --- latex:2.0-SNAPSHOT:vrs (default-cli) @ latex-maven-plugin ---
+[INFO] Manifest properties: 
+[INFO] MANIFEST: (1.0)
+[INFO]        Implementation-Version: '2.0-SNAPSHOT'
+[INFO] PackageImplementation-Version: '2.0-SNAPSHOT'
+[INFO] pom properties:
+[INFO] coordinate.groupId:    'eu.simuline.m2latex'
+[INFO] coordinate.artifactId: 'latex-maven-plugin'
+[INFO] coordinate.version:    '2.0-SNAPSHOT'
+[INFO] git properties: 
+[INFO] build version:  '2.0-SNAPSHOT'
+[INFO] commit id desc: 'latex-maven-plugin-1.8-209-g5ac27b7-dirty'
+[INFO] buildTime:      '2023-06-25T23:31:20+0200'
+[INFO] tool versions: 
+[INFO] ?warn?    command             'actual version'(not)in[expected version interval]
+[INFO]           mvn:                '3.9.4'in[3.9.1;3.9.4]
+[INFO]           ant:                '1.10.14'in[1.10.12;1.10.14]
+[INFO]           java:               '17.0.9'in[17.0.9]
+[INFO]           python:             '3.11.6'in[3.11.6]
+[INFO]           perl:               '5.38.2'in[5.38.2]
+[INFO]           pdflatex:           '1.40.25'in[1.40.21;1.40.25]
+[INFO]           lualatex:           '1.17.0'in[1.12.0;1.17.0]
+[INFO]           xelatex:            '0.999995'in[0.999992;0.999995]
+[INFO]           latex2rtf:          '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
+[INFO]           odt2doc:            '0.9.0'in[0.9.0]
+[INFO]           pdftotext:          '23.11.0'in[21.04.0;23.11.0]
+[INFO]           dvips:              '2023.1'in[2020.1;2023.1]
+[INFO]           dvipdfm:            '20220710'in[20210318;20220710]
+[INFO]           dvipdfmx:           '20220710'in[20200315;20220710]
+[INFO]           xdvipdfmx:          '20220710'in[20200315;20220710]
+[INFO]           dvipdft:            '20090604.0046'in[20090604.0046]
+[INFO]           gs:                 '9.56.1'in[9.52.0;9.56.1]
+[INFO]           chktex:             '1.7.8'in[1.7.8]
+[INFO]           diff-pdf-visually:  '1.7.0'in[1.6.4;1.7.0]
+[INFO]           diff-pdf:           '300'in[300]
+[INFO]           diff:               '3.10'in[3.8;3.10]
+[INFO]           pdfinfo:            '23.11.0'in[22.01.0;23.11.0]
+[INFO]           exiftool:           '12.71'in[12.39;12.71]
+[INFO]           bibtex:             '0.99d'in[0.99d]
+[INFO]           bibtexu:            '4.00'in[4.00;4.00]
+[INFO]           bibtex8:            '4.00'in[4.00;4.00]
+[WARNING] WMI02: makeindex:          '2.17'not in[2.15;2.16]
+[INFO]           splitindex:         '0.1'in[0.1]
+[INFO]           makeglossaries:     '4.51'in[4.45;4.51]
+[INFO]           pythontex:          '0.18'in[0.17;0.18]
+[INFO]           depythontex:        '0.18'in[0.17;0.18]
+[INFO]           mpost:              '2.02'in[2.00;2.02]
+[INFO]           ebb:                '20220710'in[20200315;20220710]
+[INFO]           gnuplot:            '5.4 patchlevel 10'in[5.4 patchlevel 0;5.4 patchlevel 10]
+[INFO]           inkscape:           '1.3.2'in[1.0.2;1.3.2]
+[INFO]           fig2dev:            '3.2.9'in[3.2.7b;3.2.9]
+[INFO] tools excluded: 
+[INFO] upmendex, xindy
+[INFO] tools not found: 
+[INFO] latexmk
+[INFO] ------------------------------------------------------------------------
+\end{lstlisting}
+%[INFO]           upmendex:           '1.00'in[0.54;1.00]
+%[INFO]           xindy:              '2.5.1'in[2.5.1]
+
 
 
 \section{Injection of files}\label{sec:injFiles}
@@ -1719,127 +1840,6 @@ details to the form of \texttt{.chktexrc} can be found in~\cite{ChkTeX22},~Secti
 % rasterizer -m application/pdf file.svgz -d file.pdf
 % cairosvg in.svg -o out.pdf
 % yyy
-
-Finally, we have the goal \texttt{latex:vrs}
-to display meta information, above all version information:
-% 
-\begin{Verbatim}
-mvn latex:vrs
-\end{Verbatim}
-%
-displays something like what is displayed in Listing~\ref{lst:vrsOut}. 
-Besides information on this software including version and even git commits, 
-there are information on so-called registered converters, 
-i.e.\@ converters intended to be invoked by this software. 
-
-The goal yields a full list of registered converters, 
-signifying which of them are excluded 
-according to parameter \texttt{convertersExcluded}, 
-which are not installed, 
-and for each of the rest, the actual version, the allowed range 
-and a warning if the actual version is out of range. 
-
-The parameter \texttt{convertersExcluded} 
-is described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
-Excluded converters are prevented from being used: 
-if tried, Exception TSS07 
-described in Table~\ref{tab:TSS} on page~\pageref{tab:TSS} is thrown. 
-If a converter is not installed, but tired to be used, 
-this kind of failure is obvious. 
-Only if a converter is used with an unintended version bears some risk. 
-Note that also unregistered converters can be used; 
-but then the user is responsible to provide an appropriate version. 
-An example for an unregistered converter 
-is given in Table~\ref{tab:paramPythontex} on page~\pageref{tab:paramPythontex}: 
-\texttt{pythontexW:pythontex} 
-indicating the converter \texttt{pythontexW} with category \texttt{pythontex}. 
-
-
-As one can see, a warning WMI02 indicates 
-that the version of a converter is out of the intended range, 
-provided, the converter is installed, and it is not excluded 
-according to the configuration \texttt{convertersExcluded}.
-
-Note that in the given version and in the installation of the author,
-of course, all converters are installed and are up-to-date
-to be able to check validity.
-The according messages are forced for illustration only. 
-For a user of this software which does no development, 
-of course only converters need to be installed which are really needed. 
-% TBC: what is an interface of a converter?
-% Note that \texttt{makeindex} is not in the list.
-% This is because it is not possible
-% to regularly check the version of that application.
-% It may be an option to use \texttt{upmendex} instead,
-% although in beta state at time of this writing
-% and not completely compatible.
-% According to \cite{UpMendex}, \cite{MkIdxMoe}
-% and further research,
-% \texttt{upmendex} does not support options \texttt{-T} and \texttt{-L}
-% and does interprete \texttt{-g} differently,
-% namely as japanese instead of german. 
-
-
-% TBD: make this listing dynamic 
-% TBD: this is almost duplicate of lst:version.properites
-% maybe one shall be eliminated. 
-\begin{lstlisting}[basicstyle=\tiny,
-float, captionpos=b, label={lst:vrsOut}, 
-caption={Output of goal \texttt{latex:vrs}}]
-[INFO] --- latex:2.0-SNAPSHOT:vrs (default-cli) @ latex-maven-plugin ---
-[INFO] Manifest properties: 
-[INFO] MANIFEST: (1.0)
-[INFO]        Implementation-Version: '2.0-SNAPSHOT'
-[INFO] PackageImplementation-Version: '2.0-SNAPSHOT'
-[INFO] pom properties:
-[INFO] coordinate.groupId:    'eu.simuline.m2latex'
-[INFO] coordinate.artifactId: 'latex-maven-plugin'
-[INFO] coordinate.version:    '2.0-SNAPSHOT'
-[INFO] git properties: 
-[INFO] build version:  '2.0-SNAPSHOT'
-[INFO] commit id desc: 'latex-maven-plugin-1.8-209-g5ac27b7-dirty'
-[INFO] buildTime:      '2023-06-25T23:31:20+0200'
-[INFO] tool versions: 
-[INFO] ?warn?    command             'actual version'(not)in[expected version interval]
-[INFO]           pdflatex:           '1.40.25'in[1.40.21;1.40.25]
-[INFO]           lualatex:           '1.17.0'in[1.12.0;1.17.0]
-[INFO]           xelatex:            '0.999995'in[0.999992;0.999995]
-[INFO]           latex2rtf:          '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
-[INFO]           odt2doc:            '0.9.0'in[0.9.0]
-[INFO]           pdftotext:          '23.06.0'in[21.04.0;23.06.0]
-[INFO]           dvips:              '2023.1'in[2020.1;2023.1]
-[INFO]           dvipdfm:            '20220710'in[20210318;20220710]
-[INFO]           dvipdfmx:           '20220710'in[20200315;20220710]
-[INFO]           xdvipdfmx:          '20220710'in[20200315;20220710]
-[INFO]           dvipdft:            '20090604.0046'in[20090604.0046]
-[INFO]           gs:                 '9.56.1'in[9.52.0;9.56.1]
-[INFO]           chktex:             '1.7.8'in[1.7.8]
-[INFO]           diff-pdf-visually:  '1.7.0'in[1.6.4;1.7.0]
-[INFO]           diff-pdf:           '300'in[300]
-[INFO]           diff:               '3.10'in[3.8;3.10]
-[INFO]           pdfinfo:            '23.06.0'in[22.01.0;23.06.0]
-[INFO]           exiftool:           '12.63'in[12.39;12.63]
-[INFO]           bibtex:             '0.99d'in[0.99d]
-[INFO]           bibtexu:            '4.00'in[4.00;4.00]
-[INFO]           bibtex8:            '4.00'in[4.00;4.00]
-[WARNING] WMI02: makeindex:          '2.17'not in[2.15;2.16]
-[INFO]           splitindex:         '0.1'in[0.1]
-[INFO]           makeglossaries:     '4.51'in[4.45;4.51]
-[INFO]           pythontex:          '0.18'in[0.17;0.18]
-[INFO]           depythontex:        '0.18'in[0.17;0.18]
-[INFO]           mpost:              '2.02'in[2.00;2.02]
-[INFO]           ebb:                '20220710'in[20200315;20220710]
-[INFO]           gnuplot:            '5.4 patchlevel 8'in[5.4 patchlevel 0;5.4 patchlevel 8]
-[INFO]           inkscape:           '1.2.2'in[1.0.2;1.2.2]
-[INFO]           fig2dev:            '3.2.8b'in[3.2.7b;3.2.8b]
-[INFO] tools excluded: 
-[INFO] upmendex, xindy
-[INFO] tools not found: 
-[INFO] latexmk
-[INFO] ------------------------------------------------------------------------
-\end{lstlisting}
-%[INFO]           upmendex:           '1.00'in[0.54;1.00]
-%[INFO]           xindy:              '2.5.1'in[2.5.1]
 
 
 

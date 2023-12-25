@@ -7,8 +7,104 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Enumeration of all converters used. 
+ * The ones of category {@link ConverterCategory.Unparametrized} 
+ * are special in that they do not occur in the configuration. 
+ * They are programming lanugages and build tools 
+ * in which this piece of software is used. 
+ */
 enum Converter {
 
+  Maven {
+    String getCommand() {
+      return "mvn";
+    }
+
+    String getVersionPattern() {
+      return X_X_X;
+    }
+    String getVersionEnvironment() {
+      return "^Apache Maven %s";
+    }
+    ConverterCategory getCategory() {
+      return ConverterCategory.Unparametrized;
+    }
+  },
+  Ant {
+    String getCommand() {
+      return "ant";
+    }
+
+    String getVersionOption() {
+      return "-version";
+    }
+
+    String getVersionPattern() {
+      return X_X_X;
+    }
+
+    String getVersionEnvironment() {
+      return "^Apache Ant\\(TM\\) version %s";
+    }
+
+    ConverterCategory getCategory() {
+      return ConverterCategory.Unparametrized;
+    }
+  },
+  Java {
+    String getCommand() {
+      return "java";
+    }
+
+    String getVersionPattern() {
+      return V_JAVA;
+    }
+    // TBD: research: maybe better use javac because there the version environment is just javac %s 
+    // for java there is more information available 
+    // and also --help is better suited 
+    // and last but not least at runtime java is relevant not javac, so this would be a hack. 
+    String getVersionEnvironment() {
+      return "^openjdk %s \\d{4}-\\d{2}-\\d{2}";
+    }
+    ConverterCategory getCategory() {
+      return ConverterCategory.Unparametrized;
+    }
+  },
+  Python {
+    String getCommand() {
+      return "python";
+    }
+
+    String getVersionPattern() {
+      return X_X_X;
+    }
+
+    String getVersionEnvironment() {
+      return "^" + Python + " %s";
+    }
+    ConverterCategory getCategory() {
+      return ConverterCategory.Unparametrized;
+    }
+  },
+  Perl {
+    String getCommand() {
+      return "perl";
+    }
+    String getVersionPattern() {
+      return X_X_X;
+    }
+    // TBD: research: maybe better use javac because there the version environment is just javac %s 
+    // for java there is more information available 
+    // and also --help is better suited 
+    // and last but not least at runtime java is relevant not javac, so this would be a hack. 
+    String getVersionEnvironment() {
+      return "^.*\\RThis is " + getCommand() + " .* \\(v%s\\)";
+    }
+    ConverterCategory getCategory() {
+      return ConverterCategory.Unparametrized;
+    }
+  },
   PdfLatex {
     String getCommand() {
       return "pdflatex";
@@ -809,6 +905,8 @@ enum Converter {
    * Version pattern with major, minor and optional bugfix version. 
    */
   private final static String VX_X__X = "(([0-9]+)\\.([0-9]+)(?:\\.([0-9]+))?)";
+
+  private final static String V_JAVA = "(([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?(?:\\\\.([0-9]+))?)";
 
   /**
    * Version pattern with major, version and minor version. 
