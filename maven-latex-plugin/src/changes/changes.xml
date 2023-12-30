@@ -788,6 +788,10 @@ Add this to documentation; where? search for beamer -->
 <!-- in documentation search for beamer and add support for leaflet 
 must adapt header.tex -->
 
+<!-- describe extensions for vs code briefly in documentation -->
+<!-- add leaflet -->
+<!-- add watermark -->
+
     <release version="2.0" date="2023-08-28" description="">
 
       <action dev='reissner' type='fix'>
