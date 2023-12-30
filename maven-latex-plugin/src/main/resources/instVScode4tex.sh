@@ -45,6 +45,8 @@ $code --force --install-extension mathematic.vscode-latex
 # bib
 $code --force --install-extension phr0s.bib
 $code --force --install-extension twday.bibmanager
+$code --force --install-extension zfscgy.bibtex-helper
+
 # nothing found for tikz
 # metapost 
 $code --force --install-extension fjebaker.vscode-metapost
