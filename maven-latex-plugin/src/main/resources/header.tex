@@ -90,11 +90,11 @@
 \fi%ifpdf
 
 
-\ifluatex%
-  \usepackage{luamplib}
+\IfPackageLoadedTF{luamplib}{%
   \newcommand*\inputmpcode[1]{\begin{mplibcode}input #1\end{mplibcode}}
-\else
-\fi
+}{}% \IfPackageLoadedTF{luamplib}
+
+
 
 %\usepackage[clear,pdf,eps]{svg}
 
@@ -105,30 +105,32 @@
 % synchronization between tex and pdf 
 %\usepackage[active]{srcltx}
 \usepackage{longtable}
-\usepackage{listings}
-\renewcommand{\lstlistoflistings}{\begingroup
-%\tocsection
-%\tocchapter
-\tocfile{List of \lstlistingname{}s}{lol}
-\endgroup}
 
-% this is a workaround for including listings with latexmk.. 
-% This can be fixed 
-% - as shown below 
-% - patch in package listings 
-% - patch in latexmk 
-% I would prefer the latter. 
-\usepackage{xpatch}
-\makeatletter
-\newcommand*{\NewLine}{^^J}%
-\xpatchcmd{\lst@MissingFileError}
-{Package Listings Error: File `#1(.#2)' not found.}
-{LaTeX Error: File `#1.#2' not found.\NewLine}{%
-  \typeout{File ending patch for \string\lst@MissingFileError\space done.}%
-}{%
-  \typeout{File ending patch for \string\lst@MissingFileError\space failed.}%
-}
-\makeatother
+\IfPackageLoadedTF{listings}{%
+  \renewcommand{\lstlistoflistings}{\begingroup
+  %\tocsection
+  %\tocchapter
+  \tocfile{List of \lstlistingname{}s}{lol}
+  \endgroup}
+
+  % this is a workaround for including listings with latexmk.. 
+  % This can be fixed 
+  % - as shown below 
+  % - patch in package listings 
+  % - patch in latexmk 
+  % I would prefer the latter. 
+  \usepackage{xpatch}
+  \makeatletter
+  \newcommand*{\NewLine}{^^J}%
+  \xpatchcmd{\lst@MissingFileError}
+  {Package Listings Error: File `#1(.#2)' not found.}
+  {LaTeX Error: File `#1.#2' not found.\NewLine}{%
+    \typeout{File ending patch for \string\lst@MissingFileError\space done.}%
+  }{%
+    \typeout{File ending patch for \string\lst@MissingFileError\space failed.}%
+  }
+  \makeatother
+}{}% \IfPackageLoadedTF{listings}
 
 \usepackage{fancyvrb}
 

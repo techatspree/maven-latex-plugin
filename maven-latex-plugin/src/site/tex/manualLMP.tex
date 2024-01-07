@@ -4,6 +4,7 @@
 %\PassOptionsToPackage{dvipdfmx}{graphicx} %or dvipdfm 
 %\RequirePackage{lmodern} % does not work with htlatex
 %\directlua{pdf.setminorversion(7)}
+%DocumentMetadata{pdfversion=1.7}
 \documentclass[a4paper,12pt]{book}
 \newif\iflatextortf% false for latex but set true for latex2rtf internally 
 
@@ -14,7 +15,11 @@
 % for buildParams: \verbdef 
 \usepackage{newverbs}
 
-
+\usepackage{listings}
+%\ifluatex%
+  \usepackage{luamplib}% works with lualatex only maybe with magic comment 
+%\else
+%\fi
 \input{header.tex}
 \setMinorVersionPdf{7}% because of gnuplot file only 
 % how to number the glossary in the toc? seemingly a gap in tocbibind 

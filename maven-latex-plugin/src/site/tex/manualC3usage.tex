@@ -928,13 +928,14 @@ according to \url{https://pandoc.org/MANUAL.html#creating-a-pdf}.
 
 Some loaded packages are also patched. 
 The patch for package \pkg{listings} is given in Listing~\ref{lst:fileIfExists}. 
+It applies only if \pkg{listings} is loaded prior input of \texttt{header.tex}. 
 One modification is, redefinition of \cmd{lstlistoflistings} 
 to make the list of listings occur in the table of contents 
 and to rename the title so that it fits other lists as the list of figures.  
 The other point is modifying \pkg{listings}' output to make it digestible for \texttt{latexmk}. 
 For details see Section~\ref{subsec:develLatexmk}. 
 
-\lstinputlisting[linerange={109-132},
+\lstinputlisting[linerange={110-134},
 language=tex, basicstyle=\scriptsize,
 float, captionpos=b, label={lst:fileIfExists}, 
 caption={A patch of the \texttt{listings} package }]%
@@ -942,19 +943,22 @@ caption={A patch of the \texttt{listings} package }]%
 
 
 The other package patched is \pkg{luamplib}; the patch is given in Listing~\ref{lst:luamplib}. 
+It applies only if \pkg{luamplib} is loaded prior input of \texttt{header.tex}. 
 As discussed in Section~\ref{sec:metapost}, 
 \pkg{luamplib} is available for \lualatex{} only. 
 It provides an environment \texttt{mplibcode} to enclose literal MetaPost. 
 The enhancement is an additional command \cmd{inputmpcode} 
-which allows including MetaPost Files. 
+which allows including MetaPost files. 
 This functionality is analogous to package \pkg{listings} 
 which allows both literal listings and loading listings from files. 
+MetaPost code within a \LaTeX{} document typically disturbs syntax highlighting 
+of both, enclosing code and included code. 
 
 %
-\lstinputlisting[linerange={94-98},
+\lstinputlisting[linerange={94-96},
 language=tex, basicstyle=\scriptsize, 
 float, captionpos=b, label={lst:luamplib},
-caption={Package \texttt{luamplib} and how to use it }]
+caption={A patch of the \texttt{luamplib} package }]
 {./header.tex}% listing 
 
 Besides loading packages it also sets \texttt{synctex} 
