@@ -89,48 +89,6 @@
   }% tex4ht not loaded 
 \fi%ifpdf
 
-% graphics 
-
-% \ifpdf%
-%   %
-%   %
-%   %
-%   %
-%   %\usepackage{xcolor}  % [pdftex]  
-%   \usepackage{graphicx}% [pdftex] 
-%   %
-%   %
-%   % sometimes comes in with svg import 
-%   \usepackage{transparent}
-%   % warning transparent package: 
-%   % loading aborted if not pdf-mode 
-%   %
-%   %
-%   % can be extended using l3opacity
-% \else
-%   % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
-%   %
-%   \IfPackageLoadedTF{tex4ht}{%
-%     \usepackage[dvipdfmx]{graphicx}
-%     %\usepackage[dvipdfmx]{xcolor}
-%     %
-%   }{%
-%     \ifxetex%
-%       %
-%       \usepackage{graphicx}
-%       %\usepackage{xcolor}
-%     \else
-%       %
-%       \usepackage[dvipdfmx]{graphicx}
-%       %\usepackage[dvipdfmx]{xcolor}
-%       %
-%       %
-%       %
-%       %
-%     \fi
-%   }% tex4ht not loaded 
-%   %\usepackage{bmpsize}% not for xelatex 
-% \fi%ifpdf
 
 \ifluatex%
   \usepackage{luamplib}
@@ -231,8 +189,5 @@
 \newcommand{\textTT}[1]{\texttt{#1}}% in conjunction with .chktex: ignored 
 
 %\usepackage{latex-bnf}
-
-
-
 
 
