@@ -937,14 +937,14 @@ For details see Section~\ref{subsec:develLatexmk}.
 \lstinputlisting[linerange={109-132},
 language=tex, basicstyle=\scriptsize,
 float, captionpos=b, label={lst:fileIfExists}, 
-caption={Patch of the \texttt{listings} package given by the header file. }]%
+caption={A patch of the \texttt{listings} package }]%
 {./header.tex}% listing 
 
 
 The other package patched is \pkg{luamplib}; the patch is given in Listing~\ref{lst:luamplib}. 
 As discussed in Section~\ref{sec:metapost}, 
 \pkg{luamplib} is available for \lualatex{} only. 
-It provides an environment texttt{mplibcode} to enclose literal MetaPost. 
+It provides an environment \texttt{mplibcode} to enclose literal MetaPost. 
 The enhancement is an additional command \cmd{inputmpcode} 
 which allows including MetaPost Files. 
 This functionality is analogous to package \pkg{listings} 
@@ -954,7 +954,7 @@ which allows both literal listings and loading listings from files.
 \lstinputlisting[linerange={94-98},
 language=tex, basicstyle=\scriptsize, 
 float, captionpos=b, label={lst:luamplib},
-caption={Package \texttt{luamplib} and how to use it. }]
+caption={Package \texttt{luamplib} and how to use it }]
 {./header.tex}% listing 
 
 Besides loading packages it also sets \texttt{synctex} 
