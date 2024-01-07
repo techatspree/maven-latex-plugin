@@ -62,7 +62,7 @@ $code --force --install-extension jock.svg
 $code --force --install-extension simonsiefke.svg-preview
 
 # spellchecker
-code --force --install-extension valentjn.vscode-ltex
+$code --force --install-extension valentjn.vscode-ltex
 
 # perl (e.g. to configure latexmk)
 $code --force --install-extension d9705996.perl-toolbox
