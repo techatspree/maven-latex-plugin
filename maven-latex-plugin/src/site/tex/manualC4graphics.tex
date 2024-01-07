@@ -152,10 +152,22 @@ insert in the header of the \LaTeX{} main file
 given by Listing~\ref{lst:header}. 
 Note that also the package \pkg{hyperref} needs adaption of its options 
 depending on the use case. 
+% TBD: this needs rework: 
+% originally, this part of the header comprised the packages graphicx, color and hyperref. 
+% Now it refers to the first two only. 
+% This is appropriate because this chapter is about graphics. 
+% On the other hand, the remark on hyperref is valid but is not specific for graphics. 
+% It must be placed elsewhere in the long run. 
+%
+% In addition, it is planned to split the header in a general one, with hyperref config 
+% and in a special one containing graphic specific material. 
+% There is another listing on luamplib which fits into that. 
+% In the long run, this material shall be at one place so that only one listing for graphics is needed. 
+
 %
 %\lstset{language=tex, basicstyle=\small}
 % FIXME\@: nag complains for htlatex 
-\lstinputlisting[linerange={62-101},
+\lstinputlisting[linerange={95-134},
 language=TeX, basicstyle=\small,
 float, captionpos=b, label={lst:header}, 
 caption={Loading packages adapted to the output format}]%

@@ -56,7 +56,7 @@
 }
 
 
-% graphics 
+% hyperref and xcolor 
 
 \ifpdf%
   % for accessability with luatex
@@ -64,36 +64,69 @@
   % compiles for xelatex only 
   %\usepackage[tagged, highstructure]{accessibility}
   \usepackage{xcolor}  % [pdftex]  
-  \usepackage{graphicx}% [pdftex] 
   % driver [hpdftex] is autodetected 
   \usepackage[destlabel]{hyperref}
-  % sometimes comes in with svg import 
-  \usepackage{transparent}
-  % warning transparent package: 
-  % loading aborted if not pdf-mode 
-  % strange: according to documentation not for xelatex; 
-  % seems to work anyway 
-  % can be extended using l3opacity
 \else
   % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
   %\usepackage[dvipdfmx]{xcolor}
   \IfPackageLoadedTF{tex4ht}{%
-    \usepackage[dvipdfmx]{graphicx}
     \usepackage[dvipdfmx]{xcolor}
     \usepackage[tex4ht, destlabel]{hyperref}
   }{%
     \ifxetex%
-      \usepackage[destlabel]{hyperref}
-      \usepackage{graphicx}
       \usepackage{xcolor}
+      \usepackage[destlabel]{hyperref}
     \else
-      \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
-      \usepackage[dvipdfmx]{graphicx}
       \usepackage[dvipdfmx]{xcolor}
+      \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
+      % \usepackage[dvipdfmx]{graphicx}
+      % \usepackage[dvipdfmx]{xcolor}
       % lualatex: without [dvipdfmx] option did not find 
       % converter dvi to pdf or to ps
       % pdflatex: without [dvipdfmx] option dvips still works, 
       % but no converter for pdf
+    \fi
+  }% tex4ht not loaded 
+\fi%ifpdf
+
+% graphics 
+
+\ifpdf%
+  %
+  %
+  %
+  %
+  %\usepackage{xcolor}  % [pdftex]  
+  \usepackage{graphicx}% [pdftex] 
+  %
+  %
+  % sometimes comes in with svg import 
+  \usepackage{transparent}
+  % warning transparent package: 
+  % loading aborted if not pdf-mode 
+  %
+  %
+  % can be extended using l3opacity
+\else
+  % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
+  %
+  \IfPackageLoadedTF{tex4ht}{%
+    \usepackage[dvipdfmx]{graphicx}
+    %\usepackage[dvipdfmx]{xcolor}
+    %
+  }{%
+    \ifxetex%
+      %
+      \usepackage{graphicx}
+      %\usepackage{xcolor}
+    \else
+      %
+      \usepackage[dvipdfmx]{graphicx}
+      %\usepackage[dvipdfmx]{xcolor}
+      %
+      %
+      %
+      %
     \fi
   }% tex4ht not loaded 
   %\usepackage{bmpsize}% not for xelatex 
@@ -104,17 +137,6 @@
   \newcommand*\inputmpcode[1]{\begin{mplibcode}input #1\end{mplibcode}}
 \else
 \fi
-
-% \@ifpackageloaded{tex4ht}{%
-% \usepackage[dvipdfmx]{xcolor}
-% \usepackage[dvipdfmx]{graphicx}
-% \usepackage[tex4ht]{hyperref}
-% \usepackage{bmpsize}
-% }{%
-% \usepackage{xcolor}  % [pdftex]  
-% \usepackage{graphicx}% [pdftex] 
-% \usepackage{hyperref}% driver [hpdftex] is autodetected 
-% }
 
 %\usepackage[clear,pdf,eps]{svg}
 
