@@ -73,6 +73,32 @@ public enum Injection {
     }
   },
   /**
+   * A header file loading package <code>graphicx</code> 
+   * with the appropriate options. 
+   * This is used to provide the command <code>includegraphics</code>. 
+   */
+  headerGrp {
+    String getFileName() {
+      return "headerGrp.tex";
+    }
+
+    /**
+     * The comment string which is that of tex. 
+     */
+    String commentStr() {
+      return "%";
+    }
+
+    // In the long run, the privacy settings are configurable 
+    boolean doFilter() {
+      return true;
+    }
+
+    boolean hasShebang() {
+      return false;
+    }
+  },
+  /**
    * A header file used to hide metainfo in a PDF file. 
    * This is mainly used for security, i.e. privacy reasons, 
    * but the current header file makes a latex main file 

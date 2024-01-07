@@ -481,6 +481,7 @@
           <include>.latexmkrc</include>
           <include>.chktexrc</include>
           <include>header.tex</include>
+          <include>headerGrp.tex</include>
           <include>litLMPpub.bib</include>
           <include>headerSuppressMetaPDF.tex</include>
         </includes>
@@ -1112,7 +1113,7 @@
               <goal>inj</goal>
             </goals>
             <configuration>
-              <injections>latexmkrc,chktexrc,vscodeExt,header,headerSuppressMetaPDF</injections>
+              <injections>latexmkrc,chktexrc,vscodeExt,header,headerGrp,headerSuppressMetaPDF</injections>
             </configuration>
           </execution>
           <execution>
