@@ -98,7 +98,7 @@ and for \miktex{} in Section~\ref{sec:optionsMiktex}.
 
 The second subject is treatment of metadata available for PDF files. 
 The motivation here is privacy as part of security 
-and creation of reproducible documents, e.g. for tests. 
+and creation of reproducible documents, e.g.\@ for tests. 
 The results of our research is collected in Section~\ref{sec:metaPDF}. 
 
 \section{The options for \texlive}\label{sec:optionsTexlive}
@@ -474,7 +474,7 @@ The XDV format is an extension and in fact a variant of the DVI format.
 
 For the other compilers in contrast, the option \texttt{-output-format=dvi/pdf} 
 determines the output format which is PDF by default 
-and there is no intermediate format for PDF. 
+and there is no intermediate format for PDF\@. 
 When creating DVI files instead, these files can be converted into PDF 
 by explicitly invoking something like 
 \texttt{dvipdfmx}, \texttt{dvipdfmx} or \texttt{xdvipdfmx}. 
@@ -582,7 +582,7 @@ which is \texttt{LaTeX with hyperref} independent of the \LaTeX{} compiler.
 This shall be overwritten if there are security concerns. 
 
 As long as the tool chain and settings remain constant, 
-invocation of latex compiler \xelatex and backend XDV to PDF converter 
+invocation of latex compiler \xelatex{} and backend XDV to PDF converter 
 specifying \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
 suffices to guarantee reproducibility. 
 This setting refers to creation date \texttt{1970:01:01 01:00:00+01:00} 
@@ -620,7 +620,7 @@ as is explained in the context of \xelatex{} above.
 
 Creating DVI files with \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
 yields reproducible results. 
-As expected, these settings are also necessary for translating DVI into PDF. 
+As expected, these settings are also necessary for translating DVI into PDF\@. 
 
 
 
@@ -640,7 +640,7 @@ to set the following pieces of information to unknown:
   (which loads \texttt{hyperref} implicitly)
   for which it is \texttt{LaTeX with Beamer class}. 
   If \texttt{hyperref} is not loaded, 
-  the creator is \TeX{} except for \xelatex which shows compiler and creation date. 
+  the creator is \TeX{} except for \xelatex{} which shows compiler and creation date. 
   Thus, it is advisable in general for security but without \texttt{hyperref} 
   for sake of stability of reproducibility. 
   \item[Producer] This is \texttt{xdvipdfmx} with version for creating DVIs 
@@ -653,7 +653,7 @@ to set the following pieces of information to unknown:
   and shall thus be hidden. 
   \item[ModDate] same as \texttt{CreationDate}. 
   \item[PTEX.Fullbanner] is not written by \xelatex, 
-  but for both \lualatex and \pdflatex. 
+  but for both \lualatex{} and \pdflatex. 
   It can be suppressed in a compiler specific way, 
   but not through \texttt{hyperref}. 
   The banner exposes tools, versions and distributions. 
@@ -684,7 +684,7 @@ Besides code, \texttt{headerSuppressMetaPDF.tex} provides
 additional info in the comments, 
 but for details specific for the individual compilers 
 see~\cite{LuaTexRef}, Section 3.2.2 for \lualatex, 
-\cite{PdfTexUsr}, Section 7.2 for \pdflatex{}. 
+and~\cite{PdfTexUsr}, Section 7.2 for \pdflatex. 
 Seemingly, \xelatex{} is quite different from the other compilers 
 and tends to write fewer pieces of information. 
 It uses an external XDV to PDF converter, \texttt{xdvipdfmx} by default. 
@@ -692,7 +692,7 @@ By placing \cmd{special} commands in the TEX file,
 the user can pass information to the XDV to PDF converter 
 also controlling meta info to some extent. 
 Some details are given in the 
-manual for \texttt{xdvipdfmx}, \cite{DviPdfMx}, Section 4.1.1. 
+manual for \texttt{xdvipdfmx},~\cite{DviPdfMx}, Section 4.1.1. 
 
 
 \subsection{Reproducibility revisited}\label{subsec:reprod2}
@@ -721,13 +721,13 @@ If a document contains a date inserted via command \cmd{date},
 and the date is given by \cmd{today}, 
 then this is only reproducible 
 with setting \texttt{SOURCE\_DATE\_EPOCH} to some fixed value and \texttt{FORCE\_SOURCE\_DATE=1}. 
-Even without \cmd{date\{\cmd{today}\}}, \xelatex seems to use hashes depending on time 
+Even without \cmd{date\{\cmd{today}\}}, \xelatex{} seems to use hashes depending on time 
 corrupting reproducibility. 
 To be more precise, creation of XDV is reproducible, 
 whereas conversion to PDF is not. 
 So, for sake of uniformity and stability of reproducibility, 
 these settings \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} are heavily recommended, 
-both for the \LaTeX{} compiler and for the converter DVI/XDV to PDF. 
+both for the \LaTeX{} compiler and for the converter DVI/XDV to PDF\@. 
 
 If reproducibility is only required for tests, 
 then the date can be given; it is just neglected for tests. 
