@@ -41,7 +41,7 @@ jobs:
     - name: install additional packages 
       run: sudo apt-get install -y transfig gnuplot inkscape
     - name: prepare with maven 
-      run: mvn -B validate #latex:grp
+      run: mvn -B validate latex:grp
       working-directory: ./maven-latex-plugin
     - name: compile with latexmk
       run: latexmk latexmk
