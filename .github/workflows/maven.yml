@@ -36,6 +36,10 @@ jobs:
       with:
         profile-path: ${{ github.workspace }}/.github/texlive.profile
         packages-path: ${{ github.workspace }}/.github/texlive.packages
+    - name: update apt 
+      run: sudo apt-get update -y
+    - name: install additional packages 
+      run: sudo apt-get install -y transfig gnuplot inkscape
     - name: prepare with maven 
       run: mvn -B validate #latex:grp
       working-directory: ./maven-latex-plugin
