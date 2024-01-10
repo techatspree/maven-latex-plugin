@@ -1,6 +1,6 @@
 <!-- markdownlint-disable no-trailing-spaces -->
 <!-- markdownlint-disable no-inline-html -->
-# The latex-maven-plugin and ant task 2
+# The latex-maven-plugin and ant task 
 
 Use this maven-latex-plugin in your Maven projects 
 and this ant tasks in your ant projects 
