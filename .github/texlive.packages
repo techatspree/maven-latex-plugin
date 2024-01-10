@@ -8,7 +8,6 @@ latex
 beamer
 geometry
 microtype
-textcomp
 anyfontsize
 rerunfilecheck
 xcolor
