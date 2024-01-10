@@ -250,7 +250,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     Optional<String> targetsMagic =
         desc.groupMatch(LatexMainParameterNames.targetsMagic);
     if (targetsMagic.isPresent()) {
-      this.log.info("Found targets " + targetsMagic + " for document '"
+      this.log.info("Found targets " + targetsMagic.get() + " for document '"
           + desc.texFile + "' in magic comment. ");
       return Settings.getTargets(targetsMagic.get(),
           TargetsContext.targetsMagic);
