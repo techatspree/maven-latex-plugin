@@ -47,7 +47,7 @@ jobs:
     #   run: latexmk latexmk
     #   working-directory: ./maven-latex-plugin/src/site/tex/fdbLatexmk
     - name: Build with Maven
-      run: mvn -B site --file pom.xml -X -Dmaven.test.skip=true
+      run: mvn -B site --file ./src/main/resources/rawPoms/pom4pdf.xml -Dmaven.test.skip=true
       # Note that the tests are not necessary, but ... used a different pom. 
       working-directory: ./maven-latex-plugin
 
