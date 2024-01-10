@@ -29,6 +29,8 @@ jobs:
         cache: maven
     - name: find folder 
       run: ls 
+    - name: enter folder 
+      run: cd maven-latex-plugin
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
