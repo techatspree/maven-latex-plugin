@@ -37,7 +37,7 @@ jobs:
         profile-path: ${{ github.workspace }}/.github/texlive.profile
         packages-path: ${{ github.workspace }}/.github/texlive.packages
     - name: prepare with maven 
-      run: mvn -B validate latex:grp
+      run: mvn -B validate #latex:grp
       working-directory: ./maven-latex-plugin
     - name: compile with latexmk
       run: latexmk latexmk
