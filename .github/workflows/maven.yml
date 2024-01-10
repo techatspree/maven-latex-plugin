@@ -27,8 +27,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    #- name: Set up Maven
+    #  uses: thermofisher/setup-maven@v1.0.0
+    #  with:
+    #    maven-version: 3.9.4
     - name: Set up Maven
-      uses: thermofisher/setup-maven@v1.0.0
+      uses: stCarolas/setup-maven@v4.5
       with:
         maven-version: 3.9.4
     - name: Build with Maven
