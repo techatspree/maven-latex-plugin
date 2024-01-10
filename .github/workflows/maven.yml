@@ -31,6 +31,8 @@ jobs:
       run: ls 
     - name: enter folder 
       run: cd maven-latex-plugin
+    - name: check folder 
+      run: ls 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
