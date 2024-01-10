@@ -36,7 +36,7 @@ jobs:
       with:
         maven-version: 3.9.4
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dmaven.tests.skip=true
+      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
       working-directory: ./maven-latex-plugin
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
