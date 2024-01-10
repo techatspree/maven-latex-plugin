@@ -4,8 +4,7 @@ latexmk
 nag
 listings
 fontspec
-inputenc
-fontenc
+latex
 beamer
 geometry
 microtype
@@ -14,10 +13,10 @@ anyfontsize
 rerunfilecheck
 xcolor
 hyperref
-mplibcode
+luamplib
 import
 amsmath
-longtable
+tools
 xpatch
 fancyvrb
 splitidx
