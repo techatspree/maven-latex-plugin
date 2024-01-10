@@ -47,7 +47,8 @@ jobs:
     #   run: latexmk latexmk
     #   working-directory: ./maven-latex-plugin/src/site/tex/fdbLatexmk
     - name: Prepare with maven 
-      run: mvn -B validate 
+      run: mvn -B validate # to create the proper pom: pom4pdf.xml
+      working-directory: ./maven-latex-plugin
     - name: Build with Maven
       run: mvn -B latex:cfg --file ./src/test/resources/integration/pom4pdf.xml #-Dmaven.test.skip=true
       # Note that the tests are not necessary, but ... used a different pom. 
