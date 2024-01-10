@@ -19,7 +19,7 @@ amsmath
 tools
 xpatch
 fancyvrb
-splitidx
+splitindex
 glossaries
 booktabs
 xurl
