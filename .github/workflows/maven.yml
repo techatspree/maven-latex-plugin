@@ -36,9 +36,15 @@ jobs:
       with:
         profile-path: ${{ github.workspace }}/.github/texlive.profile
         packages-path: ${{ github.workspace }}/.github/texlive.packages
-    - name: Build with Maven
-      run: mvn -B verify --file pom.xml #-Dmaven.test.skip=true
+    - name: prepare with maven 
+      run: mvn -B validate latex:grp
       working-directory: ./maven-latex-plugin
+    - name: compile with latexmk
+      run: latexmk latexmk
+      working-directory: ./maven-latex-plugin/src/site/tex/fdbLatexmk
+    #- name: Build with Maven
+    #  run: mvn -B verify --file pom.xml #-Dmaven.test.skip=true
+    #  working-directory: ./maven-latex-plugin
 
     # Optional: Uploads the full dependency graph to GitHub 
     # to improve the quality of Dependabot alerts this repository can receive
