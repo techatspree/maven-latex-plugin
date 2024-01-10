@@ -27,12 +27,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: find folder 
-      run: ls 
-    - name: enter folder 
-      run: cd maven-latex-plugin
-    - name: check folder 
-      run: ls 
+    - name: Set up Maven
+      uses: thermofisher/setup-maven@v1.0.0
+      with:
+        maven-version: 3.9.4
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       working-directory: ./maven-latex-plugin
