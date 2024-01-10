@@ -33,6 +33,9 @@ jobs:
         maven-version: 3.9.4
     - name: Set up texlive
       uses: paolobrasolin/setup-texlive-action@v1
+      with:
+        profile-path: ${{ github.workspace }}/.github/texlive.profile
+        packages-path: ${{ github.workspace }}/.github/texlive.packages
     - name: Build with Maven
       run: mvn -B verify --file pom.xml #-Dmaven.test.skip=true
       working-directory: ./maven-latex-plugin
