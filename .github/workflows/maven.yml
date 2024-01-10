@@ -32,7 +32,7 @@ jobs:
       with:
         maven-version: 3.9.4
     - name: Build with Maven
-      run: mvn -B verify --file pom.xml -Dmaven.test.skip=true
+      run: mvn -B verify --file pom.xml #-Dmaven.test.skip=true
       working-directory: ./maven-latex-plugin
 
     # Optional: Uploads the full dependency graph to GitHub 
