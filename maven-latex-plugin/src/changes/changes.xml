@@ -792,6 +792,40 @@ must adapt header.tex -->
 <!-- add leaflet -->
 <!-- add watermark -->
 
+<!-- added documentation for injection headerGrp. 
+Dont forget to mention for all listings of injections 
+from which injection they stem. 
+
+Also update the set of allowed injections in apidoc and in manual. -->
+
+<!-- in .github/texlive.packages 
+is a list of packages needed to test in CI pipeline of github. 
+In the long run, this is the base of what is to be installed. 
+Currently, .github/workflows/maven.yml does not specify a maven test. 
+This must be included, to ensure completeness of texlive.packages 
+and other packages. 
+Currently at least transfig is missing. 
+
+As a first step, we try to compile with `mvn validate` combined with latexmk. 
+Even this does not work for all tex files. 
+Before, `mvn validate latex:grp` must work. 
+Then finally tests with maven can be performed 
+and we have a complete list of packages. 
+If these at hand, we shall update also the documentation. 
+
+If this is all done, then texlive is preferred usage. 
+Currently strictly speaking it is the distribution in suse tumbleweed. 
+If this is done, it is not difficult to include also miktex. -->
+
+<!-- try also teatimeguest/setup-texlive-action or https://github.com/zauguin/install-texlive-->
+
+<!-- in maven.yml the test is merely absence of errors. 
+Using the proper pom with a diff does not work for a few documents. 
+I suspect, that this is due to different versions of ... whatsoever: tools or packages. 
+could be pythontex or something else. 
+To tests diffs reliable, one has to check the versions of packages. 
+Then there must be a mechanism to diff against the correct pdf files. 
+Maybe the same as in local tests. -->
     <release version="2.0" date="2023-08-28" description="">
 
       <action dev='reissner' type='fix'>
