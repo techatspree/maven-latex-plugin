@@ -36,11 +36,11 @@ jobs:
       with:
         profile-path: ${{ github.workspace }}/.github/texlive.profile
         packages-path: ${{ github.workspace }}/.github/texlive.packages
-    - name: which pythontex 
+    - name: create pythontexW 
       # run: which pythontex yields /opt/hostedtoolcache/texlive/bin/x86_64-linux/pythontex
       # run: echo $PATH contains /usr/bin
       run: sudo -s eval 'echo -e "#! /bin/bash\npythontex \$@ |& tee \${!#}.plg" > /usr/bin/pythontexW && chmod a+x /usr/bin/pythontexW'
-    - name: echo pythontex
+    - name: echo pythontexW
       run: cat /usr/bin/pythontexW
     - name: update apt 
       run: sudo apt-get update -y
@@ -62,7 +62,7 @@ jobs:
     # This is a check without diff. 
     # It merely ensures that the plugin runs without errors 
     - name: Build with Maven
-      run: mvn -B validate latex:cfg -X --file pom.xml #-Dmaven.test.skip=true
+      run: mvn -B validate latex:cfg --file pom.xml #-Dmaven.test.skip=true
       # Note that the tests are not necessary, but ... used a different pom. 
       working-directory: ./maven-latex-plugin
 
