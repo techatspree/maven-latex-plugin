@@ -39,7 +39,7 @@ jobs:
     - name: which pythontex 
       # run: which pythontex yields /opt/hostedtoolcache/texlive/bin/x86_64-linux/pythontex
       # run: echo $PATH contains /usr/bin
-      run: sudo -s eval 'echo -e "#! /bin/bash\npythontex $@ |& tee ${!#}.plg" > /usr/bin/pythontexW && chmod a+x /usr/bin/pythontexW'
+      run: sudo -s eval 'echo -e "#! /bin/bash\npythontex \$@ |& tee \${!#}.plg" > /usr/bin/pythontexW && chmod a+x /usr/bin/pythontexW'
     - name: echo pythontex
       run: cat /usr/bin/pythontexW
     - name: update apt 
