@@ -56,7 +56,7 @@ jobs:
     # This is a check without diff. 
     # It merely ensures that the plugin runs without errors 
     - name: Build with Maven
-      run: mvn -B validate latex:cfg -X --file pom.xml #-Dmaven.test.skip=true
+      run: mvn -B validate latex:cfg --file pom.xml #-Dmaven.test.skip=true
       # Note that the tests are not necessary, but ... used a different pom. 
       working-directory: ./maven-latex-plugin
 
