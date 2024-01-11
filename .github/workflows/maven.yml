@@ -36,6 +36,8 @@ jobs:
       with:
         profile-path: ${{ github.workspace }}/.github/texlive.profile
         packages-path: ${{ github.workspace }}/.github/texlive.packages
+    - name: which pythontex 
+      run: which pythontex
     - name: update apt 
       run: sudo apt-get update -y
     - name: install additional packages 
