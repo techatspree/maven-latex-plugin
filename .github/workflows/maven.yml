@@ -61,23 +61,23 @@ jobs:
 
     # This is a check without diff. 
     # It merely ensures that the plugin runs without errors 
-    - name: Build with Maven
-      run: mvn -B validate latex:cfg --file pom.xml #-Dmaven.test.skip=true
-      # Note that the tests are not necessary, but ... used a different pom. 
-      working-directory: ./maven-latex-plugin
+    # - name: Build with Maven
+    #   run: mvn -B validate latex:cfg --file pom.xml #-Dmaven.test.skip=true
+    #   # Note that the tests are not necessary, but ... used a different pom. 
+    #   working-directory: ./maven-latex-plugin
 
     # This is with diff also. 
     # It does work for xfigFormat.tex, robustsample.tex, latexEngines.tex, latexEngines.tex, 
     # but not for useBeamerPres.tex 
     # I suspect, it has to do with different versions of packages. 
     # So for the moment what follows must be deactivated. 
-    # - name: Prepare with maven 
-    #   run: mvn -B validate # to create the proper pom: pom4pdf.xml
-    #   working-directory: ./maven-latex-plugin
-    # - name: Build with Maven
-    #   run: mvn -B latex:cfg --file ./src/test/resources/integration/pom4pdf.xml #-Dmaven.test.skip=true
-    #   # Note that the tests are not necessary, but ... used a different pom. 
-    #   working-directory: ./maven-latex-plugin
+    - name: Prepare with maven 
+      run: mvn -B validate # to create the proper pom: pom4pdf.xml
+      working-directory: ./maven-latex-plugin
+    - name: Build with Maven
+      run: mvn -B latex:cfg --file ./src/test/resources/integration/pom4pdf.xml #-Dmaven.test.skip=true
+      # Note that the tests are not necessary, but ... used a different pom. 
+      working-directory: ./maven-latex-plugin
 
     # Optional: Uploads the full dependency graph to GitHub 
     # to improve the quality of Dependabot alerts this repository can receive
