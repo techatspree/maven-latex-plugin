@@ -826,8 +826,20 @@ could be pythontex or something else.
 To tests diffs reliable, one has to check the versions of packages. 
 Then there must be a mechanism to diff against the correct pdf files. 
 Maybe the same as in local tests. -->
-    <release version="2.0" date="2023-08-28" description="">
+<!-- also for sake of CI: add vmdiff to the injections. 
+also would be nice to have pyhtontexW added. -->
 
+<!-- CI: try to cache also installations beyond texlive -->
+<!-- discuss whether it is good to move away from texlive 
+provided by suse and head towards standard -->
+<!-- CI: add pipeline for miktex maybe also for windoofs -->
+
+    <release version="2.0" date="2023-08-28" description="">
+      <action dev='reissner' type='add'>
+        Weak CI: could compile all documents in a CI pipeline, 
+        but diff did not yet work. 
+        So the test consist in successful compilation. 
+      </action>
       <action dev='reissner' type='fix'>
         in LatexProcessor.runDiffPdf concerning return values. 
       </action>
