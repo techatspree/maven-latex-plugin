@@ -473,17 +473,11 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>COPYING</include>
-          <include>instVScode4tex.sh</include>
           <include>version.properties</include>
+          <include>injections/*</include>
+          <include>litLMPpub.bib</include>
           <!-- TBD: check whether needed -->
           <include>defaultSettingsAs.properties</include>
-          <!-- rc-files: filtered at runtime: fill in current parameter values -->
-          <include>.latexmkrc</include>
-          <include>.chktexrc</include>
-          <include>header.tex</include>
-          <include>headerGrp.tex</include>
-          <include>litLMPpub.bib</include>
-          <include>headerSuppressMetaPDF.tex</include>
         </includes>
         <filtering>false</filtering>
       </resource>

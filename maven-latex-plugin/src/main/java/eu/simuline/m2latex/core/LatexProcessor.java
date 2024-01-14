@@ -2403,6 +2403,11 @@ public class LatexProcessor extends AbstractLatexProcessor {
     return returnCode == 0;
   }
 
+  /**
+   * The folder in the jar-file containing this application 
+   * containing the files of the {@link Injection}s. 
+   */
+  private static final String FOLDER_INJ = "injections/";
 
   /**
    * Processes injection of files like <code>.latexmkrc</code> and <code>.chktexrc</code> 
@@ -2441,7 +2446,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     for (Injection inj : injections) {
       String fileName = inj.getFileName();
       // may throw TMI01
-      InputStream inStream = MetaInfo.getStream(fileName);
+      InputStream inStream = MetaInfo.getStream(FOLDER_INJ+fileName);
       File outFile = this.settings.rcResourceToFile(fileName);
 
       try {
