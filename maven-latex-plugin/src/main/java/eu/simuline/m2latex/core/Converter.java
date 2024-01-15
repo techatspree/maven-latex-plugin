@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 /**
  * Enumeration of all converters used. 
- * The ones of category {@link ConverterCategory.Unparametrized} 
+ * The ones of category {@link ConverterCategory#Unparametrized} 
  * are special in that they do not occur in the configuration. 
  * They are programming lanugages and build tools 
  * in which this piece of software is used. 

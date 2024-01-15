@@ -708,7 +708,7 @@ class TexFileUtils {
           Matcher matcher = pattern.matcher(lines);
           if (matcher.find()) {
             this.log.debug("Matched line: ;" + line + "'");
-            return FileMatch.matches(matcher);// as match result TBD: .toMatchResult()
+            return FileMatch.fileMatch(matcher);// as match result TBD: .toMatchResult()
           }
         }
         return FileMatch.noMatch();

@@ -34,7 +34,7 @@ import java.util.TreeSet;
 // TBD: all this must be eliminated.
 // import eu.simuline.m2latex.antTask.LatexCfgTask;
 // import eu.simuline.m2latex.antTask.LatexClrTask;
-// import eu.simuline.m2latex.mojo.CfgLatexMojo;
+import eu.simuline.m2latex.mojo.CfgLatexMojo;
 // import eu.simuline.m2latex.mojo.ChkMojo;
 // import eu.simuline.m2latex.mojo.ClearMojo;
 // import eu.simuline.m2latex.mojo.GraphicsMojo;
@@ -330,7 +330,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *    the set of targets to be created. 
    *    The target 'chk' does not create artifacts except the log file clg. 
    *    The target set may have a single entry coming from the goal 
-   *    or, for goal {@link CfgMojo} may be given by {@link Settings#getTargets()}. 
+   *    or, for goal {@link CfgLatexMojo} may be given by {@link Settings#getTargets()}. 
    * @throws BuildFailureException 
    *    <ul>
    *    <li> TSS01 if 
@@ -696,6 +696,10 @@ public class LatexProcessor extends AbstractLatexProcessor {
       .orElse(this.settings.getCommand(ConverterCategory.LaTeX));
   }
 
+  private String getDvi2pdfCommand() throws BuildFailureException {
+    return this.settings.getCommand(ConverterCategory.Dvi2Pdf);
+  }
+
   /**
    * Runs LaTeX on on the latex main file <code>texFile</code>
    * described by <code>desc</code> once,
@@ -756,7 +760,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *    TEX01 if invocation one of the following commands fails: the
    *    <ul>
    *    <li>latex2pdf command from
-   *    {@link Settings#getLatex2pdfCommand()}
+   *    {@link #getLatex2pdfCommand()}
    *    <li>BibTeX command from
    *    {@link Settings#getBibtexCommand()}
    *    <li>makeindex command from
@@ -1884,7 +1888,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 
   /**
-   * Runs the LaTeX command given by {@link Settings#getLatex2pdfCommand()}
+   * Runs the LaTeX command given by {@link #getLatex2pdfCommand()}
    * on the latex main file <code>texFile</code>
    * described by <code>desc</code>
    * in the directory containing <code>texFile</code> with arguments
@@ -1918,7 +1922,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *     See {@link LatexDev#getLatexOutputFormat()}.
    * @throws BuildFailureException
    *     TEX01 if invocation of the latex2pdf command returned by
-   *     {@link Settings#getLatex2pdfCommand()} failed.
+   *     {@link #getLatex2pdfCommand()} failed.
    */
   private void runLatex2dev(LatexMainDesc desc, LatexDev dev)
       throws BuildFailureException {
@@ -1973,7 +1977,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
   /**
    * Runs conversion from dvi or xdv to pdf-file
-   * executing {@link Settings#getDvi2pdfCommand()}
+   * executing {@link #getDvi2pdfCommand()}
    * on a dvi/xdv-file covered by <code>desc</code> with arguments
    * given by {@link #buildLatexArguments(Settings, LatexDev, File, boolean)}. 
    * Note that this works only because all converter of the according category 
@@ -1994,13 +1998,13 @@ public class LatexProcessor extends AbstractLatexProcessor {
    *     including the dvi-file dvi2pdf is to be run on.
    * @throws BuildFailureException
    *     TEX01 if invocation of the dvi2pdf command returned by
-   *     {@link Settings#getDvi2pdfCommand()} failed.
+   *     {@link #getDvi2pdfCommand()} failed.
    */
   // used in processLatex2pdf(File) and processLatex2txt(File) only
   private void runDvi2pdf(LatexMainDesc desc) throws BuildFailureException {
     assert this.settings.getPdfViaDvi().isViaDvi();
 
-    String command = this.settings.getCommand(ConverterCategory.Dvi2Pdf);
+    String command = getDvi2pdfCommand();
     // use desc.xxxFile rather than desc.dviFile, 
     // because we have to treat both, dvi and xdv
     // TBD: warning if both are present; then xdv is preferred. 

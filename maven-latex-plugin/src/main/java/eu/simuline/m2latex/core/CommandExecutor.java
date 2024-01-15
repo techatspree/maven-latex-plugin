@@ -177,7 +177,7 @@ class CommandExecutor {
    * This is set to <code>true</code> in this method. 
    * <p>
    * Supports timeless execution as described in 
-   * {@link #execute(File, File, String, ReturnCodeChecker, String[]). 
+   * {@link #execute(File, File, String, ReturnCodeChecker, String[], File...)}. 
    * <p>
    * Logging: 
    * <ul>
@@ -246,7 +246,7 @@ class CommandExecutor {
    * i.e. if it does not exist or is not updated. 
    * <p>
    * Supports timeless execution as described in 
-   * {@link #execute(File, File, String, ReturnCodeChecker, String[]). 
+   * {@link #execute(File, File, String, ReturnCodeChecker, String[], File...)}. 
    * <p>
    * Logging: 
    * <ul>
@@ -413,8 +413,8 @@ class CommandExecutor {
    * Invocation is always via 
    * {@link #execute(File, File, String, String[], File...)}. 
    * 
-   * @see LatexProcessor#runLatex2Dev
-   * @see LatexProcessor#runDvi2Pdf
+   * @see LatexProcessor#runLatex2dev(LatexMainDesc, LatexDev)
+   * @see LatexProcessor#runDvi2pdf(LatexMainDesc)
    */
   void setIsTimeless() {
     this.isTimeless = true;
