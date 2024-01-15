@@ -837,6 +837,10 @@
               <directory>src/site/resources/fromMain</directory>
               <includes>
                 <include>pom4pdf.xml</include>
+                <include>instVScode4tex.sh</include>
+                <include>ntlatex</include>
+                <include>pythontexW</include>
+                <include>vmdiff</include>
               </includes>
             </fileset>
             <fileset>
