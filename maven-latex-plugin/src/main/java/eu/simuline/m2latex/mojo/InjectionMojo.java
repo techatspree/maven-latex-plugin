@@ -43,13 +43,39 @@ public class InjectionMojo extends AbstractLatexMojo {
    * Indicates the files injected by the goal <code>inj</code>. 
    * This is a comma separated list of {@link Injection}s 
    * without blanks. 
-   * The possible injections are: 
+   * The injections are in one of three categories: representing 
    * <ul>
-   * <li><code>latexmkrc</code> represents the file <code>.latexmkrc</code></li>
-   * <li><code>chktexrc</code> represents the file <code>.chktexrc</code></li>
-   * <li><code>vscodeExt</code> represents the file <code>instVScode4tex.sh</code></li>
-   * <li><code>header</code> represents the file <code>header.tex</code></li>
-   * <li><code>headerSuppressMetaPDF</code> represents the file <code>headerSuppressMetaPDF.tex</code></li>
+   * <li>configuration files: 
+   *  <ul>
+   *  <li><code>latexmkrc</code> represents the config file <code>.latexmkrc</code> 
+   *      of <code>latexmk</code></li>
+   *  <li><code>chktexrc</code> represents the config file <code>.chktexrc</code> 
+   *      of <code>chktex</code></li>
+   *  </ul></li>
+   * <li>header files to be input into TEX files: 
+   *  <ul>
+   *  <li><code>header</code> represents the file <code>header.tex</code> 
+   *      which is intended to be included in any latex main file. </li>
+   *  <li><code>headerGrp</code> represents the file <code>headerGrp.tex</code> 
+   *      which shall be included in latex main files using the <code>graphicx</code> pacakge. </li>
+   *  <li><code>headerSuppressMetaPDF</code> represents the file <code>headerSuppressMetaPDF.tex</code> 
+   *      which serves to suppress meta info of a latex main file  
+   *      which may be considered a safety risk. </li>
+   *  </ul></li>
+   * <li>script files: 
+   *  <ul>
+   *  <li><code>vscodeExt</code> represents the file <code>instVScode4tex.sh</code> 
+   *      installing all extensions on VS Code recommended for development of latex documents. </li>
+   *  <li><code>ntlatex</code> represents the file <code>ntlatex</code> 
+   *      performing latex compilation with epoch time 0. </li>
+   *  <li><code>pythontexW</code> represents the file <code>pythontexW</code> 
+   *      which essentially invokes <code>pythontex</code> 
+   *      and redirects output to a log file</li>
+   *  <li><code>vmdiff</code> represents the file <code>vmdiff</code> 
+   *      which performs a diff based on 
+   *      the visual diff <code>diff-pdf-visually</code> and 
+   *      on the diff on meta-data given by <code>pdfinfo</code>. </li>
+   *  </ul></li>
    * </ul>
    * <p>
    * The default value is <code>latexmkrc,chktexrc</code>. 
