@@ -1123,7 +1123,7 @@
               <goal>inj</goal>
             </goals>
             <configuration>
-              <injections>latexmkrc,chktexrc,vscodeExt,header,headerGrp,headerSuppressMetaPDF</injections>
+              <injections>latexmkrc,chktexrc,header,headerGrp,headerSuppressMetaPDF</injections>
             </configuration>
           </execution>
           <execution>

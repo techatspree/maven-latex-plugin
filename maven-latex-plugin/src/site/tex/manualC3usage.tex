@@ -1054,37 +1054,29 @@ see Section~\ref{sec:chkReprod}.
 
 
 
-\subsection{An install script for VS Code Extensions }\label{subsec:instExtVsCode}
+\subsection{An installation script for VS Code Extensions }\label{subsec:instExtVsCode}
 
 The injections described so far are intended to be performed in phase \texttt{validate}  
 as illustrated in Listing~\ref{lst:executions}. 
 This is preferable, because the configuration files 
 are adapted to the settings in each run. 
 
-The last injection, \texttt{vscodeExt} injecting the file \texttt{instVScode4tex.sh} 
+The last injection, \texttt{vscodeExt} 
+injecting the file \href{\urlSite fromMain/instVScode4tex}{instVScode4tex.sh} 
 is used in a completely different way. 
-If the editor VS Code is assumed to be already installed, 
-the script \texttt{instVScode4tex.sh} 
-also given by Listing~\ref{lst:instVScode}, 
+If the editor VS Code is already installed, 
+the script \texttt{instVScode4tex.sh}, 
 installs and updates all extensions of VS Code the author used to write \LaTeX-code. 
 Project \url{https://github.com/Reissner/QMngMnt} 
 uses the script for automation of installation and update. 
 It is the only injected file which is executable. 
 
-\lstinputlisting[
-language=bash, basicstyle=\tiny,
-float, captionpos=b, label={lst:instVScode}, 
-caption={Install script for extensions of VS Code. }]%
-{instVScode4tex.sh}
-
 Pasting \href{\urlSite fromTex/.latexmkrc}{.latexmkrc}, 
 which is just Perl code, 
-into VS Code one can see the highlighting, and a preview, 
-of course provided the extensions given by Listing~\ref{lst:instVScode} are installed; 
+into VS Code, one can see the highlighting, 
+of course provided the extensions given by \texttt{instVScode4tex.sh} are installed; 
 The configuration file \texttt{.latexmkrc} 
 for the development tool \texttt{latexmk} is in fact a Perl script. 
-
-
 
 
 \section{Development of documents}\label{sec:devel}
@@ -1853,7 +1845,7 @@ Document development starts with the editor.
 Above the Emacs editor enhanced with \auctex{} was mentioned. 
 We recommend VS Code in conjunction with several extensions. 
 If VS Code itself is already installed 
-the script in Listing~\ref{lst:instVScode} on page~\pageref{lst:instVScode}  
+the script \href{\urlSite fromMain/instVScode4tex}{instVScode4tex.sh} 
 installs and updates all extensions 
 the author used to develop this manual. 
 The core extension is \texttt{latex workshop}, 
