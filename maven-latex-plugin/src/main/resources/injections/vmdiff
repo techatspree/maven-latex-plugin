@@ -1,0 +1,2 @@
+#!/bin/sh -
+diff-pdf-visually $1 $2 || diff <(pdfinfo $1) <(pdfinfo $2)

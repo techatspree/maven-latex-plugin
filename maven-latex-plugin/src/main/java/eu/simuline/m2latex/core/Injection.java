@@ -73,6 +73,58 @@ public enum Injection {
     }
   },
   /**
+   * Invokes the latex compiler configured with epoque time set to 0. 
+   */
+  ntlatex {
+    String getFileName() {
+      return "ntlatex";
+    }
+
+    boolean setExecutable() {
+      return true;
+    }
+
+    boolean hasShebang() {
+      return true;
+    }
+  },
+  /**
+   * Invokes pythontex and writes a log file. 
+   * This is needed only because the current version of pythontex does not write log files. 
+   * In future this shall change and so this injection will be superfluous. 
+   */
+  pythontexW {
+    String getFileName() {
+      return "pythontexW";
+    }
+
+    boolean setExecutable() {
+      return true;
+    }
+
+    boolean hasShebang() {
+      return true;
+    }
+  },
+  /**
+   * Invokes a diff tool for PDF files 
+   * combining visual diff with <code>diff-pdf-visual</code> 
+   * with diffing of PDF metainfo provided by <code>pdfinfo</code>. 
+   */
+  vmdiff {
+    String getFileName() {
+      return "vmdiff";
+    }
+
+    boolean setExecutable() {
+      return true;
+    }
+
+    boolean hasShebang() {
+      return true;
+    }
+  },
+  /**
    * A header file loading package <code>graphicx</code> 
    * with the appropriate options. 
    * This is used to provide the command <code>includegraphics</code>. 

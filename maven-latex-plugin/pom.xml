@@ -751,6 +751,18 @@
                   </includes>
                   <filtering>true</filtering>
                 </resource>
+                <resource>
+                  <directory>src/main/resources/injections</directory>
+                  <includes>
+                    <include>instVScode4tex.sh</include>
+                    <!-- caution: this is unfiltered 
+                      because default filtering is not apropriate-->
+                    <include>ntlatex</include>
+                    <include>pythontexW</include>
+                    <include>vmdiff</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
               </resources>
             </configuration>
           </execution>
@@ -1052,7 +1064,7 @@
       <plugin>
         <groupId>eu.simuline.m2latex</groupId>
         <artifactId>latex-maven-plugin</artifactId>
-        <version>2.0-SNAPSHOT</version><!--1.8 -->
+        <version>2.0-SNAPSHOT</version><!--1.8 2.0-SNAPSHOT-->
         <configuration>
           <settings>
             <convertersExcluded>upmendex, xindy</convertersExcluded>
