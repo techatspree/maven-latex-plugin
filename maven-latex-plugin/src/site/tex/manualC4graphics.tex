@@ -149,7 +149,7 @@ this is not supported by the default driver.
 Instead, it shall be used the driver \texttt{dvipdfmx}. 
 To obtain a \LaTeX-file which works both for creating PDF and HTML, 
 insert in the header of the \LaTeX{} main file
-given by Listing~\ref{lst:header}. 
+given by Listing~\ref{lst:headerGrp}. 
 Note that also the package \pkg{hyperref} needs adaption of its options 
 depending on the use case. 
 % TBD: this needs rework: 
@@ -158,18 +158,13 @@ depending on the use case.
 % This is appropriate because this chapter is about graphics. 
 % On the other hand, the remark on hyperref is valid but is not specific for graphics. 
 % It must be placed elsewhere in the long run. 
-%
-% In addition, it is planned to split the header in a general one, with hyperref config 
-% and in a special one containing graphic specific material. 
-% There is another listing on luamplib which fits into that. 
-% In the long run, this material shall be at one place so that only one listing for graphics is needed. 
 
 %
 %\lstset{language=tex, basicstyle=\small}
 % FIXME\@: nag complains for htlatex 
 \lstinputlisting[linerange={3-24},
 language=TeX, basicstyle=\small,
-float, captionpos=b, label={lst:header}, 
+float, captionpos=b, label={lst:headerGrp}, 
 caption={Loading packages adapted to the output format}]%
 {./headerGrp.tex}% listing 
 
@@ -185,12 +180,12 @@ float, captionpos=b, label={lst:xhtml},
 caption={Configuration file \texttt{myxhtml.cfg}}]
 {myxhtml.tex}
 %
-It applies when converting \LaTeX{} into html and that like 
-with htlatex if invoking something like \texttt{htlatex xxx.tex myxhtml,\ldots} 
+It applies when converting \LaTeX{} into HTML and that like 
+with \texttt{htlatex} if invoking something like \texttt{htlatex xxx.tex myxhtml,\ldots} 
 where \texttt{myxhtml} is located in the same directory as the \LaTeX-file 
 to be processed. 
 The configuration file essentially contains a graphics configuration, 
-which applies conversion to pdf-files included in the \LaTeX-file \texttt{xxx.tex}
+which applies conversion to PDF-files included in the \LaTeX-file \texttt{xxx.tex}
 via \cmd{includegraphics}. 
 
 
@@ -981,7 +976,7 @@ Then it deletes the original files
 \texttt{xxx.pdf\_tex} and \texttt{xxx.eps\_tex}.
 
 The author has filed a bug report to the inkscape-team,
-to avoid this workaround in future. 
+to avoid this workaround in the future. 
 
 \begin{figure}[htb]
 \centering
@@ -990,7 +985,7 @@ should be a picture
 }{
 \import{}{F4_06svg2pdf.ptx}%
 }
-\caption{\label{fig:svg2pdf}Conversion of an svg-file 
+\caption{\label{fig:svg2pdf}Conversion of an SVG-file 
 into pdf-, eps- and ptx-files with inclusions}
 \end{figure}
 
@@ -1028,7 +1023,7 @@ described in Section~\ref{subsec:instExtVsCode} are installed.
 
 \section{Pictures which are not transformed}\label{sec:picasis}
 
-Figure~\ref{fig:asIsJpg} shows some picture included as jpg. 
+Figure~\ref{fig:asIsJpg} shows some picture included as JPG. 
 This is done as usual with the command \cmd{includegraphics}{}
 provided by the package \pkg{graphicx}. 
 According to the documentation~\cite{GraX}, page 13, 
@@ -1041,11 +1036,11 @@ So maybe \texttt{ebb} is the better alternative.
 Note that both techniques are available in distribution \texlive, 
 but not in \miktex. 
 
-Research shows, that inclusion is seemlessly if PDF files are created. 
+Research shows, that inclusion is seamlessly if PDF files are created. 
 So the problem addressed is specific for creating DVI files. 
-Also at time of this writing, it seems that also in DVI mode, no problems occur. 
+Also, at time of this writing, it seems that also in DVI mode, no problems occur. 
 Nevertheless, the author experienced errors on missing bounding box 
-and to be save, provides a way to invoke \texttt{ebb} on the file \texttt{xxx.jpg}. 
+and to be safe, provides a way to invoke \texttt{ebb} on the file \texttt{xxx.jpg}. 
 
 With parameter \texttt{-m}, this creates a file \texttt{xxx.bb} 
 containing the bounding box for \texttt{dvipdfm}, 
@@ -1054,7 +1049,7 @@ containing an extended bounding box for \texttt{dvipdfmx}.
 The current implementation seems not to make any difference, 
 whether the bounding boxes are created or not. 
 
-Sizes seem to differ in dvi ouput after conversion to pdf, 
+Sizes seem to differ in DVI/XDV output after conversion to PDF, 
 depending on whether \texttt{dvipdfm} or \texttt{dvipdfmx} is used. 
 Only the latter yields the same size as direct conversion to PDF creates. 
 
@@ -1067,10 +1062,10 @@ creating bounded boxes and extended bounding boxes.
 
 FIXME\@: further research and further documentation is required. 
 
-Note that both for \pdflatex{} and siblings creating pdf-output 
+Note that both for \pdflatex{} and siblings creating PDF-output 
 and for \texttt{htlatex} in conjunction with \texttt{dvipdfmx} 
 (see Section~\ref{sec:figpdf}) 
-files in the format pdf, \gls{png}, \gls{jpg} are supported. 
+files in the format \gls{pdf}, \gls{png}, \gls{jpg} are supported. 
 % **** what about \gls{gif}? 
 This list may be incomplete. 
 
@@ -1083,11 +1078,11 @@ should be a picture
 \includegraphics%[width=0.9\textwidth]
 {F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
 }
-\caption{\label{fig:asIsJpg}Some jpg-picture, directly included }
+\caption{\label{fig:asIsJpg}Some JPG-picture, directly included }
 \end{figure}
 
 As an example, Figure~\ref{fig:asIsPng} shows the same picture 
-as png-file. 
+as PNG-file. 
 
 FIXME\@: At the moment, \texttt{htlatex} does not work with pictures at all. 
 
@@ -1099,11 +1094,11 @@ should be a picture
 \includegraphics[width=0.9\textwidth]
 {F4_09somePngOboeBaroqueDennerMIR370}%.png
 }
-\caption{\label{fig:asIsPng}Some png-picture, directly included }
+\caption{\label{fig:asIsPng}Some PNG-picture, directly included }
 \end{figure}
 
-Note that in dvi/xdv mode all usual latex converter 
-can include bmp-pictures, whereas in pdf mode only \texttt{xelatex} 
+Note that in DVI/XDV mode all usual latex converter 
+can include BMP-pictures, whereas in PDF mode only \texttt{xelatex} 
 can do that, maybe because it creates XDV internally in any case. 
 In contrast, \texttt{lualatex} and \texttt{pdflatex} can not. 
 % The following works for lualatex but not for pdflatex 
