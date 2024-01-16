@@ -788,6 +788,7 @@ representing the configuration files.
   ntlatex               & \texttt{\footnotesize ntlatex}           & timeless \LaTeX{} compiler \\
   vmdiff                & \texttt{\footnotesize vmdiff}            & special diff tool for PDF files \\
   pythontexW            & \texttt{\footnotesize pythontexW}        & surrogate for \texttt{pythontex} \\
+  depythontexW          & \texttt{\footnotesize depythontexW}      & surrogate for \texttt{depythontex} \\
   \end{longtable}
 
 
@@ -1147,7 +1148,7 @@ Calling from project root
 injects the according files \href{\urlSite fromMain/instVScode4tex}{instVScode4tex.sh} and \texttt{.latexmkrc}. 
 
 If the editor VS Code is already installed, 
-invoking the script \texttt{instVScode4tex.sh}, 
+the script \texttt{instVScode4tex.sh}, 
 installs and updates all extensions of VS Code the author used to write \LaTeX-code. 
 Project \url{https://github.com/Reissner/QMngMnt} 
 uses the script for automation of installation and update. 
@@ -1160,6 +1161,48 @@ of course provided the extensions given by \texttt{instVScode4tex.sh} are instal
 The configuration file \texttt{.latexmkrc} 
 for the development tool \texttt{latexmk} is in fact a Perl script. 
 
+
+\subsection{Scripts in conjunction with reproducibility }\label{subsec:ntlatexVmdiff}
+
+Calling from project root 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=ntlatex,vmdiff
+\end{Verbatim}
+%
+injects the according files 
+\texttt{ntlatex} and \href{\urlSite fromMain/ntlatex}{vmdiff}. 
+
+The injection, \texttt{ntlatex} 
+injects the file \href{\urlSite fromMain/ntlatex}{ntlatex} 
+with \texttt{\$\{latex2pdfCommand\}} 
+replaced by the \LaTeX{} compiler specified in the configuration. 
+This is a \LaTeX{} compiler with timestamp 0 which guarantees reproducibility 
+under certain circumstances. 
+For details see Section~\ref{sec:chkReprod} on reproducibility. 
+
+Complementary to this \texttt{vmdiff} is a diff tool for PDF files 
+combining visual equality checked with \texttt{diff-pdf-visually} 
+with equality of meta data checked via \texttt{pdfinfo}. 
+
+\subsection{Script \texttt{(de)pythontexW} patching \texttt{(de)pythontex} }\label{subsec:pythontexW}
+
+Calling from project root 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=pythontexW,depythontexW
+\end{Verbatim}
+%
+injects the according files 
+\href{\urlSite fromMain/pythontexW}{pythontexW} and 
+\href{\urlSite fromMain/depythontexW}{depythontexW}
+which just invokes \texttt{(de)pythontex} 
+but does not simply output feedback on \texttt{stdout}
+but besides doing so writes it in a log file. 
+This is needed to provide an interface usual in the \TeX{} ecosystem. 
+
+Note that all this is specific for unix -like operating systems 
+but can be easily adapted to windows. 
 
 \section{Development of documents}\label{sec:devel}
 

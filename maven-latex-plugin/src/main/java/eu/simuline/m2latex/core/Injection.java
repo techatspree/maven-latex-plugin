@@ -107,6 +107,24 @@ public enum Injection {
     }
   },
   /**
+   * Invokes depythontex and writes a log file. 
+   * This is needed only because the current version of depythontex does not write log files. 
+   * In future this shall change and so this injection will be superfluous. 
+   */
+  depythontexW {
+    String getFileName() {
+      return "depythontexW";
+    }
+
+    boolean setExecutable() {
+      return true;
+    }
+
+    boolean hasShebang() {
+      return true;
+    }
+  },
+  /**
    * Invokes a diff tool for PDF files 
    * combining visual diff with <code>diff-pdf-visual</code> 
    * with diffing of PDF metainfo provided by <code>pdfinfo</code>. 

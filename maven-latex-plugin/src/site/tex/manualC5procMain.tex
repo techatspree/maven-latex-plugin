@@ -655,8 +655,9 @@ which are, without further configuration,
 all in the folder \texttt{pythontex-files-xxx}
 as shown in Figure~\ref{fig:py2dir}, 
 which is described in more detail in~\cite{PyTexInOut}, Section~3. 
-Note that this software uses the wrapper \texttt{pythontexW} 
-of \texttt{pythontex} described below, instead of \texttt{pythontex} itself. 
+Note that this software uses the wrapper \texttt{pythontexW}\index{pythontexW} 
+of \texttt{pythontex} described in Section~\ref{subsec:pythontexW}, 
+instead of \texttt{pythontex} itself. 
 The figure reflects this. 
 
 % TBD: later on, if \texttt{xxx.depytx} after \texttt{pythontex} also \texttt{pythontex} is invoked, 
@@ -683,16 +684,8 @@ This is unlike all the other auxiliary programs in a line with \texttt{pythontex
 As a consequence, in particular warnings are difficult to detect 
 and cannot be detected in a uniform way. 
 Thus, the author wrote a little wrapper, called \texttt{pythontexW} 
-%
-\begin{verbatim}
-  #! /bin/bash
-  # bash version >=3.0
-  pythontex $@ |& tee ${!#}.plg  
-\end{verbatim}
-%
 and place it where it can be found, e.g.~in the folder of \texttt{pythontex}. 
-Note that this is specific for unix-like operating systems 
-but can be easily adapted to windows. 
+
 Accordingly, \texttt{depythontex} behaves in a non-standard way: 
 Firstly, by default, it does not output a result file but outputs on standard output. 
 This can be changed using the option \texttt{--output} or \texttt{-o} for short. 
@@ -702,15 +695,9 @@ To avoid this, the option \texttt{--overwrite} is required.
 Overwriting without asking is the standard behavior of all other auxiliary programs. 
 As \texttt{pythontex} also \texttt{depythontex} does not write a log file 
 but just prints its errors and warnings. 
-Thus, the author wrote a little wrapper, called \texttt{depythontexW} 
-%
-\begin{verbatim}
-  #! /bin/bash
-  # bash version >=3.0
-  depythontex $@ |& tee ${!#}.dplg  
-\end{verbatim}
-%
-and place it where it can be found, e.g.~in the folder of \texttt{depythontex}. 
+Thus, the author wrote a little wrapper, 
+called \texttt{depythontexW} and described in Section~\ref{subsec:pythontexW}, 
+and place it where it can be found, e.g.~in the folder of \texttt{depythontex}\index{depythontexW}. 
 % TBD: evaluate: maybe it is a better solution to enable this software itself to write the output to a log file. 
 \medskip
 
@@ -993,6 +980,8 @@ There are two strategies to deal with the problem:
   \item 
   Use diff tools implementing a weaker notion of equivalence, 
   in a sense visibility equivalence of some degree. 
+  One approach is the script \texttt{vmdiff} 
+  described in Section~\ref{subsec:pythontexW}. 
 \end{itemize}%
 
 We support both approaches, but the first one is the preferred one 
@@ -1044,7 +1033,7 @@ to make it part of the preferred usage.
 % one could display also other pieces of information identifying the document. 
 
 But the visible date is not all we have to care about. 
-Listing~\ref{lst:reprPdfEngines} shows how to eliminate metadata 
+Section~\ref{subsec:headerSuppressMetaPDF} describes a header which eliminates a lot of metadata 
 and to replace with adequate one. 
 There is metadata which can be eliminated in a uniform way for all latex engines 
 using the package \texttt{hyperref} which the author generally advises. 
@@ -1061,7 +1050,8 @@ This identifier can only be set in a way specific for the \LaTeX{} compiler.
 Caution: \xelatex{} causes \cmd{ifpdf} to enter always the \texttt{else} branch. 
 Note that for \xelatex{} further techniques are required to reach reproducibility. 
 % TBD: make this more specific. 
-Except for \xelatex, Listing~\ref{lst:reprPdfEngines} provides means to eliminate all information 
+Except for \xelatex, the header described in Section~\ref{subsec:headerSuppressMetaPDF} 
+is a means to eliminate all information 
 making the document reproducible also without \pkg{hyperref}, 
 but this applies only to newer versions. 
 Besides code the listing provides a lot of documentation. 
@@ -1073,7 +1063,8 @@ the package \texttt{hyperref}
 could be replaced by specific commands. 
 Also, using the package \texttt{iftex} one can detect the used engine 
 via the macros \cmd{ifLuaTeX}, \cmd{ifXeTeX} 
-and \cmd{ifPDFTeX} as illustrated in Listing~\ref{lst:reprPdfEngines}
+and \cmd{ifPDFTeX} as illustrated in \texttt{headerSuppressMetaPDF.tex} 
+described in Section~\ref{subsec:headerSuppressMetaPDF}
 and adapt the code to the engine. 
 
 % TBD: clarify: does hyperref replace the engine specific settings? 
@@ -1083,13 +1074,7 @@ and adapt the code to the engine.
 % but I do for security. 
 % All in all, we need additional research to write this section in a competent way. 
 
-\lstinputlisting[language={[LaTeX]TeX}, basicstyle=\footnotesize,
-firstline=3, 
-breaklines,
-%float, 
-captionpos=b, label={lst:reprPdfEngines},
-caption={Create reproducible PDF files for various engines}]%
-{./headerSuppressMetaPDF.tex}% listing 
+
 
 
 
