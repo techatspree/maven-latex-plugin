@@ -695,10 +695,12 @@ caption={Output of goal \texttt{latex:vrs}}]
 \section{Injection of files}\label{sec:injFiles}
 
 The goal \texttt{inj} is to inject files 
-into the working directory \texttt{texSrcDirectory}. 
+into the working directory \texttt{texSrcDirectory}, 
+by default in maven lifecycle phase \texttt{valiate}. 
+The injected files are in general adapted to the current configuration of the plugin. 
 
-Note that these files are written only 
-if it is guaranteed that this overwrites only files written by this plugin. 
+Note that each of these files is written only 
+if it is guaranteed that only files written by this plugin are overwritten. 
 This is the case, if no file is overwritten at all 
 or if the file to be overwritten is recognized to start with a comment 
 indicating that this file is written by this plugin. 
@@ -707,10 +709,12 @@ Of course the guarantee holds only if the headline does not tell a lie.
 If the headline cannot be read or in some other exotic conditions, 
 it cannot be ensured that the files are written by this software, 
 and so they are not overwritten by goal \texttt{inj} 
-and by the way not erased by goal \texttt{clr} as described in Section~\ref{subsec:develClear}. 
+and by the way not erased by goal 
+\texttt{clr} as described in Section~\ref{subsec:develClear}. 
 In case of such a doubt, a warning is displayed. 
 
-That way, injected files written by the plugin can be updated each run 
+That way, injected files written by the plugin can be updated each run, 
+which is necessary to keep them synchronized with the configuration of this plugin, 
 but according files written e.g.\@ by the user are protected. 
 
 A first description of the goal \texttt{inj} is given by 
@@ -720,8 +724,44 @@ mvn latex:help -Ddetail -Dgoal=inj
 \end{verbatim}
 %
 which yields a list of files which can be injected. 
+Note the distinction between the injection, which is the act of injecting 
+and the according file which is injected. 
 
-\begin{longtable}{|l|ll|}
+The set of injections can be divided into the following categories 
+according to the function of the files injected: 
+%
+\begin{itemize}
+  \item
+  Configuration files for \texttt{latexmk} and \texttt{chktex}. 
+  These are hidden files and form the default. 
+  In particular, the configuration file of \texttt{latexmk} 
+  is adapted to the configuration of this plugin, 
+  to ensure that the results are the same whether created by \texttt{latexmk} 
+  or by this plugin. 
+  \item
+  Header files are intended to be included in TEX files. 
+  They load packages and provide commands. 
+  In general, header files are designed to run on all usual \LaTeX{} compilers, 
+  with various document classes  
+  and take creation of PDF into account but also of other formats like HTML 
+  and also of DVI/XDV which is an important intermediate format. 
+  \item
+  Script files which are intended to run by the user 
+  supporting the automatic build process ``from outside''
+  above all in the course of document development. 
+  Thus, usually, their injection is triggered selectively from the command line 
+  as described below. 
+  In contrast to the files in the other categories, these are executable. 
+\end{itemize}
+
+Table~\ref{tab:injections} shows the possible injections 
+and the ones really to be performed are given in the configuration \texttt{injections}. 
+This configuration is described in Table~\ref{tab:paramMisc} on page~\pageref{tab:paramMisc}. 
+It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}, 
+representing the configuration files. 
+
+
+\begin{longtable}{l|ll}
   \toprule
   Name & File & explanation \\
   \midrule
@@ -730,39 +770,56 @@ which yields a list of files which can be injected.
   \bottomrule
   \caption{\label{tab:injections} Overview over all injections }
   \endlastfoot%
-  latexmkrc             & \texttt{.latexmkrc}        & config file for \texttt{latexmk}   \\
-  chktexrc              & \texttt{.chktexrc}         & config file for \texttt{chktex}         \\
-  header                & \texttt{header.tex}        & basic header file for latex sources      \\
-  {\tiny headerSuppressMetaPDF} & \texttt{\tiny headerSuppressMetaPDF.tex} & header file to control PDF meta-info      \\
-  vscodeExt             & \texttt{\tiny instVScode4tex.sh} & shell script to install VS Code extensions \\
+  \multicolumn{2}{l}{configuration files} \\
+  \midrule
+  latexmkrc             & \texttt{\footnotesize .latexmkrc}        & config file for \texttt{latexmk}   \\
+  chktexrc              & \texttt{\footnotesize .chktexrc}         & config file for \texttt{chktex}         \\
+  \midrule
+  \multicolumn{2}{l}{header files} \\
+  \midrule
+  header                & \texttt{\footnotesize header.tex}        & fundamental     \\
+  headerGrp             & \texttt{\footnotesize headerGrp.tex}     & for graphics      \\
+ {\tiny headerSuppressMetaPDF} & \texttt{\tiny headerSuppressMetaPDF.tex} & to control PDF meta-info      \\
+  \midrule
+  \multicolumn{2}{l}{shell scripts} \\
+  \midrule
+  vscodeExt             & \texttt{\footnotesize instVScode4tex.sh} & installs VS Code extensions \\
+  ntlatex               & \texttt{\footnotesize ntlatex}           & timeless \LaTeX{} compiler \\
+  vmdiff                & \texttt{\footnotesize vmdiff}            & special diff tool for PDF files \\
+  pythontexW            & \texttt{\footnotesize pythontexW}        & surrogate for \texttt{pythontex} \\
   \end{longtable}
 
-Table~\ref{tab:injections} shows the possible injections 
-and the ones really to be performed are given in the configuration \texttt{injections}. 
-The configuration is described in Table~\ref{tab:paramMisc} on page~\pageref{tab:paramMisc}. 
-It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}. 
 
 As described in Section~\ref{subsec:xmlPomExecutions}, 
 by default the goal \texttt{inj} is tied to the maven phase \texttt{validate}, 
-but it can be also invoked by command line via \texttt{mvn latex:inj} 
+an early phase preparing the proper build process, 
+because the injected files are a prerequisite for building. 
+
+On the other hand, injections can be also invoked by command line via \texttt{mvn latex:inj} 
 with the default injections or, with given list of injections, 
 e.g.\@ some injections via 
 %
 \begin{Verbatim}
-  mvn latex:inj -Dlatex.injections=latexmkrc,chktexrc,header
+  mvn latex:inj -Dlatex.injections=latexmkrc,chktexrc,vscodeExt
 \end{Verbatim}
 %
-In fact, only \texttt{vscodeExt} is intended for directly invoked injection, 
-whereas the others are intended for use in phase \texttt{validate}. 
+In fact, injection from command line is typically used for scripts, 
+whereas the others files are injected during the build process in phase \texttt{validate}. 
 
 In the sequel, all these injections are described in detail separately, 
 but in fact they are all related. 
-Thus, it is generally advised to inject all in phase \texttt{validate}, 
-except \texttt{vscodeExt} which is not intended to be injected on command line 
-and maybe \texttt{headerSuppressMetaPDF} which has a quite special application 
-which is not generally needed. 
-So the advice is to use \texttt{latexmkrc,chktexrc,header} 
-instead of the default \texttt{latexmkrc,chktexrc}. 
+For example, \texttt{header.tex} handles the possible configurations 
+reflected in \texttt{.latexmkrc}. 
+It provides packages used in \texttt{headerGrp.tex} 
+and provides commands to exclude checking by \texttt{chktex} 
+controlled by \texttt{.chktexrc}. 
+The header \texttt{header.tex} is very crucial 
+for example controlling and guaranteeing rerun of the \LaTeX{} compiler. 
+Its presence makes the results uniform and is a cornerstone for quality guarantees. 
+As said above, the default for injections is \texttt{latexmkrc,chktexrc}, 
+but it is advisable to use \texttt{latexmkrc,chktexrc,header}. 
+
+
 
 
 
@@ -1006,6 +1063,10 @@ but currently it detects the use case
 as the latex converter or the target format 
 and loads the according packages. 
 It is also conceivable to create different headers, one for each document class. 
+
+\subsection{A header file to support graphics }\label{subsec:headerGrp}
+
+TBD: fill 
 
 
 \subsection{A header file to suppress meta-info for PDF files }\label{subsec:headerSuppressMetaPDF}
