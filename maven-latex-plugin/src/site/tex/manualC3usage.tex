@@ -1053,8 +1053,13 @@ Note that \texttt{header.tex} is written for use of
   \item various \LaTeX{} converters, \lualatex, \xelatex{} and \pdflatex{} 
   \item various document classes, specifically \texttt{article}, \texttt{book} 
   and \texttt{beamer}, which is for presentations 
-  \item for creating PDF files but also other formats created with \pkg{tex4ht} 
+  \item for creating PDF files, but futher formats created with \pkg{tex4ht} as well
+  \item direct creation of PDF and via intermediate DVI/XDV 
 \end{itemize}
+
+Which packages are loaded at all and if loaded their options, 
+depend on the \LaTeX{} compiler, the output/intermediate format, 
+the document class, packages loaded before and maybe on other criteria. 
 
 This is realized with a bunch of if-constructs. 
 In the long run, \texttt{header.tex} could be adapted 
@@ -1064,9 +1069,21 @@ as the latex converter or the target format
 and loads the according packages. 
 It is also conceivable to create different headers, one for each document class. 
 
-\subsection{A header file to support graphics }\label{subsec:headerGrp}
 
-TBD: fill 
+\subsection{A header file for graphics via package \texttt{graphicx} }%
+\label{subsec:headerGrp}
+
+Chapter~\ref{chap:GraphConversions} lists various techniques 
+to include graphics into a \LaTeX{} document. 
+Most are based on the package \pkg{graphicx} and related packages. 
+The injection \texttt{headerGrp} 
+is tied to the file \href{\urlSite fromTex/headerGrp.tex}{headerGrp.tex}, 
+which is intended to be included in the \LaTeX{} main file 
+after \texttt{header.tex} described in Section~\ref{subsec:header} 
+and which loads the packages required for that kind of graphics 
+by need and with the appropriate options, 
+depending on the \LaTeX{} compiler, the output/intermediate format, 
+packages loaded before and maybe on other criteria. 
 
 
 \subsection{A header file to suppress meta-info for PDF files }\label{subsec:headerSuppressMetaPDF}
@@ -1079,7 +1096,6 @@ It refers to created PDF files only and does not influence the optical appearanc
 but suppresses writing certain meta-data. 
 The main motivation is security, i.e.\@ privacy, 
 but it can also be used to turn the resulting PDF reproducible. 
-
 
 The injection \texttt{headerSuppressMetaPDF} 
 is tied to \href{\urlSite fromTex/headerSuppressMetaPDF.tex}{headerSuppressMetaPDF.tex}. 
@@ -1110,9 +1126,6 @@ related with security and reproducibility
 see~\cite{LatexGen}, Section 4 
 and how this software treats the handles the issues 
 see Section~\ref{sec:chkReprod}. 
-
-
-
 
 
 \subsection{An installation script for VS Code Extensions }\label{subsec:instExtVsCode}
