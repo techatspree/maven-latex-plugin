@@ -51,6 +51,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 // is AbstractLatexMojo but not public
 import eu.simuline.m2latex.mojo.CfgLatexMojo;// for javadoc only
+import eu.simuline.m2latex.mojo.InjectionMojo;// for javadoc only
 
 /**
  * The settings for a maven plugin and for an ant task.
@@ -3272,15 +3273,24 @@ public class Settings {
   }
 
   /**
+   * The name of the property of the parameter {@link InjectionMojo#injections}. 
+   */
+  public static final String PARAM_PROP = "latex.injections";
+
+  /**
    * Returns the file assoicated with the resource <code>fileNameResource</code>. 
    *
    * @param fileNameResource
    *   The name of the resource which is also the (short) file name returned. 
    * @return
-   *   the file in directory {@link #texSrcDirectory} with name <code>fileNameResource</code>. 
+   *   the file in directory {@link #texSrcDirectory} or in the local directory 
+   *   with name <code>fileNameResource</code>. 
+   *   The directory is the local one if injection is invoked by property, 
+   *   else it is {@link #texSrcDirectory}. 
    */
   File rcResourceToFile(String fileNameResource) {
-    return new File(this.texSrcDirectory, fileNameResource);
+    String dir = (System.getProperty(PARAM_PROP) == null) ? this.texSrcDirectory : ".";
+    return new File(dir, fileNameResource);
   }
 
   /**

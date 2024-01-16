@@ -696,7 +696,8 @@ caption={Output of goal \texttt{latex:vrs}}]
 
 The goal \texttt{inj} is to inject files 
 into the working directory \texttt{texSrcDirectory}, 
-by default in maven lifecycle phase \texttt{valiate}. 
+by default in maven lifecycle phase \texttt{valiate} 
+or from command line in the root directory. 
 The injected files are in general adapted to the current configuration of the plugin. 
 
 Note that each of these files is written only 
@@ -794,17 +795,24 @@ As described in Section~\ref{subsec:xmlPomExecutions},
 by default the goal \texttt{inj} is tied to the maven phase \texttt{validate}, 
 an early phase preparing the proper build process, 
 because the injected files are a prerequisite for building. 
+Then the files are injected in the tex root directory \texttt{texSrcDirectory}. 
 
 On the other hand, injections can be also invoked by command line via \texttt{mvn latex:inj} 
 with the default injections or, with given list of injections, 
 e.g.\@ some injections via 
 %
 \begin{Verbatim}
-  mvn latex:inj -Dlatex.injections=latexmkrc,chktexrc,vscodeExt
+  mvn latex:inj -Dlatex.injections=vscodeExt,ntlatex,vmdiff,pythontexW
 \end{Verbatim}
 %
 In fact, injection from command line is typically used for scripts, 
 whereas the others files are injected during the build process in phase \texttt{validate}. 
+Of course maven is invoked from the project root 
+and there also the prescribed files are injected. 
+
+Note that ther folder where cleanup of injections with \texttt{mvn clean} is done, 
+depends also on whether \texttt{-Dlatex.injections=\dots} is specified, 
+but the value is irrelevant as long as it is valid. 
 
 In the sequel, all these injections are described in detail separately, 
 but in fact they are all related. 
@@ -1130,16 +1138,16 @@ see Section~\ref{sec:chkReprod}.
 
 \subsection{An installation script for VS Code Extensions }\label{subsec:instExtVsCode}
 
-The injections described so far are intended to be performed in phase \texttt{validate}  
-as illustrated in Listing~\ref{lst:executions}. 
-This is preferable, because the configuration files 
-are adapted to the settings in each run. 
+Calling from project root 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=vscodeExt,latexmkrc
+\end{Verbatim}
+%
+injects the according files \href{\urlSite fromMain/instVScode4tex}{instVScode4tex.sh} and \texttt{.latexmkrc}. 
 
-The last injection, \texttt{vscodeExt} 
-injecting the file \href{\urlSite fromMain/instVScode4tex}{instVScode4tex.sh} 
-is used in a completely different way. 
 If the editor VS Code is already installed, 
-the script \texttt{instVScode4tex.sh}, 
+invoking the script \texttt{instVScode4tex.sh}, 
 installs and updates all extensions of VS Code the author used to write \LaTeX-code. 
 Project \url{https://github.com/Reissner/QMngMnt} 
 uses the script for automation of installation and update. 

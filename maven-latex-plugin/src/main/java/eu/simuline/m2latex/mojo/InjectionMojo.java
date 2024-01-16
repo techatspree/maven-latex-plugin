@@ -81,7 +81,7 @@ public class InjectionMojo extends AbstractLatexMojo {
    * The default value is <code>latexmkrc,chktexrc</code>. 
    */
   @Parameter(name = "injections", defaultValue = "latexmkrc,chktexrc",
-      property = "latex.injections")
+      property = Settings.PARAM_PROP)
   private Set<Injection> injections;
 
   /**
