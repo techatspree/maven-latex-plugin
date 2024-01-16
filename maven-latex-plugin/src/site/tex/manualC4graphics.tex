@@ -14,23 +14,16 @@ but in most cases, according \LaTeX-packages must be used:
 is the basic graphics package which provides the command 
 \cmd{includegraphics}{} 
 which allows including graphics natively 
-in the formats pdf, eps, jpg and png at least. 
+in the formats PDF, EPS, JPG and PNG at least. 
 For details see~\cite{GraX}. 
-\item[xcolor]
-allows using colors in graphics. 
-Even if the author does not use colors in graphics, 
-several formats, like \gls{fig}, \gls{gp} and \gls{svg} 
-offer it and so the according converters 
-transforming them into the native formats 
-create color information which can be rendered only via \texttt{xcolor}. 
-For details see~\cite{XColorP}. 
 \item[transparent]
 allows specifying transparency in graphics. 
-Here the same applies as for color: 
 Even if you do not use the feature, 
 some source formats do (in fact only \gls{svg}) does 
 and so the according converters create according information 
 and so \LaTeX{} must get along with it. 
+Note that this applies only for output format PDF 
+and in particular not for \texttt{xelatex}. 
 For details see~\cite{TransP}. 
 \item[bmpsize]
 is needed for bitmap formats like \gls{jpg} and \gls{png} only. 
@@ -39,7 +32,7 @@ FIXME\@: needed more information.
 For details see~\cite{BmpP}. 
 \item[tikz]
 The tikz code described in~\cite{TikzPGF} is just in \LaTeX{} format. 
-Thus, it can be included directly anddoes not require any preprocessing. 
+Thus, it can be included directly and does not require any preprocessing. 
 Still what is needed is a good graphical editor like \texttt{tikzedt} 
 with online manual~\cite{TikzEdt}. 
 \item[import]
@@ -52,6 +45,15 @@ which itself imports a PDF/EPS file located in the same folder
 but not in the folder of the importing file. 
 It is advisable to combine the \texttt{import} package with other graphic packages 
 to include graphics in separate graphic files. 
+\item[xcolor]
+allows using colors in graphics. 
+Even if the author does not use colors in graphics, 
+several formats, like \gls{fig}, \gls{gp} and \gls{svg} 
+offer it and so the according converters 
+transforming them into the native formats 
+create color information which can be rendered only via \texttt{xcolor}. 
+On the other hand, the use of \texttt{xcolor} is not specific to graphics. 
+For details see~\cite{XColorP}. 
 \item[pythontex]
 is strictly speaking no graphics package either but more general 
 a way to include and run code within a \LaTeX{} document 
@@ -71,6 +73,27 @@ If using the package \texttt{pythontex}
 a special processing interacting with the latex to PDF converter is required also, 
 but it is not preprocessing. 
 \end{itemize}
+
+Section~\ref{sec:injFiles} is on injection of files 
+and in particular header files: 
+%
+\begin{description}
+  \item[\texttt{header.tex}] treated in Section~\ref{subsec:header}, 
+  is a general header file intended to be included into all \LaTeX{} files. 
+  Since the packages \pkg{import} and \pkg{xcolor} are generally useful, 
+  not only in the context of graphics, they are among those loaded in texttt{header.tex}. 
+  \item[\texttt{headerGrp.tex}] described in Section~\ref{subsec:headerGrp} in contrast, 
+  is a header file loading graphic specific packages related with \pkg{graphicx}, 
+  loading also \pkg{transparent} and \pkg{bmpsize}. 
+\end{description}
+
+The header files adapt the loading of the packages to the context, 
+in particular to the target format. 
+Note that \texttt{headerGrp.tex} must follow \texttt{header.tex}. 
+
+The package \pkg{tikz}, although a pure graphic package 
+is very specific and not related to \pkg{graphicx}, 
+Thus it must be loaded separately. The same holds for \pkg{pythontex}. 
 
 We support figures created in the \gls{fig} by the program \texttt{xfig}, 
 figures created by the plotting utility \texttt{gnuplot}, 
@@ -136,57 +159,36 @@ may be included as is.
 
 
 
-\section{Inclusion of PDF files}\label{sec:figpdf}
+\section{Inclusion of PDF and EPS files}\label{sec:figpdf}
 
 Modern \LaTeX{} implementations directly create PDF files. 
 Thus, it makes sense, 
 to allow including graphics as PDF files in \LaTeX-files. 
 This is done in PDF mode 
-by the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx}. 
-In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}-format 
-which is still used to create \gls{html}-output, 
-this is not supported by the default driver. 
-Instead, it shall be used the driver \texttt{dvipdfmx}. 
-To obtain a \LaTeX-file which works both for creating PDF and HTML, 
-insert in the header of the \LaTeX{} main file
-given by Listing~\ref{lst:headerGrp}. 
-Note that also the package \pkg{hyperref} needs adaption of its options 
-depending on the use case. 
-% TBD: this needs rework: 
-% originally, this part of the header comprised the packages graphicx, color and hyperref. 
-% Now it refers to the first two only. 
-% This is appropriate because this chapter is about graphics. 
-% On the other hand, the remark on hyperref is valid but is not specific for graphics. 
-% It must be placed elsewhere in the long run. 
+by the \LaTeX-package \pkg{graphicx}. 
+In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}/\gls{xdv}-format 
+which is still used to create \gls{html}-output. 
+Also, there are cases where PDF is not created directly but via DVI/XDV, 
+as it is the case with \texttt{xelatex}. 
 
-%
-%\lstset{language=tex, basicstyle=\small}
-% FIXME\@: nag complains for htlatex 
-\lstinputlisting[linerange={3-24},
-language=TeX, basicstyle=\small,
-float, captionpos=b, label={lst:headerGrp}, 
-caption={Loading packages adapted to the output format}]%
-{./headerGrp.tex}% listing 
+In these cases, the according graphic format is no longer PDF, but it is EPS. 
+A way to allow both ways on one document is, 
+to provide one and the same picture in two formats. 
+To that end, the name of the graphic file must be given in \cmd{includegraphics} 
+without file ending. 
+This is the approach taken for the other formats 
+which are just converted to both PDF and EPS. 
+For conversion frequently also \pkg{xcolor} and that like is required.
+Of course, here a more sophisticated technique is conceivable, 
+recognizing the required format and generating the specific one if missing. 
 
+Note that PS is not supported because it misses the bounding box. 
+If adding it, one arrives at the EPS format. 
+Although PDF and EPS files can be included, 
+only one of them can be included for a specific configuration, 
+namely the one tied to the according output format of the \LaTeX{} compiler. 
+This is in contrast to other formats described in Section~\ref{sec:picasis}. 
 
-An alternative, which we do not use 
-is replacing the \gls{pdf} by an \gls{eps} via configuration file \texttt{myxhtml.cfg} 
-which is given by Listing~\ref{lst:xhtml}. 
-%
-%\lstset{language=tex, basicstyle=\scriptsize}
-% FIXME\@: nag complains for htlatex 
-\lstinputlisting[language=TeX, basicstyle=\scriptsize,
-float, captionpos=b, label={lst:xhtml},
-caption={Configuration file \texttt{myxhtml.cfg}}]
-{myxhtml.tex}
-%
-It applies when converting \LaTeX{} into HTML and that like 
-with \texttt{htlatex} if invoking something like \texttt{htlatex xxx.tex myxhtml,\ldots} 
-where \texttt{myxhtml} is located in the same directory as the \LaTeX-file 
-to be processed. 
-The configuration file essentially contains a graphics configuration, 
-which applies conversion to PDF-files included in the \LaTeX-file \texttt{xxx.tex}
-via \cmd{includegraphics}. 
 
 
 \section{Conversion of fig-files}\label{sec:fig2dev}
