@@ -1,3 +1,24 @@
+
+% An alternative, which we do not use 
+% is replacing the \gls{pdf} by an \gls{eps} via configuration file \texttt{myxhtml.cfg} 
+% which is given by Listing~\ref{lst:xhtml}. 
+% %
+% %\lstset{language=tex, basicstyle=\scriptsize}
+% % FIXME\@: nag complains for htlatex 
+% \lstinputlisting[language=TeX, basicstyle=\scriptsize,
+% float, captionpos=b, label={lst:xhtml},
+% caption={Configuration file \texttt{myxhtml.cfg}}]
+% {myxhtml.tex}
+% %
+% It applies when converting \LaTeX{} into HTML and that like 
+% with \texttt{htlatex} if invoking something like \texttt{htlatex xxx.tex myxhtml,\ldots} 
+% where \texttt{myxhtml} is located in the same directory as the \LaTeX-file 
+% to be processed. 
+% The configuration file essentially contains a graphics configuration, 
+% which applies conversion to PDF-files included in the \LaTeX-file \texttt{xxx.tex}
+% via \cmd{includegraphics}. 
+
+
 \Preamble{xhtml}
 %\makeatletter
 \Configure{graphics*}  
