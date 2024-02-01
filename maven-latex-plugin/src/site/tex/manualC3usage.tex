@@ -796,14 +796,14 @@ As described in Section~\ref{subsec:xmlPomExecutions},
 by default the goal \texttt{inj} is tied to the maven phase \texttt{validate}, 
 an early phase preparing the proper build process, 
 because the injected files are a prerequisite for building. 
-Then the files are injected in the tex root directory \texttt{texSrcDirectory}. 
+Then the files are injected in the TEX root directory \texttt{texSrcDirectory}. 
 
 On the other hand, injections can be also invoked by command line via \texttt{mvn latex:inj} 
 with the default injections or, with given list of injections, 
-e.g.\@ some injections via 
+e.g. 
 %
 \begin{Verbatim}
-  mvn latex:inj -Dlatex.injections=vscodeExt,ntlatex,vmdiff,pythontexW
+  mvn latex:inj -Dlatex.injections=vscodeExt,ntlatex,vmdiff
 \end{Verbatim}
 %
 In fact, injection from command line is typically used for scripts, 
@@ -811,7 +811,7 @@ whereas the others files are injected during the build process in phase \texttt{
 Of course maven is invoked from the project root 
 and there also the prescribed files are injected. 
 
-Note that ther folder where cleanup of injections with \texttt{mvn clean} is done, 
+Note that the folder where cleanup of injections with \texttt{mvn clean} is done, 
 depends also on whether \texttt{-Dlatex.injections=\dots} is specified, 
 but the value is irrelevant as long as it is valid. 
 
