@@ -759,6 +759,7 @@
                       because default filtering is not apropriate-->
                     <include>ntlatex</include>
                     <include>pythontexW</include>
+                    <include>depythontexW</include>
                     <include>vmdiff</include>
                   </includes>
                   <filtering>false</filtering>
@@ -840,6 +841,7 @@
                 <include>instVScode4tex.sh</include>
                 <include>ntlatex</include>
                 <include>pythontexW</include>
+                <include>depythontexW</include>
                 <include>vmdiff</include>
               </includes>
             </fileset>
