@@ -773,8 +773,8 @@ representing the configuration files.
   \endlastfoot%
   \multicolumn{2}{l}{configuration files} \\
   \midrule
-  latexmkrc             & \texttt{\footnotesize .latexmkrc}        & config file for \texttt{latexmk}   \\
-  chktexrc              & \texttt{\footnotesize .chktexrc}         & config file for \texttt{chktex}         \\
+  latexmkrc             & \texttt{\footnotesize .latexmkrc}        & config file for \texttt{latexmk} \\% chktex 26
+  chktexrc              & \texttt{\footnotesize .chktexrc}         & config file for \texttt{chktex}  \\% chktex 26
   \midrule
   \multicolumn{2}{l}{header files} \\
   \midrule
@@ -850,11 +850,12 @@ For document development the tool \texttt{latexmk} is a valuable build tool.
 Also, a linter like \texttt{chktex} is helpful 
 both for end control and for document development. 
 
-The file \texttt{.latexmkrc} tied to the injection \texttt{latexmkrc} 
+The file \href{\urlSite fromTex/.latexmkrc}{.latexmkrc} tied to the injection \texttt{latexmkrc} 
 is the configuration file for the build tool \texttt{latexmk} 
-and likewise \texttt{.chktexrc} tied to the injection \texttt{chktexrc} 
+and likewise \href{\urlSite fromTex/.chktexrc}{.chktexrc} tied to the injection \texttt{chktexrc} 
 is the configuration file for the style check tool \texttt{chktex}. 
 The configuration files determine the behavior of the two tools without further options. 
+The user is kindly asked to help to improve these files, in particular \texttt{.chktexrc}. 
 
 Ideally, the injected \texttt{.latexmkrc} is adapted to the current settings of this plugin 
 and so invoking \texttt{latexmk} invoked with its configuration file 
@@ -871,14 +872,6 @@ Accordingly, a sensible config file \texttt{.chktexrc} mainly depends on the pac
 In Section~\ref{subsec:header} we suggest injecting also a header file \texttt{header.tex} 
 loading packages. 
 The config file \texttt{.chktexrc} is adapted to the header file \texttt{header.tex}. 
-The current state of the injected \texttt{.chktexrc} is given in Listing~\ref{lst:chktexrc} 
-and \href{\urlSite fromTex/.chktexrc}{online}. 
-The user is kindly asked to help to improve it.
-
-\lstinputlisting[basicstyle=\scriptsize,
-float, captionpos=b, label={lst:chktexrc}, 
-caption={The config file \texttt{.chktexrc} to check this manual. }]%
-{.chktexrc}
 
 Observe, that due to an incompatibility between tool \texttt{latexmk} and package \pkg{listings}, 
 this manual can only be compiled with \texttt{latexmk} 
@@ -1185,7 +1178,8 @@ Complementary to this \texttt{vmdiff} is a diff tool for PDF files
 combining visual equality checked with \texttt{diff-pdf-visually} 
 with equality of meta data checked via \texttt{pdfinfo}. 
 
-\subsection{Script \texttt{(de)pythontexW} patching \texttt{(de)pythontex} }\label{subsec:pythontexW}
+\subsection{Script \texttt{(de)pythontexW} patching \texttt{(de)pythontex} }% chktex 36
+\label{subsec:pythontexW}
 
 Calling from project root 
 %
@@ -1196,7 +1190,7 @@ Calling from project root
 injects the according files 
 \href{\urlSite fromMain/pythontexW}{pythontexW} and 
 \href{\urlSite fromMain/depythontexW}{depythontexW}
-which just invokes \texttt{(de)pythontex} 
+which just invokes \texttt{(de)pythontex} %chktex 36
 but does not simply output feedback on \texttt{stdout}
 but besides doing so writes it in a log file. 
 This is needed to provide an interface usual in the \TeX{} ecosystem. 

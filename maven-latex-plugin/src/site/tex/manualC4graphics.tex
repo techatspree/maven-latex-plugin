@@ -171,13 +171,13 @@ which is still used to create \gls{html}-output.
 Also, there are cases where PDF is not created directly but via DVI/XDV, 
 as it is the case with \texttt{xelatex}. 
 
-In these cases, the according graphic format is no longer PDF, but it is EPS. 
+In these cases, the according graphic format is no longer PDF, but it is EPS\@. 
 A way to allow both ways on one document is, 
 to provide one and the same picture in two formats. 
 To that end, the name of the graphic file must be given in \cmd{includegraphics} 
 without file ending. 
 This is the approach taken for the other formats 
-which are just converted to both PDF and EPS. 
+which are just converted to both PDF and EPS\@. 
 For conversion frequently also \pkg{xcolor} and that like is required.
 Of course, here a more sophisticated technique is conceivable, 
 recognizing the required format and generating the specific one if missing. 
@@ -1025,7 +1025,7 @@ described in Section~\ref{subsec:instExtVsCode} are installed.
 
 \section{Pictures which are not transformed}\label{sec:picasis}
 
-Figure~\ref{fig:asIsJpg} shows some picture included as JPG. 
+Figure~\ref{fig:asIsJpg} shows some picture included as JPG\@. 
 This is done as usual with the command \cmd{includegraphics}{}
 provided by the package \pkg{graphicx}. 
 According to the documentation~\cite{GraX}, page 13, 
