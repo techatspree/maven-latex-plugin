@@ -524,7 +524,11 @@ For some files it makes sense to do this independent of the build process
 e.g.\@ by invoking \texttt{mvn latex:inj}, 
 but in general it is preferable to perform the injection each build process anew 
 because that way the injected file can be adapted 
-to the current configuration of this plugin. 
+to the current settings of this plugin. 
+Note that the execution of the goal \texttt{inj} has its own configuration, 
+which allows a single parameter, \texttt{injections}. 
+Listing~\ref{lst:executions} gives a recommended parameter value, 
+although not the default. 
 
 Normally, all created files in the source directory are removed 
 after the output has been copied to the target, 
@@ -537,6 +541,9 @@ Nevertheless, cleanup is recommended to make the individual runs of this plugin 
 Thus, for document development, there is a dedicated goal \texttt{clr} 
 to clean up the source directory in phase \texttt{clean}. 
 Note that also the configuration files created by goal \texttt{inj} are cleared. 
+Since cleanup occurs in the course of the build and not with goal \texttt{clr} 
+the parameter \texttt{cleanUp} is given in the general settings. 
+The goal \texttt{clr} cannot be configured. 
 
 Finally, it is recommended to add a check of the converter versions
 right in the phase \texttt{validate} via goal \texttt{vrs}.
@@ -545,7 +552,7 @@ which restricts goal \texttt{vrs} to just display a warning
 if something is wrong 
 which seems appropriate in the context of validation. 
 
-For the default \texttt{versionsWarnOnly=false}, 
+For the default configuration \texttt{versionsWarnOnly=false}, 
 the goal \texttt{vrs} 
 yields a full list of registered converters, 
 signifying which one may cause trouble 
@@ -592,6 +599,9 @@ caption={The executions of this plugin}]
       <id>inject-files</id>
       <goals><goal>inj</goal></goals>
       <!-- phase>validate</phase-->
+      <configuration>
+      <injections>latexmkrc,chktexrc,header</injections>
+    </configuration>
     </execution>
     <execution>
       <id>validate-converters</id>
@@ -650,8 +660,10 @@ caption={Forked execution with jxr plugin}]
 </project>
 \end{lstlisting}
 
-Note the section \texttt{configuration} in Listing~\ref{lst:executions}
-which is empty and can be skipped in a default configuration
+Note that in Listing~\ref{lst:executions} 
+the section \texttt{configuration} which is not part of an execution 
+contains an empty configuration and is thus as much as empty. 
+It can thus be skipped in a default configuration
 creating output in formats PDF and HTML and performing checks on the \LaTeX-sources. 
 However, \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} 
 gives an example pom using this latex plugin 

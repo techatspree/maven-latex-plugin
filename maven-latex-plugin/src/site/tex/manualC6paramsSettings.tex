@@ -4,23 +4,32 @@
 
 This section describes the parameters 
 of both the ant-task and the maven-plugin. 
-As this software mainly acts by invoking converters, 
+There are also general aspects, treated in Section~\ref{sec:genOnSettings}. 
+% TBD: shall be integrated in this introduction maybe. 
+% The advantage would be that so sections and tables are in a one to one relation. 
+As this software mainly acts by invoking other converter and checker, 
 most parameters refer to commands and options for invocations, 
-but there are general aspects, treated in Section~\ref{sec:genOnSettings}, 
-but there are also parameters which cannot be associated to an individual converter. 
-These are collected in Section~\ref{sec:settingsGenMisc}. 
+but there are also parameters which cannot be associated to an individual invocation. 
+Parameters referring to the conversion process or to checking 
+as a whole are collected in Section~\ref{sec:settingsGen}. 
+A special case is Section~\ref{sec:settingsGoalVrsInj} 
+which collects the parameters for goals \texttt{vrs} and \texttt{inj}. 
 All the other sections refer to one or more converters. 
 
 The parameters are listed 
-in Tables~\ref{tab:paramGen}~through~\ref{tab:paramExt} 
+in Tables~\ref{tab:paramGen}~through~\ref{tab:paramDiffPdf} 
 with names, default values and short explanations. 
 Note that neither of the parameters is mandatory, 
 as there are always valid default values. 
 
-Each of the tables is described in a separate section. 
+Each of the tables is described in a separate section, 
+only the tables~\ref{tab:paramPythontex} and~\ref{tab:paramDePythontex} 
+for \texttt{pythontex} and for \texttt{depythontex}, respectively, 
+are collected in the single Section~\ref{sec:pythontex}. 
+
 Table~\ref{tab:paramGen} 
-shows parameter controlling the general conversion process 
-described in detail in Section~\ref{sec:settingsGenMisc}. 
+shows parameters controlling the general conversion process 
+described in detail in Section~\ref{sec:settingsGen}. 
 These are directories with names \texttt{xxxDirectory} 
 and further parameters not following a naming convention. 
 The other tables show parameters after a certain naming scheme: 
@@ -61,10 +70,17 @@ The converter of PDF-files into TXT-files.
 \item[chktex]
 A code-checker converting in a sense a latex main file into a log-file 
 containing errors, warnings and further messages. 
+\item[diffPdf]
+A diff tool comparing the PDF file created with an expected PDF file. 
+This is relevant only if a PDF file has been created 
+and if the comparison is activated, which is not true by default. 
 \end{itemize}
 
 It is a little more complicated 
 with the parameters in Section~\ref{sec:settingsLatex2Html}. 
+
+The command name and the list of options describes the invocation of the command. 
+This \LaTeX{} builder supervises also the return value frequently and the log file is supervised. 
 
 There are some parameters of the form \texttt{patternXxxYyy}, 
 referring to a pattern in the log-file of the converter \texttt{Xxx} 
@@ -78,6 +94,16 @@ indicates that \texttt{Xxx} had an error.
 \item[Warn]
 indicates that \texttt{Xxx} had a warning. 
 \end{itemize}
+
+Besides the abovementioned patterns, describing events in log files, 
+there are further patterns. 
+The maybe the most prominent one, \texttt{patternLateMainFile}, 
+is devoted a separate section, Section~\ref{subsec:patternLatexMainFile}. 
+All patterns, i.e. all parameters of the form \texttt{patternZZZ} 
+are interpreted as regular expressions 
+in a variant slightly generalizing the default implementation for java. 
+We owe \href{https://github.com/florianingerl/com.florianingerl.util.regex}{description} 
+and implementation to Florian Ingerl. 
 
 Essentially, there are two kinds of parameters: 
 Most are just passed to the converters invoked by this software. 
@@ -151,11 +177,10 @@ In this case, the processing is documented.
 
 
 
-\section{General parameters and miscellaneous parameters }\label{sec:settingsGenMisc}
+\section{General parameters }\label{sec:settingsGen}
 
-This section describes the general parameters of Table~\ref{tab:paramGen} 
-and the miscellaneous in Table~\ref{tab:paramMisc}. 
-The latter refer to a single goal only (clear which one). 
+This section describes the general parameters given in Table~\ref{tab:paramGen}. 
+
 
 %TODO\@: do this. 
 
@@ -439,47 +464,6 @@ and notify the developer of this plugin of the deficiency.
 } \\ % chktex 9 chktex 10 (bug) 
 \end{longtable}
 
-\begin{longtable}{|ll|}
-  \toprule
-  Parameter        & Default  \\
-  \multicolumn2{|l|}{Explanation }  \\
-  \midrule
-  \midrule
-  \endfirsthead%
-  \bottomrule
-  \caption{\label{tab:paramMisc} Miscellaneous parameters}
-  \endlastfoot%
-  \texttt{versionsWarnOnly}  & \texttt {false}  \\
-  \multicolumn2{|l|}{
-  \begin{minipage}{0.95\linewidth}
-  Indicates whether the goal \texttt{vrs} displays warnings only 
-  or also creates pieces of info. 
-  Info refers to the version of this plugin and also on its git commit, 
-  but also on the versions of the converters found 
-  and lists the converters excluded, 
-  i.e.\@ those not used and thus not tested on version.
-  
-  Warnings are emitted e.g.\@ if the version of a converter does not fit the expectations,
-  the version of a converter could not be retrieved,
-  e.g.\@ because it is not installed 
-  or if the converter specified is unknown altogether. 
-  This defaults to \texttt{false} displaying also info.
-  
-  The latter is appropriate for using in command line 
-  \texttt{mvn latex:vrs}, whereas in builds by default 
-  the pom overwrites this to have output only 
-  in case something goes wrong.
-  \end{minipage}
-  }\\ % chktex 9 chktex 10 (bug) 
-  \texttt{injections}  & \texttt {latexmkrc,chktexrc}  \\
-  \multicolumn2{|l|}{
-  \begin{minipage}{0.95\linewidth}
-Indicates the files injected by the goal \texttt{inj}. 
-This is a comma separated list of \texttt{injections}s without blanks. 
-For further description see Section~\ref{sec:injFiles}. 
-\end{minipage}
-}\\ % chktex 9 chktex 10 (bug) 
-\end{longtable}
 
 \subsection{The parameter \texttt{patternLatexMainFile}}%
 \label{subsec:patternLatexMainFile}
@@ -782,6 +766,61 @@ T$T                      (\.([^.]*|
       (cmsy)\d+(-c)?-\d+c?\.png|
       (pdf|xe|lua)?latex\d+\.fls)$
 \end{verbatim}
+
+\section{Parameters for goals \texttt{vrs} and \texttt{inj} }\label{sec:settingsGoalVrsInj}
+ 
+This section describes the parameters for the goals \texttt{vrs} and \texttt{inj} 
+given in Table~\ref{tab:paramVrsInj}. 
+As illustrated in Listing~\ref{lst:executions} of the part of the pom 
+referring to this plugin, 
+in general parameters are configured in a \texttt{settings} element 
+contained in a general \texttt{configuration} element. 
+In contrast to this, the parameters for the goals \texttt{vrs} and \texttt{inj} 
+are given in configurations within executions specific for these goals. 
+
+\begin{longtable}{|ll|}
+  \toprule
+  Parameter        & Default  \\
+  \multicolumn2{|l|}{Explanation }  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:paramVrsInj} Parameters for goals \texttt{vrs} and \texttt{inj} }
+  \endlastfoot%
+  \texttt{versionsWarnOnly}  & \texttt {false}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+  Indicates whether the goal \texttt{vrs} displays warnings only 
+  or also creates pieces of info. 
+  Info refers to the version of this plugin and also on its git commit, 
+  but also on the versions of the converters found 
+  and lists the converters excluded, 
+  i.e.\@ those not used and thus not tested on version.
+  
+  Warnings are emitted e.g.\@ if the version of a converter does not fit the expectations,
+  the version of a converter could not be retrieved,
+  e.g.\@ because it is not installed 
+  or if the converter specified is unknown altogether. 
+  This defaults to \texttt{false} displaying also info.
+  
+  The latter is appropriate for using in command line 
+  \texttt{mvn latex:vrs}, whereas in builds by default 
+  the pom overwrites this to have output only 
+  in case something goes wrong.
+  \end{minipage}
+  }\\ % chktex 9 chktex 10 (bug) 
+  \texttt{injections}  & \texttt {latexmkrc,chktexrc}  \\
+  \multicolumn2{|l|}{
+  \begin{minipage}{0.95\linewidth}
+Indicates the files injected by the goal \texttt{inj}. 
+This is a comma separated list of \texttt{injections} without blanks. 
+For further description see Section~\ref{sec:injFiles}. 
+\end{minipage}
+}\\ % chktex 9 chktex 10 (bug) 
+\end{longtable}
+
+
 
 
 \section{Parameters for graphical preprocessing}\label{sec:settingsGraph}
@@ -2199,14 +2238,14 @@ What makes sense most is \texttt{UTF-8}.
 
 
 
-\section{The code checker \texttt{chktex}}\label{sec:chkTex}
+\section{Parameters for the code checker \texttt{chktex}}\label{sec:chkTex}
 
 Among the applications used by this software, 
 the codechecker plays a special role: 
 it is not really a converter, 
 unless we interprete the log file as artifact. 
 Like for the most converters also for the codechecker 
-we can specify the command ant its options. 
+we can specify the command ant its options, both given in Table~\ref{tab:paramChkTex}. 
 
 \begin{longtable}{|ll|}
   \toprule

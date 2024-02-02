@@ -757,7 +757,8 @@ according to the function of the files injected:
 
 Table~\ref{tab:injections} shows the possible injections 
 and the ones really to be performed are given in the configuration \texttt{injections}. 
-This configuration is described in Table~\ref{tab:paramMisc} on page~\pageref{tab:paramMisc}. 
+This configuration is described in Section~\ref{sec:settingsGoalVrsInj} 
+on page~\pageref{sec:settingsGoalVrsInj}. 
 It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}, 
 representing the configuration files. 
 
@@ -2004,7 +2005,7 @@ Finally, the goal \texttt{latex:vrs} displaying versions of converters
 and the goal \texttt{latex:inj} injecting a set of files 
 depending on the configuration 
 are tied to the phase \texttt{validate}. 
-Thus, it is thus invoked when commanding
+Thus, both goals are invoked when commanding
 %
 \begin{Verbatim}[fontsize=\scriptsize]
 mvn validate
@@ -2018,6 +2019,8 @@ whereas \texttt{mvn validate} only displays warnings if appropriate.
 This is, because in the first case the plugin runs with the default \texttt{versionsWarnOnly=true} 
 whereas in the second case, is configured with \texttt{versionsWarnOnly=false} 
 as in Listing~\ref{lst:executions}. 
+Also Listing~\ref{lst:executions} shows a recommended configuration 
+for the goal \texttt{latex:inj} which determines injected the files. 
 
 
 
