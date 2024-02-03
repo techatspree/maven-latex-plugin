@@ -36,8 +36,13 @@
   % \documentclass passes option aspectratio to package geometry
 }{
   % \documentclass passes options like a4paper to package geometry
+  \IfClassLoadedTF{leaflet}{%
+    % maybe here geometry goes into 
+  }{%
   \usepackage{geometry}% no option a4paper, but showframe, showcrop 
+  }
 }
+
 %\usepackage{showframe} as an alternative 
 \usepackage{microtype}
 %\usepackage[indent,skip=0]{parskip}% used by pandoc but not good 
@@ -46,6 +51,7 @@
 \usepackage{anyfontsize}% important e.g. for beamer class 
 %\usepackage{cleveref}
 
+\usepackage[final]{showkeys}
 
 % used by hyperref and also to update index and glossary 
 % to avoid clash because of loading with different options: 
@@ -166,7 +172,11 @@
   % (acknowledged no index or glossary but bibliography)
   % 
 }{
-  \usepackage[nottoc, numindex, numbib]{tocbibind}
+  \IfClassLoadedTF{leaflet}{%
+    % maybe this exclusion is because inclusion is superfluous 
+  }{%
+    \usepackage[nottoc, numindex, numbib]{tocbibind}
+  }
 }
 
 % TBD: check: version 2.0 is already available, but seems no support to set the major version. 
