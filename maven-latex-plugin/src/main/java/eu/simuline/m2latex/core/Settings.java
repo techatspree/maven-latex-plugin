@@ -294,14 +294,16 @@ public class Settings {
   (%\\s*!\\s*LMP targets=(?<targetsMagic>(\\p{Lower}|,)+)\\R)?\
   (\\s*(\
   \\\\RequirePackage\\s*(\\[(\\s|\\w|,)*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|[.-/])+\\])?|\
-  \\\\PassOptionsToPackage\\s*\\{\\w+\\}\\s*\\{(\\w|-)+\\}|\
+  \\\\PassOptionsToPackage\\s*\\{(\\s|\\w|,)*\\}\\s*\\{(\\w|-)+\\}|\
+  \\\\newbool\\s*\\{\\w+\\}|\
+  \\\\setbool\\s*\\{\\w+\\}\\{(true|false)\\}|\
   \\\\DocumentMetadata(?<brace>\\{(?:[^{}]|(?'brace'))*\\})|\
   \\\\input\\s*\\{[^{}]*\\}\
   )?\\s*(%.*)?\\R)*\
   \\\\(documentstyle|documentclass)\\s*(\\[[^]]*\\])?\\s*\\{(?<docClass>[^} ]+)\\}\
   """;
   //"\\\\newbool\\s*\\{(\\w)+\\}\\s*|" + // newbool
-  //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // newbool only with literal values 
+  //"\\\\setbool\\s*\\{(\\w)+\\}\\{(true|false)\\}\\s*|" + // setbool only with literal values 
 
   /**
    * Assigns to document classes their allowed {@link #targets}. 
