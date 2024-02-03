@@ -179,35 +179,36 @@ before \cmd{documentclass} using
 Thus the pattern \texttt{patternLatexMainFile} 
 allows \cmd{RequirePackage} with its options preceding \cmd{documentclass}. 
 
-% There are cases, where one and the same document 
-% comes in two flavors both of which must be built. 
-% As an example, consider a document with a confidential variant 
-% and with a non-confidential variant. 
-% To define these, the declaration of the document class 
-% must be preceded by the following kind of code: 
-% %
-% \begin{Verbatim}
-% \RequirePackage{etoolbox}
-% \newbool{isConfidential}
-% \setbool{isConfidential}{true}
-% \end{Verbatim}
+There are cases, where one and the same document 
+comes in two flavors both of which must be built. 
+As an example, consider a document with a confidential variant 
+and with a non-confidential variant. 
+To define these, the declaration of the document class 
+must be preceded by the following kind of code: 
+%
+\begin{Verbatim}
+\RequirePackage{etoolbox}
+\newbool{isConfidential}
+\setbool{isConfidential}{true}
+\end{Verbatim}
 
-% The new thing is not the \cmd{RequirePackage}, 
-% but it is defining and setting a boolean 
-% via \cmd{newbool} and \cmd{setbool}, respectively. 
-% It is a good idea to set a watermark via 
-% %
-% \begin{Verbatim}
-% \ifbool{isConfidential}{%
-%   \usepackage{draftwatermark}
-%   \SetWatermarkText{Confidential}%
-% }{%
-% % no watermark text
-% }
-% \end{Verbatim}
+The new thing is not the \cmd{RequirePackage}, 
+but it is defining and setting a boolean 
+via \cmd{newbool} and \cmd{setbool}, respectively. 
+It is a good idea to set a watermark via 
+%
+\begin{Verbatim}
+\ifbool{isConfidential}{%
+  \usepackage{draftwatermark}
+  \SetWatermarkText{Confidential}%
+}{%
+% no watermark text
+}
+\end{Verbatim}
 
-% The same technique differentiating between confidential and public 
-% may be used to define a lecture with and without solution. 
+The same technique differentiating between confidential and public 
+may be used to define a lecture with and without solution 
+or any other kind of variant. 
 
 What is special for beamer presentations is, 
 that in general two documents with the same identifier, e.g.\@ title are created, 

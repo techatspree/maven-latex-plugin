@@ -520,7 +520,7 @@ is given by Listing~\ref{lst:patternLatexMainFile}.
 
 \lstinputlisting[language=XML, basicstyle=\scriptsize,
 numbers={left}, %stepnumber={5},
-linerange={166-177}, % chktex 8 TBD: why is this not covered by .chktexrc? 
+linerange={166-179}, % chktex 8 TBD: why is this not covered by .chktexrc? 
 breaklines,
 %float,
 captionpos=b, label={lst:patternLatexMainFile},
@@ -535,7 +535,9 @@ caption={The default pattern of the latex main file in a form as in a pom config
   % (%\s*!\s*LMP targets=(?&lt;targetsMagic&gt;(\p{Lower}|,)+)\R)?
   % (\s*(
   % \\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|[.-/])+\])?|
-  % \\PassOptionsToPackage\s*\{\w+\}\s*\{(\w|-)+\}|
+  % \\PassOptionsToPackage\s*\{(\s|\w|,)*\}\s*\{(\w|-)+\}|
+  % \\newbool\s*\{\w+\}|
+  % \\setbool\s*\{\w+\}\{(true|false)\}|
   % \\DocumentMetadata(?&lt;brace&gt;\{(?:[^{}]|(?'brace'))*\})|
   % \\input\s*\{[^{}]*\}
   % )?\s*(%.*)?\R)*
@@ -582,6 +584,9 @@ in contrast to \cmd{usepackage} which is used after,
 the command \cmd{PassOptionsToPackage} 
 allowing to pass an option to a package, 
 although including with \cmd{usepackage} is without, 
+\item 
+\cmd{newbool} and \cmd{setbool} to define and set a boolean value 
+defining variants (preceeded by \cmd{RequirePackage\{etoolbox\}}), 
 \item 
 the command \cmd{DocumentMetadata} allowing arbitrarily nested braces, 
 \item
