@@ -172,7 +172,7 @@ so that the document class is matched.  -->
 \\RequirePackage\s*(\[(\s|\w|,)*\])?\s*\{(\w|-)+\}\s*(\[(\d|[.-/])+\])?|
 \\PassOptionsToPackage\s*\{(\s|\w|,)*\}\s*\{(\w|-)+\}|
 \\newbool\s*\{\w+\}|
-\\setbool\s*\{\w+\}\{true|false\}|
+\\setbool\s*\{\w+\}\{(true|false)\}|
 \\DocumentMetadata(?&lt;brace&gt;\{(?:[^{}]|(?'brace'))*\})|
 \\input\s*\{[^{}]*\}
 )?\s*(%.*)?\R)*
