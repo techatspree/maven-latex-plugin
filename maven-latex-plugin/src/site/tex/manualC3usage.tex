@@ -111,6 +111,28 @@ This is quite easy, since there is little allowed preceding these commands.
 Consequently, the pattern matches the region from the start of the file 
 to and including the \cmd{documentclass} or \cmd{documentstyle} command. 
 
+Here a word of warning is at place: if a TEX file does not fit the pattern, 
+it is not interpreted as a \LaTeX{} main file without further warning. 
+So check whether the file under consideration is processed if 
+%
+\begin{itemize}
+  \item 
+  it is built for the first time or 
+  \item 
+  its head starting from beginning of the file 
+  to the line containing the \cmd{documentclass} or \cmd{documentstyle} command 
+  is changed or
+  \item 
+  the parameter \texttt{patternLatexMainFile} is changed 
+\end{itemize}
+%
+If you distrust the recognition mechanism altogether, 
+you can explicitly specify each \LaTeX{} main file in the parameter \texttt{mainFilesIncluded} 
+described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+This is safe because if a file specified that like is not a \LaTeX{} main file, 
+a warning is emitted. 
+The disadvantage of this technique is that it is inconvenient and not well maintainable. 
+
 This software is tested with document classes \texttt{article}, \texttt{book} 
 and \texttt{beamer}, the latter of which is for presentations as described in~\cite{Beamer}. 
 So far, this software has not been tested on KOMA\index{KOMA} classes 
