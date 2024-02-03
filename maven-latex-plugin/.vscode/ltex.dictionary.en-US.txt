@@ -83,3 +83,4 @@ postamble
 Postamble
 IllO
 SuSE
+KOMA
