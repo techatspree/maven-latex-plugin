@@ -154,6 +154,21 @@ Note the quotes and the correct hyphenation in the following paragraph.
   sich Thomas Manns Novelle "`{Der Tod in Venedig}"' zu Gemüte zu führen. % chktex 18
 \end{otherlanguage}
 
+To obtain correct quotes in the above paragraph, 
+package \pkg{csquotes} must be loaded with option \texttt{autostyle}. 
+Since \pkg{csquotes} is loaded in \texttt{header.tex} 
+given by an injection as described in Section~\ref{sec:injFiles}, 
+this option must be passed to \pkg{csquotes} 
+before loading the document class 
+via 
+%
+\begin{Verbatim}
+  \PassOptionsToPackage{autostyle}{csquotes}
+\end{Verbatim}
+%
+This is the technique to pass options to packages in general. 
+
+
 For all document classes, it is recommended to load \pkg{nag} 
 before \cmd{documentclass} using 
 %
@@ -164,13 +179,43 @@ before \cmd{documentclass} using
 Thus the pattern \texttt{patternLatexMainFile} 
 allows \cmd{RequirePackage} with its options preceding \cmd{documentclass}. 
 
+% There are cases, where one and the same document 
+% comes in two flavors both of which must be built. 
+% As an example, consider a document with a confidential variant 
+% and with a non-confidential variant. 
+% To define these, the declaration of the document class 
+% must be preceded by the following kind of code: 
+% %
+% \begin{Verbatim}
+% \RequirePackage{etoolbox}
+% \newbool{isConfidential}
+% \setbool{isConfidential}{true}
+% \end{Verbatim}
+
+% The new thing is not the \cmd{RequirePackage}, 
+% but it is defining and setting a boolean 
+% via \cmd{newbool} and \cmd{setbool}, respectively. 
+% It is a good idea to set a watermark via 
+% %
+% \begin{Verbatim}
+% \ifbool{isConfidential}{%
+%   \usepackage{draftwatermark}
+%   \SetWatermarkText{Confidential}%
+% }{%
+% % no watermark text
+% }
+% \end{Verbatim}
+
+% The same technique differentiating between confidential and public 
+% may be used to define a lecture with and without solution. 
+
 What is special for beamer presentations is, 
 that in general two documents with the same identifier, e.g.\@ title are created, 
 the proper presentation, e.g.\@ 
 %
 \begin{Verbatim}
 \RequirePackage[l2tabu, orthodox]{nag}
-\documentclass[10pt,hyperref=destlabel]{beamer}
+\documentclass[10pt,hyperref=destlabel.english]{beamer}
 \mode<presentation>%
 
 \input{useBeamer}
@@ -785,6 +830,10 @@ according to the function of the files injected:
   with various document classes  
   and take creation of PDF into account but also of other formats like HTML 
   and also of DVI/XDV which is an important intermediate format. 
+
+  The packages are loaded with minimum options, 
+  but these can be modified outside thie headers by \cmd{PassOptionsToPackage} 
+  as described in Section~\ref{subsec:sourcesLatex}. 
   \item
   Script files which are intended to run by the user 
   supporting the automatic build process ``from outside''

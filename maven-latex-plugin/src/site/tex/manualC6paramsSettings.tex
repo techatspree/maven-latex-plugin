@@ -575,9 +575,13 @@ only the following material is allowed:
 %
 \begin{itemize}
 \item
-the command \cmd{RequirePackage}, 
+the command \cmd{RequirePackage} for packages to be loaded 
+before \cmd{documentclass}, 
+in contrast to \cmd{usepackage} which is used after, 
 \item
-the command \cmd{PassOptionsToPackage}, 
+the command \cmd{PassOptionsToPackage} 
+allowing to pass an option to a package, 
+although including with \cmd{usepackage} is without, 
 \item 
 the command \cmd{DocumentMetadata} allowing arbitrarily nested braces, 
 \item
