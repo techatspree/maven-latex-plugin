@@ -112,8 +112,47 @@ Consequently, the pattern matches the region from the start of the file
 to and including the \cmd{documentclass} or \cmd{documentstyle} command. 
 
 This software is tested with document classes \texttt{article}, \texttt{book} 
-and \texttt{beamer}, which is for presentations as described in~\cite{Beamer}. 
-Currently, this software has not been tested on KOMA Scripts treated in~\cite{KomaAnl}. 
+and \texttt{beamer}, the latter of which is for presentations as described in~\cite{Beamer}. 
+So far, this software has not been tested on KOMA\index{KOMA} classes 
+which are treated in~\cite{KomaAnl}. 
+Nevertheless, the pattern matches all possible document classes. 
+Typically, the document class is loaded with options. 
+Except for the \texttt{beamer} class, we suggest 
+%
+\begin{Verbatim}
+\documentclass[a4paper,12pt,english]{book}
+\end{Verbatim}
+%
+where \texttt{a4paper} is a setting typical for Europe or, not the US\@. 
+The default font size is \texttt{10pt} and sometimes it makes sense to increase this. 
+For documents which are solely in English no language setting is required, 
+except if loading the package \pkg{babel}, else the hyphenation patterns get lost. 
+Since we recommend inputting the header file \texttt{header.tex} 
+described in Section~\ref{subsec:header} which in turn loads \pkg{babel} and 
+by the way also \pkg{csquotes}, a language setting is mandatory. 
+It is possible to specify the language when loading \pkg{babel} as an option 
+like so \cmd{usepackage[english]\{babel\}}, 
+but it is recommended to specify the language as an option of the document class, 
+in order to make it available for various packages, 
+besides \pkg{babel} also for \pkg{csquotes}. 
+If a document has more than one language, specify all of them, 
+the last the one the document starts with, 
+but~\cite{BabelP24} Sections~1.7 and 1.8 show how to change language, 
+here temporarily into German, 
+which requires specifying \texttt{german} in front of \texttt{english} 
+in the document class. 
+Note the quotes and the correct hyphenation in the following paragraph. 
+
+%   \begin{center}
+%     \begin{foreignlanguage}{german}
+%       Liberté, Egalité, Fraternité
+% \end{foreignlanguage}
+% \end{center}
+\begin{otherlanguage}{german}
+  Sie las den Artikel \enquote{Chancen für eine diplomatische Lösung} 
+  in der "`Wochenpost"', während er es sich nicht nehmen ließ, % chktex 18
+  sich Thomas Manns Novelle "`{Der Tod in Venedig}"' zu Gemüte zu führen. % chktex 18
+\end{otherlanguage}
 
 For all document classes, it is recommended to load \pkg{nag} 
 before \cmd{documentclass} using 
