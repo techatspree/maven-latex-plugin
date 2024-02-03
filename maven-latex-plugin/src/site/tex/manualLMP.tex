@@ -15,11 +15,10 @@
 % for buildParams: \verbdef 
 \usepackage{newverbs}
 
+\usepackage[depythontex]{pythontex}% TBD: check whether appropriate 
+
 \usepackage{listings}
-%\ifluatex%
-  \usepackage{luamplib}% works with lualatex only maybe with magic comment 
-%\else
-%\fi
+\usepackage{luamplib}% works with lualatex only maybe with magic comment 
 \input{header.tex}
 \setMinorVersionPdf{7}% because of gnuplot file only 
 % how to number the glossary in the toc? seemingly a gap in tocbibind 
@@ -164,7 +163,6 @@ today mostly replaced by PDF}
 %A computer language for creating vector graphics. 
 %}}
 
-\usepackage[depythontex]{pythontex}% TBD: check whether appropriate 
 
 
 
