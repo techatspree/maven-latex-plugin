@@ -204,7 +204,8 @@ The default value consists of two chunks:
 - 'beamer:chk,pdf,txt' beamer allows mainly pdf and derived from that txt. 
   Checking with chk does not depend on the document class. -->
             <docClassesToTargets>
-article,book:chk,dvi,pdf,html,odt,docx,rtf,txt beamer:chk,pdf,txt
+article,report,book:chk,dvi,pdf,html,odt,docx,rtf,txt
+beamer,leaflet,scrlttr2:chk,pdf,txt
             </docClassesToTargets>
 
             <!-- 

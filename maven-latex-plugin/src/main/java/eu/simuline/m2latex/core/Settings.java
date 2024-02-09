@@ -333,7 +333,7 @@ public class Settings {
   @RuntimeParameter
   @Parameter(name = "docClassesToTargets")
   private String docClassesToTargets =
-      "article,book:chk,dvi,pdf,html,odt,docx,rtf,txt beamer:chk,pdf,txt";
+      "article,report,book:chk,dvi,pdf,html,odt,docx,rtf,txt\nbeamer,leaflet,scrlttr2:chk,pdf,txt";
 
   /**
    * The list of names of latex main files 
@@ -2209,7 +2209,7 @@ public class Settings {
       throws BuildFailureException {
 
     Map<String, Set<Target>> result = new TreeMap<String, Set<Target>>();
-    String[] chunks = this.docClassesToTargets.trim().split("\\s");
+    String[] chunks = this.docClassesToTargets.trim().split("\\s+");
     int idxCol1, idxCol2;
     String classesStr;
     Set<Target> targetsSet, oldTargetSet;
