@@ -336,11 +336,13 @@ As a side effect, compilation of document classes cause warnings if not register
 The default value consists of two chunks: 
 \begin{itemize}
   \item
-  ` \texttt{article,book:chk,dvi,pdf,html,odt,docx,rtf,txt}'
+  `\texttt{article,report,book:chk,dvi,pdf,html,odt,docx,rtf,txt}' 
   ensures that article and book allow all targets. 
   \item
-  ` \texttt{beamer:chk,pdf,txt}' beamer allows mainly \texttt{pdf} and derived from that \texttt{txt}.  
+  `\texttt{beamer,leaflet,scrlttr2:chk,pdf,txt}' beamer allows mainly \texttt{pdf} and derived from that \texttt{txt}.  
   Checking with \texttt{chk} does not depend on the document class. 
+  Note that maybe leaflets or letters may work for DVI or XDV also, even for word formats and related, 
+  we restrict ourselves to the given output for simplification. 
 \end{itemize}
 
 CAUTION\@: Due to a 
