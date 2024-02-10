@@ -181,10 +181,9 @@ package \pkg{csquotes} must be loaded with option \texttt{autostyle}.
 Since \pkg{csquotes} is loaded in \texttt{header.tex} 
 given by an injection as described in Section~\ref{sec:injFiles}, 
 this option must be passed to \pkg{csquotes} 
-before loading the document class 
-via 
+before loading the document class, e.g. via 
 %
-\begin{Verbatim}
+\begin{Verbatim}[fontsize=\small]
   \PassOptionsToPackage{autostyle}{csquotes}
 \end{Verbatim}
 %
@@ -194,7 +193,7 @@ This is the technique to pass options to packages in general.
 For all document classes, it is recommended to load \pkg{nag} 
 before \cmd{documentclass} using 
 %
-\begin{Verbatim}
+\begin{Verbatim}[fontsize=\small]
   \RequirePackage[l2tabu, orthodox]{nag}
 \end{Verbatim}
 %
@@ -208,7 +207,7 @@ and with a non-confidential variant.
 To define these, the declaration of the document class 
 must be preceded by the following kind of code: 
 %
-\begin{Verbatim}
+\begin{Verbatim}[fontsize=\small]
 \RequirePackage{etoolbox}
 \newbool{isConfidential}
 \setbool{isConfidential}{true}
@@ -219,7 +218,7 @@ but it is defining and setting a boolean
 via \cmd{newbool} and \cmd{setbool}, respectively. 
 It is a good idea to set a watermark via 
 %
-\begin{Verbatim}
+\begin{Verbatim}[fontsize=\small]
 \ifbool{isConfidential}{%
   \usepackage{draftwatermark}
   \SetWatermarkText{Confidential}%
@@ -235,9 +234,11 @@ or any other kind of variant.
 What is special for beamer presentations is, 
 that in general two documents with the same identifier, e.g.\@ title are created, 
 the proper presentation, e.g.\@ 
-%
-\begin{Verbatim}
+% TBD: eliminate change of font size: long line must be breakable 
+\begin{Verbatim}[fontsize=\scriptsize]
 \RequirePackage[l2tabu, orthodox]{nag}
+\PassOptionsToPackage{colorlinks,linkcolor=blue,urlcolor=blue,citecolor=blue}{hyperref}
+
 \documentclass[10pt,hyperref=destlabel.english]{beamer}
 \mode<presentation>%
 
@@ -261,11 +262,18 @@ which is a presentation of this software including the handout
 and illustrates the use of the beamer class. 
 Observe, that both documents use \texttt{header.tex} injected 
 as described in Section~\ref{subsec:header} loading various packages. 
-To avoid option clash, document class \texttt{beamer} must specify \texttt{hyperref=destlabel}. 
-Also, all documents but beamer documents 
+The beamer class is special in that it loads the \pkg{hyperref} package itself. 
+To avoid option clash with \texttt{header.tex}, 
+document class \texttt{beamer} must specify \texttt{hyperref=destlabel}. 
+Maybe it is a matter of taste, but \texttt{beamer} tends to make links invisible. 
+To force loading options specifying colors for links, 
+use \cmd{PassOptionsToPackage} as shown above. 
+
+All documents but beamer documents 
 must specify the paper size globally via \cmd{documentclass}. 
 Beamer documents may specify accordingly \texttt{aspectratio}. 
 All this must be allowed for \LaTeX{} main files. 
+
 
 It also makes sense to allow comments, 
 i.e.\@ text from unescaped \texttt{\%} to the end of the line, 
