@@ -74,7 +74,7 @@
   %\usepackage[tagged, highstructure]{accessibility}
   \usepackage{xcolor}  % [pdftex]  
   % driver [hpdftex] is autodetected 
-  \usepackage[destlabel]{hyperref}% no clash although loaded by beamer class TBD: condition 
+  \usepackage[destlabel]{hyperref}
 \else
   % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
   %\usepackage[dvipdfmx]{xcolor}
@@ -143,18 +143,21 @@
 
 \usepackage{fancyvrb}
 
-% index and glossary
-\IfPackageLoadedTF{tex4ht}{
+\IfClassLoadedTF{scrlttr2}{%
 }{
-  \usepackage{splitidx}%[split]
-%  \usepackage{makeidx}
-%  \usepackage{showidx}
-  \makeindex
-  % TBD: eliminate; loads amsmath!!! 
-  \usepackage[toc]{glossaries}%,automake
-  % , xindy or even [xindy={language=english,codepage=utf8}]
-  % mainly for index and glossaries 
-  %\makeglossaries% TBD: activate later
+  % index and glossary
+  \IfPackageLoadedTF{tex4ht}{
+  }{
+    \usepackage{splitidx}%[split]
+    %  \usepackage{makeidx}
+    %  \usepackage{showidx}
+    \makeindex
+    % TBD: eliminate; loads amsmath!!! 
+    \usepackage[toc]{glossaries}%,automake
+    % , xindy or even [xindy={language=english,codepage=utf8}]
+    % mainly for index and glossaries 
+    %\makeglossaries% TBD: activate later
+  }
 }
 
 % high quality tables 
@@ -175,7 +178,10 @@
   \IfClassLoadedTF{leaflet}{%
     % maybe this exclusion is because inclusion is superfluous 
   }{%
-    \usepackage[nottoc, numindex, numbib]{tocbibind}
+    \IfClassLoadedTF{scrlttr2}{%
+    }{
+      \usepackage[nottoc, numindex, numbib]{tocbibind}
+    }
   }
 }
 

@@ -1,0 +1,92 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\documentclass[english,german,a4paper,fontsize=10pt,version=last]{scrlttr2}
+
+\input{../header.tex}
+
+
+\input{../headerSuppressMetaPDF.tex}
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Letter with/about the latex-maven-plugin },
+    Subject     ={Brief von und ueber scrlttr2},
+    Keywords    ={LaTeX;scrlttr2}
+  }
+}
+
+
+
+% % % Layout
+% % \clubpenalty=10000           % Keine "Schusterjungen"
+% % \widowpenalty=10000          % Keine "Hurenkinder"
+% % \displaywidowpenalty=10000
+
+% % % Linie im Kopf ausblenden und im Fuß eine feine Linie
+% % %\newcommand*{\headrulewidth}{0pt}
+% % %\newcommand*{\footrulewidth}{0.4pt}
+
+% % % Eigene Fusszeile festlegen, Kopfzeile leeren
+% % \pagestyle{empty}% no header and no footer 
+% % %\pagestyle{fancy}
+% % %\fancyhead{}
+% % %\cfoot{\VollerName, \AbsenderStrasse, \AbsenderPLZOrt, \Telefon}
+
+% % \newcommand{\cpp}{C$\mathrel{++}$}
+
+
+% % % Makro für Ort und Unterschrift
+% % \newcommand*{\UnterschriftOrt}{%
+% %     \Unterschrift\\
+% %     \OrtDatum\\
+% % }
+
+% % %\selectlanguage{english}
+% % \newcommand*{\signaturePlace}{%
+% %     \Unterschrift\\
+% %     \placeDate\\
+% % }
+% % %\selectlanguage{german}
+
+% % % Unterschrift als Bilddatei einfügen
+% % \newcommand*{\Unterschrift}[1][0.0cm]{%
+% %     \hspace*{#1}\import{\baseDir}{unterschriftWrapper}\\
+% % \VollerName%
+% % }
+
+
+% % \input{./headerLetter.tex}
+
+%\input{../header}
+
+\selectlanguage{german}
+
+
+\begin{document}
+
+\begin{letter}{Egon Walther \\ Walthershofener Straße 20 \\ 88444 Walthershofen} 
+  \opening{Lieber Egon,}
+
+  Wie Du weißt, haben wir einen Teil des Projektantrages in \LaTeX{} verfasst. 
+  Nun habe ich alle Dokumentation bei jedem \foreignlanguage{english}{Build} 
+  der Software oder der zugehörigen Seite durch ein \foreignlanguage{english}{Maven Plugin} aus \LaTeX{} generiert. 
+  Leider basiert das \foreignlanguage{english}{Plugin} auf sehr alten Techniken, 
+  sodass ich zwar meine Diplomarbeit kompilieren kann, 
+  nicht aber die \LaTeX{} Dokumente des Projektantrages. 
+
+  Die aktuelle Version 2.0 des Plugins bringt uns dem Ziel näher, 
+  alle Dokumente, auch die nach neuester Technik zu kompilieren. 
+  Zudem ist es nun auch möglich in qualitativ akzeptabler Weise 
+  Briefe mit dem \foreignlanguage{english}{Documentstyle} zu kompilieren. 
+  Insbesondere dieser Brief ist mit dem Plugin generiert. 
+
+
+  \closing{Herzlichen Gruß, \\[2\baselineskip]Ernst Reißner }
+
+\end{letter}
+
+% Hier folgt der Lebenslauf samt Anlagen 
+%\includepdf[pages=-]{../../LebenslaufAktuell/lebenslauf.pdf}
+
+\end{document}
