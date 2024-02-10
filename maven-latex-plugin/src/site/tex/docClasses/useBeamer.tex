@@ -6,7 +6,7 @@
   pdfinfo={
     Author      ={Ernst Reissner},
     Title       ={Presentation with/of the latex-maven-plugin },
-    Subject     ={presentations with beamer},
+    Subject     ={presentations with document class beamer},
     Keywords    ={LaTeX;beamer}
   }
 }
@@ -21,8 +21,8 @@
 \author{E. Reissner}
 \date{\today{} ernst.reissner@simuline.eu}
 
-
-\hypersetup{colorlinks,linkcolor=,urlcolor=blue,citecolor=yellow}%
+%\hypersetup{colorlinks=true,allcolors=blue}%
+\hypersetup{colorlinks,linkcolor=blue,urlcolor=blue,citecolor=blue}%
 %\hypersetup{frenchlinks}
 \begin{document}
  
@@ -47,7 +47,7 @@ This is some additional text
 
 \begin{frame}
   \frametitle{Purpose of these documents }
-  The purpose of this document is twofold:
+  The purpose of this presentation is twofold:
   %
   \begin{itemize}
     \item Give an overview over the plugin. 
@@ -62,13 +62,13 @@ This is some additional text
       The content of this presentation is updated only by need. 
     \end{itemize}
     
-    \item Demonstrate that the plugin can compile a presentation using the \texttt{beamer} class 
+    \item Demonstrate that the plugin can compile a presentation using the \texttt{beamer} document class 
     and a handout written as \texttt{beamerarticle}. 
 
     \begin{itemize}
       \item In fact, when citing this presentation as~\cite{PresBeamer}, 
       this refers to both. 
-      \item The presentation is about the plugin 
+      \item The presentation is about the plugin. 
       \item The handout adds information on how to write a beamer presentation. 
       \item Both documents turn \texttt{beamer} class and package \texttt{beamerarticle} into preferred usage 
       ensuring tests. 
@@ -109,7 +109,7 @@ This is some additional text
 
 \begin{frame}
   \frametitle{Checks}
-  Check 
+  Checks 
   %
   \begin{itemize}
     \item
@@ -128,14 +128,16 @@ This is some additional text
   Orchestration of various tools detecting need for execution e.g.
   of \texttt{bibtex} including \texttt{rerunfilecheck} for \texttt{lualatex} and friends.
 
-  Supports document development, mainly by cooperating with editor, viewer and with other tools in the build chain.
+  Supports document development, mainly by cooperating with editor, viewer and with other tools in the build chain. 
+  Offers 
+  %
   \begin{itemize}
-    \item Offers various scripts, 
+    \item various scripts, 
     most notably an installation script for extensions of VS Code.
-    \item Offers configuration file \texttt{.chktexrc} for \texttt{chktex}.
-    \item Can create configuration file \texttt{.latexmkrc} 
+    \item configuration file \texttt{.chktexrc} for \texttt{chktex}.
+    \item Oconfiguration file \texttt{.latexmkrc} 
     for \texttt{latexmk} synchronized with the configuration.
-    \item Offers header files like \texttt{header.tex} 
+    \item header files like \texttt{header.tex} 
     to unify packages loaded by latex main files.
   \end{itemize}
 \end{frame}
@@ -185,11 +187,159 @@ This is some additional text
     \item[\texttt{inj}] to inject useful files like headers or config files 
     like \texttt{.latexmkrc}. 
   \end{description}
+\end{frame}
+
+\section{Usage}
+
+
+\begin{frame}[fragile]
+\frametitle{Usage: Set up repository}
+As this is the main usage of this software, 
+usage refers to usage as a maven plugin. 
+Since it did not yet make it into the repository maven central, 
+it can be accessed only giving the source repository explicitly: 
+
+\begin{Verbatim}
+<project>
+  ...
+  <repositories>
+  <repository>
+    <id>publicRepoAtSimuline</id>
+    <name>repo at simuline</name>
+    <url>https://www.simuline.eu/RepositoryMaven</url>
+  </repository>
+  ...
+</project>
+\end{Verbatim}
   
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Usage: Set up life cycles}
+Also, it must be ensured that the plugin is executed 
+when building the application and when building the according site. 
+This is a side effect of configuring the \texttt{maven-jxr-plugin}. 
+
+\begin{Verbatim}[fontsize=\scriptsize]
+<project>
+...
+<reporting>
+  <plugins>
+    ...
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jxr-plugin</artifactId>
+      <version>3.3.0</version>
+    </plugin>
+    ...
+  </plugins>
+</reporting>
+</project>
+\end{Verbatim}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Usage: Simple Example}
+  
+  Given this, usage can be as simple as setting 
+\begin{Verbatim}[fontsize=\scriptsize]
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>eu.simuline.m2latex</groupId>
+        <artifactId>latex-maven-plugin</artifactId>
+        <version>2.0-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <goals><goal>pdf</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
+\end{Verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Usage: adding executions for build and clean}
+  Configuring executions for build and clean looks like this. 
+
+\begin{Verbatim}[fontsize=\scriptsize]
+    <plugin>
+      <groupId>eu.simuline.m2latex</groupId>
+      <artifactId>latex-maven-plugin</artifactId>
+      <version>2.0-SNAPSHOT</version>
+        ...
+      <executions>
+        <execution>
+          <id>process-latex-sources</id>
+          <!-- chk, dvi, pdf, html, odt, docx, rtf, txt -->
+          <goals><goal>cfg</goal></goals> <!-- phase>site</phase-->
+        </execution>
+        <execution>
+          <id>clear-latex-sources</id>
+          <goals><goal>clr</goal></goals> <!-- phase>clean</phase-->
+        </execution>
+        ...
+      </executions>
+    </plugin>
+\end{Verbatim}
 
 \end{frame}
 
-% \section{Usage}
+\begin{frame}[fragile]
+  \frametitle{Usage: adding further executions }
+  It is recommended to add executions for injection and version check also 
+
+\begin{Verbatim}[fontsize=\scriptsize]
+    <plugin>
+      <groupId>eu.simuline.m2latex</groupId>
+      <artifactId>latex-maven-plugin</artifactId>
+      <version>2.0-SNAPSHOT</version>
+        ...
+      <executions>
+        ...
+        <execution>
+          <id>inject-files</id>
+          <goals><goal>inj</goal></goals> <!-- phase>validate</phase-->
+          <configuration>
+          <injections>latexmkrc,chktexrc,header</injections>
+        </configuration>
+        </execution>
+        <execution>
+          <id>validate-converters</id>
+          <goals><goal>vrs</goal></goals> <!-- phase>validate</phase-->
+          <configuration>
+            <versionsWarnOnly>true</versionsWarnOnly>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+\end{Verbatim}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Usage: more complex examples}
+  Note that even in this complex example, 
+  further configuration is only sketched, 
+  which is justified because 
+  there is in general little deviation from the default 
+  to be mentioned explicitly. 
+  So, more complex examples are rare. 
+
+  For a full description of configuration, 
+see the manual~\cite{LatexPlugin}, Chapter 6. 
+\end{frame}
 
 % \section{Examples}
 

@@ -1,0 +1,275 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\documentclass[a4paper,notumble,10pt,english]{leaflet}%a4paper,12pt,notumble
+
+\input{../header.tex}
+
+\input{../headerSuppressMetaPDF.tex}
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Leaflet with/of the latex-maven-plugin },
+    Subject     ={Leaflets with document class leaflet},
+    Keywords    ={LaTeX;leaflet}
+  }
+}
+
+\title{Leaflet of the \texttt{latex-maven-plugin}}
+\author{E. Reissner}
+\date{\today{} ernst.reissner@simuline.eu}
+
+\begin{document}
+\maketitle
+
+The purpose of this leaflet is twofold:
+%
+\begin{itemize}
+  \item Give an overview over the plugin. 
+  But: 
+  %
+  \begin{itemize}
+    \item The single official description of the plugin is the manual~\cite{LatexPlugin}.
+    \item The 
+    \href{http://simuline.eu/LatexMavenPlugin/index.html}{project site} 
+    gives already an overview. 
+    \item 
+    The content of this leaflet~\cite{LeafLeaf} is updated only by need. 
+  \end{itemize}
+  
+  \item Demonstrate that the plugin can compile a leaflet using the \texttt{leaflet} document class. 
+\end{itemize}
+
+\section{Features}
+
+\subsection{Realized Features}
+
+Automatically creates documents from LaTeX sources during the Maven \texttt{site} phase 
+and in an ant run. 
+
+This comprises running basic tools like \texttt{lualatex} and \texttt{bibtex} 
+and rerunning them by need. 
+
+\subsubsection{Input and output}
+
+Supports 
+\begin{itemize}
+  \item
+  many output formats like PDF, DVI, HTML, DOCX, RTF, TXT and others
+  \item
+  many graphical input formats like PNG, MP, FIG, gnuplot; 
+  also provides a separate goal creating them, \texttt{grp} 
+  \item
+  bibliography, index, glossary and embedded code; in particular split index
+\end{itemize}
+
+\subsubsection{Checks}
+
+Checks 
+%
+\begin{itemize}
+  \item
+  sources with \texttt{chktex} and logs the results in target and goal \texttt{chk} 
+  \item
+  versions of used tools via goal \texttt{vrs} 
+  \item
+  log files detecting errors and warnings 
+  \item
+  whether a document could have been reproduced, by demand 
+\end{itemize}
+
+
+\subsubsection{Orchestration and document development}
+
+Orchestration of various tools detecting need for execution e.g.
+of \texttt{bibtex} including \texttt{rerunfilecheck} for \texttt{lualatex} and friends.
+
+Supports document development, mainly by cooperating with editor, viewer and with other tools in the build chain. 
+Offers 
+%
+\begin{itemize}
+  \item various scripts, 
+  most notably an installation script for extensions of VS Code.
+  \item configuration file \texttt{.chktexrc} for \texttt{chktex}.
+  \item Oconfiguration file \texttt{.latexmkrc} 
+  for \texttt{latexmk} synchronized with the configuration.
+  \item header files like \texttt{header.tex} 
+  to unify packages loaded by latex main files.
+\end{itemize}
+
+\subsection{Planned Features}
+
+\begin{itemize}
+  \item Support \texttt{biber} replacing \texttt{bibtex} as preferred tool
+  \item Support \texttt{xindy} replacing \texttt{makeindex} as preferred tool
+  \item Support \texttt{bib2gls} replacing \texttt{makeglossary} as preferred tool
+  \item Execute \texttt{glosstex} if needed
+  \item Usage of the \texttt{multibib} macros
+  \item \dots
+  \end{itemize}
+
+  \newpage
+
+  \section{Goals}
+
+  An overview is on the 
+  \href{http://simuline.eu/LatexMavenPlugin/plugin-info.html}{goals page}. 
+  
+
+  Besides goals referring to creating output of a given type 
+  like \texttt{pdf}, \texttt{odt} and \texttt{html}, 
+  there is a goal \texttt{cfg}, 
+  which allows configuring various output formats as \texttt{targets}. % chktex 1
+  
+  One further goal, \texttt{chk} to perform a check with \texttt{chktex} 
+  is allowed among the \texttt{targets}. 
+
+  The other goals cannot serve as targets: 
+  %
+  \begin{description}
+    \item[\texttt{vrs}] to check versions of tools, 
+    \item[\texttt{grp}] to create graphic files speeding up use of \texttt{latexmk} 
+    and 
+    \item[\texttt{inj}] to inject useful files like headers or config files 
+    like \texttt{.latexmkrc}. 
+  \end{description}
+
+  \newpage
+
+  \section{Examples}
+
+  As this is the main usage of this software, 
+  usage refers to usage as a maven plugin. 
+  Since it did not yet make it into the repository maven central, 
+  it can be accessed only giving the source repository explicitly: 
+
+  \begin{Verbatim}[fontsize=\scriptsize]
+    <project>
+      ...
+      <repositories>
+      <repository>
+        <id>publicRepoAtSimuline</id>
+        <name>repo at simuline</name>
+        <url>https://www.simuline.eu/RepositoryMaven</url>
+      </repository>
+      ...
+    </project>
+  \end{Verbatim}
+
+  Also, it must be ensured that the plugin is executed 
+  when building the application and when building the according site. 
+  This is a side effect of configuring the \texttt{maven-jxr-plugin}. 
+
+\begin{Verbatim}[fontsize=\scriptsize]
+<project>
+  ...
+  <reporting>
+    <plugins>
+      ...
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>3.3.0</version>
+      </plugin>
+      ...
+    </plugins>
+  </reporting>
+</project>
+\end{Verbatim}
+
+  Given this, usage can be as simple as setting 
+
+
+  
+\begin{Verbatim}[fontsize=\scriptsize]
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>eu.simuline.m2latex</groupId>
+        <artifactId>latex-maven-plugin</artifactId>
+        <version>2.0-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <goals><goal>pdf</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
+\end{Verbatim}
+
+
+But fully configuring all executions, 
+e.g. including version checks and injections 
+e.g. of headers looks like this. 
+
+
+\begin{Verbatim}[fontsize=\scriptsize]
+<project>
+  ...
+  <plugin>
+    <groupId>eu.simuline.m2latex</groupId>
+    <artifactId>latex-maven-plugin</artifactId>
+    <version>2.0-SNAPSHOT</version>
+    <configuration>
+      <settings>
+        <!--targets>chk, pdf, html</targets-->
+        <!--cleanUp>false</cleanUp-->
+        ...
+      </settings>
+    </configuration>
+    <executions>
+      <execution>
+        <id>process-latex-sources</id>
+        <!-- chk, dvi, pdf, html, odt, docx, rtf, txt -->
+        <goals><goal>cfg</goal></goals>
+        <!-- phase>site</phase-->
+      </execution>
+      <execution>
+        <id>clear-latex-sources</id>
+        <goals><goal>clr</goal></goals>
+        <!-- phase>clean</phase-->
+      </execution>
+      <execution>
+        <?m2e execute onConfiguration?>
+        <id>inject-files</id>
+        <goals><goal>inj</goal></goals>
+        <!-- phase>validate</phase-->
+        <configuration>
+          <injections>latexmkrc,chktexrc,header</injections>
+        </configuration>
+      </execution>
+      <execution>
+        <id>validate-converters</id>
+        <goals><goal>vrs</goal></goals>
+        <!-- phase>validate</phase-->
+        <configuration>
+          <versionsWarnOnly>true</versionsWarnOnly>
+        </configuration>
+      </execution>
+    </executions>
+  </plugin>
+  ...
+</project>
+\end{Verbatim}
+
+Note that even in this complex example, 
+further configuration is only sketched, 
+which is justified because 
+there is in general little deviation from the default 
+to be mentioned explicitly. 
+So, more complex examples are rare. 
+
+For a full description of configuration, 
+see the manual~\cite{LatexPlugin}, Chapter 6. 
+
+  %\section{References}% if with star not in toc 
+
+\bibliographystyle{alpha}
+\bibliography{../lit,../litLMPpub}
+\end{document}
