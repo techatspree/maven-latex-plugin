@@ -541,12 +541,24 @@ The preferred usage is defined as follows:
   \item The maven plugin, rather than the ant task. 
   \item Configuration is the default setting of this plugin. 
   In particular, the latex processor is \lualatex. 
-  \item Document classes are \texttt{book}, \texttt{article} and \texttt{beamer}. 
+  \item Document classes are \texttt{book}, \texttt{article}, 
+  \texttt{beamer}, \texttt{leaflet} and \texttt{scrlttr2}. 
   For beamer documents, preferred usage are both, the presentation and the handout 
   as described in Section~\ref{subsec:sourcesLatex}. 
   Note that, unlike most other aspects of preferred usage, 
   this is not tested through this manual 
   but with the beamer presentation and handout given by~\cite{PresBeamer}. 
+  Also, the test for \texttt{leaflet} class is tested by document~\cite{LeafLeaf} 
+  and the test for the letter class is tested in~\cite{LetScrlttr2}. 
+
+  Caution: Currently, the classes \texttt{letter} and \texttt{report} 
+  are not preferred usage, 
+  but the latter is accepted with default configuration without warning. 
+  In the long run, the manual shall be a report, whereas there shall be a user guide 
+  which shall be a book. 
+  
+  Among the document classes provided by KOMA script as described in~\cite{KomaAnl}, 
+  only \texttt{scrlttr2} is used which replaces \texttt{letter}. 
   \item \LaTeX{} packages are those given by \texttt{header.tex} 
   described in Section~\ref{subsec:header}. 
   \item Graphics are in the formats described and used in the manual. 
