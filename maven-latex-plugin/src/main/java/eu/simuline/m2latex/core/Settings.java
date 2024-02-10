@@ -293,8 +293,8 @@ public class Settings {
   (%\\s*!\\s*T[eE]X .*\\R)*\
   (%\\s*!\\s*LMP targets=(?<targetsMagic>(\\p{Lower}|,)+)\\R)?\
   (\\s*(\
-  \\\\RequirePackage\\s*(\\[(\\s|\\w|,)*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|[.-/])+\\])?|\
-  \\\\PassOptionsToPackage\\s*\\{(\\s|\\w|,)*\\}\\s*\\{(\\w|-)+\\}|\
+  \\\\RequirePackage\\s*(\\[(\\s|\\w|[,=])*\\])?\\s*\\{(\\w|-)+\\}\\s*(\\[(\\d|[.-/])+\\])?|\
+  \\\\PassOptionsToPackage\\s*\\{(\\s|\\w|[,=])*\\}\\s*\\{(\\w|-)+\\}|\
   \\\\newbool\\s*\\{\\w+\\}|\
   \\\\setbool\\s*\\{\\w+\\}\\{(true|false)\\}|\
   \\\\DocumentMetadata(?<brace>\\{(?:[^{}]|(?'brace'))*\\})|\
