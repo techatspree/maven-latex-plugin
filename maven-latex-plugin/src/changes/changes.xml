@@ -834,6 +834,68 @@ also would be nice to have pyhtontexW added. -->
 provided by suse and head towards standard -->
 <!-- CI: add pipeline for miktex maybe also for windoofs -->
 
+<!--  
+  Unfortunately ltex does not adapt language 
+  if specified in documentclass. 
+  Then \selectlanguage{lang} is required, 
+  even in a one-language document. 
+  This is odd since the main language is selected 
+  from \begin{document} on. 
+  \DocumentMetadata{lang=de-DE} is suggested 
+  \usepackage[pdflang=es-MX]{hyperref} is not feasable. 
+  maybe the first replaces the second. 
+
+ -->
+
+
+
+<!-- rework of Chapter 6: intro and section 6.1 are not separated clearly. -->
+<!-- except for scrlttr2 this supports no KOMA-script classes. 
+According to the manual {KomaAnl}, these are 
+scrbook, scrrprt, scrartcl, scrlettr, scrlttr2
+book, report, article, letter. 
+
+according to {KomaAnl}, Section 4.3, scrlettr has been removed long ago. 
+Thus we dont take it into acount any more. 
+The class letter is not preferred usage, 
+because it is really inferior to scrlttr2. 
+
+In contrast, we prefer th standard classes book, report and article 
+over the according KOMA-script variants. 
+Thus these are not part of the preferred usage. 
+There are arguments to define also scrbook, scrrprt, scrartcl also in docClassesToTargets, 
+although no preferred usage. 
+
+Note that report is not preferred usage, because not tested. 
+Nevertheless, in docClassesToTargets it is mentioned. 
+This is not really consequent. 
+To resolve, we shall add a report. 
+An idea would be to extract some esoteric part of the manual which is large enough 
+to justify something else but an article. 
+Or, maybe a better idea, to turn the manual in a report again, 
+and write a kind of user guide which is a book. 
+Means: separate current manual which is a book 
+into a manual which shall be a report, so to be readable quicker 
+and in a user guide which is more compehensive and is a book. 
+This requires extensive planning. 
+Maybe also, the authors shall wait until the description of the parameters 
+can be extracted. 
+
+https://ctan.org/topic/class refers to a lot of additional document classes. 
+
+
+rework preferred usage 
+
+rework on form of sources, including form of headers. 
+-->
+<!-- include pdf figures with package pdfpages -->
+<!-- research on package bookmark -->
+<!-- \usepackage{eurosym} for euro sign official independent of the font -->
+<!-- research etoolbox vs ifthen vs xifthen -->
+
+<!-- do research on % % \usepackage{setspace}         % Zeilenabstand festlegen
+% % %\usepackage{showframe} -->
+
     <release version="2.0" date="2023-08-28" description="">
       <action dev='reissner' type='add'>
         Weak CI: could compile all documents in a CI pipeline, 
