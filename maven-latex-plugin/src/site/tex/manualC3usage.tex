@@ -134,25 +134,32 @@ a warning is emitted.
 The disadvantage of this technique is that it is inconvenient and not well maintainable. 
 
 This software is tested with document classes \texttt{article}, \texttt{book} 
-and \texttt{beamer}, the latter of which is for presentations as described in~\cite{Beamer}. 
-So far, this software has not been tested on KOMA\index{KOMA} classes 
-which are treated in~\cite{KomaAnl}. 
-Nevertheless, the pattern matches all possible document classes. 
+for \texttt{beamer} which is for presentations as described in~\cite{Beamer}, 
+for \texttt{leaflet} creating leaflets as explained in~\cite{Leaflet} and in~\cite{LeafletMan} 
+and for letters using document class \texttt{scrlttr2}. 
+So far, \texttt{scrlttr2} is the only KOMA\index{KOMA} class this software has been tested for. 
+KOMA classes are treated in~\cite{KomaAnl} and \texttt{scrlttr2} described in~\cite{KomaAnl}, Part 1, Chapter 4. 
+Note that \texttt{scrlttr2} replaces \texttt{letter} which is not recommended. 
+The attentive reader may realize that class \texttt{report} is not mentioned. 
+It shall work but is currently not tested. 
+
+Nevertheless, the pattern \texttt{patternLatexMainFile} matches all possible document classes. 
 Typically, the document class is loaded with options. 
-Except for the \texttt{beamer} class, we suggest 
+The most frequent class may be \texttt{article} followed by \texttt{report} and \texttt{book}. 
+For these, we suggest something like
 %
 \begin{Verbatim}
-\documentclass[a4paper,12pt,english]{book}
+\documentclass[a4paper,12pt,english]{article}
 \end{Verbatim}
 %
-where \texttt{a4paper} is a setting typical for Europe or, not the US\@. 
+where \texttt{a4paper} is a setting, typical for Europe or, not the US\@. 
 The default font size is \texttt{10pt} and sometimes it makes sense to increase this. 
 For documents which are solely in English no language setting is required, 
 except if loading the package \pkg{babel}, else the hyphenation patterns get lost. 
 Since we recommend inputting the header file \texttt{header.tex} 
 described in Section~\ref{subsec:header} which in turn loads \pkg{babel} and 
 by the way also \pkg{csquotes}, a language setting is mandatory. 
-It is possible to specify the language when loading \pkg{babel} as an option 
+It is possible specifying the language when loading \pkg{babel} as an option 
 like so \cmd{usepackage[english]\{babel\}}, 
 but it is recommended to specify the language as an option of the document class, 
 in order to make it available for various packages, 
@@ -230,6 +237,21 @@ It is a good idea to set a watermark via
 The same technique differentiating between confidential and public 
 may be used to define a lecture with and without solution 
 or any other kind of variant. 
+
+Documents of class \texttt{leaflet} resemble \texttt{article}s, 
+except special options like \texttt{notumble}. 
+
+\begin{Verbatim}[fontsize=\footnotesize]
+  \documentclass[a4paper,notumble,10pt,english]{leaflet}% 12pt,notumble
+\end{Verbatim}
+
+The same is true for letters of type \texttt{scrlttr2}, 
+except for the special specification of fontsize and versioning of the class: 
+
+\begin{Verbatim}[fontsize=\footnotesize]
+\documentclass[english,german,a4paper,fontsize=10pt,version=last]{scrlttr2}
+\end{Verbatim}
+
 
 What is special for beamer presentations is, 
 that in general two documents with the same identifier, e.g.\@ title are created, 
@@ -1173,8 +1195,9 @@ Note that \texttt{header.tex} is written for use of
 %
 \begin{itemize}
   \item various \LaTeX{} converters, \lualatex, \xelatex{} and \pdflatex{} 
-  \item various document classes, specifically \texttt{article}, \texttt{book} 
-  and \texttt{beamer}, which is for presentations 
+  \item various document classes, 
+  specifically \texttt{article}, \texttt{book}, \texttt{beamer} for presentations, 
+  \texttt{leaflet} and the letter class \texttt{scrlttr2}. 
   \item for creating PDF files, but futher formats created with \pkg{tex4ht} as well
   \item direct creation of PDF and via intermediate DVI/XDV 
 \end{itemize}
