@@ -633,7 +633,7 @@ public class LatexProcessor extends AbstractLatexProcessor {
     // clearCreated may log warnings WPP02, WFU01, WFU03, EFU05
     this.preProc.clearCreated(texProcDir);
     // may log WFU10, WFU11, EFU05 
-    clearRcFiles();
+    clearInjFiles();
   }
 
   // FIXME: use the -recorder option to resolve dependencies.
@@ -2486,13 +2486,12 @@ public class LatexProcessor extends AbstractLatexProcessor {
 
 
   /**
-   * Deletes <code>.latexmkrc</code> and <code>.chktexrc</code> 
-   * in {@link Settings#getTexSrcDirectoryFile()} if written by this software if possible. 
+   * Deletes injected files if written by this software if possible. 
    * 
    * WFU10, WFU11: if a config file is not written by this software or it is not clear or the reader cannot close. 
    * EFU05: if the config file shall be deleted but this coes not work. 
    */
-  private void clearRcFiles() {
+  private void clearInjFiles() {
     for (Injection inj : Injection.values()) {
       File outFile = this.settings.rcResourceToFile(inj.getFileName());
       // isCreatedByMyself may emit warnings WFU10, WFU11 
