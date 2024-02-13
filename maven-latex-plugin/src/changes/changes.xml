@@ -246,7 +246,7 @@ Also: meta-uml, with documentation
 	   but in ant task only. 
 	 - add latexmk to dependencies (because of cleaning)
 	   converter is already known. 
-	   TBD: add a category and maybe target clearwith latexmk, 
+	   TBD: add a category and maybe target clear with latexmk, 
 	   maybe also a parameter using latexmk. 
 	   Also, files created by latexmk shall be cleared. 
 	 - clean goal based on (categories of) coverters.
@@ -895,6 +895,13 @@ rework on form of sources, including form of headers.
 
 <!-- do research on % % \usepackage{setspace}         % Zeilenabstand festlegen
 % % %\usepackage{showframe} -->
+
+<!-- monitor what about files "(pdf|xe|lua)?latex\\d+\\.fls|" 
+  are cleared, whereas latexmk cannot be configured that like. 
+  An according notification is already sent. 
+  https://tex.stackexchange.com/questions/682509/latexmk-does-not-clean-lualatexnumber-fls -->
+
+
 
     <release version="2.0" date="2023-08-28" description="">
       <action dev='reissner' type='add'>
