@@ -851,11 +851,12 @@ provided by suse and head towards standard -->
 
 <!-- rework of Chapter 6: intro and section 6.1 are not separated clearly. -->
 <!-- except for scrlttr2 this supports no KOMA-script classes. 
-According to the manual {KomaAnl}, these are 
+According to the manual {KomaAnl23}, these are 
 scrbook, scrrprt, scrartcl, scrlettr, scrlttr2
 book, report, article, letter. 
 
-according to {KomaAnl}, Section 4.3, scrlettr has been removed long ago. 
+according to {KomaAnl23}, Section 4.20, 
+scrlettr has been removed long ago. 
 Thus we dont take it into acount any more. 
 The class letter is not preferred usage, 
 because it is really inferior to scrlttr2. 
