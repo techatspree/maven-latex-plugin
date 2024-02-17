@@ -928,6 +928,17 @@ correct default value,
 document tht the number shall not be given., 
 added the passoptions... to the manual in section on main files. 
 -->
+
+<!-- 
+I found that all the knowledge how to write documents of various classes is not very much accessible.
+http://simuline.eu/LatexMavenPlugin/intro.html shall have an overview of the document classes also.
+This shall be also part of the examples.
+To that end, link one article and representatives of classes to tex sources.
+Mention that book and report are like article. 
+-->
+
+<!-- when including biblatex: add to header 
+\PassOptionsToPackage{style=alphabetic}{biblatex}
 -->
 
 
