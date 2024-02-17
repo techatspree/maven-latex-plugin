@@ -19,7 +19,15 @@
 \usepackage[depythontex]{pythontex}% TBD: check whether appropriate 
 
 \usepackage{listings}
+\usepackage{iftex}% This is a hack: is loaded later also in header.tex
+% it is needed for htlatex because there is no htlualatex. 
+% Even if there were, we had to change latex compiler separately for pdf and html. 
+% The solution is to use make4ht and to pass the latex compiler as an argument.  
+% 
+\iftutex%
 \usepackage{luamplib}% works with lualatex only maybe with magic comment 
+\else
+\fi
 \input{header.tex}
 \setMinorVersionPdf{7}% because of gnuplot file only 
 % how to number the glossary in the toc? seemingly a gap in tocbibind 

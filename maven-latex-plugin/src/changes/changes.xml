@@ -901,6 +901,24 @@ rework on form of sources, including form of headers.
   An according notification is already sent. 
   https://tex.stackexchange.com/questions/682509/latexmk-does-not-clean-lualatexnumber-fls -->
 
+<!-- use make4ht instead of htlatex and htxelatex. 
+One reason is that htlualatex does not exist. 
+Other reason is that even if switching between pdflatex and xelatex, 
+there are two parameters specifying the compiler, one for pdf and another for html and related. 
+This breaks single source principle. 
+With make4ht, one can pass the compiler as an argument. 
+Another advantage is that make4th is faster as it does not require superfluous repetitions. 
+
+Note also that in manualLMP.tex there is a hack around \usepackage{luamplib} 
+which can be eliminated then. 
+
+Tried xhtml,uni-html4,5,pic-tabular but 5 seems to have no influence on the manual. 
+It seems not appropriate to have this in the parameter, 
+as it is individual for any document. 
+Thus it shall be passed to the package tex4ht via \PassOptionsToPackage{5}{tex4ht}. 
+This proceeding shall be made mandatory if html or related is required. 
+
+-->
 
 
     <release version="2.0" date="2023-08-28" description="">

@@ -1079,7 +1079,7 @@
             <!--pdfViaDvi>true</pdfViaDvi-->
             <cleanUp>false</cleanUp>
             <!--chkDiff>true</chkDiff-->
-            <targets>chk,pdf</targets>
+            <targets>chk,pdf,html</targets>
             <!--pdfViaDvi>true</pdfViaDvi-->
 
 
