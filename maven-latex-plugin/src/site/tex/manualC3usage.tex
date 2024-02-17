@@ -133,19 +133,26 @@ This is safe because if a file specified that like is not a \LaTeX{} main file,
 a warning is emitted. 
 The disadvantage of this technique is that it is inconvenient and not well maintainable. 
 
-This software is tested with document classes \texttt{article}, \texttt{book} 
+This software is tested for document classes 
+as the built-in classes \texttt{article} and \texttt{book}, 
 for \texttt{beamer} which is for presentations as described in~\cite{Beamer}, 
-for \texttt{leaflet} creating leaflets as explained in~\cite{Leaflet} and in~\cite{LeafletMan} 
+for \texttt{leaflet} creating leaflets as explained in~\cite{Leaflet} 
+and in~\cite{LeafletMan} 
 and for letters using document class \texttt{scrlttr2}. 
-So far, \texttt{scrlttr2} is the only KOMA\index{KOMA} class this software has been tested for. 
-KOMA classes are treated in~\cite{KomaAnl} and \texttt{scrlttr2} described in~\cite{KomaAnl}, Part 1, Chapter 4. 
+So far, \texttt{scrlttr2} is the only KOMA\index{KOMA} class 
+this software has been tested for. 
+KOMA classes are treated in~\cite{KomaAnl23} 
+and \texttt{scrlttr2} described in~\cite{KomaAnl23}, Part 1, Chapter 4. 
 Note that \texttt{scrlttr2} replaces \texttt{letter} which is not recommended. 
-The attentive reader may realize that class \texttt{report} is not mentioned. 
+The attentive reader may realize 
+that the built-in document class \texttt{report} is not mentioned. 
 It shall work but is currently not tested. 
 
-Nevertheless, the pattern \texttt{patternLatexMainFile} matches all possible document classes. 
+Nevertheless, the pattern \texttt{patternLatexMainFile} 
+matches all possible document classes. 
 Typically, the document class is loaded with options. 
-The most frequent class may be \texttt{article} followed by \texttt{report} and \texttt{book}. 
+The most frequent class may be \texttt{article} 
+followed by \texttt{report} and \texttt{book}. 
 For these, we suggest something like
 %
 \begin{Verbatim}
