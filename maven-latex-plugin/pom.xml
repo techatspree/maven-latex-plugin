@@ -1096,6 +1096,10 @@
             <!--patternWarnPyTex>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\(s\), [1-9][0-9]* warning\(s\)</patternWarnPyTex-->
             <!--depythontexCommand>depythontexW</depythontexCommand-->
             <!--chkTexOptions>-q -b0</chkTexOptions--><!-- BUG: does not do without -->
+            <!--tex4htStyOptions>
+              xhtml,uni-html4,5,pic-tabular
+            </tex4htStyOptions-->
+
           </settings>
         </configuration>
 

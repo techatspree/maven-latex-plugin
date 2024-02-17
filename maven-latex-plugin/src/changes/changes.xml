@@ -911,13 +911,23 @@ Another advantage is that make4th is faster as it does not require superfluous r
 
 Note also that in manualLMP.tex there is a hack around \usepackage{luamplib} 
 which can be eliminated then. 
+-->
 
+<!--
 Tried xhtml,uni-html4,5,pic-tabular but 5 seems to have no influence on the manual. 
+This must be clarified first.  
+
 It seems not appropriate to have this in the parameter, 
 as it is individual for any document. 
+
 Thus it shall be passed to the package tex4ht via \PassOptionsToPackage{5}{tex4ht}. 
 This proceeding shall be made mandatory if html or related is required. 
 
+As a consequence, the documentation must be changed: 
+correct default value, 
+document tht the number shall not be given., 
+added the passoptions... to the manual in section on main files. 
+-->
 -->
 
 
