@@ -36,7 +36,7 @@
 % % \pagestyle{empty}% no header and no footer 
 % % %\pagestyle{fancy}
 % % %\fancyhead{}
-% % %\cfoot{\VollerName, \AbsenderStrasse, \AbsenderPLZOrt, \Telefon}
+
 
 % % \newcommand{\cpp}{C$\mathrel{++}$}
 
@@ -70,10 +70,19 @@
 
 \begin{document}
 
-\begin{letter}{Egon Walther \\ Walthershofener Straße 20 \\ 88444 Walthershofen} 
-  \opening{Lieber Egon,}
+\newcommand{\AdressatFirma}{CapMini GmbH}
+\newcommand{\AdressatTitel}{}
+\newcommand{\AdressatVorname}{Egon}
+\newcommand{\AdressatNachname}{Walther}
+\newcommand{\AdressatAnschriftStrasse}{Walthershofener Straße 20}
+\newcommand{\AdressatAnschriftPLZOrt}{88444 Walthershofen}
+\setboolean{isMale}{true}
 
-  Wie Du weißt, haben wir einen Teil des Projektantrages in \LaTeX{} verfasst. 
+\begin{letter}{\Anschrift} 
+  %\opening{Lieber Egon,}
+  \opening{\Anrede}
+
+  Wie Sie wissen, haben wir einen Teil des Projektantrages in \LaTeX{} verfasst. 
   Nun habe ich alle Dokumentation bei jedem \foreignlanguage{english}{Build} 
   der Software oder der zugehörigen Seite durch ein \foreignlanguage{english}{Maven Plugin} aus \LaTeX{} generiert. 
   Leider basiert das \foreignlanguage{english}{Plugin} auf sehr alten Techniken, 
@@ -83,7 +92,7 @@
   Die aktuelle Version 2.0 des Plugins bringt uns dem Ziel näher, 
   alle Dokumente, auch die nach neuester Technik zu kompilieren. 
   Zudem ist es nun auch möglich in qualitativ akzeptabler Weise 
-  Briefe mit dem \foreignlanguage{english}{Documentstyle} zu kompilieren. 
+  Briefe zu kompilieren. 
   Insbesondere dieser Brief ist mit dem Plugin generiert. 
   
 

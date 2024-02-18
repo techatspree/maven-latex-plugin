@@ -6,13 +6,13 @@
 
 % Die beiden Anreden im Briefkopf und im Text müssen unterschieden werden. 
 % VORSICHT: Ms. Mr. usw in Amerikanischem Englisch. 
-\newboolean{istMaennlich}
-\newcommand*{\AdressatTitel}{}
+\newboolean{isMale}
+%\newcommand*{\AdressatTitel}{}
 \newcommand*{\AnredeKopf}%
-{\ifthenelse{\boolean{istMaennlich}}%
+{\ifthenelse{\boolean{isMale}}%
 {\iflanguage{german}{Herrn}{Mr}}{\iflanguage{german}{Frau}{Ms}}}
 \newcommand*{\AnredeText}%
-{\ifthenelse{\boolean{istMaennlich}}%
+{\ifthenelse{\boolean{isMale}}%
 {\iflanguage{german}{r Herr}{ Mr}}{\iflanguage{german}{ Frau}{ Ms}}}
 % wenn unbekannt: 
 % Dear Sir or Madam	eher brit. Englisch
@@ -21,7 +21,7 @@
 
 % Adressat
 \newcommand{\Anschrift}{%\vspace{3.5cm}%
-    \Firma{} \\
+    \AdressatFirma{} \\
     \AnredeKopf{} 
     \AdressatTitel{}\AdressatVorname{} \AdressatNachname\\
     \AdressatAnschriftStrasse\\
@@ -122,7 +122,7 @@
 }
 
 % data sender, common for langauges 
-\setkomavar{fromname}{\FullName}
+\setkomavar{fromname}{\SenderFullName}
 \setkomavar{fromemail}[]{\EMail}
 
 \iflanguage{german}
@@ -130,8 +130,8 @@
   % Absenderdaten:
   \setkomavar{frommobilephone}[]{\Mobil}
   \setkomavar{fromaddress}{%ohne name
-    \AbsenderStrasse\\
-    \AbsenderDPLZOrt
+    \SenderStrasse\\
+    \SenderDPLZOrt
   }
 
   \setkomavar{subject}[]{\subject}
@@ -140,14 +140,14 @@
   % Absenderdaten:
   \setkomavar{frommobilephone}[]{\mobile}
   \setkomavar{fromaddress}{%ohne name
-    \AbsenderStrasse\\
-    \AbsenderDPLZOrt
+    \SenderStrasse\\
+    \SenderDPLZOrt
   }
   \setkomavar{subject}[afteropening]{\subject}
 }
 
 
 % signatur linksbündig mit ordentlichem Abstand vorher für pic. 
-\setkomavar{signature}{\FullName}
+\setkomavar{signature}{\SenderFullName}
 \renewcommand*{\raggedsignature}{\raggedright}
 \setplength{sigbeforevskip}{0.0cm}
