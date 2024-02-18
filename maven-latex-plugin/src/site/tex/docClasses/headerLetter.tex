@@ -33,7 +33,7 @@
 % Hier kommt "Ort, den Datum" 
 
 % Betreff
-%\newcommand*{\Betreff}{Bewerbung als ****}%{\textbf{Bewerbung als \Bewerberstelle}}
+%\newcommand*{\Betreff}{...}
 
 % Anrede im Brief
 \newcommand*{\Anrede}%
@@ -129,7 +129,7 @@
 \iflanguage{german}
 {
     % Absenderdaten:
-\setkomavar{fromname}{\VollerName}
+\setkomavar{fromname}{\FullName}
 \setkomavar{frommobilephone}[]{\Mobil}
 %\setkomavar{fromphone}[]{\Telefon}
 \setkomavar{fromemail}[]{\EMail}
@@ -140,17 +140,17 @@
 \AbsenderDPLZOrt
 }
 
-\setkomavar{subject}[]{Bewerbung als \Bewerberstelle}
+\setkomavar{subject}[]{\subject}
 
 
 
 % signatur linksbündig mit ordentlichem Abstand vorher für pic. 
-\setkomavar{signature}{\VollerName}
+\setkomavar{signature}{\FullName}
 \renewcommand*{\raggedsignature}{\raggedright}
 \setplength{sigbeforevskip}{0.0cm}
 }{
     % Absenderdaten:
-\setkomavar{fromname}{\VollerName}
+\setkomavar{fromname}{\FullName}
 \setkomavar{frommobilephone}[]{\mobile}
 %\setkomavar{fromphone}[]{\myPhone}
 \setkomavar{fromemail}[]{\EMail}
@@ -162,11 +162,11 @@
 }
 %\setkomavar{refline}[]{dateright}
 % This must be put in the 1st section of the letter 
-\setkomavar{subject}[afteropening]{Application as \Bewerberstelle}
+\setkomavar{subject}[afteropening]{\subject}
 
 
 % signatur linksbündig mit ordentlichem Abstand vorher für pic. 
-\setkomavar{signature}{\VollerName}
+\setkomavar{signature}{\FullName}
 \renewcommand*{\raggedsignature}{\raggedright}
 \setplength{sigbeforevskip}{0.0cm}
 
