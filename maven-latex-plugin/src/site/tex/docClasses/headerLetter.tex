@@ -1,6 +1,8 @@
 
 
-% ACHTUNG: BRITISCHES ENGLISCH
+% CAUTION: BRITISH ENGLISCHonly 
+\usepackage{ifthen}
+
 
 % Die beiden Anreden im Briefkopf und im Text müssen unterschieden werden. 
 % VORSICHT: Ms. Mr. usw in Amerikanischem Englisch. 
@@ -60,8 +62,6 @@
 % Hier kommt der Text 
 
 \newcommand{\Grussworte}{%
-%Über die Einladung zu einem persönlichen Gespräch freue ich mich und verbleibe
-%
 \iflanguage{german}{Mit freundlichen Grüßen,}{Yours sincerely}%
 % Deutsch: mit Komma, 
 % britisch: ohne Komma, 
@@ -84,18 +84,11 @@
 % {\LoadLetterOption{../absenderDE}}
 % {\LoadLetterOption{../absenderUK}}
 
-
-\iflanguage{german}
-{
-    % Erklaerungen zu den Optionen sind in
-% http://www.tex.ac.uk/tex-archive/macros/latex/contrib/koma-script/scrguide.pdf
-% zu finden. Kommentiere aus / deaktiviere, was Du nicht brauchst
-% (z.B. `fromphone`).
 \KOMAoptions{
     %addrfield=false,
     backaddress=false,
     foldmarks=false,
-    fromalign=right, % german 
+    %fromalign=right, % german 
     %fromrule=aftername,
     footsepline=off,
     fromphone=false,
@@ -105,69 +98,56 @@
     fromfax=false, 
 %refline=nodate
 }
-}{
-    % Erklaerungen zu den Optionen sind in
-% http://www.tex.ac.uk/tex-archive/macros/latex/contrib/koma-script/scrguide.pdf
-% zu finden. Kommentiere aus / deaktiviere, was Du nicht brauchst
-% (z.B. `fromphone`).
-\KOMAoptions{
-    %addrfield=false,
-    backaddress=false,
-    foldmarks=false,
-    fromalign=left, % english
-    %fromrule=aftername,
-    footsepline=off,
-    fromphone=false,
-    frommobilephone=true,
-    fromemail=true,
-    fromurl=false,
-    fromfax=false, 
-    refline=dateright% english
-}
-}
 
 \iflanguage{german}
 {
-    % Absenderdaten:
-\setkomavar{fromname}{\FullName}
-\setkomavar{frommobilephone}[]{\Mobil}
-%\setkomavar{fromphone}[]{\Telefon}
-\setkomavar{fromemail}[]{\EMail}
-%\setkomavar{fromurl}[]{\vspace*{0.5\baselineskip}\today}
-\setkomavar{fromfax}[]{\ }
-\setkomavar{fromaddress}{%ohne name
-\AbsenderStrasse\\
-\AbsenderDPLZOrt
-}
-
-\setkomavar{subject}[]{\subject}
-
-
-
-% signatur linksbündig mit ordentlichem Abstand vorher für pic. 
-\setkomavar{signature}{\FullName}
-\renewcommand*{\raggedsignature}{\raggedright}
-\setplength{sigbeforevskip}{0.0cm}
+    % Erklaerungen zu den Optionen sind in
+  % http://www.tex.ac.uk/tex-archive/macros/latex/contrib/koma-script/scrguide.pdf
+  %  zu finden. Kommentiere aus / deaktiviere, was Du nicht brauchst
+  % (z.B. `fromphone`).
+  \KOMAoptions{
+    %addrfield=false,
+    fromalign=right, % german 
+    refline=dateright % german, default
+  }
 }{
-    % Absenderdaten:
-\setkomavar{fromname}{\FullName}
-\setkomavar{frommobilephone}[]{\mobile}
-%\setkomavar{fromphone}[]{\myPhone}
-\setkomavar{fromemail}[]{\EMail}
-%\setkomavar{fromurl}[]{\vspace*{0.5\baselineskip}\today}% hack: date 
-\setkomavar{fromfax}[]{\ }
-\setkomavar{fromaddress}{%ohne name
-\AbsenderStrasse\\
-\AbsenderDPLZOrt
+  % Erklaerungen zu den Optionen sind in
+  % http://www.tex.ac.uk/tex-archive/macros/latex/contrib/koma-script/scrguide.pdf
+  % zu finden. Kommentiere aus / deaktiviere, was Du nicht brauchst
+  % (z.B. `fromphone`).
+  \KOMAoptions{
+    fromalign=left, % english
+    refline=dateright% english
+  }
 }
-%\setkomavar{refline}[]{dateright}
-% This must be put in the 1st section of the letter 
-\setkomavar{subject}[afteropening]{\subject}
+
+% data sender, common for langauges 
+\setkomavar{fromname}{\FullName}
+\setkomavar{fromemail}[]{\EMail}
+
+\iflanguage{german}
+{
+  % Absenderdaten:
+  \setkomavar{frommobilephone}[]{\Mobil}
+  \setkomavar{fromaddress}{%ohne name
+    \AbsenderStrasse\\
+    \AbsenderDPLZOrt
+  }
+
+  \setkomavar{subject}[]{\subject}
+
+}{
+  % Absenderdaten:
+  \setkomavar{frommobilephone}[]{\mobile}
+  \setkomavar{fromaddress}{%ohne name
+    \AbsenderStrasse\\
+    \AbsenderDPLZOrt
+  }
+  \setkomavar{subject}[afteropening]{\subject}
+}
 
 
 % signatur linksbündig mit ordentlichem Abstand vorher für pic. 
 \setkomavar{signature}{\FullName}
 \renewcommand*{\raggedsignature}{\raggedright}
 \setplength{sigbeforevskip}{0.0cm}
-
-}
