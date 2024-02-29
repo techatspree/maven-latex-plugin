@@ -942,6 +942,16 @@ Mention that book and report are like article.
 \PassOptionsToPackage{style=alphabetic}{biblatex}
 -->
 
+<!-- xfig kann jetzt auch in tikz exportieren 
+Zu evaluieren: ist das so gut wie latex+pdf?
+wenn nein, alles lassen wie es  ist, 
+nur kurzer Hinweis im Handbuch.
+
+Sonst: Überlegen, ob man nicht lieber umsteigt: 
+nur ein File, all in one. 
+dann aber tikz vermutlich als package notwendig 
+in den injected files. 
+-->
 
     <release version="2.0" date="2023-08-28" description="">
       <action dev='reissner' type='add'>
