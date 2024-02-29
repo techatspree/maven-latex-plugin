@@ -335,7 +335,7 @@ public class Settings {
   @RuntimeParameter
   @Parameter(name = "docClassesToTargets")
   private String docClassesToTargets =
-      "article,report,book:chk,dvi,pdf,html,odt,docx,rtf,txt\nbeamer,leaflet,scrlttr2:chk,pdf,txt";
+      "article,report,book,minimal:chk,dvi,pdf,html,odt,docx,rtf,txt\nbeamer,leaflet,scrlttr2:chk,pdf,txt";
 
   /**
    * The list of names of latex main files 

@@ -37,9 +37,12 @@ The package \texttt{tex4ht}
 is \IfPackageLoadedTF{tex4ht}{}{not} loaded. 
 
 This document describes the grammar 
-of the native file format of the xfig graphic program version 3.2. 
-It is based on xfig.3.2/Doc/FORMAT3.2 in xfig 3.2 source distribution. 
+of the native file format of the xfig graphic program version 3.2.9. 
+It is based on xfig.3.2.9/Doc/FORMAT3.2 in xfig 3.2.9 source distribution. 
 The file extension is \texttt{.fig} and the file-format is human-readable. 
+Note that compared to version 3.2.8a, in version 3.2.9 
+a comment specifying the encoding has been added. 
+Treating comments as transparent, the format is unchanged. 
 
 If a line contains \texttt{\#}, 
 the rest of the line is ignored as regards the 
@@ -106,7 +109,7 @@ in some cases followed by a single blank.
 
 There is a single exception to this rule: 
 Compound objects as described in Section~\ref{subsec:compound} 
-which turns objects described by subsequent lines 
+which turns a sequence of objects described by subsequent lines 
 into a unique object described by a 
 start line and an end line specific for that compound. 
 Both, start line and end line does not allow a leading blank. 
@@ -140,7 +143,8 @@ some hand-fitting may be needed in some pathological cases.
 The very first line is comment line containing the name and version: 
 %
 \begin{verbatim}
-\#FIG 3.2  Produced by xfig version 3.2.5c 
+#FIG 3.2  Produced by xfig version 3.2.9 
+#encoding: UTF-8
 \end{verbatim}
 
 

@@ -942,16 +942,39 @@ Mention that book and report are like article.
 \PassOptionsToPackage{style=alphabetic}{biblatex}
 -->
 
-<!-- xfig kann jetzt auch in tikz exportieren 
-Zu evaluieren: ist das so gut wie latex+pdf?
-wenn nein, alles lassen wie es  ist, 
-nur kurzer Hinweis im Handbuch.
+<!-- from version 3.2.9 on, xfig, to be more precise fig2dev with the same version 
+can export into tikz. 
+Replacing current conversion combining tex and pdf would be advantageous: 
+faster and less created files around. 
 
-Sonst: Überlegen, ob man nicht lieber umsteigt: 
-nur ein File, all in one. 
-dann aber tikz vermutlich als package notwendig 
-in den injected files. 
+We have an example document src/site/tex/xfig/minTikz.tex in minimal documentclass 
+illustrating that conversion is lossless and 
+thus as good as our combination of pdf/eps and latex. 
+This must be checked in great detail: Are all possibilities of the fig format used? 
+
+Conversion is done as follows: 
+
+fig2dev -L tikz example.fig example.tikz
+
+(-L not needed because ending clarifies, but that way it is clearer. )
+
+The document minTikz.tex illustrates how the result is also scaleable. 
+Maybe here we shall extend headerGrp.tex by some according command, 
+also including tikz, color is present in header.tex already. 
+After some checking we shall make a transition to tikz, 
+but we shall before ensure that the results are really equivalent. 
+So check is on the manual step by step. 
+
+If conversion is done, adapt also clr goal 
+and adapt version of fig2dev which must be minimum 3.2.9. 
+
+One shall notify the developer of xfig, that in the xfig file 
+there shall be a way to specify the (last) export format if any, 
+e.g. in a comment. 
+This would enable this software to decide on the conversion, if supported. 
+Else warning. 
 -->
+
 
     <release version="2.0" date="2023-08-28" description="">
       <action dev='reissner' type='add'>

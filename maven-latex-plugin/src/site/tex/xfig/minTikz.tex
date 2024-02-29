@@ -1,0 +1,17 @@
+\documentclass{minimal}
+\usepackage{tikz}
+\begin{document}
+This document just illustrates the use of document class \texttt{minimal} 
+applied to illustrate the export functionality of the \texttt{xfig} tool 
+creating \texttt{tikz} pictures. 
+The document class \texttt{minimal} is special in that no PDF properties are created, 
+because it serves as a wrapper for details like pictures in the course of document development. 
+
+This document shows, that the \texttt{xfig} format 
+can be translated without loss into the \texttt{tikz} format. 
+
+\begin{center}
+  % the ! means make proportional 
+\resizebox{0.5\textwidth}{!}{\input{example.tikz}}
+\end{center}
+\end{document}
