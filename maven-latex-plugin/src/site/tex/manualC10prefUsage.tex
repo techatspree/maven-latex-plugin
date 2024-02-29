@@ -1,0 +1,230 @@
+\chapter{Preferred usage, Test Concepts and Tests}\label{chap:tests}
+
+This software may be used in different environments, 
+is highly configurable and 
+also there is a huge amount of packages potentially in use. 
+
+In order not to get lost in extensive tests for covering all and everything, 
+the author applies the notion of\index{preferred usage} \emph{preferred usage}. 
+This is essentially the way the author uses this software. 
+This is also what is tested extensively. 
+Other ways of usage are supported insofar as reported bugs are fixed in general, 
+but since explicit tests lack, the quality is lower for these cases. 
+
+The preferred usage is defined as follows: 
+%
+\begin{itemize}
+  \item Linux, to be more precise, SuSE tumbleweed. 
+  The author used this software frequently and always with success on Windows also. 
+  As a shell use git shell. 
+  \item \LaTeX{} Distribution \texlive, to be more precise the SuSE specific variant. 
+  In the long run \miktex{} must be at least tried also. 
+  As \miktex{} is available for Linux also, test will be under Linux. 
+  \item 
+  VS Code with the extensions installed by \texttt{instVScode4tex.sh} 
+  which is described in Section~\ref{subsec:instExtVsCode}, 
+  and the viewer \texttt{okular}. 
+  This is defined here, although not going into the artifacts. 
+  \item The VS Code extension \texttt{james-yu.latex-workshop}, 
+  which is installed by \texttt{instVScode4tex.sh} is used only with build recipe 
+  \texttt{latexmk (latexmkrc)}. 
+  \item If \texttt{latexmk} is used, then with config file \texttt{.latexmkrc}, 
+  whereas \texttt{chktex} is definitely used, 
+  and it is configured with config file \texttt{.chktexrc}. 
+  Both config files are injected by \texttt{inj} described in Section~\ref{subsec:latChkRc}. 
+  \item Neither \texttt{latexmk} nor \texttt{chktex} is used with options. 
+  \item The maven plugin, rather than the ant task. 
+  \item Configuration is the default setting of this plugin. 
+  In particular, the latex processor is \lualatex. 
+  \item Document classes are \texttt{book}, \texttt{article}, 
+  \texttt{beamer}, \texttt{leaflet} and \texttt{scrlttr2}. 
+  For beamer documents, preferred usage are both, the presentation and the handout 
+  as described in Section~\ref{subsec:sourcesLatex}. 
+  Note that, unlike most other aspects of preferred usage, 
+  this is not tested through this manual 
+  but with the beamer presentation and handout given by~\cite{PresBeamer}. 
+  Also, the test for \texttt{leaflet} class is tested by document~\cite{LeafLeaf} 
+  and the test for the letter class is tested in~\cite{LetScrlttr2}. 
+
+  Caution: Currently, the classes \texttt{letter} and \texttt{report} 
+  are not preferred usage, 
+  but the latter is accepted with default configuration without warning. 
+  In the long run, the manual shall be a report, whereas there shall be a user guide 
+  which shall be a book. 
+  
+  Among the document classes provided by KOMA script 
+  described in~\cite{KomaAnl23}, 
+  only \texttt{scrlttr2} is preferred usage. 
+  It replaces \texttt{letter}. 
+  \item \LaTeX{} packages are those given by \texttt{header.tex} 
+  described in Section~\ref{subsec:header}. 
+  \item Graphics are in the formats described and used in the manual. 
+  \item Using tools pythontex, makeindex, splitindex, makeglossaries 
+  belongs to the preferred usage. 
+  This does not mean that these tools must be used, 
+  but it means that the usage is restricted to these tools, not taking graphics into account. 
+  \item Tools must be used with accepted version, 
+  in the sense that \texttt{mvn latex:vrs} does not emit a warning. 
+  \item The output format is PDF\@. 
+  \item The support of reproducible PDF files and here of the first kind: 
+  Reproducibility does not only refer to the visible aspects of the PDF file, 
+  but also to meta-data. 
+  \item Reproducibility is reached by manipulating the system time, 
+  although as an alternative method also suppressing writing meta-info into the PDF file is supported. 
+  \item 
+  Security issues are addressed by including a header described in Section~\ref{subsec:headerSuppressMetaPDF}. 
+\end{itemize}
+
+
+It is the ``founded conviction'' of the author, that in most of the use cases, 
+restriction to the preferred usage is possible 
+but when deviating, there is some increased risk 
+that there is a bug in this \LaTeX{} builder. 
+
+The set of documents coming with this software 
+are compiled sticking to the preferred usage. 
+Above all, this manual~\cite{LatexPlugin} not only describes all vital features, 
+but also uses them, with one big exception: Its document class is \texttt{book}, 
+and it cannot have other document classes of course. 
+Most other documents are \texttt{article}s 
+and~\cite{PresBeamer} refers to a presentation with class \texttt{beamer} 
+and to the according handout which is again an article. 
+So the build process for these documents altogether 
+cover the preferred usage to a wide extent. 
+Thus, a bug in this \LaTeX{} builder 
+is likely to be reflected in a deficiency 
+in the compiled version of one of these documents. 
+
+This shows that testing the compiled documents is a reasonable test strategy. 
+It is not feasible to do this manually for whole documents, 
+and it is also technically close to impossible to do it automatically. 
+What can be checked automatically is coincidence with the last document. 
+
+
+So the strategy is to either change the (source of the) software 
+or the \emph{source of the} documents, but never both at once. 
+If the software is changed, the created documents must persist. 
+Changes in the manual are locally in the sources 
+and result in local changes in the compiled document, 
+because the software was not changed. 
+Thus, the compiled document can be checked manually. 
+Since the only output format being part of the preferred usage is PDF, 
+only compilations into PDF must be taken into account. 
+
+Section~\ref{sec:chkReprod} describes how this \LaTeX{} builder 
+can perform an equality check on PDF documents. 
+There, both Section~\ref{sec:paramRepro} on parameters for equality check is referenced 
+and Table~\ref{tab:TLP} comprising build failures if the documents do not coincide. 
+We highlight the parameter \texttt{chkDiff} which determines whether the check is performed 
+and build failures \texttt{TLP01} thrown if the documents differ. 
+In tests, \texttt{chkDiff} is set \texttt{true}, the default is \texttt{false}. 
+\medskip
+
+
+Although this test concept seems appealing, 
+it is not always easy to realize. 
+
+Before explaining the difficulties, let us differentiate between the two ways 
+the pom of this plugin uses this plugin itself. 
+The pom for performing tests 
+is based on \href{\urlSite fromMain/pom4pdf.xml}{pom4pdf.xml}, 
+not on the actual \texttt{pom.xml} of the project 
+a version of which is 
+\href{https://github.com/Reissner/latex-maven-plugin/tree/master/maven-latex-plugin}%
+{on github}. 
+For \texttt{pom4pdf.xml}, the current version is determined by filtering, 
+which remains correct even during the release process. 
+In addition, the project \texttt{pom.xml} used for development 
+contains another, explicit dependency to \texttt{latex-maven-plugin}. 
+This one is used for creating the documents for the site 
+and also for developer tests. 
+Thus, during development \texttt{pom.xml} is kept close to \texttt{pom4pdf.xml}, 
+and it has a snapshot version \texttt{x.y.0-SNAPSHOT}. 
+
+Let us first consider the case of development 
+in which the version of this plugin is a SNAPSHOT version. 
+Then tests refer to the (snapshot) version under consideration. 
+If a change is made to the documents and all tests pass, 
+the changed documents are compiled with current software, 
+and go into the next snapshot deployed. 
+To be precise, the documents are compiled with deployed software, 
+which is equivalent with the software compiled from the current sources. 
+
+If in contrast the software is changed, keeping the manual unchanged, 
+then still compilation of the documents and also check 
+is performed with the deployed version of this \texttt{latex-maven-plugin}. 
+So, to decide whether the documents remain the same after the software change, 
+a second build must be performed, 
+because this compiles with the newly deployed snapshot of this software. 
+
+
+
+The situation is even more complicated 
+if development is finished for the current version 
+and a new release must be built. 
+As is state of the art, 
+for this task the \texttt{maven-release-plugin} is used. 
+It requires for sake of reproducibility, 
+that the pom of the project, not the pom  has dependencies and plugins only in release versions, 
+no snapshot versions. 
+
+As is state of the art, 
+for release the \texttt{maven-release-plugin} is used. 
+Whereas it has no explicit restrictions on the pom for tests \texttt{pom4pdf.xml}, 
+it requires for sake of reproducibility, 
+that the pom of the project \texttt{pom.xml} has dependencies and plugins 
+only in release versions, no snapshot versions. 
+This applies also to this plugin. 
+For development, it has version \texttt{x.y.0-SNAPSHOT} 
+to deploy \texttt{x.y.0}, and this is also the version one wants to create a site with, 
+but this is the one to released at present. 
+A possible fallback is always to deactivate the usage of this plugin. 
+As a consequence, later a version \texttt{x.y.1} shall be released, 
+which uses \texttt{x.y.0} for site creation. 
+Better is to use the last release version and to configure it so 
+that the documents can be compiled with the old version. 
+This may require a creative release planning, including features used to compile documentation 
+and maybe a change in the parameters or some other change in the environment, 
+which must be compensated in later releases also. 
+
+Let us give examples of creative realizations of the described test concept 
+relying on thorough release planning. 
+To release \texttt{2.0.0} starting with the prior version \texttt{1.8.0}, 
+almost only injections are added. 
+These can be done manually using \texttt{2.0.0-SNAPSHOT}. 
+Then the injected files are checked in into version control 
+and then the documentation can be compiled with old version \texttt{1.8.0} 
+with the same result. 
+In a release \texttt{2.0.1}, version \texttt{1.8.0} can be replaced by \texttt{2.0.0}. 
+
+For version \texttt{2.1.0} it is planned, that this plugin can use \texttt{latexmk}, 
+and in the manual this is also described. 
+In \texttt{2.1.0-SNAPSHOT} the manual may be compiled using \texttt{latexmk}, 
+but nevertheless, in \texttt{2.1.0} the manual is still compiled without \texttt{latexmk}, 
+using release \texttt{2.0.0} for creating the manual for the site. 
+Only in \texttt{2.1.1}, also the manual is included in the site using \texttt{latexmk}. 
+
+For version \texttt{2.2.0} it is planned, to support \texttt{bib2gls} directly. 
+Observe that \texttt{2.1.0} supports can treat \texttt{bib2gls} via \texttt{latexmk}, 
+but without all the monitoring \texttt{2.2.0} offers with direct support. 
+Of course, the manual describes direct support and 
+some \texttt{2.2.0-SNAPSHOT} is able to compile the manual using \texttt{bib2gls} directly. 
+Nevertheless, close to release for site creation, 
+\texttt{2.1.0} is used again relying on \texttt{latexmk} to invoke \texttt{bib2gls}. 
+In \texttt{2.2.1} then \texttt{2.2.0} can be used for site creation invoking \texttt{bib2gls} directly. 
+
+
+Note that the test concept based on preferred usage has a considerable weakness: 
+It cannot test warnings, errors and exceptions 
+because they are not preferred usage. 
+On the other hand, it is an important design goal, 
+that the result of this software is trustable if no warning, error or exception occurs. 
+This requires extensive tests also on imperfect runs. 
+These must be supplemented in the future. 
+
+FIXME\@: this chapter describes the tests to be performed. 
+
+Missing are tests on logging, tests on various input formats, 
+output formats, tests including several paths 
+defined by invocation of auxiliary applications for index, glossary, \dots 
+
