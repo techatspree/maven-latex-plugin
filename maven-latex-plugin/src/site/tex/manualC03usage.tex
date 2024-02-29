@@ -137,8 +137,8 @@ This software is tested for document classes
 as the built-in classes \texttt{article} and \texttt{book}, 
 for \texttt{beamer} which is for presentations as described in~\cite{Beamer}, 
 for \texttt{leaflet} creating leaflets as explained in~\cite{Leaflet} 
-and in~\cite{LeafletMan} 
-and for letters using document class \texttt{scrlttr2}. 
+and in~\cite{LeafletMan}, 
+for letters using document class \texttt{scrlttr2} and for the class \texttt{minimal}. 
 So far, \texttt{scrlttr2} is the only KOMA\index{KOMA} class 
 this software has been tested for. 
 KOMA classes are treated in~\cite{KomaAnl23} 
@@ -203,8 +203,9 @@ before loading the document class, e.g.\@ via
 %
 This is the technique to pass options to packages in general. 
 
-
-For all document classes, it is recommended to load \pkg{nag} 
+For documents of class \texttt{minimal} there are no requirements imposed. 
+No checks and no PDF-info. 
+For all other document classes, it is recommended to load \pkg{nag} 
 before \cmd{documentclass} using 
 %
 \begin{Verbatim}[fontsize=\small]
@@ -614,9 +615,10 @@ via the setting \texttt{targets},
 the possible targets may depend on the document class of the latex main file. 
 At time of this writing, 
 all document classes in preferred usage as defined in Chapter~\ref{chap:tests} 
-support all targets with one exception: 
+support all targets with obvious exceptions: 
 Besides checking (target \texttt{chk}) for obvious reasons 
-the beamer class directly supports only target \texttt{pdf} 
+the classes \texttt{beamer}, \texttt{leaflet} and the letter class \texttt{scrlttr2} 
+directly support only target \texttt{pdf} 
 and because texts are created from PDF files, also target \texttt{txt}. 
 The mapping from document classes to allowed targets 
 is given in setting \texttt{docClassesToTargets} given in 

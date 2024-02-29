@@ -324,7 +324,7 @@ public class Settings {
    * As a side effect, compilation of document classes cause warnings if not registered here. 
    * The default value consists of two chunks: 
    * <ul>
-   * <li><tt>article,report,book:chk,dvi,pdf,html,odt,docx,rtf,txt</tt> 
+   * <li><tt>article,report,book,minimal:chk,dvi,pdf,html,odt,docx,rtf,txt</tt> 
    * ensures that article and book allow all targets. </li>
    * <li><tt>beamer,leaflet,scrlttr2:chk,pdf,txt</tt> beamer allows mainly pdf and derived from that txt. 
    * Checking with chk does not depend on the document class. 
