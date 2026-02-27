@@ -1,0 +1,653 @@
+%%%BC  Don, I have suggested some editing to your fine epistle.
+%%%BC  They are all preceeded by those five letter characters, but not
+%%%BC  not always starting in column 1.  I would like to distribute
+%%%BC  the edited form to our printer standards committee along with
+%%%BC  Tom Reid and Glen V.'s work. Do I have your permission to
+%%%BC  make those corrections?  The opinions are really notes to me.
+%%%BC  These notes show a lot of thought.
+%%%BC  Thanks, Bart Childs.
+%%%BC
+%%% Format=LaTeX
+%%%
+\documentstyle[twoside]{article}
+                             % I'm not wedded to this.
+                             % LaTeX was chosen so that the recipient
+                             % could format this to match whatever style
+                             % they like.
+
+\font\logo=logo10    % Ideally this would be logo10
+\def\AmSTeX{$\cal A\kern-.1667em\lower.5ex\hbox{$\cal M$}\kern-.075em
+  S$-\TeX}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\def\SliTeX{{\rm S\kern-.06em{\sc l\kern-.035emi}\kern-.06em T\kern
+   -.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\def\TeXMaG{T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\-% TeX part
+   M\kern-.1667em\lower.5ex\hbox{A}\kern-.2267emG}
+\def\TeXhax{T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\-{\sc hax}}
+\def\MF{\hbox{\logo META}\-\hbox{\logo FONT}}
+\def\PS{{\sc PostScript}}
+\def\Unix{{\sc Unix}}
+
+\chardef\BS=`\\    % This is a better way of doing things than Lamport's
+                   % \newcommand
+
+\newcommand{\Special}{{\tt\BS special}}
+\newcommand{\DVI}{{\tt DVI}}
+
+\def\.#1{\ifvmode\leavevmode\fi\hbox{\tt\let\\=\BS
+         \chardef\{=`\{\chardef\}=`\}\chardef\ ='40
+         \chardef\&=`\&#1}}
+
+\begingroup
+\catcode`\_=\active\catcode`\-=\active\catcode`\|=\active
+\gdef\BNFdefs{\def\&##1{\hbox{\bf##1}}
+   \def\dash{\char'174\space} % '174 is an em-dash.
+   \def\e{\hbox to 1em{\hss$\epsilon$\hss}}
+   \catcode`\_=\active\let_=\_
+   \catcode`\-=\active\def->{&\hbox to 1em{\hss$\rightarrow$\hss}}
+      \chardef\-=`\-
+   \catcode`\|=\active\def|{&\hbox to 1em{\hss$\mid$\hss}}
+      \def\|{\hbox to 1em{\hss$\mid$\hss}}
+   \let\\=\cr}
+\endgroup
+
+\def\BNF{\bgroup\BNFdefs\halign\bgroup\hss\it\boldmath##
+         &\it\boldmath##\hfil\cr}
+\def\endBNF{\crcr\egroup\egroup\noindent}
+
+%%%
+%%% Other definitions should be placed here:
+
+
+%%%
+%%% Here are some LaTeX commands for the title
+\title{Proposed \DVI\ \Special\ command standard}
+\author{Don Hosek\\
+         Harvey Mudd College\thanks{BITNET: {\tt DHOSEK@HMCVAX}.
+         Phone: (714)~621-8000.
+         Postal address: Platt Campus Center, Harvey Mudd College,
+         Claremont, CA 91711}\\
+         Claremont, CA}
+%%%BC I like the telephone better. Mine is 409-845-5470
+%%%DH There's little hope of catching me on the phone, but I'll include it
+%%%DH any way.
+\date{August 6, 1987}
+
+\begin{document}
+\maketitle
+
+The information in this report includes some ideas based on responses to
+an article sent to the \TeXhax\ mailing list and printed in the \TeXMaG\
+electronic ``magazine''. Among those people who sent me suggestions were
+Neta Amit, Stephan Bechtolsheim, Peter Breitenlohner, `dorab', John
+Gourlay, Jean-Francois Lamy, Kevin LaRue, William LeFebvre, and Thomas
+J.~Reid. Also, Dean Guenther invited me to send my suggestions for the
+TUG meeting. I apologize if I left anyone out of this list.
+
+\section{Introduction}
+It is becoming clear that some sort of standard on the syntax and
+effect of \Special\ commands is necessary. In my original report to
+\TeXhax\ and \TeXMaG\ \cite{hosek:specials}, I outlined some of the
+issues to be confronted in the development of a \Special\ standard.
+These included device dependency, naming conventions and syntax,
+graphics, and scope (see also \cite{fox:changebars}).
+
+Dean Guenther informs me that he hopes to see some definite standards
+for \Special\ commands set after this year's TUG meeting, and
+Stephan Bechtolsheim (\.{dvi2ps}) is holding off on writing the
+\Special\ handling code for his latest version of the driver until the
+\Special\ command issue is resolved. The suggestions in this paper are
+just that, suggestions; the specifications of this proposed standard are
+open to change. The final standard that comes out of this meeting should
+be specific enough that all implementations of it can generate identical
+results, but also open to extension to reflect changes and innovations
+in printing technology.
+
+\section{Syntax}
+The general syntax for a \Special\ command is: optional environment
+setting commands followed by the special command with multiple special
+commands separated by semicolons. A Backus-Naur Form\footnote{See
+\cite{aho:compilers} for additional information on BNF} syntax for
+\Special\ commands follows:
+\begin{BNF}
+special_command-> spec_cmd \.; special_command \| spec_cmd\\
+spec_cmd-> environment_setting_cmds cmd\\
+         | \e\\
+environment_setting_cmds-> env_cmd environment_setting_cmds\\
+         | \e\\
+\end{BNF}
+Most possible {\it cmd\/} or {\it env\_cmd} values accept options
+that have the syntax described below:
+\begin{BNF}
+options-> required_space opt options \| \e\\
+required_space-> \.\ \ optional_space\\
+optional_space-> required_space \| \e\\
+opt-> angle \| position \| scaling \| tag \| length \| color\\
+         | cap_shape \| file_name\\
+angle-> \." real \| \./ real \., real\\
+position-> \.( dimen \., dimen \.) \| \.+ \.( dimen \., dimen \.)\\
+scaling-> \.< opt_real \., opt_real \.> \| \.[ dimen \., dimen \.]\\
+tag-> chars \.:\\
+length-> req_dimen\\
+color-> \.{black} \| \.{white}\\
+         | \.{red} \| \.{blue} \| \.{yellow}\\
+         | \.{violet} \| \.{green} \| \.{orange}\\
+         | \.{brown}\\
+         | color \.{\&} color\\
+cap_shape-> \.{butt} \| \.{round} \| \.{square} \| \.{bar}\\
+file_name-> opt_area name opt_ext\\
+real-> digit digit_string\\
+         | digit digit_string \.. digit_string\\
+opt_real-> real \| \e\\
+digit-> \.0 \| \.1 \| \.2 \| \.3 \| \.4 \| \.5 \| \.6 \| \.7 \| \.8 \| \.9\\
+digit_string-> digit digit_string \| \e\\
+dimen-> opt_real unit\\
+req_dimen-> real unit\\
+unit-> scaled_unit \| \.{true} scaled_unit \| \e\\
+scaled_unit-> \.{pt} \| \.{pc} \| \.{in} \| \.{bp} \| \.{cm} \| \.{mm}
+         \| \.{dd} \| \.{cc} \| \.{sp}\\
+chars-> chr chars \| \e\\
+chr-> letter \| digit \\
+letter-> \.A \dash \.Z \| \.a \dash \.z\\
+opt_area-> \.< name \.> \| name \.: \| \e\\
+opt_ext-> \.. name \| \e\\
+\end{BNF}
+
+Details of the semantics of the various possiblities for {\it env\_cmd\/}
+or {\it cmd\/} are given in sections~\ref{sec:env} and~\ref{sec:cmds}.
+However, a brief overview of the various {\it env\_cmd\/} and {\it cmd\/}
+values will be given, followed by  an explanation of the various
+{\it option\/} values.
+
+\subsection{Overview of {\it env\_cmd}}
+An environment command or commands affect {\it only\/} the first
+{\it cmd\/} following it. Since {\it cmd\/} is never empty, this means
+that an environment setting command can not affect a {\it cmd\/} that is
+in a different \Special\ than the one in which the {\it env\_cmd\/}
+appeared.
+
+The following is a list of possible {\it env\_cmd\/} values with
+option list and a brief description. A detailed explanation will be
+deferred until Section~\ref{sec:env}.
+\begin{description}
+\item[\.{black} {\it color\/}] Set the color to be used as black.
+\item[\.{linecap} {\it cap\_shape\/}] Set the shape of line ends.
+\item[\.{linewidth} {\it length\/}] Set the width of lines.
+\item[\.{offset} {\it position\/}] Change the location of the output
+         from {\it cmd.\/}
+\item[\.{turn} {\it angle\/}] Rotate the command.
+\item[\.{scale} {\it scaling\/}] Scale the command.
+\item[\.{white} {\it color\/}] Set the color to be used as white.
+\end{description}
+
+\subsection{Overview of {\it cmd}}
+\begin{description}
+\item[\.{arc} {\it length\/} {\it angle\/} {\it angle\/}] Draw an arc.
+\item[\.{beginbar} {\it tag\/}] Begin a vertical bar at the current \DVI\
+         $h,v$ coordinates.
+\item[\.{circle} {\it length}] Draw a circle.
+\item[\.{disk} {\it length\/}] Draw a filled-in circle.
+\item[\.{endbar} {\it tag\/}] End a vertical bar at the current \DVI\ $v$
+         coordinate.
+\item[\.{include} {\it tag\/} {\it file\_name\/}] Include the graphics
+         image of the type {\it tag\/} contained in {\it file\_name.}
+\item[\.{landscape}] Orient the page in the landscape position.
+\item[\.{line} {\it length\/} {\it angle\/}] Draw a line.
+\item[\.{message}] Send {\it option\/} to the terminal.
+\item[\.{newsheet}] Force a new sheet.
+\item[\.{pie} {\it length\/} {\it angle\/} {\it angle\/}] Draw a
+         filled-in arc.
+\item[\.{portrait}] Orient the page in the portrait position.
+\item[\.{rotate} {\it angle\/}] Rotate the page about the center of the
+         {\sl real\/} page.
+\item[\.{spline} {\it position\/} {\it position\/} {\it position\/}] Draw
+         a B\'ezier cubic.
+\item[\.{textcolor} {\it color\/}] Set the current text color.
+\end{description}
+
+\subsection{Overview of {\it opt}}
+The order in which the {\it opt\/} values appear in {\it options\/}
+is not important unless more than one {\it opt\/} of a given type
+appears in the paramter list.
+
+\subsubsection{Angles}\label{sec:angle}
+An angle may be specified in two manners. It may be given as~\." followed
+by a real number (let us call it~$n$). The angle~$\theta$ represented,
+is then considered to be (in degrees) $n \bmod 360$ if
+$n \bmod 360\le180$, and $360-(n \bmod 360)$ otherwise. It may also
+be given as \./ followed by two reals separated with a comma (let us
+call them $m$~and~$n$). If $n>0$ and $m\ge0$ then
+$\theta=\arctan\left|m/n\right|$; if $n>0$ and $m<0$ then
+$\theta=180-\arctan\left|m/n\right|$; if $n<0$ and $m\ge0$ then
+$\theta=-180+\arctan\left|m/n\right|$; if $n<0$ and $m<0$ then
+$\theta=-\arctan\left|m/n\right|$; if $n=0$ and $m<0$ then $\theta=180$;
+and if $n=0$ and $m>0$ then $\theta=0$. If $m=0$ and $n=0$ then the
+command should be flushed.
+All angles are considered to be counterclockwise measured from ``up''
+on the current page orientation, unless specified otherwise.
+
+If an angle must be rounded,\footnote{This generally only applies to
+rotation of figures or pages where the array of available rotations
+would tend to be relatively small, such as [-180, -90, 0, 90].} it should
+be rounded as follows:
+\begin{enumerate}
+\item Assuming that the available angles of rotation are in the
+         array~$p$, scan through~$p$ from $1$~to $\it last$ in increasing
+         order. Continue to scan until $p_i\ge\theta$.
+%%%BC I think that $p_i\ge\theta$. is more direct
+%%%DH Good point.
+\item If $p_i-\theta\le\theta-p_{i-1}$ then round $\theta$ to $p_i$,
+         otherwise, round $\theta$ to $p_{i-1}$ ($p_0$ should be set
+         ridiculously low, to make sure that $\theta$ is rounded to $p_1$
+         if $\theta<p_1$).
+\end{enumerate}
+
+\subsubsection{Dimensions}
+Dimensions are specified in essentially the same format as \TeX\ uses
+(see \cite[Chapter~10]{knuth:texbook} for details on the meanings of
+the units used). One extension to this format is that integer values
+shall be assumed to be in terms of \DVI~units (as defined in
+\cite[\S13--20]{ware:dvitype}). In the case of \TeX82, \DVI~units are
+always scaled points ($2^{-16}$~points) so a construction such as
+\verb|\number\mydimen| will yield a valid dimension for a \Special\
+command. This could be used by macros that generate \Special\ commands
+rather than \verb|\the\mydimen| to keep computations by the postprocesor
+down.
+
+Dimensions should be rounded to pixel dimensions using the algorithim
+of {\it rule\_pixels} \cite[\S76]{ware:dvitype}.
+
+\subsubsection{Positions}
+An offset may be described in two manners. An absolute offset is given
+as $\.(x,y\.)$ where $x$~and~$y$ are optional dimensions. If the
+dimension is omitted, the current $h$~or %%%BC inserted a blank here
+    $v$ is substituted for it. The
+standard \DVI\ coordinate system is used (see \cite[\S14]{ware:dvitype}).
+
+A relative offset is specified as $\.+\.(x,y\.)$ where $x$~and %%%BC and here
+    $y$ are
+optional dimensions. If a dimension is omitted, it is treated as zero.
+$x$~is added to the current~$h$, and $y$~is added to the current~$v$
+to get the position for the output of the \Special\ command.
+
+\subsubsection{Scaling}
+Scaling may be described in two manners. Absolute scaling is given as
+$\.[x,y\.]$ where $x$ and $y$ are optional dimensions. If a dimension
+is omitted, the natural width of the \Special's output is substituted
+for it. When given, $x$~or~$y$ cause the width or height of the
+\Special's output to be scaled to match the given dimension.
+
+Relative scaling is specified as $\.< x, y \.>$ where $x$~and~$y$ are
+optional reals. If $x$~or~$y$ are omitted, then they are treated as~1.
+Scaling is performed by multiplying the natural width of the special
+by~$x$ and the natural height by~$y$.
+
+\subsubsection{Tags}
+A tag is used to indicate the nature of external information to be
+included. Their interpretation is given under the description of
+each command that uses them in section~\ref{sec:cmds}. Tags may be of
+any length.
+%%%BC When I first read this I could not figure out what it was.
+%%%BC Then when I did, I became absolutely opposed. Having a TAG
+%%%BC   means that it cannot be device independent. This should be
+%%%BC   left as it is for input because the thoughts must be considered.
+%%%DH Not necessarily device dependant; the tag only indicates what the
+%%%DH   information comes from (they are only used by the graphics inclusion
+%%%DH   facility at present) Just because I'm driving a PS printer doesn't
+%%%DH   mean that I can't or shouldn't attempt to deal with a Tektronix plot
+%%%DH   file or a series of QUIC commands or whatever.
+
+\subsubsection{Lengths}
+A length is given as a dimension. It may not be omitted.
+
+\subsubsection{Colors}
+A color may be one of the names from the definition of {\it color\/} or
+some combination of them. A color not in the list of names may be
+obtained by ``mixing'' colors (e.g. pink may be specified as
+\.{red\&white}). If two graphic objects overlap that are of different
+colors, then the object whose definition occurs later in the page should
+take precedence.
+
+\subsubsection{Line Cap Shapes}
+The shape of the end of a line may be one of three forms:\footnote
+{\cite[p.~217]{adobe:psref} contains illustrations of three of the line
+caps described}
+\begin{description}
+\item[\.{butt}] The line is squared off at its endpoint.
+\item[\.{round}] A semicircle with radius equal to half of the line width
+         is drawn at the end of the line.
+\item[\.{square}] The line is extended one half of the line width past
+         its endpoint and squared off.
+\item[\.{bar}] If the line is vertical at its endpoint, this is treated
+         as a butt cap. Otherwise, a vertical line is drawn through the
+         endpoint, and the edges of the lines are extended or retracted
+         to meet the vertical line drawn.\footnote{This is primarily
+         intended for musical typesetting. See \cite{gourlay:music} and
+         \cite{renner:textyl} for more information on the subject.}
+\end{description}
+
+\subsubsection{File Names}\label{sec:filename}
+File names are specified in the same manner as used by \TeX\ and \MF\
+(see \cite[Part 29]{knuth:texprog} for details and \.{WEB} code).
+The default directory specification is left up to the \DVI\ driver
+designer, although it is suggested that there be some standard
+directory defined for commonly used included images (such as a
+letterhead). Default file extensions are dependent on the context
+of {\it file\_name.\/}
+%%%BC I guess that I end up with the same thoughts that I had back on
+%%%BC   the tags. The extension should be furnished by the driver
+%%%BC   because that becomes system dependent, not DVI.
+
+
+\section{Environment setting commands}\label{sec:env}
+The commands described here are used to set certain parameters on
+graphics, etc., %%%BC what is this?
+                %%% changed \&c to etc.
+    \Special\ commands. They only affect %%%BC changed effect to affect
+    the {\it cmd\/}
+following them. For example, In the following series of \Special\
+commands, the \.{color} special will only affect the \.{line} command,
+not the
+\.{arc}.
+\begin{verbatim}
+\special{color red line "0 1in; arc "-10 "10 1in}
+
+\special{color red line "0 1in}
+\special{arc "-10 "10 1in}
+\end{verbatim}
+%%%BC The above is questionable! It is enough for the user to
+%%%BC   have to understand TeX's difficulties without having
+%%%BC   to learn arbitrariness that may be in the driver too.
+%%%BC Leave as is for now!
+
+The %%%BC removed an extra word
+%%%BC commands
+    individual commands are described below, organized by their
+effects. %%%BC added an `s'
+
+\subsection{Color setting commands}
+The \.{black} and \.{white} commands set colors to be used by graphics
+commands.
+\begin{description}
+\item[\.{black} {\it color\/}] Set the color to be used for ``black''.
+         {\it i.e.,\/} the color that lines and curves of graphics
+         primitives are to be drawn in and the color to be used for
+         pixels to be colored in an included graphic image. The default
+         black is \.{black}.
+\item[\.{white} {\it color\/}] Set the color to be used for ``white''.
+         {\it i.e.,\/} the color that will be used for pixels that
+         are set off in an included graphic image. The default white is
+         \.{white}.
+\end{description}
+
+\subsection{Line and curve parameter commands}
+These commands are intended to affect the shapes of lines and curves
+drawn by graphics primitives.
+\begin{description}
+\item[\.{linecap} {\it cap\_shape}] Set the shape of the ends of lines.
+         See the description of {\it cap\_shape\/} above for details
+         on that parameter. The default line cap is \.{butt}.
+\item[\.{linewidth} {\it length}] Set the width of lines and curves to be
+         drawn by graphics primitives. The edges of the line will be
+         half the line width from the zero-width path of the curve or
+         line. The default line width is $0.38889$pt.
+\end{description}
+
+\subsection{Translation and rotation}
+Graphic output is normally placed at the current \DVI\ $h,v$ coordinates.
+These commands alter the placement and sizing of graphic output from a
+\Special\ command.
+\begin{description}
+\item[\.{offset} {\it position\/}] Move the output of the \Special\
+         command by/to {\it position.\/} The default is to print it
+         where it appears.
+\item[\.{turn} {\it angle\/}] Rotate the output of the \Special\
+         command about the position where it appears. The default is
+         to leave it unrotated.
+\item[\.{scale} {\it scaling\/}] Scale the output of the \Special\
+         command by the amount specified by {\it scaling.\/} The default
+         is to print the output at the natural size.
+\end{description}
+
+\section{Proposed  commands}\label{sec:cmds}
+%%%BC No {\it cmd\/} may not have an affect on any page than the one upon
+%%%BC suggested new line for above
+No {\it cmd\/} may affect any page other than the one upon
+which it appears. A {\it cmd\/} also may not change the positioning
+of text. The commands proposed are listed below, organized by type.
+%%%BC I am sure that there is reason for the suggestion. However,
+%%%BC   I would sure want the next one, DUPLEX, to be global.
+%%%BC What commands did you have in mind?
+%%%DH There is no duplex special; duplex printing should be specified by
+%%%DH a command line option or some such.
+
+\subsection{Duplex printing}
+Duplex printing ({\it i.e.,\/} printing on both sides of a sheet of
+paper, is a feature available with some output devices. Duplex printing
+can only be selected on a global basis (generally through a command-line
+option), but a new sheet may be forced if necessary (for example, for
+a table of contents page that is output at the end of the document).
+This is accomplished with the \.{newsheet} command.
+\begin{description}
+\item[\.{newsheet}] Force a new sheet on output. If \.{newsheet} appears
+         on a page that would normally be printed on the back of a sheet
+         of paper than that page will be printed on a new sheet of paper.
+         If the \Special\ appears on the front of a sheet of paper (this
+         is always the case in simplex printing) then \.{newsheet} has no
+         effect.
+\end{description}
+
+\subsection{Page orientation}
+Most output devices have the ability to print output rotated
+by~$90^\circ$ and sometimes other values. This can be globally specified
+{\sl only\/} by the user interface to the \DVI-driver. Changes on a {\sl
+single page basis\/} may be made through \Special\ commands listed below
+(These commands will generally be issued inside of a command pair
+%%%BC added pair to the above and endinsert below 2 lines
+    such as
+\verb|\pageinsert ... \endinsert|).
+\begin{description}
+\item[\.{rotate} {\it angle\/}] The page that \.{rotate} appears upon
+         will be printed rotated $n^\circ$ counterclockwise from the
+         vertical position on the actual sheet. If necessary, the
+         angle should be rounded as outlined in section~\ref{sec:angle}.
+         If more than one \.{rotate} occurs on a given page, the one
+         occurring later takes precedence.
+\item{\.{landscape}} A specialized case of \.{rotate}. {\it angle\/} is
+         set to $90^\circ$.\footnote{Or $-90^\circ$ if $90^\circ$ is not
+         available and the former is.}
+\item{\.{portrait}} A specialized case of \.{rotate}. {\it angle\/} is
+         set to $0^\circ$. This is likely to only be of use in a document
+         with a global orientation other than $0^\circ$.
+\end{description}
+
+\subsection{Graphics Inclusion}
+To maintain a reasonable degree of compatibility between device drivers
+for graphics inclusion, a graphics inclusion facility must know something
+about
+%%%BC removed ->      both
+           the nature of the graphics file. This may be either the
+intended destination of the graphics file (for example, a file may
+be composed of Hewlett-Packard LaserJet Plus control codes) or the
+source of the file (MacPaint, for example can generate \PS\ output;
+however, it contains additional header information which must be stripped
+off of the file before it can be included in a \PS\ file generated by
+some \DVI-to-PS program).
+
+A \DVI\ driver should insure that the current {\em real\/} values of
+$h$~and~$v$ are not changed by any included graphics. If the device
+allows absolute positioning on the page, then the simplest approach
+is to simply reset the position on the page; otherwise the driver
+{\em must\/} keep track of position changes in the included file
+and compensate appropriately afterwards.
+
+\begin{description}
+\item[\.{include} {\it tag\/} {\it file\_name}] Include the graphics
+         file in {\it file\_name\/} of type {\it tag.\/}
+
+         {\it tag\/} indicates the nature of the graphics file.
+         Intelligent drivers should be able to interpret ``foreign''
+         graphics formats. Possible values for {\it tag\/} are: (this is
+         not a full list; other values may be added as necessary to
+         reflect new printers or graphics software)
+         \begin{description}
+         \item[\.{BITMAP:}] The file is a bitmap of an image with the
+                   first fullword indicating the width of the bitmap
+                   (in pixels), the second fullword indicating the
+                   height of the bitmap, and third fullword indicating
+                   the intended resolution (in dpi). The data following
+                   this is the binary data for the bitmap scanning from
+                   left to right horizontally and top to bottom
+                   vertically. If rows will not align on fullwords,
+                   then they will be padded on the right with 0~bits.
+         \item[\.{EPIC:}] The file is composed of EPIC graphics commands.
+         \item[\.{HALFTONE:}] The file contains a halftone graphics
+                   image. Format is similar to that for \.{BITMAP:}
+                   except that the first byte contains a value indicating
+                   how many bits each pixel requires to store its
+                   gray-scale value.
+         \item[\.{IMP:}] The file is composed of \.{IMPRESS} commands.
+         \item[\.{INTER:}] The file is composed of Xerox Interpress
+                   commands.
+         \item[\.{MAC:}] The file is a \PS\ file created by a MacIntosh
+                   graphics program such as MacPaint.
+         \item[\.{PCL:}] The file is composed of PCL instructions.
+         \item[\.{PS:}] The file is composed of \PS\ commands.
+         \item[\.{QUIC:}] The file is composed of {\sf QUIC} control
+                   sequences.
+         \item[\.{TEK:}] The file is composed of Tektronics plot
+                   commands.
+         \end{description}
+
+         The file name is as described above in
+         section~\ref{sec:filename}. The default filetype is {\it tag\/}
+         (less the colon).
+\end{description}
+
+\subsection{Graphics primitives}
+The ability to generate simple figures using graphics primitives has
+been used in the program \.{DVIIMP} \cite{ware:dviimp} and a few
+versions of other \DVI-drivers. There is also a \Unix\ utility called
+\.{tpic} which uses \.{pic} commands to generate \Special\ commands for
+\TeX. The philosophy of these graphics primitives could also be
+applied to the \LaTeX\ \.{picture} environment (see \cite{lamport:latex})
+to allow more freedom in the choice of graphic objects.
+
+All graphics primitives ignore \.{white}.
+
+The following graphics primitives are provided:
+\begin{description}
+\item[\.{arc} {\it length\/} {\it angle\/} {\it angle\/}] Draw an arc
+         centered at the current position with radius {\it length\/}
+         from the first {\it angle\/} counterclockwise to the second
+         angle.
+\item[\.{circle} {\it length\/}] Draw a circle with radius {\it length\/}
+         centered at the current position.
+\item[\.{disk} {\it length\/}] Draw a filled circle with radius
+         {\it length\/} centered at the current position.
+\item[\.{line} {\it length\/} {\it angle}] Draw a line of length
+         {\it length\/} at an angle of {\it angle\/} from the current
+         point.
+\item[\.{pie} {\it length\/} {\it angle\/} {\it angle\/}] Draw two lines
+         of length {\it length\/} at the two angles specified, and an
+         arc with the {\it length\/} and angles above, and fill the
+         figure in with the current \.{black} color.
+
+         Line joins are {\sl mitred.\/} The outer edges of the two lines
+         are extended until they meet. If the difference between the two
+         angles is less than $10^\circ$ then the join is drawn as if the
+         two lines each had round line caps and no special joining was
+         done.
+
+         The \.{linecap} setting is ignored.
+\item[\.{spline} {\it position\/} {\it position\/} {\it position\/}] A
+         B\'ezier cubic is drawn from from the current position to
+         the last {\it position\/} in {\it options\/} using the second
+         and third {\it position\/}s as control points.
+\end{description}
+
+\subsection{Miscellaneous \Special\ commands}
+The following miscellaneous commands should also be provided.
+\begin{description}
+\item[\.{beginbar} {\it tag\/}] Begin a vertical line at the current
+         \DVI\ $h,v$ coordinates. The line continues until the $v$
+         coordinate of the matching \.{endbar} on the page. If there is
+         no matching \.{endbar}, then no line is drawn.
+\item[\.{endbar} {\it tag\/}] End a vertical line at the current $v$
+         coordinate (see \.{beginbar}).
+\item[\.{message} {\it option}] Output {\it option\/} to the terminal.
+         If the \DVI-driver does not output page numbers as it processes
+         the file, it should print the \TeX\ page number (from the {\it
+         bop\/} command see~\cite{ware:dvitype}) before printing {\it
+         message\_text.}
+\item[\.{textcolor} {\it color}] All text from the first \DVI\ {\it
+         push\/} to its matching {\it pop\/} are to be typeset in
+         {\it color.\/}
+\end{description}
+
+%\bibliography{texref,misc}
+%\bibliographystyle{plain}
+
+%%% HOSEK1.BBL
+\begin{thebibliography}{10}
+
+\bibitem{aho:compilers}
+Alfred~V. Aho, Ravi Sethi, and Jeffrey~D. Ullman.
+\newblock {\em Compilers: Principles, Techniques, and Tools}.
+\newblock Addison-Wesley, Reading, Massachussetts, 1986.
+
+\bibitem{fox:changebars}
+Jim Fox.
+\newblock Change bars.
+\newblock {\em TUGboat}, 7(3), 1986.
+\newblock Appeared in ``Queries'' section.
+
+\bibitem{gourlay:music}
+John~S. Gourlay, Allen Parrish, Dean~K. Roush, F.~Javier Sola, and Yiling Tien.
+\newblock Computer formatting of music.
+\newblock Technical Report OSU-CISRC-2/87-TR3, Ohio State University, 1986.
+
+\bibitem{hosek:specials}
+Don Hosek.
+\newblock Call for standardization of {\tt dvi} specials.
+\newblock {\em \TeXMaG}, 1(5), 1987.
+
+\bibitem{adobe:psref}
+Adobe~Systems Incorporated.
+\newblock {\em PostScript language reference manual}.
+\newblock Addison-Wesley, Reading, Massachussetts, 1985.
+
+\bibitem{ware:dvitype}
+Donald~E. Knuth.
+\newblock The {\tt dvitype} processor.
+\newblock {\tt WEB} program, Stanford University, August 1984.
+
+\bibitem{knuth:texbook}
+Donald~E. Knuth.
+\newblock {\em The \TeX book}.
+\newblock Addison Wesley, Reading, Massachusetts, 1986.
+
+\bibitem{knuth:texprog}
+Donald~E. Knuth.
+\newblock {\em \TeX: The Program}.
+\newblock Addison Wesley, Reading, Massachusetts, 1986.
+
+\bibitem{lamport:latex}
+Leslie Lamport.
+\newblock {\em \LaTeX: A Document Preparation System}.
+\newblock Addison Wesley, Reading, Massachusetts, 1986.
+
+\bibitem{renner:textyl}
+John~S. Renner.
+\newblock {\TeX}tyl: a line-drawing interface for {\TeX}.
+\newblock Technical Report OSU-CISRC-4/87-TR9, Ohio State University, March
+  1987.
+
+\bibitem{ware:dviimp}
+Arthur~L. Samuel.
+\newblock The {\tt dviimp} processor.
+\newblock {\tt WEB} program, Stanford University, July 1985.
+
+\end{thebibliography}
+\end{document}

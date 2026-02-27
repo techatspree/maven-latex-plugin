@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta name="generator" content="Infopark CMS Fiona; 6.8.0; 53616c7465645f5fb14a315e7e8b33048d3c428086aedb09">
+    <meta charset="utf-8">
+    <title>LRZ: MakeIndex - ein Indexprozessor fuer LaTeX</title>
+    <meta name="robots" content="index,follow"> 
+    
+    
+    <meta name="keywords" content="makeindex, latex"> 
+    <meta name="geo.region" content="DE-BY">
+    <meta name="geo.placename" content="Garching bei München">
+    <meta name="geo.position" content="48.261423;11.668574">
+    <meta name="ICBM" content="48.261423, 11.668574">
+    <link rel="shortcut icon" href="https://www.lrz.de/favicon.ico" title="Favicon">
+    <!-- mobile viewport optimisation -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="LRZ:%20MakeIndex%20-%20ein%20Indexprozessor%20fuer%20LaTeX_files/styles2.css" type="text/css">
+    <!--[if lte IE 7]>
+        <link href="http://www.lrz.de/css2/core/iehacks.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+    <!--[if lt IE 9]>
+        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+     
+  <span>@media print {#ghostery-purple-box {display:none !important}}</span><link rel="stylesheet" type="text/css" id="SL_Style" href="LRZ:%20MakeIndex%20-%20ein%20Indexprozessor%20fuer%20LaTeX_files/translator.css"><link href="LRZ:%20MakeIndex%20-%20ein%20Indexprozessor%20fuer%20LaTeX_files/css.css" rel="stylesheet" type="text/css"></head>
+
+  
+  
+  
+  
+   <body class="hidecol2">
+    <div class="ym-wrapper">
+      <div class="ym-wbox">
+        <header>
+			<div class="ym-grid">
+				<div class="ym-g50 ym-gl linearize-level-2">
+					<div class="ym-gbox">
+                                       
+			<a href="https://www.lrz.de/" title="Leibniz-Rechenzentrum" rollapp-href="https://www.lrz.de/"><img title="Leibniz-Rechenzentrum" class="logo-lrz" src="LRZ:%20MakeIndex%20-%20ein%20Indexprozessor%20fuer%20LaTeX_files/lrz_logo_2014_s.png" alt="LRZ-Logo"></a>
+         
+         
+					</div> <!-- eof ym-gbox -->
+				</div> <!-- eof ym-g50 -->
+				<div class="ym-g50 ym-gr linearize-level-2">
+					<div class="ym-gbox">
+						<!-- content -->
+						<div id="topnav">
+							<!-- start: skip link navigation -->
+							<a class="ym-skip" href="#nav" title="skip link" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#nav">zur Navigation</a><span class="ym-hideme">.</span>
+							<a class="ym-skip" href="#content" title="skip link" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#content">zum Inhalt</a><span class="ym-hideme">.</span>
+							<!-- end: skip link navigation -->
+                                                       <!--noindex-->
+							  <a href="https://www.lrz.de/suchen" rollapp-href="https://www.lrz.de/suchen">Suche</a>
+| 
+
+<a href="https://www.lrz.de/wir/kontakt/adresse/" rollapp-href="https://www.lrz.de/wir/kontakt/adresse/">Kontakt  </a>
+
+| 
+
+<a href="https://www.lrz.de/impressum/" rollapp-href="https://www.lrz.de/impressum/">Impressum</a>
+
+| 
+
+<a href="https://www.lrz.de/datenschutzerklaerungen/" rollapp-href="https://www.lrz.de/datenschutzerklaerungen/">Datenschutz</a>
+
+ <br>
+                                                       <div class="mobile-menu ym-noprint"> 
+                                                           <ul>
+                                                              <li><a href="https://www.lrz.de/" title="Leibniz-Rechenzentrum" rollapp-href="https://www.lrz.de/">Home</a></li>
+                                                              <li><a href="https://www.lrz.de/aktuell/" title="Aktuelles" rollapp-href="https://www.lrz.de/aktuell/">Aktuelles</a></li>
+	                                                      <li><a href="https://www.lrz.de/fragen/faq/" title="FAQ" rollapp-href="https://www.lrz.de/fragen/faq/">FAQ</a></li>
+	                                                     <li><a href="https://www.lrz.de/services/" title="Services" rollapp-href="https://www.lrz.de/services/">Services</a></li>
+                                                   
+                                                         <li><a href="https://servicedesk.lrz.de/de" rollapp-href="https://servicedesk.lrz.de/de">Servicedesk</a></li>
+                                                  
+                                                         <li><a href="https://idportal.lrz.de/?Sprache=de" rollapp-href="https://idportal.lrz.de/?Sprache=de">Id-Portal</a></li>
+                                                         </ul>
+                                                          </div> <!-- eof mobile-menu --> 
+                                                        <!--/noindex-->
+							<div id="langnav" class="ym-noprint">
+								
+
+
+							</div> <!-- eof langnav -->
+						</div> <!-- eof topnav -->
+					</div> <!-- eof ym-gbox -->
+				</div> <!-- eof g50 -->
+			</div> <!-- eof grid -->
+			<div class="ym-grid">
+				<div class="ym-hlist flexible linearize-level-1 ym-noprint">
+					<ul>
+  <li><a href="https://www.lrz.de/aktuell/" title="Aktuelle LRZ-Informationen / News from LRZ" rollapp-href="https://www.lrz.de/aktuell/">Aktuelles</a></li>
+  <li>
+
+  
+
+<a href="https://www.lrz.de/fragen/faq/" rollapp-href="https://www.lrz.de/fragen/faq/">FAQ</a>
+</li>
+  <li>
+
+<a href="https://www.lrz.de/services/" rollapp-href="https://www.lrz.de/services/">Services</a>
+</li>
+  
+  <li><a href="https://servicedesk.lrz.de/de" rollapp-href="https://servicedesk.lrz.de/de">Servicedesk</a></li>
+  
+  <li><a href="https://idportal.lrz.de/?Sprache=de" rollapp-href="https://idportal.lrz.de/?Sprache=de">Id-Portal</a></li>
+</ul>
+
+				</div>  <!-- eof ym-hlist --> 
+			</div> <!-- eof ym-grid -->
+        </header> <!-- eof header --> 
+       <div class="ym-print">
+       <br>
+      <hr>
+      </div>
+        
+		<div class="ym-column">
+			<div class="ym-col1 ym-noprint linearize-level-2" role="navigation">
+				<div class="ym-cbox-left">
+					<!-- noindex -->
+					<nav id="nav" class="ym-vlist">
+						
+
+<ul>
+    <li>
+
+
+
+
+
+
+
+<a href="https://www.lrz.de/" rollapp-href="https://www.lrz.de/">Startseite</a> 
+
+
+
+</li>
+</ul>
+<ul>
+    <li>
+
+
+
+
+
+
+
+<a href="https://www.lrz.de/wir/" rollapp-href="https://www.lrz.de/wir/">Wir über uns</a> 
+
+
+
+</li>
+    <li>
+
+
+
+
+
+
+
+<a href="https://www.lrz.de/services/" rollapp-href="https://www.lrz.de/services/">Services</a> 
+
+
+
+</li>
+    <li>
+
+
+
+
+
+
+
+<a href="https://www.lrz.de/fragen/" rollapp-href="https://www.lrz.de/fragen/">Fragen, Beratung und Unterstützung</a> 
+
+
+
+</li>
+    <li>
+
+
+
+
+
+
+
+<a href="https://www.lrz.de/forschung/" rollapp-href="https://www.lrz.de/forschung/">Forschung</a> 
+
+
+
+</li>
+    <li>
+
+
+
+
+
+
+
+<a href="https://www.lrz.de/andere/" rollapp-href="https://www.lrz.de/andere/">Externe Links</a> 
+
+
+
+</li></ul>
+<ul class="submenu"><li>
+
+
+
+
+
+
+<a href="https://www.lrz.de/services/software/textverarbeitung/" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/">Textbearbeitung, Textverarbeitung </a> 
+
+
+
+<ul>
+  
+    <li>
+  
+
+
+
+  
+  
+  
+  <a href="https://www.lrz.de/services/software/textverarbeitung/tex/" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/tex/">TeX, LaTeX &amp; Co</a>
+  
+
+</li>
+  
+    <li>
+  
+
+
+
+  
+  
+  
+  
+    <strong>MakeIndex</strong>
+    
+    
+      
+    
+    
+  
+
+</li>
+  
+</ul>
+</li></ul>
+
+
+
+					</nav>
+					<!-- /noindex -->
+				</div>  <!-- eof ym-cbox-left -->
+			</div>  <!-- eof ym-col1 -->
+         <!-- rechte Spalte -->
+          
+			       <div class="ym-col2 ym-noprint linearize-level-1" role="complementary">
+          <div class="ym-cbox-right">
+        <!-- noindex -->
+          <!-- optional: banner -->
+
+	<a href="https://www.vrst2016.lrz.de/" title="VRST 2016" rollapp-href="https://www.vrst2016.lrz.de/"><img src="LRZ:%20MakeIndex%20-%20ein%20Indexprozessor%20fuer%20LaTeX_files/vrst_banner.jpeg" alt="VRST2016"></a>
+          <h3 class="infotop flexible">Informationen für ...</h3>
+              <nav>
+                <ul class="sidemenu">
+                  <li><a href="https://www.lrz.de/info/hochschulmitarbeiter/" title="Informationen für Hochschulmitarbeiter" rollapp-href="https://www.lrz.de/info/hochschulmitarbeiter/">Hochschulmitarbeiter</a> </li>
+                  <li><a href="https://www.lrz.de/info/studenten/" title="Informationen für Studenten" rollapp-href="https://www.lrz.de/info/studenten/">Studenten</a> </li>
+                  <li><a href="https://www.lrz.de/services/compute/" title="Informationen für Supercomputer-Nutzer" rollapp-href="https://www.lrz.de/services/compute/">Supercomputer-Nutzer</a></li>
+                  <li><a href="https://www.lrz.de/services/compute/grid_en/" title="Informationen für Grid-Nutzer" rollapp-href="https://www.lrz.de/services/compute/grid_en/">Grid-Nutzer</a></li>
+                   <li><a href="https://www.lrz.de/services/compute/cloud_en/" title="Informationen für Cloud-Nutzer" rollapp-href="https://www.lrz.de/services/compute/cloud_en/">Cloud-Nutzer</a></li>
+                  <li><a href="https://www.lrz.de/info/institutionen/" title="Informationen für Institutionen" rollapp-href="https://www.lrz.de/info/institutionen/">Institutionen</a></li>
+                  <li><a href="https://www.lrz.de/info/netadmin/" title="Informationen für Netzverantwortliche" rollapp-href="https://www.lrz.de/info/netadmin/">Netzverantwortliche</a> </li>
+                  <li><a href="https://www.lrz.de/info/sysadmin/" title="Informationen für Systemverwalter" rollapp-href="https://www.lrz.de/info/sysadmin/">Systemverwalter</a> </li>
+                  <li><a href="https://www.lrz.de/wir/kontakt/beh-info/" title="Informationen für behinderte Nutzer des
+  Leibniz-Rechenzentrums" rollapp-href="https://www.lrz.de/wir/kontakt/beh-info/">Nutzer mit Handicap</a> </li>
+                  <li><a href="https://www.lrz.de/presse/" title="Presse" rollapp-href="https://www.lrz.de/presse/">Pressevertreter</a> </li>
+                </ul>
+
+<!-- special information 
+ -->
+              </nav>
+   
+      <!-- /noindex -->
+            </div>  <!-- eof ym-cbox-right -->
+          </div> <!-- eof col2 -->
+         
+         
+			<div class="ym-col3" role="main" id="content">
+				<div class="ym-cbox ym-clearfix">
+					<!-- small banner optional -->
+					
+					
+						<div id="crumbcontainer" class="ym-noprint">
+							<div class="breadcrumb">
+								
+<a href="https://www.lrz.de/" title="Startseite" rollapp-href="https://www.lrz.de/">www.lrz.de</a>/<a href="https://www.lrz.de/services/" rollapp-href="https://www.lrz.de/services/">services</a>/<a href="https://www.lrz.de/services/software/" rollapp-href="https://www.lrz.de/services/software/">software</a>/<a href="https://www.lrz.de/services/software/textverarbeitung/" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/">textverarbeitung</a>/<span>makeindex</span>
+
+							</div>
+						</div>  
+					
+					<!-- begin headlines and abstract -->
+
+  <h1 id="top">MakeIndex - ein Indexprozessor fuer LaTeX</h1>
+  
+
+
+<div class="lrz_abstract">
+  <p>MakeIndex ist ein allgemein anwendbarer Indexprozessor. Als Eingabe
+ dienen ihm eine oder mehrere ungeordnete Indexdateien, wie sie 
+gewöhnlich von einem Formatierer erzeugt werden. Er sortiert die 
+enthaltenen Indexeinträge und generiert die aktuelle Indexdatei. 
+MakeIndex ist an kein spezielles Format seiner Eingabedateien gebunden. 
+Als Voreinstellung wird das .idx-File-Format, welches LaTeX erzeugt, 
+angenommen. Das Format der Eingabedatei kann in einem Style-File neu 
+definiert, d.h. an die Erfordernisse anderer Formatierer angepaßt 
+werden. Das Style-File legt gleichzeitig das Aussehen der zu 
+generierenden Index-Datei fest. Innerhalb eines Indexeintrages wird eine
+ Definition von Untereinträgen bis zu drei Stufen unterstützt.</p>
+</div>
+
+<!-- end headlines and abstract -->
+
+<!-- begin blob -->
+
+  
+  <h2>Einleitung und Literatur</h2>
+
+
+  <p>MakeIndex ist ein allgemein anwendbarer <em>Indexprozessor</em>. Als
+  Eingabe dienen ihm eine oder mehrere ungeordnete Indexdateien, wie sie
+  gewöhnlich von einem Formatierer erzeugt werden. Er sortiert die
+  enthaltenen Indexeinträge und generiert die aktuelle Indexdatei.
+  MakeIndex ist an kein spezielles Format seiner Eingabedateien gebunden.
+  Als Voreinstellung wird das <em>.idx</em>-File-Format, welches LaTeX
+  erzeugt, angenommen. Das Format der Eingabedatei kann in einem Style-File
+  neu definiert, d.h. an die Erfordernisse anderer Formatierer angepaßt
+  werden. Das Style-File legt gleichzeitig das Aussehen der zu
+  generierenden Index-Datei fest. Innerhalb eines Indexeintrages wird eine
+  Definition von Untereinträgen bis zu drei Stufen unterstützt.</p>
+
+
+  <p>Als weiterführende <em>Literatur</em> wird empfohlen:</p>
+
+
+  <table cellspacing="0" cellpadding="3">
+    <tbody><tr valign="top">
+      <td>[1]</td>
+
+      <td>H. Kopka</td>
+
+      <td>LaTeX-Erweiterungsmöglichkeiten</td>
+
+      <td>Addison-Wesley Deutschland, 1991 (2. Auflage), ISBN
+      3-89319-356-1</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td>[2]</td>
+
+      <td>L. Lamport</td>
+
+      <td>MakeIndex - An Index Processor for LaTeX</td>
+
+      <td>bei den meisten Systemen als LaTeX-Datei <tt>mkind.tex</tt> oder
+      <tt>makeindex.tex</tt> verfügbar</td>
+    </tr>
+  </tbody></table>
+
+
+  <h2>Erzeugung eines Indexregisters</h2>
+
+
+  <h3>Allgemeine Vorgehensweise</h3>
+
+
+  <p>In den folgenden Ausführungen und Beispielen werden Dateinamen
+  verwendet, wie sie den unter DOS und UNIX üblichen Konventionen
+  entsprechen (d.h. Dateiname und Extension sind jeweils durch einen Punkt
+  voneinander getrennt).</p>
+
+
+  <p>Angenommen, ein Benutzer hat ein LaTeX-Dokument <em>myfile.tex</em>
+  erstellt, für das er automatisch ein Indexregister generieren möchte. Um
+  dies zu realisieren, ist wie folgt vorzugehen:</p>
+
+
+  <ul>
+    <li>Zuerst muß der Benutzer aus seinem Text die Begriffe selektieren,
+    die er in sein Indexregister aufnehmen möchte. Diese Begriffe werden
+    dort, wo sie im LaTeX-Text auftreten, durch ein
+    <tt>\index</tt>-Kommando markiert. Die Möglichkeiten und damit
+    verbundenen Wirkungen dieses Befehls sind genauer erklärt in den
+    Abschnitten <em><a href="#index_definition" title="MakeIndex - ein Indexprozessor fuer LaTeX" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#index_definition">Definition von
+    Indexeinträgen im LaTeX-Dokument</a></em> und <em><a href="#index_spezial" title="MakeIndex - ein Indexprozessor fuer LaTeX" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#index_spezial">Erzeugung spezieller Formen von
+    Indexeinträgen</a></em>. Außerdem sind die folgenden Änderungen in
+    <tt>myfile.tex</tt> zu tätigen:</li>
+  </ul>
+
+
+  <div class="c1">
+    <ul>
+      <li>Im Kommando <tt>\documentstyle</tt> wird die
+      Dokument-Style-Option <tt>makeidx</tt> ergänzt.</li>
+
+
+      <li>In den Vorspann des Dokuments (d.h. zwischen die Kommandos
+      <tt>\documentstyle</tt> und <tt>\begin{document}</tt>) wird das
+      Kommando <tt>\makeindex</tt> eingetragen.</li>
+
+
+      <li>An der Stelle des Dokuments, an der das Indexregister erscheinen
+      soll (gewöhnlich am Ende, d.h. vor <tt>\end{document}</tt>) muß das
+      Kommando <tt>\printindex</tt> geschrieben werden.</li>
+    </ul>
+  </div>
+
+
+  <ul>
+    <li>Anschließend läßt er sein Dokument von LaTeX bearbeiten. Dabei wird
+    eine ungeordnete Index-Datei angelegt, die die Extension <tt>.idx</tt>
+    bekommt. In diese Datei wird jedesmal, wenn LaTeX im Text einen
+    <tt>\index</tt>-Befehl findet, ein Kommando</li>
+
+
+    <li class="c2">
+      <div class="c1">
+        <p><tt>\indexentry{ stichwort }{ seitennummer }</tt>
+        </p>
+      </div>
+
+
+      <p>eingetragen. Es enthält das vom Benutzer festgelegte Stichwort und
+      die Nummer der Seite, auf der der <tt>\index</tt>-Befehl definiert
+      war.</p>
+    </li>
+  </ul>
+
+
+  <ul>
+    <li>Die <tt>.idx</tt>-Datei wird als "ungeordnete Indexdatei"
+    bezeichnet und ist als Eingabe für MakeIndex bestimmt. Der
+    Stichwortprozessor kann jetzt aufgerufen werden. Er sortiert die
+    Indexeinträge und faßt diejenigen zu gleichen Begriffen zusammen. Als
+    Ergebnis entsteht eine "geordnete Indexdatei" mit der Extension
+    <em>.ind</em>. Sie enthält die LaTeX-Befehle</li>
+  </ul>
+
+
+  <div class="c1">
+    <ul>
+      <li><tt>\item{...}</tt>, <tt>\subitem{...}</tt> und
+      <tt>\subsubitem{...}</tt>, die als Argumente die in
+      <tt>myfile.tex</tt> markierten Begriffe in geordneter Reihenfolge
+      enthalten.</li>
+
+
+      <li><tt>\indexspace</tt>, die vertikale Leerräume zwischen Einträgen
+      mit verschiedenem Anfangsbuchstaben bewirken.</li>
+    </ul>
+  </div>
+
+
+  <ul>
+    <li>Nun muß <tt>myfile.tex</tt> nochmals mit LaTeX bearbeitet werden.
+    Dabei wird das fertige Indexregister erzeugt und an der Stelle in das
+    Dokument eingefügt, wo LaTeX den Befehl <tt>\printindex</tt>
+    findet.</li>
+  </ul>
+
+
+  <h3><a name="Ordnungskriterien" id="Ordnungskriterien" rollapp-href="">Ordnungskriterien</a>
+  </h3>
+
+
+  <p>Es gibt zwei Möglichkeiten, die Indexeinträge zu sortieren:</p>
+
+
+  <ul>
+    <li>eine lexikographische Sortierung, wie sie für <em>englische</em>
+    Texte verwendet wird (Voreinstellung). Die Sortierung erfolgt in der
+    Reihenfolge:</li>
+  </ul>
+
+
+  <div class="c1">
+    <ul>
+      <li>Sonderzeichen</li>
+
+
+      <li>Zahlen (numerisch aufsteigend geordnet)</li>
+
+
+      <li>Buchstaben (in alphabetischer Reihenfolge, Großbuchstaben
+      rangieren vor Kleinbuchstaben)</li>
+    </ul>
+  </div>
+
+
+  <ul>
+    <li>eine lexikographische Sortierung, wie sie die DIN-Norm 5007 für
+    <em>deutsche</em> Texte vorschreibt (bei Angabe der Option <tt>-g</tt>,
+    siehe Abschnitt <em><a href="#Aufrufoptionen" title="MakeIndex - ein Indexprozessor fuer LaTeX" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#Aufrufoptionen">Aufrufoptionen</a></em>):</li>
+  </ul>
+
+
+  <div class="c1">
+    <ul>
+      <li>Sonderzeichen</li>
+
+
+      <li>Buchstaben (in alphabetischer Reihenfolge, Kleinbuchstaben
+      rangieren vor Großbuchstaben). Die durch die Befehle <tt>"a</tt>,
+      <tt>"o</tt>, <tt>"u</tt> und <tt>"s</tt> repräsentierten deutschen
+      Sonderzeichen werden bei der Sortierung wie <tt>ä</tt>, <tt>ö</tt>,
+      <tt>ü</tt> und <tt>ß</tt> behandelt.</li>
+
+
+      <li>Zahlen (numerisch aufsteigend geordnet)</li>
+    </ul>
+  </div>
+
+
+  <p>Die Indexeinträge können außerdem wortweise (Voreinstellung) und
+  buchstabenweise sortiert werden. Während bei der wortweisen Sortierung
+  die Blanks innerhalb von Begriffen logisch vor allen anderen Buchstaben
+  stehen, werden sie bei der buchstabenweisen Sortierung ignoriert.</p>
+
+
+  <h3><a name="index_definition" id="index_definition" rollapp-href="">Definition von
+  Indexeinträgen im LaTeX-Dokument</a>
+  </h3>
+
+
+  <p>Jedes <tt>\index</tt>-Kommando im Dokument veranlaßt LaTeX zu einem
+  Indexeintrag in die ungeordnete Indexdatei. Diese Einträge enthalten
+  folgende Informationen:</p>
+
+
+  <ul>
+    <li>das Stichwort, das im Indexregister erscheinen soll</li>
+
+
+    <li>evtl. Untereinträge bis zu drei Stufen, die einzelnen Stichwörter
+    sind durch das Zeichen <tt>!</tt> getrennt</li>
+
+
+    <li>die Nummer der Seite, auf der das entsprechende
+    <tt>\index</tt>-Kommando spezifiziert wurde</li>
+  </ul>
+
+
+  <p>Einfache Einträge ins Indexregister werden durch</p>
+
+  <pre> Seite vi:  \index{Maus|(}                     Maus, vi-x, 22
+ Seite  x:  \index{Maus|)}         --&gt;
+ Seite 22:  \index{Maus}
+</pre>
+
+  <p>erreicht. Die runden Klammern dienen bei Festlegung einer Reihe von
+  aufeinanderfolgenden Seiten (hier <tt>vi-x</tt> ) dazu, die jeweils erste
+  (durch <tt>|(</tt> ) bzw. letzte Seite (durch <tt>|)</tt> ) zu
+  definieren.</p>
+
+
+  <p>Eine hierarchische Gliederung von Indexeinträgen kann wie folgt
+  realisiert werden:</p>
+
+  <pre> Seite  4:  \index{Tier!Maus|see{Ratte}}       Tier
+ Seite  8:  \index{Tier!Maus!Beine}              Maus, siehe Ratte
+ Seite 10:  \index{Tier!Maus!Schwanz}    --&gt;       Beine, 8
+ Seite 25:  \index{Tier!Ratte}                     Schwanz, 10
+ Seite 29:  \index{Tier!Pferd}                   Pferd, 29
+                                                 Ratte, 25
+</pre>
+
+  <p>Durch das Kommando <tt>\index{...|see{...}}</tt> wird ein Querverweis
+  erzeugt. Zu beachten ist, daß MakeIndex aus dem Textstück
+  <tt>|see{...}</tt> den englischen Text <tt>see</tt> generiert. Für
+  deutschsprachige Texte, in denen gewöhnlich das Wort <tt>siehe</tt>
+  erscheint (wie im obigen Beispiel), ist dafür der Befehl</p>
+
+  <pre>    \renewcommand{\seeterm}{siehe}
+</pre>
+
+  <p>nötig. Diese Umschaltung wird in <tt>german.sty</tt> realisiert. Da
+  dem <tt>see</tt>-Eintrag keine Seitennummer zugeordnet wird, ist es
+  gleichgültig, an welcher Stelle im Dokument (nach
+  <tt>\begin{document}</tt> er erscheint.</p>
+
+
+  <p>Für das zuletzt aufgeführte Beispiel würde eine <tt>.idx</tt>-Datei
+  mit folgenden Einträgen erzeugt:</p>
+
+  <pre>  \indexentry{Tier!Maus|see{Ratte}}{4}
+  \indexentry{Tier!Maus!Beine}{8}
+  \indexentry{Tier!Maus!Schwanz}{10}
+  \indexentry{Tier!Ratte}{25}
+  \indexentry{Tier!Pferd}{29}
+</pre>
+
+  <p>MakeIndex sortiert die ungeordneten Indexeinträge und verpackt sie
+  (bei Verwendung der Voreinstellungen) in LaTeX-Kommandos. Diese werden in
+  der geordneten Indexdatei gespeichert, die für unser Beispiel folgende
+  Zeilen enthielte:</p>
+
+  <pre>  \item Tier
+    \subitem Maus, \see{Ratte}
+      \subsubitem Beine, 8
+      \subsubitem Schwanz, 10
+    \subitem Pferd, 29
+    \subitem Ratte, 25
+</pre>
+
+  <h3><a name="index_spezial" id="index_spezial" rollapp-href="">Erzeugung spezieller
+  Formen von Indexeinträgen</a>
+  </h3>
+
+
+  <h4>Maskierung von Zeichen</h4>
+
+
+  <p>Die Spezialsymbole <tt>! @ |</tt> werden von MakeIndex als
+  Sonderzeichen interpretiert (siehe Abschnitt <em><a href="#Styledatei" title="MakeIndex - ein Indexprozessor fuer LaTeX" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#Styledatei">Die MakeIndex-Styledatei</a></em>). Sollen sie als normaler
+  Text im Indexregister erscheinen, müssen sie durch den "quote"-Operator
+  <tt>"</tt> maskiert werden, d.h. sie sind in einem <tt>\index</tt>-Befehl
+  als <tt>"! "@ "|</tt> zu schreiben. So kann aus</p>
+
+  <pre>        Seite  1:  \index{alpha"@beta}
+</pre>
+
+  <p>nach Bearbeitung durch MakeIndex der Eintrag</p>
+
+  <pre>        \item alpha@beta, 1
+</pre>
+
+  <p>entstehen. Das Maskierungszeichen hebt somit die Sonderrolle auf, die
+  die Spezialsymbole für MakeIndex haben.</p>
+
+
+  <h4>Definition von Sortier-Schlüsseln</h4>
+
+
+  <p>Will man innerhalb von Indexeinträgen LaTeX-Kommandos verwenden oder
+  auf die Positionierung eines Indexeintrages direkt Einfluß nehmen, muß
+  man für das entsprechende Stichwort einen Sortierschlüssel festlegen:</p>
+
+  <pre>        Seite  1:  \index{alpha@{\it alpha\/}
+        Seite  4:  \index{Metall!Eisen@Fe}
+</pre>
+
+  <p>Die Grundidee hierbei ist, daß die Zeichenkette vor dem <tt>@</tt> die
+  Position des Indexeintrages innerhalb des Indexregisters bestimmt,
+  während die Zeichenkette nach dem <tt>@</tt> ("actual"-Operator) als
+  aktueller Indexeintrag behandelt wird. Es ist zu beachten, daß bei
+  Definition von <tt>\index</tt>-Kommandos mit demselben Schlüssel, jedoch
+  einmal unter Benutzung des "actual"-Operators und einmal ohne diesen,
+  zwei unterschiedliche Einträge im Indexregister entstehen. Für das obige
+  Beispiel würden in der <tt>.ind</tt>-Datei folgende Indexeinträge
+  erscheinen:</p>
+
+  <pre>        \item {\it alpha\/}, 1
+        \item Metall
+          \subitem Fe, 4
+</pre>
+
+  <h4>Seitennummern in verschiedenen Schriftarten</h4>
+
+
+  <p>Es besteht die Möglichkeit, eine Seitennummer mit einem besonderen
+  Kommando zu umschließen. Dies realisiert der "encap"-Operator<tt>|</tt>
+  .</p>
+
+
+  <p>Beispielsweise entsteht bei Benutzung der MakeIndex-Voreinstellung aus
+  der auf Seite <tt>14</tt> befindlichen Zeile</p>
+
+  <pre>        \index{alpha|bold}
+</pre>
+
+  <p>der Eintrag</p>
+
+  <pre>        \item alpha \bold{14}
+</pre>
+
+  <p>Fügt der Benutzer in den Vorspann seines Dokuments ein Kommando</p>
+
+  <pre>        \newcommand{\bold}[1]{{\bf #1}}
+</pre>
+
+  <p>ein, welches festlegt, daß <tt>\bold{n}</tt> zu <tt>{\bf n}</tt>
+  expandiert, erscheint die Seitennummer in Fettdruck. Seitennummern in
+  verschiedenen Fonts können nützlich sein, um zusätzliche Informationen
+  darüber zu vermitteln, worauf sich ein Index bezieht. Möglicherweise
+  könnte man bei ein und demselben Schlüssel die Seite, auf der seine
+  Definition erscheint, in einer anderen Schriftart setzen als die Seite,
+  auf der ein Beispiel angegeben ist, usw.</p>
+
+
+  <p>Auch bei expliziter Definition einer Folge von Seiten ist es erlaubt,
+  verschiedene Schrifttypen für die Seitennumerierung festzulegen. So wird
+  aus</p>
+
+  <pre>        Seite  1:  \index{alpha|(bold}
+        Seite  5:  \index{alpha|)}
+</pre>
+
+  <p>der Eintrag</p>
+
+  <pre>        \item alpha, \bold{1--5}
+</pre>
+
+  <p>generiert. Eine weitere, mitunter sinnvolle Anwendung könnte folgende
+  Kombination sein:</p>
+
+  <pre>        Seite  1:  \index{alpha|(}
+        Seite  3:  \index{alpha|bold}
+        Seite  5:  \index{alpha|)}
+</pre>
+
+  <p>führt zu Zeile</p>
+
+  <pre>        \item alpha, \bold{3}, 1--5
+</pre>
+
+  <p>Allerdings schreibt MakeIndex hierbei eine Warnung in die zugehörige
+  Transcript-Datei, daß eine inkonsistente Seitenbereichsangabe gefunden
+  wurde.</p>
+
+
+  <p>Ein explizit definierter Seitenbereich, der mit einer römischen
+  Seitennummer beginnt und mit einer arabischen endet, wird ebenfalls als
+  fehlerhaft betrachtet. In einem solchen Falle wird der Seitenbereich so
+  geteilt, daß eine römische und eine arabische Seitenfolge erscheint. Die
+  Anweisungen</p>
+
+  <pre>        Seite  i:  \index{alpha|(}
+        Seite iv:  \index{alpha}
+        Seite  3:  \index{alpha}
+        Seite  7   \index{alpha|)}
+</pre>
+
+  <p>werden zu</p>
+
+  <pre>        \item alpha, i--iv, 3--7
+</pre>
+
+  <p>zusammengefaßt, bei gleichzeitiger Ausgabe einer Warnung in die
+  Transcript-Datei.</p>
+
+
+  <h3><a name="index_deutsch" id="index_deutsch" rollapp-href="">Indexeinträge mit
+  deutschen Sonderzeichen</a>
+  </h3>
+
+
+  <p>Bei deutschen Texten führt die Benutzung des quote-Operators<tt>"</tt>
+  für Maskierungen zu einer Inkompatibilität mit den Definitionen in der
+  Datei <tt>german.sty</tt>, bei denen das Zeichen<tt>"</tt> als spezielles
+  Umschaltzeichen für die Erzeugung der Umlaute bzw. des
+  <tt>ß</tt>-Zeichens dient.</p>
+
+
+  <p>Korrekte Indexeinträge mit deutschen Sonderzeichen erhält man
+  folgendermaßen:</p>
+
+
+  <ul>
+    <li>Eine Möglichkeit ist die Verwendung der TeX-Befehle <tt>\"a \"o
+    \"u</tt> usw.</li>
+
+
+    <li>Eine weitere Verfahrensweise, um deutsche Sondersymbole zu
+    erhalten, ist die Maskierung der Maskierungszeichens selbst. Das
+    bedeutet, daß die Anführungszeichen zur Benutzung der Definitionen in
+    <tt>german.sty</tt> innerhalb eines <tt>\index</tt>-Befehls doppelt zu
+    schreiben sind (<tt>""a ""o ""u</tt> usw.). Die Leistungseigenschaften
+    von <tt>german.sty</tt> werden dann richtig angesprochen. Allerdings
+    hat die Variante einen Nachteil. Zwar werden die Umlaute bzw. das
+    <tt>ß</tt> korrekt generiert, sie werden jedoch beim Sortiervorgang an
+    die falsche Position gesetzt. Der Grund hierfür ist, daß <tt>"</tt> als
+    Sonderzeichen lexikalisch vor allen Buchstaben erscheint. Um die
+    richtige Reihenfolge bei der Sortierung sicherzustellen, muß bei diesen
+    Wörtern stets ein Sortierschlüssel definiert werden. Aus den
+    <tt>\index</tt>-Befehlen</li>
+
+
+    <li class="c2">
+      <pre>        Seite  1:  \index{Safe}
+        Seite  4:  \index{Sage@S""age}
+        Seite  9:  \index{S""age}
+</pre>
+
+      <p>entstehen Register-Einträge in folgender Reihenfolge:</p>
+
+      <pre>        \item S"age, 9
+        \item Safe, 1
+        \item S"age, 4
+</pre>
+
+      <p>Die Befehle <tt>\index{S""age}</tt> und
+      <tt>\index{Sage@S""age}</tt> erzeugen getrennt Einträge.</p>
+    </li>
+
+
+    <li>Ab Version 2.11 bietet MakeIndex die Option <tt>-g</tt> ("german
+    ordering"). Sie veranlaßt eine Sortierung der Indexeinträge
+    entsprechend der Norm DIN 5007 (siehe Abschnitt <em><a href="#Ordnungskriterien" title="MakeIndex - ein Indexprozessor fuer LaTeX" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#Ordnungskriterien">Ordnungskriterien</a></em>). Außerdem wird
+    MakeIndex durch diese Option befähigt, Einträge mit deutschen
+    TeX-Kommandos für Umlaute und ß (<tt>"a</tt>, <tt>"o</tt>, <tt>"u</tt>,
+    <tt>"s</tt>) zu bearbeiten. Sie werden wie <tt>ä</tt>, <tt>ö</tt>,
+    <tt>ü</tt> bzw. <tt>ß</tt> eingeordnet. Da das Zeichen <tt>"</tt> dem
+    Indexprozessor als "quote"-Operator dient, muß dieser in einer
+    MakeIndex-Styledatei umdefiniert werden. Das erfolgt (z.B. für die
+    Festlegung des <tt>+</tt> als neuen "quote"-Operator) durch die
+    Zeile</li>
+
+
+    <li class="c2">
+      <pre>           quote '+'
+</pre>
+
+      <p>Anschließend können die deutschen Sonderzeichen wie gewohnt
+      eingegeben werden.</p>
+    </li>
+  </ul>
+
+
+  <h2>Der Aufruf von MakeIndex an LRZ-Rechnern</h2>
+
+
+  <h3>... unter DOS / Windows</h3>
+
+
+  <p>MakeIndex liegt in <tt>X:\PCTEX.21</tt> und wird mit</p>
+
+
+  <div class="c1">
+    <p><tt>MAKEINDX [-cglqr][-s sty][-o ind][-t log][-p no] idx0
+    [idx1...]</tt>
+    </p>
+  </div>
+
+
+  <p>aufgerufen.</p>
+
+
+  <h3>... unter UNIX (Sun, HP, IBM)</h3>
+
+
+  <p>MakeIndex liegt in <tt>/client/bin</tt> und wird mit</p>
+
+
+  <div class="c1">
+    <p><tt>makeindex [-cgilqr][-s sty][-o ind][-t log][-p no] [idx0
+    idx1...]</tt>
+    </p>
+  </div>
+
+
+  <p>aufgerufen.</p>
+
+
+  <h3><a name="Aufrufoptionen" id="Aufrufoptionen" rollapp-href="">Aufrufoptionen</a>
+  </h3>
+
+
+  <p>Durch die einzelnen Optionen wird folgendes bewirkt:</p>
+
+
+  <table cellspacing="0" cellpadding="3" border="1">
+    <tbody><tr>
+      <th>Option</th>
+
+      <th align="center">
+        <div class="c3">
+          <p>Erläuterung</p>
+        </div>
+      </th>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-c</tt>
+      </td>
+
+      <td>Alle Leerzeichen werden aus den Stichworten entfernt. Als
+      Voreinstellung werden Leerzeichen bei der Sortierung berücksichtigt
+      und auch im Indexeintrag mit geschrieben. Die Option <tt>-c</tt>
+      unterdrückt führende und nachfolgende Leerzeichen sowie
+      Tabulatorsprünge. Mehrere Leerzeichen zwischen einzelnen Wörtern
+      eines Indexeintrages werden zu einem einzigen komprimiert.</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-g</tt>
+      </td>
+
+      <td>"german ordering" (siehe Abschnitte <em><a href="#Ordnungskriterien" title="MakeIndex - ein Indexprozessor fuer LaTeX" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#Ordnungskriterien">Ordnungskriterien</a></em> und <em><a href="#index_deutsch" title="MakeIndex - ein Indexprozessor fuer LaTeX" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#index_deutsch">Indexeinträge mit deutschen Sonderzeichen</a></em>
+      )</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-i</tt>
+      </td>
+
+      <td>Die Eingabe wird von "stdin" gelesen. Ist bei Verwendung dieser
+      Option keine Ausgabedatei (mit <tt>-o</tt>) definiert, erfolgt die
+      Ausgabe der geordneten Indexdatei nach "stdout". (Die Option ist nur
+      unter UNIX verwendbar.)</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-l</tt>
+      </td>
+
+      <td>Die Sortierung der Indexeinträge erfolgt buchstabenweise.</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-o ind</tt>
+      </td>
+
+      <td>Die Option legt den Namen der MakeIndex-Ausgabedatei fest. Bei
+      Fehlen der Option wird er aus dem Namen von <tt>idx0</tt> durch
+      Anhängen der Extension <tt>.ind</tt> gebildet.</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-p no</tt>
+      </td>
+
+      <td>
+        Die Ausgabedatei beginnt bei Seitennummer <em>no</em>. Das ist dann
+        sinnvoll, wenn die Indexdatei separat formatiert wird. Für
+        <tt>no</tt> sind positive ganze Zahlen sowie die Eintragungen
+        <em>any</em>, <em>odd</em> und <em>even</em> erlaubt. Bei diesen
+        Spezialfällen wird die Nummer der ersten Seite des Indexregisters
+        aus der zugehörigen Transcript-Datei gewonnen. Die letzte Seite der
+        LaTeX-Quelldatei wird dabei wie folgt bestimmt: Die
+        Transcript-Datei wird rückwärts bis zum ersten Auftreten einer in
+        eckige Klammern eingeschlossenen ganzen Zahl durchsucht. Falls
+        keine solche Seitennummer oder kein Transcript-File gefunden werden
+        kann, erfolgt keine Festlegung einer Startseite. Den drei
+        speziellen Eintragungen für <tt>no</tt> kommen folgende Bedeutungen
+        zu:
+
+        <table cellspacing="0" cellpadding="3">
+          <tbody><tr>
+            <td valign="top"><tt>any</tt>
+            </td>
+
+            <td>Die Nummer der ersten Seite ergibt sich aus der höchsten
+            Seitennummer der zuletzt bearbeiteten LaTeX-Quelle, erhöht um
+            eins.</td>
+          </tr>
+
+
+          <tr>
+            <td valign="top"><tt>odd</tt>
+            </td>
+
+            <td>Die Nummer der ersten Seite ist die erste ungerade Zahl
+            nach der höchsten Seitennummer der zuletzt bearbeiteten
+            LaTeX-Quelle.</td>
+          </tr>
+
+
+          <tr>
+            <td valign="top"><tt>even</tt>
+            </td>
+
+            <td>Die Nummer der ersten Seite ist die erste gerade Zahl nach
+            der höchsten Seitennummer der zuletzt bearbeiteten
+            LaTeX-Quelle.</td>
+          </tr>
+        </tbody></table>
+      </td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-q</tt>
+      </td>
+
+      <td>"quiet mode", d.h. es werden keine Meldungen auf dem Bildschirm
+      angezeigt. Diese werden aber nach wie vor in die Transcript-Datei
+      (Extension <tt>.ilg</tt>) eingetragen.</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-r</tt>
+      </td>
+
+      <td>Diese Option unterdrückt eine Zusammenfassung der Seitenangaben
+      zu einem Bereich, falls der entsprechende Indexeintrag auf drei oder
+      mehr aufeinanderfolgenden Seiten auftritt (z.B. 1-5). Es werden nur
+      dann Seitenbereiche erzeugt, wenn diese durch Bereichsoperatoren
+      definiert wurden. Ansonsten erfolgt eine explizite Aufzählung aller
+      Seiten, in denen ein <tt>\index</tt>-Kommando für ein bestimmtes
+      Stichwort enthalten war.</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-s sty</tt>
+      </td>
+
+      <td>Die nach dieser Option angegebene Zeichenkette wird als Name der
+      zu verwendenden MakeIndex-Styledatei interpretiert. Fehlt die Option
+      in der Kommandozeile, wird MakeIndex ohne Verwendung einer
+      Style-Datei abgearbeitet. Die MakeIndex-Styledatei sollte entweder im
+      aktuellen Katalog oder in einem Verzeichnis zu finden sein, das durch
+      die Environment-Variable <em>INDEXSTYLE</em> festgelegt ist.</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>-t log</tt>
+      </td>
+
+      <td>Die Option legt den Namen der Transcript-Ausgabedatei fest. Bei
+      Fehlen der Option wird er aus dem Namen von <tt>idx0</tt> durch
+      Anhängen der Extension <tt>.ilg</tt> gebildet.</td>
+    </tr>
+
+
+    <tr>
+      <td valign="top"><tt>idxn</tt>
+      </td>
+
+      <td>Es ist Liste von ungeordneten Index-Dateien anzugeben, deren
+      Einträge von MakeIndex eingelesen, sortiert und formatiert werden
+      sollen. Hier ist es notwendig, mindestens einen Dateinamen anzugeben.
+      Die einzelnen Dateinamen sind durch Leerzeichen voneinander zu
+      trennen.</td>
+    </tr>
+  </tbody></table>
+
+
+  <h2><a name="Styledatei" id="Styledatei" rollapp-href="">Die MakeIndex-Styledatei</a>
+  </h2>
+
+
+  <p>Der Stichwortprozessor generiert aus der ungeordneten Indexdatei einen
+  Text, der sich aus LaTeX-Formatierungsanweisungen zusammensetzt.
+  MakeIndex ist jedoch keinesfalls an LaTeX gebunden. Die
+  <em>Style-Datei</em> dient dem Benutzer als Werkzeug, in den Prozeß der
+  Generierung der geordneten Indexdatei einzugreifen. Die generierte
+  Indexdatei kann damit individuell gestaltet werden.</p>
+
+
+  <p>Ein Style-File ist recht einfach aufgebaut. Es besteht aus einer Liste
+  von <em>&lt;Spezifikator,Zuweisung&gt;-Paaren</em>. Die Reihenfolge
+  dieser Paare innerhalb der Style-Datei ist beliebig. Kommentarzeilen
+  beginnen mit dem Zeichen <tt>%</tt> .</p>
+
+
+  <p>Für die <em>Argumente der Spezifikatoren</em> gelten spezielle
+  syntaktische Regeln:</p>
+
+  <pre> &lt;string&gt; : Es wird eine beliebige Zeichenkette erwartet, die in
+            doppelte Hochkomma einzuschließen ist.
+            ("...")
+            Die maximale Länge einer solchen Zeichenkette ist 144.
+ &lt;char&gt;   : Hier muß ein einzelner Buchstabe erscheinen, der
+            von einzelnen Hochkomma begrenzt wird.
+            ('...')
+ &lt;number&gt; : Es muß eine nichtnegative ganze Zahl eingetragen werden.
+</pre>
+
+  <p>Für alle in der Style-Datei nicht aufgeführten Spezifikatoren bleiben
+  die voreingestellten Werte gültig.</p>
+
+
+  <p>Es folgt eine <em>Liste aller Spezifikatoren und ihrer Argumente und
+  Voreinstellungen</em>. Es wird unterschieden, ob sie aus der Eingabedatei
+  (<tt>.idx</tt>-Datei) gelesen oder in die Ausgabedatei
+  (<tt>.ind</tt>-Datei) geschrieben werden. Die Zeichenfolge <tt>\n</tt>
+  erzeugt dabei einen Zeilenvorschub, die Zeichenfolge <tt>\t</tt> einen
+  Tabulatorsprung.</p>
+
+
+  <h3>Eingabe-Spezifikatoren</h3>
+
+
+  <table cellspacing="0" cellpadding="3" border="1">
+    <tbody><tr valign="middle">
+      <th>Spezifikator</th>
+
+      <th valign="middle">Argumente und Voreinstellungen</th>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>keyword &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\\indexentry"<br></tt>Dieses Kommando teilt MakeIndex mit,
+      daß es sich bei seinem Argument um einen Indexeintrag handelt.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>arg_open &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'{'</tt><br>
+      Begrenzer, der den Indexeintrag einleitet</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>arg_close &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'}'</tt><br>
+      Begrenzer, der den Indexeintrag abschließt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>range_open &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'('<br></tt> Begrenzer, der den Beginn einer explizit
+      angegebenen Anzahl aufeinanderfolgender Seiten anzeigt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>range_close &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>')'<br></tt> Begrenzer, der das Ende einer explizit
+      angegebenen Anzahl aufeinanderfolgender Seiten anzeigt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>level &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'!'<br></tt> Begrenzer, der die einzelnen Stufen für
+      Untereinträge voneinander trennt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>actual &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'@'<br></tt> Das Symbol zeigt an, daß der nächste Eintrag in
+      der aktuellen Indexdatei erscheint.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>encap &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'|'<br></tt> Das Symbol zeigt an, daß der Rest der
+      Argumentliste als geschlossenes Kommando für die Seitennumerierung
+      verwendet werden soll.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>quote &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'"'</tt>
+      </td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>escape &lt;char&gt;</tt>
+      </td>
+
+      <td><tt>'\\'<br></tt> Die Symbole für quote und escape müssen
+      unterschieden werden. quote dient dazu, das nächste Zeichen zu
+      überspringen, mit Ausnahme der Fälle, bei denen es von einem
+      escape-Zeichen angeführt wird. Dann wird kein Zeichen
+      übersprungen.</td>
+    </tr>
+  </tbody></table>
+
+
+  <h3>Ausgabe-Spezifikatoren</h3>
+
+
+  <table cellspacing="0" cellpadding="3" border="1">
+    <tbody><tr>
+      <th>Spezifikator</th>
+
+      <th align="center">Argumente und Voreinstellungen</th>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>preamble &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\\begin{theindex}\n"</tt><br>
+      die Zeichenkette, mit der die zu generierende Indexdatei beginnen
+      soll</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>postamble &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n\n\\end{theindex}\n"</tt><br>
+      die Zeichenkette, mit der die zu generierende Indexdatei
+      abgeschlossen werden soll.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>setpage_prefix &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n \\setcounter{page}{"</tt><br>
+      der Präfix des Kommandos, welches die Nummer für die erste Seite des
+      Indexregisters einstellt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>setpage_suffix &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"}\n"<br></tt> der Suffix des Kommandos, welches die Nummer
+      für die erste Seite des Indexregisters setzt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>group_skip &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n\n \\indexspace \n"</tt><br>
+      der vertikale Leerraum, der vor Beginn einer neuen Indexgruppe (neues
+      Anfangszeichen) eingefügt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>lethead_prefix &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>""<br></tt> der Präfix für den Kopf, der generiert werden
+      soll, wenn ein neuer Buchstabe beginnt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>lethead_suffix &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>""<br></tt>der Suffix für den Kopf, der generiert werden
+      soll, wenn ein neuer Buchstabe beginnt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>lethead_flag &lt;number&gt;</tt>
+      </td>
+
+      <td>
+        <tt>0<br></tt>der Schalter, der anzeigt, ob bei Beginn eines neuen
+        Anfangsbuchstaben ein Kopf generiert werden soll oder nicht:
+
+        <table cellspacing="0" cellpadding="3" border="1">
+          <tbody><tr valign="top">
+            <td><tt>number=0</tt>
+            </td>
+
+            <td>es erscheint kein Kopf</td>
+          </tr>
+
+
+          <tr valign="top">
+            <td><tt>number&gt;0</tt>
+            </td>
+
+            <td>zwischen Präfix und Suffix erscheint der entsprechende
+            Großbuchstabe</td>
+          </tr>
+
+
+          <tr valign="top">
+            <td><tt>number&lt;0</tt>
+            </td>
+
+            <td>zwischen Präfix und Suffix erscheint der entsprechende
+            Kleinbuchstabe</td>
+          </tr>
+        </tbody></table>
+      </td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>item_0 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n &nbsp;\\item "</tt><br>
+      das Kommando, das zwischen zwei Indexeinträgen nullter Stufe
+      erscheint</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>item_1 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n &nbsp;&nbsp;&nbsp;\\subitem "</tt><br>
+      das Kommando, das zwischen zwei Indexeinträgen erster Stufe
+      erscheint</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>item_2 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\subsubitem "</tt><br>
+      das Kommando, das zwischen zwei Indexeinträgen zweiter Stufe
+      erscheint</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>item_01 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n &nbsp;&nbsp;&nbsp;\\subitem "</tt><br>
+      das Kommando, das zwischen einem Indexeintrag der Stufe null und eins
+      eingefügt wird</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>item_12 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\subsubitem "</tt><br>
+      das Kommando, das zwischen einem Indexeintrag der Stufe eins und zwei
+      eingefügt wird</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>item_x2 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\n &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\subsubitem "</tt><br>
+      das Kommando, das zwischen einem Indexeintrag der Stufe eins und zwei
+      eingefügt wird. Der Unterschied zum vorhergehenden Spezifikator ist,
+      daß hier der Indexeintrag der Stufe eins keine Seitennummer besitzt
+      (wie z.B. bei Angabe von Referenzen).</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>delim_0 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>", "</tt><br>
+      der Begrenzer, der zwischen einem Indexeintrag der Stufe null und
+      seiner ersten Seitenangabe einzufügen ist. Voreinstellung ist ein
+      Komma, gefolgt von einem Leerzeichen.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>delim_1 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>", "<br></tt> der Begrenzer, der zwischen einem Indexeintrag
+      der Stufe eins und seiner ersten Seitenangabe einzufügen ist.
+      Voreinstellung ist ein Komma, gefolgt von einem Leerzeichen.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>delim_2 &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>", "</tt><br>
+      der Begrenzer, der zwischen einem Indexeintrag der Stufe zwei und
+      seiner ersten Seitenangabe einzufügen ist. Voreinstellung ist ein
+      Komma, gefolgt von einem Leerzeichen.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>delim_r &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"--"</tt><br>
+      der Begrenzer, der bei Angabe einer Reihe aufeinanderfolgender Seiten
+      zwischen der Nummer der ersten und der letzten Seite eingefügt werden
+      soll</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>encaps_prefix &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\\"</tt><br>
+      der Präfix für das Kommando, welches die Seitennummer
+      einschließt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>encaps_infix &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"{"</tt><br>
+      der Infix für das Kommando, welches die Seitennummer einschließt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>encaps_suffix &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"}"</tt><br>
+      der Suffix für das Kommando, welches die Seitennummer
+      einschließt</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>line_max &lt;number&gt;</tt>
+      </td>
+
+      <td><tt>72</tt><br>
+      die maximale Länge einer Zeile in der Ausgabedatei. Bei einer
+      längeren Zeile erfolgt ein Zeilenumbruch.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>indent_space &lt;string&gt;</tt>
+      </td>
+
+      <td><tt>"\t\t"</tt><br>
+      der Leerraum, der vor einer umgebrochenen Zeile eingefügt wird</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>indent_length &lt;number&gt;</tt>
+      </td>
+
+      <td><tt>16</tt><br>
+      die Länge von <tt>indent_space</tt></td>
+    </tr>
+  </tbody></table>
+
+
+  <h3>Beispiel</h3>
+
+
+  <p>Im folgenden Beispiel wird die Definition einer Style-Datei gezeigt.
+  Diese generiert ein Indexregister, welches auch unabhängig vom Haupttext
+  mit LaTeX aufbereitet werden kann:</p>
+
+  <pre>   preamble
+     "\\documentstyle[12pt]{book}
+      \\begin{document}
+      \\begin{theindex}
+      {\\small\n"
+   postamble
+     "\n\n}
+      \\end{theindex}
+      \\end{document}\n"
+</pre>
+
+  <h2>Fehlermeldungen des Programs MakeIndex</h2>
+
+
+  <p>MakeIndex gibt während seiner Arbeit auf dem Bildschirm aus:</p>
+
+
+  <ul>
+    <li>wieviele Zeilen aus der Eingabedatei gelesen wurden</li>
+
+
+    <li>wieviele Zeilen daraus generiert und in die Ausgabedatei
+    geschrieben wurden</li>
+
+
+    <li>wieviele Fehler erkannt wurden</li>
+  </ul>
+
+
+  <p>In der Transcript-Datei (Extension <tt>.ilg</tt>) werden Nachrichten
+  abgelegt, die zur Identifikation der aufgetretenen Fehler dienen. Jede
+  dieser Meldungen enthält eine kurze Erklärung zu dem aufgetretenen Fehler
+  selbst und gibt die Zeilennummer an, in der dieser auftrat. Bei Fehlern
+  während der Lese-Phase bezieht sich diese Nummer auf das
+  <tt>.idx</tt>-File, bei solchen während der Schreibphase auf das
+  <tt>.ind</tt>-File.</p>
+
+
+  <h3>Fehler während des Lesevorgangs</h3>
+
+
+  <table cellspacing="0" cellpadding="3" border="1">
+    <tbody><tr>
+      <th>Fehlermeldung</th>
+
+      <th>Erläuterung</th>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Extra `!' at position ...</tt>
+      </td>
+
+      <td>Das <tt>\index</tt>-Kommando beinhaltet mehr als zwei
+      unmaskierte<tt>!</tt>-Zeichen. Evtl. sollte eines davon maskiert
+      werden.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Extra `@' at position ...</tt>
+      </td>
+
+      <td>Das <tt>\index</tt>-Kommando beinhaltet zwei oder mehr
+      unmaskierte <tt>@</tt>-Zeichen.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Extra `|' at position ...</tt>
+      </td>
+
+      <td>Das <tt>\index</tt>-Kommando beinhaltet zwei oder mehr
+      unmaskierte <tt>|</tt>-Zeichen.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Illegal null field</tt>
+      </td>
+
+      <td>Das Argument des <tt>\index</tt>-Kommandos ist nicht sinnvoll, da
+      eines der Argumente eine leere Zeichenkette darstellt. Das Kommando
+      <tt>\index{!big}</tt> würde beispielsweise einen solchen Fehler
+      verursachen, da es einen Untereintrag <tt>big</tt> definiert, aber
+      keinen zugehörigen übergeordneten Eintrag. Auch das Kommando
+      <tt>\index{@big}</tt> ist fehlerhaft, da es der Sortierung eine leere
+      Zeichenkette übergibt.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Argument ... too long (max 1240).</tt>
+      </td>
+
+      <td>Das Dokument enthält ein <tt>\index</tt>-Kommando mit einem sehr
+      langen Argument. Meist ist in solchen Fällen die rechte schließende
+      Klammer vergessen worden, die den Abschluß des Arguments
+      anzeigt.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td>Weitere Fehler:</td>
+
+      <td>MakeIndex kann eine ganze Reihe weiterer Fehlermeldungen
+      ausgeben, die meist auf schwerwiegendere Fehler im <tt>.idx</tt>-File
+      hinweisen. Wenn LaTeX diese Datei ohne eine Fehlermeldung generiert,
+      kann davon ausgegangen werden, daß die Datei in Ordnung ist.
+      Andernfalls ist es am besten, wenn direkt in der ungeordneten
+      Indexdatei nach dem Fehler gesucht wird.</td>
+    </tr>
+  </tbody></table>
+
+
+  <h3>Fehler während des Schreibvorgangs</h3>
+
+
+  <table cellspacing="0" cellpadding="3" border="1">
+    <tbody><tr>
+      <th>Fehlermeldung</th>
+
+      <th>Erläuterung</th>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Unmatched range opening operator</tt>
+      </td>
+
+      <td>Zu einem Kommando <tt>\index{...|(}</tt> existiert kein
+      korrespondierendes Kommando <tt>\index{...|)}</tt>. Die durch
+      <tt>...</tt> symbolisierte Zeichenkette muß vollständig identisch
+      sein.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Unmatched range closing operator</tt>
+      </td>
+
+      <td>Zu einem Kommando <tt>\index{...|)}</tt> existiert kein
+      korrespondierendes Kommando <tt>\index{...|(}</tt>.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Extra range closing operator</tt>
+      </td>
+
+      <td>Im Dokument erscheinen zwei <tt>\index{...|(}</tt>-Kommandos,
+      ohne daß dazwischen ein Kommando <tt>\index{...|)}</tt> gefunden
+      wurde.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Inconsistent page encapsulator ... within range</tt>
+      </td>
+
+      <td>MakeIndex wurde angewiesen, eine Reihe aufeinanderfolgender
+      Seiten in einem Indexeintrag und gleichzeitig einen Eintrag zu
+      demselben Stichwort für eine innerhalb des Intervalls liegende
+      Seitennummer zu generieren. Das wäre z.B. der Fall, wenn ein Kommando
+      <tt>\index{gnu|ii}</tt> zwischen den Anweisungen
+      <tt>\index{gnu|(}</tt> und <tt>\index{gnu|)}</tt> eingetragen
+      würde.</td>
+    </tr>
+
+
+    <tr valign="top">
+      <td><tt>Conflict entries</tt>
+      </td>
+
+      <td>MakeIndex wurde angewiesen, zweimal einen Eintrag zu demselben
+      Stichwort und derselben Seite zu erzeugen, z.B. wenn die Kommandos
+      <tt>\index{gnu|(see{...}}</tt> und <tt>\index{gnu}</tt> auf einer
+      Seite im Dokument definiert wurden.</td>
+    </tr>
+  </tbody></table>
+
+
+<!-- end blob -->
+
+
+
+				</div> <!-- eof cbox -->
+			</div> <!-- eof col3 -->
+			<div class="ym-ie-clearing">&nbsp;</div>
+        </div> <!-- eof column level-2 -->
+		<footer class="flexible ym-noprint">
+			<div class="inside">
+				<div class="ym-grid">
+					<div class="ym-g20 ym-gl">
+						<div class="ym-gbox-left">
+						<p><a href="http://www.badw.de/" title="Logo Bayerische Akademie der Wissenschaften" rollapp-href="http://www.badw.de/"><img src="LRZ:%20MakeIndex%20-%20ein%20Indexprozessor%20fuer%20LaTeX_files/badw_weiss-transp.png" class="footer-logo flexible" alt="BAdW-Logo"></a></p>
+						</div>
+					</div>
+              		<div class="ym-g40 ym-gl ft-item">
+  <div class="ym-gbox-left">
+    <h4>Häufig nachgefragte Themen</h4>
+    <div class="ym-grid ym-equalize">
+      <div class="ym-g33 ym-gl">
+	<div class="ym-gbox-left">
+	  <ul>
+	    <li><a href="https://www.lrz.de/services/client-server/serverdienste/antivirus/" title="Antivirus" rollapp-href="https://www.lrz.de/services/client-server/serverdienste/antivirus/">Antivirus</a></li>
+            <li><a href="https://www.lrz.de/services/compute/cloud_en/" title="Cloud" rollapp-href="https://www.lrz.de/services/compute/cloud_en/">Compute Cloud</a></li>
+	    <li><a href="https://www.lrz.de/services/netz/wlan/eduroam/" title="Eduroam" rollapp-href="https://www.lrz.de/services/netz/wlan/eduroam/">Eduroam</a></li>
+	    <li><a href="https://www.lrz.de/services/netzdienste/email/" title="E-Mail" rollapp-href="https://www.lrz.de/services/netzdienste/email/">E-Mail</a></li>
+            <li><a href="https://gitlab.lrz.de/" title="Gitlab" rollapp-href="https://gitlab.lrz.de/">Gitlab</a></li>
+	    <li><a href="https://www.lrz.de/wir/stellen/" title="Stellenangbote" rollapp-href="https://www.lrz.de/wir/stellen/">Jobs</a></li>
+            <li><a href="https://www.lrz.de/wir/kennung/" title="Kennungen" rollapp-href="https://www.lrz.de/wir/kennung/">Kennungen</a></li>
+	   </ul>
+	</div>
+      </div>
+
+      <div class="ym-g33 ym-gl">
+	<div class="ym-gbox-left">
+	  <ul>
+            <li><a href="https://www.lrz.de/services/schulung/" title="Schulung, Kurse" rollapp-href="https://www.lrz.de/services/schulung/">Kurse</a></li>
+	    <li><a href="https://www.lrz.de/services/swbezug/" title="Software" rollapp-href="https://www.lrz.de/services/swbezug/">Lizenzen</a></li>
+	    <li><a href="https://www.lrz.de/services/peripherie/posterdruck/" title="Posterdruck" rollapp-href="https://www.lrz.de/services/peripherie/posterdruck/">Posterdruck</a></li>
+            <li><a href="https://www.lrz.de/services/schriften/" title="Schriften" rollapp-href="https://www.lrz.de/services/schriften/">Schriftenbezug</a></li>
+	    <li><a href="https://www.lrz.de/services/serverbetrieb/" title="Serverbetrieb" rollapp-href="https://www.lrz.de/services/serverbetrieb/">Serverbetrieb</a></li>
+             <li><a href="https://www.lrz.de/services/swbezug/" title="Software" rollapp-href="https://www.lrz.de/services/swbezug/">Software</a></li>
+             <li><a href="http://www.lrz.de/services/compute/supermuc/status/" title="SuperMUC Status" rollapp-href="http://www.lrz.de/services/compute/supermuc/status/">SuperMUC (Status)</a></li> 
+         </ul>
+	</div>
+      </div>
+
+      <div class="ym-g33 ym-gr">
+	<div class="ym-gbox-right">
+	  <ul>
+              <li><a href="https://www.lrz.de/services/datenhaltung/syncandshare/" title="Sync + Share" rollapp-href="https://www.lrz.de/services/datenhaltung/syncandshare/">Sync+Share</a></li>
+             <li><a href="https://www.lrz.de/services/netz/mobil/vpn/" title="VPN" rollapp-href="https://www.lrz.de/services/netz/mobil/vpn/">VPN</a></li>
+            <li><a href="https://www.lrz.de/services/termine/" title="Termine" rollapp-href="https://www.lrz.de/services/termine/">Vorträge, Veranstaltungen</a></li>
+            <li><a href="https://www.lrz.de/services/netzdienste/webhosting/" title="Webhosting" rollapp-href="https://www.lrz.de/services/netzdienste/webhosting/">Webhosting</a></li>
+	    <li><a href="https://www.lrz.de/services/netz/wlan/" title="WLan" rollapp-href="https://www.lrz.de/services/netz/wlan/">WLAN</a></li>
+	    <li><a href="https://www.lrz.de/services/pki/" title="PKI" rollapp-href="https://www.lrz.de/services/pki/">Zertifikate</a></li>
+	  </ul>
+	</div>
+      </div>
+    </div>    
+  </div>
+</div>  
+
+<div class="ym-g20 ym-gl ft-item">
+  <div class="ym-gbox-left">
+    <h4>Subscribe &amp; Follow</h4>
+    <ul>
+      <li><a href="https://www.lrz.de/wir/newsletter/" title="Newsletter" rollapp-href="https://www.lrz.de/wir/newsletter/">Newsletter</a></li>
+      <li><a href="https://www.lrz.de/services/netzdienste/email/mailman/" title="Mailman" rollapp-href="https://www.lrz.de/services/netzdienste/email/mailman/">Mailinglisten</a></li>
+     <!-- <li><a href="external:/aktuell/rss/">RSS Newsfeed</a></li> -->
+    </ul>     
+  </div>
+</div>
+
+<div class="ym-g20 ym-gr ft-item">
+  <div class="ym-gbox-rechts">
+    <h4>Kontakt</h4>
+    <ul>
+      <li><a href="mailto:lrzpost@lrz.de" title="LRZ Post" rollapp-href="mailto:lrzpost@lrz.de">E-Mail</a></li>
+      <li><a href="https://www.lrz.de/wir/kontakt/weg/" title="Wegbeschreibung" rollapp-href="https://www.lrz.de/wir/kontakt/weg/">Anfahrt</a></li>
+    </ul>
+  </div>
+</div>
+				</div> <!-- eof grid container -->
+			</div> <!-- eof inside -->
+        </footer>
+     <div class="ym-grid ft-legal">
+ <div class="ym-g50 ym-gl">
+   <div class="ym-gbox">
+ <p>© Leibniz-Rechenzentrum</p>
+ 
+		    <p class="lbr">Stand:
+		      2009-05-07
+		      </p>
+		    
+    </div>
+   </div>
+
+<div class="ym-g50 ym-gr ym-noprint">
+   <div class="ym-gbox">
+
+<p class="float-right"><a href="https://www.lrz.de/datenschutzerklaerungen/datenschutzerklaerung_web/" title="Datenschutzerklärung Web" rollapp-href="https://www.lrz.de/datenschutzerklaerungen/datenschutzerklaerung_web/">Datenschutzerklärung</a> | <a href="https://www.lrz.de/impressum/" title="impressum" rollapp-href="https://www.lrz.de/impressum/">Impressum</a></p>
+
+</div>
+</div>
+
+ </div>
+   
+      </div> <!-- eof ym-wbox -->
+    </div> <!-- eof ym-wrapper -->
+    <!-- full skip link functionality in webkit browsers -->
+    <script src="LRZ:%20MakeIndex%20-%20ein%20Indexprozessor%20fuer%20LaTeX_files/yaml-focusfix.js"></script>
+  
+
+
+<div id="SL_balloon_obj" style="display: block;"><div id="SL_button" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/imtranslator-s.png&quot;) repeat scroll 0% 0%; display: none; width: 24px; height: 24px; position: absolute; cursor: pointer; opacity: 1; left: 913px; top: 649px;"></div><div id="SL_shadow_translation_result2" style="display: none; margin-top: 30px; margin-left: 1px; direction: ltr; text-align: left; min-height: 40px;"><div></div></div><div id="SL_shadow_translator" style="display: none;"><div id="SL_providers"><div class="SL_BL_LABLE_ON" title="Google" id="SL_P0">G</div><div class="SL_BL_LABLE_ON" title="Microsoft" id="SL_P1">M</div><div class="SL_BL_LABLE_ON" title="Translator" id="SL_P2">T</div></div><div id="SL_planshet" style="background: rgb(244, 245, 245) url(&quot;chrome://imtranslator/content/img/util/bg2.png&quot;) repeat scroll 0% 0%;"><div id="SL_arrow_up"></div><div id="SL_TB"><div id="bubblelogo" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/imtranslator-s.png&quot;) repeat scroll 0% 0%; display: block; width: 24px; height: 24px; position: absolute;"></div><table id="SL_tables"><tr><td width="10%" align="right"><input id="SLloc" title="Lock-in language" type="checkbox"></td><td width="20%" align="left"><select id="SL_lng_from"><option value="auto" selected="selected">Detect language</option><option value="af">Afrikaans</option><option value="sq">Albanian</option><option value="ar">Arabic</option><option value="hy">Armenian</option><option value="az">Azerbaijani</option><option value="eu">Basque</option><option value="be">Belarusian</option><option value="bn">Bengali</option><option value="bs">Bosnian</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="ceb">Cebuano</option><option value="ny">Chichewa</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="hr">Croatian</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="en">English</option><option value="eo">Esperanto</option><option value="et">Estonian</option><option value="tl">Filipino</option><option value="fi">Finnish</option><option value="fr">French</option><option value="gl">Galician</option><option value="ka">Georgian</option><option value="de">German</option><option value="el">Greek</option><option value="gu">Gujarati</option><option value="ht">Haitian Creole</option><option value="ha">Hausa</option><option value="iw">Hebrew</option><option value="hi">Hindi</option><option value="hmn">Hmong</option><option value="hu">Hungarian</option><option value="is">Icelandic</option><option value="ig">Igbo</option><option value="id">Indonesian</option><option value="ga">Irish</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="jw">Javanese</option><option value="kn">Kannada</option><option value="kk">Kazakh</option><option value="km">Khmer</option><option value="ko">Korean</option><option value="lo">Lao</option><option value="la">Latin</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="mk">Macedonian</option><option value="mg">Malagasy</option><option value="ms">Malay</option><option value="ml">Malayalam</option><option value="mt">Maltese</option><option value="mi">Maori</option><option value="mr">Marathi</option><option value="mn">Mongolian</option><option value="my">Myanmar (Burmese)</option><option value="ne">Nepali</option><option value="no">Norwegian</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pa">Punjabi</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sr">Serbian</option><option value="st">Sesotho</option><option value="si">Sinhala</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="so">Somali</option><option value="es">Spanish</option><option value="su">Sundanese</option><option value="sw">Swahili</option><option value="sv">Swedish</option><option value="tg">Tajik</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="ur">Urdu</option><option value="uz">Uzbek</option><option value="vi">Vietnamese</option><option value="cy">Welsh</option><option value="yi">Yiddish</option><option value="yo">Yoruba</option><option value="zu">Zulu</option></select></td><td width="5%" align="center"><div id="SL_switch_b" title="Switch languages" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/switchb.png&quot;) repeat scroll 0% 0%; display: block; width: 10px; height: 10px; cursor: pointer;" align="center"></div></td><td width="20%" align="left"><select id="SL_lng_to"><option value="af">Afrikaans</option><option value="sq">Albanian</option><option value="ar">Arabic</option><option value="hy">Armenian</option><option value="az">Azerbaijani</option><option value="eu">Basque</option><option value="be">Belarusian</option><option value="bn">Bengali</option><option value="bs">Bosnian</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="ceb">Cebuano</option><option value="ny">Chichewa</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="hr">Croatian</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="en">English</option><option value="eo">Esperanto</option><option value="et">Estonian</option><option value="tl">Filipino</option><option value="fi">Finnish</option><option value="fr">French</option><option value="gl">Galician</option><option value="ka">Georgian</option><option value="de">German</option><option value="el">Greek</option><option value="gu">Gujarati</option><option value="ht">Haitian Creole</option><option value="ha">Hausa</option><option value="iw">Hebrew</option><option value="hi">Hindi</option><option value="hmn">Hmong</option><option value="hu">Hungarian</option><option value="is">Icelandic</option><option value="ig">Igbo</option><option value="id">Indonesian</option><option value="ga">Irish</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="jw">Javanese</option><option value="kn">Kannada</option><option value="kk">Kazakh</option><option value="km">Khmer</option><option value="ko">Korean</option><option value="lo">Lao</option><option value="la">Latin</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="mk">Macedonian</option><option value="mg">Malagasy</option><option value="ms">Malay</option><option value="ml">Malayalam</option><option value="mt">Maltese</option><option value="mi">Maori</option><option value="mr">Marathi</option><option value="mn">Mongolian</option><option value="my">Myanmar (Burmese)</option><option value="ne">Nepali</option><option value="no">Norwegian</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pa">Punjabi</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sr">Serbian</option><option value="st">Sesotho</option><option value="si">Sinhala</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="so">Somali</option><option value="es" selected="selected">Spanish</option><option value="su">Sundanese</option><option value="sw">Swahili</option><option value="sv">Swedish</option><option value="tg">Tajik</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="ur">Urdu</option><option value="uz">Uzbek</option><option value="vi">Vietnamese</option><option value="cy">Welsh</option><option value="yi">Yiddish</option><option value="yo">Yoruba</option><option value="zu">Zulu</option></select></td><td width="5%" align="center"> </td><td width="6%" align="center"><div id="SL_TTS_voice" title="Listen" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/tts-voice.png&quot;) repeat scroll 0% 0%;"></div></td><td width="6%" align="center"><div id="SL_copy" title="Copy translation" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/copy_hand.png&quot;) repeat scroll 0% 0%;"></div></td><td width="6%" align="center"><div id="SL_bbl_font_patch" title="This function is disabled in Dictionary mode"></div><div id="SL_bbl_font" title="Font size" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/font-off.png&quot;) repeat scroll 0% 0%;"></div></td><td width="6%" align="center"><div id="SL_TH" title="Translation History" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/history.png&quot;) repeat scroll 0% 0%;"></div></td><td width="10%"></td><td width="6%" align="right"><div id="SL_pin" title="Pin pop-up bubble" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/pin-off.png&quot;) repeat scroll 0% 0%; display: block; width: 16px; height: 16px; cursor: pointer;"></div></td></tr></table></div><div id="SL_alert_bbl" style="display: none;"><div id="SLHKclose"></div><div id="SL_alert_cont"></div></div></div><div id="SL_shadow_translation_result" style="background: rgb(255, 255, 255) url(&quot;chrome://imtranslator/content/img/util/bg.png&quot;) repeat scroll 0% 0%; visibility: visible; min-height: 40px;"><div></div></div><div id="SL_loading" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/indicator.gif&quot;) repeat scroll 0% 0%; display: block; position: absolute; width: 35px; margin-left: 180px; margin-top: -40px; height: 35px;"></div><div id="SL_player2" style="display: none; height: 0px; width: 0px;"></div><div id="SL_alert100" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/bg2.png&quot;) repeat scroll 0% 0%; display: none;">Text-to-speech function is limited to 100 characters</div><div id="SL_Balloon_options" style="background: rgb(255, 255, 255) none repeat scroll 0% 0%;"><div id="SL_arrow_down"></div><table width="100%"><tr><td width="18%" height="16" align="left"><div id="SL_bbl_donate" title="Make a small conribution" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/donate2.png&quot;) repeat scroll 0% 0%;"></div></td><td width="68%" align="center"><a href="#" id="OPlnk" title="Show options" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#">Options</a> : <a href="#" id="HISTlnk" title="Translation History" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#">History</a> : <a href="http://about.imtranslator.net/tutorials/presentations/imtranslator-translator-for-firefox/popup-bubble-application/" target="_blank" id="HELPlnk" title="Help" rollapp-href="http://about.imtranslator.net/tutorials/presentations/imtranslator-translator-for-firefox/popup-bubble-application/">Help</a> : <a href="#" id="FBlnk" title="Feedback" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#">Feedback</a></td><td width="15%" align="right"><a id="SL_Balloon_Close" href="#" title="Close" rollapp-href="https://www.lrz.de/services/software/textverarbeitung/makeindex/#">Close</a></td></tr></table></div></div></div></body></html>

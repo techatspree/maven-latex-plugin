@@ -1,0 +1,14 @@
+\documentclass{article}
+
+\usepackage[record,acronym,symbols,style=tree]{glossaries-extra}
+
+\setabbreviationstyle[acronym]{long-short}
+
+\GlsXtrLoadResources[src={termAcroSymb}]
+
+\begin{document}
+A \gls{sample} document with an \gls{ex} derivative \gls{dfx}.
+There are two \glspl{abbr}: \gls{ex} and \gls{abbr}.
+
+\printunsrtglossaries
+\end{document}

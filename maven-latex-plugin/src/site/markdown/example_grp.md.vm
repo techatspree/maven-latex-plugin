@@ -1,0 +1,34 @@
+<!-- markdownlint-disable no-trailing-spaces -->
+<!-- markdownlint-disable no-inline-html -->
+
+# Creating graphic files only with goal `grp`
+
+There are many graphic formats, like FIG, 
+which cannot be included directly into the target format, e.g. PDF. 
+In case of FIG and DVI, this software converts FIG files into EPS files 
+for inclusion into DVI. 
+This has to be done for all goals creating document output, 
+the most versatile of which is `cfg`, 
+but this section is on creating graphic files only, 
+which is done by goal `grp`. 
+
+The use case is document development. 
+If running a latex converter like `lualatex` 
+and auxiliary tools like `bibtex` standalone 
+on a document which contains graphics in a format which needs conversion. 
+If graphic files are not present in a format which allows inclusion, this causes an error. 
+This problem is solved by running goal `grp` before `lualatex`. 
+
+Also, when building with `latexmk` this may result in an error. 
+It is quite[1] save if using the config file created by goal `inj`. 
+But the number of runs required may be very high. 
+
+So there are cases where the goal `grp` makes sense. 
+
+[^1]: What may happen is that `latexmk` needs more 
+runs than maximally specified. 
+This results in a corrupt artifact. 
+
+
+<!-- the link is very instable -->
+<!-- For details, see [manual Section 3.2](manualLMPch3.html#x8-120003.2). -->

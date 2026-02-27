@@ -1,0 +1,2342 @@
+\chapter{Usage of Plugin and Task}\label{chap:usage}
+
+% TBD: in the long run: plugin, task and standalone, or as a dependency
+This software offers both, a maven plugin and an according ant task,
+but the emphasis is on the maven plugin.
+Thus, the sections of this chapter are either general
+or apply to the maven plugin;
+only Section~\ref{sec:usageAntTask} specifically refers to the ant task. 
+Usage presupposes installation as described in Chapter~\ref{chap:install}
+including settings in \texttt{pom.xml} 
+as described in Section~\ref{sec:xmlPom} for the maven plugin 
+and the settings in \texttt{build.xml} 
+as described in Section~\ref{sec:xmlBuild} for the ant task.
+
+This plugin may be used both if the \LaTeX-sources are ready 
+to create ``final'' output from them 
+and also to support development of the \LaTeX{} sources. 
+Accordingly, this chapter has Section~\ref{sec:sources}
+devoted to the form of the sources, including directory structure,
+\LaTeX-files and others, mainly graphic files included
+and a Section~\ref{sec:outputFormats} on exporting into various formats.
+
+There is a very special usage, called development of documents,
+which means while the document is under construction.
+The features and goals tied to this phase
+are collected in Section~\ref{sec:devel}.
+
+In contrast, Section~\ref{sec:usageLifecycle}
+is on usage of the maven plugin within the lifecycles.
+This can be used during development of documents
+but is more appropriate for small changes
+or when development finished at a stage. 
+
+%TBD: add links to all sections 
+% also mention where the individual goals are treated. 
+
+\section{The source files and their directories}\label{sec:sources}
+
+Source files are files contributing to creating documentation 
+from \LaTeX-files in the build process 
+which are not themselves created in the build process. 
+They are searched in the \emph{\TeX{} source directory} and subdirectories recursively. 
+\index{\TeX{} source directory}% chktex 24
+By default, this is \texttt{./src/site/tex}, 
+where ``\texttt{.}'' is the \emph{base directory} of this maven/ant-project. 
+This structure complies with conventions in maven-projects. 
+\index{base directory}% chktex 24
+
+Note that, against the convention of maven-projects, 
+the \TeX{} source directory may contain also files created during the build process. 
+By default, after the build process is finished, they are removed again. 
+For some background on this see Section~\ref{subsec:sourceCreated}. 
+
+Source files may be TEX files treated in Section\ref{subsec:sourcesLatex} 
+and various kinds of graphic files described in Section~\ref{subsec:sourcesGraphic}, 
+but may include also 
+%
+\begin{itemize}
+\item 
+verbatim text embedded into TEX files with \pkg{verbatim}, 
+\item 
+BIB files typically describing a bibliography,  or, %TBD: support of biblatex 
+not yet supported, a glossary or that like, % TBD: check when supported, mention glossaries-extra
+\item 
+program files, either included as a listing by package \pkg{listings} 
+or executed via the package \pkg{pythontex}\index{pythontex}. % chktex 24
+\end{itemize}
+
+
+\subsection{\LaTeX{} main files and other latex files}\label{subsec:sourcesLatex}
+
+The TEX files are special in that only part of them is processed explicitly 
+invoking a compiler like \lualatex{} on them, 
+part is just included via \cmd{input} or \cmd{include}. 
+The \LaTeX-files to be compiled top level, 
+are called \emph{\LaTeX{} main files}. 
+As an example, 
+in the \emph{TEX source directory} of this software, 
+\texttt{manualLMP.tex} is a \LaTeX{} main file, 
+whereas the file \texttt{header.tex} is not, although also a \LaTeX-file: 
+it is intended to be input in another TEX file, in this case \texttt{manualLMP.tex}. 
+
+
+% identification of the latex main file?
+\LaTeX{} main files are detected automatically 
+\index{latex main file}% chktex 24
+by fitting the regular expression \texttt{patternLatexMainFile} 
+described in detail in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}, 
+and in the reference given there, 
+whereas the description here is quite high level. 
+
+As a first approximation, a \LaTeX{} main file is one invoking 
+the command \cmd{documentclass} 
+or the outdated \cmd{documentstyle}, both specifying the document class. 
+It must be excluded that the pattern matches a textual occurrence of \cmd{documentclass}, 
+which just occurs because the document is on \LaTeX{} 
+and mentions the command \cmd{documentclass}. 
+This is quite easy, since there is little allowed in TEX files preceding these commands. 
+
+Consequently, the pattern matches the region from the start of the file 
+to and including the \cmd{documentclass} or \cmd{documentstyle} command. 
+This starting segment of a \LaTeX{} main file 
+is called the \textit{opening}\index{opening}. 
+
+Here a word of warning is at place: if a TEX file does not fit the pattern, 
+it is not interpreted as a \LaTeX{} main file without further warning. 
+So check whether the file under consideration is processed if 
+%
+\begin{itemize}
+  \item 
+  it is built for the first time or 
+  \item 
+  its opening  is changed or
+  \item 
+  the parameter \texttt{patternLatexMainFile} is changed 
+\end{itemize}
+%
+If you distrust the recognition mechanism via pattern matching altogether, 
+you can explicitly specify each \LaTeX{} main file 
+in the parameter \texttt{mainFilesIncluded} 
+described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+This is safe because if a file specified in \texttt{mainFilesIncluded} 
+that like is not a \LaTeX{} main file according to the pattern \texttt{patternLatexMainFile}, 
+a warning is emitted. 
+That way one can check whether the pattern is matched. 
+We could have decided that these files are compiled with or without warning, 
+but this would lead to a technique is that it is inconvenient and not well maintainable. 
+
+
+\subsubsection{On openings neglecting (magic) comments}\label{subsubsec:openingNoMagComm}
+
+This section contains material both specific for supported document classes 
+and general information but magic comments are deferred to Section~\ref{subsubsec:openingMagComm}. 
+
+This software is tested for document classes 
+%
+\begin{itemize}
+  \item \texttt{article} and \texttt{book} which are built-in, 
+  \item \texttt{beamer} for presentations as described in~\cite{Beamer}, 
+  \item \texttt{leaflet} creating leaflets as explained in~\cite{Leaflet} and in~\cite{LeafletMan}, 
+  \item \texttt{scrlttr2} for letters described in~\cite{KomaAnl23}, Part1, Chapter 4, 
+  \item and \texttt{minimal} for quite special uses (did not find real documentation). 
+\end{itemize}
+
+
+Note that \texttt{scrlttr2} replaces the built-in \texttt{letter} which is not recommended. 
+In fact, is the only KOMA\index{KOMA} class this software is tested for. 
+The attentive reader may realize 
+that the built-in document class \texttt{report} is not mentioned. 
+It shall work but is currently not tested. 
+
+Nevertheless, the pattern \texttt{patternLatexMainFile} 
+matches all possible document classes. 
+Typically, the document class is loaded with options. 
+The most frequent class may be \texttt{article} 
+followed by \texttt{report} and \texttt{book}. 
+For these, we suggest something like
+%
+\begin{Verbatim}
+\documentclass[a4paper,12pt,english]{article}
+\end{Verbatim}
+%
+where \texttt{a4paper} is a setting, typical for Europe or, not the US\@. 
+The default font size is \texttt{10pt} and sometimes it makes sense to increase this. 
+For documents which are solely in English no language setting is required, 
+except if loading the package \pkg{babel}, else the hyphenation patterns get lost. 
+Since we recommend inputting the header file \texttt{header.tex} 
+described in Section~\ref{subsec:header} which in turn loads \pkg{babel} and 
+by the way also \pkg{csquotes}, a language setting is mandatory. 
+It is possible specifying the language when loading \pkg{babel} as an option 
+like so \cmd{usepackage[english]\{babel\}}, 
+but it is recommended to specify the language as an option of the document class, 
+in order to make it available for various packages, 
+besides \pkg{babel} also for \pkg{csquotes}. 
+If a document has more than one language, specify all of them, 
+the last the one the document starts with, 
+but~\cite{BabelP24} Sections~1.7 and 1.8 show how to change language, 
+here temporarily into German, 
+which requires specifying \texttt{german} in front of \texttt{english} 
+in the document class. 
+Note the quotes and the correct hyphenation in the following paragraph. 
+
+%   \begin{center}
+%     \begin{foreignlanguage}{german}
+%       Liberté, Egalité, Fraternité
+% \end{foreignlanguage}
+% \end{center}
+\begin{quote}
+\begin{otherlanguage}{german}
+  Sie las den Artikel \enquote{Chancen für eine diplomatische Lösung} 
+  in der "`Wochenpost"', während er es sich nicht nehmen ließ, % chktex 18
+  sich Thomas Manns Novelle "`{Der Tod in Venedig}"' zu Gemüte zu führen. % chktex 18
+\end{otherlanguage}
+\end{quote}
+
+To obtain correct quotes in the above paragraph, 
+package \pkg{csquotes} must be loaded with option \texttt{autostyle}. 
+Since \pkg{csquotes} is loaded in \texttt{header.tex} 
+given by an injection as described in Section~\ref{sec:injFiles}, 
+this option must be passed to \pkg{csquotes} 
+before loading the document class, e.g.\@ via 
+%
+\begin{Verbatim}[fontsize=\small]
+  \PassOptionsToPackage{autostyle}{csquotes}
+\end{Verbatim}
+%
+This is the technique to pass options to packages in general. 
+
+For documents of class \texttt{minimal} there are no requirements imposed. 
+No checks and no PDF-info. 
+For all other document classes, it is recommended to load \pkg{nag} 
+before \cmd{documentclass} by 
+%
+\begin{Verbatim}[fontsize=\small]
+  \RequirePackage[l2tabu, orthodox]{nag}
+\end{Verbatim}
+%
+Thus the pattern \texttt{patternLatexMainFile} 
+allows \cmd{RequirePackage} with its options preceding \cmd{documentclass}. 
+
+There are cases, where one and the same document 
+comes in two flavors both of which must be built. 
+As an example, consider a document with a confidential variant 
+and with a non-confidential variant. 
+To define these, the declaration of the document class 
+must be preceded by the following kind of code: 
+%
+\begin{Verbatim}[fontsize=\small]
+\RequirePackage{etoolbox}
+\newbool{isConfidential}
+\setbool{isConfidential}{true}
+\end{Verbatim}
+
+The new thing is defining and setting a boolean 
+via \cmd{newbool} and \cmd{setbool}, respectively. 
+It is a good idea to set a watermark via 
+%
+\begin{Verbatim}[fontsize=\small]
+\ifbool{isConfidential}{%
+  \usepackage{draftwatermark}
+  \SetWatermarkText{Confidential}%
+}{%
+% no watermark text
+}
+\end{Verbatim}
+
+The same technique differentiating between confidential and public 
+may be used to define a lecture with and without solution 
+or any other kind of variant. 
+
+Documents of class \texttt{leaflet} resemble \texttt{article}s, 
+except special options like \texttt{notumble}. 
+
+\begin{Verbatim}[fontsize=\footnotesize]
+  \documentclass[a4paper,notumble,10pt,english]{leaflet}% 12pt,notumble
+\end{Verbatim}
+
+The same is true for letters of type \texttt{scrlttr2}, 
+except for the special specification of font size and versioning of the class: 
+
+\begin{Verbatim}[fontsize=\footnotesize]
+\documentclass[english,german,a4paper,fontsize=10pt,version=last]{scrlttr2}
+...
+\input{header.tex}
+\LoadLetterOption{DIN}
+\end{Verbatim}
+
+Observe that after inputting \texttt{header.tex} which loads \pkg{geometry}, 
+various pseudo lengths have to be re-adjusted. 
+This is done by loading the letter option. 
+Without it may happen, that the text does not reach until the bottom of the frame. 
+
+
+What is special for beamer presentations is, 
+that in general two documents with the same identifier, e.g.\@ title are created, 
+the proper presentation, e.g.\@ 
+% TBD: eliminate change of font size: long line must be breakable 
+\begin{Verbatim}[fontsize=\scriptsize]
+\RequirePackage[l2tabu, orthodox]{nag}
+\PassOptionsToPackage{colorlinks,linkcolor=blue,urlcolor=blue,citecolor=blue,destlabel}{hyperref}
+
+\documentclass[10pt,english]{beamer}
+\mode<presentation>%
+
+\input{useBeamer}
+\end{Verbatim}
+%
+and the corresponding handout 
+%
+\begin{Verbatim}
+  \RequirePackage[l2tabu, orthodox]{nag}
+
+  \documentclass[a4paper]{article}
+  \usepackage{beamerarticle}
+  \input{useBeamer}
+\end{Verbatim}
+%
+both including the same piece of code which is included from file \texttt{useBeamer.tex}. 
+The author recommends to stick to this convention. 
+As an example document may serve~\cite{PresBeamer} 
+which is a presentation of this software including the handout 
+and illustrates the use of the beamer class. 
+Observe, that both documents use \texttt{header.tex} injected 
+as described in Section~\ref{subsec:header} loading various packages. 
+The beamer class is special in that it loads the \pkg{hyperref} package itself. 
+To avoid option clash with \texttt{header.tex}, 
+for document class \texttt{beamer} option \texttt{destlabel} 
+must be passed to the package. 
+% originally in \documentclass[hyperref=destlabel] 
+Maybe it is a matter of taste, but \texttt{beamer} tends to make links invisible. 
+To force loading options specifying colors for links and \texttt{destlabel}, 
+use \cmd{PassOptionsToPackage} as shown above. 
+
+All documents but beamer documents 
+must specify the paper size globally via \cmd{documentclass}. 
+Beamer documents may specify accordingly \texttt{aspectratio}. 
+All this must be allowed for \LaTeX{} main files. 
+
+
+\subsubsection{Magic comments}\label{subsubsec:openingMagComm}
+
+It also makes sense to allow comments also in openings, 
+i.e.\@ text from unescaped \texttt{\%} to the end of the line, 
+and also magic comments. 
+A magic comment, as all comments, is ignored by the \LaTeX{} compilers 
+but give hints to more high level tools 
+like IDEs or build tools like this \LaTeX{} builder. 
+It is the mechanism to treat a document in a specific way 
+so magic comments override the general settings. 
+
+Typically, a magic comment comprises a whole line and starts with \texttt{\%~!}, 
+maybe followed by an identifier of the tool it refers to 
+or by an identifier referring to TEX files in general. 
+For example latex workshop and \TeX{}shop support the magic comment \texttt{\%~!TEX root} 
+and this must be essentially in the first line. 
+The magic comments specific for this tool may be preceded by general magic comments 
+and start with \texttt{\%~!LMP} which is short for ``latex maven plugin''. 
+This is not fully correct but easy to remember. 
+
+This \LaTeX{} builder is designed to cooperate with other tools. 
+The magic comments of the other tools 
+as described in various places in Section~\ref{sec:devel} 
+on document development and in particular in Section~\ref{subsec:develLatexmk}. 
+Thus, if appropriate, also magic comments of other tools are read, 
+except those of \auctex, because \auctex{} places magic comments at the end of file, 
+forcing this software to read all the file if it accessed \auctex{} magic comments also. 
+All other tools including latex workshop for VS Code 
+support a subset of what is 
+\href{http://transit.iut2.upmf-grenoble.fr/doc/texstudio/html/usermanual_en.html#TEXCOM}%
+{defined by \TeX{}studio}. 
+From all magic comments in the context of signifying \LaTeX{} main files 
+only \texttt{program} and \texttt{root} are relevant. 
+If a root is given, then the file is no \LaTeX{} main file 
+and, provided the feature is used, also the converse is true. 
+Since this software shall not rely on further tooling, 
+it does not use \texttt{root}. 
+All in all, among the general magic comments only 
+\texttt{\%~!TEX program=\dots} is read. 
+It can occur more than once, but the first occurrence is what counts; 
+the others are ignored silently. % TBD: really good? 
+Note that the magic comment \texttt{\%~!TEX program=\dots} overrides 
+the setting \texttt{latex2pdfCommand} for creating PDF files and related, 
+specified in Table~\ref{tab:paramLatex2pdf} on page~\pageref{tab:paramLatex2pdf}, 
+but not the \texttt{tex4htCommand} from Table~\ref{tab:paramLatex2Html} 
+on page~\pageref{tab:paramLatex2Html}. 
+
+After the general magic comments of the form \texttt{\%~!TEX \dots} 
+come the ones specific for this \LaTeX{} builder. 
+They take the form \texttt{\%~!LMP \dots}. 
+Like the general magic comments, the specific ones are all optional, 
+but in contrast, they come in a fixed order without repetition. 
+
+What follows is a full range of magic comments: 
+%
+\begin{Verbatim}
+% !TEX program=lualatex
+% !LMP chkDiff
+% !LMP latexmk
+% !LMP targets=chk,pdf,html
+
+\documentclass[a4paper]{article}
+\end{Verbatim}
+
+
+Section~\ref{subsec:patternLatexMainFile} 
+describes the meaning of the individual comments 
+in the course of explaining the pattern \texttt{patternLatexMainFile}. 
+Note that there the names of the magic comments is given, whereas the above listing refers to the content, 
+but it is easy to identify the according magic comments. 
+The relation of the magic comments is described in the following. 
+
+The magic comments may come only in the ordering given in the above listing, 
+but each of them is optional. 
+They can be freely combined, 
+but note that \texttt{chkDiff} and \texttt{latexmkMagic} 
+apply to creation and check PDF files only. 
+So, for \texttt{targets=pdf,html}, these magic comments apply to target \texttt{pdf}, 
+but not to \texttt{html}. 
+For \texttt{targets=chk,html} it even takes no effect at all 
+without issuing a warning. 
+As explained above, \texttt{program} affects 
+only the targets \texttt{pdf} and \texttt{dvi} including also XDV files. 
+
+
+% Since the pattern \texttt{patternLatexMainFile} may never be appropriate for all situations 
+% to match the document class in \cmd{documentclass} 
+% and not all users are familiar with regular expressions to adapt by need, 
+% there need to be a workaround to adapting the pattern. 
+% One is to use \cmd{input} to inlude material which does not fit. 
+
+% In future, it is conceivable to use also magic comments for this task. 
+% In fact, any of our magic comments signifies already a \LaTeX{} main file. 
+% The idea is instead of 
+% The only problem is, that if the pattern 
+% marking a \LaTeX{} main file by specifying its document class like in 
+% \texttt{\%~!LMP class=\dots} is an easy workaround. 
+
+% As will be explained in detail in Section~\ref{sec:outputFormats}, 
+% the explicit document class is only used 
+% to restrict the targets for which to compile a \LaTeX{} main file. 
+% The targets can be specified for each \LaTeX{} main file individually 
+% using \texttt{\%~!LMP targets=\dots}. 
+% In fact specifying targets marks a TEX file as a \LaTeX{} main file also 
+% making specification of the class as \texttt{\%~!LMP class=\dots} superfluous. 
+% Nevertheless, \texttt{\%~!LMP class=\dots\ targets=\dots} is allowed. 
+
+
+
+% In contrast, magic comments like \texttt{\%~!TeX program=\dots} 
+% specifying the \LaTeX{} converter signify a \LaTeX{} main file in any case. 
+% It overwrites also the converter 
+% given in the general setting \texttt{latex2pdfCommand} 
+% specified in Table~\ref{tab:paramLatex2pdf} on page~\pageref{tab:paramLatex2pdf}. 
+% A magic comment specifying the converter does not specify, 
+% neither the target directly nor via the document class. 
+
+
+% The pattern \texttt{patternLatexMainFile} matches comments and in particular magic comments, 
+% but it is written also to extract the parameters in magic comments described above 
+% as it extracts the document class from the \cmd{documentclass} command. 
+% In fact more than that: 
+% It matches if the magic comment indicates 
+% that the file under consideration is a \LaTeX{} main file 
+% or if the presence of a \cmd{documentclass} command signifies this. 
+
+% If the magic comment of this tool specifies the document class or the target set, 
+% it is considered a \LaTeX{} main file, even if no \texttt{documentclass} is matched. 
+% In fact, it does not make sense to specify both in the magic comment, 
+% the document class and the target set, 
+% because the document class is used only to determine the target set. 
+% Typically, the document class is given as a magic comment, 
+% if it is not easy to get the pattern for the specific document right, 
+% maybe because the user is not so familiar with the technique, so it is a fallback. 
+% In contrast, the target set is given in the magic comment 
+% if it shall be specified individually for the given \LaTeX{} main file. 
+
+
+Note that documents of the classes \texttt{beamer}, \texttt{leaflet} and \texttt{scrlttr2} 
+can essentially only be compiled into a PDF, 
+and maybe further to a TXT file. 
+In addition, to targets and goals \texttt{pdf} and \texttt{txt}, 
+it can be checked with target or goal \texttt{chk}. 
+Other targets are skipped, and a message is displayed. 
+The relations are configurable 
+through settings \texttt{targets} and \texttt{docClassesToTargets} 
+both in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+Also, if a document class occurs, 
+which is not registered in \texttt{docClassesToTargets}, 
+a warning \texttt{WLP09} described in Table~\ref{tab:WarnLPP} 
+on page~\pageref{tab:WarnLPP} is displayed. 
+% TBD: clarify whether this is not an exception 
+
+
+
+
+
+
+\subsection{Source graphic files}\label{subsec:sourcesGraphic}
+
+The great bulk of file types occurring as sources, 
+are graphic files in various formats. 
+Note that this section is not about intermediate file types like PDF or MPS 
+used to include the original file types into the target. 
+
+As regards the way the according files are included in \LaTeX-files, 
+there are the following kinds of graphic formats, 
+all included in the TEX source directory. 
+%
+\begin{enumerate}
+\item
+The first can be included into \LaTeX-files directly via \cmd{input}. 
+These formats are essentially \LaTeX{}
+and are defined in an according package. 
+Examples are \pkg{eepic} described in~\cite{EEpic}
+and above all \pkg{tikz} described in~\cite{TikzPGF23}. 
+\item
+The second one via the command \cmd{includegraphics}{} 
+defined by the package \pkg{graphicx} 
+which is described in~\cite{GraX}. 
+Chapter 2 therein mentions the supported drivers, 
+among these are also \texttt{dvipdfm} and \texttt{dvipdfmx}, the latter is the default. 
+It is not the package but the driver 
+which decides on the support of graphic formats. 
+The dvipdfmx user manual,~\cite{DviPdfMx}, Section 3.1.1 lists the allowed formats 
+MetaPost (i.e.~\gls{mps}), postscript (i.e.~\gls{eps}), 
+\gls{pdf}, \gls{jpg} including jpeg2000 and \gls{png}. 
+\item\label{it:transExp}
+The third one must be transformed into a graphics format 
+of one of the former two kinds using an external tool for transformation. 
+Here, of course, only a limited support is possible, 
+because there is a broad variety of formats. 
+We have chosen
+%
+\begin{itemize}
+\item
+  the \gls{fig}-format described in~\cite{XFigF}
+  because of its simplicity, 
+\item
+  the gnuplot format, described in~\cite{GnuPlot6_0}, 
+  because it allows computation of function plots, 
+\item
+  scalable vector graphics \gls{svg}-format specified in~\cite{Svg11}\footnote%
+  { As the specification is hard to digest,
+  we refer to the tutorial~\cite{SvgTut}. } 
+  as it is important for construction and the counterpart of pixel oriented
+  formats,
+\item
+  likewise, metapost (\gls{mp}-format),
+  described in~\cite{MPost24} because it is native to \LaTeX{} 
+  and quite versatile 
+\end{itemize}
+\item\label{it:transImp}
+The fourth kind of graphics formats 
+has to be transformed into one of the kinds one or two 
+but unlike in type three, this is not done explicitly 
+by an external tool but by a latex-package during the \LaTeX-run. 
+Note that, although not required to be explicitly transformed, 
+those graphics files induce additional files 
+by running \LaTeX.
+Essentially, each of the abovementioned type of format
+can be included that way but currently,
+this is done for the \gls{svg}-format only
+included by the package \pkg{svg} (see~\cite{SvgP}).
+The author personally refrains from using packages like that
+because of the lack of flexibility and further drawbacks. 
+\item 
+Finally, there is a way to include graphics which is not really a graphic format: 
+In the course of running code, e.g.~by package \pkg{pythontex} in Python, 
+as described in Section~\ref{sec:pythontex}, 
+it is also possible to create computed graphics. 
+It may be advisable to separate code into special files to be included via \cmd{input}, 
+but it is not strictly required. 
+In the long run it seems a good idea, to extend \pkg{pythontex} 
+to read in code files, e.g.~in python directly. 
+\end{enumerate}
+
+% The \LaTeX-files and the graphic files belonging to a \LaTeX{} main file 
+% are assumed to be in one single folder. 
+% If one file is included by two different main files, 
+% a link shall be used.
+%TBC: True???
+
+
+
+\subsection{Created files in the \TeX{} source directory}\label{subsec:sourceCreated}
+
+Note that against maven convention and unlike former versions of this software, 
+the current version does not create a working directory 
+by cloning the TEX source directory. 
+Instead, it operates directly on the TEX source directory 
+also creating intermediate files, 
+deleting them again by default after the build process.
+The advantage of processing that way is,
+that this allows cooperation between this software
+and other tool chains which are better suited for developing latex files.
+Details are described in Section~\ref{sec:devel} an in particular in Section~\ref{subsec:develLatexmk}.
+
+The downside is that a file residing in the TEX source directory 
+risks being overwritten or deleted by this software, 
+if it does not stick to the rules. 
+The rules are simple: 
+%
+\begin{itemize}
+\item
+For each graphic file being transformed, 
+i.e.~of types~\ref{it:transExp} or~\ref{it:transImp} above, 
+additional files are created with the same name up to the suffix. 
+Thus, for these graphic files no file with the same name 
+up to the ending is allowed. 
+\item
+For \LaTeX{} main files more general files are created, 
+but they all must match those in pattern \texttt{patternCreatedFromLatexMain} 
+described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+So it is save to add files not matching this pattern. 
+\end{itemize}
+
+
+Note Section~\ref{sec:injFiles}  which is on goal \texttt{inj} 
+injecting diles in the \TeX{} source directory and 
+Section~\ref{subsec:develGraph} on goal \texttt{grp} 
+processing graphic files which creates intermediate files therein also. 
+
+To get rid of intermediate files, there is a separate goal \texttt{clr} 
+described in Section~\ref{subsec:develClear}. 
+
+
+
+
+\section{Exporting in various formats and checking sources}\label{sec:outputFormats}
+
+% TBD: magic comment to specify converter name and its options. 
+
+
+After having added the configuration of the plugin to the \texttt{pom.xml},
+minimally the one given in Listing~\ref{lst:coords},
+it can be used directly invoking maven through 
+\texttt{mvn latex:cfg}. 
+Here \texttt{latex} is the (short) name of the plugin 
+and \texttt{cfg} is the goal. 
+It can also be interpreted as \texttt{mvn $<$source$>$:$<$targets$>$}: 
+The source files are in \texttt{latex}-format and the \texttt{targets} 
+are read from the \emph{configuration} in the pom 
+(\emph{configuration} is what \texttt{cfg} stands for) 
+which is illustrated in Listing~\ref{lst:coordsConfig}. 
+For a detailed description of the setting \texttt{targets} 
+see Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+Here only an overview is given. 
+% TBD: clarify what about the ant task 
+
+By default, the targets configured are \texttt{chk}, \texttt{pdf} and \texttt{html}. 
+The following Listing~\ref{lst:targetsAll} shows a configuration 
+with the full range of output formats including in addition 
+the OpenOffice document format \texttt{odt}, 
+the MS word-formats \texttt{doc(x)} and \texttt{rtf} % chktex 36
+and also plain text format \texttt{txt} in utf8 encoding. 
+
+Note that the target \texttt{docx} converts by default into \gls{docx} 
+but may also be configured to produce the old-fashioned \gls{doc} format. 
+
+Be aware that the target \texttt{dvi} creates output in DVI format 
+only for latex processors \lualatex{} and \pdflatex{}, 
+whereas \xelatex{} creates the XDV (extended DVI) format for target \texttt{dvi}. 
+
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\small,
+escapechar=|,
+float, captionpos=b, label={lst:targetsAll}, 
+caption={Configuration with full range output formats}]
+<!-- create html and pdf and other formats from latex -->
+<plugin>
+  <groupId>|\groupId|/groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\strippedVersionID|</version>
+	
+  <configuration>
+    <settings>
+      <targets>chk,pdf,dvi,html,odt,docx,rtf,txt</targets>
+    </settings>
+  </configuration>
+</plugin>
+\end{lstlisting}
+
+Somehow special is the target \texttt{chk} 
+which is mere checking by invoking \texttt{chktex} 
+without resulting output file. 
+It just displays a warning if a rule is violated. 
+
+The resulting files in the given output formats 
+are copied to the site directory, 
+which is \texttt{./target/site} in a default maven project. 
+
+Sometimes it is more convenient 
+to specify the output formats not via the pom 
+but directly as a goal on the command line. 
+In particular, one may write \texttt{mvn latex:pdf} to create documentation 
+in PDF-format only.
+Likewise, command \texttt{mvn latex:dvi} to get good old dvi/xdv files
+or even \texttt{mvn latex:txt} for plain text, just as examples. 
+Accordingly, \texttt{mvn latex:chk} performs a pure check. 
+This occurs preferably in the context of documentation development. 
+In particular, checking is treated separately in Section~\ref{subsec:develCheck}. 
+
+Note that the \texttt{-X} switch activates debugging 
+which results in a more verbose output. 
+Example: \texttt{mvn -X latex:cfg}. 
+
+Although the possible targets can be configured globally 
+via the setting \texttt{targets}, 
+the possible targets may depend on the document class of the latex main file. 
+At time of this writing, 
+all document classes in preferred usage as defined in Chapter~\ref{chap:tests} 
+support all targets with obvious exceptions: 
+Besides checking (target \texttt{chk}) for obvious reasons 
+the classes \texttt{beamer}, \texttt{leaflet} and the letter class \texttt{scrlttr2} 
+directly support only target \texttt{pdf} 
+and because texts are created from PDF files, also target \texttt{txt}. 
+The mapping from document classes to allowed targets 
+is given in setting \texttt{docClassesToTargets} given in 
+Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+This parameter restricts the targets given in parameter \texttt{targets}. 
+As explained in detail in Section~\ref{subsubsec:openingMagComm}, 
+if a document class cannot be identified by the command \texttt{documentclass} 
+or the outdated \texttt{documentstyle}, 
+it can be specified by a magic comment directly. 
+
+Finally, the targets can be specified individually for each latex main file 
+using a magic comment as described in Section~\ref{subsubsec:openingMagComm}. 
+A target specification in a magic comment overwrites all settings in 
+\texttt{targets} and in \texttt{docClassesToTargets}. 
+If a magic comment specifies the targets directly, 
+the document class need not be known. 
+In particular, a magic comment only specifying targets identifies already a \LaTeX{} main file 
+as specified in Section~\ref{subsubsec:openingMagComm}. 
+
+As a magic comment can be used 
+to specify the target formats for a latex main file individually, 
+Section~\ref{subsubsec:openingMagComm} shows 
+how to specify the latex converter to be used for this file 
+overwriting the general setting \texttt{latex2pdfCommand} in the pom 
+given in Table~\ref{tab:paramLatex2pdf} on page~\pageref{tab:paramLatex2pdf}. 
+
+% The code shows that allowed is only what is defined in enum Target. 
+% Thus chk, which is a goal, is not output format. 
+% This makes sense because Target specifies the files to be copied to the target filder. 
+
+% in a sense this section mixes up output formats and goals. 
+% For goal latex:cfg the output formats are as listed under config target. 
+% Other goals, like latex:pdf specify a single output format. 
+
+% Still other goals have no output format. These are 
+% - latex:chk, although a check file is created. 
+%   TBD: currently, there is no config to make chk run on latex main files. 
+% - latex:grp, although graphic files are created but they are not exported. 
+%   This may be done if source distributions are defined. 
+% - latex:vrs, creating a version output or emitting warning if a version does not fit. 
+% - latex:clr, for cleanup. 
+
+% TBD: latex:grp does not fit: it is not an output format. 
+% maybe it becomes output format if introducing source distributions 
+% 
+% Same is true for target clr. 
+
+
+
+In a standard maven project, 
+the above minimal configuration should be sufficient. 
+Only if the folder structure deviates from the standard 
+or if the \LaTeX{} sources require special configuration, 
+parameters have to be given explicitly, 
+because they deviate from the default values. 
+Chapter~\ref{chap:settings} summarizes all available parameters, 
+giving the default value and a description. 
+
+
+For sake of uniformity, 
+the name of the ant-task is \texttt{latex:cfg}, 
+and it can be invoked via \texttt{ant latex:cfg}. 
+Unlike the maven-plugin, the ant-task 
+does not allow to specify a target on the command line. 
+The \texttt{-d} switch activates debugging 
+which results in a more verbose output. 
+Example: \texttt{ant -d latex:cfg}. 
+
+Whereas by default the target directory and in particular 
+the target site directory with all output of this plugin is deleted 
+in maven's \texttt{clean} life-cycle, 
+the tools invoked by this software also create intermediate files 
+in the source directory. 
+By default, i.e.\@ for setting \texttt{<cleanUp>true</cleanUp>}, 
+all files created in the source directory in the last run are cleaned. 
+Nevertheless, for document development intermediate files are vital 
+and so cleanup is frequently set to false. 
+In this case, cleanup must be done in a separate goal, 
+described in Section~\ref{subsec:develClear}. 
+
+% By default, the goal \texttt{clr} 
+% is also executed in maven's \texttt{clear} life-cycle. 
+
+% There is an according ant-task \texttt{latex:cfg} 
+% which can be invoked via \texttt{ant -d latex:cfg}. 
+% FIXME\@: ant  \texttt{latex:clr} has duplicate parameters. 
+% This can be fixed only by properties. 
+% Another problem is, to provide a complete subset of parameters 
+% which apply to \texttt{latex:cfg} and to \texttt{latex:cfg}, respectively. 
+
+\section{Checking versions of converters}\label{sec:chkVersions}
+
+The goal \texttt{vrs} is to display meta information, above all version information:
+% 
+\begin{Verbatim}
+mvn latex:vrs
+\end{Verbatim}
+%
+displays something like what is displayed in Listing~\ref{lst:vrsOut}. 
+Besides information on this software including version and even git commits, 
+there are information on so-called registered converters, 
+i.e.\@ converters intended to be invoked by this software. 
+
+The goal yields a full list of registered converters, 
+signifying which of them are excluded 
+according to parameter \texttt{convertersExcluded}, 
+which are not installed, 
+and for each of the rest, the actual version, the allowed range 
+and a warning if the actual version is out of range. 
+
+The parameter \texttt{convertersExcluded} 
+is described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+Excluded converters are prevented from being used: 
+if tried, Exception TSS07 
+described in Table~\ref{tab:TSS} on page~\pageref{tab:TSS} is thrown. 
+If a converter is not installed, but tired to be used, 
+this kind of failure is obvious. 
+Only if a converter is used with an unintended version bears some risk. 
+Note that also unregistered converters can be used; 
+but then the user is responsible to provide an appropriate version. 
+An example for an unregistered converter 
+is given in Table~\ref{tab:paramPythontex} on page~\pageref{tab:paramPythontex}: 
+\texttt{pythontexW:pythontex} 
+indicating the converter \texttt{pythontexW} with category \texttt{pythontex}. 
+
+
+As one can see, a warning WMI02 indicates 
+that the version of a converter is out of the intended range, 
+provided, the converter is installed, and it is not excluded 
+according to the configuration \texttt{convertersExcluded}.
+
+Note that in the given version and in the installation of the author,
+of course, all converters are installed and are up-to-date
+to be able to check validity.
+The according messages are forced for illustration only. 
+For a user of this software which does no development, 
+of course only converters need to be installed which are really needed. 
+% TBC: what is an interface of a converter?
+% Note that \texttt{makeindex} is not in the list.
+% This is because it is not possible
+% to regularly check the version of that application.
+% It may be an option to use \texttt{upmendex} instead,
+% although in beta state at time of this writing
+% and not completely compatible.
+% According to \cite{UpMendex}, \cite{MkIdxMoe}
+% and further research,
+% \texttt{upmendex} does not support options \texttt{-T} and \texttt{-L}
+% and does interprete \texttt{-g} differently,
+% namely as japanese instead of german. 
+
+
+% TBD: make this listing dynamic 
+% TBD: this is almost duplicate of lst:version.properites
+% maybe one shall be eliminated. 
+\begin{lstlisting}[basicstyle=\tiny,
+float, captionpos=b, label={lst:vrsOut}, 
+caption={Output of goal \texttt{latex:vrs}}]
+[INFO] --- latex:2.0-SNAPSHOT:vrs (default-cli) @ latex-maven-plugin ---
+[INFO] Manifest properties: 
+[INFO] MANIFEST: (1.0)
+[INFO]        Implementation-Version: '2.0-SNAPSHOT'
+[INFO] PackageImplementation-Version: '2.0-SNAPSHOT'
+[INFO] pom properties:
+[INFO] coordinate.groupId:    'eu.simuline.m2latex'
+[INFO] coordinate.artifactId: 'latex-maven-plugin'
+[INFO] coordinate.version:    '2.0-SNAPSHOT'
+[INFO] git properties: 
+[INFO] build version:  '2.0-SNAPSHOT'
+[INFO] commit id desc: 'latex-maven-plugin-1.8-209-g5ac27b7-dirty'
+[INFO] buildTime:      '2023-06-25T23:31:20+0200'
+[INFO] tool versions: 
+[INFO] ?warn?    command             'actual version'(not)in[expected version interval]
+[INFO]           mvn:                '3.9.4'in[3.9.1;3.9.4]
+[INFO]           ant:                '1.10.14'in[1.10.12;1.10.14]
+[INFO]           java:               '17.0.9'in[17.0.9]
+[INFO]           python:             '3.11.6'in[3.11.6]
+[INFO]           perl:               '5.38.2'in[5.38.2]
+[INFO]           pdflatex:           '1.40.25'in[1.40.21;1.40.25]
+[INFO]           lualatex:           '1.17.0'in[1.12.0;1.17.0]
+[INFO]           xelatex:            '0.999995'in[0.999992;0.999995]
+[INFO]           latex2rtf:          '2.3.18 r1267'in[2.3.16 r1254;2.3.18 r1267]
+[INFO]           odt2doc:            '0.9.0'in[0.9.0]
+[INFO]           pdftotext:          '23.11.0'in[21.04.0;23.11.0]
+[INFO]           dvips:              '2023.1'in[2020.1;2023.1]
+[INFO]           dvipdfm:            '20220710'in[20210318;20220710]
+[INFO]           dvipdfmx:           '20220710'in[20200315;20220710]
+[INFO]           xdvipdfmx:          '20220710'in[20200315;20220710]
+[INFO]           dvipdft:            '20090604.0046'in[20090604.0046]
+[INFO]           gs:                 '9.56.1'in[9.52.0;9.56.1]
+[INFO]           chktex:             '1.7.8'in[1.7.8]
+[INFO]           diff-pdf-visually:  '1.7.0'in[1.6.4;1.7.0]
+[INFO]           diff-pdf:           '300'in[300]
+[INFO]           diff:               '3.10'in[3.8;3.10]
+[INFO]           pdfinfo:            '23.11.0'in[22.01.0;23.11.0]
+[INFO]           exiftool:           '12.71'in[12.39;12.71]
+[INFO]           bibtex:             '0.99d'in[0.99d]
+[INFO]           bibtexu:            '4.00'in[4.00;4.00]
+[INFO]           bibtex8:            '4.00'in[4.00;4.00]
+[WARNING] WMI02: makeindex:          '2.17'not in[2.15;2.16]
+[INFO]           splitindex:         '0.1'in[0.1]
+[INFO]           makeglossaries:     '4.51'in[4.45;4.51]
+[INFO]           pythontex:          '0.18'in[0.17;0.18]
+[INFO]           depythontex:        '0.18'in[0.17;0.18]
+[INFO]           mpost:              '2.02'in[2.00;2.02]
+[INFO]           ebb:                '20220710'in[20200315;20220710]
+[INFO]           gnuplot:            '5.4 patchlevel 10'in[5.4 patchlevel 0;5.4 patchlevel 10]
+[INFO]           inkscape:           '1.3.2'in[1.0.2;1.3.2]
+[INFO]           fig2dev:            '3.2.9'in[3.2.7b;3.2.9]
+[INFO] tools excluded: 
+[INFO] upmendex, xindy
+[INFO] tools not found: 
+[INFO] latexmk
+[INFO] ------------------------------------------------------------------------
+\end{lstlisting}
+%[INFO]           upmendex:           '1.00'in[0.54;1.00]
+%[INFO]           xindy:              '2.5.1'in[2.5.1]
+
+
+
+\section{Injection of files}\label{sec:injFiles}
+
+The goal \texttt{inj} is to inject files 
+into the working directory \texttt{texSrcDirectory}, 
+by default in maven lifecycle phase \texttt{valiate} 
+or from command line in the root directory. 
+The injected files are in general adapted to the current configuration of the plugin. 
+
+Note that each of these files is written only 
+if it is guaranteed that only files written by this plugin are overwritten. 
+This is the case, if no file is overwritten at all 
+or if the file to be overwritten is recognized to start with a comment 
+indicating that this file is written by this plugin. 
+Of course the guarantee holds only if the headline does not tell a lie. 
+
+If the headline cannot be read or in some other exotic conditions, 
+it cannot be ensured that the files are written by this software, 
+and so they are not overwritten by goal \texttt{inj} 
+and by the way not erased by goal 
+\texttt{clr} as described in Section~\ref{subsec:develClear}. 
+In case of such a doubt, a warning is displayed. 
+
+That way, injected files written by the plugin can be updated each run, 
+which is necessary to keep them synchronized with the configuration of this plugin, 
+but according files written e.g.\@ by the user are protected. 
+
+A first description of the goal \texttt{inj} is given by 
+%
+\begin{verbatim}
+mvn latex:help -Ddetail -Dgoal=inj
+\end{verbatim}
+%
+which yields a list of files which can be injected. 
+Note the distinction between the injection, which is the act of injecting 
+and the according file which is injected. 
+
+The set of injections can be divided into the following categories 
+according to the function of the files injected: 
+%
+\begin{itemize}
+  \item
+  Configuration files for \tool{latexmk} and \texttt{chktex}. 
+  These are hidden files and form the default. 
+  In particular, the configuration file of \tool{latexmk} 
+  is adapted to the configuration of this plugin, 
+  to ensure that the results are the same whether created by \tool{latexmk} 
+  or by this plugin. 
+  \item
+  Header files are intended to be included in TEX files. 
+  They load packages and provide commands. 
+  In general, header files are designed to run on all usual \LaTeX{} compilers, 
+  with various document classes  
+  and take creation of PDF into account but also of other formats like HTML 
+  and also of DVI/XDV which is an important intermediate format. 
+
+  The packages are loaded with minimum options, 
+  but these can be modified outside the headers by \cmd{PassOptionsToPackage} 
+  as described in Section~\ref{subsubsec:openingNoMagComm}. 
+  \item
+  Script files which are intended to run by the user 
+  supporting the automatic build process ``from outside''
+  above all in the course of document development. 
+  Thus, usually, their injection is triggered selectively from the command line 
+  as described below. 
+  In contrast to the files in the other categories, these are executable. 
+\end{itemize}
+
+Table~\ref{tab:injections} shows the possible injections 
+and the ones really to be performed are given in the configuration \texttt{injections}. 
+This configuration is described in Section~\ref{sec:settingsGoalVrsInj} 
+on page~\pageref{sec:settingsGoalVrsInj}. 
+It is a comma separated list and the default is \texttt{latexmkrc,chktexrc}, 
+representing the configuration files. 
+
+
+\begin{longtable}{l|ll}
+  \toprule
+  Name & File & explanation \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:injections} Overview over all injections }
+  \endlastfoot%
+  \multicolumn{2}{l}{configuration files} \\
+  \midrule
+  latexmkrc             & \texttt{\footnotesize .latexmkrc}        & config file for \tool{latexmk} \\% chktex 26
+  chktexrc              & \texttt{\footnotesize .chktexrc}         & config file for \texttt{chktex}  \\% chktex 26
+  \midrule
+  \multicolumn{2}{l}{header files} \\
+  \midrule
+  header                & \texttt{\footnotesize header.tex}        & fundamental     \\
+  headerGrp             & \texttt{\footnotesize headerGrp.tex}     & for graphics      \\
+ {\tiny headerSuppressMetaPDF} & \texttt{\tiny headerSuppressMetaPDF.tex} & to control PDF meta-info      \\
+  \midrule
+  \multicolumn{2}{l}{shell scripts} \\
+  \midrule
+  vscodeExt             & \texttt{\footnotesize instVScode4tex.sh} & installs VS Code extensions \\
+  ntlatex               & \texttt{\footnotesize ntlatex}           & timeless \LaTeX{} compiler \\
+  vmdiff                & \texttt{\footnotesize vmdiff}            & special diff tool for PDF files \\
+  pythontexW            & \texttt{\footnotesize pythontexW}        & surrogate for \texttt{pythontex} \\
+  depythontexW          & \texttt{\footnotesize depythontexW}      & surrogate for \texttt{depythontex} \\
+  \end{longtable}
+
+
+As described in Section~\ref{subsec:xmlPomExecutions}, 
+by default the goal \texttt{inj} is tied to the maven phase \texttt{validate}, 
+an early phase preparing the proper build process, 
+because the injected files are a prerequisite for building. 
+Then the files are injected in the TEX root directory \texttt{texSrcDirectory}. 
+
+On the other hand, injections can be also invoked by command line via \texttt{mvn latex:inj} 
+with the default injections or, with given list of injections, 
+e.g. 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=vscodeExt,ntlatex,vmdiff
+\end{Verbatim}
+%
+In fact, injection from command line is typically used for scripts, 
+whereas the others files are injected during the build process in phase \texttt{validate}. 
+Of course maven is invoked from the project root 
+and there also the prescribed files are injected. 
+
+Note that the folder where cleanup of injections with \texttt{mvn clean} is done, 
+depends also on whether \texttt{-Dlatex.injections=\dots} is specified, 
+but the value is irrelevant as long as it is valid. 
+
+In the sequel, all these injections are described in detail separately, 
+but in fact they are all related. 
+For example, \texttt{header.tex} handles the possible configurations 
+reflected in \texttt{.latexmkrc}. 
+It provides packages used in \texttt{headerGrp.tex} 
+and provides commands to exclude checking by \texttt{chktex} 
+controlled by \texttt{.chktexrc}. 
+The header \texttt{header.tex} is very crucial 
+for example controlling and guaranteeing rerun of the \LaTeX{} compiler. 
+Its presence makes the results uniform and is a cornerstone for quality guarantees. 
+As said above, the default for injections is \texttt{latexmkrc,chktexrc}, 
+but it is advisable to use \texttt{latexmkrc,chktexrc,header}. 
+
+
+
+
+
+Now let us treat the injections individually. 
+
+% TBD: for injections allowing filtering, 
+% one must think carefully, what is wanted to be shown in this documentation: 
+% the filtered files are mere examples, whereas the raw ones are more informative 
+% but more difficult to understand. 
+% Many of the links of this manual do not point on the optimal kind of injection file. 
+% linking fromTex means filtered. This is appropriate if a file is not filtered at all. 
+% for headerSuppressMetPdf.tex, and for .chktexrc this may change. 
+% For .latexmkrc it is inappropriate to link to fromTex only. 
+
+
+\subsection{The configuration files \texttt{.latexmkrc} and \texttt{.chktexrc}}\label{subsec:latChkRc}
+
+For document development the tool \tool{latexmk} is a valuable build tool. 
+Also, a linter like \texttt{chktex} is helpful 
+both for end control and for document development. 
+
+The file \href{\urlSite fromTex/.latexmkrc}{.latexmkrc} tied to the injection \texttt{latexmkrc} 
+is the configuration file for the build tool \tool{latexmk} 
+and likewise \href{\urlSite fromTex/.chktexrc}{.chktexrc} tied to the injection \texttt{chktexrc} 
+is the configuration file for the style check tool \texttt{chktex}. 
+The configuration files determine the behavior of the two tools without further options. 
+The user is kindly asked to help to improve these files, in particular \texttt{.chktexrc}. 
+
+Ideally, the injected \texttt{.latexmkrc} is adapted to the current settings of this plugin 
+and so invoking \tool{latexmk} invoked with its configuration file 
+behaves like this latex plugin. 
+Currently, not all possible settings of this plugin 
+are taken into account in the \texttt{.latexmkrc}, 
+but the magic comments in the source files described in Section~\ref{subsubsec:openingMagComm} 
+are read and taken into account as far as this makes sense. 
+
+For default settings, maybe partially overwritten by magic comments, 
+this maven plugin and \tool{latexmk} create the same target files. 
+This is true even for this manual. 
+In particular, the graphic formats 
+described in Chapter~\ref{chap:GraphConversions} are supported. 
+So are bibliographies, indices and glossaries and also material computed by \tool{pythontex} 
+as described in Chapter~\ref{chap:latexMainConversions}, 
+but without reflecting all options and patters to supervise log files. 
+Also, reproducibility check is supported including magic comments and all parameters. 
+% TBD: what about chk? 
+% what about dvi/xdv? read the manual of latexmk
+
+At time of this writing, \texttt{.latexmkrc} works for various \LaTeX{} generators 
+but supports target \texttt{pdf} only, 
+although in the long run also \texttt{chk} and \texttt{dvi} could be useful. 
+Still, creation of PDF files is supported in both variants, via DVI/XDV or directly. 
+Compilation via \tool{latexmk} is based on code in \texttt{.latexmkrc} 
+and this mimics a wide range of functionality offered by this tool. 
+Among these also build for reproducibility checks as described in Section~\ref{sec:chkReprod}
+
+A sensible config file \texttt{.chktexrc} mainly depends on the packages loaded. 
+In Section~\ref{subsec:header} we suggest injecting also a header file \texttt{header.tex} 
+loading packages. 
+The config file \texttt{.chktexrc} is adapted to the header file \texttt{header.tex}. 
+
+Observe, that due to an incompatibility between tool \tool{latexmk} and package \pkg{listings}, 
+this manual can only be compiled with \tool{latexmk} 
+if \pkg{listings} is not only loaded but also patched 
+as done by \texttt{header.tex} and described in Section~\ref{subsec:header}. 
+With that patch, this software yields the same resulting PDF file 
+as compilation with \tool{latexmk}. 
+
+Currently, \texttt{.chktexrc} serves only to suppress warnings, 
+mainly on material which is the argument of commands or the content of an environment. 
+What is really needed depends on the packages loaded 
+and on the commands and environments defined in addition. 
+
+Since basic packages are loaded and basic commands are defined 
+in the injected \texttt{header.tex} 
+which is described in Section~\ref{subsec:header}, 
+it makes sense, to synchronize \texttt{.chktex} and \texttt{header.tex}. 
+As an example, \texttt{header.tex} loads package \pkg{listings} 
+which provides the environment \texttt{lstlisting} and the command \cmd{listinputlisting}. 
+The content of both shall not be subject to checks via \texttt{chktex} 
+and must thus be excluded in \texttt{.chktexrc}. 
+
+
+All this together illustrates why it is recommended to inject 
+besides the default \texttt{.chktexrc} and \texttt{.latexmkrc} 
+also \texttt{header.tex}. 
+\medskip
+
+
+As described in Sections~\ref{subsec:develLatexmk} and~\ref{subsec:develCheck}, 
+both tools \texttt{chktex} and \tool{latexmk} 
+are invoked directly by the user in the course of document development, 
+but they may be invoked by this \LaTeX{} builder in the course of a regular build, 
+i.e.\@ for maven goal \texttt{cfg} also. 
+% TBD: and ant task with the same name ... well, this will not work 
+% maybe when the ant task is adapted accordingly, including injections. 
+So their respective configuration files must be injected 
+in the maven build process before the \LaTeX{} build tools are invoked, 
+i.e.\@ prior to the phase \texttt{site}. 
+Thus, goal \texttt{inj} has default phase \texttt{validate}. 
+
+
+As described in~\cite{LatexMk23}, 
+Section~``CONFIGURATION/INITIALIZATION (RC) FILES'', 
+there are various configuration files \texttt{latexmkrc} or \texttt{.latexmkrc}, 
+among these a global one, a local one referring to the enclosing folder, 
+and finally one specified by the command line option \texttt{-r} 
+which is described in~\cite{LatexMk23}, 
+Section~``LATEXMK OPTIONS AND ARGUMENTS ON COMMAND LINE''. 
+
+Likewise,~\cite{ChkTeX22}, Section 6.1.3, shows that also \texttt{chktexrc} 
+has a global configuration file \texttt{chktexrc} 
+and a local one \texttt{.chktexrc} or \texttt{chktexrc}, 
+depending on the operating system. 
+Finally, a configuration file can be specified with the option \texttt{-l}, 
+according to~\cite{ChkTeX22}, Section 6.1.1. 
+Unfortunately,~\cite{ChkTeX22} does not tell about the ordering 
+in which the configuration file given by the option \texttt{-l} is read in. 
+
+For sake of reproducibility, we recommend restricting to the global configuration file 
+which is tied to the installation and to a local file, specific to the latex source directory 
+which shall be valid for all latex main files in that directory. 
+
+Goal \texttt{inj} injects the configuration files \texttt{.latexmkrc}, \texttt{.chktexrc} 
+and further files, 
+all in the latex source directory. 
+It is natural to use each as the local configuration file. 
+
+Caution: According to~\cite{ChkTeX22}, Section 6.1.3, 
+as described, the local configuration file fits only for UNIX-like operating systems. 
+For Windows and that like, \texttt{chktexrc} is expected instead of \texttt{.chktexrc}. 
+Uniformity with respect to the operating systems can be realized 
+with a link to \texttt{chktexrc} named \texttt{.chktexrc}. 
+That way independent of the operating system, 
+the configuration files \texttt{.latexmkrc} and \texttt{.chktexrc} are sufficient. 
+
+It is important that there is a unique central configuration file 
+applying to all latex main files. 
+There is the choice between at least two mechanisms to ensure this: 
+Either \tool{latexmk} and \texttt{chktex} 
+are invoked with options \texttt{-r} and \texttt{-l}, respectively, 
+specifying the configuration file explicitly 
+or for each folder containing a latex main file 
+there must be a link named \texttt{.latexmkrc} and \texttt{.chktexrc}, respectively, 
+to the according central configuration file. 
+
+We recommend using links because then \tool{latexmk} and \texttt{chktex} 
+can be used on the command line without further options. 
+This is convenient for the user when invoking the tools directly 
+which is the typical usage for document development. 
+
+
+\subsection{A generic header file \texttt{header.tex}}\label{subsec:header}
+
+It is observed that the headers of various \LaTeX{} files are quite similar. 
+In particular the packages loaded 
+have a huge overlap and at the same time, although rare, 
+exotic packages tend to be loaded which may be replaced by standard ones. 
+This hurts single source principle 
+and at the same times makes it almost impossible 
+for a build tool as this one, 
+to make guarantees that it works still with the unexpected packages. 
+This is, e.g.\@ because a package may write warnings 
+in an unexpected format into some log file. 
+
+The injection \texttt{header} 
+is tied to the file \href{\urlSite fromTex/header.tex}{header.tex}, 
+which is intended to be included in each \LaTeX{} main file. 
+Essentially it includes packages always needed. 
+% and packages which are patched. 
+It is inspired by the packages \texttt{pandoc} includes by default 
+according to \url{https://pandoc.org/MANUAL.html#creating-a-pdf}. 
+
+Some loaded packages are also patched. 
+The patch for package \pkg{listings} is given in Listing~\ref{lst:fileIfExists}. 
+It applies only if \pkg{listings} is loaded prior input of \texttt{header.tex}. 
+One modification is, redefinition of \cmd{lstlistoflistings} 
+to make the list of listings occur in the table of contents 
+and to rename the title so that it fits other lists as the list of figures.  
+The other point is modifying \pkg{listings}' output to make it digestible for \tool{latexmk}. 
+For details see Section~\ref{subsec:develLatexmk}. 
+
+\lstinputlisting[linerange={119-156},
+language=tex, basicstyle=\scriptsize,
+float, captionpos=b, label={lst:fileIfExists}, 
+caption={A patch of the \texttt{listings} package }]%
+{./header.tex}% listing 
+
+
+The other package patched is \pkg{luamplib}; the patch is given in Listing~\ref{lst:luamplib}. 
+It applies only if \pkg{luamplib} is loaded prior input of \texttt{header.tex}. 
+As discussed in Section~\ref{sec:metapost}, 
+\pkg{luamplib} is available for \lualatex{} only. 
+It provides an environment \texttt{mplibcode} to enclose literal MetaPost. 
+The enhancement is an additional command \cmd{inputmpcode} 
+which allows including MetaPost files. 
+This functionality is analogous to package \pkg{listings} 
+which allows both literal listings and loading listings from files. 
+MetaPost code within a \LaTeX{} document typically disturbs syntax highlighting 
+of both, enclosing code and included code. 
+
+%
+\lstinputlisting[linerange={103-105},
+language=tex, basicstyle=\scriptsize, 
+float, captionpos=b, label={lst:luamplib},
+caption={A patch of the \texttt{luamplib} package }]
+{./header.tex}% listing 
+
+Besides loading packages it also sets \texttt{synctex} 
+which is crucial for synchronizing TEX files and according PDF files 
+via forward search and backward search 
+as described in Section~\ref{subsec:editViewLatex}. 
+
+% TBD \listfiles to check loaded packages 
+
+It also provides the command \cmd{setMinorVersionPdf} to set the minor version of the PDF file created. 
+This is mostly needed because some graphic tool creates PDF files with a newer PDF version 
+than the \LaTeX{} distribution does. 
+Setting the version high enough, avoids an according warning \texttt{WAP03} 
+listed in Table~\ref{tab:WarnALP} on page~\pageref{tab:WarnALP}. 
+The warning pattern is described in Section~\ref{subsec:patternWarnLatex} in detail. 
+As described in~\cite{DocMetaDataSuppCode}, Section 2 
+the recommended way to set major and minor version of the PDF output 
+like in \cmd{DocumentMetadata\{pdfversion=1.7\}}, 
+but due to a bug, any invocation of \cmd{DocumentMetadata} corrupts reproducibility of the created PDFs. 
+After this is fixed, the \cmd{setMinorVersionPdf} shall be removed again. 
+% TBD: check from time to time. 
+
+Another class of commands provided is represented by \cmd{textttNoChk} 
+which sets the argument in typewriter font 
+just like \cmd{texttt} but for which checks by \texttt{chktex} are suppressed. 
+Another example for this kind of command is \cmd{inputNoChk} 
+which may be used to input either generated material like TikZ,
+or text which is no \LaTeX{} at all. 
+For details see Sections~\ref{subsec:latChkRc} and~\ref{subsec:develCheck}. 
+\medskip
+
+
+As the configuration files described above, 
+\texttt{header.tex} is intended to be injected in phase \texttt{validate}. 
+
+Note that \texttt{header.tex} is written for use of 
+%
+\begin{itemize}
+  \item various \LaTeX{} converters, \lualatex, \xelatex{} and \pdflatex{} 
+  \item various document classes, 
+  specifically \texttt{article}, \texttt{book}, \texttt{beamer} for presentations, 
+  \texttt{leaflet} and the letter class \texttt{scrlttr2}. 
+  \item for creating PDF files, but futher formats created with \pkg{tex4ht} as well
+  \item direct creation of PDF and via intermediate DVI/XDV 
+\end{itemize}
+
+Which packages are loaded at all and if loaded their options, 
+depend on the \LaTeX{} compiler, the output/intermediate format, 
+the document class, packages loaded before and maybe on other criteria. 
+
+This is realized with a bunch of if-constructs. 
+In the long run, \texttt{header.tex} could be adapted 
+to the configuration as \texttt{.latexmkrc}, 
+but currently it detects the use case 
+as the latex converter or the target format 
+and loads the according packages. 
+It is also conceivable to create different headers, one for each document class. 
+
+
+\subsection{A header file for graphics via package \texttt{graphicx} }%
+\label{subsec:headerGrp}
+
+Chapter~\ref{chap:GraphConversions} lists various techniques 
+to include graphics into a \LaTeX{} document. 
+Most are based on the package \pkg{graphicx} and related packages. 
+The injection \texttt{headerGrp} 
+is tied to the file \href{\urlSite fromTex/headerGrp.tex}{headerGrp.tex}, 
+which is intended to be included in the \LaTeX{} main file 
+after \texttt{header.tex} described in Section~\ref{subsec:header} 
+and which loads the packages required for that kind of graphics 
+by need and with the appropriate options, 
+depending on the \LaTeX{} compiler, the output/intermediate format, 
+packages loaded before and maybe on other criteria. 
+
+
+\subsection{A header file to suppress meta-info for PDF files }\label{subsec:headerSuppressMetaPDF}
+
+Whereas the header file described in Section~\ref{subsec:header} is intended to be used 
+in merely any \LaTeX{} main file, 
+the one described here, is optional. 
+
+It refers to created PDF files only and does not influence the optical appearance 
+but suppresses writing certain meta-data. 
+The main motivation is security, i.e.\@ privacy, 
+but it can also be used to turn the resulting PDF reproducible. 
+
+The injection \texttt{headerSuppressMetaPDF} 
+is tied to \href{\urlSite fromTex/headerSuppressMetaPDF.tex}{headerSuppressMetaPDF.tex}. 
+Above all, it suppresses information on creation and modification time, on the tool chain used 
+and the trailer identifier. 
+By intention the latter changes in each build run even if the sources are the same. 
+Typically, this is implemented merging the current time into the build process. 
+The trailer identifier is fixed by the header file 
+and so created PDF files created from the same sources are the same, 
+except if date and time are included manually, as e.g.\@ by the command \cmd{today}, 
+except for \xelatex, which uses the system time to create further hash codes. 
+So, including \texttt{headerSuppressMetaPDF.tex} may serve to create reproducible PDF files. 
+As described in Section~\ref{sec:chkReprod}, 
+the mainstream technique to reach reproducibility 
+is via manipulating the system time, 
+but if an environment does not support this, 
+including \texttt{headerSuppressMetaPDF.tex} is a fallback strategy, 
+if not using \xelatex. 
+
+The extent to which meta info is suppressed is inspired by reproducibility 
+but above all, it is subjective. 
+It is planned to make it configurable, 
+i.e.\@ the file \texttt{headerSuppressMetaPDF.tex} 
+is created according to security settings of this maven plugin. 
+
+For further information on meta info in PDF files 
+related with security and reproducibility 
+see~\cite{LatexGen}, Section 4 
+and how this software treats the handles the issues 
+see Section~\ref{sec:chkReprod}. 
+
+
+\subsection{An installation script for VS Code Extensions }\label{subsec:instExtVsCode}
+
+Calling from project root 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=vscodeExt,latexmkrc
+\end{Verbatim}
+%
+injects the according files \href{\urlSite fromMain/instVScode4tex}{instVScode4tex.sh} and \texttt{.latexmkrc}. 
+
+If the editor VS Code is already installed, 
+the script \texttt{instVScode4tex.sh}, 
+installs and updates all extensions of VS Code the author used to write \LaTeX-code. 
+Project \url{https://github.com/Reissner/QMngMnt} 
+uses the script for automation of installation and update. 
+It is the only injected file which is executable. 
+
+Pasting \href{\urlSite fromTex/.latexmkrc}{.latexmkrc}, 
+which is just Perl code, 
+into VS Code, one can see the highlighting, 
+of course provided the extensions given by \texttt{instVScode4tex.sh} are installed; 
+The configuration file \texttt{.latexmkrc} 
+for the development tool \tool{latexmk} is in fact a Perl script. 
+
+
+\subsection{Scripts in conjunction with reproducibility }\label{subsec:ntlatexVmdiff}
+
+Calling from project root 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=ntlatex,vmdiff
+\end{Verbatim}
+%
+injects the according files \texttt{ntlatex} and \texttt{vmdiff} in the root directory. 
+
+The injection \texttt{ntlatex} 
+injects the file \href{\urlSite fromMain/ntlatex}{ntlatex} 
+which runs the \LaTeX{} compiler specified in the pom, or in the magic comments if present, 
+to create a PDF file. 
+As usual, magic comments override configuration in the pom. 
+Also, it takes into account whether the PDF file is created via intermediate DVI/XDV files or not, 
+depending on the configuration. 
+
+This invocation takes also processing time and the timezone into account 
+to guarantee reproducibility if so configured. 
+As \tool{latexmk} is, also \tool{ntlatex} shall be independent 
+of the configuration given by the pom. 
+This is realized in the same way, 
+namely by encoding the configuration in the injection \texttt{.latexmkrc}. 
+The downside is, that \tool{ntlatex} like \tool{latexmk} requires Perl to work. 
+For details see Section~\ref{sec:chkReprod} on reproducibility. 
+
+But if \tool{ntlatex} so close to \tool{latexmk}, 
+why is it needed in addition? 
+It is because \tool{latexmk} won't recompile, if the expected PDF file exist already 
+and no sources changed. 
+So \tool{ntlatex} is needed to force recompilation. 
+\medskip
+
+Complementary to this \texttt{vmdiff} is a diff tool for PDF files 
+combining visual equality checked with \texttt{diff-pdf-visually} 
+with equality of metadata checked via \texttt{pdfinfo} 
+if the files are visually the same. 
+It is realized as a bash script \href{\urlSite fromMain/ntlatex}{vmdiff} and requires no installation 
+except \texttt{diff-pdf-visually} and \texttt{pdfinfo}. 
+% TBD: clarify: elsewhere we also use exiftool for similar tasks. 
+% but the according output must be filtered a bit. 
+% There is a category for tools reading metadata, 
+% but it is not clear whether pdfinfo and exiftool belong to the same category in the long run. 
+
+\subsection{Script \texttt{(de)pythontexW} patching \texttt{(de)pythontex} }% chktex 36
+\label{subsec:pythontexW}
+
+Calling from project root 
+%
+\begin{Verbatim}
+  mvn latex:inj -Dlatex.injections=pythontexW,depythontexW
+\end{Verbatim}
+%
+injects the according files 
+\href{\urlSite fromMain/pythontexW}{pythontexW} and 
+\href{\urlSite fromMain/depythontexW}{depythontexW}
+which just invokes \texttt{(de)pythontex} %chktex 36
+but does not simply output feedback on \texttt{stdout}
+but besides doing so writes it in a log file. 
+This is needed to provide an interface usual in the \TeX{} ecosystem. 
+
+Note that all this is specific for unix -like operating systems 
+but can be easily adapted to windows. 
+
+\section{Development of documents}\label{sec:devel}
+
+The term ``development of documents'' is coined by the author 
+and reflects that writing a document 
+resembles developing software 
+in that it is an iterative process consisting in producing pieces of information, 
+checking, modifying, correcting, erasing it, checking again\dots. 
+After initial creation, is like a dialog between the author and its work. 
+
+This is true of course independent of the tools used, 
+but some tools support this process better than others. 
+For document development the ideal are WYSIWYG (``what you see is what you get'') editors, 
+which should maybe be better called WYRIWYR (``what you write is what you read''), 
+or, taking also drawings into account, IllO (``input looks like output''). %TBD: maybe better glossary 
+For software development the ideal languages are prototyping languages, interpreted at least. 
+
+From that point of view, \LaTeX{} and friends is the worst conceivable choice: 
+%
+\begin{itemize}
+  \item
+  You write in an editor, but you read off from a viewer. 
+  So you must permanently switch your attention. 
+  \item
+  You write a sequence of commands, but you read text, formulae, drawings. 
+  In a sense you program the appearance of a page or site. 
+
+  This discrepancy becomes particularly apparent when creating a drawing in \LaTeX, 
+  e.g.\@ with TikZ, because even drawings are described or programmed quite formally. 
+  \item
+  You cannot just see instantly the result of your work; 
+  first you have to trigger a compilation process and wait some time. 
+  So, besides an editor and a viewer you also need some kind of console. 
+  It is even worse: 
+  Typically, based on the console output you must either rerun the compiler 
+  or run some auxiliary program, even more of them 
+  and then again the compiler, maybe several times. 
+  The decision whether the viewer shows the final result already, 
+  or whether another command has to be issued and if so which one, 
+  is based on the console output. 
+  So part of your attention must be on the console also. 
+  The console is also used to issue the next command. 
+  \item 
+  The compilation process may go wrong or be in a sense deficient, 
+  so what you need is observing logs, either on the console or in a log file. 
+  Even if the input is accepted by build tools even without warning, 
+  still there may be something wrong. 
+  The \LaTeX{} tools do not include any spell checking or grammar checking. 
+  Since \LaTeX{} documents are in a sense programmed, 
+  an additional burden is the need for a kind of linting, 
+  which is done, e.g.\@ by \texttt{chktex}. 
+  This must be invoked manually and yields another log file, 
+  although no output. 
+\end{itemize}
+
+The situation is visualized in Figure~\ref{fig:docDevelBase}. 
+It is no UML diagram although using elements of UML\@. 
+The developer of the document (it may or may not be the author) 
+is visualized as a stick figure 
+and the tools used for development are the boxes surrounding it,
+resembling instances in a UML class diagram. 
+Besides the tool under consideration, the according files are shown. 
+The console is to invoke conversion commands like \lualatex. 
+This shows already, that the user does not face a single counterpart, 
+but has to juggle with a bunch of tools at once. 
+The arrows represent data flows. 
+If this data comprises commands the lines are solid, else they are dashed. 
+
+This explains the need for tools and techniques to mitigate the situation. 
+
+At first sight, this \LaTeX-builder is not to contribute to document development, 
+because it is used after the end of the development process, 
+automating the compilation process. 
+Since the \LaTeX-builder is also a checker tool, 
+supervising even warnings, e.g.\@ on bad boxes, and by default invoking \texttt{chktex} 
+and monitoring its log file, and since compilation may always fail, 
+the \LaTeX-builder may initiate another loop in the development process. 
+
+Before describing the contribution of this \LaTeX-builder 
+to the process of document development, 
+let us describe the process of document development in more detail, 
+in particular the other tools supporting document development and their interaction. 
+With this background in mind, it is easier to describe the role of the \LaTeX-builder 
+in the team of development tools. 
+
+\begin{figure}
+  \centering
+  \IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{ 
+%\includegraphics{F4_05someMetapost1.mps}
+\includegraphics{F3_01texUsagePlain.mps}
+}
+  \caption{\label{fig:docDevelBase}Document development with base tools}
+\end{figure}
+
+The minimum needed to develop a document in \LaTeX{} 
+are an editor, an according viewer and the \LaTeX{} tools for build and check 
+as described in Section~\ref{subsec:editViewLatex}. 
+As described above, using this basic tools directly 
+distracts much of the attention of the author/developer 
+from the content. 
+Thus, it is a good idea to use a tool to orchestrate the \LaTeX{} tools. 
+The author of this software prefers the orchestration tool \tool{latexmk} 
+which is described in Section~\ref{subsec:develLatexmk}. 
+
+The check tool \texttt{chktex} and the according goal \texttt{chk} 
+are already described in Section~\ref{sec:outputFormats}. 
+Nevertheless, the aspects of checking 
+in the context of document development is treated separately 
+in Section~\ref{subsec:develCheck}. 
+
+The goals \texttt{grp} and \texttt{clr} 
+described in Sections~\ref{subsec:develGraph} and~\ref{subsec:develClear} 
+make sense only in the context of document development. 
+For details see these sections. 
+
+Finally, Section~\ref{subsec:develConfig} 
+is on installing extensions for document development on the editor VS Code. 
+To that end, this software provides an installation script. 
+
+
+\subsection{Editors, viewers and \LaTeX}\label{subsec:editViewLatex}
+
+Although there are alternatives like Emacs with extension \auctex, 
+the author recommends using VS Code in conjunction with extensions 
+to write and build \LaTeX{} documents 
+and to view the results on \texttt{okular}. 
+The recommended extensions are those 
+installed by the script \texttt{instVScode4tex.sh} 
+described in Section~\ref{subsec:develConfig}. 
+
+Most of the recommended extensions of VS Code 
+are to highlight the code of the various file types, 
+one, \ltex{} is a spell and grammar checker, 
+but the central extension is \texttt{james-yu.latex-workshop} 
+which also provides build functionality. 
+Among the build ``recipies'' is \texttt{latexmk (latexmkrc)} 
+which is recommended because it integrates well with build tool \tool{latexmk} 
+described in Section~\ref{subsec:develLatexmk} 
+in a way which integrates \tool{latexmk} well with this \LaTeX{} builder. 
+Note that \LaTeX{} Workshop also offers a command ``clean up'', 
+corresponding with goal \texttt{clr} of this software 
+which is described in more detail in Section~\ref{subsec:develClear}
+
+As a PDF viewer, we use \texttt{okular} 
+with settings given by the menu ``settings'' 
+and submenu ``configure okular''. 
+To make \texttt{okular} update as soon as the PDF changes, 
+in tab \texttt{General} 
+  %
+\begin{itemize}
+  \item deselect show backend selection dialog and 
+  \item select reload document on file change. 
+\end{itemize}
+
+To enable backward search described below, 
+in tab \texttt{Editor} choose ``custom editor'' and type 
+%
+\begin{Verbatim}
+  code -r --goto %f:%l
+\end{Verbatim}
+
+Together the ``general'' settings make \texttt{okular} update automatically 
+when a new PDF occurs. 
+
+As an HTML viewer any of the usual browsers is usable; 
+they all update as soon as the rendered HMTL file changes. 
+
+Still it is a problem to synchronize editor and viewer. 
+As far as the author knows, synchronization is possible only for PDF viewers. 
+Synchronization means at least that for a position on the editor, 
+the according position on the viewer must easily be found 
+and vice versa. 
+Even better would be if moving in the editor selects the according site at the viewer 
+and the other way round. 
+These two features are called \emph{forward search} and \emph{backward search}, respectively. 
+If the latex main file has a setting \texttt{synchtex=1} or \texttt{synchtex=-1}, 
+then the created PDF has the according information. 
+Then for VS Code with \LaTeX{} Workshop offers forward search: 
+the keystroke \texttt{ctrl-alt-j} 
+makes the viewer move to the site corresponding with the cursor position. 
+For the viewer \texttt{okular}, backward search is configured in tab ``editor'' 
+as described above, 
+and it works with the browse tool just hovering over the location of interest 
+and pressing shift plus mouse left key. 
+
+This software supports forward and backward search 
+in that it offers injection of a header file \texttt{header.tex} 
+which sets \texttt{synchtex=1} 
+and offers injection of an installation script \texttt{instVScode4tex.sh} 
+which allows installation of the relevant extensions of VS Code. 
+\medskip
+
+
+Besides the separation of editor and viewer, 
+the time delay between writing and reading 
+disturbs document development. 
+\LaTeX{} has a way to speed up compilation: 
+compiling only parts of a longer document 
+which are under construction and which may thus change. 
+These parts must be in separate TEX files 
+and must be included with \cmd{include} 
+not just input using \cmd{input}. 
+With the command \cmd{includeonly} 
+one can specify the files to be recompiled. 
+This works particularly well for document class \texttt{book} 
+when including chapters because each chapter starts with a new page, 
+so, page breaks are the same whether 
+compiling a chapter with \cmd{includeonly} 
+or compiling the whole document. 
+
+This plugin supports partial compilation 
+insofar as the goal \texttt{clr} described in Section~\ref{subsec:develClear} 
+eliminates additional AUX files tied to included sections. 
+
+
+\subsection{The build tool \tool{latexmk}}\label{subsec:develLatexmk}
+
+Essentially, it is possible to compile latex files 
+only with editor, viewer and a console. 
+Let us collect the challenges. 
+The document may contain graphic files 
+which must be precompiled by further tools 
+which must be invoked a priori on the console. 
+For FIG files this is \texttt{fig2dev}. 
+This invocation must be repeated as soon as a FIG file changes\footnote%
+{Typically, this triggers a sequence of invocations of converters 
+along files one depending on the other. }. 
+
+Then a latex converter like \lualatex{} must be invoked. 
+Typically, the latex converter must be invoked more than once 
+and besides the latex converter 
+some further auxiliary programs like \texttt{makeindex} must be run. 
+The console displays indications to the user what action to be taken next. 
+Normally after invocation of an auxiliary program, 
+the latex converter must be rerun at least once. 
+Each of the programs may fail. 
+Most of the programs write success messages and more detailed information 
+containing error messages, warnings or just information messages 
+on the console and in their respective log files. 
+Potentially, these influence the actions the user must take next. 
+\smallskip
+
+What is needed, is a tool for orchestration\index{orchestration} 
+of the basic tools: 
+Orchestration means invoking more basic tools in a reasonable order 
+and supervising the results, at least success and to react appropriately. 
+This frees the user from deciding 
+which of the many auxiliary programs are to be invoked next 
+and whether the latex converter is to be invoked once more 
+to get final correct output. 
+Also, an orchestration tool detects if a build fails 
+or ideally even if a warning indicates 
+that the result is not correct or maybe only not ideal. 
+
+There is a tool doing this work, \tool{latexmk}, 
+except that it does not care about warnings. 
+
+If something goes wrong, and it is not clear what, 
+it is typically a good idea to fall back to the more basic tools. 
+A great point with \tool{latexmk} is, 
+that this is possible without any problem, 
+and it is as simple to switch back from basic tools to \tool{latexmk}. 
+This is what we mean saying that \tool{latexmk} 
+\emph{integrates} the basic tools. 
+
+The best way to invoke \tool{latexmk} for document development is 
+%
+\begin{Verbatim}
+  latexmk -pvc latexFile
+\end{Verbatim}
+
+According to~\cite{LatexMk23}, Section ``DESCRIPTION'', 
+the option \texttt{-pvc} is shorthand for ``preview continuously'', 
+a kind of nonstop mode: 
+The PDF file, or whatsoever is created, 
+then a viewer is opened in the background 
+if not yet open 
+and then \tool{latexmk} monitors changes of dependencies 
+and triggers a rebuild each time a change is detected 
+performing a proper sequence of invocations of latex converters and auxiliary tools. 
+Note that \tool{latexmk} does not stop after finishing a compilation, 
+whether successful or not. 
+Instead, it awaits a change of a source file which triggers a new run of some basic tool 
+until interrupted by the user. 
+The option \texttt{-pvc} is described in more detail 
+in~\cite{LatexMk23}, Section ``LATEXMK OPTIONS AND ARGUMENTS ON COMMAND LINE''. 
+One detail to be added, mentioned in~\cite{LatexMk23}, Section ``DESCRIPTION'', is, 
+that \tool{latexmk} detects dependencies 
+based on the FLS file written by the latex converter 
+when invoked with the \texttt{-recorder} option. 
+
+A small fallback step advisable if something goes wrong 
+is to interrupt continuous viewing and to invoke \tool{latexmk} without options. 
+Then \tool{latexmk} performs a single build and finishes; no viewer is opened. 
+This may help in understanding the problem, 
+but in general, it is advisable to go back to basic tools like \lualatex. 
+To understand the build process from scratch, 
+erase all created files by \texttt{latexmk -C} 
+or all intermediate files by \texttt{latexmk -c}, which does not erase the resulting PDF file, 
+before using the basic tools. 
+\medskip
+
+
+
+Let us discuss the differences between \tool{latexmk} and this latex plugin: 
+First, the plugin runs within a maven process which introduces a lot of overhead. 
+So this cannot be as fast as \tool{latexmk} is. 
+In addition, a maven plugin cannot open a viewer. 
+Moreover, the plugin is designed to build all latex main files %in a project 
+and not to focus on a single one. 
+In many cases, more than one output format shall be created. 
+The latter properties which are disadvantages in the context of document development, 
+can be overcome, by specifying a single target in the setting \texttt{targets} 
+or by invoking goals with a single target, e.g.\@ by \texttt{mvn latex:pdf} 
+and to restrict to building a subset of files and if needed a single latex main file
+with the settings \texttt{mainFilesExcluded} or \texttt{mainFilesIncluded} 
+described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+
+Another difference is, that by default, the plugin cleans up the folder with the TEX sources, 
+and only the resulting file, e.g.\@ PDF is copied to the target folder before cleanup. 
+To be more precise, only the files present before the build are kept, possibly updated, 
+all the others are removed. 
+This is appropriate for a maven plugin but destroys log files containing vital information 
+if the build goes wrong. 
+Still if a file is interesting it may be created by touch or by some basic latex tool 
+as \lualatex{} or \texttt{makeindex} 
+and then a build done by this plugin will pertain the file updated by the build process. 
+For document development, 
+the parameter \texttt{cleanUp}, also described in Table~\ref{tab:paramGen}, 
+which is \texttt{true} by default, can be set to \texttt{false} 
+so that no file in the latex directory is deleted. 
+
+So, it is clear that this plugin is for final global build with a lot of supervision 
+sensitive to detecting caveats. 
+To overcome these, further development of the document is necessary, 
+which is better done individually on the problematic document with \tool{latexmk}. 
+In a sense \tool{latexmk} is the fallback to this maven plugin 
+as much as \lualatex{} is the fallback to \tool{latexmk}. 
+
+To make this work, this plugin must integrate \tool{latexmk} 
+as \tool{latexmk} integrates \lualatex{}. 
+This is guaranteed, if this plugin can write a config file \texttt{.latexmkrc} 
+which causes \tool{latexmk} to behave like this plugin. 
+This is exactly what injection of \texttt{.latexmkrc} is intended to do 
+according to Section~\ref{subsec:latChkRc}. 
+% TBD: in fact, this is not fully reached. 
+Note that this feature is just offered, 
+but the user may also use his/her own file \texttt{.latexmkrc}. 
+
+Based on injection of \texttt{.latexmkrc}, this plugin may even use \tool{latexmk} 
+as a means to build bypassing its internal build rules. 
+For motivation of this feature and for details in implementation see Section~\ref{sec:latexmk}. 
+
+There is a difference in the build processes (except if this plugin uses \tool{latexmk}) 
+concerning mostly graphic files: 
+\tool{latexmk} detects dependencies via the \texttt{-recorder} option of the latex generator 
+and creates or recreated what is new or changed. 
+This is more elegant than the idea of this plugin 
+which is creates a fixed set of graphic files first 
+and is from that pointon based on detecting hard coded set of files and tracing log files. 
+Nevertheless, to deal with graphic files which are to be created in the course of the build, 
+\tool{latexmk} runs the latex converter in \texttt{nonstopmode} mode. 
+Still, the converter run is interrupted, a single graphic file is created according to some rule 
+and then the converter is rerun. 
+For a document with 10 graphic files to be created in the course of the build, 
+for \tool{latexmk} only the 10th runs of the converter is completed. 
+In contrast, this plugin requires a single run, so performance is significantly better. 
+The use of \cmd{IfFileExists} is not really elegant but prevents \tool{latexmk} from frequent reruns 
+and in some cases is a technique to make the build process with \tool{latexmk} work. 
+One of these cases, related with using \pkg{listings} is discussed below in this section. 
+
+More general, there are cases, where this latex builder succeeds but \tool{latexmk} does not. 
+As this latex builder may invoke \tool{latexmk} either in general or for selected files, 
+this latex builder is mightier than \tool{latexmk}. 
+If both approaches succeed, the results shall be the same for this plugin and for \tool{latexmk}. 
+
+It is possible to combine this plugin with \tool{latexmk} to speed up \tool{latexmk}: 
+%
+\begin{Verbatim}
+  mvn clean validate latex:grp
+\end{Verbatim}
+%
+cleans like \texttt{latexmk -C} and in \texttt{validate} 
+invokes goal \texttt{inj} injecting \texttt{.latexmkrc} to configure \tool{latexmk} 
+and maybe \texttt{header.tex} necessary to compile the latex files at all. 
+Finally, goal \texttt{grp} creates the graphic files which speeds up \tool{latexmk}. 
+Of course the above maven invocation is also a good initialization 
+for building with the basic tools without \tool{latexmk}. 
+
+Finally, goal \texttt{clr} tied to phase \texttt{clean} erases all intermediate files 
+and thus makes the next build independent of the previous one. 
+
+
+For further reading on goal \texttt{grp} creating graphics files 
+see Section~\ref{subsec:develGraph}, 
+Section~\ref{sec:injFiles} is on file injection and 
+goal \texttt{clr} to clear created files is 
+described in Section~\ref{subsec:develClear}. 
+\medskip
+
+
+
+Finally, we show how this plugin may support \tool{latexmk} where. 
+To understand in which sense, one must dive very deep. 
+In short, injection of a header patches package \pkg{listings} 
+in a way that saves performance of \tool{latexmk}. 
+Let us elaborate. 
+
+This software and \tool{latexmk} follow a different philosophy in finding dependencies: 
+Whereas this software creates image files in advance before invoking a latex converter, 
+\tool{latexmk} first calls the latex converter in \texttt{nonstopmode} 
+to avoid a stop because of a missing file. 
+Then the file is created using the appropriate rule (hopefully unique) 
+and the converter is run again, 
+this time passing the inclusion of the first created files 
+failing at the next one. 
+To find out that another rule is needed, \tool{latexmk} parses the LOG file of the latex compiler. 
+As the packages write log messages in their own style, 
+this is the point where the solution is no longer generic 
+and so it is no wonder that there is at least one kind of inclusion which does not work that way: 
+inclusion with \cmd{lstinputlisting} provided by \pkg{listings}. 
+In fact, the author has an email from J.~Hoffmann, author of \pkg{listings} 
+telling that there are more packages with the same problem. 
+To be checked: \pkg{fancyvrb} and \pkg{moreverb}. 
+Nevertheless, all other ways of inclusion \emph{used by this manual} 
+like the one with \cmd{import} seem to work fine. 
+
+The current workaround for the second problem 
+is by patching \pkg{listings} as described in Section~\ref{subsec:header}.
+
+The suggested workaround for the first problem is 
+creating graphic files using goal \texttt{grp} as described in Section~\ref{subsec:develGraph} 
+before invoking \tool{latexmk}. 
+
+Still some generalization in \tool{latexmk} could spare this modification. 
+
+Another point is, that currently for each file \tool{latexmk} creates with a separate rule, 
+another run of the latex processor is required: 
+The initial run is interrupted with the first missing file. 
+Then that file is created by an appropriate rule and the latex processor is rerun 
+failing with the next missing file. 
+That way the process goes on until the last file is created with a rule. 
+Of course this procedure is quite time-consuming, so an alternative is required. 
+
+
+
+\subsection{Checks in the context of document development}\label{subsec:develCheck}
+
+The target \texttt{chk} just invoke the tool \texttt{chktex} and logs finding in a CLG file. 
+It is invoked as the final quality check for the documents created from latex sources. 
+But if this check fails, there is a transition to document development. 
+As said in Section~\ref{subsec:develLatexmk} on running this plugin on a single file with a single target 
+applies here also. 
+But here again, this plugin is not the first choice: Better is to invoke \texttt{chktex} directly 
+and to eliminate the warnings iteratively. 
+Since the file \texttt{.chktexrc} injected by this plugin as described in Section~\ref{sec:injFiles} 
+configures \texttt{chktex} whether \texttt{chktex} is invoked directly by the user 
+or via the plugin in goal \texttt{chk}, the results are the same. 
+In the wording coined in Section~\ref{subsec:develLatexmk}, 
+this plugin integrates \texttt{chktex} very much the same way as it integrates \tool{latexmk} 
+namely by injection of a config file. 
+
+The config file \texttt{.chktexrc} in turn is adapted to the header \texttt{header.tex} 
+which is also injected. 
+In general, \texttt{.chktexrc} excludes content of environments 
+and of arguments of commands defined in packages loaded by \texttt{header.tex} 
+or defined therein directly. 
+A nice example of another kind of synergy is the command \cmd{textttNoChk} 
+defined in \texttt{header.tex}. 
+Functionally, it is just \cmd{texttt} which sets the argument in typewriter font, 
+but in \texttt{.chktexrc} it is listed among the commands 
+the arguments of which shall not be checked by \texttt{chktex}. 
+\medskip
+
+
+After eliminating warnings until direct invocation of \texttt{chktex} displays no warnings, 
+one can be sure that also check with goal \texttt{chk} of this plugin does not yield warnings. 
+
+
+\subsection{Goal Graphics \texttt{grp}}\label{subsec:develGraph}
+
+In the context of document development, 
+typically compilation is done by basic tools like \lualatex{} 
+or by an orchestration tool like \tool{latexmk}. 
+Nevertheless, since separation of builds is desirable, 
+intermediate files like graphic files are not present. 
+Maybe they are removed by cleaning. 
+
+The 
+
+TBD\@: check whether this is really needed: is also described in section on latexmk. 
+Maybe we need a section on this plugin describing grp and clr uniformly. 
+Maybe also first write on chktex and its relation to this plugin. 
+
+Hint to relation with latexmk. 
+needs mvn validate \& mvn latex:grp. 
+
+For creating the graphic files in the TEX source directory, 
+there is a goal \emph{graphics}, invoked by \texttt{mvn latex:grp}. 
+This goal does not create any output in the site directory. 
+Instead, it populates the source directories 
+with graphic files which can be directly included into the \LaTeX-file 
+and so it allows to run the \LaTeX-compiler on the latex main files 
+from within a development environment. 
+Thus, the goal \emph{graphics} is thus a vital feature 
+for development of documents. 
+
+
+Note that in general \texttt{mvn clean validate latex:grp} 
+creates all files necessary to compile with a latex converter like \lualatex{} 
+and also to compile smoothly with \tool{latexmk}. 
+
+
+
+\subsection{Goal Clear \texttt{clr}}\label{subsec:develClear}
+
+When invoking this plugin as a final build, 
+\texttt{cleanUp} is set to its default \texttt{true}. 
+Thus, all files not present at the beginning of the build process are removed. 
+As a consequence, there is no need for a separate goal \texttt{clr}. 
+This comes into the game only in the context of document development. 
+Either \texttt{cleanUp} was set to \texttt{false} 
+or other more basic tools created intermediate files which must be deleted by \texttt{clr}. 
+
+Cleaning is vital because it makes the next build independent of the previous one. 
+Deletion is driven by a regular expression \texttt{patternCreatedFromLatexMain} 
+described in Table~\ref{tab:paramGen} on page~\pageref{tab:paramGen}. 
+Completeness can be guaranteed only 
+if the set of loaded packages is limited. 
+Of course, only created files shall be deleted. 
+For packages introduced in the injected header \texttt{header.tex} 
+described in Section~\ref{subsec:header}, this shall be the case. 
+The author's criterion for a correct regular expression is, 
+that after deletion exactly the files under version control remain. 
+
+The goal \texttt{clr} corresponds with \texttt{latexmk -C} and is tied to phase \texttt{clean}. 
+
+Clearing comprises files created by the goal \texttt{grp} and by any other goals. 
+Note that AUX files are deleted if they belong to a latex main file or to an included file. 
+
+The most interesting files are those created by injection, 
+i.e.\@ by goal \texttt{inj} like \texttt{.latexmkrc}: 
+As pointed out in Section~\ref{sec:injFiles}, 
+each of the files in question is deleted only 
+if they were definitively written by this plugin. 
+If this is proved to be false or a proof is not possible, 
+the configuration files are not deleted. 
+As for goal \texttt{inj}, in case of a doubt, a warning is displayed. 
+
+
+
+\subsection{Installation and Configuration}\label{subsec:develConfig}
+
+TBD\@: rework: maybe better describe the goal \texttt{inj}. 
+The goal \texttt{inj} is to create a set of files, 
+partially adapted to the current configuration. 
+
+
+
+By default, it is tied to lifecycle phase \texttt{validate} 
+and comprises the set of injections \texttt{latexmkrc,chktexrc}. 
+
+The first we treat is injection \texttt{vscodeExt} 
+injecting a file \texttt{instVScode4tex.sh} in the TEX source directory. 
+Typically, this is not injected during a lifecycle, 
+but when installing or updating extensions for VS Code 
+used during document development. 
+Thus, typically it is invoked in the form 
+%
+\begin{verbatim}
+  mvn latex:inj -Dlatex.injections=vscodeExt
+\end{verbatim}
+
+\noindent
+In the default configuration, this creates an executable file 
+%
+\begin{verbatim}
+  src/site/tex/instVScode4tex.sh
+\end{verbatim}
+%
+using bash shell. 
+The extensions are those described 
+
+
+
+Install script for installing extensions for VS Code 
+helping in developing \LaTeX{} documents. 
+
+
+In addition, configuration scripts for \tool{latexmk} and \texttt{chktex}. 
+Also describe how to use. 
+
+
+
+\subsection{Miscellaneous}
+% TBD: This is to be (re-)moved in the long run. 
+
+
+
+During development, it is comfortable, 
+to have the log-file in the same directory as the \LaTeX{} main file. 
+Also, if PDF- and TEX-files are synchronized, 
+% FIXME: reference to package 
+also the PDF-file should be in the same directory. 
+Likewise, files in graphic formats 
+which cannot be included into a \LaTeX-file without conversion, 
+that converted file shall be in the same directory as the original one. 
+So, all files, manually created files 
+and files arising from automatic conversions 
+shall be in the same folder, at least during development. 
+Also, typically, one wants to mix creation by this maven-plugin or ant-task 
+with at least partial creation through external tools. 
+For example, if writing \LaTeX-files with Emacs, 
+it is much more convenient, to compile the \LaTeX{} main file 
+via \pdflatex{} from within Emacs 
+or to create a PDF-file from a \gls{fig}-file 
+through \texttt{xfig}'s export dialog, 
+than using this maven-plugin or this ant-task. 
+Also, these tools work best, if all is in one folder. 
+
+On the other hand, 
+conventionally, in a maven project, 
+sources are held in folder \texttt{src}, 
+whereas created files occur in the folder \texttt{target}. 
+Likewise for ant. 
+The compromise, this maven-plugin and this ant-task take, 
+is, that at the end of a run, 
+at most the files present at the beginning of the run 
+may be present in the source directory. 
+So, this software builds in the following steps: 
+%
+\begin{itemize}
+\item
+Store a list of all files present at the beginning of a run.
+\item
+Process all graphics files of the formats requiring preprocessing.
+\item
+Determine the \LaTeX{} main files.
+\item
+Run the \LaTeX{} converter, e.g.~the one creating PDF-output or DOCX-output.
+This may include running auxiliary programs like \texttt{bibtex} or \texttt{pythontex} 
+and also rerunning the \LaTeX{} converter several times. 
+\item
+Copy the result files (if any) into the target folder.
+\item
+Remove all files not present at the beginning of a run, by default. 
+% FIXME: maybe different for goal chk. 
+\end{itemize}
+
+To keep e.g.~the resulting PDF, 
+just create it via compilation through Emacs, 
+even if not all graphic files to be included are present 
+or just by a \texttt{touch}-command. 
+Then in the next run of this plugin, 
+this PDF will be re-created, 
+that time complete with the graphics output. 
+That way, synchronization between \LaTeX- and PDF-files is possible. 
+Likewise, to keep the log-file or the aux-file, just touch it. 
+This technique is really valuable for debugging. 
+
+To keep all created files after a run of this maven-plugin, 
+set the parameter \texttt{cleanUp} in the pom 
+to \texttt{false} as illustrated in Listing~\ref{lst:noCleanup}. 
+For the ant-task likewise. 
+
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\small,
+escapechar=|,
+float=b, captionpos=b, label={lst:noCleanup},
+caption={Configuration without cleanup}]
+<!-- create html and pdf and other formats from latex -->
+<plugin>
+  <groupId>|\groupId|</groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\strippedVersionID|</version>
+	
+  <configuration>
+    <settings>
+      <targets>pdf</targets>
+      <cleanUp>false</cleanUp>
+    </settings>
+  </configuration>
+</plugin>
+\end{lstlisting}
+
+
+But how can one get rid of all these newly created files? 
+That is what is the goal \texttt{latex:clr} is for: 
+% 
+\texttt{mvn latex:clr}
+%
+removes all created graphic files 
+and for each latex main file, it removes all files with ``similar'' names
+including log files, index files and that like.
+Typically, this suffices, to remove all files created. 
+If not, 
+try to modify parameter \texttt{\$patternCreatedFromLatexMain} 
+in the pom accordingly. 
+If this does not help either, please inform the developer of this software. 
+Of course, if further software is used which creates additional files, 
+like Emacs creates a folder \texttt{auto}, 
+these files cannot be removed by this maven-plugin or this ant-task.
+Note that \texttt{latex:clr}
+also removes exported files as listed in Section~\ref{sec:outputFormats}
+from the target folder. 
+
+During development of a \LaTeX-main file, 
+it is often more convenient to compile from within an editor like Emacs. 
+The problem is, that compilation fails if the graphic files are missing. 
+This is what the goal \emph{graphics} accessible via 
+% 
+\begin{Verbatim}
+mvn latex:grp
+\end{Verbatim}
+%
+is for: 
+It creates all graphic files required to compile the \LaTeX-main files. 
+
+Still this does not create a bibliography, an index or a glossary. 
+With \auctex\index{auctex}, an Emacs-package for editing \LaTeX, 
+bibliography and index are well-supported. 
+To create a glossary, \auctex{} has to be modified a little. 
+
+%FIXME\@: include this into auctex. 
+
+That way also the log-files required are created: 
+In case of this manual, 
+the files \texttt{manualLMP.xxx} are created 
+where \texttt{xxx} is 
+%
+\begin{itemize}
+\item
+\texttt{log} for \LaTeX, 
+\item
+\texttt{blg} for \texttt{BibTeX}, 
+\item
+\texttt{glg} for \texttt{makeglossaries} and 
+\item
+\texttt{ilg} for \texttt{makeindex}. 
+\end{itemize}
+
+The last goal regularly used for development of documentation is \emph{check}. 
+It is invoked via 
+% 
+\begin{Verbatim}
+mvn latex:chk
+\end{Verbatim}
+%
+and runs \texttt{chktex}, described in~\cite{ChkTeX22}, 
+on each latex main file 
+after having created graphic files as for goal \emph{graphics}. 
+As a result, a log-file with suffix \texttt{.clg} is created 
+but not copied to the target folder. 
+If the log-file contains an entry, 
+an according message is logged. 
+% FIXME: there is a lot more to do here. 
+Note that, with default configuration, 
+\texttt{chktex} requires the \LaTeX-package \pkg{booktabs} 
+described in~\cite{BooktP}. 
+
+Besides the basic configuration packaged with \texttt{chktex}, 
+there can be an additional configuration file \texttt{.chktexrc} 
+which partially overwrites variables set by the basic configuration file, 
+partially, for list-valued variables, adds entries. 
+Section~\ref{sec:xmlPom} describes how to access the \texttt{.chktexrc} 
+with which this manual is checked and 
+details to the form of \texttt{.chktexrc} can be found in~\cite{ChkTeX22},~Section 6.1.5.  
+
+
+% rsvg-convert -f pdf -o t.pdf t.svg
+% inkscape t.svg --export-pdf=t.pdf
+% convert file.svgz file.pdf 
+% rasterizer -m application/pdf file.svgz -d file.pdf
+% cairosvg in.svg -o out.pdf
+% yyy
+
+
+
+Another aspect of document development is integration with other tools. 
+
+Document development starts with the editor. 
+Above the Emacs editor enhanced with \auctex{} was mentioned. 
+We recommend VS Code in conjunction with several extensions. 
+If VS Code itself is already installed 
+the script \href{\urlSite fromMain/instVScode4tex}{instVScode4tex.sh} 
+installs and updates all extensions 
+the author used to develop this manual. 
+The core extension is \texttt{latex workshop}, 
+the others are mainly used for editing graphic files. 
+For details see Section~\ref{sec:xmlPom}. 
+
+
+
+
+
+
+
+% TBD: link? 
+
+\section{Goals in the maven lifecycle}\label{sec:usageLifecycle}
+
+The goal \texttt{latex:cfg} exporting in the formats configured
+is tied to the lifecycle phase \texttt{site} so is invoked
+when commanding
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+mvn site
+\end{Verbatim}
+%
+or subsequent phase.
+
+Also, the goal \texttt{latex:clr} cleaning created files
+both from source directory and from target directory
+is tied to phase \texttt{clean} so is invoked
+when commanding
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+mvn clean
+\end{Verbatim}
+
+Finally, the goal \texttt{latex:vrs} displaying versions of converters 
+and the goal \texttt{latex:inj} injecting a set of files 
+depending on the configuration 
+are tied to the phase \texttt{validate}. 
+Thus, both goals are invoked when commanding
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+mvn validate
+\end{Verbatim}
+%
+which is invoked not only in installation, but also by the site plugin.
+This ensures, that the converters are checked for correct version
+before being used. 
+Note that by default, \texttt{mvn latex:vrs} displays complete version info,
+whereas \texttt{mvn validate} only displays warnings if appropriate. 
+This is, because in the first case the plugin runs with the default \texttt{versionsWarnOnly=true} 
+whereas in the second case, is configured with \texttt{versionsWarnOnly=false} 
+as in Listing~\ref{lst:executions}. 
+Also Listing~\ref{lst:executions} shows a recommended configuration 
+for the goal \texttt{latex:inj} which determines injected the files. 
+
+
+
+
+\section{The ant-tasks}\label{sec:usageAntTask}
+
+
+Section~\ref{sec:outputFormats} treats goal \texttt{cfg} 
+to create output from one source in various formats 
+and also check which is without output. 
+The target formats and also the checks are specified in the parameter \texttt{targets}. 
+
+There is an according ant task \texttt{cfg} 
+doing the same also based on parameter \texttt{targets}. 
+Whereas the maven plugin provides separate goals for each target, 
+the ant-task has no such convenience feature. 
+Section~\ref{sec:outputFormats} briefly mentions goal \texttt{clr} 
+used for cleanup. 
+There is an according ant-task relying on according parameters. 
+Note that the ant task does not support very much of document development, 
+but it is likely, that the user performs document development 
+and runs other programs than the ant task on the sources. 
+In this case, the \texttt{clr} task is vital. 
+
+
+If this ant-task is used in an ant project 
+with folder structure conforming with a maven project 
+and if the \LaTeX{} sources do not require a special configuration, 
+the above configuration is sufficient. 
+Otherwise, parameters have to be given explicitly 
+overwriting the default values. 
+

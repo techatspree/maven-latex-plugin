@@ -1,0 +1,27 @@
+Usage
+    MEPer is a java program. To start the program, use
+    java -jar MEper.jar
+
+    A directory named "MetaPostPreviewer" will be created in the user's home
+    directory. The following files (and temporary files) will be created in this
+    directory:
+        - preview.mp, the MetaPost source file.
+        - preview.eps, the output of the MetaPost;
+        - preview.png, converted from the eps file.
+
+    The jar file and source files can be downloaed from
+    http://www.cse.ucsd.edu/~s1pan/MEPer.
+
+System requirement
+    The following tools are needed to run MEPer:
+        - the latest release of the Sun Java SE platform
+        - MetaPost
+        - ImageMagick, or ghostscript
+
+License and Disclaimer
+    MEPer is free software under the GPL (Gnu General Public License). It is free
+    to use but WITHOUT ANY WARRANTY. If you modify or redistribute it, please
+    include the orginal author's name or a link to the MEPer web page.
+
+Copyright 2009, Shengjun Pan
+

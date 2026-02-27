@@ -1,0 +1,1297 @@
+%\DocumentMetadata{uncompress}%pdfversion=1.7,
+\RequirePackage[l2tabu, orthodox]{nag}
+\DocumentMetadata{uncompress,xmp=true}%
+\documentclass[a4paper, english]{article}%scrartcl [12pt, a4paper]
+%\pdfvariable compresslevel 0
+%\pdfcompresslevel 0
+%\pdfobjcompresslevel 0
+% \usepackage{iftex}
+% \usepackage{longtable}
+% \usepackage{booktabs}
+% \usepackage{xurl}
+%\special{dvipdfmx:config z 0}% refrain from compression 
+% \special{pdf:trailerid [
+%   <00112233445566778899aabbccddeeff>
+%   <00112233445566778899aabbccddeeff>
+% ]}
+
+% for buildParams: \verbdef 
+\usepackage{newverbs}
+%\usepackage{datetime2}
+\usepackage{listings}
+
+\input{../header.tex}
+
+%\usepackage{hyperxmp}
+
+\input{../headerSuppressMetaPDF.tex}
+
+% allows description environments 
+% with newline after label via \begin{description}[style=nextline]
+\usepackage[shortlabels]{enumitem}
+
+\input{../buildParams.tex}
+
+\hypersetup{%
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Special and common aspects of pdf/dvi/xdvi generators },
+    %Creator     ={unknown}, 
+    % % LaTeX with hyperref; this is uniform for hyperref. 
+    % % except for beamer class, then it is LaTeX with Beamer class
+    % % else TeX for lua/pdflatex, but  XeTeX output 2023.12.06:0106 for xelatex 
+    % % thus it is advisable to eliminate this 
+    % % maybe security issue, but it is well visible. 
+    % % also corrupts reproducibility. 
+    % Producer    ={unknown},
+    % % xdvipdfmx with version and that like for dvi or xelatex; 
+    % % pdfTeX-1.40.25, LuaTeX-1.17.0 for pdf
+    % % This shall be eliminated. 
+    %CreationDate={unknown},
+    % ModDate     ={unknown},
+    % % these two are only overwritten to avoid wrong entry 
+    % % when using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}
+    % % This is recommended for tests, because else we cannot give a \date 
+    Subject     ={pdf/dvi/xdvi generators},
+    Keywords    ={LaTeX;pdflatex;xelatex;lualatex}
+  }
+  %pdfsource   ={no latex main file}
+}
+%\usepackage{datetime2}% not with dvi
+
+\ExplSyntaxOn
+
+\NewExpandableDocumentCommand{\printtime}{}
+ {
+  \int_compare:nT { \c_sys_hour_int < 10 } { 0 }
+  \int_eval:n { \c_sys_hour_int }
+  :
+  \int_compare:nT { \c_sys_minute_int < 10 } { 0 }
+  \int_eval:n { \c_sys_minute_int }
+ }
+
+\ExplSyntaxOff
+
+\title{Special and common aspects of pdf/dvi/xdvi generators }
+\author{Ernst Reissner (rei3ner@arcor.de)}
+\date{\the\year-\the\month-\the\day T\printtime}%***\today***\DTMnow }%\today \DTMnow
+
+\newcommand{\pdflatex}{\texttt{pdflatex}}
+\newcommand{\lualatex}{\texttt{lualatex}}
+\newcommand{\xelatex}{\texttt{xelatex}}
+
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
+
+
+\newcommand{\texlive}{\TeX~Live}
+\newcommand{\miktex}{MiKTeX}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+%\listoffigures
+\listoftables
+\lstlistoflistings%
+
+\section{Introduction}
+
+This document is created with \lualatex{} or that like 
+with output format 
+\ifpdf%
+PDF%
+\else
+DVI% TBD: take XDV into account also 
+\fi.
+The package \texttt{tex4ht} 
+is \IfPackageLoadedTF{tex4ht}{}{not} loaded. 
+
+This document is about features the three generators on latex, 
+\pdflatex, \lualatex{} and \xelatex{} have in common 
+and discusses also aspects under which they are specific. 
+These programs are just underlying tex engines preloading the the \LaTeX{} format. 
+The names of the underlying engines just drop the inner sylable ``\texttt{la}''. 
+For \texttt{pdftex} there is a user manual~\cite{PdfTexUsr24}, 
+for \texttt{luatex} there is a reference manual~\cite{LuaTexRef24} and 
+for \texttt{xetex} a reference guide~\cite{XeTexRef24}. 
+
+The first aspect we cover are the options (among those to display the version). 
+It turns out, that the options are specific for the distribution. 
+Apart from \texlive{}, there is a second important distribution, \miktex, 
+which should also be treated. 
+
+We treat the options for \texlive{} in Section~\ref{sec:optionsTexlive} 
+and those for \miktex{} in Section~\ref{sec:optionsMiktex}. 
+
+The second subject is privacy as part of security 
+and reproducible builds of documents, e.g.\@ for tests. 
+The focus is here on PDF files and comprises besids visible data 
+also metadata. 
+The results of our research is collected in Section~\ref{sec:PDFreprSec}. 
+
+\section{The options for \texlive}\label{sec:optionsTexlive}
+
+
+Note that in fact we use a variant of \texttt{luatex}, called \texttt{luahbtex}. 
+
+This document is valid for versions of the underlying tex engine 
+as given in Table~\ref{tab:versions}. 
+Moreover, our research refers to a specific distribution, \texlive. 
+
+
+\begin{longtable}{|ll|}
+  \toprule
+  converter & version \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:versions} Converters and the version this document refers to }
+  \endlastfoot%
+  \pdflatex{}  & \texttt{pdfTeX 3.141592653-2.6-1.40.24} \\% chktex 8
+  \xelatex{}   & \texttt{XeTeX 3.141592653-2.6-0.999994} \\% chktex 8
+  \lualatex{}  & \texttt{LuaHBTeX, Version 1.15.0} \\
+\end{longtable}
+
+
+We start with a synopsis of the options. 
+Table~\ref{tab:latexOptionsCommonTexlive} 
+shows options of the converters under consideration. 
+Note that in contrast to the other converters, 
+\lualatex{} defines options starting with \texttt{-{}-} 
+but it can also process the options if given with a single dash also. 
+Conversely, converters other than \lualatex{} can also deal with options 
+starting with single dash. 
+Options unknown to a converter never result in an error or even a warning; 
+instead just an info message is displayed. 
+This allows to create a configuration which works for all converters. 
+
+In Table~\ref{tab:latexOptionsCommonTexlive} column ``included'', 
+each converter is represented by the starting letter of its name, 
+so for each option it is known which converters know about it 
+and conversely, which options each converter has. 
+
+The table allows furnishing configurations working for all converters. 
+Some options are common to all converters
+
+
+{\footnotesize
+\begin{longtable}{|lllll|}
+\toprule
+option & \multicolumn{3}{l}{included} & explanation \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:latexOptionsCommonTexlive} Options of \TeX{} engines in \texlive}
+\endlastfoot%
+\texttt{(-)-cnf-line=STRING}       & p&x&l & parse \texttt{STRING} as a configuration file line \\
+\texttt{-{}-credits}               & -&-&l & Display credits and exit. \\
+\texttt{-{}-debug-format}          & -&-&l & enable format debugging \\
+\texttt{(-)-draftmode}             & p&-&l & switch on draft mode (generates no output PDF) \\
+\texttt{-enc}                      & p&-&- & Enable encTeX extensions such as \texttt{\textbackslash{}mubyte} \\
+\texttt{-etex}                     & p&x&- & enable e-TeX extensions \\
+\texttt{(-)-[no-]file-line-error}  & p&x&l & disable/enable file:line:error style messages \\
+\texttt{-{}-[no-]file-line-error-style} & -&-&l& aliases of \texttt{-{}-[no-]file-line-error} \\
+\texttt{-fmt=FMTNAME}              & p&x&l & use FMTNAME instead of program name or a \%\& line\footnote%
+{in fact for \lualatex{} the explanation deviates a bit: \texttt%
+{-{}-fmt=FORMAT\@: load the format file FORMAT}} \\
+\texttt{(-)-ini}                   & p&x&l & for dumping formats \\
+\texttt{-ipc}                      & p&-&- & send DVI output to a socket \\
+                                   &  & &  & as well as the usual output file \\
+\texttt{-ipc-start}                & p&-&- & as \texttt{-ipc}, and also start the server at the other end \\
+\texttt{(-)-halt-on-error}         & p&x&l & stop processing at the first error \\
+\texttt{(-)-help}                  & p&x&l & display this help and exit \\
+\texttt{(-)-version}               & p&x&l & output version information and exit \\
+\texttt{-8bit}                     & p&x&- & make all characters printable by default\footnote%
+{for \xelatex: don't use \^{}\^{}X sequences} \\
+\texttt{(-)-interaction=STRING}    & p&x&l & set interaction mode \\
+                                   &  & &  & (\texttt{STRING=batchmode/nonstopmode/} \\
+                                   &  & &  &  \texttt{scrollmode/errorstopmode}) \\
+\texttt{(-)-jobname=STRING}        & p&x&l & set the job name to \texttt{STRING} \\
+\texttt{(-)-kpathsea-debug=NUMBER} & p&x&l & set path searching debugging flags \\
+                                   &  & &  & according to the bits of \texttt{NUMBER} \\
+\texttt{-{}-lua=FILE}              & -&-&l & Load and execute a lua initialization script. \\
+\texttt{-{}-luaonly}               & -&-&l & run a lua file, then exit \\
+\texttt{-{}-luaconly}              & -&-&l & byte-compile a lua file, then exit \\
+\texttt{-{}-luahashchars}          & -&-&l & the bits used by current Lua interpreter for strings hashing \\
+ \texttt{(-)-[no-]mktex=FMT}       & p&x&l & disable/enable mktexFMT generation\footnote%
+{\texttt{(FMT=tex/tfm/pk)} for \pdflatex; else \texttt{(FMT=tex/tfm)}} \\
+\texttt{-mltex}                    & p&x&- & enable MLTeX extensions such as \texttt{\textbackslash{}charsubdef} \\
+\texttt{-no-pdf}                   & -&x&- & generate XDV (extended DVI) output rather than PDF \\
+\texttt{-{}-nosocket}              & -&-&l & Disable the Lua socket library. \\
+\texttt{(-)-output-comment=STRING} & p&x&l & use STRING for DVI file comment instead of date \\
+                                   &  & &  & (no effect for PDF)\footnote%
+{For \xelatex{} it is XDV instead of DVI and the remark \texttt{(no effect for PDF)} is missing} \\
+\texttt{(-)-output-directory=DIR}  & p&x&l & use existing DIR as the directory to write files in \\
+\texttt{(-)-output-format=FORMAT}  & p&-&l & use \texttt{FORMAT} for job output; \texttt{FORMAT} is `dvi' or `pdf'\footnote%
+{\xelatex{} offers option \texttt{-no-pdf} instead. } \\
+\texttt{-output-driver=CMD}        & -&x&- & use \texttt{CMD} as the XDV-to-PDF driver instead of \texttt{xdvipdfmx} \\
+\texttt{-papersize=STRING}         & -&x&- & set PDF media size to \texttt{STRING} \\        
+\texttt{-[no-]parse-first-line}    & p&x&- & disable/enable parsing of first line of input file \\
+\texttt{(-)-progname=STRING}       & p&x&l & set program (and fmt) name to \texttt{STRING}\footnote%
+{\lualatex{} does not mention \texttt{(and fmt)}} \\
+\texttt{(-)-recorder}              & p&x&l & enable filename recorder \\
+\texttt{-{}-safer}                 & -&-&l & Disable easily exploitable Lua commands. \\
+\texttt{(-)-[no-]shell-escape}     & p&x&l & disable/enable \texttt{\textbackslash{}write18{SHELL COMMAND}}\footnote%
+{For \lualatex{} the explanation is \texttt{disable/enable system commands}} \\
+\texttt{(-)-shell-restricted}      & p&x&l & enable restricted \texttt{\textbackslash{}write18}\footnote%
+{For \lualatex{} the explanation is \texttt{restrict system commands to a list of commands given in texmf.cnf}} \\
+\texttt{-src-specials}             & p&x&- & insert source specials into the DVI file \\
+\texttt{-src-specials=WHERE}       & p&x&- & insert source specials in certain places of \\
+                                   &  & &  & the DVI/XDV\footnote{DVI for \pdflatex; XDV for \xelatex} file. \\
+\texttt{(-)-synctex=NUMBER}        & p&x&l & generate SyncTeX data for previewers\footnote%
+{Explanation differs for \lualatex} \\ 
+\texttt{-translate-file=TCXNAME}   & p& &  & use the TCX file \texttt{TCXNAME}\footnote%
+{TCX means \TeX{} character translation} \\
+\texttt{-{}-utc}                   &  & &l & Init time to UTC\footnote{Coordinated Universal Time, 
+successor of Greenwich Mean Time (GMT)} \\
+\end{longtable}
+} %\small
+
+
+
+
+
+pdflatex: 
+
+\begin{verbatim}
+Usage: pdftex [OPTION]... [TEXNAME[.tex]] [COMMANDS]
+   or: pdftex [OPTION]... \FIRST-LINE
+   or: pdftex [OPTION]... &FMT ARGS
+  Run pdfTeX on TEXNAME, usually creating TEXNAME.pdf.
+  Any remaining COMMANDS are processed as pdfTeX input, after TEXNAME is read.
+  If the first line of TEXNAME is %&FMT, and FMT is an existing .fmt file,
+  use it.  Else use `NAME.fmt', where NAME is the program invocation name,
+  most commonly `pdftex'.
+
+  Alternatively, if the first non-option argument begins with a backslash,
+  interpret all non-option arguments as a line of pdfTeX input.
+
+  Alternatively, if the first non-option argument begins with a &, the
+  next word is taken as the FMT to read, overriding all else.  Any
+  remaining arguments are processed as above.
+
+  If no arguments or options are specified, prompt for input.
+\end{verbatim}
+
+
+
+
+
+\section{The options for \miktex}\label{sec:optionsMiktex}
+
+Since at the time of this writing, the author has no \miktex{} at hand, 
+the results for \miktex{} are based on documentation, rather than experimentation. 
+The three engines are a bit different, also in their names. 
+
+
+Well this section is preliminary only. 
+It turned out that Section~\ref{sec:optionsTexlive} is valid only for distribution \texlive. 
+So in this section we venture to find out the options for the other big distribution, 
+\miktex. 
+We shall also investigate whether there are further distributions. 
+
+Whereas the description~\cite{Texlive} seems not to mention the options explicitly, 
+the \miktex{} manual~\cite{MiKTeX} describes each program in Section II, 6, 
+in particular also the tex converters. 
+This is the source of the following tables. 
+
+
+The first observation is that, for \miktex{} all options start with two dashes, 
+whereas for \texlive{} this is the case only for luatex. 
+One has to clarify, 
+whether the maven latex plugin under consideration really works for \miktex. 
+
+{\footnotesize
+\begin{longtable}{|lllll|}
+  \toprule
+  option & \multicolumn{3}{l}{included} & explanation \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:latexOptionsCommonMiktex} Options of \TeX{} engines in \miktex}
+  \endlastfoot%
+  \texttt{-{}-alias=name}             & p&x&l       & Pretend to be program name, \dots\footnote%
+ {Using this option is equivalent to copying the program file to name and invoking name.} \\
+\texttt{-{}-aux-directory=dir}        & p&x&l       & 
+Set \texttt{dir} as the directory to write auxiliary files to. \\
+\texttt{-{}-buf-size=n}               & p&x&- & Set the the maximum number of characters \dots \\
+\texttt{-{}-c-style-errors}           & p&x&l       & Change the way, error messages are printed. \\
+\texttt{-{}-credits}                  & -&-&l & Display credits and exit\footnote%
+   {The same as for \texlive. }. \\
+\texttt{-{}-disable-8bit-chars}       & p&x&- & Make only 7-bit characters printable. \\
+\texttt{-{}-disable/enable-installer} & p&x&l       & Disable/Enable automatic installation of packages. \\
+\texttt{-{}-disable-write18}          & p&x&l       & Disable the \texttt{\textbackslash{}write18\{command\}} construct.\\
+\texttt{-{}-enable-write18}           & p&x&l       & Fully enable the \texttt{\textbackslash{}write18\{command\}} construct\footnote%
+{Corresponds roughly to \texttt{(-)-shell-escape} in \texlive. }. \\
+\texttt{-{}-restrict-write18}         & p&x&l       & Partially enable the \texttt{\textbackslash{}write18{command}} construct. \\
+%\texttt{-{}-parse-first-line}   & p&x&- & Disable checking \dots the first line \dots \\
+\texttt{-{}-debug-format}             & -&-&l & Enable format debugging\footnote%
+{The same as for \texlive. }. \\
+\texttt{-{}-[dont-]parse-first-line}  & p&x&- & [Dont p|P]arse first line of input file \\
+                                      &  & &        & under definite conditions\footnote%
+{Similar for \texlive. Note that there is also a converse option. } \\
+\texttt{-{}-draftmode}                & p&-&l  & switch on draft mode (generates no output PDF)\footnote%
+{Some differences in formulation between the converter and also between distributions} \\
+\texttt{-{}-enable-8bit-chars}        & p&x&- & Make all characters printable. \\
+\texttt{-{}-enable-enctex}            & p&-&- & Enable encTeX extensions such as \texttt{\textbackslash{}mubyte}\footnote%
+{Corresponds with \texttt{-enc} in \texlive. }. \\
+\texttt{-{}-enable-etex}              & p&x&- & Enable eTeX extensions. \\
+\texttt{-{}-enable-installer}        & p&x&l       & Enable automatic installation of packages. \\
+\texttt{-{}-enable-mltex}             & p&x&- & Enable MLTeX extensions such as \texttt{\textbackslash{}charsubdef}. \\
+\texttt{-{}-error-line=n}             & p&x&- & Set the width of context lines on \dots error messages. \\
+\texttt{-{}-extra-mem-bot=n}          & p&x&- & Set the extra size \dots{} for large data structures \dots \\
+\texttt{-{}-extra-mem-top=n}          & p&x&- & Set the extra size (in memory words) for chars, tokens, \dots. \\
+\texttt{-{}-font-max=n}               & p&x&- & Set the maximum internal font number. \\
+\texttt{-{}-font-mem-size=n}          & p&x&- & Set the size, in TeX memory words, of the font memory. \\
+\texttt{-{}-half-error-line=n}        & p&x&- & Set the width of first lines of contexts \\
+                                      &  & &        & in terminal error messages. \\
+\texttt{-{}-halt-on-error}            & p&x&l       & Quit after the first error. \\
+\texttt{-{}-hash-extra=n}             & p&x&- & Set the extra space for the hash table of control sequences \dots \\
+\texttt{-{}-help}                     & p&x&l       & Give help and exitt\footnote%
+{The same as for \texlive. }.. \\
+\texttt{-{}-hhelp}                   & p&x&- & manual page in an HTML Help window\footnote%
+{This option is only available on Windows systems.} \\
+\texttt{-{}-include-directory=dir}    & p&x&l       & Add the directory \texttt{dir} to [those] \\
+                                      &  & &        & to be searched for input files. \\
+\texttt{-{}-initialize}               & p&x&l       & Become the INI variant of the program. \\
+\texttt{-{}-interaction=mode}         & p&x&l       & Set the interaction mode (\texttt{mode=batchmode/nonstopmode/}\\
+&& && \texttt{scrollmode/errorstopmode}). \\
+\texttt{-{}-job-name=name}            & p&x&l       & Set the name of the job (\texttt{\textbackslash{}jobname}). \\
+\texttt{-{}-job-time=file}            & p&x&- & Set the time-stamp of all output files \\
+                                      &  & &        & equal to file's time-stamp. \\
+\texttt{-{}-lua=FILE}                 & -&-&l & load and execute a lua initialization script\footnote%
+   {The same as for \texlive. }.   \\
+\texttt{-{}-luaonly}                  & -&-&l & Start LuaTeX as a Lua interpreter\footnote%
+   {Could be the same as for \texlive. }.  \\
+\texttt{-{}-luaconly}                 & -&-&l & byte-compile a lua file, then exit\footnote%
+   {Could be the same as for \texlive. }. \\
+\texttt{-{}-luahashchars}             & -&-&l & the bits used by current Lua interpreter for strings hashing \\
+\texttt{-{}-main-memory=n}            & p&x&- & Change the total size \dots{} of the main memory array. \\
+\texttt{-{}-max-in-open=n}            & p&x&- & Set the maximum number of input files \dots \\
+\texttt{-{}-max-print-line=n}         & p&x&- & Set the width of longest text lines output. \\
+\texttt{-{}-max-strings=n}            & p&x&- & Set the maximum number of strings. \\
+\texttt{-{}-[no-]mktex=fmt}           & -&-&l & Enable/Disable \texttt{fmt} generation, \\
+                                      &  & &  & where \texttt{fmt} must be either \texttt{tex} or \texttt{tfm}. \\
+\texttt{-{}-nest-size=n}              & p&x&- & Set the maximum number of semantic levels \\
+                                      &  & &        & simultaneously active. \\
+\texttt{-{}-no-c-style-errors}        & p&x&l       & Don't change the way, error messages are printed. \\
+\texttt{-{}-no-pdf}                   & -&x&- & generate XDV (extended DVI) output rather than PDF \\
+\texttt{-{}-nosocket}                 & -&-&l & Disable the Lua socket library. \\
+\texttt{-{}-output-comment=string}    & -&-&l & Use \texttt{string} for DVI file comment instead of date. \\
+\texttt{-{}-output-directory=dir}     & p&x&l       & Write output files in \texttt{dir}\footnote%
+{Similar as for \texlive. }. \\
+\texttt{-{}-output-driver=CMD}        & -&x&- & use CMD as the XDV-to-PDF driver instead of xdvipdfmx \\
+\texttt{-{}-output-format=format}     & p&-&l  & Use format for job output (one of: dvi, pdf)\footnote%
+{\pdflatex{} and \lualatex{} differ a bit in text. Seems similar to \texlive. }. \\
+\texttt{-{}-papersize=STRING}         & -&x&- & set PDF media size to STRING \\
+\texttt{-{}-param-size=n}             & p&x&- & Set the the maximum number \\
+                                      &  & &        & of simultaneous macro parameters. \\
+\texttt{-{}-pool-free=n}              & p&x&- & Set the minimum pool space left after loading the format. \\
+\texttt{-{}-pool-size=n}              & p&x&- & Set the maximum number of characters in strings, \dots \\
+\texttt{-{}-quiet}                    & p&x&- & Suppress all output, except errors. \\
+\texttt{-{}-record-package-usages=file} & p&x&- & Record all package usages and write them into \texttt{file}. \\
+\texttt{-{}-recorder}                 & p&x&l       & Enable the file name recorder\footnote%
+{The same as in \texlive. }. \\
+\texttt{-{}-safer}                    & -&-&l & Disable easily exploitable Lua commands\footnote%
+   {The same as for \texlive. }.   \\
+\texttt{-{}-save-size=n}              & p&x&- & Set the the amount of space for saving values \\
+                                      &  & &        & outside of current group. \\
+\texttt{-{}-src-specials}             & p&x&- & Embed source file information in the DVI file\footnote%
+{Similar as in \texlive. }. \\
+\texttt{-{}-stack-size=n}             & p&x&- & Set the maximum number of simultaneous input sources. \\
+\texttt{-{}-string-vacancies=n}       & p&x&- & Set the minimum number of characters \dots \\
+\texttt{-{}-synctex=n}                & p&x&l       & Generate SyncTeX data for previewers\footnote%
+{Explanation with more detail than for \texlive. } \\
+\texttt{--tcx=tcxname}                & p&-&- & Use the tcxname translation table \dots \\
+\texttt{-{}-time-statistics}          & p&x&- & Show processing time statistics. \\
+\texttt{-{}-trace[=tracestreams]}     & p&x&- & Enable trace messages. \\
+\texttt{-{}-trie-size=n}              & p&x&- & Set the amount of space for hyphenation patterns. \\
+\texttt{-{}-undump=name}              & p&x&l       & Use name as the name of the format to be used, \dots \\
+\texttt{-{}-utc}                      & -&-&l & Init time to UTC\footnote%
+   {The same as for \texlive. }.  \\
+\texttt{-{}-version}                  & p&x&l       & Show version information and exit\footnote%
+{The same as for \texlive. }. \\
+\end{longtable}
+}
+
+Strange, there are \texttt{-{}-enable-etex} and \texttt{-{}-enable-mltex} 
+but no way to disable. 
+Maybe disable is the default. 
+
+\begin{verbatim}
+  miktex-pdftex [option...] [[file] | [\command...]]
+\end{verbatim}
+
+% \begin{longtable}{|ll|}
+%   \toprule
+%   option & explanation \\
+%   \midrule
+%   \midrule
+%   \endfirsthead%
+%   \bottomrule
+%   \caption{\label{tab:latexOptionsPdflatexMiktex} Options specific to \pdflatex{} }
+%   \endlastfoot%
+%   \end{longtable}
+
+
+
+
+\begin{verbatim}
+  miktex-luatex [option...] [[command...] | [file]]
+
+The following options are ignored:
+
+--8bit, --etex, --parse-first-line, --no-parse-first-line
+These are always on.
+
+--default-translate-file=tcxname, --translate-file=tcxname
+These are always off.
+\end{verbatim}
+
+% \begin{longtable}{|ll|}
+%   \toprule
+%   option & explanation \\
+%   \midrule
+%   \midrule
+%   \endfirsthead%
+%   \bottomrule
+%   \caption{\label{tab:latexOptionsLualatexMiktex} \miktex: Options specific to \lualatex{} }
+%   \endlastfoot%
+%   % \texttt{-{}-[no-]file-line-error-style} & aliases of --[no-]file-line-error \\
+%   \midrule
+%   \midrule
+%   \end{longtable}
+
+
+  
+  
+  
+
+\begin{verbatim}
+  miktex-xetex [option...] [[file] | [\command...]]
+\end{verbatim}
+
+
+
+% \begin{longtable}{|ll|}
+%   \toprule
+%   option & explanation \\
+%   \midrule
+%   \midrule
+%   \endfirsthead%
+%   \bottomrule
+%   \caption{\label{tab:latexOptionsXelatexMiktex} \miktex: Options specific to \xelatex{} }
+%   \endlastfoot%
+%    \end{longtable}
+
+%   Same options as for \texlive, except \texttt{-etex} which is specific to \texlive. 
+
+
+
+\section{Reproducibility and security for PDF documents created}\label{sec:PDFreprSec}
+
+Of course reproducibility and security are general subjects not tied to a specific format like PDF, 
+but as a first step we undertake a discussion specific for PDF files. 
+This shall be extended step by step. 
+
+Reproducible builds are important for tests and for global cooperation. 
+For PDF files besides visible data also so-called metadata must be reproduced. 
+Security is mainly privacy here. 
+Also, besides visible data also metadata shall not expose private data. 
+
+
+To display metadata, we use \texttt{exiftool} and \texttt{pdfinfo}. 
+
+
+\subsection{The tool chains}\label{subsec:toolchain}
+
+Although \xelatex{} always produces a XDV file ias an intermediate step, 
+when creating a PDF file this is eliminated. 
+In contrast, with the option \texttt{-no-pdf} 
+one can eliminate creation of the PDF file and the XDV is not erased. 
+For conversion, of the XDV file to PDF, the option \texttt{-output-driver=CMD} 
+is used which defaults to the command \texttt{xdvipdfmx}. 
+Besides direct creation of a PDF file, 
+we consider creation via XDV file using \texttt{xdvipdfmx}. 
+The XDV format is an extension and in fact a variant of the DVI format. 
+
+For the other compilers in contrast, the option \texttt{-output-format=dvi/pdf} 
+determines the output format which is PDF by default 
+and there is no intermediate format for PDF\@. 
+When creating DVI files instead, these files can be converted into PDF 
+by explicitly invoking something like 
+\texttt{dvipdfmx}, \texttt{dvipdfmx} or \texttt{xdvipdfmx}. 
+In my current distribution \texlive, 
+the programs \texttt{dvipdfm}, \texttt{dvipdfmx} and \texttt{xdvipdfmx} 
+are all binary identical. 
+
+Nevertheless, they turn out to yield different results. 
+One reason found below is, 
+that the name with which the program is invoked 
+goes into the result. 
+It is likely that this is the only reason. 
+
+As a consequence of the workflow of \xelatex, 
+\cmd{ifpdf} provided by package \texttt{iftex} 
+always enters the \cmd{else} branch for \xelatex. 
+
+Although this section focuses on PDF format, 
+of course the intermediate format DVI/XDV must be considered by need. 
+The visual appearance is roughly the same, so visual reproducibility of DVI/XDV 
+is almost equivalent with visual reproducibility of PDF, 
+but for metadata one has to distinguish cases where the \LaTeX{} compiler already creates metadata 
+and writes it into \cmd{special} commands in a DVI/XDV file, 
+whereas the PDF creator just includes this data from DVI/XDV 
+from cases where it is the PDF creator which creates metadata, like creation time. 
+
+
+\subsection{Dates, times and time zones}\label{subsec:dateTime}
+
+Clearly, creation times affect reproducibility quite directly, 
+because usually the date is given in the head page of a document, 
+but it goes also into metadata both directly and indirectly. 
+
+Before discussing aspects of time in the context of PDF creation from \LaTeX, 
+
+
+\subsubsection{Date/time formats and time zones}\label{subsubsec:dateTimeZones}
+
+This section introduces date/time formats, time zones and conversions between. 
+
+The description is started with \emph{epoch time} 
+which is the most important although not well human-readable. 
+It is the number of seconds from start of computer time history, 
+which is agreed to be 
+%
+\begin{verbatim}
+  1970-01-01T00:00:00Z
+\end{verbatim}
+%
+i.e.\@ the point in time, where in timezone UTC (represented by the \texttt Z, zero deviation from UTC) 
+it was start of year 1970, i.e. date \texttt{1970--01--01} and midnight, time \texttt{00:00:00}. 
+It is called epoch time, although nothing special happened like Christs birth. 
+Zero and negative time is allowed. 
+Note, that this does not depend on a time zone, 
+but as human-readable time formats depend on the time zone, 
+conversion from and to epoch time must take time zone into account. 
+
+In fact, the above date is an example of a representation given by~\cite{ISO8601-1}. 
+More general, the timezone is either \texttt Z representing UTC 
+or some deviation from UTC for example with two digits for hours and two digits for minutes. 
+For example the same date as above in time zone two hours earlier (more east) than UTC writes 
+%
+\begin{verbatim}
+  1970-01-01T02:00:00+0200
+\end{verbatim}
+
+Among the standard environment variables in POSIX operating systems 
+is also \texttt{TZ} specifying the time zone 
+as described in \url{https://www.gnu.org/software/libc/manual/html_node/Standard-Environment.html}. 
+We only use the forms based on UTC like so: 
+%
+\begin{verbatim}
+  TZ=UTC, TZ=UTC-02
+\end{verbatim}
+%
+CAUTION: The number is understood as to be added to given time to get UTC, 
+so east of UTC has negative numbers. 
+This is the sign opposite to the representation given by ISO 8601 
+which is the offset to be added to UTC to get time given. 
+
+In Unix and similar operating systems, conversion can be done with \texttt{date}. 
+If a time is given with option \texttt{-d}, 
+this is converted into the format given by the format specifier which starts with \texttt{+}. 
+If no time is given, the current time is assumed. 
+%
+\begin{description}[style=nextline]
+  \item[\texttt{date}] 
+  yields the current date and time with timezone in current locale representation. 
+  The locale is given by the environment variable \texttt{LANG}. 
+  \item[\texttt{date +\%FT\%T\%z}] 
+  yields the current date and time 
+  in form given by ISO 8601 with date given by \texttt{\%F} followed by literal \texttt{T} 
+  followed by time \texttt{\%T} and finally the time zone given by \texttt{\%z}. 
+  \item[\texttt{date -d 'Apr 29 2024' +\%s}] 
+  converts human-readable date into epoch time specified by format \texttt{\%s} 
+  (seconds since 1970-01-01, i.e. epoch time). 
+  \textbf{Caution}: Many formats are recognized, but time zones are \emph{silently ignored}. 
+  For example, 
+  %
+  \begin{verbatim}
+    date -d '2024-06-20T12:03:00+03' +%s
+  \end{verbatim}
+  %
+  silently ignores the timezone \texttt{+03} 
+  and uses the current one which is \texttt{UTC+02}, because me the author is located in Germany. 
+  This can be seen, because the result does not depend on the time zone; 
+  you can use \texttt{+02} or \texttt{Z} signifying UTC or drop: 
+  the result is always \texttt{1718877780}. 
+  
+  To set the time zone, the variable \texttt{TZ} must be used like so: 
+  %
+  \begin{verbatim}
+    TZ=UTC-02 date -d '2024-06-20T12:03:00' +%s
+  \end{verbatim}
+  %
+  Note the sign difference between ISO 8601 representation and \texttt{TZ}. 
+  Since \texttt{UTC+02} is the timezone of the author, the result is still \texttt{1718877780}, 
+  but if using \texttt{TZ=UTC-03}, which is one hour east, 
+  it is one hour, i.e.~\@ \texttt{3600} seconds less which results in epoch time \texttt{1718874180}. 
+  \item[\texttt{date -d '@1718877780' +\%FT\%T\%z}] 
+  converts from epoch time (signified by leading \texttt{@}) into local time zone resulting in 
+  %
+  \begin{verbatim}
+    2024-06-20T12:03:00+0200
+  \end{verbatim}
+  %
+  Since the time zone of the author is currently \texttt{GTM+02}, or with minutes \texttt{GTM+0200}
+  this is what the resulting time string ends with. 
+  \item[\texttt{TZ=UTC-03 date -d '@1718877780' +\%FT\%T\%z}] 
+  converts from epoch time (signified by leading \texttt{@}) into time zone given by \texttt{TZ} resulting in 
+  %
+  \begin{verbatim}
+    2024-06-20T13:03:00+0300
+  \end{verbatim}
+  %
+  Compared with the result above, the time which is one hour later 
+  and this is reflected by the according time zone. 
+  Note again the sign contrary to the value of \texttt{TZ}. 
+\end{description}
+
+
+Finally, ~\cite{Pdf20}, Section~7.9.4 describes the encoding 
+of date/time with timezone in metadata of PDF files. 
+It is quite similar to the format given by ISO 8601-1. 
+Transformation is by dropping separators \texttt{--} and \texttt{:}, 
+prefixing \texttt{D:} and inserting \texttt{'} separating hours and minutes in time zone. 
+The above date/time writes as follows: 
+%
+\begin{verbatim}
+  D:20240620130300+03'00
+\end{verbatim}
+
+\subsubsection{Date, time and time zones in PDF files created from \LaTeX{} files}
+\label{subsubsec:dateTimeZoneTexPdf}
+
+
+
+When creating documents from \LaTeX, 
+date and time information go into at least in the following aspects: in 
+%
+\begin{itemize}
+\item 
+\LaTeX{} macros displaying time and date in the document 
+like the built-in \cmd{today}, \cmd{date} and \cmd{time} 
+accessible with prefixed \cmd{the}, 
+and also \cmd{DTMnow} provided by package \texttt{datetime2} 
+\item 
+metadata of PDF documents like \texttt{CreationDate} 
+and \texttt{ModDate}
+\item 
+file properties like creation time and modification time. 
+\end{itemize}
+
+There are several environment variables affecting treatment of these aspects. 
+First we analyze behavior without them. 
+
+Let us start with the last aspect: 
+For Linux, the command \texttt{stat} 
+yields both creation time and modification time of a file \texttt{xxx.pdf}: 
+%
+\begin{description}
+  \item[\texttt{stat -c +\%w xxx.pdf}] is the time of file birth, i.e.\@ creation time 
+  \item[\texttt{stat -c +\%y xxx.pdf}] is the modification time. 
+  This is the same as given by \texttt{ls -l}. 
+\end{description}
+%
+Both times comprise the date 
+are endowed with time zone information and are given in human-readable form, 
+although not precisely conform with ISO 8601-1. 
+The command \texttt{stat} assumes the local time zone by default, 
+but is sensitive to \texttt{TZ}: 
+%
+\begin{verbatim}
+  TZ=UTC stat -c +%w xxx.pdf
+\end{verbatim}
+%
+displays the result in UTC time zone. 
+The according pieces of information in epoch time 
+are accessed with option in capital letters, 
+i.e.\@ \texttt{+\%W} and \texttt{+\%Y}, respectively. 
+\medskip
+
+
+As one would expect, the modification time is the time when the compiler finished writing. 
+The time of file birth is really when the file comes into existence, 
+e.g.\@ for the first time or after having been deleted. 
+
+The first surprise with metadata \texttt{CreationDate} and \texttt{ModDate} is, 
+that in fact it is not only date but comprises time and timezone as well, 
+much the same as the according file properties. 
+The form in which they are given in the PDF files 
+is described in Section~\ref{subsubsec:dateTimeZones}. 
+This is essentially accessible via 
+%
+\begin{verbatim}
+  pdfinfo -rawdates xxx.pdf
+\end{verbatim}
+%
+The data is considered raw because it is displayed as is, i.e.\@ as stored in the PDF file. 
+It is close to ISO 8824--1. 
+Dates are also accessible in format specified in ISO 8601-1 via 
+%
+\begin{verbatim}
+  pdfinfo -isodates xxx.pdf
+\end{verbatim}
+
+The second surprise is, that the creation date and modification date given by metadata 
+do not coincide with the according file properties. 
+
+First, \xelatex{} is special in that by default, it provides \texttt{CreationDate} only, 
+whereas \lualatex{} and \pdflatex{} provide both. 
+The command \cmd{DocumentMetadata} forces \xelatex{} to display both times. 
+This is not really important, because the two times seem to coincide if both are given. 
+The idea behind creation time is, that the \LaTeX{} compiler creates a new file 
+even when overwriting an old one. 
+The time when starting to overwrite seems to be the \texttt{CreationDate}. 
+Why the \texttt{ModDate} is the same and not the later time when writing is finished, 
+well\dots the reader may find an explanation him/herself. 
+An idea is that this is related to incremental updates described in \cite{Pdf20}, Section 7.5.6: 
+Instead of creating a PDF anew if a modification occurs, 
+it is advised to just append a description of the difference. 
+This update does not affect creation date but only modification date. 
+\LaTeX{} processors no not support incremental updates 
+and so compilation creates just a new PDF document. 
+
+Both, \xelatex{} and \pdflatex{} represent \texttt{CreationDate} and \texttt{ModDate} 
+with the local time zone which can be overwritten by \texttt{TZ}, and so does \lualatex{} by default. 
+In addition, \lualatex{} has an option \texttt{-{}-utc} 
+both for \texlive{} and for \miktex{} 
+described in Sections~\ref{sec:optionsTexlive} and~\ref{sec:optionsMiktex} 
+which forces metadata given in UTC zone, 
+overwriting internal timezone but also the value of \texttt{TZ} if provided. 
+\medskip
+
+
+Finally, we have to consider the visible date and time 
+displayed by commands like \cmd{date} or \cmd{time}, to be 
+and \cmd{DTMnow} provided by package \texttt{datetime2}. 
+Unfortunately, \cmd{time}, the number of minutes since midnight is not well human-readable. 
+Thus, for experiments we use \cmd{printdate} defined in Listing~\ref{lst:printdate} 
+which is based on \cmd{time}. 
+
+\lstinputlisting[linerange={58-69},
+language=tex, %basicstyle=\scriptsize,
+float, captionpos=b, label={lst:printdate}, 
+caption={Definition of \cmd{printdate} }]{latexEngines.tex}
+
+
+
+
+
+
+Time and date in the visible document, e.g.\@ by \cmd{DTMnow} 
+behave exactly as the date and time given by the metadata, 
+except that \xelatex{} does not display seconds in visible document 
+and does not make the time zone visible, 
+although metadata show that both pieces of information are available. 
+
+Note that as \lualatex{} represents metadata in UTC time if invoked with option \texttt{-{}-utc}, 
+the same is true for visible date and time. 
+The time zone is made explicit. 
+Note that the variable \texttt{TZ} is treated as for metadata: 
+Goes into representation, except for \lualatex{} invoked with option \texttt{-{}-utc}. 
+\medskip
+
+
+
+
+
+
+
+
+The environment variable \texttt{SOURCE\_DATE\_EPOCH} 
+defined in \url{https://reproducible-builds.org/docs/source-date-epoch/}, 
+is set with epoch time. 
+It was introduced to obtain reproducible builds in a general context 
+can also be used in \TeX{} systems. 
+Although \texttt{SOURCE\_DATE\_EPOCH} defines the build time in a sense, 
+it is specified, that the given epoch time is exactly what is written into the metadata. 
+It affects \LaTeX{} each compiler but in slightly different way. 
+
+For \pdflatex, the main description is in~\cite{PdfTexUsr24}, Chapter~2.
+An important detail is, that the time zone written into metadata is UTC. 
+Even if the timezone is given explicitly by \texttt{TZ}, it is ignored. 
+The time given by \texttt{SOURCE\_DATE\_EPOCH} affects metadata but also \cmd{DTMnow}. 
+To affect also primitives like \cmd{time}, 
+one has to add \texttt{FORCE\_SOURCE\_DATE=1} in addition. 
+Essentially, \xelatex{} behaves the same as described in\xelatex:~\cite{XeTexRef24}, Sections 8.3 and 8.5. 
+
+In contrast to this, as described in~\cite{LuaTexRef24}, Section 4.4, 
+\lualatex{} does honor the environment variable \texttt{SOURCE\_DATE\_EPOCH} but not \texttt{FORCE\_SOURCE\_DATE}. 
+Instead, it acts as if \texttt{FORCE\_SOURCE\_DATE=1} is set implicitly: 
+Besides metadata, also visible date representations honor \texttt{SOURCE\_DATE\_EPOCH}, 
+be it \cmd{time} or \cmd{DTMnow}. 
+In contrast to \pdflatex{} and \xelatex, 
+which automatically display epoch time given by \texttt{SOURCE\_DATE\_EPOCH} in UTC, 
+\lualatex{} does so only if invoked with option \texttt{-{}-utc}. 
+Else \lualatex{} honors the current time zone 
+which may also be specified by \texttt{TZ}. 
+
+
+
+
+
+
+
+
+At time of this writing there seems to be a bug in \lualatex{} 
+leading to the wrong time zone 
+when the time is start of a full hour. 
+
+
+
+Last thing: 
+Latex compiler creating DVI/XDV and going on with \texttt{xdvipdvmx}. 
+Of course, visible data are as with direct compilation and also file times are straightforward. 
+To get these data right, latex compiler must be invoked with the system variables 
+as for direct creation of PDF files. 
+
+The only issue are meta-data. 
+Here also they seem to be stored in the intermedate dvi/xdv files, 
+and just passed to PDF by \texttt{xdvipdvmx}, 
+except date and time information. 
+These are added by \texttt{xdvipdfmx}. 
+
+So, \texttt{SOURCE\_DATE\_EPOCH} and \texttt{TZ} but not \texttt{FORCE\_SOURCE\_DATE} 
+must be considered when invoking \texttt{xdvipdfmx} and that like. 
+If none of these are given, the current time with local time zone are used. 
+If \texttt{SOURCE\_DATE\_EPOCH} is not given, then \texttt{TZ} is honored, 
+but if \texttt{SOURCE\_DATE\_EPOCH} is given, then creation time is in UTC time zone, 
+ignoring \texttt{TZ}. 
+So \texttt{xdvipdfmx} behaves very much like \xelatex{} in direct compilation of PDF, 
+which is clear because it is by defaults \xelatex's PDF backend. 
+This behavior of \texttt{xdvipdfmx} coins time metadata even if used in conjunction with \lualatex, 
+which is some argument to configure direction computation of PDF files with \lualatex 
+in a way that it fits the other compilers. 
+
+
+
+\subsection{Metadata in the PDF trailer and info dictionary}\label{subsec:trailerInfoDict}
+
+The root for metadata in PDF file is the trailer dictionary. 
+As described in~\cite{Pdf20}, Section 7.5.5, 
+it contains references to several other dictionaries, 
+the size and the \emph{trailer identifier} with key \texttt{ID}. 
+Among the references is that with key \texttt{Info} 
+to the \emph{document information dictionary} (DID) described in \cite{Pdf20}, Section 14.3.3. 
+The most important entries are \texttt{CreationDate} and \texttt{ModDate}; 
+the rest is deprecated with PDF version 2.0. 
+Still these entries are relevant for PDF versions 1.x. 
+For all entries in the document information dictionary including \texttt{CreationDate} and \texttt{ModDate} 
+there are replacements in the metadata streams described in~\cite{Pdf20}, Section 14.3.2. 
+To be more precise it is the XMP metadata, which is an XML format, described in~\cite{ISO16684-1}. 
+Frequently, the replacements allow a set of locales. 
+The latex compiler writes this if in the header of the TEX file 
+%
+\begin{verbatim}
+\DocumentMetadata{...}
+\end{verbatim}
+%
+is specified, even if the argument list is empty, because this signifies default \texttt{xmp=true}. 
+The result can be read through 
+%
+\begin{verbatim}
+  pdfinfo -meta xxx.pdf
+\end{verbatim}
+
+The keys of the document information dictionary (DID) 
+and their replacements as XMP are given in Table~\ref{tab:keysDID_XMP}. 
+Note that the keys for XMP have a prefixed namespace separated by \texttt{:}. 
+The table does not list all XMP keys specified in~\cite{ISO16684-1}, 
+but only those which are observed as created by a latex compiler. 
+Observe that the XMP keys with namespace \texttt{pdf} are not specified in~\cite{ISO16684-1}. 
+
+
+\begin{longtable}{|lll|}
+  \toprule
+  DID & XMP & remark \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:keysDID_XMP} Keys of DID and replacement by XMP}
+  \endlastfoot%
+  Title        & dc:title   & same\\
+  Author       & dc:creator & same \\
+  Subject      & dc:description & \\
+  Keywords     & dc:subject & not pdf:Keywords as specified \\
+  --           & dc:type & \\
+  --           & dc:language & \\
+  --           & dc:date & duplicate of CreationDate? \\
+  --           & dc:format & application/pdf \\
+  --           & dc:source & the latex main file \\
+  Creator      & xmp:CreatorTool & should be creator of tex source... \\
+  Producer     & pdf:Producer & \\
+  ---          & pdf:PDFVersion & \\
+  CreationDate & xmp:CreateDate & \\
+  ModDate      & xmp:ModifyDate & same as CreationDate? \\
+  ---          & xmp:MetadataDate & same as CreationDate? \\
+  Trapped      & pdf:Trapped & \\
+  ---          & xmpMM:DocumentID & \\
+  ---          & xmpMM:InstanceID & \\
+  %Special and common aspects of pdf/dvi/xdvi generators
+\end{longtable}
+
+So far, the only piece of data degrading security 
+is \texttt{dc:source}. 
+One may think of eliminating it using package \texttt{hyperxmp}, 
+described in~\cite{HyperXmpP}. 
+This is deferred because it collides with \cmd{DocumentMetadata}. 
+
+Besides a reference to the document information dictionary, 
+the trailer dictionary also contains the trailer identifier 
+described in \cite{Pdf20}, Section 7.5.5. 
+It indicates that not writing the trailer identifier or corrupting it is no good idea, 
+e.g. because it is needed for encryption or for uniquely identifying the document. 
+
+Details are given in \cite{Pdf20}, Section 14.4. 
+First, the identifier consists of two hashes, 
+the first of which depends on the newly created but unmodified document. 
+The notion behind is that of incremental updates described in \cite{Pdf20}, Section 7.5.6. 
+The first hash shall depend on the content of the file 
+at creation time and on \texttt{CreateDate}. 
+The second hash in contrast shall depend on content of the file after last incremental update 
+and on time of last update, i.e. on \texttt{ModDate}. 
+
+In the \LaTeX{} world incremental update is not supported 
+so that \texttt{CreateDate} and \texttt{ModDate} coincide 
+and so do the contents. 
+As a consequence, the two hashes of the trailer identifier coincide as well. 
+The last section of \cite{Pdf20}, Section 14.4 seems to indicate, 
+that the location of the PDF file may go into the trailer ID, 
+which would make it less reproducible. 
+
+
+\subsection{Reproducibility}\label{subsec:reprod}
+
+The first observation is, that invocation of \texttt{xelatex latexEngines} 
+produces different PDF output for each run. 
+Likewise, \texttt{xelatex -no-pdf latexEngines} produces different XDV output for each run. 
+As turns out later, this is because the creation time goes into the result. 
+
+Thus, it is plausible that, to obtain reproducibility, we invoke the compiler as 
+%
+\begin{verbatim}
+  SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 xelatex         latexEngines
+  SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 xelatex -no-pdf latexEngines
+\end{verbatim}
+
+The second result is, that creating the PDF file and the XDV file that way is reproducible. 
+
+
+
+
+It turns out, that this compression setting does not refer to the XDV file, 
+which seems always compressed, but solely to the PDF file. 
+The PDF files differ mainly in the time stamp 
+but also in some hashes which may depend on the time stamp. 
+
+Now let us experiment with \texttt{xdvipdfmx}. 
+Even if we start with a reproducible XDV file, 
+the PDF file created by \texttt{xdvipdfmx} 
+changes with each invocation. 
+This changes when also \texttt{xdvipdfmx} is invoked with fixed time. 
+%
+\begin{verbatim}
+  SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 xdvipdfmx latexEngines
+\end{verbatim}
+
+As mentioned above, in the distribution \texlive{} current at time of this writing, 
+the programs \texttt{dvipdfm}, \texttt{dvipdfmx} and \texttt{xdvipdfmx} 
+are all binary identical. 
+Nevertheless, they seem to lead to different output. 
+Possibly, the invocation name goes into the result. 
+To find out, we do not allow compression. 
+It turns out that the names go into the result as the producer. 
+
+Using the package \texttt{hyperref}, 
+one can overwrite a lot of metadata. 
+Details are found in the manual~\cite{HyperTextP}, Section 5.10. 
+In particular, the producer can be set \texttt{unknown}. 
+As a result, the trailer identifier is the only remaining difference. 
+Seemingly, the producer goes into this whether displayed or not. 
+The trailer identifier cannot be overwritten by \texttt{hyperref}, 
+but only in a way specific for \xelatex: 
+%
+\begin{verbatim}
+  \special{pdf:trailerid [
+    <00112233445566778899aabbccddeeff>
+    <00112233445566778899aabbccddeeff>
+  ]}  
+\end{verbatim}
+%
+makes even the XDV to PDF converter transparent. 
+
+In~\cite{HyperTextP}, Section 5.10, also the creator is found, 
+which is \texttt{LaTeX with hyperref} independent of the \LaTeX{} compiler. 
+This shall be overwritten if there are security concerns. 
+
+As long as the tool chain and settings remain constant, 
+invocation of latex compiler \xelatex{} and backend XDV to PDF converter 
+specifying \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+suffices to guarantee reproducibility. 
+This setting refers to start of computer time history, 
+although nothing special happened like Christs birth,
+creation date \texttt{1970--01--01 00:00:00Z} 
+and if the file exist, this is the modification date. 
+From the point of view of reproducibility, 
+there is ok, but it is not the truth. 
+Thus, it makes sense to overwrite this with the string \texttt{unknown}. 
+If the file is overwritten, the same considerations apply to the modification date. 
+Both can be overwritten with package \texttt{hyperref}. 
+
+One question remains: how does \texttt{hyperref} manipulate the metadata 
+and in a second step, can we do this directly without using \texttt{hyperref}. 
+\medskip
+
+
+Now let us switch to the other two \LaTeX{} compilers. 
+Both write the banner information indicating 
+above all the type of compiler and the version. 
+As checked by switching compression of, \xelatex{} does not write any banner information. 
+Again, as long as the compiler does not change nor changes its version or its distribution, 
+the banner does not corrupt reproducibility. 
+On the other hand, removing it would stabilize and generalize reproducibility somewhat: 
+stabilize because the banner contains version information 
+and thus breaks reproducibility at version change, 
+and it breaks reproducibility when changing the compiler of course. 
+Also, privacy or security is an argument in favor of eliminating the banner. 
+The package \texttt{hyperref} offers no way to change the banner; 
+this can be done only in a machine specific way. 
+The details are described in Section~\ref{subsec:securityRep} below. 
+
+The same is true for the trailer identifier. 
+Strictly speaking it need not be suppressed for reproducibility, 
+but to make the result independent of the DVI to PDF converter 
+as is explained in the context of \xelatex{} above. 
+
+Creating DVI files with \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+yields reproducible results. 
+As expected, these settings are also necessary for translating DVI into PDF\@. 
+
+\subsection{Suppressing and overwriting meta info in a compiler specific way }
+
+For \lualatex{} \cite{LuaTexRef24}, Section 3.2.2 describes the variable \texttt{suppressoptionalinfo} 
+which specifies bitwise which pieces of metadata to be suppressed. 
+Among the \texttt{PTEX} entries, \texttt{PTEX.FullBanner} is unique as it refers to the top level document: 
+it is the first line of output in the log file. 
+For sake of privacy this shall be suppresed. 
+The other \texttt{PTEX} entries, 
+\texttt{PTEX.FileName}, \texttt{PTEX.PageNumber} and \texttt{PTEX.InfoDict} 
+refer to embedded PDF files. 
+The \texttt{InfoDict} has entries \texttt{Producer}, \texttt{Creator}, \texttt{CreationDate} ,\texttt{ModDate} 
+and \texttt{Trapped} and must be suppressed as well. 
+
+Also, \texttt{Creator} and \texttt{Producer} shall be suppressed. 
+Note that suppression of \texttt{Creator} is impossible when using package \texttt{hyperref}, 
+because it writes \texttt{LaTeX with hyperref} setting itself as creator. 
+To be safe that this piece of information is not exposed, 
+this meta info must be overwritten later. 
+Metadata \texttt{Trapped} is suppressed, although there are reasons 
+both for suppression and for leaving as is. 
+
+As described elsewhere, neither \texttt{CreationDate}, \texttt{ModDate} or \texttt{ID} shall be suppressed. 
+
+As described in \cite{PdfTexUsr24}, Section 4.2.3 and 4.2.4, \pdflatex can suppress only \texttt{PTEX} data 
+which must be done, and \texttt{CreationDate}, \texttt{ModDate} which must not be suppressed. 
+Finally, \xelatex cannot suppress any metadata. 
+\medskip 
+
+
+Meta info may be suppressed but also overwritten. 
+For \lualatex{} \cite{LuaTexRef24}, Section 3.2.2 shows how to overwrite the trailer ID. 
+In contrast, \pdflatex{} has many options to overwrite metadata 
+collected in \cite{PdfTexUsr24}, Section 4.2, among those also the trailer ID. 
+Neither of these are needed. 
+Finally, there is no official documentation on \xelatex{} for overwriting metadata 
+but internet sources show a way to overwrite the trailer ID: 
+%
+\begin{verbatim}
+\special{pdf:trailerid [
+  <00112233445566778899aabbccddeeff>
+   <00112233445566778899aabbccddeeff>
+]}
+\end{verbatim}
+
+
+
+\subsection{Security and Stability of Reproducibility}\label{subsec:securityRep}
+
+
+
+
+
+
+Security is here privacy. 
+Hiding information makes attacks more difficult. 
+Stability of reproducibility consists in stability as regards new versions of the same tools 
+in the tool chain and the aspect of change of a tool or some other aspect of environment. 
+
+One aspect is the time zone. 
+As indicated in Section~\ref{subsubsec:dateTimeZoneTexPdf}, 
+reproducible PDF files must have \texttt{CreateDate} and \texttt{ModDate} 
+both in UTC time zone. 
+This supports both privacy, as the true time zone of the build facility is not accessible 
+and stability of reproducibility as a change of location of the build facility 
+or change of summer/winter time 
+may not corrupt reproducibility. 
+This feature supports international cooperation. 
+
+From Section~\ref{subsec:reprod} come the recommendation 
+to set the following pieces of information to unknown., 
+This is done with hyperref package **** 
+%
+\begin{description}
+  \item[Creator] This is uniformly \texttt{LaTeX with hyperref} 
+  as long as \texttt{hyperref} is loaded, except for \texttt{beamer} class 
+  (which loads \texttt{hyperref} implicitly)
+  for which it is \texttt{LaTeX with Beamer class}. 
+  If \texttt{hyperref} is not loaded, 
+  the creator is \TeX{} except for \xelatex{} which shows compiler and creation date. 
+  Thus, it is advisable in general for security but without \texttt{hyperref} 
+  for sake of stability of reproducibility. 
+  \item[Producer] This is \texttt{xdvipdfmx} with version for creating DVIs 
+  and in general for \xelatex. 
+  For creating PDF with \pdflatex{} or with \lualatex, 
+  it is something like \texttt{pdfTeX-1.40.25} or \texttt{LuaTeX-1.18.0}. 
+  This shall be hidden for sake of security and stability of reproducibility. 
+  % \item[CreationDate] Note that despite its name, 
+  % in fact it is both date and time and comprises also the timezone. 
+  % Its format is specified in~\cite{Pdf20}, Section 7.9.4. 
+  % Time zone comes at the end and UTC is represented by letter \texttt{Z}, 
+  % where other time zones are specified by a signed offset. 
+
+  % Whereas both \pdflatex{} and \xelatex{} always display creation time in UTC, 
+  % \lualatex{} does so only if started with option \texttt{-{}-utc}. 
+  % It sets the time zone to UTC time which also goes into the creation date. 
+  % At time of this writing, \lualatex{} has a bug ending up with the wrong timezone 
+  % if the time is midnight, 
+  % as in 
+  % %
+  % \begin{verbatim}
+  %   SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 lualatex testProgram
+  % \end{verbatim}
+
+  % This can be worked around by something like 
+  % %
+  % \begin{verbatim}
+  %   SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1 TZ=UTC-02 lualatex testProgram
+  % \end{verbatim}
+
+  % Note that the variable \texttt{TZ} uses negative sign for zones east of UTC 
+  % which is inverse to the raw format used in metadata. 
+  
+  % It is wrong if using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1} 
+  % and shall thus be hidden. 
+  % \item[ModDate] 
+  % Note that \xelatex{} is unique in that it does not write \texttt{ModDate}, 
+  % except \cmd{DocumentMetadata} is in the header of the document. 
+  % It is really the same as \texttt{CreationDate}. 
+  \item[PTEX.Fullbanner] is not written by \xelatex, 
+  but for both \lualatex{} and \pdflatex. 
+  It can be suppressed in a compiler specific way, 
+  but not through \texttt{hyperref}. 
+  The banner exposes tools, versions and distributions. 
+  Thus, it shall not be exposed for sake of security and stability of reproducibility. 
+ 
+\end{description}
+
+All these pieces of information 
+and a bit more are suppressed 
+by including \href{\urlSite fromTex/headerSuppressMetaPDF.tex}{headerSuppressMetaPDF.tex}. 
+Observe that to that end the package \texttt{hyperref} is used 
+whenever possible because this technique is not specific for the latex compiler. 
+Only banner and trailer identifier are suppressed in a compiler specific way. 
+
+% TBD: in the long run, here must be included a description of the details 
+Besides code, \texttt{headerSuppressMetaPDF.tex} provides 
+additional info in the comments, 
+but for details specific for the individual compilers 
+see~\cite{LuaTexRef24}, Section 14.1.8 for \lualatex, 
+and~\cite{PdfTexUsr24}, Section 4.2 for \pdflatex. 
+Seemingly, \xelatex{} is quite different from the other compilers 
+and tends to write fewer pieces of information. 
+It uses an external XDV to PDF converter, \texttt{xdvipdfmx} by default. 
+By placing \cmd{special} commands in the TEX file, 
+the user can pass information to the XDV to PDF converter 
+also controlling meta info to some extent. 
+Some details are given in the 
+manual for \texttt{xdvipdfmx},~\cite{DviPdfMx}, Section 4.1.1. 
+
+
+
+\subsection{Miscellaneous}\label{subsec:misc}
+
+\subsubsection{The command \cmd{DocumentMetadata}}\label{subsubsec:docMeta}
+
+One of the subjects is the command \cmd{DocumentMetadata} 
+described in~\cite{DocMetaDataSuppCode}, Section 2. 
+We used it as 
+%
+\begin{verbatim}
+\DocumentMetadata{uncompress}
+\end{verbatim}
+%
+to avoid compression of the created PDF file, mainly for debugging, 
+but it is significant even with empty argument list, 
+e.g. it forces \xelatex{} displaying \texttt{ModDate} in addition to \texttt{CreationDate}. 
+Another effect, which can be considered a bug is, 
+that overwriting of meta info by command \cmd{hypersetup} offered by package \texttt{hyperref} 
+does not work anymore. 
+This applies e.g. to dates but also to creator and producer. 
+This bug does not corrupt reproducibility but security. 
+
+Another effect comes into the game because \cmd{DocumentMetadata} 
+has default value \texttt{xmp=true} which means that XMP metadata 
+described in~\cite{ISO16684-1} is written. 
+This is an XML format and can be retrieved through 
+%
+\begin{verbatim}
+  pdfinfo -meta xxx.pdf
+\end{verbatim}
+
+Seemingly, this does not corrupt reproducibility but may be considered to degrade security. 
+Partially, it is a surrogate for the document information dictionary 
+as described in Section~\ref{subsec:trailerInfoDict}. 
+
+Readers who refuse using \cmd{DocumentMetadata} and  use use \xelatex{} 
+may take refuge to switching off compression via 
+%
+\begin{verbatim}
+  \special{dvipdfmx:config z 0}
+\end{verbatim}
+
+\subsubsection{Manipulating the trailer identifier}\label{subsubsec:trailerId}
+
+
+
+
+\section{To be clarified}\label{sec:TBC}
+
+Note that \xelatex{} works as the other engines for PDF, 
+whereas it has XDV instead of DVI as alternative format. 
+Thus, the format DVI is ignored. 
+See the manual. 
+
+
+\bibliographystyle{alpha}
+\bibliography{../lit,../litTools}{}% chktex 11 
+
+
+\end{document}
+
+

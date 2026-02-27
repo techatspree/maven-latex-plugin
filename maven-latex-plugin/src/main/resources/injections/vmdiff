@@ -1,0 +1,2 @@
+#!/bin/sh -
+diff-pdf-visually $1 $2 && diff <(pdfinfo -rawdates $1) <(pdfinfo -rawdates $2)

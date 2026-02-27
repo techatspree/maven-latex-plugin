@@ -1,0 +1,88 @@
+\chapter{Gaps}\label{chap:gaps}
+
+Only figures created with xfig and stored as files pdf and ptx 
+may be integrated into a \LaTeX{} document. 
+This could be extended to a broader variety of export file formats. 
+The problem is, that fig-files to not contain information on the export
+format. 
+This has to be either given elsewhere in a config file 
+or determined by pre-parsing the tex-files. 
+
+There is no support for pictures in \gls{gif}-format 
+but maybe a converter to \gls{png} is all needed. 
+
+There is no proper make-mechanism taking dependencies into account. 
+Thus all documents in all formats specified are remade, 
+whether they changed or not. 
+
+Also, if more than one target is created from one \LaTeX{} source, 
+common steps are redone for each target. 
+E.g.~if pdf and html are created, 
+pdf creation is done twice and if pdf, html, odt and docx are created, 
+odt is done twice (once for odt second for docx) 
+and pdf is done even trice: 
+once for pdf itself, once for odt and once for docx. 
+
+% This has to be removed. 
+Creating more than one index is supported only 
+via package \pkg{splitidx} in conjunction with \texttt{SplitIndex}. 
+There are the following packages also supporting multiple indices 
+but not supported officially: 
+\pkg{index} described in~\cite{IndexP}, 
+\pkg{amsmidx} described in~\cite{AmsmidxP} and 
+\pkg{imakeidx} described in~\cite{ImakeidxP}.
+Note that the package \pkg{multind} is obsolete. 
+
+According to~\cite{GloP}, Section~1, 
+there are three options to create a glossary, 
+whereas this software supports option two only, 
+which uses \texttt{makeindex}. 
+Also, although the package \pkg{glossaries} itself 
+supports multiple glossaries via the command
+%
+\begin{lstlisting}[language=TeX, basicstyle=\small]
+\newglossary[log-ext]{name}{in-ext}{out-ext}{title}[counter]
+\end{lstlisting}
+%
+described in~\cite{GloP}, Section~12, 
+this software only supports creating a single glossary. 
+
+Reading~\cite{GloP}, Section~15.1, the glossarystyle \texttt{index} 
+seems to allow creating indices through the \pkg{glossaries} package 
+making any index-package obsolete. 
+
+For development given the \LaTeX{} main file \texttt{xxx.tex}, 
+the files \texttt{xxx.pdf}, \texttt{xxx.pdf}, \texttt{xxx.synctex.gz} 
+and \texttt{xxx.log} are vital. 
+Thus it would be fine to have a goal which touches these files 
+or to have a parameter to touch these prior to creation 
+to avoid that these are cleaned up after the run. 
+This is an alternative to setting parameter \texttt{cleanup} to \texttt{false}. 
+On the other hand, goal \texttt{grp} creating graphics 
+in conjunction with a development tool like \auctex{} for \texttt{emacs}, 
+allows to compile a latex main file in that tool 
+and thus to access \texttt{xxx.log} and \texttt{xxx.pdf}. 
+
+There are lots of possible improvements to be done on the goal \emph{check}. 
+
+
+The ant-task does not allow creating single formats, e.g.~pdf selectively. 
+
+The ant-build is not completed: tests are not run and 
+test runs are no prerequisite for installation. 
+
+This manual is not finished. 
+To test the overall functionality of the maven-plugin and of the ant-task 
+described here, this manual is created through plugin and task. 
+
+Support for djvu via pdf2djvu: 
+pdf2djvu -o output\_file input\_file
+
+pdf2dsc
+(ps with document structuring convention) 
+
+pdf2svg is not so useful. 
+
+pdftohtml -c is also not bad, 
+
+consider also pdftocairo for creation of tiff and ps and many others. 

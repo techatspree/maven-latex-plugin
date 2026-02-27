@@ -1,0 +1,5 @@
+\documentclass{article}
+\usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
+\begin{document}
+computed by python: \pys[sname]{1+1=!{1+1}}
+\end{document}

@@ -1,0 +1,211 @@
+\chapter{Bugs}\label{chap:bugs}
+
+Seemingly, indices and glossaries based on page numbers 
+(there seems to be an alternative to this), 
+may be out of date with the current algorithm: 
+First \lualatex{} (or some other converter) is run to create the raw index. 
+Then a sorting program like \texttt{makeindex} is called 
+which creates the sorted, collected and formatted index. 
+Then one \lualatex{} run is required to include this index 
+into the created pdf-file. 
+A second \lualatex{} run is required 
+to write the index to the table of contents, as typically required. 
+The problem with this procedure is, 
+that the subsequent runs of \lualatex{} change the raw index 
+which requires rerunning \texttt{makeindex} 
+and after that again \lualatex. 
+
+One way to solve that problem is to use the package \pkg{imakeidx} 
+(improved makeidx) instead of the traditional package \pkg{makeidx}. 
+This offers also multiple indices, which is another gap to be filled. 
+Seemingly, \pkg{imakeidx} does not support glossaries 
+and so for these, another solution is required, 
+although the problem is the same. 
+
+Packages \pkg{robustindex} and \pkg{robustglossaries} 
+% **** reference? 
+offer another solution. 
+The advantage would be to have handled both index and glossary. 
+Also support of hyperrefs within indices and glossaries seem to be expanded. 
+On the other hand, the two packages seem experimental 
+and seem to play with package \pkg{hyperref}. 
+
+The current implementation is based on package \pkg{rerunfilecheck} 
+which works for index but not for glossary. 
+
+Check whether \pkg{glossaries} option \texttt{autorun} makes sense. 
+Seems to run the command \texttt{makeglossaries} after each latex run. 
+But how to find out whether to rerun latex??? 
+
+Pattern to identify latex main file: 
+Documentation: shall not include the environment 
+\texttt{documentclass/documentstyle} in an input. 
+Also check \texttt{RequiresPackage} 
+and check whether \texttt{(re)newcommand} is possible % chktex 36
+or makes sense. 
+
+Maybe there is a bug in the number of reruns: 
+I think, makeglossaries is like bibtex needing two latex reruns 
+and not like makeindex, which requires a single rerun. 
+
+Since this software heavily relies on \pkg{rerunfilecheck}, 
+maybe a warning if not used is a good idea. 
+
+Figures are missing in html output 
+Formulae are missing in html output. 
+Index is s missing in html output. 
+Glossary occurs in the toc but is not numbered. 
+
+Did not find a way to add a numbered entry for the glossary 
+into the table of contents. 
+
+The pattern \texttt{(!\ )} detects an error only % chktex 37
+\texttt{-no-file-line-error} (which is the default) is set 
+but does not work with option \texttt{-file-line-error}. 
+This yields 
+%
+\begin{verbatim}
+./manualLMP.tex:2500: Undefined control sequence.
+l.2500 \bla
+\end{verbatim}
+%
+instead of 
+%
+\begin{verbatim}
+! Undefined control sequence.
+l.2500 \bla
+\end{verbatim}
+
+I ask myself how to detect this error in file line error mode! 
+
+%\bla
+
+Pattern matching is line-wise. 
+This is inappropriate for patternLatexMainFile 
+but also for further patterns like multiline-warnings. 
+
+Also there seems to be a bug in java's regex package, 
+which leads to non-termination: 
+pattern \texttt{\~(\textbackslash s*)*xx} seems not to terminate. % chktex 1
+
+A problem is also that the ending ``\texttt{.svg}'' may occur as a source 
+and as a target file of htlatex. 
+Thus \texttt{mvn latex:clr} tries to delete the targets of the svg-files, 
+although these are not sources but themselves targets. 
+
+A way to solve this problem is, 
+to apply the delete pattern to graphic source files 
+and the files created. 
+CAUTION\@: for svg, 
+the files created by the latex run shall be taken into account. 
+A warning shall be issued for each matching. 
+
+
+Target html: references to figures are missing. 
+jpg and png-pictures oddly represented. 
+With option svg: problem. 
+Leave away, then at least the formula occurs. 
+But then, from the mixed pictures only the text occur, 
+whereas the pdf is still missing. 
+Maybe htlatex still relies on eps-format. 
+Table is very wide. 
+Umlauts and sz maybe also not properly represented. 
+
+Still for target html: currently all aspects making problems 
+are deactivated: 
+Figures, index and glossary. 
+For the index have a look at the log-file. 
+These aspects must be re-integrated as soon as possible. 
+
+For html: run package tex4ht with option \texttt{info} 
+to obtain further options and their descriptions. 
+Also add a proper description into this manual. 
+
+For files \texttt{.directory} (``\texttt{.}'' first), 
+the separation of root and suffix does not work. 
+Maybe the best to ignore files like that. 
+
+Target \texttt{txt}: seems as if index and glossary not up to date. 
+
+target \texttt{pdf}: Idea to run \texttt{makeglossaries} 
+always prior to \lualatex. 
+
+Maybe this is more a gap than a bug: 
+support for dvi-creation should be provided separately. 
+
+For target dvi, 
+neither png nor jpg-pictures are included. 
+The other formats work with \texttt{\$pdfViaDvi} set. 
+Note that the postscript-files must be in the same directory 
+as the dvi, probably because it includes them 
+only by link. 
+
+For the other case, \texttt{\$pdfViaDvi} unset, this requires some research. 
+
+Also for creation of the txt-format, 
+\texttt{\$pdfViaDvi} must be set. 
+
+FIXME\@: on bibliography, index and glossary 
+
+The application \texttt{chktex} does not necessarily return an error code 
+if something goes wrong, e.g.~reading \texttt{-l chktexrc}. 
+Thus only in debug mode one can recognize the misbehavior. 
+This knocks out detection of build failures. 
+
+Also I would like to replace the global \texttt{chktexrc} by a local version, 
+via `\texttt{-g0 -l chktexrc.my}'. 
+The problem is, 
+that the file is interpreted relative to the working directory. 
+
+The application chktex has an option \texttt{-I} to specify, 
+whether input files shall be read. 
+If not, creation of graphics is immaterial. 
+I can also imagine, that one wants to configure, 
+whether graphics shall be created or not. 
+
+It may make sense to define in \texttt{chktexrc} another verbosity level 
+with format allowing to decide whether there is a warning/error/message. 
+Now I modified the levels that all but the headlines start with blank. 
+This makes it easy in -v1 and in -v2 to detect warning/error/message 
+at the beginning of a line, 
+without the risk of false error because a message is logged 
+on a text starting with the word ``error''. 
+
+
+Maybe this is not a bug 
+but an inconsistency between \auctex{} and local config: 
+Running with the plugin, e.g.~with \pdflatex, we obtain 
+%
+\begin{Verbatim}[fontsize=\tiny]
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.8.9)  30 JAN 2017 10:58
+entering extended mode
+ \write18 enabled.
+ Source specials enabled.
+ %&-line parsing enabled.
+**test.tex
+(./test.tex
+\end{Verbatim}
+%
+whereas running from within Emacs with \auctex{} we obtain 
+%
+\begin{Verbatim}[fontsize=\tiny]
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+\end{Verbatim}
+%
+and also the behavior is slightly different, 
+e.g.~on file 
+% TBD: clarify why this does not work with lstlisting...
+\begin{verbatim}
+\documentclass{article}
+\begin{document}
+ äö¿
+\end{document}
+\end{verbatim}
+
+The parameter \texttt{patternReRunLatex} 
+treated in Section~\ref{subsec:patternReRunLatex} 
+needs more careful investigation. 
+This is done to some extent in class \texttt{org.m2latex.core.Settings}.  
+

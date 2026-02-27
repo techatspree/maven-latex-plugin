@@ -1,0 +1,23 @@
+
+\ifpdf%
+  \usepackage{graphicx}% [pdftex] 
+  % sometimes comes in with svg import 
+  \usepackage{transparent}
+  % warning transparent package: 
+  % loading aborted if not pdf-mode 
+  % can be extended using l3opacity
+\else
+  % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
+  %
+  \IfPackageLoadedTF{tex4ht}{%
+    \usepackage[dvipdfmx]{graphicx}
+    %
+  }{%
+    \ifxetex%
+      \usepackage{graphicx}
+    \else
+      \usepackage[dvipdfmx]{graphicx}
+    \fi
+  }% tex4ht not loaded 
+  %\usepackage{bmpsize}% not for xelatex 
+\fi%ifpdf

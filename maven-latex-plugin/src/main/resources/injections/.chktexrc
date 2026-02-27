@@ -1,0 +1,29 @@
+# config file for chktex 
+# adapted to latex-maven-plugin and to the according ant task 
+
+# LTeX: SETTINGS enabled=false
+
+Silent {
+  \textbackslash
+}
+
+WipeArg {
+  # for package listings 
+  \lstinputlisting:[]{} \lstset:{}
+  # for commands \textttNoChk and \inputNoChk both defined in header.tex 
+  #\textTT:{}
+  \textttNoChk:{}
+  \inputNoChk:{}
+}
+
+VerbEnvir
+{
+  Verbatim lstlisting
+}
+
+CmdLine {
+  --nowarn 3 --nowarn 17
+}
+
+UserWarn={
+}

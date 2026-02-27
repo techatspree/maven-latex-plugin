@@ -1,0 +1,1875 @@
+/* @override http://localhost/k2/wp-content/themes/k2103/style.css */
+
+/*
+Theme Name: K2
+Theme URI: http://getk2.com
+Description: <strong><a href="themes.php?page=k2-options">Configure K2</a></strong> or visit the <a href="http://groups.google.com/group/k2-support">support forums</a>, <a href="http://code.google.com/p/kaytwo/w/list">the wiki</a> or <a href="http://code.google.com/p/kaytwo/issues/list">the bug tracker</a>. K2 was developed by <a href="http://binarybonsai.com/">Michael</a>, <a href="http://chrisjdavis.org/">Chris</a>, <a href="http://zeo.unic.net.my/">Zeo</a>, <a href="http://stevelam.org/">Steve</a>, Ben and <a href="http://xentek.net/">Eric Marden</a>, and is licensed under the <a href="http://www.opensource.org/licenses/gpl-license.php">GPL</a>.
+Version: 1.0.3
+Author: Various Artists
+Author URI: http://getk2.com/
+Tags: blue, custom-header, fixed-width, flexible-width, one-column, two-columns, three-columns, theme-options, threaded-comments, microformats, translation-ready, light
+
+The Real K2: http://en.wikipedia.org/wiki/K2
+
+$Revision: 932M $
+*/
+
+/* Reset CSS */
+/* http://meyerweb.com/eric/tools/css/reset/ */
+/* v1.0 | 20080212 */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	}
+
+
+/* Typography */
+
+body {
+    font-family: "Source Sans Pro", "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
+	}
+
+strong, em, b, i {
+    font-family: "Source Sans Pro", "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
+	}
+
+h1, .blog-title, h2, h3 {
+	font-family: "Source Sans Pro", "Trebuchet MS", Verdana, sans-serif;
+	}
+
+h4, h5, h6 {
+	font-family: "Source Sans Pro", Verdana, sans-serif;
+	}
+
+
+/* Page Structure */
+
+body {
+	font-size: 75%;  
+        /*font-sie: 65%;  resets 1.1em to 11px */ 
+	color: black;
+	font-weight: 330;
+	background: #fefefe;
+	text-align: center;
+	}
+
+body.lang-ar,
+body.lang-fa,
+body.lang-he,
+body.lang-hi,
+body.lang-km,
+body.lang-ko,
+body.lang-ja,
+body.lang-th,
+body.lang-zh {
+	font-size: 75%; /* Resets 1em to 12px, for internationalized K2s */
+	}
+
+#page,
+body.smartposition #rollingarchives {
+	background: white;
+	}
+
+
+#page {
+	text-align: left;
+	margin: 0 auto;
+	margin-top: 20px;
+	position: relative;
+	border: 1px solid #eee;
+	clear: both;
+	box-shadow: 2px 2px 10px 2px #bfbfbf;
+	-webkit-box-shadow: 2px 2px 10px 2px #bfbfbf;
+	-moz-box-shadow: 2px 2px 10px 2px #bfbfbf; 
+	}
+
+.columns-one #page {
+	width: 560px;
+//	width: 640px;
+	}
+
+.columns-two #page {
+//	width: 780px;
+	width: 820px;
+	}
+
+.columns-three #page {
+	width: 950px;
+	}
+
+#header {
+	position: relative;
+	height: 200px;
+//	background: #3371A3;
+	background: #fefefe;
+	background-position: top right;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	border-bottom: 1px solid #afafaf;
+	}
+
+.content {
+	padding: 0 20px 30px;
+	}
+
+body.columns-two #primary-wrapper {
+	float: left;
+	margin-right: -220px;
+	width: 100%;
+	}
+
+body.columns-two #primary {
+	margin-right: 220px;
+	}
+
+body.columns-two .secondary {
+	float: right;
+	}
+
+#primary {
+	position: relative;
+	float: left;
+	width: 540px;
+	padding: 10px;
+	}
+
+* html #primary {
+	display: inline;
+	}
+
+body.sidebars-none #primary-wrapper {
+	margin: 0px;
+	float: none;
+	}
+
+body.sidebars-none #primary {
+	float: none;
+	width: auto !important;
+	margin: 0px !important;
+	}
+
+.columns-one .secondary {
+	width: 240px;
+	border-top: 1px solid #eee;
+	}
+
+.columns-three .secondary {
+	width: 175px;
+	}
+
+.secondary {
+	width: 200px;
+	float: left;
+	font-size: 1em;
+	line-height: 1.5em;
+	color: #666;
+	padding: 0 10px;
+	overflow: hidden;
+	}
+
+#sidebar-2 {
+	clear: right;
+	}
+
+.comments {
+	clear: both;
+	text-align: left;
+	margin: 30px 0 0;
+	position: relative;
+	}
+
+
+/* Main Menu in Header */
+
+.admintab a {
+	position: fixed;
+	top: 5px;
+	right: 5px;
+	color: #333 !important;
+	background: #cfcfcf;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+.admintab a:hover {
+	background: #333 !important;
+	color: white !important;
+}
+
+ul.menu {
+	position: absolute;
+	white-space: nowrap;
+	bottom: 0;
+	margin: 0 20px;
+	}
+
+ul.menu,
+ul.menu li {
+	float: left;
+	list-style: none;
+	}
+
+ul.menu li {
+	margin-right: 4px;
+	}
+
+ul.menu li a {
+	display: block;
+	padding: 5px 15px;
+	font-size: .8em;
+        text-transform: uppercase;
+	letter-spacing: .2em;
+	color: black;
+        background: #fff;
+        border: 1px solid #afafaf;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+        margin-bottom: -1px;
+	}
+
+ul.menu li a:hover {
+	background: #333;
+	color: #eee;
+        border: 1px dotted #333; 
+	text-decoration: none;
+	}
+
+ul.menu li.current_page_item a,
+ul.menu li.current_page_item a:hover,
+ul.menu li.current_page_ancestor a,
+ul.menu li.current_page_ancestor a:hover,
+body.single ul.menu li.blogtab a,
+body.single ul.menu li.blogtab a:hover {
+	color: #333;
+	background: #ffe066;
+	text-decoration: none;
+	}
+
+/* Sidebar Subpages Menu */
+
+.sb-pagemenu ul {
+	margin-left: 10px;
+	}
+
+.sb-pagemenu ul ul {
+	margin-top: 2px;
+	}
+
+.sb-pagemenu ul ul .page_item {
+	margin-left: 10px;
+	padding: 0;
+	}
+
+
+/* Headings */
+
+h1 {
+	font-size: 3em;
+	}
+
+.blog-title {
+	font-size: 2em;
+	font-style: normal;
+	font-weight: 300;
+        text-transform: uppercase;
+	letter-spacing: .2em;
+	padding: 75px 40px 0;
+        color: black;  
+	}
+
+.blog-title a,
+#header .description {
+	text-decoration: none;
+	}
+
+.blog-title a:hover {
+	border-bottom: 1px dotted #666;
+	}
+
+#header .description { /* Description in header */
+	font-size: 1em;
+	letter-spacing: .65px;
+	margin: 0 40px;
+	color: silver;
+	}
+
+h2 {
+	font-size: 2.25em;
+	font-weight: 300;
+	margin-top: 1.5em;
+	}
+
+#rollingarchives.emptypage {
+	display: none;
+	}
+
+.page-head {
+	margin: 10px 0 20px;
+	text-align: center;
+	font-weight: 400;
+	}
+
+.page-head h1 {
+	font-size: 2.25em;
+	font-weight: 400;
+	}
+
+.page-head h2 {
+	color: #999;
+	font-size: 2.0em;
+	font-weight: normal;
+	text-transform: lowercase;
+	}
+
+.secondary h4 { /* Secondary H4 is sidebar headlines */
+	font-size: 1.5em;
+	font-weight: 300;
+	padding: 0;
+	display: block;
+	color: #444;
+	margin-bottom: 5px;
+	}
+
+.entry-title, h3 { /* H3 is entry headlines. H4 is comments and replyform headlines */
+	font-size: 2em;
+	font-weight: 300;
+	color: #333;
+	}
+
+h4 {
+	font-size: 1.6em;
+	font-weight: 300;
+        letter-spacing: .05em;
+	color: #444;
+	}
+
+.entry-title {
+	margin-right: 40px;
+	}
+
+.four04 .entry-title,
+body.page #current-content .entry-title {
+	margin-left: 40px;
+	text-align: center;
+	}
+
+.entry-content h3 {
+	font-size: 1.8em;
+	font-weight: normal;
+	margin-top: 25px;
+	}
+
+.entry-content h4,
+.entry-meta h4 {
+	font-size: 1.5em;
+	font-weight: normal;
+	margin-top: 25px;
+	}
+
+.k2-asides h3 {
+	font-size: 1.6em;
+	font-weight: normal;
+	}
+
+.entry-head {
+	margin-top: 10px;
+	position: relative;
+	}
+
+body.page .entry-content h3 {
+	font-size: 1.7em;
+	display: block;
+	padding: 15px 0 0;
+	}
+
+body.page .entry-content h4 {
+	font-size: 1.5em;
+	display: block;
+	padding: 15px 0 0;
+	}
+
+.secondary div {
+	margin: 20px 0 0;
+	padding: 0;
+	position: relative;
+	}
+
+.secondary div div {
+	margin: 0;
+	}
+
+#primary .metalink a, #primary .metalink a:visited, /* The Metalink class takes care of the comments, edit, rss and trackback links next to the titles */
+.secondary .metalink a, .secondary .metalink a:visited,
+.secondary span a, .secondary span a:visited {
+	color: #999;
+	font-weight: normal;
+	}
+
+#primary .hentry .entry-head .metalink {
+	font-size: 1.8em;
+	text-transform: lowercase;
+	margin-left: 15px;
+	}
+
+#primary .k2-asides .entry-head .metalink {
+	font-size: 1.4em;
+	}
+
+.single #primary .k2-asides .entry-content {
+	font-size: 1.5em;
+	color: #999;
+	}
+
+.comment-meta {
+	margin: 0 15px 0 0;
+	float: none;
+	}
+
+.comment-login, .comment-welcomeback {
+	margin-top: 15px;
+	color: #777;
+	}
+
+#comment-personaldetails {
+	margin-top: 10px;
+	}
+
+.feedicon { /* Next to Comment Section Headline */
+	border: 0 !important;
+	padding: 0 !important;
+	}
+
+.feedlink { /* On the sidebar */
+	border: none;
+	padding: 2px;
+	padding-right: 20px;
+	background: url('images/feed.png') right center no-repeat;
+	height: 16px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #777;
+	}
+
+.feedlink span {
+	visibility: hidden;
+	}
+
+.feedlink:hover span {
+	visibility: visible;
+	}
+
+.secondary .k2-asides {
+	margin: 0;
+	padding: 0 0 10px;
+	word-spacing: -1px;
+	}
+
+.secondary .k2-asides p {
+	display: inline;
+	}
+
+.secondary .k2-asides .metalink {
+	padding-left: 0px;
+	}
+
+.secondary span a {
+	margin-left: 10px;
+	}
+
+.entry-head .entry-edit {
+	position: absolute;
+	right: 0;
+	top: 7px;
+	font-size: 1.1em;
+	display: inline;
+	}
+
+.entry-title, .entry-title a, .entry-title a:visited,
+h2, h2 a, h2 a:visited,
+h3, h3 a, h3 a:visited,
+h4, h4 a, h4 a:visited {
+	color: #444;
+	}
+
+.entry-title, .entry-title a, .entry-title a:hover, .entry-title a:visited,
+h2, h2 a, h2 a:hover, h2 a:visited,
+h3, h3 a, h3 a:hover, h3 a:visited,
+h4, h4 a, h4 a:hover, h4 a:visited {
+	text-decoration: none;
+	}
+
+.entry-meta {
+	font-size: 1em;
+	line-height: 1.6em;
+	color: #bbb;
+	}
+
+.entry-meta a,
+.comment-meta a,
+.entry-date,
+.entry-time {
+	color: #777;
+	}
+
+.entry-meta div {
+	display: inline;
+	}
+
+.entry-head .entry-meta {
+	min-height: 16px;
+	}
+
+.image-meta abbr,
+abbr.entry-date {
+	border: none;
+	}
+
+.entry-pages {
+	font-size: 1.2em;
+	}
+
+.entry-pages span {
+	font-weight: 400;
+	}
+
+.entry-tags {
+	padding: 2px 0px;
+	}
+
+.entry-head .entry-tags {
+	display: block;
+	}
+
+.entry-tags a {
+	text-transform: lowercase;
+	}
+
+div.comment-reply {
+	display: inline;
+}
+
+.entry-edit a,
+a.quoter_comment,
+a.quoter_page,
+a.comment_quote_link,
+a.comment-edit-link,
+a.comment-reply-link,
+a#cancel-comment-reply-link,
+.comment-edit a { /* Rounded Buttons */
+	border: none;
+	padding: 4px 8px;
+	height: 16px;
+	line-height: 16px;
+	color: #333;
+	background: #e7e7e7;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	display: inline;
+	}
+
+#pinglist a.comment-edit-link {
+	padding: 2px 8px;
+	margin-left: 10px;
+	font-size: .8em;
+	}
+
+#commentlist #respond a.quoter_page,
+#commentlist #respond a#cancel-comment-reply-link {
+	background: #ddd;
+}
+
+.entry-edit a:hover,
+a.quoter_comment:hover,
+a.quoter_page:hover,
+#commentlist #respond a.quoter_page:hover,
+a.comment_quote_link:hover,
+a.comment-edit-link:hover,
+a.comment-reply-link:hover,
+#commentlist #respond a#cancel-comment-reply-link:hover,
+a#cancel-comment-reply-link:hover,
+.comment-edit a:hover {
+	background-color: #333;
+	color: #fff;
+	border-bottom: 1px dotted #666;
+//	text-decoration: none;
+	}
+
+div.quoter_page_container {
+	margin: 5px 0;
+	display: none; /* Hidden because it's not too nice an implementation */
+}
+
+.commentslink {
+	padding: 2px 0;
+	}
+
+
+/* Primary Contents */
+
+.hentry {
+	margin: 0 0 25px;
+	position: relative;
+	}
+
+.entry-content {
+	font-size: 1.2em;
+	line-height: 1.6em;
+	text-align: left;
+	color: #444;
+	}
+
+.entry-content p,
+.entry-content ul,
+.entry-content ol,
+.entry-content div,
+.entry-content blockquote {
+	margin: 13px 0;
+	}
+
+#dynamic-content .k2-asides .entry-content p,
+#dynamic-content .k2-asides .entry-content ul,
+#dynamic-content .k2-asides .entry-content ol,
+#dynamic-content .k2-asides .entry-content div,
+#dynamic-content .k2-asides .entry-content blockquote {
+	margin: 5px 0;
+	}
+
+#dynamic-content .k2-asides {
+	margin: 15px 0;
+	}
+
+#dynamic-content .k2-asides .entry-head,
+#dynamic-content .k2-asides .entry-foot {
+	display: none;
+	}
+
+#dynamic-content .k2-asides .entry-content {
+	display: block;
+	border-left: 2px solid #ddd;
+	padding-left: 20px;
+	}
+
+.asides-permalink {
+	font-weight: 400;
+	}
+
+.entry-content .map div { /* Google Maps Support */
+	margin: 0;
+	}
+
+.metalinks {
+	margin-top: 3px;
+	}
+
+#primary a.post-edit-link:hover,
+#primary a.comment-edit-link:hover,
+#primary a.comment-reply-link:hover {
+	border-bottom: 1px dotted #666;
+	text-decoration: none;
+}
+
+.columns-three .template-image #primary {
+	width: 670px;
+	}
+
+.template-image .entry-foot {
+	position: absolute;
+	top: 0;
+	right: -220px;
+	width: 200px;
+	padding-top: 180px;
+	}
+
+.columns-one .template-image .entry-foot {
+	position: relative;
+	width: auto;
+	top: auto;
+	right: auto;
+	padding-top: 0;
+	margin-right: 210px;
+	}
+
+.columns-one .template-image #gallery-nav {
+	right: -210px;
+	top: 0;
+	width: 200px;
+	border-bottom: none;
+	}
+
+.entry-foot h5 {
+	font-size: 1.5em;
+	font-weight: normal;
+	}
+
+#gallery-nav img {
+	height: 96px;
+	width: 96px;
+	}
+
+#gallery-nav {
+	top: 3.2em;
+	margin: 0;
+	position: absolute;	
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+	}
+
+#gallery-nav a {
+	text-decoration: none;
+	}
+
+#gallery-nav a span {
+	display: block;
+	}
+
+.attachment .hentry {
+	margin-left: 60px;
+	}
+
+.template-image .hentry {
+	margin-left: 0;
+	}
+
+.attachment-icon {
+	position: absolute;
+	top: 0;
+	left: -60px;
+	}
+
+.attachment-image {
+	text-align: center;
+	}
+
+.attachment-image .caption {
+	margin: 0;
+	}
+
+.attachment-image .caption p {
+	display: inline;
+	}
+
+.image-meta {
+	padding: 10px 0 10px 20px;
+	list-style-type: circle;
+	}
+
+.image-meta li {
+	margin: 3px 0;
+	}
+
+.image-meta span {
+	font-weight: 400;
+	display: block;
+	float: left;
+	width: 8em;
+	}
+
+
+/* Comments */
+
+.comments .metalinks {
+	display: none; /* Rarely used these days, so let's hide it. */
+}
+
+.commentsrsslink {
+	padding: 2px 0;
+	margin-right: 10px;
+	height: 16px;
+	}
+
+.trackbacklink {
+	padding: 2px 0;
+	height: 16px;
+	}
+
+.commentsrsslink a, .trackbacklink a {
+	color: #999;
+	padding: 2px;
+	}
+
+.nopassword {
+	text-align: center;
+	}
+
+#commentlist {
+	margin: 10px 0;
+	position: relative;
+	}
+
+#commentlist .children {
+	margin-left: 20px;
+	}
+
+#commentlist .children li {
+	}
+
+#commentlist li {
+	margin: 10px 0 0;
+	list-style: none;
+	}
+
+#commentlist .comment {
+	padding: 10px;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	}
+
+#commentlist li.comment {
+	padding: 0;
+	}
+
+#commentlist li .comment-content {
+	font-size: 1.2em;
+	line-height: 1.5em;
+	}
+
+.comment-content p,
+.comment-content ul,
+.comment-content ol,
+.comment-content div,
+.comment-content blockquote {
+	margin: 13px 0;
+	}
+
+#commentlist li .comment-meta {
+	padding: 2px 0;
+	display: block;
+	}
+
+#commentlist li img {
+	padding: 0;
+	border: none;
+	}
+
+#commentlist .avatar,
+#commentlist .gravatar {
+	float: right;
+	}
+
+#commentlist .comment-author {
+	font-size: 1em;
+	text-transform: uppercase;
+	font-weight: normal;
+	letter-spacing: 0.2em;
+	}
+
+.comment-author cite {
+	font-style: normal;
+	}
+
+#commentlist li .counter {
+	display: none;
+	font: normal 1.5em 'Century Gothic', 'Lucida Grande', Arial, Helvetica, Sans-Serif;
+	color: #999;
+	float: left;
+	width: 35px;
+	}
+
+.byuser {
+	background: #f6f7f8;
+	}
+
+.bypostauthor {
+	background: #f6f6f6;
+	}
+
+.bypostauthor > div.comment blockquote {
+	color: #333;
+	background: url('images/quote.png') no-repeat 10px 0;              
+	}
+
+#respond {
+	position: relative;
+	margin-top: 20px;
+	}
+
+#commentlist #respond { /* For threaded comments */
+	background: #eee;
+	margin-top: 15px;
+	padding: 10px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
+
+#commentlist .cancel-comment-reply {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+	padding: 2px 0;
+	}
+
+#pinglist {
+	font-size: 1.2em;
+	padding: 0;
+	margin: 10px 0 10px;
+	background: #f6f7f8;
+	}
+
+#pinglist li {
+	margin-left: 40px;
+	padding: 7px 0;
+	list-style: none;
+	}
+
+#pinglist li small {
+	font-size: 0.8em;
+	display: block;
+	}
+
+#pinglist li .counter {
+	display: none;
+	}
+
+#pinglist li span.favatar img {
+	margin-left: -25px;
+	border: none;
+	padding: 0;
+	float: left;
+	}
+
+#pinglist li img {
+	padding: 0;
+	border: none;
+	}
+	
+#leavecomment, .comments #loading, #comments-closed-msg {
+	text-align: center;
+	margin: 30px 0 20px !important;
+	color: #ddd;
+	font-size: 1.7em;
+	}
+
+.comments #loading {
+	margin-top: 20px !important;
+	}
+
+#comments-closed-msg {
+	margin-bottom: 40px !important;
+	}
+
+.comments #commenterror {
+	display: none;
+	line-height: 2.0;
+	padding: 5px;
+	color: #FF0000;
+	background-color: #FFFF99;
+	}
+
+.comments #commentload {
+	padding-top: 3px;
+	float: right;
+	vertical-align: middle;
+	height: 18px;
+	width: 18px;
+	background: url('images/spinner.gif') center center no-repeat;
+	}
+
+.comments form {
+	clear: both;
+	padding: 1px 0 10px;
+	}
+
+.comments input[type=text], .comments textarea {
+	padding: 2px;
+	color: #777;
+	}
+
+input[type=text]:focus, textarea:focus {
+	background: #fff;
+	color: #333;
+	border-color: #666;
+	}
+
+.comments form input[type=text] {
+	width: 45%;
+	margin: 5px 5px 1px 0;
+	}
+
+.comments textarea {
+	width: 99%;
+	margin: 10px 0;
+	border: 1px solid #888;
+	}
+
+.comments form #submit {
+	float: right;
+	}
+
+#footer {
+	clear: both;
+	margin: 0 auto;
+	padding: 20px 0 40px;
+	text-align: center;
+	color: #777;
+	}
+
+#footer p {
+	line-height: 1.6em;
+	}
+
+#footer a {
+	color: #888;
+	font-weight: normal;
+	}
+
+#footer a:hover {
+	border: none;
+	border-bottom: 1px dotted #666;
+	text-decoration: none;
+	color: #000;
+	}
+
+#footer .wp-version,
+#footer .k2-version {
+	display: none;
+	padding-left: 0.3em;
+	}
+
+.footerstats {
+	display: none;
+	}
+
+
+/* Links */
+
+a:hover, a:visited:hover {
+	border-bottom: 1px dotted #666;
+	}
+
+h2 a:hover, h2 span a:hover {
+	color: #27d !important;
+	border-bottom: 1px dotted #666;
+	}
+
+a {
+	color: #27d;
+	text-decoration: none;
+	}
+
+.entry-content a:visited {
+	color: #41b;
+	}
+
+.more-link {
+	border-bottom: 1px dotted #666;
+	color: #22f;
+}
+
+/* Various Tags and Classes */
+
+.hidden {
+	position: absolute !important;
+	left: 0px;
+	top: -500px !important;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	}
+
+.clear {
+	clear: both;
+	}
+
+a img {
+	border: none;
+	}
+
+img.noborder {
+	border: none !important;
+	}
+
+.aligncenter,
+.center {
+	text-align: center;
+	}
+
+.entry-content .aligncenter,
+img.center,
+img[align="center"] {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	}
+	
+.entry-content .alignright,
+img[align="right"] {
+	float: right;
+	margin: 0 0 4px 8px;
+	display: block;
+	}
+
+.entry-content .alignleft,
+img[align="left"] {
+	float: left;
+	margin: 0 8px 4px 0;
+	display: block;
+	}
+	
+a[rel~="attachment"] img,
+.gallery a img,
+.wp-caption {
+	background-color: #F3F3F3;
+	border: 1px solid #ddd;
+	padding: 3px;
+	text-align: center;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
+
+a[rel~="attachment"] img:hover,
+.gallery a img:hover,
+.wp-caption:hover {
+	padding:2px;
+	border: 1px dotted #27d;
+	}
+
+.wp-caption a img,
+.wp-caption a img:hover {
+	padding: 4px 0px 0px;
+	border: 0 none;
+	}
+
+.wp-caption .wp-caption-text {
+	margin: 4px 0 2px;
+	}
+
+.smallcaps {
+	font-variant: small-caps;
+	}
+
+abbr[title],
+acronym[title] {
+	cursor: help;
+	}
+
+abbr.entry-date {
+	cursor: inherit;
+	}
+
+small {
+	font-size: 0.9em;
+	line-height: 1.5em;
+	}
+
+small, strike {
+	color: #777;
+	}
+	
+code {
+	font-size: 1.1em;
+	}
+
+blockquote {
+	margin: 20px 0;
+	padding: 0 20px 0 50px;
+	color: #333;
+	background: url('images/quote.png') no-repeat 10px 0;
+	border: none;
+	}
+
+hr {
+	display: none;
+	}
+
+body.smartposition #nav-above {
+	position: fixed;
+	top: 0px;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+	width: 500px;
+	margin: 0;
+	padding: 10px 0;
+	z-index: 10;
+	}
+
+.navigation {
+	padding: 10px 10px 10px 0;
+	}
+
+.comments .navigation {
+	margin: 20px 0;
+	}
+
+.navigation .nav-previous,
+.navigation .left {
+	float: left;
+	width: 50%;
+	text-align: left;
+	}
+
+.navigation .nav-next,
+.navigation .right {
+	float: right;
+	width: 50%;
+	text-align: right;
+	}
+
+.navigation a {
+	color: #999;
+	}
+
+.alert {
+	background: #FFF6BF;
+	text-align: center;
+	margin: 10px auto;
+	padding: 4px 20px;
+	}
+
+img.wp-smiley {
+	border: none !important;
+	padding: 0 0 0 5px !important;
+	}
+
+
+/* Lists */
+
+.archive-list {
+	list-style: none;
+	margin: 10px 0 0 0 !important;
+	padding-left: 0px !important;
+	}
+
+.archive-list li {
+	display: block;
+	float: left;
+	margin: 0 10px 0 0 !important;
+	padding: 2px 0 2px 10px !important;
+	width: 150px;
+	}
+
+.archive-list li:hover {
+	background-color: #EDEDED;
+	}
+
+.entry-content ol, .entry-content ul {
+	padding: 0 0 0 35px;
+	}
+
+.entry-content ol li, .entry-content ul li {
+	margin: 0 0 3px;
+	padding: 0;
+	}
+
+.secondary div p {
+	margin-top: 0.5em;
+	}
+
+.secondary ul, .secondary ol {
+	margin: 5px 0 0;
+	padding-left: 0;
+	}
+
+.secondary ul ul, .secondary ol ol {
+	margin: 0 0 0 10px;
+	}
+       
+.secondary ul ul ul, .secondary ol ol ol {
+	margin: 0 0 0 20px;
+	}
+
+
+.secondary ol {
+	margin-left: 15px;
+	}
+
+.secondary ul li, .secondary ol li {
+	margin: 0;
+	padding: 1px 0;
+	}
+	
+.secondary ul li {
+	list-style-type: none;
+	list-style-image: none;
+	}
+
+.sb-links ul li {
+	margin-top: 20px;
+	}
+
+.sb-links ul ul {
+	margin-left: 0px;
+	}
+
+.sb-links ul ul li {
+	margin-top: 0;
+	}
+
+
+/* Search Widget, incl. Livesearch */
+
+.widget_search {
+	margin-top: 20px !important;
+	}
+
+#search h4, .widget_search h4 {
+	display: none;
+	}
+
+input[type=text], textarea {
+	color: #444;
+	padding: 1px;
+	margin: 0;
+	}
+
+#search-label { /* The 'Search for:' label */
+	display: none;
+	}
+
+#search-label.overlabel-apply { /* Inline label for livesearch */
+	display: block;
+	position: absolute;
+	color: #888;
+	cursor: text;
+	padding: 4px 5px;
+	z-index: 1;
+	background: white;
+	}
+
+#search-label.overlabel-apply.fade { /* Fade label when #s has focus */
+	color: #ccc;
+	}
+
+#search-label.overlabel-apply.hide { /* Hide label when #s isn't empty */
+	text-indent: -1000px;
+	}
+
+#s, #search-label.overlabel-apply { /* Style #s and label in same way */
+	font-size: 1.1em;
+	width: 190px;
+	line-height: 15px;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	}
+
+#s { /* The actual search input field */
+	position: relative;
+	padding: 3px;
+	width: 60%;
+	border: 1px solid #ddd;
+	background: transparent;
+	z-index: 2;
+	}
+
+.livesearch #s { /* The search input field w. livesearch enabled */
+	padding-right: 20px;
+	width: 175px;
+	}
+
+body.columns-three #search-label.overlabel-apply { /* For Three Columns */
+	width: 165px;
+	}
+
+body.columns-three .livesearch #s { /* For Three Columns */
+	width: 150px;
+	}
+
+#s:focus {
+	border-color: #333;
+	}
+
+#searchreset, #searchload { /* Reset button & loading spinner */
+	position: absolute;
+	top: 2px;
+	opacity: 0;
+	right: 2px;
+	height: 18px;
+	width: 18px;
+	}
+
+#searchreset {
+	z-index: 4;
+	background: url('images/reset-fff.png') center center no-repeat;
+	}
+
+#searchload {
+	z-index: 3;
+	background: url('images/spinner.gif') center center no-repeat;
+	}
+
+#searchsubmit { /* Static search button */
+	float: right;
+	width: 30%;
+	}
+
+
+/* Attachment */
+
+.entry-content .attachment { 
+	text-align: center; 
+	}
+
+
+/* Rolling Archives */
+
+body.rollingarchives #nav-below {
+	display: none;
+}
+
+#rollingarchives { /* AJAX-powered navigation hub */
+	top: 0;
+	height: 45px;
+	display: block;
+	width: 500px;
+	border-bottom: none;
+	}
+
+body.smartposition #rollingarchives { /* .smartposition is added to BODY with JS when #dynamic-content passes the top of the window */
+	position: fixed;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+	z-index: 50;
+	}
+
+body.smartposition #dynamic-content { /* When scrolling past content top, adjust for fixing RA interface to top of screen */
+	padding-top: 45px;
+	}
+
+body.smartposition #dynamic-content.onepageonly { /* If there is only a single page, remove space at top of page */
+	padding-top: 0;
+	}
+
+#dynamic-content { /* Contains both the RA nav and content, and is used for as a top marker for the smartposition */
+	position: relative;
+	}
+
+#rollingarchives a:hover {
+//	text-decoration: underline;
+	border-bottom: 1px #ececec dotted;
+	}
+
+#rollnavigation a:active, #rollnavigation a:focus {
+	outline: none;
+	}
+
+#rollprevious, #rollnext, #rollload, #rollhome, #rollpages, #rolldates, #texttrimmer {
+	position: absolute;
+	top: 17px;
+	}
+
+#rollprevious:hover, #rollnext:hover, #rollhome:hover {
+//	text-decoration: underline;
+	border-bottom: 1px #ececec dotted;
+	cursor: pointer;
+	}
+
+#rollhome {
+	display: none;
+	left: 54px;
+	background: url('images/house.png') no-repeat center center;
+	width: 16px;
+	height: 16px;
+	}
+
+#rollload {
+	background: url('images/spinner.gif') no-repeat center center;
+	top: 16px;
+	left: 50%;
+	margin-left: -8px;
+	width: 16px;
+	height: 16px;
+	}
+
+#rollload span, #rollhome span {
+	display: none;
+	}
+
+#rollnext, #rollprevious, .navigation a {
+	color: #27d;
+	font-weight: 400;
+	}
+
+#rollpages {
+	left: 55px;
+	color: #aaa;
+	}
+
+#rollhover {
+	position: absolute;
+	top: 7px;
+	left: -47px;
+	z-index: 55;
+	height: 45px;
+	background: url('images/rollhover.png') no-repeat center top;
+	}
+
+#rollhover, #rolldates {
+	width: 100px;
+	}
+
+#rollhover {
+	top: 8px;
+	}
+
+#rolldates {
+	position: absolute;
+	color: #999;
+	text-align: center;
+	font-size: .9em;
+	top: 22px;
+	margin: 0;
+	}
+
+#rollprevious {
+	left: 0;
+	text-align: left;
+	}
+
+#rollnext {
+	right: 0;
+	text-align: right;
+	}
+
+.emptypage #rollnavigation {
+	visibility: hidden;
+	}
+
+.firstpage #rollprevious {
+	visibility: visible;
+	}
+
+.firstpage #rollnext,
+.firstpage #rollhome {
+	visibility: hidden;
+	}
+
+.nthpage #rollnext,
+.nthpage #rollprevious,
+.nthpage #rollhome {
+	visibility: visible;
+	}
+
+.lastpage #rollnext,
+.lastpage #rollhome {
+	visibility: visible;
+	}
+
+.lastpage #rollprevious {
+	visibility: hidden;
+	}
+
+#pagetrackwrap {
+	position: absolute;
+	top: 16px;
+	left: 140px;
+	width: 230px;
+	}
+
+#pagetrack {
+	height: 6px;
+	background: #eee;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border: 1px solid #ddd;
+	margin-top: 3px;
+	}
+
+#pagehandle {
+	width: 6px;
+	height: 6px;
+	margin: 0 1px;
+	background: #999;
+	cursor: col-resize;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	}
+
+#pagehandle:hover {
+	background: #333;
+	}
+
+#primarycontent {
+	clear: both;
+	}
+
+div.trimmed .hentry {
+	background: #f5f5f5;
+	}
+
+div.trimmed .hentry.alt {
+	background: transparent;
+	}
+
+#texttrimmer {
+	width: 55px;
+	height: 15px;
+	right: 55px;
+	}
+
+.firstpage #texttrimmer,
+.firstpage #pagetrackwrap {
+	visibility: hidden;
+	}
+
+.nthpage #texttrimmer,
+.nthpage #pagetrackwrap,
+.lastpage #texttrimmer,
+.lastpage #pagetrackwrap {
+	visibility: visible;
+	}
+
+#trimmertrim:hover, #trimmeruntrim:hover {
+	text-decoration: none;
+	border-bottom: 1px dotted #666;
+	}
+
+#trimmertrim, #trimmeruntrim {
+	cursor: pointer;
+	width: 50px;
+	text-align: center;
+	color: #999;
+	}
+
+.trimmed #trimmertrim {
+	display: none;
+	}
+
+#trimmeruntrim {
+	display: none;
+	}
+
+.trimmed #trimmeruntrim {
+	display: block;
+	}
+
+body.smartposition #trimmertrim, body.smartposition #trimmeruntrim {
+	top: 3px;
+	}
+
+body.onepageonly #dynamic-content { /* For the rare case of having only one page of content on the frontpage */
+	padding-top: 0;
+	}
+
+body.showrollingarchives #dynamic-content .navigation {
+	display: none;
+	}
+
+#dynamic-content .archivepages { /* Hide 'Page X of Y' when RA is active */
+	display: none;
+	}
+
+
+/* CSS Beyond this point is for various supported plugins and not the 'core' K2 template */
+
+
+/* Links Module */
+
+.sb-links h4 {
+	display: none;
+	}
+
+.linkcat h4 {
+	display: inline;
+	}
+
+.linkcat ul {
+	margin-top: 7px !important;
+	}
+
+
+/* Brian's Latest Comments
+	http://meidell.dk/archives/2004/09/12/brians-latest-comments/ */
+
+#brians-latest-comments ul li span a, #brians-latest-comments ul li small a,
+.sb-comments-blc ul li span a, .sb-comments-blc ul li small a {
+	color: #999;
+	font-weight: normal;
+	word-spacing: -1px;
+	}
+
+#brians-latest-comments ul li,
+.sb-comments-blc ul li {
+	margin-bottom: 6px;
+	}
+
+#brians-latest-comments ul li > a[title="Go to the comments of this entry"],
+.sb-comments-blc ul li > a[title="Go to the comments of this entry"] {
+	position: absolute;
+	right:0;
+	color: #999;
+	}
+
+.activityentry {
+	font-size: 1.1em;
+	}
+
+div#latest-comments small {
+	display: block;
+	margin: 0;
+	font-weight: normal;
+	line-height: 1.5em;
+	}
+
+
+/* FlickrRSS */
+
+.sb-flickr div {
+	margin-top: 10px !important;
+	}
+
+.sb-flickr div img {
+	padding: 5px;
+	}
+
+.sb-flickr div a {
+	}
+	
+.sb-flickr div a img {
+	margin: 0px 5px;
+	}
+
+
+/* Calendar Module */
+
+#wp-calendar {
+	width: 100%;
+	}
+
+#wp-calendar td {
+	color: #ccc;
+	}
+
+#wp-calendar td, #wp-calendar th {
+	text-align: center;
+	padding: 2px 0;
+	}
+
+#wp-calendar a {
+	display: block;
+	}
+
+#wp-calendar caption {
+	font-size: 1.5em;
+	font-weight: 400;
+	padding: 10px;
+	}
+
+#wp-calendar #prev {
+	text-align: left;
+	}
+
+#wp-calendar #next {
+	text-align: right;
+	}
+	
+#wp-calendar #today {
+	background: #f3f3f3;
+	}
+
+/* 	Ultimate Tag Warrior
+	K2 removes UTW's default tags for more default control. */
+
+.localtags, .technoratitags {
+	display: none;
+	}
+
+
+/* Contact Form */
+
+.contactform {
+	width: 100%; 
+	position: relative;
+	}
+
+.contactleft {
+	width: 15%; 
+	text-align: right;
+	clear: both; 
+	float: left; 
+	display: inline; 
+	padding: 4px; 
+	margin: 5px 0; 
+	}
+
+.contactright {
+	width: 70%; 
+	text-align: left;
+	float: right; 
+	display: inline; 
+	padding: 4px; 
+	margin: 5px 0; 
+	}
+	
+.contacterror {
+	border: 1px solid #ff0000;
+	}
+
+
+/* Noteworthy */
+
+.category-noteworthy h3.entry-title {
+	background: url('images/heart.png') no-repeat right center;
+	padding-right: 25px;
+	display: inline;
+	}
+
+.noteworthyLink { margin-left: 5px }
+
+
+/* GeoPress Fix */
+
+.entry-content div.mapstraction {
+	margin: 0;
+	}
+
+
+/* Tag Cloud Module */
+
+.sb-wptagcloud ul {
+	line-height: 2em;
+	text-align: justify;
+	}
+
+.sb-wptagcloud li {
+	display: inline;
+	}
+
+.sb-wptagcloud a {
+	padding: 0 2px;
+	white-space: nowrap;
+	text-transform: lowercase;
+	}
+
+b { font-weight: 400; }
+
+pre {
+    overflow: auto; 
+    padding: 1em; 
+    margin-left: 0em; 
+    font-family: monospace,Monaco; 
+    color: #555; 
+    border-left: solid 5px; 
+    border-color: #efefef;
+    background-color: #fff; 
+    font-size: .7em; 
+    line-height: 150%;
+}
+
+code {font-family: monospace, Monaco; color: #444; font-size: .8em;}
+span.TEX {letter-spacing: -0.125em; padding-right:.2em; }
+span.TEX span.E{ position:relative;top:0.5ex;left:-0.0417em;}
+a span.TEX span.E {text-decoration: none; }
+span.LATEX span.A{font-size: 70%; position:relative; top:-0.45ex; left:-0.3em;}
+span.LATEX span.TEX{ position:relative; left: -0.3em;}
+span.LATEX {margin-right:-.4em;}

@@ -1,0 +1,21 @@
+% !LMP targets=chk,dvi
+% TBD: the setting targets=chk,html displays warnings 
+% documentmetadata refers to PDF; it is here just to ensure that this latex main file is recognized 
+\DocumentMetadata{uncompress, pdfversion=1.8}
+\documentclass[a4paper,english]{article}
+\input{../header.tex}
+%\usepackage{iftex}
+
+\begin{document}
+Tests magic comment: 
+exclude target \texttt{pdf} individually specifying \texttt{chk} and \texttt{dvi}. 
+If this is not excluded, an invisible \texttt{\textbackslash{}GenericError} 
+in an \texttt{\textbackslash{}ifpdf} construction throws an error leading to an error return code 
+of the late processor. 
+\ifpdf%
+  \GenericError{...}{Found this document to be converted into a PDF, although this is excluded}{}{} % chktex 11
+\else
+\fi
+If this does not work, a diff is initiated, but there is no comparison file, 
+which would result in an error. 
+\end{document}

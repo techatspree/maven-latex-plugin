@@ -1,0 +1,1122 @@
+\chapter{Graphical Preprocessing}\label{chap:GraphConversions}
+
+While \LaTeX{} is really strong in text processing 
+and also in formula processing, 
+in itself it is weak in its graphical abilities. 
+Graphics in some formats can be included directly, 
+in some cases preprocessing is necessary to obtain includable graphics, 
+but in most cases, according \LaTeX-packages must be used: 
+%
+\begin{itemize}
+\item[graphicx]
+is the basic graphics package which provides the command 
+\cmd{includegraphics}{} 
+which allows including graphics natively 
+in the formats PDF, EPS, JPG and PNG at least. 
+For details see~\cite{GraX}. 
+\item[transparent]
+allows specifying transparency in graphics. 
+Even if you do not use the feature, 
+some source formats do (in fact only \gls{svg}) does 
+and so the according converters create according information 
+and so \LaTeX{} must get along with it. 
+Note that this applies only for output format PDF 
+and in particular not for \texttt{xelatex}. 
+For details see~\cite{TransP}. 
+\item[bmpsize]
+is needed for bitmap formats like \gls{jpg} and \gls{png} only. 
+Used to extract resolution and bounding box. 
+FIXME\@: needed more information. 
+For details see~\cite{BmpP}. 
+\item[tikz]
+The tikz code described in~\cite{TikzPGF23} is just in \LaTeX{} format. 
+Thus, it can be included directly and does not require any preprocessing. 
+Still what is needed is a good graphical editor like \texttt{tikzedt} 
+with online manual~\cite{TikzEdt}. 
+\item[import]
+is strictly speaking no graphics package. 
+According to its documentation~\cite{ImpoP}, 
+it allows an imported file to find its own inputs 
+(using ``\cmd{input}'', ``\cmd{includegraphics}'' etc.) in that directory. 
+This is vital for the graphic formats for which a TEX file is imported 
+which itself imports a PDF/EPS file located in the same folder 
+but not in the folder of the importing file. 
+It is advisable to combine the \texttt{import} package with other graphic packages 
+to include graphics in separate graphic files. 
+\item[xcolor]
+allows using colors in graphics. 
+Even if the author does not use colors in graphics, 
+several formats, like \gls{fig}, \gls{gp} and \gls{svg} 
+offer it and so the according converters 
+transforming them into the native formats 
+create color information which can be rendered only via \texttt{xcolor}. 
+On the other hand, the use of \texttt{xcolor} is not specific to graphics. 
+For details see~\cite{XColorP}. 
+\item[pythontex]
+is strictly speaking no graphics package either but more general 
+a way to include and run code within a \LaTeX{} document 
+as described in~\cite{PythonTexP}. 
+Note that not only Python but also other languages can be used. 
+Most of them offer graphic capabilities 
+and so graphics can be included also via \pkg{pythontex}. 
+Nevertheless, we do not treat this technique in this chapter, 
+but separately in Section~\ref{sec:pythontex}. 
+This is because graphics is a side aspect of \pkg{pythontex} 
+and also because strictly speaking there is no preprocessing. 
+First a latex processor is run, and the package extracts the code 
+into a separate file which is then further processed by an external tool. 
+This is more like running \cmd{bibtex} to extract a bibliography. 
+
+If using the package \texttt{pythontex} 
+a special processing interacting with the latex to PDF converter is required also, 
+but it is not preprocessing. 
+\end{itemize}
+
+Section~\ref{sec:injFiles} is on injection of files 
+and in particular header files: 
+%
+\begin{description}
+  \item[\texttt{header.tex}] treated in Section~\ref{subsec:header}, 
+  is a general header file intended to be included into all \LaTeX{} files. 
+  Since the packages \pkg{import} and \pkg{xcolor} are generally useful, 
+  not only in the context of graphics, they are among those loaded in texttt{header.tex}. 
+  \item[\texttt{headerGrp.tex}] described in Section~\ref{subsec:headerGrp} in contrast, 
+  is a header file loading graphic specific packages related with \pkg{graphicx}, 
+  loading also \pkg{transparent} and \pkg{bmpsize}. 
+\end{description}
+
+The header files adapt the loading of the packages to the context, 
+in particular to the target format. 
+Note that \texttt{headerGrp.tex} must follow \texttt{header.tex}. 
+
+The package \pkg{tikz}, although a pure graphic package 
+is very specific and not related to \pkg{graphicx}, 
+Thus it must be loaded separately. The same holds for \pkg{pythontex}. 
+
+We support figures created in the \gls{fig} by the program \texttt{xfig}, 
+figures created by the plotting utility \texttt{gnuplot}, 
+the TEX specific graphic language MetaPost, 
+figures in \gls{svg}-format 
+and finally figures in formats which can be included into a \LaTeX-file 
+without preprocessing like \gls{png} and \gls{jpg}. 
+Further functionality on \LaTeX{} figures can be easily added. 
+If there is some need, please write an email to the author. 
+
+Table~\ref{tab:graphicOverview} gives an overview over the supported formats 
+together with the graphic converters, 
+the name of the parameter to configure which one is used 
+and the default value. 
+Of course this converter must be installed. 
+It is advisable to have also an editor installed. 
+Sometimes the editor is used also as converter. 
+For human-readable formats like \texttt{fig}, it often makes sense, 
+to use both the graphical editor and the textual one. 
+
+\begin{longtable}{|l|ll|}
+\toprule
+Graphic format & conversion tool & editor \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:graphicOverview} 
+Overview over the supported graphic formats }
+\endlastfoot%
+fig             & \texttt{fig2devCommand}, e.g.~\texttt{fig2dev}  & xfig, emacs   \\
+gnuplot (gp)    & \texttt{gnuplotCommand}, e.g.~\texttt{gnuplot}  & emacs         \\
+MetaPost (mp)   & \texttt{metapostCommand}, e.g.~\texttt{mpost}   & emacs         \\
+svg             & \texttt{svg2devCommand}, e.g.~\texttt{inkscape} & inkscape      \\
+jpg, png        & ---                                             & gimp          \\
+\end{longtable}
+
+Besides the converter external to \LaTeX, 
+also several \LaTeX-packages are required 
+to use graphics. 
+
+
+This section describes the conversions of 
+graphical source files into target files 
+in detail. 
+
+But PDF also occurs as an intermediate format for pictures. 
+For historical reasons, still \gls{eps} is used. 
+Section~\ref{sec:figpdf} shows that it suffices to stick to pictures 
+in PDF format. 
+% FIXME\@: REALLY? 
+%FIXME\@: missing pdf als basic input format. What about (e)ps? 
+Section~\ref{sec:fig2dev} shows how \texttt{fig2dev} converts fig-files 
+into \LaTeX-files containing text and including graphics in as PDF files. 
+Likewise, Section~\ref{sec:gnuplot2dev} describes 
+how gnuplot converts gnuplot-files into PDF files. 
+An interesting alternative to gnuplot for computing pictures 
+is MetaPost described in Section~\ref{sec:metapost}. 
+A more elaborate alternative to fig-pictures are SVG pictures 
+described in Section~\ref{sec:picSvg}
+Also several formats collected in Section~\ref{sec:picasis} 
+may be included as is. 
+
+
+
+\section{Inclusion of PDF and EPS files}\label{sec:figpdf}
+
+Modern \LaTeX{} implementations directly create PDF files. 
+Thus, it makes sense, 
+to allow including graphics as PDF files in \LaTeX-files. 
+This is done in PDF mode 
+by the \LaTeX-package \pkg{graphicx}. 
+In contrast, traditionally \LaTeX{} produced output in the \gls{dvi}/\gls{xdv}-format 
+which is still used to create \gls{html}-output. 
+Also, there are cases where PDF is not created directly but via DVI/XDV, 
+as it is the case with \texttt{xelatex}. 
+
+In these cases, the according graphic format is no longer PDF, but it is EPS\@. 
+A way to allow both ways on one document is, 
+to provide one and the same picture in two formats. 
+To that end, the name of the graphic file must be given in \cmd{includegraphics} 
+without file ending. 
+This is the approach taken for the other formats 
+which are just converted to both PDF and EPS\@. 
+For conversion frequently also \pkg{xcolor} and that like is required.
+Of course, here a more sophisticated technique is conceivable, 
+recognizing the required format and generating the specific one if missing. 
+
+Note that PS is not supported because it misses the bounding box. 
+If adding it, one arrives at the EPS format. 
+Although PDF and EPS files can be included, 
+only one of them can be included for a specific configuration, 
+namely the one tied to the according output format of the \LaTeX{} compiler. 
+This is in contrast to other formats described in Section~\ref{sec:picasis}. 
+
+
+
+\section{Conversion of fig-files}\label{sec:fig2dev}
+
+
+
+A simple but still useful tool to draw figures is \texttt{xfig}\index{xfig}\index{fig2dev} 
+which stores graphics in a native format 
+described in~\cite{XFigF} with file extension \texttt{.fig}. 
+The file extension \texttt{.fig} is also used by MATLAB to store plots, 
+but this is something different. 
+Graphics in xfig format cannot be directly included in latex files 
+but must be exported into a \LaTeX-readable format. 
+
+To export a file \texttt{xxx.fig} residing in directory \texttt{yyy} 
+into several external formats, 
+\texttt{xfig} uses \texttt{fig2dev}. 
+A look in~\cite{XFigF}, Section~3.4 shows that texts with set ``special''-flag 
+are interpreted as latex-code. 
+For these texts the appropriate export language would be \texttt{latex}. 
+On the other hand, \texttt{latex} is weak in graphics 
+and \texttt{pdf} would be the ideal export format for all kinds of objects, 
+except for texts with set ``special''-flag. 
+In \texttt{pdf} format, texts are interpreted literally, 
+independent of the ``special''-flag. 
+Thus, \texttt{fig2dev} offers a mixed solution: 
+export \texttt{xxx.fig} in format \texttt{pdftex} which yields a pdf-file 
+\texttt{xxx.pdf} containing all but text with set ``special''-flag 
+and complementary \texttt{pdftex\_t} which yields a tex-file \texttt{xxx.ptx} 
+including the pdf-file and the texts with set ``special''-flag\index{special-flag}. %maybe glossary 
+The exported files are in the same directory \texttt{yyy} 
+as the original file \texttt{xxx.fig}. 
+
+For example, 
+the fig-file \texttt{F4\_01fig2dev.fig} defining Figure~\ref{fig:fig2dev}, 
+is transformed into a file \texttt{F4\_01fig2dev.ptx} 
+in format \texttt{pdftex\_t} which starts as given by Listing~\ref{lst:ptx}. 
+
+%\lstset{language=tex, breaklines, basicstyle=\footnotesize}
+% FIXME\@: nag complains for htlatex 
+\lstinputlisting[language=TeX, basicstyle=\tiny,
+breaklines, lastline=25,
+float, captionpos=b, label={lst:ptx}, 
+caption={The ptx-file for a fig-file}]{F4_01fig2dev.ptx}
+
+The file \texttt{xxx.ptx} is ``imported'' into the tex-file of this manual 
+by the command 
+%
+\begin{lstlisting}[language=TeX]
+\import{yyy}{xxx.ptx}
+\end{lstlisting}
+%texttt
+and includes \texttt{xxx.pdf} automatically the file \texttt{xxx.pdf} 
+via \cmd{includegraphics\{xxx\}}{} (line 2). 
+Note the following remarkable details: 
+%
+\begin{itemize}
+\item
+Observe that we can drop the suffix of the included file \texttt{xxx.pdf} 
+which is expressed as ``\texttt{xxx}'' 
+because \LaTeX{} chooses the right suffix: 
+If instead of \texttt{xxx.pdf} there is a file \texttt{xxx.eps}, 
+the latter is chosen if no suffix is specified. 
+As we will see below, 
+omitting the suffix is crucial to make \texttt{xxx.ptx} work 
+for both \LaTeX-output formats: 
+the pdf-format can include pdf-files, 
+whereas the dvi-format which is required to create html- and
+odt-files can include eps-files. 
+\item
+If \texttt{xxx.pdf} is included in \texttt{xxx.ptx} 
+with the full path name, 
+we may use \cmd{input\{xxx.ptx\}}{} instead of \cmd{import\{yyy\}\{xxx.ptx\}}. 
+
+If in contrast, \texttt{xxx.pdf} is included in \texttt{xxx.ptx} 
+with the short name only, 
+\texttt{xxx.pdf} is assumed to be in the same directory 
+as the file inputting \texttt{xxx.ptx}. 
+So in general, i.e.~if this is not \texttt{yyy}, we need import 
+\cmd{import\{yyy\}\{xxx.ptx\}}. 
+If the directories coincide, 
+in the import the string \texttt{yyy} may be empty. 
+If the string \texttt{yyy} is not empty, it must end with the path delimiter, 
+i.e.~\texttt/ for Unix like systems and 
+\texttt{\textbackslash} for win-like systems. 
+\end{itemize}
+
+As indicated in Section~\ref{sec:figpdf}, 
+the commands in \texttt{xxx.ptx} 
+require the packages \pkg{graphicx} and \pkg{xcolor}. 
+Also the \cmd{import}{} command 
+requires the \pkg{import} package. 
+
+To export \texttt{xxx.fig} into \texttt{xxx.ptx} and \texttt{xxx.pdf} 
+this software invokes two commands: 
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.pdf   
+fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xxx.ptx
+\end{Verbatim}
+%
+Both commands specify the input file \texttt{xxx.fig}, 
+both use the options given by the parameter \texttt{fig2devGenOptions} 
+while each invocation allows to specify also specific options, 
+\texttt{fig2devPdfEpsOptions} and \texttt{fig2devPtxOptions}, respectively, 
+and both use the option \texttt{-L} 
+to specify the output format (``language''). 
+
+%FIXME\@: ptx-->tex and then: convention: intuitive suffixes 
+
+The parameters specific for \texttt{pdftex} 
+are called \texttt{fig2devPdfEpsOptions} 
+because the options available are the same 
+as for output format \texttt{pstex} creating eps-files. 
+An example for a common option would be \texttt{-b width} 
+which shall specify the same boundary for both formats; 
+otherwise they do not fit. 
+
+For the output format \texttt{pdftex\_t}, 
+the option \texttt{-p xxx} says, 
+that the string \texttt{xxx} must be included in \texttt{xxx.ptx} 
+as \cmd{includegraphics\{xxx\}}. 
+Note that the option \texttt{-p} shall not be specified 
+in \texttt{fig2devPtxOptions}, because it is automatically added. 
+
+Equivalent to mixed export with formats \texttt{pdftex} and \texttt{pdftex\_t} 
+which is appropriate for \LaTeX-output format pdf, 
+is the mixed export with the according formats 
+\texttt{pstex} and \texttt{pstex\_t} appropriate for \LaTeX-output format dvi. 
+The difference is that \texttt{pstex} creates an eps-file instead of a pdf-file 
+with the same content 
+and \texttt{pstex\_t} creates a tex-file which looks like that 
+created by \texttt{pdftex\_t} except including the eps-file 
+instead of the pdf-file. 
+If the suffix is not given, 
+\texttt{pstex\_t} and \texttt{pdftex\_t} create identical files. 
+Thus exporting \texttt{xxx.fig} via 
+%
+\begin{Verbatim}[fontsize=\scriptsize]
+fig2dev -L pstex    <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.eps   
+fig2dev -L pdftex   <fig2devGenOptions> <fig2devPdfEpsOptions>        xxx.fig xxx.pdf   
+fig2dev -L pdftex_t <fig2devGenOptions> <fig2devPtxOptions>    -p xxx xxx.fig xxx.ptx
+\end{Verbatim}
+%
+and ``inputting'' \texttt{xxx.ptx} works for both \LaTeX{} output formats. 
+
+Table~\ref{tab:xfigSuffixes} relates the language specified with the \texttt{-L} option 
+with the suffix of the output file chosen canonically, the suffix we choose 
+and the actual file format. 
+In contrast to \texttt{fig2dev}, 
+we choose the actual file format, except if this is TEX\@. 
+We opted for the quite unusual suffix \texttt{.ptx} 
+instead of \texttt{.tex} 
+to avoid that TEX-files may be both, 
+source files and created files, 
+but this is not compulsory, 
+since the same holds and is accepted for pdf-files. 
+
+\begin{longtable}{|l|lll|}
+\toprule
+Output format (language) & xfig suffix & our suffix & format \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule%
+\caption{\label{tab:xfigSuffixes} Language, suffixes and file format }
+\endlastfoot%
+pstex                    & pstex       & eps        & eps \\
+pstex\_t                 & pstex\_t    & ptx        & tex \\
+pdftex                   & pdf         & pdf        & pdf \\
+pdftex\_t                & pdf\_t      & pdf        & pdf \\
+\end{longtable}
+
+
+Maybe xfig is intended to export from within the export dialog 
+and not directly via a script like \texttt{fig2dev}. 
+This may be the reason 
+why the magnification must be set in the export dialog, 
+but it is stored in the fig-file nevertheless. 
+
+Figure~\ref{fig:fig2dev} shows the transformation 
+of figures with \texttt{fig2dev} 
+and the inclusion of the eps-file and of the pdf-file in the ptx-file. 
+Note that the \texttt{fig2dev}-command is configurable 
+via the parameter \texttt{fig2devCommand}, 
+but there will be hardly any command with the same command line interface 
+performing exactly the transformations given in Figure~\ref{fig:fig2dev}, 
+except \texttt{fig2dev} itself. 
+
+At the same time, Figure~\ref{fig:fig2dev} is an example 
+for a \LaTeX-file \texttt{xxx.ptx} created from a fig-file 
+and embedded in this \LaTeX-file 
+with the \cmd{input}-command. 
+More than that, 
+Figure~\ref{fig:fig2dev} describes the way it has been created. 
+Note that all text labels are specified with set ``special''-flag, 
+and are thus included as \LaTeX-text, 
+except the text \textbf{\tiny postscript} 
+which is typeset with a postscript font to make the difference visible. 
+
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+\import{}{F4_01fig2dev.ptx}
+}
+\caption{\label{fig:fig2dev}Conversion of a fig-file 
+into pdf-, eps- and ptx-files with inclusions}
+\end{figure}
+
+
+\section{Conversion of gnuplot-files}\label{sec:gnuplot2dev}
+
+The term ``gnuplot'' refers to a file format
+and to a program \texttt{gnuplot}
+which can read this format, both described in~\cite{GnuPlot6_0}. 
+
+Note that there seems no official file extension 
+to identify gnuplot files. 
+From the most common extensions \texttt{.plt}, \texttt{.gpi} and \texttt{.gp} 
+we have chosen the one with the least collision 
+and supported by Emacs, vscode and by my file browser: \texttt{.gp}. 
+% FIXME\@: should be configurable.
+% FIXME\@: look at https://www.file-extensions.org/
+% FIXME\@: have a look in general on extensions for vscode 
+% and include them into this manual 
+
+The gnuplot format is a textual command language you can even program with 
+and may thus be created with any editor but
+for sake of reproducibility it is recommended to use only files
+created by \texttt{gnuplot}.
+To ensure that a handwritten gnuplot file \texttt{xxx.gp},
+e.g.\@ with a single line like
+%
+\begin{verbatim}
+plot [-10:10] sin(x), atan(x), cos(atan(x))
+\end{verbatim}
+%
+really works
+with the current \texttt{gnuplot} and to see how it is interpreted,
+it is recommended to convert it via
+%
+\begin{lstlisting}
+gnuplot -persist -e "load 'xxx.gp'; save 'xxx.gp'"
+\end{lstlisting}
+%
+If you have a look inside the resulting file 
+\href{\urlSite fromTex/F4_03someGnuplot.gp}{\texttt{F4\_03someGnuplot.gp}}, 
+you can see, that in a comment line
+the current version of \texttt{gnuplot} is documented
+and also all the settings implicitly used.
+The original line is the last but one. 
+Pasting the into VS Code, one can see the highlighting, 
+of course provided the extensions 
+described in Section~\ref{subsec:instExtVsCode} are installed. 
+
+Also, if a gnuplot file is created with an old version of \texttt{gnuplot},
+it is recommended to update version with the same command.
+Note that \texttt{gnuplot} does not offer full backward compatibility. 
+
+
+This software supports including 
+figures stored in \texttt{.gp}-files created by \texttt{gnuplot}.
+To export a file \texttt{xxx.gp} into several external formats, 
+it uses \texttt{gnuplot} itself. 
+According to the manual~\cite{GnuPlot6_0}, Part IV, 
+\texttt{gnuplot} supports output formats through so-called \emph{terminals}. 
+Among those are several ones intended for inclusion into \LaTeX-files, 
+like \texttt{Cairolatex}, \texttt{Epscairo}, \texttt{Epslatex}, 
+\texttt{Latex}, \texttt{Lua (tikz)}, \texttt{Postscript}, \texttt{Ps(la)tex}, % chktex 36
+\texttt{Pstricks}, \texttt{Texdraw} and \texttt{Tikz} 
+which is in fact equivalent with \texttt{Lua (tikz)}. 
+Comparison with the manual~\cite{GnuPlot5_0} for older versions of \texttt{gnuplot} 
+shows that support of \texttt{Eepic}, \texttt{Mp} and \texttt{Tpic} ended. 
+Note that also export into the fig-format via the terminal \texttt{Fig} 
+is supported which in turn may be included in latex 
+as described in Section~\ref{sec:fig2dev}. 
+Also, \texttt{gnuplot} pictures may be exported in MetaPost format 
+which in turn may be included in latex 
+as described in Section~\ref{sec:metapost}. 
+% TBD: clarify maybe tikz is superior. see backlog. 
+
+This software supports the export of a file \texttt{xxx.gp} 
+only via the terminal \texttt{Cairolatex} 
+which offers export to mixed PDF and \LaTeX\@: 
+graphics in PDF and text in \LaTeX{}
+which yields the fonts typical for \LaTeX. 
+This is as described for fig-files in Section~\ref{sec:fig2dev}, 
+except that text is generally converted in \LaTeX{}-format, 
+and not selectively those text marked with special flag. 
+
+Accordingly, the export yields two files \texttt{xxx.ptx} and
+\texttt{xxx.pdf}, both in the directory \texttt{yyy} 
+in which \texttt{xxx.gp} resides. 
+The file \texttt{xxx.ptx} must be imported via 
+%
+\begin{lstlisting}[language=TeX]
+\import{yyy}{xxx.ptx}
+\end{lstlisting}
+%
+It contains the texts and includes \texttt{xxx.pdf} 
+via \cmd{includegraphics\{xxx\}}{} without specifying a suffix. 
+
+Unlike for fig-files, 
+\texttt{xxx.ptx} and \texttt{xxx.pdf} are created with a single command: 
+%
+\begin{verbatim}
+gnuplot -e "set terminal cairolatex pdf <gnuplotOptions>;
+            set output 'xxx.ptx';
+            load 'xxx.gp'"
+\end{verbatim}
+
+Accordingly, 
+\texttt{xxx.ptx} and \texttt{xxx.eps} are created with a single command: 
+%
+\begin{verbatim}
+gnuplot -e "set terminal cairolatex eps <gnuplotOptions>;
+            set output 'xxx.ptx';
+            load 'xxx.gp'"
+\end{verbatim}
+%
+Note that this writes another but identical file \texttt{xxx.ptx} 
+as no file endings are written 
+and so \texttt{xxx.ptx} can include both, \texttt{pdf} and \texttt{eps}. 
+When creating both performance is not optimal, 
+but \texttt{gnuplot} offers no way to avoid this. 
+If being strict, 
+\texttt{xxx.ptx} is perfectly correct only for output \texttt{eps},
+% TBC: in which respect? 
+if comments and error messages are taken into account 
+but as long as no error occurs, 
+the result is perfectly ok also for \texttt{pdf}. 
+
+As for inclusion of fig-files, 
+packages \pkg{graphicx} and \texttt{color} are needed. 
+
+
+%FIXME\@: 
+%Here further options are missing: 
+%   // set terminal pdf {monochrome|color|colour}
+%    //                      {{no}enhanced}
+%    //                      {fname "<font>"} {fsize <fontsize>}
+%    //                      {font "<fontname>{,<fontsize>}"}
+%    //                      {linewidth <lw>} {rounded|butt}
+%    //                      {solid|dashed} {dl <dashlength>}}
+%    //                      {size <XX>{unit},<YY>{unit}}
+
+Figure~\ref{fig:gp2pdf} shows the transformation of the plots 
+and the inclusion of graphic files. 
+In addition, Figure~\ref{fig:gnuplot} shows an example of a \LaTeX-file 
+created from a gnuplot file 
+and embedded in this \LaTeX-file. 
+%Note that the \texttt{gnuplot}-command is configurable 
+%via the parameter \texttt{gnuplotCommand}, 
+%but there will be hardly any command with the same command line interface 
+%performing exactly the transformations given in Figure~\ref{fig:gp2pdf}, 
+%except \texttt{gnuplot} itself. 
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+\import{}{F4_02gp2pdf.ptx}
+}
+\caption{\label{fig:gp2pdf}Conversion of a gnuplot-file 
+into pdf-, eps- and ptx-files with inclusions}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+\import{}{F4_03someGnuplot.ptx}
+}
+\caption{\label{fig:gnuplot}
+Converted sample gnuplot-file into ptx and pdf files }
+\end{figure}
+
+
+\section{Inclusion of MetaPost files}\label{sec:metapost}
+
+A vector graphic format, very native to TeX is \texttt{MetaPost}, 
+a derivative of \texttt{Metafont} originally used to describe shape of fonts. 
+Although seemingly supported by \TeX{} only, 
+\texttt{MetaPost} is interesting in its own right, 
+as it is a graphical programming language, 
+Turing complete, much like postscript, and allows also declarative programming. 
+The manual describing the language is~\cite{MPost24}, 
+seemingly complete, but it is not. 
+Thus, one can be thankful for~\cite{MPostGuid} 
+which offers some introduction and for the really helpful tutorial~\cite{MPostTut}. 
+
+Files containing \texttt{MetaPost} have the ending \texttt{.mp}. 
+Note that there are other graphic formats 
+like monochrome pictures in TIFF-format 
+which are identified with the same extension 
+but the MetaPost format has nothing to do with this. 
+
+Since \texttt{MetaPost} is a programming language, 
+MetaPost files are created with an editor. 
+Since \texttt{MetaPost} is very versatile, 
+it is impossible to give an impression by a single example. 
+We decided to choose an example 
+using a MetaPost library, \texttt{MetaUML}, 
+described in~\cite{MetaUml} for some reasons apparent later. 
+The example file is given in Listing~\ref{lst:metapost} 
+and also on the web as 
+\href{\urlSite fromTex/F4_05someMetapost.mp}{\texttt{F4\_05someMetapost.mp}}. 
+It is the source file of Figure~\ref{fig:metapost}. 
+Pasting the into VS Code, one can see the highlighting, 
+of course provided the extensions 
+described in Section~\ref{subsec:instExtVsCode} are installed. 
+
+
+\lstinputlisting[language=MetaPost,
+basicstyle=\footnotesize,
+float,
+showstringspaces={false},
+numbers={left}, stepnumber={5}, 
+captionpos=b, label={lst:metapost},
+caption={An example file in MetaPost}]
+{F4_05someMetapost.mp}
+
+Listing~\ref{lst:metapost} illustrates some structure of MetaPost. 
+As in \TeX, comments start with \texttt{\%} and end with the line or with the file. 
+The proper figures are enclosed between \texttt{beginfig(n)} and \texttt{endfig}, %chktex 36
+where $n$ is the number of the figure, the so called \texttt{charcode}\footnote%
+{This is a relict from Metafont, where each figure showed a character}, 
+and the file ends with \texttt{end}. 
+This software relies on specifying a single figure per file; the \texttt{charcode} is irrelevant. 
+
+Code outside figures is possible, but does not belong to a figure 
+and is thus not displayed. 
+In our example, besides \texttt{end} commands outside the figure 
+are just \texttt{input xxx}, where \texttt{xxx} names a so-called library 
+defined by the file \texttt{xxx.mp} 
+and a sequence of settings of internal variables 
+of the MetaPost compiler 
+controlling how the following figure is compiled. 
+Most of them even in comments. 
+
+The compiler for \texttt{MetaPost} 
+is given by the parameter \texttt{metapostCommand} 
+which defaults to \texttt{mpost}, occasionally just \texttt{mp}. 
+
+Each internal variable which can be set in the MP file 
+can also be set when invoking \texttt{mpost} 
+using the option \texttt{-s \textlangle{}variable\textrangle=\textlangle{}value\textrangle} 
+as described in~\cite{MPost24},~Section~B.2.1. 
+There it is stated that the option is read just before the file is read, 
+which implies that the setting in the file overrides the command line setting. 
+Caution: in the manual, the variable is referred to as ``key''. 
+
+The most basic setting is \texttt{outputformat:="eps"} %chktex 18
+which is the only setting appropriate for latex. 
+So don't change\footnote%
+{Note that \texttt{metapostCommand} may also besides \gls{eps} 
+output \gls{svg} and \gls{png}, 
+just by setting \texttt{outputformat:="svg"} or that like. %chktex 18
+Caution: case-sensitive, assuming silently \texttt{eps} if the format is not recognized. 
+Whereas \gls{svg} is a vector format as MetaPost ifself, \gls{png} is a raster format}. 
+Note the strange default setting for the names of the output files, \texttt{outputtemplate}, 
+which reflects the \texttt{charcode} of the individual figures as file ending. 
+For inclusion in latex, the file ending \texttt{mps} is required 
+and so frequently \texttt{outputtemplate} is set to reflect the ending. 
+It seems more appropriate to make the setting in the command line 
+which yields the following invocation
+%
+\begin{verbatim}
+  mpost -s 'outputtemplate="%{jobname}%{charcode}.mps"' xxx.mp
+\end{verbatim}
+
+As we agreed that a MetaPost file shall contain a single figure only, 
+we also ignore the \texttt{charcode} which unifies MetaPost with other formats supported. 
+This yields 
+%
+\begin{verbatim}
+  mpost -s 'outputtemplate="%{jobname}.mps"' xxx.mp
+\end{verbatim}
+%
+The MetaPost file shall not overwrite the command line settings. 
+
+The setting of \texttt{prologues} controls where fonts come from and 
+becomes relevant when using \TeX{} for typesetting. 
+Listing~\ref{lst:metapost}, line 21 includes a label via a note implicitly, 
+and for the material between \texttt{btex} and \texttt{etex} uses \TeX{}. 
+The manual~\cite{MPost24}, Section 8.1 is on typesetting labels 
+and specifies the meaning of \texttt{prologues}. 
+If we stick to including in \LaTeX{} and creating PDF out of that only, 
+the default setting $0$ is appropriate always 
+but since this software uses DVI as intermediate format, e.g.\@ to create HTML, 
+or because for debugging one wants to view the MPS files standalone in a viewer 
+things are not so easy. 
+For details see~\cite{MPost24}, Section 14.2. 
+Setting \texttt{prologues:=1} is deprecated. 
+The only save way to get the correct display is to include fonts in the MPS file, 
+setting \texttt{prologues:=3}, but this makes the MPS file quite big. 
+So a good compromise is to set \texttt{prologues:=2} as a command line option 
+resulting in 
+%
+\begin{verbatim}
+  mpost -s prologues=2 -s 'outputtemplate="%{jobname}.mps"' xxx.mp
+\end{verbatim}
+%
+and overwriting by need as in Listing~\ref{lst:metapost}, line 2. 
+
+As mentioned above, \texttt{input xxx} includes a library 
+making the program dependent on a file \texttt{xxx.mp}. 
+As for latex processors, also \texttt{mpost} records dependencies recursively 
+in an FLS file if invoked with option \texttt{-recorder}. 
+Also like latex processors, an error shall not cause break or interaction 
+so adding the option \texttt{-interaction=nonstopmode}. 
+Thus, we arrive finally at the default invocation 
+%
+\begin{verbatim}
+  mpost -interaction=nonstopmode -recorder \
+    -s prologues=2 -s 'outputtemplate="%{jobname}.mps"' xxx.mp
+\end{verbatim}
+
+
+
+
+
+
+% TBD: treat mpxerr.tex, mpxerr.log
+% this must be done both in software and in this manual 
+
+
+
+
+
+Figure~\ref{fig:mp2mps} illustrates 
+how \texttt{mpost} converts an \gls{mp}-file \texttt{xxx.mp} 
+with the given settings into various result files: 
+%
+\begin{itemize}
+\item
+an \gls{mps}-file or with setting 
+\begin{verbatim}outputtemplate="\%{jobname}\%{charcode}.mps"\end{verbatim}
+more \gls{mps}-files \texttt{xxx1.mps}\dots \texttt{xxxn.mps}, 
+\item
+a log-file \texttt{xxx.log} and a fls-file \texttt{xxx.fls} much like \LaTeX{} does 
+\item
+and an \gls{mpx}-file \texttt{xxx.mpx} containing the \LaTeX{} text of the figure; 
+this is not created if there is no such text. 
+\end{itemize}
+
+
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+\import{}{F4_04mp2mps.ptx}
+}
+\caption{\label{fig:mp2mps}Conversion of a MetaPost-file into an mps-file}
+\end{figure}
+
+
+Figure~\ref{fig:metapost} gives an example of a MetaPost file 
+included in this \LaTeX-file as ab mps-file 
+created from the MetaPost file 
+and embedded in this \LaTeX-file 
+with the \cmd{includegraphics}-command. 
+Normally, \cmd{includegraphics} is invoked with the filename without extension, 
+but for mps-files, the extension is needed. 
+As for inclusion of fig-files, the package \pkg{graphicx} is needed. 
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{ 
+%\includegraphics{F4_05someMetapost1.mps}
+\includegraphics{F4_05someMetapost.mps}
+}
+\caption{\label{fig:metapost}
+Converted sample MetaPost-file included as mps-file  }
+\end{figure}
+
+One of the descendants of MetaPost is TikZ (see introductory text~\cite{TikzIntro})
+and one of the deficiencies resolved is that it allows passing information 
+from the main document to the proper figure. 
+
+With \lualatex{} this can be reached for MetaPost also using package \pkg{luamplib}. 
+The package itself provides an environment \texttt{mplibcode}. 
+Essentially, \lualatex{} interprets all code 
+enclosed in the \texttt{mplibcode} environment as MetaPost. 
+As described in Section~\ref{subsec:header}, 
+this software can inject a header which loads the header 
+and enhances it providing the additional command \cmd{inputmpcode} 
+which allows also load MetaPost from a file. 
+The latter is preferred to direct inclusion with the \texttt{mplibcode} environment, 
+e.g.\@ for sake of proper code highlighting. 
+Note that the package declaration is enclosed in an if construct, 
+ensuring that the package is loaded only if lualatex or that like is run. 
+
+That this allows better integration within the enclosing latex document 
+is illustrated by redefining the letter $\aleph$ as $\alpha$ which is really related. 
+%
+\begin{lstlisting}[language=TeX]
+  {% make redefine local 
+  \renewcommand{\aleph}{\alpha}
+  \inputmpcode{F4_05someMetapost}
+  }% to recover from redefine {manualC4graphics.tex}
+\end{lstlisting}
+
+Figure~\ref{fig:metapostLua} Documents, 
+that the redefinition really influences rendering in the MetaPost file. 
+
+\begin{figure}[htb]
+  \centering
+  \IfPackageLoadedTF{tex4ht}{%
+  should be a picture 
+  }{
+  \ifluatex%
+  {% make redefine local 
+  \renewcommand{\aleph}{\alpha}
+  \inputmpcode{F4_05someMetapost}
+  }% to recover from redefine 
+  \else
+  \includegraphics{F4_05someMetapost.mps}
+  \fi
+  }%texFhtLoaded
+  \caption{\label{fig:metapostLua}
+  Sample MetaPost-file included via \texttt{luamplib} for lua(hb)tex } % chktex 36
+\end{figure}
+
+  
+  %Question: how to center, how to scale? 
+  %Interesting: interaction between MetaPost code and enclosing tex: 
+  
+  
+
+
+
+% I cannot detect an mps file. 
+  
+% This example is simple but not very illustrative. 
+% In the long run we shall use a state diagram based on~\cite{MetaUml}. 
+
+% There must be also a section on installation of packages: 
+% in suse linux it is ready to go, but in general, it is not. 
+% kpsewhich metauml.mp
+% /usr/share/texmf/metapost/metauml/metauml.mp
+% shows the location. 
+% Put https://github.com/ogheorghies/MetaUML/ there 
+% and mktexlsr and then check again with kpsewhich. 
+% docs is in 
+% /usr/share/texmf/doc/metapost/metauml/README
+
+% What is interesting here also is, that mp can be included directly in lualatex. 
+% There shall be some illustration for this. 
+
+% Similarly one can install latex packages. 
+% Example: tikz-uml: 
+% kpsewhich tikz-uml.sty shows 
+% /usr/share/texmf/tex/latex/tikz-uml/tikz-uml.sty
+
+% ok download, move accordingly and also move the docs 
+% /usr/share/texmf/doc/amstex/base/README
+% /usr/share/texmf/doc/latex/geometry/README.md
+
+
+
+\section{Inclusion of SVG-files}\label{sec:picSvg}
+
+Comparable with the xfig-format described in Section~\ref{sec:fig2dev} 
+but much more elaborate and widely used is the \gls{svg}-format. 
+There is a huge up-to-date official SVG 1.1 specification,~\cite{Svg11} 
+and a specification~\cite{Svg12Tiny} for SVG Tiny 1.2, 
+which is itself quite short and more readable 
+and gives also a good overview on ``SVG Big''. 
+For a tutorial, see~\cite{SvgTut}. 
+As stated in~\cite{Svg12Tiny}, Section~1.1, 
+SVG-files may contain vector graphics, raster images and text. 
+It may also contain video and audio elements 
+and may be interactive and dynamic, 
+which goes beyond what can be included in \LaTeX-files. 
+
+Figure~\ref{fig:svgWithText} shows a picture in \gls{svg}-format. 
+As PDF-files are included directly 
+via the \cmd{includegraphics}-command, 
+using the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx}, 
+virtually, 
+\texttt{xxx.svg} can be included directly via 
+% FIXME\@: done differently 
+\begin{lstlisting}[language=TeX]
+%\includesvg[width=0.5\textwidth]{xxx}%
+\end{lstlisting}
+%
+using the \LaTeX-packages \pkg{svg} described in~\cite{SvgP}. 
+Note that the suffix of the file name shall be omitted. 
+
+A closer look shows, that graphic preprocessing is done behind the scenes 
+in the course of a \LaTeX-run 
+creating files \texttt{xxx.pdf} and \texttt{xxx.pdf\_tex}. 
+As described for fig-files in Section~\ref{sec:fig2dev} 
+and for gnuplot-files in Section~\ref{sec:gnuplot2dev}: 
+The latter is a \LaTeX-file containing text 
+and including the former. 
+To include \texttt{xxx.pdf} 
+of course the \LaTeX-packages \pkg{xcolor} and \pkg{graphicx} 
+are required. 
+Moreover, it may happen that the \LaTeX-package \pkg{transparent} 
+is required also, depending on the features used in \texttt{xxx.svg}. 
+
+As indicated in~\cite{SvgP}, Section~1, 
+the \pkg{svg}-package delegates the transformation 
+of \texttt{xxx.svg} \texttt{xxx.pdf} and \texttt{xxx.pdf\_tex} 
+to \texttt{inkscape}. 
+This is a graphical editor with export functions 
+which can be invoked in batch-mode also. 
+Of course using the \pkg{svg}-package has the advantage 
+that no explicit preprocessing is required, 
+the created files updated by need. 
+It is worth thinking about whether it is worthwhile 
+writing according packages \texttt{fig} and \texttt{gnuplot}. 
+
+On the other hand, 
+this breaks the workflow this software normally applies to graphic files. 
+In particular, the package creates latex main files 
+which are not removed after the latex run 
+if parametrized accordingly or if something goes wrong. 
+Also, the \pkg{svg}-package does not provide the full flexibility 
+of a standard solution. 
+Since this software is still under construction 
+and more than that, is in an experimental phase, 
+we provide explicit preprocessing of SVG-files using \texttt{inkscape}. 
+Another problem with the \pkg{svg}-package is, 
+that according to~\cite{SvgP}, Section~1, 
+it does not work on Windows platforms. 
+
+
+Some research shows,
+that \texttt{inkscape} in the version current at time of this writing
+exports mixed PDF and latex: If invoked as 
+%
+\begin{Verbatim}[fontsize=\footnotesize]
+inkscape --export-filename=xxx.pdf --export-area-drawing --export-latex xxx.svg 
+\end{Verbatim}
+%
+\texttt{inkscape} creates a file \texttt{xxx.pdf}
+containing all graphics but text and another file \texttt{xxx.pdf\_tex}
+containing text and including \texttt{xxx.pdf}.
+The file \texttt{xxx.pdf\_tex}
+can be integrated into the latex document as
+%
+\begin{lstlisting}[language=TeX]
+\def\svgwidth{0.5\textwidth}
+\import{yyy}{xxx.pdf\_tex}%
+\end{lstlisting}
+%
+Unlike \texttt{fig2dev} and \texttt{gnuplot}, 
+specifying the files with their full path, 
+has no effect, i.e.~inclusion uses the file name only. 
+Thus, \cmd{import}{} cannot be replaced by \cmd{input}{} 
+and so the \LaTeX-package \pkg{import} is required. 
+ 
+
+This is essentially the same technique as applied for fig-files 
+and for gnuplot-files as described 
+in Sections~\ref{sec:fig2dev}~and~\ref{sec:gnuplot2dev}. 
+
+Analogously,
+%
+\begin{Verbatim}[fontsize=\footnotesize]
+inkscape --export-filename=xxx.eps --export-area-drawing --export-latex xxx.svg 
+\end{Verbatim}
+%
+exports files \texttt{xxx.eps\_tex} and \texttt{xxx.eps}.
+
+In older versions of \texttt{inkscape},
+there was a configuration allowing \texttt{xxx.eps\_tex}
+to include uniformly both \texttt{xxx.pdf} and \texttt{xxx.eps}.
+Thus, \texttt{xxx.pdf\_tex} could be deleted
+and \texttt{xxx.eps\_tex} moved to \texttt{xxx.ptx}
+which in turn could be included into the main document.
+
+As shown in Figure~\ref{fig:svg2pdf},
+for the current version of \texttt{inkscape},
+this software filters \texttt{xxx.eps\_tex} into \texttt{xxx.ptx}
+``manually'' so that both \texttt{xxx.pdf} and \texttt{xxx.eps}
+are included in \texttt{xxx.ptx}.
+Then it deletes the original files
+\texttt{xxx.pdf\_tex} and \texttt{xxx.eps\_tex}.
+
+The author has filed a bug report to the inkscape team,
+to avoid this workaround in the future. 
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+\import{}{F4_06svg2pdf.ptx}%
+}
+\caption{\label{fig:svg2pdf}Conversion of an SVG-file 
+into pdf-, eps- and ptx-files with inclusions}
+\end{figure}
+
+
+\begin{figure}[htb]
+\centering
+%\def\svgwidth{0.5\textwidth}
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+  \import{}{F4_07someSvg.ptx}% this should be the standard
+}
+\caption{\label{fig:svgWithText}Some svg-picture with text FIXME\@: uniformity  }
+\end{figure}
+
+In contrast to the FIG format, 
+SVG pictures can be created by several programs. 
+Among those, is also \texttt{inkscape} 
+which can be used like \texttt{xfig}  
+as a graphical editor with export functionality. 
+In contrast to FIG format, 
+SVG is essentially human-readable, 
+in fact an XML derivative. 
+The author calls it ``essentially'', 
+referring to the fact, that the format is quite wordy 
+as is illustrated by the source code 
+\href{\urlSite fromTex/F4_07someSvg.svg}{\texttt{F4\_07someSvg.svg}} 
+for the above picture. 
+Nevertheless, it can be an advantage 
+to go into internals and manipulate with a text editor. 
+Pasting the into VS Code, one can see the highlighting and a preview, 
+of course provided the extensions 
+described in Section~\ref{subsec:instExtVsCode} are installed. 
+
+
+\section{Pictures which are not transformed}\label{sec:picasis}
+
+Figure~\ref{fig:asIsJpg} shows some picture included as JPG\@. 
+This is done as usual with the command \cmd{includegraphics}{}
+provided by the package \pkg{graphicx}. 
+According to the documentation~\cite{GraX}, page 13, 
+the bounding box must be provided somehow. 
+
+This may be done via the package \pkg{bmpsize} 
+but alternatively also using the command \texttt{ebb}. 
+There is some hint, that \pkg{bmpsize} does not work with \texttt{xelatex}. 
+So maybe \texttt{ebb} is the better alternative. 
+Note that both techniques are available in distribution \texlive, 
+but not in \miktex. 
+
+Research shows, that inclusion is seamlessly if PDF files are created. 
+So the problem addressed is specific for creating DVI files. 
+Also, at time of this writing, it seems that also in DVI mode, no problems occur. 
+Nevertheless, the author experienced errors on missing bounding box 
+and to be safe, provides a way to invoke \texttt{ebb} on the file \texttt{xxx.jpg}. 
+
+With parameter \texttt{-m}, this creates a file \texttt{xxx.bb} 
+containing the bounding box for \texttt{dvipdfm}, 
+and with parameter \texttt{-x} a file \texttt{xxx.xbb} 
+containing an extended bounding box for \texttt{dvipdfmx}. 
+The current implementation seems not to make any difference, 
+whether the bounding boxes are created or not. 
+
+Sizes seem to differ in DVI/XDV output after conversion to PDF, 
+depending on whether \texttt{dvipdfm} or \texttt{dvipdfmx} is used. 
+Only the latter yields the same size as direct conversion to PDF creates. 
+
+Since bounding boxes seem superfluous, 
+we control their creation with a parameter \texttt{createBoundingBoxes} 
+whether to invoke \texttt{ebb}, which is false by default. 
+Nevertheless, if we invoke, then we do twice 
+creating bounded boxes and extended bounding boxes. 
+
+
+FIXME\@: further research and further documentation is required. 
+
+Note that both for \pdflatex{} and siblings creating PDF-output 
+and for \texttt{htlatex} in conjunction with \texttt{dvipdfmx} 
+(see Section~\ref{sec:figpdf}) 
+files in the format \gls{pdf}, \gls{png}, \gls{jpg} are supported. 
+% **** what about \gls{gif}? 
+This list may be incomplete. 
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+\setkeys{Gin}{width=0.9\textwidth}
+\includegraphics%[width=0.9\textwidth]
+{F4_08someJpgOboeBaroqueDennerMIR370}%.jpg
+}
+\caption{\label{fig:asIsJpg}Some JPG-picture, directly included }
+\end{figure}
+
+As an example, Figure~\ref{fig:asIsPng} shows the same picture 
+as PNG-file. 
+
+FIXME\@: At the moment, \texttt{htlatex} does not work with pictures at all. 
+
+\begin{figure}[htb]
+\centering
+\IfPackageLoadedTF{tex4ht}{%
+should be a picture 
+}{
+\includegraphics[width=0.9\textwidth]
+{F4_09somePngOboeBaroqueDennerMIR370}%.png
+}
+\caption{\label{fig:asIsPng}Some PNG-picture, directly included }
+\end{figure}
+
+Note that in DVI/XDV mode all usual latex converter 
+can include BMP-pictures, whereas in PDF mode only \texttt{xelatex} 
+can do that, maybe because it creates XDV internally in any case. 
+In contrast, \texttt{lualatex} and \texttt{pdflatex} can not. 
+% The following works for lualatex but not for pdflatex 
+% And still the same picture, Figure~\ref{fig:asIsPng} shows the oboe 
+% as bmp-file. 
+
+% \begin{figure}[htb]
+%   \centering
+%   \IfPackageLoadedTF{tex4ht}{%
+%   should be a picture 
+%   }{
+%   \includegraphics[width=0.9\textwidth]
+%   {F4_10someBmpOboeBaroqueDennerMIR370.bmp}%.bmp
+%   }
+%   \caption{\label{fig:asIsBmp}Some bmp-picture, directly included }
+%   \end{figure}
+  

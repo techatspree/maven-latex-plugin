@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{pythontex}
+
+%================
+% Macro to write list of dependent files to where latexmk will find it,
+% when configured with the code in pythontex_latexmkrc.
+\newcommand{\pycachedeps}{\py{cache_dependencies()}}
+%\AtEndDocument{\pycachedeps}
+
+% Python code used by above.
+\begin{pycode}
+def cache_dependencies():
+  s = '';
+  for item in pytex._dependencies:
+    s += "%PythonTeX dependency: '" + item + "';\n"
+  return s;
+\end{pycode}
+%================
+
+\begin{document}
+
+Test of using pythontex with dependency information.
+
+% Python code to access a particular file, together with use of a pythontex
+% subroutine to add the file to pythontex's list of source files.
+\begin{pycode}
+pytex.add_dependencies("data.txt")
+n = "data.txt"
+f = open( n, "r" )
+print( "From '", n, "', first line is: \\\\", f.readline(), "" )
+f.close
+\end{pycode}
+
+A big loop, which takes a few seconds to run in python.  This is just to illustra
+\begin{pycode}
+j = -20
+for i in range(0,15000000):
+  j = j + i
+print(j)
+\end{pycode}
+
+% Cache dependencies (in .pytxmcr file):
+\pycachedeps
+\end{document}

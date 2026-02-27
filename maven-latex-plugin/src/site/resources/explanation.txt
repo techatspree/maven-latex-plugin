@@ -1,0 +1,11 @@
+	// explanation: have a look at /usr/share/texmf/tex4ht/
+	//
+	// xhtml, ooffice: options of package tex4ht: 
+	// \usepackage[xhtml,ooffice]{tex4ht} 
+	// still not clear what is allowed. 
+	//
+	// ooffice/! is the folder ooffice rec. with all subfolders (!) 
+	// These are fonts 
+	//
+	// -c refers to a segment in the env-file. 
+	// env files are ./base/unix/tex4ht.env and ./base/win32/tex4ht.env

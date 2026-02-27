@@ -1,0 +1,140 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      #actions/checkout@v4
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+        # seems not to work 
+    - name: Set up Maven
+    #@v4.5
+      uses: stCarolas/setup-maven@v5
+      with:
+        maven-version: 3.9.4
+      # try maven-version: 3.9.8
+    - name: Set up texlive
+      uses: paolobrasolin/setup-texlive-action@v1
+      with:
+        profile-path: ${{ github.workspace }}/.github/texlive.profile
+        packages-path: ${{ github.workspace }}/.github/texlive.packages
+        #cache-enabled: false
+    - name: update apt 
+      run: sudo apt-get update -y
+      #https://github.com/marketplace/actions/install-and-cache-apt-tools
+    - name: install additional packages
+      # graphics: transfig gnuplot inkscape 
+      # pdf utilities: poppler-utils (pdfinfo, pdftotext)
+      # 
+      # Perl modules 
+      # - Capture::Tiny in libcapture-tiny-perl
+      # - DateTime::Format::ISO8601 by libdatetime-format-iso8601-perl
+      # - Cwd and File::Spec::Functions by perl or perl-base 
+      run: sudo apt-get install -y transfig gnuplot inkscape poppler-utils perl perl-base libcapture-tiny-perl libdatetime-format-iso8601-perl
+    #- name: install perl modules
+    #  run: sudo cpan -T Cwd File::Spec::Functions Capture::Tiny DateTime DateTime::Format::ISO8601
+    #    #sudo cpan App::cpanminus
+    #    #sudo cpanm Cwd File::Spec::Functions Capture::Tiny DateTime DateTime::Format::ISO8601
+    - name: correct diff tool
+      run: |
+        sudo mv diff diff.org
+        sudo -s eval 'echo -e "#! /bin/sh\nexit 0" > diff && chmod a+x diff'
+      working-directory: /usr/bin
+
+    # - name: install additional packages 
+    #   uses: awalsh128/cache-apt-pkgs-action@latest
+    #   with:
+    #     packages: transfig gnuplot inkscape
+
+    # - name: prepare with maven 
+    #   run: mvn -B verify #validate latex:grp
+    #   working-directory: ./maven-latex-plugin
+    # - name: compile with latexmk
+    #   run: latexmk latexmk
+    #   working-directory: ./maven-latex-plugin/src/site/tex/fdbLatexmk
+
+    # - name: find
+    #   run: find src 
+    #   working-directory: ./maven-latex-plugin
+
+    # This is a check without diff. 
+    # It merely ensures that the plugin runs without errors 
+    - name: Restore Maven cache
+      uses: skjolber/maven-cache-github-action@v1
+      with:
+        step: restore
+    - name: create pythontexW by injection 
+      # run: which pythontex yields /opt/hostedtoolcache/texlive/bin/x86_64-linux/pythontex
+      # run: echo $PATH contains /usr/bin
+      run: |
+        bash -version
+        mvn latex:inj -Dlatex.injections=pythontexW
+        sudo mv pythontexW /usr/bin
+      working-directory: ./maven-latex-plugin
+    - name: echo pythontexW
+      run: cat /usr/bin/pythontexW
+    - name: Build with Maven
+      run: mvn -B test -X --file pom.xml 
+      # process-resources latex:cfg 
+      # options useful for debugging: --fail-never -Dmaven.test.skip=true -X
+      # Note that the tests are not necessary, but ... used a different pom. 
+      working-directory: ./maven-latex-plugin
+    - name: Save Maven cache
+      uses: skjolber/maven-cache-github-action@v1
+      with:
+        step: save
+    - name: write logs
+      if: always()
+      run: tail -n600 src/site/tex/./docClasses/letter.log
+      working-directory: ./maven-latex-plugin
+    # - name: diff visual
+    #   run: diff <(pdftotext -layout src/site/tex/recorderOption/recorder.pdf /dev/stdout) <(pdftotext -layout src/main/resources/docsCmp/recorderOption/recorder.pdf /dev/stdout)
+    #   working-directory: ./maven-latex-plugin
+    # - name: pdfinfo 
+    #   run: |
+    #     pdfinfo -rawdates src/site/tex/recorderOption/recorder.pdf 
+    #     pdfinfo -rawdates src/main/resources/docsCmp/recorderOption/recorder.pdf
+    #   working-directory: ./maven-latex-plugin
+    # - name: log
+    #   run: cat src/site/tex/recorderOption/recorder.log
+    #   working-directory: ./maven-latex-plugin
+
+    # This is with diff also. 
+    # It does work for xfigFormat.tex, robustsample.tex, latexEngines.tex, latexEngines.tex, 
+    # but not for useBeamerPres.tex 
+    # I suspect, it has to do with different versions of packages. 
+    # So for the moment what follows must be deactivated. 
+    # - name: Prepare with maven 
+    #   run: mvn -B validate # to create the proper pom: pom4pdf.xml
+    #   working-directory: ./maven-latex-plugin
+    # - name: Build with Maven
+    #   run: mvn -B latex:cfg --file ./src/test/resources/integration/pom4pdf.xml #-Dmaven.test.skip=true
+    #   # Note that the tests are not necessary, but ... used a different pom. 
+    #   working-directory: ./maven-latex-plugin
+
+    # Optional: Uploads the full dependency graph to GitHub 
+    # to improve the quality of Dependabot alerts this repository can receive
+    # - name: Update dependency graph
+    #   uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6

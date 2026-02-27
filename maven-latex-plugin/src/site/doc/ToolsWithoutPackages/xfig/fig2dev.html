@@ -1,0 +1,836 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<title>fig2dev</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" id="SL_Style" href="fig2dev_files/translator.css"><span>@media print {#ghostery-purple-box {display:none !important}}</span><link href="fig2dev_files/css.css" rel="stylesheet" type="text/css"></head>
+<body>
+<h1>fig2dev</h1>
+<hr>
+<pre><!-- Manpage converted by man2html 3.0.1 -->
+<b>FIG2DEV(1)</b>                                                          <b>FIG2DEV(1)</b>
+
+
+
+
+</pre>
+<h2>NAME</h2><pre>       fig2dev - translates Fig code to various graphics languages
+
+
+
+</pre>
+<h2>SYNOPSIS</h2><pre>       <b>fig2dev</b> <b>-L</b> <i>language</i> [ <b>-m</b> <i>mag</i> ] [ <b>-f</b> <i>font</i> ] [ <b>-s</b> <i>fsize</i> ] [ <i>other</i> <i>options</i>
+       ] [ <i>fig-file</i> [ <i>out-file</i> ] ]
+
+
+
+</pre>
+<h2>DESCRIPTION</h2><pre>       <i>Fig2dev</i> translates fig code in the named <i>fig-file</i>  into  the  specified
+       graphics  <i>language</i> and puts them in <i>out-file.</i>  The default <i>fig-file</i> and
+       <i>out-file</i> are standard input and standard output, respectively
+
+       Xfig (Facility for Interactive Generation of figures) is a  screen-ori-
+       ented tool which runs under the X Window System, and allows the user to
+       draw and manipulate objects interactively.  This version of fig2dev  is
+       compatible with xfig versions 1.3, 1.4, 2.0, 2.1, 3.0, 3.1 and 3.2.
+
+       Xfig version 3.2.3 and later saves and allows the user to edit comments
+       for each Fig object.  These comments are output  with  several  of  the
+       output  languages,  such  as  PostScript,  CGM,  EMF,  LaTeX, MetaFont,
+       PicTeX, (as % comments), tk (as # comments), and pic (as .\" comments).
+
+
+
+</pre>
+<h2>GENERAL OPTIONS</h2><pre>       <b>-L</b> <b>language</b>
+              Set the output graphics language.  Valid languages are <b>box,</b> <b>cgm,</b>
+              <b>epic,</b> <b>eepic,</b> <b>eepicemu,</b> <b>emf,</b> <b>eps,</b> <b>gif,</b> <b>ibmgl,</b>  <b>jpeg,</b>  <b>latex,</b>  <b>map</b>
+              <b>(HTML</b> <b>image</b> <b>map),</b> <b>mf</b> <b>(MetaFont),</b> <b>mp</b> <b>(MetaPost),</b> <b>mmp</b> <b>(Multi-Meta-</b>
+              <b>Post),</b> <b>pcx,</b> <b>pdf,</b> <b>pdftex,</b> <b>pdftex_t,</b> <b>pic,</b> <b>pictex,</b>  <b>png,</b>  <b>ppm,</b>  <b>ps,</b>
+              <b>pstex,</b>  <b>pstex_t,</b>  <b>ptk</b>  <b>(Perl/tk),</b>  <b>sld</b>  <b>(AutoCad</b>  <b>slide</b> <b>format),</b>
+              <b>textyl,</b> <b>tiff,</b> <b>tk</b> <b>(tcl/tk),</b> <b>tpic,</b> <b>xbm</b> <b>and</b> <b>xpm</b>.
+
+              Notes:
+              <i>dvips</i> and <i>xdvi</i> must be compiled with the tpic  support  (-DTPIC)
+              for epic, eepic and tpic to work.
+              You  must  have  ghostscript  and  ps2pdf,  which comes with the
+              ghostscript distribution to get the pdf output  and  the  bitmap
+              formats  (png,  jpeg, etc.), and the netpbm (pbmplus) package to
+              get gif, xbm, xpm, and sld output.
+
+
+       <b>-h</b>     Print help message with all options  for  all  output  languages
+              then exit.
+
+
+       <b>-D</b> <b>+/-rangelist</b>
+              With  +rangelist,  keep  only  those  depths  in the list.  With
+              -rangelist, keep all depths except those in the list. The range-
+              list  may  be  a list of comma-separated numbers or ranges sepa-
+              rated by colon (:). For example, -D +10,40,55:70,80  means  keep
+              only layers 10, 40, 55 <b>through</b> 70, and 80.
+
+
+       <b>-f</b> <b>font</b>
+              Set the default font used for text objects to <i>font.</i>  The default
+              is Roman; the format of this option depends on the graphics <i>lan-</i>
+              <i>guage</i>  in  use.  In TeX-based languages, the font is the base of
+              the name given in lfonts.tex, for instance "cmr" for  Roman,  or
+              "tt"  for teletype.  In PostScript, it is any font name known to
+              the printer or interpreter.
+
+
+       <b>-G</b> <b>minor[:major][:unit]</b>
+              Draws a grid on the page.  Specify thin, or thin and thick  line
+              spacing  in  one  of  several  units.  For example, "-G .25:1cm"
+              draws a thin, gray line every .25 cm and  a  thicker  gray  line
+              every 1 cm.  Specifying "-G 1in" draws a thin line every 1 inch.
+              Fractions may be used, e.g. "-G 1/16:1/2in"  will  draw  a  thin
+              line  every  1/16  inch (0.0625 inch) and a thick line every 1/2
+              inch.
+              Allowable units are: i, in, inch, f, ft, feet, c, cm, mm, and m.
+              <b>Only</b>  <b>allowed</b>  <b>for</b>  <b>PostScript,</b> <b>EPS,</b> <b>PDF,</b> <b>and</b> <b>bitmap</b> <b>(GIF,</b> <b>JPEG,</b>
+              <b>etc)</b> <b>drivers</b> <b>for</b> <b>now.</b>
+
+
+       <b>-j</b>     Enable the I18N internationalization facility.
+
+
+       <b>-m</b> <b>mag</b> Set the magnification at which the figure is  rendered  to  <i>mag.</i>
+              The default is 1.0.
+
+
+       <b>-s</b> <b>size</b>
+              Set the default font size (in points) for text objects to <i>fsize.</i>
+              The default is 11*mag, and thus is scaled by the <b>-m</b> option.   If
+              there is no scaling, the default font is eleven point Roman."
+
+
+       <b>-V</b>     Print the program version number and exit.
+
+
+       <i>other</i> <i>options</i>
+              The  other  options  are specific to the choice of graphics <i>lan-</i>
+              <i>guage,</i> as described below.
+
+
+
+</pre>
+<h2>CGM OPTIONS</h2><pre>       CGM is Computer Graphics Metafile, developed by ISO and ANSI and  is  a
+       vector-based  plus  bitmap  language.   Microsoft  WORD, PowerPoint and
+       probably other products can import this format <i>and</i> <i>display</i>  <i>it</i>  <i>on</i>  <i>the</i>
+       <i>screen,</i>  something that they won’t do with EPS files that have an ASCII
+       preview.
+
+       <b>-b</b> <b>dummyarg</b>
+              Generate binary output (dummy argument required after the "-b").
+
+
+       <b>-r</b>     Position  arrowheads for CGM viewers that display rounded arrow-
+              heads.  Normally, arrowheads are pointed, so fig2dev compensates
+              for  this  by moving the endpoint of the line back so the tip of
+              the arrowhead ends where the original endpoint of the line  was.
+              If  the  <b>-r</b>  option  is used, the position of arrows will <i>NOT</i> be
+              corrected for  compensating  line  width  effects,  because  the
+              rounded  arrowhead  doesn’t  extend  beyond  the endpoint of the
+              line.
+
+
+
+</pre>
+<h2>EMF OPTIONS</h2><pre>       EMF is Enhanced Metafile, developed by Microsoft and is a  vector-based
+       plus  bitmap  language.   Microsoft WORD, PowerPoint and probably other
+       products can import this format <i>and</i> <i>display</i> <i>it</i> <i>on</i> <i>the</i> <i>screen,</i> something
+       that they won’t do with EPS files that have an ASCII preview.
+
+
+
+</pre>
+<h2>EPIC OPTIONS</h2><pre>       EPIC  is  an  enhancement to LaTeX picture drawing environment.  It was
+       developed by Sunil Podar of Department of Computer Science  in  S.U.N.Y
+       at Stony Brook.
+
+       EEPIC  is  an  extension  to EPIC and LaTeX picture drawing environment
+       which uses tpic specials as a graphics mechanism.  It  was  written  by
+       Conrad  Kwok  of Division of Computer Science at University of Califor-
+       nia, Davis.
+
+       EEPIC-EMU is an EEPIC emulation package which does not  use  tpic  spe-
+       cials.
+
+
+       <b>-A</b> <b>factor</b>
+              Scale  arrowheads by <i>factor.</i>  The width and height of arrowheads
+              is <i>divided</i> by this factor.  This is because <i>EPIC</i> arrowheads  are
+              normally about double the size of <i>TeX</i> arrowheads.
+
+
+       <b>-E</b> <b>num</b> Set encoding for text translation (0 = none, 1 = ISO-8859-1, 2 =
+              ISO-8859-2)
+
+
+       <b>-F</b>     Don’t set the font face, series, and style; only set  it’s  size
+              and the baselineskip. By default, fig2dev sets all 5 font param-
+              eters when it puts some text. The disadvantage is that you can’t
+              set  the font from your LaTeX document. With this option on, you
+              can set the font from your LaTeX document (like "<b>\sfshape</b> <b>\input</b>
+              <b>picture.eepic</b>").
+
+              If  any of the pictures included in your LaTeX document has been
+              generated with <b>-F</b>, then all pictures must be generated with this
+              option.
+
+              This option can be used only when fig2dev was compiled with NFSS
+              defined.
+
+
+       <b>-l</b> <b>width</b>
+              Use "<b>\thicklines</b>" when width of the line is wider  than  <i>lwidth.</i>
+              The default is 2.
+
+
+       <b>-P</b>     Generate  a complete LaTeX file. In other words, the output file
+              can be formatted without requiring any changes.  The  additional
+              text  inserted  in  the  beginning and at the end of the file is
+              controlled  by  the  configuration  parameter   "Preamble"   and
+              "Postamble".
+
+
+       <b>-R</b>     Allow  rotated text. Rotated text will be set using the \rotate-
+              box command.  So, you will need to  include  "<b>\usepackage{graph-</b>
+              <b>ics}</b>" in the preamble of your LaTeX document.
+
+              If  this  option is not set, then rotated text will be set hori-
+              zontally.
+
+
+
+       <b>-S</b> <b>scale</b>
+              Set the scale to which the  figure  is  rendered.   This  option
+              automatically  sets the <i>magnification</i> and size to <i>scale</i> / 12 and
+              <i>scale</i> respectively.
+
+
+       <b>-t</b> <b>stretch</b>
+              Set the stretch factor of dashed lines to <i>sretch.</i>   The  default
+              is 30.
+
+
+       <b>-v</b>     Include comments in the output file.
+
+
+       <b>-W</b>     Enable  variable  line  width.  By default, only two line widths
+              are available: The normal line width (hinlines), and thick lines
+              (hicklines),  if  a  line  width of more than one is selected in
+              xfig.
+
+
+       <b>-w</b>     Disable variable line width. Only "<b>\thicklines</b>"  and/or  "<b>\thin-</b>
+              <b>lines</b>" commands will be generated in the output file.
+
+              When variable line width option is enabled, "<b>\thinlines</b>" command
+              is still used when line width is less than <i>LineThick</i>. One poten-
+              tial  problem is that the width of "<b>\thinlines</b>" is 0.4pt but the
+              resolution of Fig is 1/80 inch (approx. 1pt).  If  <i>LineThick</i>  is
+              set to 2, normal lines will be drawn in 0.4pt wide lines but the
+              next line width is already 2pt. One possible solution is to  set
+              <i>LineThick</i>  to 1 and set the width of the those lines you want to
+              be drawn in "<b>\thinlines</b>"  to 0.
+
+              Due to this problem, Variable line width <i>VarWidth</i>  is  defaulted
+              to be false.
+
+
+
+
+</pre>
+<h2>IBM-GL (HP/GL) OPTIONS</h2><pre>       IBM-GL  (IBM  Graphics  Language)  is  compatible  with HP-GL (Hewlett-
+       Packard Graphics Language).
+
+
+       <b>-a</b>     Select ISO A4 (ANSI A) paper size if the default is ANSI A  (ISO
+              A4) paper size.
+
+
+       <b>-c</b>     Generate  instructions for an IBM 6180 Color Plotter with (with-
+              out) an IBM Graphics Enhancement Cartridge (IBM-GEC).
+
+
+       <b>-d</b> <b>xll,yll,xur,yur</b>
+              Restrict plotting to a rectangular area  of  the  plotter  paper
+              which  has  a  lower  left  hand corner at <i>(xll,yll)</i> and a upper
+              right hand corner at <i>(xur,yur).</i>  All four numbers are in  inches
+              and  follow <b>-d</b> in a comma-sparated list - <i>xll,yll,xur,yur</i> - with
+              no spaces between them.
+
+
+       <b>-f</b> <b>file</b>
+              Load text character specifications from the table in  the  <i>fonts</i>
+              file.  The table must have 36 entries - one for each font plus a
+              default.  Each entry consists of 5 numbers which specify the 1.)
+              standard  character  set  (0 - 4, 6 - 9, 30 - 39), 2.) alternate
+              character set (0 - 4, 6 - 9, 30 - 39), 3.) character slant angle
+              (degrees),  4.)  character  width scale factor and 5.) character
+              height scale factor.
+
+
+       <b>-k</b>     Precede output with PCL command to use HP/GL
+
+
+       <b>-l</b> <b>pattfile</b>
+              Load area fill line patterns from  the  table  in  the  <i>pattfile</i>
+              file.  The table must have 21 entries - one for each of the area
+              fill patterns.  Each entry consists of 5 numbers  which  specify
+              the  1.)  pattern  number (-1 - 6), 2.) pattern length (inches),
+              3.) fill type (1 - 5), 4.) fill spacing (inches)  and  5.)  fill
+              angle (degrees).
+
+
+       <b>-m</b> <b>mag,x0,y0</b>
+              The  magnification  may  appear  as the first element in a comma
+              separated list - <i>mag,x0,y0</i> - where the second and third  parame-
+              ters specify an offset in inches.
+
+
+       <b>-P</b>     Rotate  the  figure  to  portrait mode. The default is landscape
+              mode.
+
+
+       <b>-p</b> <b>penfile</b>
+              Load plotter pen specifications from the table  in  the  <i>penfile</i>
+              file.  The table must have 9 entries - one for each color plus a
+              default.  Each entry consists of 2 numbers which specify the 1.)
+              pen number (1 - 8) and 2.) pen thickness (millimeters).
+
+
+       <b>-S</b> <b>speed</b>
+              Set the pen speed to <i>speed</i> (centimeters/second).
+
+
+       <b>-v</b>     Plot  the  figure  upside-down  in portrait mode or backwards in
+              landscape mode.  This allows you to write on the top surface  of
+              overhead  transparencies  without  disturbing the plotter ink on
+              the bottom surface.
+
+       Fig2dev may be installed with either ANSI A or  ISO  A4  default  paper
+       size.   The  <b>-a</b>  option selects the alternate paper size.  Fig2dev does
+       not fill closed splines.  The IBM-GEC is required to fill  other  poly-
+       gons.   Fig2dev  may be installed for plotters with or without the IBM-
+       GEC.  The <b>-c</b> option selects the alternate instruction set.
+
+
+
+</pre>
+<h2>OPTIONS COMMON TO ALL BITMAP FORMATS</h2><pre>       <b>-b</b> <b>borderwidth</b>
+              Make blank border around figure of width <i>borderwidth.</i>
+
+
+       <b>-F</b>     Use correct font sizes (points) instead of the traditional  size
+              that  xfig/fig2dev  uses, which is 1/80 inch.  The corresponding
+              xfig command-line option is -correct_font_size.
+
+
+       <b>-g</b> <b>color</b>
+              Use <i>color</i> for the background.
+
+
+       <b>-N</b>     Convert all colors to grayscale.
+
+
+       <b>-S</b> <b>smoothfactor</b>
+              This  will  smooth  the  output  by  passing   <i>smoothfactor</i>   to
+              ghostscript   in  the  <i>-dTextAlphaBits</i>  and  <i>-dGraphicsAlphaBits</i>
+              options to improve font  rendering  and  graphic  smoothing.   A
+              value  of  2 for <i>smoothfactor</i> provides some smoothing and 4 pro-
+              vides more.
+
+
+
+</pre>
+<h2>GIF OPTIONS</h2><pre>       <b>-t</b> <b>color</b>
+              Use <i>color</i> for the transparent color in the GIF file.  This  must
+              be  specified in the same format that <b>ppmmake(1)</b> allows.  It may
+              allow an X11 color name, but at least you may  use  a  six-digit
+              hexadecimal RGBvalue using the # sign, e.g. #ff0000 (Red).
+
+
+
+</pre>
+<h2>JPEG OPTIONS</h2><pre>       <b>-q</b> <b>image_quality</b>
+              use  the integer value <i>image</i><b>_</b><i>quality</i> for the JPEG "Quality" fac-
+              tor.  Valid values are 0-100, with the default being 75.
+
+
+
+
+</pre>
+<h2>LATEX OPTIONS</h2><pre>       <b>-d</b> <b>dmag</b>
+              Set a separate magnification for the length of  line  dashes  to
+              <i>dmag.</i>
+
+
+       <b>-E</b> <b>num</b> Set  encoding  for  latex  text translation (0 no translation, 1
+              ISO-8859-1, 2 ISO-8859-2)
+
+
+       <b>-l</b> <b>lwidth</b>
+              Sets the threshold between LaTeX thin and thick lines to  <i>lwidth</i>
+              pixels.   LaTeX  supports  only two different line width: \thin-
+              lines and \thicklines.  Lines of width greater than <i>lwidth</i>  pix-
+              els  are drawn as \thicklines.  Also affects the size of dots in
+              dotted line style.  The default is 1.
+
+       <b>-v</b>     Verbose mode.
+
+       LaTeX cannot accurately represent all the graphics objects which can be
+       described  by  Fig.   For  example, the possible slopes which lines may
+       have are limited.  Some objects, such as spline curves, cannot be drawn
+       at  all.  Fig2latex chooses the closest possible line slope, and prints
+       error messages when objects cannot be drawn accurately
+
+
+
+</pre>
+<h2>MAP (HTML image map) OPTIONS</h2><pre>       Xfig version 3.2.3 and later saves and allows the user to edit comments
+       for  each  Fig object.  The fig2dev map output language will produce an
+       HTML image map using Fig objects that  have  href="some_html_reference"
+       in their comments.  Any Fig object except compound objects may used for
+       this.  Usually, besides generating the map file, you would also  gener-
+       ate a GIF file, which is the image to which the map refers.
+
+       For  example,  you may have an xfig drawing with an imported image that
+       has the comment href="go_here.html" and a box  object  with  a  comment
+       href="go_away.html".  This will produce an image map file such the user
+       may click on the image and the browser  will  load  the  "go_here.html"
+       page,  or click on the box and the browser will load the "go_away.html"
+       page.
+
+       After the map file is generated by <i>fig2dev</i> you will need to edit it  to
+       fill out any additional information it may need.
+
+       <b>-b</b> <b>borderwidth</b>
+              Make blank border around figure of width <i>borderwidth.</i>
+
+
+
+
+</pre>
+<h2>METAFONT OPTIONS</h2><pre>       <i>fig2dev</i>  scales the figure by 1/8 before generating METAFONT code.  The
+       magnification can be further changed with the <b>-m</b> option  or  by  giving
+       magnification options to <b>mf.</b>
+
+       In  order to process the generated METAFONT code, the mfpic macros must
+       be installed where <b>mf</b> can find them. The mfpic macro package is  avail-
+       able at any CTAN cite under the subdirectory: graphics/mfpic
+
+
+       <b>-C</b> <b>code</b>
+              specifies the starting METAFONT font code. The default is 32.
+
+       <b>-n</b> <b>name</b>
+              specifies the name to use in the output file.
+
+       <b>-p</b> <b>pen_magnification</b>
+              specifies  how  much the line width should be magnified compared
+              to the original figure. The default is 1.
+
+       <b>-t</b> <b>top</b> specifies the top of the whole coordinate system. The default is
+              <b>ypos.</b>
+
+       <b>-x</b> <b>xmin</b>
+              specifies the minimum x coordinate value of the figure (inches).
+              The default is 0.
+
+       <b>-y</b> <b>ymin</b>
+              specifies the minumum y coordinate value of the figure (inches).
+              The default is 0.
+
+       <b>-X</b> <b>xmax</b>
+              specifies the maximum x coordinate value of the figure (inches).
+              The default is 8.
+
+       <b>-Y</b> <b>ymax</b>
+              specifies the maximum y coordinate value of the figure (inches).
+              The default is 8.
+
+
+
+</pre>
+<h2>METAPOST OPTIONS</h2><pre>       <b>-i</b> <b>file</b>
+              Include file content via \input-command.
+
+
+       <b>-I</b> <b>file</b>
+              Include file content as additional header.
+
+
+       <b>-o</b>     Old mode (no latex).
+
+
+       <b>-p</b> <b>number</b>
+              Adds the line "prologues:=number" to the output.
+
+
+
+
+</pre>
+<h2>PIC OPTIONS</h2><pre>       <b>-p</b> <b>ext</b> Enables  the  use  of  certain PIC extensions which are known to
+              work with the groff  package;  compatibility  with  DWB  PIC  is
+              unknown.  The extensions enabled by each option are:
+
+           <b>arc</b>     Allow ARC_BOX i.e. use rounded corners
+           <b>line</b>    Use the ’line_thickness’ value
+           <b>fill</b>    Allow ellipses to be filled
+           <b>all</b>     Use all of the above
+           <b>psfont</b>  Don’t convert Postscript fonts generic type
+                   (useful for files going to be Ditroff’ed for
+                   and printed on PS printer). DWB-compatible.
+           <b>allps</b>   Use all of the above (i.e. "all" + "psfont")
+
+
+
+</pre>
+<h2>PICTEX OPTIONS</h2><pre>       In order to include PiCTeX pictures into a document, it is necessary to
+       load the PiCTeX macros.
+
+       PiCTeX uses TeX integer register arithmetic to generate curves, and  so
+       it  is  very slow.  PiCTeX draws curves by <b>\put</b>-ing the <i>psymbol</i> repeat-
+       edly, and so requires a large amount of TeX’s internal memory, and gen-
+       erates  large DVI files.  The size of TeX’s memory limits the number of
+       plot symbols in a picture.  As a result, it is best to  use  PiCTeX  to
+       generate small pictures.
+
+
+       <b>-E</b> <b>num</b> Set  encoding  for  latex  text translation (0 no translation, 1
+              ISO-8859-1, 2 ISO-8859-2)
+
+
+
+</pre>
+<h2>POSTSCRIPT, ENCAPSULATED POSTSCRIPT (EPS), and PDF OPTIONS</h2><pre>       With PostScript, xfig can be used to create multiple page figures Spec-
+       ify  the -M option to produce a multi-page output.  For posters, add -O
+       to overlap the pages slightly to get around the problem of the unprint-
+       able area in most printers, then cut and paste the pages together.  Due
+       to memory limitations of most laser printers,  the  figure  should  not
+       have large imported images (bitmaps). Great for text with very big let-
+       ters.
+
+       The EPS driver has the following differences from PostScript:
+           o No showpage is generated  because  the  output  is  meant  to  be
+           imported into another program or document and not printed
+           o The landscape/portrait options are ignored
+           o The centering option is ignored
+           o The multiple-page option is ignored
+           o The paper size option is ignored
+           o The x/y offset options are ignored
+
+       The EPS driver has the following two special options:
+
+       <b>-B</b> �<b>�</b>��<b>Wx</b> <b>[Wy</b> <b>X0</b> <b>Y0]</b>�<b>�</b>��
+              This specifies that the bounding box of the EPS file should have
+              the width Wx and the height Wy.  If a value less than  or  equal
+              to  0  is  specified  for  Wx  or  Wy,  these  are  set  to  the
+              width/height respectively of the figure. Origin is  relative  to
+              screen (0,0) (upper-left).  Wx, Wy, X0 and Y0 are interpreted in
+              centimeters or inches depending on the measure given in the fig-
+              file.   Remember  to put either quotes (") or apostrophes (’) to
+              group the arguments to -B.
+
+       <b>-R</b> �<b>�</b>��<b>Wx</b> <b>[Wy</b> <b>X0</b> <b>Y0]</b>�<b>�</b>��
+              Same as the -B option except that X0 and Y0 is relative  to  the
+              lower  left corner of the <b>figure.</b>  Remember to put either quotes
+              (") or apostrophes (’) to group the arguments to -R.
+
+       The PDF driver uses all the PostScript options.
+
+       Text can now include various ISO-character codes above 0x7f,  which  is
+       useful  for  language  specific characters to be printed directly.  Not
+       all ISO-characters are implemented.
+
+       Color support: Colored objects created by Fig can be printed on a color
+       postscript printer. There are 32 standard colors: black, yellow, white,
+       gold, five shades of blue, four shades of green, four shades  of  cyan,
+       four  shades  of red, five shades of magenta, four shades of brown, and
+       four shades of pink.  In addition there may be user-defined  colors  in
+       the file.  See the xfig FORMAT3.2 file for the definition of these col-
+       ors.  On a monochrome printer, colored objects will be mapped into dif-
+       ferent grayscales by the printer.  Filled objects are printed using the
+       given area fill and color.  There are 21 "shades" going from  black  to
+       full  saturation of the fill color, and 21 more "tints" from full satu-
+       ration + 1 to white.  In  addition,  there  are  16  patterns  such  as
+       bricks, diagonal lines, crosshatch, etc.
+
+       <b>-A</b>     Add an ASCII (EPSI) preview.
+
+       <b>-b</b> <b>borderwidth</b>
+              Make blank border around figure of width <i>borderwidth.</i>
+              Not availble in EPS.
+
+
+       <b>-C</b> <b>dummy_arg</b>
+              Add  a  color  *binary* TIFF preview for Microsoft products that
+              need a binary preview.  See also  -T  (monochrome  preview).   A
+              dummy argument must be supplied for historical reasons.
+
+       <b>-c</b>     option centers the figure on the page.  The centering may not be
+              accurate if there are texts in the <i>fig</i><b>_</b><i>file</i> that extends too far
+              to the right of other objects.
+
+       <b>-e</b>     option  puts  the  figure against the edge (not centered) of the
+              page.  Not availble in EPS.
+
+
+       <b>-F</b>     Use correct font sizes (points) instead of the traditional  size
+              that  xfig/fig2dev  uses, which is 1/80 inch.  The corresponding
+              xfig command-line option is -correct_font_size.
+
+
+       <b>-g</b> <b>color</b>
+              Use <i>color</i> for the background.
+
+       <b>-l</b> <b>dummy_arg</b>
+              Generate figure  in  landscape  mode.   The  dummy  argument  is
+              ignored, but must appear on the command line for reasons of com-
+              patibility.  This option will override the orientation  specifi-
+              cation in the file (for file versions 3.0 and higher).
+              Not availble in EPS.
+
+       <b>-M</b>     Generate multiple pages if figure exceeds paper size.
+              Not availble in EPS.
+
+       <b>-N</b>     Convert all colors to grayscale.
+
+
+       <b>-n</b> <b>name</b>
+              Set  the  Title  part of the PostScript output to <i>name.</i>  This is
+              useful when the input to <i>fig2dev</i> comes from standard input.
+
+       <b>-O</b>     When used with <b>-M</b>, overlaps the pages slightly to get around the
+              problem of the unprintable area in most printers.
+              Not availble in EPS.
+
+       <b>-p</b> <b>dummy_arg</b>
+              Generate  figure  in  portrait  mode.   The  dummy  argument  is
+              ignored, but must appear on the command line for reasons of com-
+              patibility.   This option will override the orientation specifi-
+              cation in the file (for file versions 3.0 and higher).  This  is
+              the default for Fig files of version 2.1 or lower.
+              Not availble in EPS.
+
+
+       <b>-T</b>     Add  a  monochrome  *binary* TIFF preview for Microsoft products
+              that need a binary preview.  See also -C (color preview).
+
+
+       <b>-x</b> <b>offset</b>
+              shift the figure in the X direction by <i>offset</i> units (1/72
+              inch).   A  negative  value shifts the figure to the left
+              and a positive value to the right.
+              Not availble in EPS.
+
+       <b>-y</b> <b>offset</b>
+              shift the figure in the Y direction by <i>offset</i> units (1/72
+              inch).   A  negative  value  shifts  the  figure up and a
+              positive value down.
+              Not availble in EPS.
+
+       <b>-z</b> <b>papersize</b>
+              Sets the papersize.  Not availble in EPS.
+              Available paper sizes are:
+                  "Letter" (8.5" x 11" also "A"),
+                  "Legal" (11" x 14")
+                  "Ledger" (11" x 17"),
+                  "Tabloid" (17" x 11", really Ledger in Landscape mode),
+                  "A" (8.5" x 11" also "Letter"),
+                  "B" (11" x 17" also "Ledger"),
+                  "C" (17" x 22"),
+                  "D" (22" x 34"),
+                  "E" (34" x 44"),
+                  "A4" (21  cm x  29.7cm),
+                  "A3" (29.7cm x  42  cm),
+                  "A2" (42  cm x  59.4cm),
+                  "A1" (59.4cm x  84.1cm),
+                  "A0" (84.1cm x 118.9cm),
+                  and "B5" (18.2cm x 25.7cm).
+
+
+
+
+</pre>
+<h2>PSTEX OPTIONS</h2><pre>       The <b>pstex</b> language is a variant of <b>ps</b> which suppresses formatted
+       (special)  text.   The  <b>pstex_t</b>  language  has the complementary
+       behavior: it generates only the LaTeX special text and the  com-
+       mands  necessary  to  position  special text, and to overlay the
+       PostScript file generated using <b>pstex.</b>  These two drivers can be
+       used  to  generate  a  figure  which combines the flexibility of
+       PostScript graphics with LaTeX text formatting of special  text.
+
+
+       <b>-F</b>     Use  correct  font  sizes  (points) instead of the tradi-
+              tional size that xfig/fig2dev uses, which is  1/80  inch.
+              The  corresponding  xfig  command-line  option  is  -cor-
+              rect_font_size.
+
+
+       <b>-g</b> <b>color</b>
+              Use <i>color</i> for the background.
+
+       <b>-n</b> <b>name</b>
+              sets the Title part of the  PostScript  output  to  <i>name.</i>
+              This is useful when the input to <i>fig2dev</i> comes from stan-
+              dard input.
+
+
+
+
+</pre>
+<h2>PSTEX_T OPTIONS</h2><pre>       The pstex_t language produces only the LaTeX  special  text  and
+       the  commands necessary to position special text, and to overlay
+       the PostScript file generated using <b>pstex.</b>  (see above)
+
+
+       <b>-E</b> <b>num</b> Set encoding for latex text translation  (0  no  transla-
+              tion, 1 ISO-8859-1, 2 ISO-8859-2)
+
+
+       <b>-F</b>     Don’t set the font face, series, and style; only set it’s
+              size and the baselineskip. By default, fig2dev sets all 5
+              font  parameters when it puts some text. The disadvantage
+              is that you can’t set the font from your LaTeX  document.
+              With this option on, you can set the font from your LaTeX
+              document (like "<b>\sfshape</b> <b>\input</b> <b>picture.eepic</b>").
+
+       <b>-p</b> <b>file</b>
+              specifies the name of the PostScript file to be overlaid.
+              If  not  set or its value is null then no PS file will be
+              inserted.
+
+
+
+</pre>
+<h2>TK and PTK OPTIONS (tcl/tk and Perl/tk)</h2><pre>       <b>-l</b> <b>dummy_arg</b>
+              Generate figure in landscape mode.  The dummy argument is
+              ignored,  but must appear on the command line for reasons
+              of compatibility.  This option will override the orienta-
+              tion specification in the file (for file versions 3.0 and
+              higher).
+
+       <b>-p</b> <b>dummy_arg</b>
+              Generate figure in portrait mode.  The dummy argument  is
+              ignored,  but must appear on the command line for reasons
+              of compatibility.  This option will override the orienta-
+              tion specification in the file (for file versions 3.0 and
+              higher).  This is the default for Fig  files  of  version
+              2.1 or lower.
+
+       <b>-P</b>     Generate  canvas  of  full page size instead of using the
+              bounding box of the figure’s objects. The default  is  to
+              use only the bounding box.
+
+       <b>-z</b> <b>papersize</b>
+              Sets  the  papersize.   See  the  POSTSCRIPT  OPTIONS for
+              available paper sizes.  This is only  used  when  the  -P
+              option (use full page) is used.
+
+
+
+</pre>
+<h2>SEE ALSO</h2><pre>       [x]<b>fig(1)</b>, <b>pic(1)</b> <b>pic2fig(1)</b>, <b>transfig(1)</b>
+
+
+</pre>
+<h2>BUGS and RESTRICTIONS</h2><pre>       Please send bug reports, fixes, new features etc. to:
+       xfig-bugs@epb1.lbl.gov (Brian V. Smith)
+
+       Arc-boxes are not supported for the tk output language, and only
+       X bitmap pictures are supported because of the canvas limitation
+       in tk.
+
+       Picture objects are not scaled with the magnification factor for
+       tk output.
+
+       Because tk scales canvas items according to the X display  reso-
+       lution,  polygons,  lines,  etc.  may be scaled differently than
+       imported pictures (bitmaps) which aren’t scaled at all.
+
+       Rotated text  is  only  supported  in  the  IBM-GL  (HP/GL)  and
+       PostScript (including eps) languages.
+
+
+</pre>
+<h2>COPYRIGHT</h2><pre>       Copyright (c) 1991 Micah Beck
+       Parts Copyright (c) 1985 Supoj Sutantavibul
+       Parts Copyright (c) 1989-1999 Brian V. Smith
+
+       Permission to use, copy, modify, distribute, and sell this soft-
+       ware and its documentation for any  purpose  is  hereby  granted
+       without  fee, provided that the above copyright notice appear in
+       all copies and that both that copyright notice and this  permis-
+       sion notice appear in supporting documentation. The authors make
+       no representations about the suitability of  this  software  for
+       any  purpose.  It is provided "as is" without express or implied
+       warranty.
+
+       THE AUTHORS DISCLAIM ALL WARRANTIES WITH REGARD  TO  THIS  SOFT-
+       WARE,  INCLUDING  ALL  IMPLIED WARRANTIES OF MERCHANTABILITY AND
+       FITNESS, IN NO EVENT SHALL THE AUTHORS BE LIABLE  FOR  ANY  SPE-
+       CIAL,  INDIRECT  OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSO-
+       EVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN  AN
+       ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+       OUT OF OR IN CONNECTION WITH THE  USE  OR  PERFORMANCE  OF  THIS
+       SOFTWARE.
+
+
+</pre>
+<h2>AUTHORS</h2><pre>       Micah Beck
+       Cornell University
+       Sept 28 1990
+
+       and Frank Schmuck (then of Cornell University)
+       and Conrad Kwok (then of U.C. Davis).
+
+       drivers contributed by
+       Jose Alberto Fernandez R. (U. of Maryland)
+       and Gary Beihl (MCC)
+
+       Color support, ISO-character encoding and poster support by
+       Herbert Bauer (heb@regent.e-technik.tu-muenchen.de)
+
+       Modified from f2p (fig to PIC), by the author of Fig
+       Supoj Sutanthavibul (supoj@sally.utexas.edu)
+       University of Texas at Austin.
+
+       MetaFont driver by
+       Anthony Starks (ajs@merck.com)
+
+       X-splines code by
+       Carole Blanc (blanc@labri.u-bordeaux.fr)
+       Christophe Schlick (schlick@labri.u-bordeaux.fr)
+       The  initial  implementation was done by C. Feuille, S. Grobois,
+       L. Maziere and L. Minihot as a student practice (Universite Bor-
+       deaux, France).
+
+       Japanese  text  support  for  LaTeX  output  written  by T. Sato
+       (VEF00200@niftyserve.or.jp)
+
+       The tk driver was written by
+       Mike Markowski (mm@udel.edu) with a  little  touch-up  by  Brian
+       Smith
+
+       The CGM driver (Computer Graphics Metafile) was written by
+       Philippe Bekaert (Philippe.Bekaert@cs.kuleuven.ac.be)
+
+       The EMF driver (Enhanced Metafile) was written by
+       Michael Schrick (m_schrick@hotmail.com)
+
+
+
+                            Version 3.2.4 Oct 2002                  <b>FIG2DEV(1)</b>
+</pre>
+<hr>
+<address>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html" rollapp-href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+
+
+<div id="SL_balloon_obj" style="display: none;"><div id="SL_button" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/imtranslator-s.png&quot;) repeat scroll 0% 0%; display: block; width: 24px; height: 24px; position: absolute; cursor: pointer;"></div><div id="SL_shadow_translation_result2" style="display: none;"></div><div id="SL_shadow_translator"><div id="SL_providers"><div class="SL_BL_LABLE_ON" title="Google" id="SL_P0">G</div><div class="SL_BL_LABLE_ON" title="Microsoft" id="SL_P1">M</div><div class="SL_BL_LABLE_ON" title="Translator" id="SL_P2">T</div></div><div id="SL_planshet" style="background: rgb(244, 245, 245) url(&quot;chrome://imtranslator/content/img/util/bg2.png&quot;) repeat scroll 0% 0%;"><div id="SL_arrow_up"></div><div id="SL_TB"><div id="bubblelogo" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/imtranslator-s.png&quot;) repeat scroll 0% 0%; display: block; width: 24px; height: 24px; position: absolute;"></div><table id="SL_tables"><tr><td width="10%" align="right"><input id="SLloc" title="Lock-in language" type="checkbox"></td><td width="20%" align="left"><select id="SL_lng_from"><option value="auto" selected="selected">Detect language</option><option value="af">Afrikaans</option><option value="sq">Albanian</option><option value="ar">Arabic</option><option value="hy">Armenian</option><option value="az">Azerbaijani</option><option value="eu">Basque</option><option value="be">Belarusian</option><option value="bn">Bengali</option><option value="bs">Bosnian</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="ceb">Cebuano</option><option value="ny">Chichewa</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="hr">Croatian</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="en">English</option><option value="eo">Esperanto</option><option value="et">Estonian</option><option value="tl">Filipino</option><option value="fi">Finnish</option><option value="fr">French</option><option value="gl">Galician</option><option value="ka">Georgian</option><option value="de">German</option><option value="el">Greek</option><option value="gu">Gujarati</option><option value="ht">Haitian Creole</option><option value="ha">Hausa</option><option value="iw">Hebrew</option><option value="hi">Hindi</option><option value="hmn">Hmong</option><option value="hu">Hungarian</option><option value="is">Icelandic</option><option value="ig">Igbo</option><option value="id">Indonesian</option><option value="ga">Irish</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="jw">Javanese</option><option value="kn">Kannada</option><option value="kk">Kazakh</option><option value="km">Khmer</option><option value="ko">Korean</option><option value="lo">Lao</option><option value="la">Latin</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="mk">Macedonian</option><option value="mg">Malagasy</option><option value="ms">Malay</option><option value="ml">Malayalam</option><option value="mt">Maltese</option><option value="mi">Maori</option><option value="mr">Marathi</option><option value="mn">Mongolian</option><option value="my">Myanmar (Burmese)</option><option value="ne">Nepali</option><option value="no">Norwegian</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pa">Punjabi</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sr">Serbian</option><option value="st">Sesotho</option><option value="si">Sinhala</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="so">Somali</option><option value="es">Spanish</option><option value="su">Sundanese</option><option value="sw">Swahili</option><option value="sv">Swedish</option><option value="tg">Tajik</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="ur">Urdu</option><option value="uz">Uzbek</option><option value="vi">Vietnamese</option><option value="cy">Welsh</option><option value="yi">Yiddish</option><option value="yo">Yoruba</option><option value="zu">Zulu</option></select></td><td width="5%" align="center"><div id="SL_switch_b" title="Switch languages" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/switchb.png&quot;) repeat scroll 0% 0%; display: block; width: 10px; height: 10px; cursor: pointer;" align="center"></div></td><td width="20%" align="left"><select id="SL_lng_to"><option value="af">Afrikaans</option><option value="sq">Albanian</option><option value="ar">Arabic</option><option value="hy">Armenian</option><option value="az">Azerbaijani</option><option value="eu">Basque</option><option value="be">Belarusian</option><option value="bn">Bengali</option><option value="bs">Bosnian</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="ceb">Cebuano</option><option value="ny">Chichewa</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="hr">Croatian</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="en">English</option><option value="eo">Esperanto</option><option value="et">Estonian</option><option value="tl">Filipino</option><option value="fi">Finnish</option><option value="fr">French</option><option value="gl">Galician</option><option value="ka">Georgian</option><option value="de">German</option><option value="el">Greek</option><option value="gu">Gujarati</option><option value="ht">Haitian Creole</option><option value="ha">Hausa</option><option value="iw">Hebrew</option><option value="hi">Hindi</option><option value="hmn">Hmong</option><option value="hu">Hungarian</option><option value="is">Icelandic</option><option value="ig">Igbo</option><option value="id">Indonesian</option><option value="ga">Irish</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="jw">Javanese</option><option value="kn">Kannada</option><option value="kk">Kazakh</option><option value="km">Khmer</option><option value="ko">Korean</option><option value="lo">Lao</option><option value="la">Latin</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="mk">Macedonian</option><option value="mg">Malagasy</option><option value="ms">Malay</option><option value="ml">Malayalam</option><option value="mt">Maltese</option><option value="mi">Maori</option><option value="mr">Marathi</option><option value="mn">Mongolian</option><option value="my">Myanmar (Burmese)</option><option value="ne">Nepali</option><option value="no">Norwegian</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pa">Punjabi</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sr">Serbian</option><option value="st">Sesotho</option><option value="si">Sinhala</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="so">Somali</option><option value="es" selected="selected">Spanish</option><option value="su">Sundanese</option><option value="sw">Swahili</option><option value="sv">Swedish</option><option value="tg">Tajik</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="ur">Urdu</option><option value="uz">Uzbek</option><option value="vi">Vietnamese</option><option value="cy">Welsh</option><option value="yi">Yiddish</option><option value="yo">Yoruba</option><option value="zu">Zulu</option></select></td><td width="5%" align="center"> </td><td width="6%" align="center"><div id="SL_TTS_voice" title="Listen" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/tts-voice.png&quot;) repeat scroll 0% 0%;"></div></td><td width="6%" align="center"><div id="SL_copy" title="Copy translation" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/copy_hand.png&quot;) repeat scroll 0% 0%;"></div></td><td width="6%" align="center"><div id="SL_bbl_font_patch" title="This function is disabled in Dictionary mode"></div><div id="SL_bbl_font" title="Font size" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/font-off.png&quot;) repeat scroll 0% 0%;"></div></td><td width="6%" align="center"><div id="SL_TH" title="Translation History" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/history.png&quot;) repeat scroll 0% 0%;"></div></td><td width="10%"></td><td width="6%" align="right"><div id="SL_pin" title="Pin pop-up bubble" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/pin-off.png&quot;) repeat scroll 0% 0%; display: block; width: 16px; height: 16px; cursor: pointer;"></div></td></tr></table></div><div id="SL_alert_bbl"><div id="SLHKclose"></div><div id="SL_alert_cont"></div></div></div><div id="SL_shadow_translation_result" style="background: rgb(255, 255, 255) url(&quot;chrome://imtranslator/content/img/util/bg.png&quot;) repeat scroll 0% 0%;"></div><div id="SL_loading" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/indicator.gif&quot;) repeat scroll 0% 0%; display: block; position: absolute; width: 35px; margin-left: 180px; margin-top: -40px; height: 35px;"></div><div id="SL_player2"></div><div id="SL_alert100" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/bg2.png&quot;) repeat scroll 0% 0%;">Text-to-speech function is limited to 100 characters</div><div id="SL_Balloon_options" style="background: rgb(255, 255, 255) none repeat scroll 0% 0%;"><div id="SL_arrow_down"></div><table width="100%"><tr><td width="18%" height="16" align="left"><div id="SL_bbl_donate" title="Make a small conribution" style="background: transparent url(&quot;chrome://imtranslator/content/img/util/donate2.png&quot;) repeat scroll 0% 0%;"></div></td><td width="68%" align="center"><a href="#" id="OPlnk" title="Show options" rollapp-href="http://linuxcommand.org/man_pages/fig2dev1.html#">Options</a> : <a href="#" id="HISTlnk" title="Translation History" rollapp-href="http://linuxcommand.org/man_pages/fig2dev1.html#">History</a> : <a href="http://about.imtranslator.net/tutorials/presentations/imtranslator-translator-for-firefox/popup-bubble-application/" target="_blank" id="HELPlnk" title="Help" rollapp-href="http://about.imtranslator.net/tutorials/presentations/imtranslator-translator-for-firefox/popup-bubble-application/">Help</a> : <a href="#" id="FBlnk" title="Feedback" rollapp-href="http://linuxcommand.org/man_pages/fig2dev1.html#">Feedback</a></td><td width="15%" align="right"><a id="SL_Balloon_Close" href="#" title="Close" rollapp-href="http://linuxcommand.org/man_pages/fig2dev1.html#">Close</a></td></tr></table></div></div></div></body></html>

@@ -1,0 +1,78 @@
+# tools
+latex-bin
+metapost
+latexmk
+# latex contains classes, e.g. article, book, report, minimal
+latex
+latex-lab
+chktex
+pythontex
+
+# tools with packages 
+splitindex
+glossaries
+glossaries-extra
+# classes
+beamer
+leaflet
+# koma-script contains scrlttr2
+koma-script
+# minimal contained in package 'latex' 
+# packages before \documentclass
+nag
+etoolbox
+tex4ht
+luamplib
+listings
+tools
+
+# packages from header.tex in proper order 
+# iftex  is already present 
+fontspec
+# inputenc contained in package 'latex' 
+# fontenc  contained in package 'latex' 
+babel
+csquotes
+geometry
+microtype
+anyfontsize
+# showkeys contained in package 'latex' 
+rerunfilecheck
+xcolor
+hyperref
+import
+amsmath
+# longtable contained in package 'tools'
+xpatch
+fancyvrb
+booktabs
+xurl
+tocbibind
+# packages from headerGrp
+# graphicx contained in package 'graphics'
+graphics
+transparent
+# further packages
+kvoptions
+infwarerr
+metauml
+cm-super
+collection-fontsrecommended
+newverbs
+robustindex
+fvextra
+upquote
+xstring
+pgfopts
+currfile
+
+# also needed 
+epstopdf-pkg
+lineno
+newfloat
+filehook
+enumitem
+pdfmanagement-testphase
+tagpdf
+bookmark
+mptopdf

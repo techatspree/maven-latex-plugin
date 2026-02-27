@@ -1,0 +1,136 @@
+
+% presupposes hyperref and iftex (e.g. preload header.tex)
+
+% xelatex enters always else branch of \ifpdf 
+% This is maybe because it always creates xdv 
+% and the difference is only that for pdf another step is executed. 
+% Whether this is considered a bug.... ? hm. 
+\ifXeTeX%
+  % for xelatex
+  % TBD: find a way to express pdfinfoomitdate: necessary? 
+  % provide valid trailerid 
+  % \special{pdf:trailerid [
+  %   <00112233445566778899aabbccddeeff>
+  %   <00112233445566778899aabbccddeeff>
+  % ]}% correct but not necessary 
+\else
+  \ifpdf%
+    \ifLuaTeX%
+      % for lualatex 
+      % no adding to the trailer dictionary.
+      % if invalid trailer id, e.g. empty, this is silently not set 
+      % \pdfvariable trailerid{[
+      %   <00112233445566778899aabbccddeeff>
+      %   <00112233445566778899aabbccddeeff>
+      % ]}% luatex 1.18, manual 14.1.8% chktex 1
+
+      % omit only CreationDate and ModDate keys.
+      % \pdfvariable suppressoptionalinfo 767% chktex 1
+      % 767=512+0+128+64+...+1 this excludes all but 
+      % We decided to omit all information 
+      %\pdfvariable suppressoptionalinfo  -1%\numexpr% luatex 1.18, manual 14.1.8 % chktex 1
+      %\pdfvariable suppressoptionalinfo 927%1023-32-64=1000-9-64=1000-73=927% luatex 1.18, manual 14.1.8 % chktex 1
+      %\pdfvariable suppressoptionalinfo -1% luatex 1.18, manual 14.1.8 % chktex 1
+      % The meaning of the bits are described in luatex reference manual 
+      % \cite{LuaTexRef24}, Section 3.2.2. 
+      \pdfvariable suppressoptionalinfo \numexpr % chktex 1
+      0
+      + 1 % PTEX.FullBanner % for sake of reproducibility and privacy 
+      + 2 % PTEX.FileName   % this and the following PTEX entries refer to embedded PDF files 
+      + 4 % PTEX.PageNumber
+      + 8 % PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
+      + 16 % Creator %(cannot be suppressed if hyperref is used; must be overwritten below.) 
+      % + 32 % CreationDate % do not suppress: needed for reproducibility check 
+      % + 64 % ModDate      % do not suppress: needed for reproducibility check 
+      + 128 % Producer      % suppress for privacy/security 
+      + 256 % Trapped       % xelatex no info and pdflatex does have info
+      % + 512 % ID          % don't suppress trailerid: makes an individual of the PDF and needed to encrypt
+      % according to \cite{Pdf20}, Section 7.5.5, the trailer ID is mandatory from PDF2.0 on. 
+      % Also, consequences of absence are listed, e.g. encryption. 
+      % Missing is a specification on what the trailer ID may depend. 
+      % Seemingly, the trailer ID is unchanged if so is the file and the processing time. 
+      % It seems not to depend on further inner states of the computer generating the PDF. 
+      % This is not formulated as a requirement. 
+      % If this may change, then a trailerid must be set explicitly again, but '+ 512' must remain inactive. 
+      % with luatex 1.18 there are macros closer to pdftex. 
+      \relax
+    \else
+      \ifPDFTeX%
+        % the following see pdftex user manual, \cite{PdfTexUsr}, Section 7.4
+        % \pdftrailerid{[
+        %   <00112233445566778899aabbccddeeff>
+        %   <00112233445566778899aabbccddeeff>
+        % ]}%
+
+        % omit CreationDate and ModDate keys.
+        % not before pdfTeX 3.14159265-2.6-1.40.17
+        % the following two see pdftex user manual, \cite{PdfTexUsr24}, Section 4.2.4
+        \pdfinfoomitdate=0 % turn 0 explicitly because /CreationDate and /ModDate are needed for reproducibility check 
+        % we do even more for security reasons 
+        \pdfsuppressptexinfo=-1
+        % eliminates PTEX info: 
+        % 1 -> PTEX.Fullbanner
+        % 2 -> PTEX.FileName
+        % 4 -> PTEX.PageNumber
+        % 8 -> PTEX.InfoDict (/Producer /Creator /CreationDate /ModDate /Trapped)
+
+        % Replacing pdfinfoomitdate1 in conjunction with
+        % \usepackage[nodocdata=true,nopdftrailerid=true]{pdfprivacy}
+
+        % If doing without hyperref package (pdftex only): 
+        % \pdfinfo{
+        %   /Author       (Ernst Reissner)
+        %   /Title        (The dvi-format and the program dvitype)
+        %   /CreationDate (unknown)
+        %   /ModDate      (unknown)
+        %   /Subject      (dvi and dvitype)
+        %   /Keywords     (LaTeX;dvi;dvitype)
+        %}
+      \else
+        % Here, the tex processor is unknown. 
+        \GenericError{...}{Tried compilation with unknown TeX compiler. }{}{} % chktex 11
+      \fi%pdftex
+    \fi%luatex
+  \else%ifpdf
+  \fi%ifpdf
+\fi%xetex
+
+% TBD: check of resulting pdf with exif unveils a warning duplicate author 
+
+% TBD: there are ways to do without hypersetup. 
+
+\hypersetup{
+  % PTEX.InfoDict: (/Producer /Creator /CreationDate /ModDate /Trapped)
+  % Except Trapped, this is exactly PTEX.InfoDict. 
+  % TBD: deactivate this. 
+  % There are settings like the banner or the trailer id, 
+  % accessible only compile specific, 
+  % so we cannot do without. 
+  % Conversely, all accessible from hyperref and needed (consider xelatex) 
+  % are accessible compiler specific. 
+  % So this is not really needed. 
+  pdfinfo={
+    Creator     ={unknown}, 
+    % 'LaTeX with hyperref'; this is uniform for hyperref 
+    % and cannot be eliminated even for lualatex with suppressoptionalinfo 16. 
+    % else TeX for lua/pdflatex, but  XeTeX output 2023.12.06:0106 for xelatex 
+    % thus it is advisable to eliminate this 
+    % maybe security issue, but it is well visible. 
+    % also corrupts reproducibility. 
+    % only way to do so: overwrite. 
+    Producer    ={unknown}, %TBD: clarify whether this is really needed to be overwritten 
+    % xdvipdfmx with version and that like for dvi or xelatex; 
+    % pdfTeX-1.40.25, LuaTeX-1.17.0 for pdf
+    % This shall be eliminated for sake of privacy and reproducibility. 
+    %CreationDate={unknown},
+    %ModDate     ={unknown}
+    % these two are only overwritten to avoid wrong entry 
+    % when using \texttt{SOURCE\_DATE\_EPOCH=0 FORCE\_SOURCE\_DATE=1}
+    % This is recommended for tests, because else we cannot give a \date 
+    % This is no longer recommended: leaving these alive is a value. 
+    % In contrary, these entries are needed to reach reproducibility
+    }%,
+    %pdfsource   ={no latex main file}
+}
+
+

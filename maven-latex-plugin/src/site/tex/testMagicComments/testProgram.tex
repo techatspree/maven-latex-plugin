@@ -1,0 +1,46 @@
+% \usepackage{iftex}
+% \usepackage{hyperref}
+\input{../header.tex}
+\input{../headerSuppressMetaPDF.tex}
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Processing with pdflatex: demand and test},
+    Subject     ={test file},
+    Keywords    ={magic comments}
+  }
+}
+
+\title{Processing with \texttt{pdflatex}: demand and test}
+\author{Ernst Reissner (rei3ner@arcor.de)}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+
+
+Tests magic comment: overwrite default \LaTeX{} processor, 
+which is \texttt{lualatex} by default, by \texttt{pdflatex}. 
+If this does not work, an invisible \texttt{\textbackslash{}GenericError} 
+in an \texttt{\textbackslash{}ifPDFTeX} construction throws an error leading to an error return code 
+of the late processor. 
+\ifPDFTeX%
+  % ok
+\else
+  \ifLuaTeX%
+    \GenericError{...}{Found this document to be converted with lualatex, although pdflatex is specified. }{}{} % chktex 11
+  \else
+    \ifXeTeX%
+      \GenericError{...}{Found this document to be converted with xelatex, although xelatex is specified. }{}{} % chktex 11
+    \else
+      \GenericError{...}{Found this document to be converted not with pdflatex, although this is specified. }{}{} % chktex 11
+    \fi
+  \fi
+\fi
+
+Here, it is tested that \LaTeX{} processor is chosen correctly for compilation '\jobname' 
+\IfFileExists{./\jobname.fdb_latexmk}{using}{without} latexmk. 
+\end{document}

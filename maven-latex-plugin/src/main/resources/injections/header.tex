@@ -1,0 +1,239 @@
+
+%\listfiles
+\synctex=1% maybe security issue: draft only? 
+
+% for buildParams to check empty: \ifdefempty
+%\usepackage{etoolbox}
+% for buildParams: \verbdef 
+%\usepackage{newverbs}
+
+% provdies \ifPDFTeX, \ifXeTeX and \ifLuaTeX. 
+% iftutex test is true for XeTeX and LuaTeX, 
+% and an ifpdf test is provided to test the PDF or DVI output mode.
+\usepackage{iftex}
+
+
+\iftutex%
+  \usepackage{fontspec}
+\else
+  % this seems to work with beamer also 
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+\fi
+%\usepackage{textalpha}
+
+% internationalization 
+\usepackage{babel}
+\usepackage{csquotes}% use \PassOptionsToPackage{autostyle}{csquotes}
+
+% absolutely necessary. 
+% for document development add certain options. 
+% Then remove headline and prevent this plugin from overwriting. 
+
+\IfClassLoadedTF{beamer}{
+  % here nothing to do. 
+  % beamer loads geometry itself. 
+  % \documentclass passes option aspectratio to package geometry
+}{
+  % \documentclass passes options like a4paper to package geometry
+  \IfClassLoadedTF{leaflet}{%
+    % maybe here geometry goes into 
+  }{%
+  \usepackage{geometry}% no option a4paper, but showframe, showcrop 
+  }
+}
+
+%\usepackage{showframe} as an alternative 
+\usepackage{microtype}
+%\usepackage[indent,skip=0]{parskip}% used by pandoc but not good 
+% special characters
+%\usepackage{textcomp}
+\usepackage{anyfontsize}% important e.g. for beamer class 
+%\usepackage{cleveref}
+
+\usepackage[final]{showkeys}
+
+% used by hyperref and also to update index and glossary 
+% to avoid clash because of loading with different options: 
+% declare first 
+% Note that documentation is wrong: [aux] is the strictest check 
+\IfClassLoadedTF{beamer}{
+  % beamer loads rerunfilecheck with empty options. 
+  % TBD: check whether this is appropriate (acknowledged no index or glossary but bibliography)
+}{
+  \usepackage[aux]{rerunfilecheck}% not used glossary and index 
+}
+
+\makeatletter\disable@package@load{auxhook}{}\makeatother% just bugfix: superfluous in next hyperref version 
+% hyperref and xcolor 
+
+\ifpdf%
+  % for accessability with luatex
+  %\usepackage{luatex85}
+  % compiles for xelatex only 
+  %\usepackage[tagged, highstructure]{accessibility}
+  \usepackage{xcolor}  % [pdftex]  
+  % driver [hpdftex] is autodetected 
+  \usepackage[destlabel]{hyperref}
+\else
+  % No PDF, includes dvi/xdv and HTML,... via package tex4ht 
+  %\usepackage[dvipdfmx]{xcolor}
+  \IfPackageLoadedTF{tex4ht}{%
+    \usepackage[dvipdfmx]{xcolor}
+    \usepackage[tex4ht, destlabel]{hyperref}
+  }{%
+    \ifxetex%
+      \usepackage{xcolor}
+      \usepackage[destlabel]{hyperref}
+    \else
+      \usepackage[dvipdfmx]{xcolor}
+      \usepackage[dvipdfmx, destlabel]{hyperref}%[dvipdfmx]
+      % \usepackage[dvipdfmx]{graphicx}
+      % \usepackage[dvipdfmx]{xcolor}
+      % lualatex: without [dvipdfmx] option did not find 
+      % converter dvi to pdf or to ps
+      % pdflatex: without [dvipdfmx] option dvips still works, 
+      % but no converter for pdf
+    \fi
+  }% tex4ht not loaded 
+\fi%ifpdf
+\makeatletter\reenable@package@load{auxhook}\makeatother% just bugfix: superfluous in next hyperref version 
+
+\IfPackageLoadedTF{luamplib}{%
+  \newcommand*\inputmpcode[1]{\begin{mplibcode}input #1\end{mplibcode}}
+}{}% \IfPackageLoadedTF{luamplib}
+
+
+
+%\usepackage[clear,pdf,eps]{svg}
+% used to import tex files including graphics: mixed pics 
+\usepackage{import}
+% TBD: eliminate; but only after glossaries is deprecated. 
+\usepackage{amsmath}
+
+% synchronization between tex and pdf 
+%\usepackage[active]{srcltx}
+\usepackage{longtable}
+
+% this indirection is needed because \makeatletter, \makeatother and \xpatchcmd 
+% don't work inside an argument as discussed in  
+% https://tex.stackexchange.com/questions/719158/
+% does-ifpackageloadedtf-neutralize-xpatch
+\newif\iflistingsloaded%
+\IfPackageLoadedTF{listings}{%
+  \listingsloadedtrue%
+}{%
+  \listingsloadedfalse%
+}
+
+\iflistingsloaded%
+  \renewcommand{\lstlistoflistings}{\begingroup
+  %\tocsection
+  %\tocchapter
+  \tocfile{List of \lstlistingname{}s}{lol}
+  \endgroup}
+
+  % this is a workaround for including listings with latexmk.. 
+  % This can be fixed 
+  % - as shown below 
+  % see https://tex.stackexchange.com/questions/685257/
+  % latexmkcan-include-files-created-during-the-latexmk-run-except-with-lstinp
+  % - patch in package listings 
+  % - patch in latexmk 
+  % I would prefer the latter. 
+  \usepackage{xpatch}
+  \makeatletter
+  \newcommand*{\NewLine}{^^J}%
+  \xpatchcmd{\lst@MissingFileError}
+  {Package Listings Error: File `#1(.#2)' not found.}
+  {LaTeX Error: File `#1.#2' not found.\NewLine}{%
+    \typeout{File ending patch for \string\lst@MissingFileError\space done.}%
+  }{%
+    \typeout{File ending patch for \string\lst@MissingFileError\space failed.}%
+  }
+  \makeatother
+\fi
+
+
+\usepackage{fancyvrb}
+
+\IfClassLoadedTF{scrlttr2}{%
+}{
+  % index and glossary
+  \IfPackageLoadedTF{tex4ht}{
+  }{
+    \usepackage{splitidx}%[split]
+    %  \usepackage{makeidx}
+    %  \usepackage{showidx}
+    \makeindex
+    % TBD: eliminate; loads amsmath!!! 
+    % Concerning this section there is an entry in changes.xml 
+    % There are also articles and so which do not need glossaries. 
+    % So loading glossaries and invoking \makeglossaries 
+    % may not be appropriate. 
+    % \makeglossaries emits a warning if no \printglossaries is present 
+    % so currently a compromise: load package glossaries 
+    % but dont invoke \makeglossaries. 
+    \usepackage[toc]{glossaries}%,automake
+    % , xindy or even [xindy={language=english,codepage=utf8}]
+    % mainly for index and glossaries 
+    %\makeglossaries%
+  }
+}
+
+% high quality tables 
+\usepackage{booktabs}
+\aboverulesep=0ex
+\belowrulesep=0ex
+
+\usepackage{xurl}
+
+%\makeglossary% for rerunfilecheck 
+
+%\usepackage{etexcmds} %still later 
+\IfClassLoadedTF{beamer}{
+  % we may want an entry for bibliography, maybe not numbered, 
+  % (acknowledged no index or glossary but bibliography)
+  % 
+}{
+  \IfClassLoadedTF{leaflet}{%
+    % maybe this exclusion is because inclusion is superfluous 
+  }{%
+    \IfClassLoadedTF{scrlttr2}{%
+    }{
+      \usepackage[nottoc, numindex, numbib]{tocbibind}
+    }
+  }
+}
+
+% TBD: check: version 2.0 is already available, but seems no support to set the major version. 
+\newcommand{\setMinorVersionPdf}[1] {%
+  \ifXeTeX%
+    \special{pdf:minorversion #1}
+  \else
+    \ifpdf%
+      \ifPDFTeX%
+        \pdfminorversion=#1%
+      \else
+        \ifLuaTeX%
+        \pdfvariable minorversion=#1% chktex 1
+        \else
+          % Here, the tex processor is unknown. 
+          \GenericError{...}{Tried compilation with unknown TeX compiler. }{}{} % chktex 11
+        \fi
+      \fi
+    \else
+      % nothing to do: no pdf output 
+    \fi
+  \fi
+}
+
+% wrappers in conjunction with .chktex: ignored 
+%\newcommand{\textTT}[1]{\texttt{#1}}
+\newcommand{\textttNoChk}[1]{\texttt{#1}}
+% chktex executes \input{#1} but does not find the file #1: suppress that warning 
+\newcommand{\inputNoChk}[1]{\input{#1}} % chktex 27
+
+%\usepackage{latex-bnf}
+
+

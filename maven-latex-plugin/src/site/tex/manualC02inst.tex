@@ -1,0 +1,783 @@
+% !TEX root = manualLMP.tex
+
+\chapter{Installation}\label{chap:install}
+
+Both the ant-task\index{ant-task} and the maven-plugin just direct parameters 
+from ant and from maven, respectively, 
+to the programs that do the proper work. 
+Thus, installation of the ant-task and of the maven-plugin 
+requires that all needed programs are installed. 
+These prerequisites are collected in Section~\ref{sec:prerequisites}. 
+
+\section{Prerequisites}\label{sec:prerequisites}
+
+The ant-task is tested with\index{ant} 
+%
+\begin{verbatim}
+Apache Ant(TM) version 1.10.12 compiled on December 14 1969}
+\end{verbatim}
+%
+(of course the year is not correct, but this is the version string
+displayed by that release) and the maven-plugin with\index{maven} 
+%
+\begin{verbatim}
+Apache Maven 3.9.2 
+\end{verbatim}
+%
+Both, ant and maven are written in java and require a java installation. 
+The java\index{java} version used for tests is \texttt{17.0.8}. 
+
+
+So, a java installation is the base for running either the ant-task 
+or the maven-plugin. 
+Also, this plugin is written in java. 
+To use the maven-plugin, of course maven must be installed 
+and to use the ant-task, ant must be installed. 
+
+The ant-task\index{ant-task} just passes parameters in the build file to the core 
+and accordingly the maven-plugin passes parameters in the pom 
+to the core of this software. 
+The core just invokes various programs to do the actual work. 
+
+Besides plain building of documentation, 
+this software also supports development of documents. 
+\LaTeX{} and related programs are based on text files mainly 
+and so a good editor is required for development. 
+
+The author recommends and uses VS Code, e.g.\@ 1.81.1 
+in conjunction with package \LaTeX{} workshop 9.13.4 and LTeX 13.1.0. 
+
+An alternative is good old 
+%
+\begin{verbatim}
+  GNU Emacs 24.3.1 (x86\_64-suse-linux-gnu, GTK+ Version 3.16.7)
+\end{verbatim}
+%
+together with several packages to support 
+various file formats. 
+To list the available packages type 
+\texttt{M-x list-packages}. 
+For comfortable development with \LaTeX, 
+the \auctex{} package, version \texttt{11.88} is recommended. 
+The version is displayed from within Emacs 
+by typing \texttt{C-h v AUCTeX-version RET}. 
+For an overview on \auctex{} see~\cite{AucTeX}. 
+
+
+FIXME\@: gnuplot-mode expects file extension gp. 
+Should be made configurable. 
+
+To edit metapost, the mode built-in mode \texttt{Metamode} is used. 
+
+Built-in mode \texttt{Docview} to view PDF, PS and DVI\@. 
+
+latexmk
+
+Builtin modes bib-mode and bibtex
+
+Built in reftex-modes
+
+Useful: 
+ac-math, auto-complete-auctex
+
+Depending on what kinds of graphic formats are used, 
+the following programs are required: 
+%
+\begin{itemize}
+\item
+To convert the \gls{fig}-files into \gls{pdf}-files, 
+by default \texttt{fig2dev}\index{fig2dev} is used. 
+It makes sense to have \texttt{xfig}\index{xfig} installed 
+to create and edit fig-files, but this is not mandatory. 
+\item
+To convert gnuplot files into PDF-files, there is no alternative, 
+to have installed \texttt{gnuplot}\index{gnuplot}. 
+It serves as an interpreter and also as a converter. 
+Strictly speaking, only the latter functionality is required here. 
+\item
+To convert \gls{mp}-files into \gls{eps}-files, 
+the interpreter \texttt{mpost}\index{mpost}\index{metapost} or equivalent is required. 
+This comes with a standard \TeX{} installation. 
+With the standard configuration, 
+the resulting EPS-file can be viewed with \texttt{ghostscript} 
+and for developing it is recommended to have \texttt{ghostscript} installed. 
+\item
+To include \gls{svg}-files into \LaTeX\index{svg}, 
+\texttt{inkscape}\index{inkscape} must be installed. 
+It also serves to create and to edit SVG-files. 
+\end{itemize}
+
+
+Currently, for including PDF-files in both cases, 
+the driver \texttt{dvipdfmx} must be installed. 
+Strictly speaking, this is required only for HTML-creation and related. 
+Note that if no pictures created by \texttt{fig2dev}, \texttt{gnuplot}, 
+\texttt{mpost} or by \texttt{inkscape} are used, of course, 
+neither \texttt{fig2dev} nor \texttt{gnuplot},
+\texttt{mpost}, \texttt{inkscape} 
+nor \texttt{dvipdfmx} is needed. 
+To include graphics, the graphics bundle described in~\cite{GraX} is required, 
+except for SVG-files which requires the svg-package 
+described in~\cite{SvgP}. 
+
+As the set of required software depends on the graphic formats 
+which shall be imported, 
+it depends also on the set of output-formats 
+to be supported: 
+%
+\begin{itemize}
+\item
+To create PDF-files from \LaTeX-files we use \lualatex\index{lualatex} 
+or some other kind of \LaTeX{} creating PDF-files 
+like \xelatex\index{xelatex} or \pdflatex\index{pdflatex}. 
+
+\LaTeX{} uses several auxiliary programs. 
+Above all \texttt{bibtex}\index{bibtex}, to create the bibliography 
+and \texttt{makeindex}\index{makeindex} and \texttt{splitindex}\index{splitindex} for the index 
+and \texttt{makeglossaries}\index{makeglossaries} for the glossary. 
+The latter two 
+also require the latex packages \pkg{makeidx}, optionally \pkg{showidx}, 
+both described in~\cite{MkidxShIdxP}, 
+the package \pkg{splitidx} documented in~\cite{SplitidxP}
+and \pkg{glossaries} specified in~\cite{GloP}. 
+Note that \texttt{makeglossaries} either invokes \texttt{makeindex} 
+or \texttt{xindy}, depending on the parametrization of \pkg{glossaries}. 
+Both, \texttt{makeglossaries} and \texttt{xindy} are written in Perl, 
+which shall also be installed if a glossary is required. 
+
+To include program code in Python, octave and other language, 
+\texttt{pythontex}\index{pythontex} is needed; to eliminate that code creating an equivalent tex-file, 
+one has to combine it with \texttt{depythontex}\index{depythontex}. 
+Both are written in Python3 which shall be installed also as a dependency. 
+To use them, one also needs to install the package \pkg{pythontex}. 
+
+The package \pkg{rerunfilecheck} is in any standard \LaTeX-installation. 
+It is almost mandatory 
+because this software presupposes that package is present  
+to ensure that the table of contents, list of figures, list of tables, 
+the index and the glossary are up-to-date. 
+
+It is standard to endow a PDF-file with hyperlinks. 
+To support this, the package \pkg{hyperref} is required. 
+
+****
+\item
+To create \gls{html}-files, 
+or to be more precise any kind of \gls{sgml} and \gls{xml}, 
+from \LaTeX-files, \texttt{htlatex} or alternatively \texttt{htxelatex} is used. 
+Currently, the author is not aware of any alternative to the two. 
+This includes also creating OpenOffice documents like ODT-files. 
+Thus, OpenOffice documents are created in two steps, 
+the first is to create PDF-files with the according tools, 
+the second one is done by \texttt{htlatex}\index{htlatex} or that like.\index{htxelatex} 
+\item
+To create RTF-files, currently \texttt{latex2rtf}\index{latex2rtf} is used. 
+Note that this does not require \pdflatex. 
+As a drawback, not all \LaTeX-packages are supported. 
+\item
+MS Word documents are created from OpenOffice documents 
+via the command \texttt{odt2doc}\index{odt2doc}  and thus require three steps 
+and so the according tool chain. 
+\item
+Finally, there is a way, to create plain text files from the PDF-files 
+via \texttt{pdftotext}\index{pdftotext}. 
+The way from \LaTeX{} to text via PDF makes sense 
+because that text is well formatted math mode symbols like $\pi$ 
+and because table of contents, index, glossary and that like are included. 
+So, for that task, besides \texttt{pdftotext} the whole tool chain to create
+PDF-files is required. 
+\item
+An application which does not create a target, 
+i.e.~a file in the target directory is \texttt{chktex}\index{chktex} 
+which just checks the latex main files and associated files. 
+\end{itemize}
+
+So to run this software, the aforementioned programs 
+or at least the subset used, must be installed.
+To obtain reproducible results, the versions must fit.
+This version is checked with the executables with versions given by 
+an according properties file 
+\href{\urlSite fromMain/version.properties}{version.properties}. 
+
+% TBD: rework on the above list of programs
+% since it has been extended.
+% in particular pythontex and latexmk
+
+
+There are also several \LaTeX-packages needed or at least recommended. 
+The recommended ones are 
+%
+\begin{description}
+\item[\pkg{geometry}] described in~\cite{GeomP} 
+to control page layout. 
+\item[\pkg{microtype}] described in~\cite{MicroTyP} improve readability 
+and make the document look nicer. 
+It also helps to avoid bad boxes. 
+\item[\pkg{hyperref}] described in~\cite{HyperTextP} 
+to insert hypertext marks, which I do not want to miss in larger documents. 
+% FIXME: with latex2rtf: 
+%\newif\iflatextortf% false for latex but set true for latex2rtf internally 
+%\iflatextortf\else\usepackage{hyperref}\fi % includes hyperrefss if not rtf
+%\iflatextortf\else\begin{appendix}\fi
+%\iflatextortf\else\end{appendix}\fi
+\item[\pkg{srcltx}] described in~\cite{SrcLtxP} 
+which allows jumping from the DVI file to the TEX source and back.
+% TBD: indicate as deprecated. 
+\item[\pkg{showframe}] 
+if \pkg{geometry} is not used with option \pkg{showframe}. 
+There seems to be no package documentation for package \pkg{showframe}. 
+\item[\pkg{booktabs}] described in~\cite{BooktP} 
+
+\item[\pkg{anyfontsize}] described in~\cite{AnyfontsizeP} 
+to allow arbitrary font sizes, eliminating certain warnings. 
+An alternative may be \pkg{fix-cm} described in~\cite{FixCmP}. 
+\end{description}
+
+\noindent
+Almost required are 
+%
+\begin{itemize}
+\item
+\pkg{rerunfilecheck} described in~\cite{RerunFChkP} 
+which writes additional rerun warnings to the log file 
+if some auxiliary files have changed. 
+This software relies on these warnings 
+to control rerun latex and other applications. 
+\item
+\pkg{iftex} described in~\cite{IfTeXP} which has two functions: 
+\begin{itemize}
+  \item 
+  It provides the \cmd{ifpdf}-command to detect pdf-mode. 
+  This is required to distinguish creation of PDF and text 
+  from HTML, ODT, DOC and others, based on DVI/XDV\@. 
+  \item 
+  Also, it is able to detect a specific latex engine via commands 
+  like \cmd{ifluatex} or \cmd{ifpdftex} but also \cmd{iftutex} 
+  being true for \lualatex{} and \xelatex{}, but not for \pdflatex. 
+  This is used if a document shall work for more than one engine 
+  like this manual and is in particular used to create reproducible PDF files 
+  which is engine specific. 
+  Finally, there is a way to force an exception if the wrong engine is used, 
+  e.g.~by specifying \cmd{RequireLuaTeX}. 
+\end{itemize}
+\item
+The graphics packages described in~\cite{GraX}, 
+in particular \pkg{graphicx}, \pkg{xcolor} and \pkg{transparent}, 
+the latter two described in~\cite{XColorP} and in~\cite{TransP}, 
+respectively. 
+Sometimes also \pkg{bmpsize} described in~\cite{BmpP} 
+if pixel graphics is used. 
+\item
+\pkg{import} described in~\cite{ImpoP} 
+e.g.~to import nested graphic files from arbitrary directories. 
+\item
+\texttt{inputenc} described in~\cite{InputencP} 
+to select an input encoding 
+\texttt{fontenc} to select a font encoding. 
+Font selection is described in~\cite{FontSel} in general, 
+with Section 5 on font encoding and 
+Section 5.1 on the \texttt{fontenc} package. 
+This package is almost indispensable if you do not write English, 
+e.g.~to access German umlauts. 
+Note that~\cite{FontEnc} describes font encoding in more detail. 
+\item 
+\pkg{makeidx} and \pkg{showidx} described in~\cite{MkidxShIdxP} 
+or something comparable for creating indices. 
+\item 
+\pkg{glossaries} described in~\cite{GloP} 
+with tutorial~\cite{GloPGuide}
+or something comparable for creating glossaries. 
+\item 
+\pkg{tocbibind} described in~\cite{TocBibIndP} 
+to include bibliography and index (what about glossaries?) 
+into the table of contents. 
+\item 
+\pkg{nag} described in~\cite{NagP} 
+which performs certain checks unveiling deficiencies 
+not filtered by the compiler nor by another check tool. 
+\item 
+\pkg{babel} described in~\cite{BabelP24} for language support. 
+This is not used by this manual, because it is in English. 
+\end{itemize}
+
+\noindent
+Useful packages with which this software is tested: 
+%
+\begin{itemize}
+\item
+The ams-packages **** \pkg{amsmath}
+\item
+\pkg{longtable} described in~\cite{LongTabP} 
+for long tables, i.e.~tables exceeding a page. 
+\item
+\pkg{listings} described in~\cite{ListingsP} for listings. 
+\item
+\pkg{fancyvrb} described in~\cite{FancyVerbP} 
+provides useful environments to mark verbatim text. 
+\end{itemize}
+
+
+\section{Setting up pom.xml for the maven plugin}\label{sec:xmlPom}
+
+If this software is used as a maven plugin,
+it need not explicitly be installed, maven itself does this by need
+based on the entries of the pom. 
+
+We can distinguish between entries in the pom 
+which are necessary for any kind of usage of this maven plugin 
+described in Section~\ref{subsec:xmlPomBasic}, 
+configuration settings to obtain behavior deviating from the default 
+as sketched in Section~\ref{subsec:xmlPomSettings} 
+and finally executions to integrate this plugin in the lifecycle 
+as described in Section~\ref{subsec:xmlPomExecutions}. 
+
+\subsection{Basic setup}\label{subsec:xmlPomBasic}
+
+% TBD: add the plugin to maven central
+Unfortunately, this plugin did not yet make it into maven central.
+Thus, one has to add the providers' repository to the pom
+as shown in Listing~\ref{lst:srcRepo} to enable maven to find the software. 
+
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=b, label={lst:srcRepo}, 
+caption={The source repository for this plugin}]
+<project ...>
+  ...
+  <repositories>
+    <repository>
+      <id>publicRepoAtSimuline</id>
+      <name>repo at simuline</name>
+      <url>|\repo|</url>
+    </repository>
+  </repositories>
+  ...
+</project>
+\end{lstlisting}
+
+Then just adding the coordinates in the build-plugins section of the pom
+as shown in Listing~\ref{lst:coords}, 
+and it can be used from command line,
+e.g.~to create PDF files as \texttt{mvn latex:pdf}
+or for cleanup \texttt{mvn latex:clr} with default configuration. 
+Alternatively, the plugin can be inserted also 
+in the reporting-plugins section of the pom. 
+%
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=b, label={lst:coords}, 
+caption={The coordinates of this plugin}]
+<project ...>
+  ...
+  <build>
+    ...
+    <plugins>
+      ...
+      <!-- create html and pdf and other formats from latex -->
+      <plugin>
+        <groupId>|\groupId|</groupId>
+        <artifactId>|\artifactId|</artifactId>
+        <version>|\strippedVersionID|</version>
+      </plugin>
+     ...
+   </plugins>
+    ...
+  </build>
+  ...
+</project>
+\end{lstlisting}
+
+This plugin is indexed 
+in \url{https://mvnrepository.com/artifact/eu.simuline.m2latex/latex-maven-plugin}. 
+
+\subsection{Deviating from default settings}\label{subsec:xmlPomSettings}
+
+This plugin is highly configurable by means of a lot of settings. 
+Listing~\ref{lst:coordsConfig} shows some of them, but all are in their default settings, 
+so no need to specify them explicitly: 
+%
+\begin{description}
+\item[\texttt{targets}] defines the output formats and the checks to be run 
+(\texttt{chk} signifies running \texttt{chktex}) for goal \texttt{cfg}. 
+\item[\texttt{cleanUp}] whether all generated files shall be removed 
+leaving the \LaTeX{} source folder untouched. 
+\item[\texttt{latex2pdfCommand}] is one of the names of the tools to be invoked. 
+There are more settings for treating tools. 
+\end{description}
+
+It is the experience of the author, 
+that in many situations no explicit setting is necessary at all. 
+The only setting needed to be configured regularly is \texttt{targets} 
+which determines the output formats and whether sources are checked 
+for goal \texttt{cfg}. 
+It is recommended to use checking via target \texttt{chk} in any case. 
+Some settings are only relevant only for document development 
+as described in Section~\ref{sec:devel}, 
+one of these is \texttt{cleanUp}: setting this to \texttt{false} 
+keeps intermediate files, in particular log files available 
+which helps to find errors and in locating the sources of warnings. 
+There are further situations where the user is grateful 
+of being able to configure this software, 
+or even where it is not usable with default settings. 
+Chapter~\ref{chap:settings} describes the complete set of settings. 
+The same pieces of information 
+is given in the \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} 
+used to test this plugin. 
+Although each setting takes its default value, 
+it is given explicitly and is endowed with a comment 
+describing it in detail as in Chapter~\ref{chap:settings}. 
+Since this pom is quite long, it is not part of this manual 
+but is given by reference on the project site. 
+% TBD: the explanations are in three places: 
+% javadoc comments, pom and chapter {chap:settings}. 
+% If it were possible to display apidocs also nested config 
+% by latex:help, 
+% javadoc comments alone would be sufficient. 
+% This would realize single source principle 
+% and would make a shorter manual which also compiles much faster. 
+
+
+% TBD: analysis when configuration must be made explicit at all. 
+%
+% There is a general situation: output formats: affects targets 
+% whether chk is desired: affects targets 
+%
+% one of the situations is document development. 
+% This affects the following settings: 
+% readTexSrcProcDirRec, targets, mainFilesIncluded, mainFilesExcluded, cleanUp, 
+% debugBadBoxes, debugWarnings, maxNumRerunsLatex
+%
+% environment: convertersExcluded, all settings which determine names of converters. 
+% Sometimes one wants to send sources and so need to adapt to foreign environments. 
+% this affects mostly latex2PdfCommand and metapostCommand: mostl mpost, could also be mp. 
+% also bibtexCommand with default bibtex which may be replaced by bibtex8 or by bibtexu
+%
+% some settings are determined by reverse engineering and may be rendered  invalid 
+% just by having a new version, either of a tool or of a package 
+% or just by use another package not forseen, or just a situation not taken into account 
+% This affects: patternLatexMainFile, patternCreatedFromLatexMain, patternReRunLatex, 
+% patternReRunMakeIndex, patternReRunMakeGlossaries, patternT4htOutputFiles
+% also patterns to detect warnings or errors in log files. 
+% although some like patternErrMPost seem quite stable. 
+% 
+% special needs: if a tool does not fit. 
+% Then one could write a wrapper or its own implementation. 
+% This occurs in case <pythontexCommand>pythontexW:pythontex</pythontexCommand>
+% Special: pdfViaDvi if html and pdf via tex4ht
+% another application: fig2dev not writing an FLS file: we could use a wrapper script 
+% which does write an FLS file. 
+%
+% other usage: latexmk and chktex: where to read the config file. 
+%
+% usage of creating own converter: 
+% mpost -interaction=nonstopmode -recorder -s prologues=2 -s 'outputtemplate="F3_01texUsagePlain.mps"' F3_01texUsagePlain.mp
+% is what this plugin does by default. 
+% so it seems sensible to define mympost just invoking mpost that way. 
+% this would be a reason to 
+
+
+\begin{lstlisting}[language=xml, basicstyle=\footnotesize,
+  escapechar=|,
+  float, captionpos=hb, label={lst:coordsConfig}, 
+  caption={The coordinates of this plugin and some settings}]
+        <!-- create html and pdf and other formats from latex -->
+        <plugin>
+          <groupId>|\groupId|</groupId>
+          <artifactId>|\artifactId|</artifactId>
+          <version>|\strippedVersionID|</version>
+          <configuration>
+            <settings>
+              <!--targets>chk, pdf, html</targets-->
+              <!--latex2pdfCommand>lualatex</latex2pdfCommand-->
+              <!--cleanUp>true</cleanUp-->
+              ...
+            </settings>
+          </configuration>
+        </plugin>
+  \end{lstlisting}
+
+\subsection{Executions}\label{subsec:xmlPomExecutions}
+
+% TBD: reference to section 'goals in lifecycle'. 
+To make the plugin available within a build,
+one has to add executions, e.g.~as shown in Listing~\ref{lst:executions}. 
+For all goals specified there, a default phase is defined, 
+as given as a comment but as this is hard-coded, 
+one has to specify in the executions only 
+when deviating from the default. 
+
+Typically, this plugin, to be more precise its goal \texttt{cfg}, 
+which allows configuring checks and the output formats in setting \texttt{targets},  
+is used in the \texttt{site} lifecycle phase 
+to process latex sources. 
+It is perfectly ok to stick to a single format like \texttt{pdf} 
+and configure \texttt{target} accordingly. 
+
+Alternatively, one may define an execution with the required goals like \texttt{pdf}, 
+but then the phase must be specified explicitly, because there is no default phase. 
+Of course, then no additional check is performed. 
+
+The goal \texttt{inj} injects files into the working directory \texttt{texSrcDirectory} 
+as described in detail in Section~\ref{sec:injFiles}. 
+For some files it makes sense to do this independent of the build process 
+e.g.\@ by invoking \texttt{mvn latex:inj}, 
+but in general it is preferable to perform the injection each build process anew 
+because that way the injected file can be adapted 
+to the current settings of this plugin. 
+Note that the execution of the goal \texttt{inj} has its own configuration, 
+which allows a single parameter, \texttt{injections}. 
+Listing~\ref{lst:executions} gives a recommended parameter value, 
+although not the default. 
+
+Normally, all created files in the source directory are removed 
+after the output has been copied to the target, 
+but during document development, described in Section~\ref{sec:devel}, 
+cleanup may be deactivated by setting \texttt{cleanUp} 
+and so the source directory may be polluted. 
+This may happen if other tools are used in conjunction with this plugin. 
+
+Nevertheless, cleanup is recommended to make the individual runs of this plugin independent.
+Thus, for document development, there is a dedicated goal \texttt{clr} 
+to clean up the source directory in phase \texttt{clean}. 
+Note that also the configuration files created by goal \texttt{inj} are cleared. 
+Since cleanup occurs in the course of the build and not with goal \texttt{clr} 
+the parameter \texttt{cleanUp} is given in the general settings. 
+The goal \texttt{clr} cannot be configured. 
+
+Finally, it is recommended to add a check of the converter versions
+right in the phase \texttt{validate} via goal \texttt{vrs}.
+Listing~\ref{lst:executions} specifies \texttt{versionsWarnOnly=true}, 
+which restricts goal \texttt{vrs} to just display a warning 
+if something is wrong 
+which seems appropriate in the context of validation. 
+
+For the default configuration \texttt{versionsWarnOnly=false}, 
+the goal \texttt{vrs} 
+yields a full list of registered converters, 
+signifying which one may cause trouble 
+because its version is out of range
+as displayed in Listing~\ref{lst:vrsOut}. 
+In the course of a build run, this seems too much information, 
+but in fact, it is just a matter of taste. 
+
+For details on executions of goals \texttt{inj}, \texttt{clr} and \texttt{vrs} 
+see Section~\ref{sec:devel}. 
+% TBD: check and make the reference more precise. 
+
+
+%\lstset{language=xml, basicstyle=\small}
+\begin{lstlisting}[language=XML, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=hb, label={lst:executions}, 
+caption={The executions of this plugin}]
+<plugin>
+  <groupId>|\groupId|</groupId>
+  <artifactId>|\artifactId|</artifactId>
+  <version>|\strippedVersionID|</version>
+  <configuration>
+    <settings>
+      <!--targets>chk, pdf, html</targets-->
+      <!--cleanUp>false</cleanUp-->
+      ...
+    </settings>
+  </configuration>
+  <executions>
+    <execution>
+      <id>process-latex-sources</id>
+      <!-- chk, dvi, pdf, html, odt, docx, rtf, txt -->
+      <goals><goal>cfg</goal></goals>
+      <!-- phase>site</phase-->
+    </execution>
+    <execution>
+      <id>clear-latex-sources</id>
+      <goals><goal>clr</goal></goals>
+      <!-- phase>clean</phase-->
+    </execution>
+    <execution>
+      <?m2e execute onConfiguration?>
+      <id>inject-files</id>
+      <goals><goal>inj</goal></goals>
+      <!-- phase>validate</phase-->
+      <configuration>
+      <injections>latexmkrc,chktexrc,header</injections>
+    </configuration>
+    </execution>
+    <execution>
+      <id>validate-converters</id>
+      <goals><goal>vrs</goal></goals>
+      <!-- phase>validate</phase-->
+      <configuration>
+        <versionsWarnOnly>true</versionsWarnOnly>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+\end{lstlisting}
+
+The executions considered so far are appropriate 
+for mavens default lifecycle. 
+Typically, this maven plugin is used in the site lifecycle, 
+which does not contain the phase \texttt{validate}, 
+but accordingly \texttt{pre-site}. 
+As a consequence, goals \texttt{inj} and \texttt{vrs} are not invoked. 
+To get around, 
+one could specify the phase \texttt{pre-site} in the execution explicitly. 
+The author uses the \texttt{maven-jxr-plugin} 
+as illustrated in Listing~\ref{lst:forkJxr}, 
+which, as a side effect, forks the lifecycle 
+and includes phase \texttt{validate} of the default lifecycle 
+and in particular goals \texttt{inj} and \texttt{vrs}. 
+
+It is planned to perform a version check in first usage of a tool, 
+except tools in the environment, i.e.\@ build tools and programming languages. 
+This avoids check of tools which are not needed. 
+Also, for the generic user, no execution for goal \texttt{vrs} is needed any more; 
+by need it can be invoked from the command line as \texttt{mvn latex:vrs}. 
+Still the developer of this software will continue to specify that execution. 
+
+
+
+\begin{lstlisting}[language=XML, basicstyle=\footnotesize,
+escapechar=|,
+float, captionpos=hb, label={lst:forkJxr}, 
+caption={Forked execution with jxr plugin}]
+<project>
+  ...
+  <reporting>
+    <plugins>
+      ...
+      <!-- as a side effect, 
+          triggers 'generate-sources' forked phase execution  -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>3.3.0</version>
+      </plugin>
+      ...
+    </plugins>
+  </reporting>
+</project>
+\end{lstlisting}
+
+Note that in Listing~\ref{lst:executions} 
+the section \texttt{configuration} which is not part of an execution 
+contains an empty configuration and is thus as much as empty. 
+It can thus be skipped in a default configuration
+creating output in formats PDF and HTML and performing checks on the \LaTeX-sources. 
+However, \href{\urlSite fromMain/pom4pdf.xml}{pom.xml} 
+gives an example pom using this latex plugin 
+with full configuration with default values and executions.
+In addition, Chapter~\ref{chap:settings} describes each setting individually. 
+\medskip
+
+
+
+\section{Setting build.xml for the ant task}\label{sec:xmlBuild}
+
+As you can see, the \texttt{taskdef}'s refer to java classes.
+Unlike maven which loads jars with the classes inside automatically
+from
+% 
+\begin{Verbatim}[fontsize=\small, commandchars=\\\{\}]
+\repo%
+\end{Verbatim}
+%
+the jar for the tasks, \createdJar,
+must be downloaded manually from
+%
+\begin{Verbatim}[fontsize=\scriptsize, commandchars=\\\{\}]
+\repo/eu/simuline/m2latex/\artifactId/\strippedVersionID%
+\end{Verbatim}
+%
+Moreover, ant expects to find the jar files in an according folder.
+In my installation it is \antJarDir;
+as can be seen in the ant documentation,
+in general it is in folder \texttt{lib} in ant's installation directory. 
+
+However, \href{\urlSite build.xml}{build.xml} 
+gives an example build file using this latex ant task\index{ant-task} 
+with full configuration with default values and executions.
+From that, one has to copy the following
+into the \texttt{build.xml} file in the current project:
+%
+\begin{itemize}
+\item The properties \texttt{antJarDir} and \texttt{createdJar}, 
+\item The path element with the id \texttt{latex.classpath}
+\item The taskdefs \texttt{latexCfg}  and \texttt{latex:Clr}
+\item The  targets \texttt{latex:cfg} and \texttt{latex:clr}
+\end{itemize}
+
+As for the maven plugin, for the ant task, add configuration, 
+where a deviation from the default requires to do so. 
+The configuration is the same and is described in detail 
+in Chapter~\ref{chap:settings}. 
+
+
+
+\section{Installation from source}\label{sec:instSrc}
+
+The first step to install from source, is to clone from the repository by
+%
+\begin{Verbatim}[commandchars=\\\{\}]
+git clone \devSite{}
+\end{Verbatim}
+%
+of course assuming that \texttt{git} has been installed.
+Then change into the root repository where \texttt{pom.xml}
+for maven and also \texttt{built.xml} for ant are located. 
+
+To install the maven-plugin, ensure that maven is installed. 
+One is tempted just to type 
+%
+\begin{Verbatim}
+mvn clean install
+\end{Verbatim}
+%
+but this does not work since the plugin needs itself to be installed
+to perform even \texttt{clean}.
+To solve that problem just comment out all its executions
+in the local \texttt{pom.xml} by enclosing them in \texttt{<!--\ldots-->}.
+In fact this is a minor bug, since, to be strict, only
+the executions for verification and clearing must be deactivated.
+For processing, it would be sufficient to add
+\texttt{<phase>site</phase>} to execution \texttt{process-latex-sources}.
+\medskip
+
+
+Since the author develops with maven,
+including the development of the ant task,
+the maven built, creates the file \createdJar{}
+defining the ant task.
+To this end, also \texttt{mvn clean package} is sufficient.
+After that, installation proceeds like described in Section~\ref{sec:xmlBuild}
+copying that jar file ant's lib-folder where ant can find it.
+
+With root access and after having checked the proper paths,
+the build file \texttt{build.xml} can be used 
+to perform copy task by \texttt{ant install},
+to insert an according link by \texttt{ant link}
+to remove it again with \texttt{ant uninstall}.
+The build file \texttt{build.xml} works only
+if \createdJar{} is placed where ant can find it
+or if the parts are deactivated below the line
+%
+\begin{Verbatim}
+  <!-- deactivate the following,
+  unless the ant task is installed already -->
+\end{Verbatim}
+
+I feel building with maven and linking the jar created
+is a very good way to develop the ant task,
+because after changes the new ant task is available immediately.
+
+For typical changes in the sources,
+it is possible to recompile and package the ant task
+by \texttt{ant jar} also cleanup is possible with \texttt{ant clean}.
+Finally, the ant task can be tested with \texttt{ant latex:cfg}
+and \texttt{ant latex:clr}. 
+
+In the long run, it should be possible to build the ant task\index{ant-task} from sources
+with ant alone.
+
+

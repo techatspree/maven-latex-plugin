@@ -1,143 +1,1252 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
+  <!-- coordinates for model and artifact xxx -->
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.akquinet.jbosscc.latex</groupId>
-    <artifactId>maven-latex-plugin</artifactId>
-    <packaging>maven-plugin</packaging>
-    <version>1.3-SNAPSHOT</version>
-    <name>Maven LaTeX Plugin</name>
-    <url>http://akquinet.github.com/maven-latex-plugin/</url>
+  <!-- The Basics -->
+  <groupId>eu.simuline.m2latex</groupId>
+  <artifactId>latex-maven-plugin</artifactId>
+  <version>2.1-SNAPSHOT</version>
+  <packaging>maven-plugin</packaging>
 
-    <description>
-        Automatically create pdf or html documents from LaTeX sources during the Maven site phase.
-    </description>
+  <prerequisites>
+    <!-- This is the minimum version. 
+      It must coincide with the minimum version 
+      in the interval in ./src/main/resources/version.properties -->
+    <maven>3.9.1</maven>
+  </prerequisites>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+  <!--parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent-->
 
-    <scm>
-        <connection>scm:git:git://github.com/akquinet/maven-latex-plugin.git</connection>
-        <url>https://github.com/akquinet/maven-latex-plugin</url>
-        <developerConnection>scm:git:git@github.com:akquinet/maven-latex-plugin.git</developerConnection>
-    </scm>
+  <!-- information for generating a site: about -->
+  <name>LaTeX Maven Plugin</name>
+  <description>
+    Automatically create documents 
+    in formats PDF, DVI, XDV, (X)DOC, ODT, TXT, (X)HTML and others 
+    from LaTeX sources during the Maven site phase
+    allowing typical graphic formats native 
+    to tex (like eps and metapost) or to the package graphicx.
+    Also includes bibliography, indices, glossaries 
+    and execution of program code. 
+    Furthermore, displays warnings if there is a hint that the result is not optimal. 
+    In particular checks for rerun, warnings and under/overfull boxes. 
+  </description>
 
-    <mailingLists>
-        <mailingList>
-            <name>maven-latex-plugin Users</name>
-            <archive>http://groups.google.com/group/maven-latex-plugin-users</archive>
-            <post>maven-latex-plugin-users@googlegroups.com</post>
-            <subscribe>maven-latex-plugin-users+subscribe@googlegroups.com</subscribe>
-            <unsubscribe>maven-latex-plugin-users+unsubscribe@googlegroups.com</unsubscribe>
-        </mailingList>
-    </mailingLists>
+  <url>https://github.com/Reissner/latex-maven-plugin/</url>  <!-- should be mojohouse -->
+  <inceptionYear>2016</inceptionYear>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>Simuline Organization (l2r)</name>
+    <url>http://www.simuline.eu</url>
+  </organization>
+
+  <!--organization>
+    <name>akquinet AG</name>
+    <url>http://www.akquinet.de</url>
+  </organization-->
+
+  <developers>
+    <!-- <developer>
+			<id>cerker</id>
+			<name>Carsten Erker</name>
+			<email>carsten.erker at akquinet dot de</email>
+			<organization>akquinet tech@spree GmbH</organization>
+			<organizationUrl>http://www.akquinet.de</organizationUrl>
+		</developer>
+
+		<developer>
+			<id>hwilming</id>
+			<name>Heinz Wilming</name>
+			<email>heinz.wilming at akquinet dot de</email>
+			<organization>akquinet tech@spree GmbH</organization>
+			<organizationUrl>http://www.akquinet.de</organizationUrl>
+		</developer> -->
+
+    <developer>
+      <id>ereissner</id>
+      <name>Ernst Reissner</name>
+      <email>ernst.reissner at simuline dot eu</email>
+      <organization>l2r</organization>
+      <organizationUrl>https://www.simuline.eu</organizationUrl>
+      <timezone>Europe/Berlin</timezone>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <properties>
+        <picUrl>http://www.simuline.eu/Gluck_0001.gif</picUrl>
+      </properties>
+    </developer>
+  </developers>
+
+  <!-- mailingLists></mailingLists-->
+
+  <!-- this is a trial -->
+  <!-- in maven central: not recommended -->
+  <pluginRepositories>
+    <pluginRepository>
+      <id>plugin-repo</id>
+      <!--url>http://akquinet.github.com/latex-maven-plugin/maven2/</url-->
+      <url>https://www.simuline.eu/RepositoryMaven</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
 
 
-    <organization>
-        <name>akquinet AG</name>
-        <url>http://www.akquinet.de</url>
-    </organization>
+  <!--scm>
+    <connection>
+    scm:git:git://github.com/akquinet/latex-maven-plugin.git
+    </connection>
+    <url>https://github.com/akquinet/latex-maven-plugin</url>
+    <developerConnection>
+    scm:git:git@github.com:akquinet/latex-maven-plugin.git
+    </developerConnection>
+    <tag>1.3</tag>
+  </scm-->
 
-    <developers>
-        <developer>
-            <id>cerker</id>
-            <name>Carsten Erker</name>
-            <email>carsten.erker at akquinet dot de</email>
-            <organization>akquinet tech@spree GmbH</organization>
-            <organizationUrl>http://www.akquinet.de</organizationUrl>
-        </developer>
+  <scm>
+    <connection>
+      scm:git:https://github.com/Reissner/latex-maven-plugin.git
+    </connection>
+    <developerConnection>
+      scm:git:https://github.com/Reissner/latex-maven-plugin.git
+    </developerConnection>
+    <url>https://github.com/Reissner/latex-maven-plugin</url>
+    <!--tag>latex-maven-plugin-1.3</tag-->
+    <tag>HEAD</tag>
+  </scm>
 
-        <developer>
-            <id>hwilming</id>
-            <name>Heinz Wilming</name>
-            <email>heinz.wilming at akquinet dot de</email>
-            <organization>akquinet tech@spree GmbH</organization>
-            <organizationUrl>http://www.akquinet.de</organizationUrl>
-        </developer>
-    </developers>
+  <distributionManagement>    <!-- For authentication see ~/.m2/settings.xml -->
+    <site>
+      <id>publicSiteAtSimuline</id>
+      <url>ftp://www.simuline.eu/public_html/LatexMavenPlugin</url>
+      <!-- site is 
+      http://www.simuline.eu/LatexMavenPlugin/ 
+      This is configured by a parameter, 
+      but not really single source. 
+      But to overcome: lot of parameters -->
+    </site>
 
-    <issueManagement>
-        <system>Github Issues</system>
-        <url>https://github.com/akquinet/maven-latex-plugin/issues</url>
-    </issueManagement>
+    <repository>
+      <id>publicRepoAtSimuline</id>
+      <uniqueVersion>false</uniqueVersion>
+      <url>ftp://www.simuline.eu/public_html/RepositoryMaven</url>
+    </repository>
+  </distributionManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
-            <version>2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-site-plugin</artifactId>
-            <version>2.0-beta-7</version>
-            <type>maven-plugin</type>
-        </dependency>
-        <dependency>
-            <groupId>easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>1.2_Java1.3</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.4</source>
-                    <target>1.4</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.2.2</version>
-            </plugin>
-        </plugins>
-    </build>
+  <mailingLists>
+    <!--mailingList>
+      <name>latex-maven-plugin Users</name>
+      <archive>http://groups.google.com/group/latex-maven-plugin-users</archive>
+      <post>latex-maven-plugin-users@googlegroups.com</post>
+      <subscribe>latex-maven-plugin-users+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>latex-maven-plugin-users+unsubscribe@googlegroups.com</unsubscribe>
+    </mailingList-->
+  </mailingLists>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.4.3</version>
-                <reportSets />
-            </plugin>
-            <plugin>
+  <issueManagement>
+    <system>Github Issues</system>
+    <url>https://github.com/Reissner/latex-maven-plugin/issues</url>
+    <!--url>https://github.com/akquinet/latex-maven-plugin/issues</url-->
+  </issueManagement>
+
+  <properties>
+    <!-- Using platform encoding to copy filtered resources; 
+    without project.build.sourceEncoding the build depends on the platform! -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- checked during validation -->
+    <versionMvn>3.9.2</versionMvn>
+    <versionJava>17</versionJava>
+    <versionTestPlugins>3.3.1</versionTestPlugins>
+    <versionJunit5>5.8.2</versionJunit5>
+    <!--versionJunit5Platform>5.8.2</versionJunit5Platform-->
+    <versionJunit4>4.13.2</versionJunit4>
+    <versionItf>0.11.0</versionItf>
+    <versionAnt>1.10.14</versionAnt>
+    <versionSlf4j>2.1.0-alpha1</versionSlf4j>
+    <versionsACCM>4.0.0-alpha-7</versionsACCM><!-- 4.0.0-alpha-13 does not work -->
+    <versionStripped>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}</versionStripped>
+    <urlSite>https://www.simuline.eu/LatexMavenPlugin/</urlSite>
+  </properties>
+
+  <dependencies>
+
+    <!-- versions:  3.9.2 ${versionMvn} 4.0.0-alpha-5 -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${versionsACCM}</version>
+      <scope>provided</scope>
+      <!-- TBD: with default scope, this yields a warning, because not forseen like that. 
+        We shall file a feature requrest -->
+    </dependency>
+
+    <!-- TBD: lot of dependency convergence errors, 
+	mainly betwen maven-compat and maven-core. 	
+	I wrote already org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.5
+		to update dependency 
+		-org.codehaus.plexus:plexus-component-annotations:1.5.5->2.1.0
+		Then maven-compat can update to new sisu and a lot is resolved. 
+
+		- maven-compat may update maven-resolver-impl to obtain 
+		  org.slf4j:slf4j-api:1.7.30->1.7.32
+		- maven-compat shall fix double dependency plexus-utils 3.4.1 and 3.0.24 
+		  besides 3.3.0
+		
+-->
+
+    <!-- needed for integration test -->
+    <!-- maven2 compatibility layer, 
+		some time this will be removed.. 
+		soon maven 4 will be born. -->
+    <!-- ${versionMvn} 4.0.0-alpha-5 -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-compat</artifactId>
+      <version>${versionsACCM}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- needed for maven-plugin-plugin descriptor -->
+    <!-- ${versionMvn} 4.0.0-alpha-5 -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>${versionsACCM}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!--dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${versionMvn}</version>
+      <scope>provided</scope>
+    </dependency-->
+
+    <!-- maven-resolver-api. -->
+
+
+    <!-- for a trial in MetaInfo class -->
+    <!-- ${versionMvn} 4.0.0-alpha-5 -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${versionsACCM}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- needed when running the integration test -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${versionSlf4j}</version>
+    </dependency>
+
+    <!-- needed when running the integration test -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${versionSlf4j}</version>
+    </dependency>
+    <!-- <scope>test</scope>: if not then the plugin descriptors are not found  -->
+
+    <!--dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-maven-slf4j</artifactId>
+      <version>0.12.2</version>
+    </dependency-->
+
+    <!-- dependencies to annotations -->
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>4.0.0-beta-1</version><!--3.12.0-->
+      <scope>provided</scope>
+      <!-- TBD: with default scope, this yields a warning, because not forseen like that. 
+      We shall file a feature requrest -->
+    </dependency>
+
+    <!-- version maybe outdated -->
+    <!-- CAUTION: if using this instead of org.apache.ant:ant, 
+    problems with plugin test occur. -->
+    <!--dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-ant-tasks</artifactId>
+      <version>2.1.3</version>
+      <scope>provided</scope>
+    </dependency-->
+
+    <!-- TBD: this is a bit too much, but works. surrogat of maven-ant-task -->
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>${versionAnt}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!--dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-manager</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-repository-metadata</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-profile</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-registry</artifactId>
+      <version>2.2.1</version>
+      <scope>provided</scope>
+    </dependency-->
+
+
+    <!--dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.4</version>
+        </dependency-->
+    <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
+
+    <!-- for 'printing' escape characters -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.12.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>4.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${versionJunit4}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.12.0</version>
+      <!--scope>test</scope-->
+    </dependency>
+
+    <!-- maybe to be replaced by https://blog.soebes.de/blog/2020/08/18/itf-part-i/ -->
+    <dependency>
+      <groupId>org.apache.maven.plugin-testing</groupId>
+      <artifactId>maven-plugin-testing-harness</artifactId>
+      <version>4.0.0-alpha-2</version><!-- 4.0.0-beta-1 does not work-->
+      <scope>test</scope>
+    </dependency>
+
+    <!-- TBD: eliminate in java12 -->
+    <!--scope>test</scope-->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.16.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.florianingerl.util</groupId>
+      <artifactId>regex</artifactId>
+      <version>1.1.11</version>
+    </dependency>
+
+    <!--dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-engine</artifactId>
+		<version>${versionJunit5}</version>
+		<scope>test</scope>
+	</dependency-->
+
+    <!-- annotations and assertions -->
+    <!--dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-api</artifactId>
+		<version>${versionJunit5}</version>
+		<scope>test</scope>
+	</dependency-->
+
+    <!-- @suite support -->
+    <!--dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-params</artifactId>
+		<version>${versionJunit5}</version>
+		<scope>test</scope>
+	</dependency-->
+
+    <!-- support for parametrized tests -->
+    <!--dependency>
+		<groupId>org.junit.platform</groupId>
+		<artifactId>junit-platform-suite</artifactId>
+		<version>${versionJunit5Platform}</version>
+		<scope>test</scope>
+	</dependency-->
+
+    <!--dependency>
+		<groupId>com.soebes.itf.jupiter.extension</groupId>
+		<artifactId>itf-extension-maven</artifactId>
+		<version>${versionItf}</version>
+		<scope>test</scope>
+	  </dependency-->
+
+    <!--dependency>
+		<groupId>com.soebes.itf.jupiter.extension</groupId>
+		<artifactId>itf-assertj</artifactId>
+		<version>${versionItf}</version>
+		<scope>test</scope>
+	</dependency-->
+
+    <!--dependency>
+		<groupId>com.soebes.itf.jupiter.extension</groupId>
+		<artifactId>itf-jupiter-extension</artifactId>
+		<version>${versionItf}</version>
+		<scope>test</scope>
+	</dependency-->
+
+    <!--dependency>
+		<groupId>org.assertj</groupId>
+		<artifactId>assertj-core</artifactId>
+		<version>3.16.1</version>
+		<scope>test</scope>
+	</dependency-->
+
+  </dependencies>
+
+  <build>
+
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>3.3.2</version>
+      </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-file</artifactId>
+        <version>3.3.2</version>
+      </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-http</artifactId>
+        <version>3.3.2</version>
+      </extension>
+    </extensions>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>COPYING</include>
+          <include>version.properties</include>
+          <include>injections/*</include>
+          <include>litLMPpub.bib</include>
+          <!-- TBD: check whether needed -->
+          <include>defaultSettingsAs.properties</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/filters</directory>
+        <includes>
+          <!-- TBD: check whether needed -->
+          <include>defaultSettingsAs.properties</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+
+    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+    <!--pluginManagement>
+      <plugins>
+    <plugin>
+      <groupId>org.eclipse.m2e</groupId>
+      <artifactId>lifecycle-mapping</artifactId>
+      <version>1.0.0</version>
+      <configuration>
+        <lifecycleMappingMetadata>
+          <pluginExecutions>
+            <pluginExecution>
+              <pluginExecutionFilter>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
+                <artifactId>exec-maven-plugin</artifactId>
+                <versionRange>[1.5.0,)</versionRange>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </pluginExecutionFilter>
+              <action>
+                <ignore></ignore>
+              </action>
+            </pluginExecution>
+          </pluginExecutions>
+        </lifecycleMappingMetadata>
+      </configuration>
+    </plugin>
+      </plugins>
+    </pluginManagement-->
+
+
+    <plugins>
+
+      <!-- at the moment just to enforce maven version
+	   use as mvn validate not as mvn enforcer:enforce
+	   TBD: add a lot of tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <rules>
+            <requireMavenVersion>
+              <version>${versionMvn}</version>
+              <message>
+		 		Invalid Maven version. It should, at least, be ${versionMvn}
+              </message>
+            </requireMavenVersion>
+            <requireJavaVersion>
+              <version>${versionJava}</version>
+            </requireJavaVersion>
+            <dependencyConvergence />
+          </rules>
+        </configuration>
+      </plugin>
+
+      <!-- information about a project or the system -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-help-plugin</artifactId>
+        <version>3.4.1</version>
+      </plugin>
+
+      <!-- read/write property values -->
+      <!-- in this case, this plugin also exposes profile properties from settings.xml
+      related with gpg: gpg.executable and gpg.passwprase. 
+      This makes it unuseable. 
+      What would be needed is make it configurable to include/exclude properites. 
+      On the other hand, development shows low level of activity, 
+      feature requests are not worked on, 
+      but pull requests are done. 
+      So if i want to do it myself, i can. Well... 
+      For the moment, I decided to drop this and go with resources plugin.  -->
+      <!--  
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>write-project-properties</goal>
+            </goals>
+            <configuration>
+              <outputFile>
+                ${project.build.outputDirectory}/mvn.properties
+              </outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+-->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <!--configuration>
+              <keyname>${gpg.keyname}</keyname>
+              <passphraseServerId>${gpg.keyname}</passphraseServerId>
+            </configuration-->
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- used to create version without SNAPSHOT suffix and timestamp for documentation -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <locale>en_US</locale>
+        </configuration>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>parse-timestamp</id>
+            <goals>
+              <goal>timestamp-property</goal>
+            </goals>
+            <configuration>
+              <name>timestampDay</name>
+              <pattern>yyyy-MM-dd</pattern>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <configuration>
+          <propertiesEncoding>UTF-8</propertiesEncoding>
+          <!-- This relies on the fact, that the pom overwrites this, 
+						which means strange enough, that the pom is applied first. 
+						CAUTION: the pom influences not just some settings for latex-plugin 
+						but also the tests. -->
+          <filters>
+            <filter>src/main/filters/defaultSettingsAs.properties</filter>
+          </filters>
+        </configuration>
+
+        <executions>
+          <!-- copy PDFs into jar for comparison -->
+          <execution>
+            <id>copy-pdf2site</id>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/docsCmp</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+
+          <!-- filter the build parameters for tex documents -->
+          <execution>
+            <id>filterTexProps</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/site/tex</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <includes>
+                    <include>buildParams.tex</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>copyBib</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/site/tex</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/</directory>
+                  <includes>
+                    <include>litLMPpub.bib</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+          <!-- filter the full pom for integration tests -->
+          <execution>
+            <id>filterIntTestPoms</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/test/resources/integration</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/rawPoms</directory>
+                  <includes>
+                    <include>pom4pdf.xml</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+
+          <!-- filter the full pom for site generation -->
+          <execution>
+            <id>filterFullPomSite</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/site/resources/fromMain</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/rawPoms</directory>
+                  <includes>
+                    <include>pom4pdf.xml</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+                <resource>
+                  <directory>src/main/resources/injections</directory>
+                  <includes>
+                    <include>instVScode4tex.sh</include>
+                    <!-- caution: this is unfiltered 
+                      because default filtering is not apropriate-->
+                    <include>ntlatex</include>
+                    <include>pythontexW</include>
+                    <include>depythontexW</include>
+                    <include>vmdiff</include>
+                  </includes>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>4.9.10</version>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>initialize</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+          </generateGitPropertiesFilename>
+          <!--  includeOnlyProperties>
+	       <includeOnlyProperty>^git.build.(time|version)$
+	       </includeOnlyProperty>
+	       <includeOnlyProperty>^git.commit.id.(abbrev|full)$
+	       </includeOnlyProperty>
+	       </includeOnlyProperties-->
+          <commitIdGenerationMode>full</commitIdGenerationMode>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.1.1</version>
+      </plugin>
+
+      <!--plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <version>2.12.1</version>
+        <executions>
+          <execution>
+            <id>check-changes</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>changes-check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin-->
+
+
+      <!-- configuration for clean plugin -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/site/tex</directory>
+              <includes>
+                <include>buildParams.tex</include>
+                <include>litLMPpub.bib</include>
+              </includes>
+            </fileset>
+
+            <fileset>
+              <directory>src/site/resources/fromMain</directory>
+              <includes>
+                <include>pom4pdf.xml</include>
+                <include>instVScode4tex.sh</include>
+                <include>ntlatex</include>
+                <include>pythontexW</include>
+                <include>depythontexW</include>
+                <include>vmdiff</include>
+              </includes>
+            </fileset>
+            <fileset>
+              <directory>src/test/resources/integration</directory>
+              <includes>
+                <include>pom4pdf.xml</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+      <!-- This plugin will write properties values 
+	   using dependency information into classpath.txt-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.7.1</version>
+        <executions>
+          <execution>
+            <?m2e execute onConfiguration,onIncremental?>
+            <goals>
+              <goal>build-classpath</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputFile>${project.build.directory}/classpath.txt</outputFile>
+        </configuration>
+      </plugin>
+
+      <!-- configuration was source and target = 1.8 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-g</arg>
+            <arg>-Xlint:unchecked</arg>
+          </compilerArgs>
+          <source>${versionJava}</source>
+          <target>${versionJava}</target>
+        </configuration>
+      </plugin>
+
+
+
+      <!-- creates HelpMojo 
+	   Still there is a problem with detail=true. 
+	   Does not work with 3.4 or later versions! 
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>4.0.0-beta-1</version>
+        <configuration>
+          <goalPrefix>latex</goalPrefix>
+          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+        </configuration>
+
+        <executions>
+          <execution>
+            <?m2e execute onConfiguration,onIncremental?>
+            <id>default-descriptor</id>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+            <!--phase>process-classes</phase-->
+          </execution>
+          <execution>
+            <id>generated-helpmojo</id>
+            <goals>
+              <goal>helpmojo</goal>
+            </goals>
+          </execution>
+          <!--phase>process-classes</phase-->
+        </executions>
+      </plugin>
+
+
+      <!-- maybe three jars even: one each for 
+	   - maven plugin 
+	   - ant task
+	   - standalone application 
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.4.2</version>
+        <executions>
+          <execution>
+            <id>second-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>antTask</classifier>
+              <includes>
+                <include>**/antTask/*</include>
+                <!-- this is added to the name of the jar file-->
+                <include>**/core/*</include>
+                <include>org/apache/maven/plugin/*Exception*</include>
+                <include>org/apache/commons/io/*</include>
+                <include>org/apache/commons/io/output/*</include>
+                <include>org/apache/commons/io/filefilter/*</include>
+                <include>org/codehaus/plexus/util/*</include>
+                <include>org/codehaus/plexus/util/cli/*</include>
+                <include>org/codehaus/plexus/util/cli/shell/*</include>
+                <include>*.properties</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+        <!-- refers to all jars -->
+        <configuration>
+          <archive>
+            <!-- name of jar and list of folders if set true -->
+            <!-- index>true</index-->
+            <manifest>
+              <!-- adds all 'Implementation-xxx' 
+		   but "Implementation-Vendor-Id' -->
+              <addDefaultImplementationEntries>true
+              </addDefaultImplementationEntries>
+              <!-- adds all 'Specification-xxx' 
+		   but "Implementation-Vendor-Id' -->
+              <addDefaultSpecificationEntries>true
+              </addDefaultSpecificationEntries>
+              <!-- make jar executable for standalone application -->
+              <!--addClasspath>true</addClasspath-->
+              <!--classpathPrefix>lib/</classpathPrefix-->
+              <!--classpathLayoutType>repository</classpathLayoutType-->
+              <!--customClasspathLayout>WEB-INF/lib/$${artifact.groupIdPath}/$${artifact.artifactId}-$${artifact.version}$${dashClassifier?}.$${artifact.extension}</customClasspathLayout-->
+
+              <!--mainClass>the main class</mainClass-->
+            </manifest>
+            <!-- 'sealed' means all packages are complete in this jar-->
+            <manifestEntries>
+              <Sealed>true</Sealed>
+              <url>${project.url}</url>
+            </manifestEntries>
+            <manifestSections>
+              <manifestSection>
+                <name>eu/simuline/m2latex/core/</name>
+                <manifestEntries>
+                  <Implementation-Version>${project.version}</Implementation-Version>
+                  <url>${project.url}</url>
+                </manifestEntries>
+              </manifestSection>
+            </manifestSections>
+          </archive>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>3.1.2</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.1.2</version>
+      </plugin>
+
+      <!-- javadoc plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <breakiterator>true</breakiterator>
+          <show>private</show>
+          <source>${versionJava}</source>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${versionTestPlugins}</version>
+        <configuration>
+          <enableAssertions>true</enableAssertions><!-- TBD: eliminate later -->
+          <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>          <!-- -Xmixed  -->
+          <trimStackTrace>false</trimStackTrace>
+          <systemPropertyVariables>
+            <!--testResourcesDir>${project.testResources}</testResourcesDir-->
+            <unitTestResourcesDir>src/test/resources/units</unitTestResourcesDir>
+            <buildDirectory>${project.build.directory}</buildDirectory>
+          </systemPropertyVariables>
+          <!--includes>
+			<include>LatexProcessorTest.java</include>
+			<include>CommandExecutorTest.java</include>
+			<include>TexFileUtilsTest.java</include>
+			<include>SettingsTest.java</include>
+			<include>PdfMojoTest.java</include>
+          </includes-->
+          <excludes>
+            <exclude>LatexProcessorTest.java</exclude>
+            <!--exclude>PdfMojoTest.java</exclude-->
+          </excludes>
+        </configuration>
+      </plugin>
+
+
+      <!-- creates site, here from markdown -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>4.0.0-M16</version>
+        <dependencies>
+          <!-- Add doxia-module-markdown as dependency for the plugin -->
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-module-markdown</artifactId>
+            <version>2.0.0-M12</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <!-- create html and pdf and other formats from latex -->
+      <!-- this is activated for developer tests only -->
+      <plugin>
+        <groupId>eu.simuline.m2latex</groupId>
+        <artifactId>latex-maven-plugin</artifactId>
+        <version>2.1-SNAPSHOT</version><!-- 2.0 2.1-SNAPSHOT -->
+        <configuration>
+          <settings>
+            <convertersExcluded>upmendex, xindy</convertersExcluded>
+            <!--texSrcDirectory>src/site/tex/testMagicComments</texSrcDirectory-->
+            <!--latex2pdfCommand>xelatex</latex2pdfCommand-->
+            <!--pdfViaDvi>true</pdfViaDvi-->
+            <cleanUp>false</cleanUp>
+            <!-- This is a hack: here it should be the default chkDiff=false, 
+              and only in pom4pdf.xml it shall be chkDiff=true, 
+              but this does not work properly. 
+              There is an according entry in the backlog in changes.xml 
+              and a more detailled description in PdfMojoTest.java -->
+            <chkDiff>true</chkDiff>
+            <targets>pdf</targets><!--chk,pdf,html-->
+            <!-- <targets>chk,pdf,html</targets> -->
+            <!--pdfViaDvi>true</pdfViaDvi-->
+            <latexmkUsage>NotAtAll</latexmkUsage><!--Fully NotAtAll AsBackend-->
+
+            <!-- TBD: the default does not seem appropriate -->
+            <!--diffDirectory>src/main/resources/docsCmp</diffDirectory-->
+            <!--targets>chk,pdf,html</targets-->
+            <!--docClassesToTargets>article,book:chk,dvi,pdf,html,odt,docx,rtf,txt beamer:chk,pdf,txt</docClassesToTargets-->
+            <!--mainFilesIncluded>testtest</mainFilesIncluded-->
+            <!--patternLatexMainFile>
+            </patternLatexMainFile-->
+            <!--mainFilesIncluded>manualLMP</mainFilesIncluded-->
+            <mainFilesExcluded>test useBeamerHandout</mainFilesExcluded>
+            <pythontexCommand>pythontexW:pythontex</pythontexCommand>
+            <pythontexOptions>--rerun=always</pythontexOptions>
+            <!--patternErrPyTex>\* PythonTeX error|(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\(s\), [0-9]+ warning\(s\)</patternErrPyTex-->
+            <!--patternWarnPyTex>(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\(s\), [1-9][0-9]* warning\(s\)</patternWarnPyTex-->
+            <!--depythontexCommand>depythontexW</depythontexCommand-->
+            <!--chkTexOptions>-q -b0</chkTexOptions--><!-- BUG: does not do without -->
+            <!--tex4htStyOptions>
+              xhtml,uni-html4,5,pic-tabular
+            </tex4htStyOptions-->
+
+          </settings>
+        </configuration>
+
+        <executions>
+          <!--execution>
+            <id>process-latex-sources-pdf</id>
+            <goals>
+              <goal>pdf</goal>
+            </goals>
+          </execution-->
+          <execution>
+            <id>process-latex-sources</id>
+            <goals>
+              <goal>cfg</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>clear-latex-sources</id>
+            <goals>
+              <goal>clr</goal>
+            </goals>
+          </execution>
+          <execution>
+            <?m2e execute onConfiguration?>
+            <id>inject-files</id>
+            <goals>
+              <goal>inj</goal>
+            </goals>
+            <configuration>
+              <injections>latexmkrc,chktexrc,header,headerGrp,headerSuppressMetaPDF</injections>
+            </configuration>
+          </execution>
+          <execution>
+            <?m2e execute onConfiguration?>
+            <id>validate-converters</id>
+            <goals>
+              <goal>vrs</goal>
+            </goals>
+            <configuration>
+              <versionsWarnOnly>true</versionsWarnOnly>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.6.2</version>
+        <configuration>
+          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+          <skipEmptyReport>false</skipEmptyReport>
+        </configuration>
+      </plugin>
+
+      <!-- as a side effect, triggers 'generate-sources' forked phase execution  -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>3.4.0</version>
+      </plugin>
+
+
+      <!-- offers also command line analysis:
+      mvn versions:display-plugin-updates
+      mvn versions:display-dependency-updates
+      mvn versions:display-property-updates
+      -->
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <!-- TBD: uniform version -->
+        <version>2.17.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>dependency-updates-report</report>
+              <report>plugin-updates-report</report>
+              <report>property-updates-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${versionTestPlugins}</version>
+        <reportSets />
+      </plugin>
+      <!--plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>2.7</version>
+          </plugin-->
+
+      <!-- changes plugin: src/changes/changes.xml -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <version>2.12.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-report-plugin</artifactId>
+        <version>4.0.0-beta-1</version>
+      </plugin>
+
+      <!-- nullpointer exception and no issue tracker -->
+      <!--plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-linkcheck-plugin</artifactId>
+				<version>1.2</version>
+			</plugin-->
+
+    </plugins>
+  </reporting>
 
 </project>

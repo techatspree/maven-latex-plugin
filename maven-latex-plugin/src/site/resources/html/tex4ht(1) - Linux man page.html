@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>tex4ht(1) - Linux man page</title>
+<!-- base href="http://linux.die.net/man/1/tex4ht" -->
+<link rel="canonical" href="http://linux.die.net/man/1/tex4ht">
+<link rel="stylesheet" type="text/css" href="tex4ht%281%29%20-%20Linux%20man%20page_files/white.css">
+<link rel="shortcut icon" href="http://linux.die.net/favicon.ico" type="image/x-icon">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="TeX4ht interacts with TeX-based applications through a style file tex4ht.sty and other files which are loaded by this style file, leaving the processing of ...">
+<script type="text/javascript">
+<!--
+var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-50820-6']);_gaq.push(['_trackPageview']);
+window.google_analytics_uacct = 'UA-50820-6';
+// -->
+</script>
+<link href="tex4ht%281%29%20-%20Linux%20man%20page_files/translator.css" id="SL_Style" type="text/css" rel="stylesheet"><style>@media print {#UNIQUE_ID-ghostery {display:none !important}}</style></head>
+
+<body>
+<div id="bg">
+<div id="logo">
+<a href="http://www.die.net/"><img src="tex4ht%281%29%20-%20Linux%20man%20page_files/logo.svg" alt="die.net" onerror="this.onerror=null; this.src='/style/logo.png'" height="120" width="120"></a>
+</div>
+<div id="content">
+
+<!-- google_ad_section_start -->
+<h1>tex4ht(1) - Linux man page</h1>
+
+<h2>Name</h2>
+TeX4ht - a system for authoring hypertext with TeX and friends
+<h2>Synopsis</h2>
+<div id="adright">
+
+<ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-5823754184406795" data-ad-slot="7130739364"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+<b>mk4ht</b> <i>command file</i> [ <i>options1</i> ] [ <i>options2</i> ] [ <i>options3</i>
+]
+<p><b>httex</b>|<b>htlatex</b>|<b>httexi</b> <i>file</i> [ <i>options1</i> ] [ <i>options2</i> ] [ <i>options3</i> ]
+</p><p><b>ht</b> tex|latex <i>file</i> [ <i>t4ht options</i> ]
+</p><p><b>tex4ht</b> [ <b>-f</b><i>dir-char</i> ] <i>file[.dvi]</i> [ <b>-c</b><i>tag-name</i> ] [ <b>-e</b><i>env-file</i> ] [ <b>-g</b><i>bitmap-file-ext</i> ] [
+<b>-h</b>(<b>e|f|F|g|s|v|V</b>) ] [ <b>-i</b><i>htf-font-dir</i> ] [ <b>-l</b><i>bookkeeping-file</i> ] [ <b>-P</b>(<b>*</b>|<b><i>filter</i></b>) ] [
+<b>-t</b><i>tfm-font-dir</i> ] [ <b>-u10</b> ] [ <b>-utf8</b> ] [ <b>-xs</b> ]
+</p><p><b>t4ht</b> [ <b>-f</b><i>dir-char</i> ] <i>file[.lg]</i> [ <b>-c</b><i>tag-name</i> ] [ <b>-d</b><i>out-dir</i> ] [ <b>-e</b><i>env-file</i> ] [ <b>-i</b>
+] [ <b>-m</b><i>mode</i> ] [ <b>-M</b><i>mode</i> ] [ <b>-p</b> ] [ <b>-r</b> ] [ <b>-S</b>(<b>*</b>|<b><i>filter</i></b>) ] [ <b>-X</b><i>field-content</i> ]
+[ <b>-.</b><i>field-content</i> ]
+</p><h2>Description</h2>
+(This manual page was written for the Debian GNU/Linux distribution 
+because the original
+program does not have a manual page. Instead, it is documented in detail
+ at the author's website; see below. Please refer to that documentation 
+for more
+details or up to date information.)
+<p>This page documents briefly the portmanteau perl script <b>mk4ht</b>, the more specific shell scripts <b>httex</b>, <b>htlatex</b>, <b>httexi</b>, and
+others like them, the lower level shell script interface <b>ht</b>, and the commands <b>tex4ht</b> and <b>t4ht</b> that all these scripts invoke. Together
+these programs constitute TeX4ht; a highly configurable TeX-based authoring system for producing hypertext.
+</p><p>TeX4ht interacts with TeX-based applications through a style file <i>tex4ht.sty</i> and other files which are loaded by this style file, leaving the
+processing of the source files to the native TeX compiler. The output of the TeX compiler is then post-processed by <b>tex4ht</b> and <b>t4ht</b>.
+Consequently, TeX4ht can handle most features of TeX-based systems in general, and of LaTeX in particular.
+</p><p>The shell scripts <b>httex</b> , <b>htlatex</b> and <b>httexi</b> convert TeX (respectively LaTeX and texinfo) into HTML. Typical user requirements should
+be satisfied by these scripts which can generally convert typical TeX source <i>without</i> requiring any modifications.
+</p><p>To convert from a one of the other dialects of TeX (like ConTeXt), <i>or</i> to convert into one of the other variants of hypertext (MathML, XML, OO and so
+on), it is <i>recommended</i> that you use the perl script <b>mk4ht</b>. Most common usage of the system can be covered by the appropriate use of this command
+with its options.
+</p><p>The shell script <b>ht</b> is a much more elementary script which
+ is provided for more complicated needs. Its correct use depends on a 
+better understanding
+of the system.
+</p><p>All these scripts begin with suitable invocations of <i><b><a href="http://linux.die.net/man/1/tex">tex</a></b>(1)</i> or <i><b><a href="http://linux.die.net/man/1/latex">latex</a></b>(1)</i> or other dialects of TeX as required. The
+post-processing of the <i>.dvi</i> output is handled by <b>tex4ht</b>. Anything that cannot be rendered using HTML (or its chosen hypertext variant), such as
+the creation of bitmap images or CSS (Cascade Style Sheet) files is handled by the auxiliary program <b>t4ht</b>. The method used for generating the images can
+be configured.
+</p><h2>Options</h2>
+The following is only a very brief summary of the main program options. For more details of the
+command-line and configuration options, see the HTML documentation (see below).
+<h3>Options for httex, htlatex and httexi</h3>
+<b>httex</b>, <b>htlatex</b> and <b>httexi</b> are shell scripts that
+can be used to convert a file in the TeX/LaTeX/texinfo format into HTML.
+ This TeX source file should be like any other TeX source file normally 
+used to produce
+a <i>.dvi</i> file by processing with TeX and friends. The name of such a
+ file is the mandatory file argument for each script. This is followed 
+by up to three
+optional arguments (delimited with quotation marks). These arguments, 
+which are <b>not</b> required for typical usage, are as follows:
+<dl compact="compact">
+<dt>1.
+</dt><dd>The first argument is a list of options for the <i>tex4ht.sty</i> style file (used with tex or latex), separated with commas. See the HTML documentation
+for the list of options available. The <i>.log</i> file generated by tex/latex also includes summaries of some of the options available. If not empty, this
+argument must start with <b>html</b> or <b>xhtml</b>. Additional options could be <b>mathml</b> or <b>docbook</b> to indicate appropriate style of output.
+</dd><dt>2.
+</dt><dd>This argument is used to select tagged sections of <i>tex4ht.env</i> that specifies the font files (*.htf) to use. This corresponds to the <b>-c</b> option
+for the command <i>tex4ht</i> as explained below. Examples include <b>unicode</b> or <b>mozilla</b>.
+</dd><dt>3.
+</dt><dd>This argument lists options for the <i>t4ht</i> program as explained below.</dd></dl>
+<p>See the HTML documentation for more details and examples.
+</p><p>Similar scripts are available within the directory <i>/usr/share/tex4ht</i> for generating other kinds of hypertext output. It is also possible to use the
+perl script <b>mk4ht</b> as explained below.
+</p><h3>Options for mk4ht</h3>
+<b>mk4ht</b> is a perl script that can be used to convert TeX source 
+files from numerous
+dialects of TeX into different hypertext variants. This script takes two
+ mandatory arguments: the name of the command to run and the file to run
+ it on. Each
+possible command is of the form "&lt;variant&gt;&lt;dialect&gt;": so for
+ example <i>xhmlatex</i> denotes a LaTeX source that needs to be converted to XHTML
+with MathML extensions. The possible names for commands can be found by listing the directory <i>/usr/share/tex4ht.</i> The three optional arguments to
+<b>mk4ht</b> are identical to those outlined above for <b>httex</b>, <b>htlatex</b> and <b>httexi</b>. In fact, the command <b>htlatex foo</b> is
+identical to <b>mk4ht htlatex foo</b> except that the former is shorter to type! However, <b>mk4ht</b> can be configured to shorten the command
+line as follows.
+<p>Each user can create the configuration file <i>mk4ht.cfg</i> or <i>.mk4ht</i> in the home or working directory to configure commonly used options for mk4ht;
+in addition options to clean up temporary files can also be added to this configuration file. Running the command <b>mk4ht</b> without any arguments will
+summarise the use of this user configuration file.
+</p><h3>Options for ht</h3>
+<b>ht</b> is a small shell script that is used to run the tex4ht programs. It has two
+compulsory arguments, as follows:
+<dl compact="compact">
+<dt>1.
+</dt><dd>The TeX command name to run, usually either <b>tex</b> or <b>latex</b>.
+</dd><dt>2.
+</dt><dd>The input file name (with or without extension).</dd></dl>
+<p>It may take any additional options, which will be passed on to the call to <b>t4ht</b>.
+</p><h3>General directory/file search options</h3>
+Several of the options detailed below relate to setting directory
+paths to find particular kinds of files. Note the following when specifying directories for the programs:
+<dl compact="compact">
+<dt>1.
+</dt><dd>There must be no space between the option letter (eg, <b>-t</b>) and the directory/file name.
+</dd><dt>2.
+</dt><dd>The directory name must end with a trailing slash (<b>/</b>, or <b>/!</b> - see below).
+</dd><dt>3.
+</dt><dd>You can add an exclamation mark (<b>!</b>) to the end of the directory name, to enable sub-directory searching.
+</dd><dt>4.
+</dt><dd>Only one directory can be specified at a time. To search 
+multiple directories, either use the sub-directory searching facility or
+ repeat the option. (The
+directory search options can be repeated as often as required.)
+</dd><dt>5.
+</dt><dd>When compiled with <b>kpathsea</b> (as in the Debian package), the path-searching is in part taken over by kpathsea. On a Debian system see
+<i>/usr/share/doc/tex4ht/README.kpathsea</i> for more information on path-searching in a kpathsea-enabled tex4ht.</dd></dl>
+<p>As well as command-line options, most of these options can (and normally should) be set in the configuration file <i>tex4ht.env</i>.
+ The format within this
+file is similar, but without using a hyphen before the option letter. 
+See the HTML documentation for more details on the configuration options
+ available. The
+file <i>tex4ht.env</i> can be superseded on a per-directory and/or a per-user basis as explained in the HTML documentation. On a Debian system see
+<i>/usr/share/doc/tex4ht/README.Debian</i> as well.
+</p><h3>Options for tex4ht</h3>
+<dl compact="compact">
+<dt><b>-c</b><i>tag-name</i>
+</dt><dd>Certain lines within the <i>tex4ht.env</i> configuration file can be marked with tags. These lines (typically <i>htf-font-dir</i>
+ search lines) will be
+omitted unless specifically requested by specifying the tag name on the 
+tex4ht command line. If not used, a command-line option of <b>-c</b><i>default</i> is
+assumed. (See the supplied tex4ht.env file for examples of tagged sections.)
+</dd><dt><b>-e</b><i>env-file</i>
+</dt><dd>Specify address of the tex4ht configuration file <i>tex4ht.env</i>.
+</dd><dt><b>-g</b><i>bitmap-file-ext</i>
+</dt><dd>Set the extension of bitmap images to <i>bitmap-file-ext</i> instead of the default <i>.png</i>. Note that the extension should begin with a dot
+(<b>.</b>). Note also that this option only affects images generated automatically for symbol fonts, and not images generated with the <b>rsPicture</b> macro
+of tex4ht.
+</dd><dt><b>-he</b>
+</dt><dd>Trace errors and warnings (produces verbose output).
+</dd><dt><b>-hg</b>
+</dt><dd>Trace groups
+</dd><dt><b>-hs</b>
+</dt><dd>Trace <b>rsspecial</b>s.
+</dd><dt><b>-hV</b>
+</dt><dd>Trace search path for tex4ht.env configuration file
+</dd><dt><b>-hF</b>
+</dt><dd>Trace search path for <i>.htf</i> font files
+</dd><dt><b>-hv</b>
+</dt><dd>Dump contents of found tex4ht.env configuration file to stderr (for debugging)
+</dd><dt><b>-hf</b>
+</dt><dd>Dump contents of each <i>.htf</i> font file found to stderr (for debugging)
+</dd><dt><b>-i</b><i>htf-font-dir</i>
+</dt><dd>Set directory for HTF font files (used by tex4ht) to <i>htf-font-dir</i>.
+</dd><dt><b>-l</b><i>bookkeeping-file</i>
+</dt><dd>Specify name of the file listing cache used to speed up filename lookups (ignored if compiled with kpathsea support)
+</dd><dt><b>-P</b><i>filter</i>
+</dt><dd>Restrict system calls requested in the source (La)TeX files to utilities whose names have <i>filter</i> as a prefix. Use a single asterisk as <i>filter</i>
+to allow any system calls.
+</dd><dt><b>-t</b><i>tfm-font-dir</i>
+</dt><dd>Set directory for TFM font files to <i>tfm-font-dir</i> (ignored if compiled with kpathsea support).
+</dd><dt><b>-u10</b>
+</dt><dd>Use base 10 encoding for unicode characters.
+</dd><dt><b>-utf8</b>
+</dt><dd>Use utf-8 encoding for unicode characters.
+</dd><dt><b>-xs</b>
+</dt><dd>Use 8.3 (MSDOS style) file names for the generated PNG files.</dd></dl>
+<h3>Options for t4ht</h3>
+<dl compact="compact">
+<dt><b>-c</b><i>tag-name</i>
+</dt><dd>Certain lines within the <i>tex4ht.env</i> configuration file 
+can be marked with tags. These lines (typically scripts for 
+post-processing files) will be
+omitted unless specifically requested by specifying the tag name on the 
+tex4ht command line. If not used, a command-line option of <b>-c</b><i>default</i> is
+assumed. (See the supplied tex4ht.env file for examples of tagged sections.)
+</dd><dt><b>-d</b><i>out-dir</i>
+</dt><dd>Output files to directory <i>out-dir</i>, instead of to the current directory.
+</dd><dt><b>-e</b><i>env-file</i>
+</dt><dd>Specify address of the tex4ht configuration file <i>tex4ht.env</i>.
+</dd><dt><b>-i</b>
+</dt><dd>Generate verbose debugging output.
+</dd><dt><b>-m</b><i>mode</i>
+</dt><dd>Create any new output files with access mode as indicated by <i>mode</i>. The <i>mode</i> should be a numeric mode, as used by the <i><b><a href="http://linux.die.net/man/1/chmod">chmod</a></b>(1)</i>
+command.
+</dd><dt><b>-M</b><i>mode</i>
+</dt><dd>As <i>-m</i> but change all mode of all output files (including reused bitmaps).
+</dd><dt><b>-p</b>
+</dt><dd>Do not convert pictures (ie, images generated with macros like <b>rsPicture</b>, not characters in symbol fonts that will be automatically converted into a
+graphic file).
+</dd><dt><b>-r</b>
+</dt><dd>Do not resuse existing bitmaps of glyphs (for characters in symbol fonts etc), but instead generate all bitmaps anew.
+</dd><dt><b>-S</b><i>filter</i>
+</dt><dd>Restrict system calls requested in the source (La)TeX files to utilities whose names have <i>filter</i> as a prefix. Use a single asterisk as <i>filter</i>
+to allow any system calls.
+</dd><dt><b>-X</b><i>field-content</i>
+</dt><dd>Scripts for post-processing of files can be specified in 
+tex4ht.env. If these scripts refer to a field %%3, content for that 
+field can be set with this
+command-line option.
+</dd><dt><b>-.</b><i>field-content</i>
+</dt><dd>Scripts for post-processing of groups of files with a 
+particular extension can be specified in tex4ht.env. If these scripts 
+refer to a field %%2, content
+for that field can be set with this command-line option.</dd></dl>
+<h2>Files</h2>
+<dl compact="compact">
+<dt><i>/usr/share/texmf/tex4ht/base/unix/tex4ht.env</i>
+</dt><dd>Configuration file for tex4ht. This file is commented within the file, and some additional notes are in <i>/usr/share/doc/tex4ht/README.kpathsea</i> on a
+Debian system. Further explanation is available in the HTML documentation.
+</dd><dt><i>/usr/share/texmf/web2c/texmf.cnf</i>
+</dt><dd>Global configuration file for all TeX-related programs using the kpathsea path searching library. The variables <i>TEX4HTINPUTS</i>, <i>T4HTINPUTS</i> and
+<i>TEX4HTFONTSET</i> within this file relate to file searching within <b>tex4ht</b> and <b>t4ht.</b> These variables may also be set in the environment,
+outwith /usr/share/texmf/web2c/texmf.cnf.
+</dd><dt><i>/usr/share/texmf/tex4ht/ht-fonts/*.htf</i>
+</dt><dd>Hypertext font files used by tex4ht.
+</dd><dt><i>/usr/share/texmf/tex/generic/tex4ht/tex4ht.sty</i> and <i>/usr/share/texmf/tex/generic/tex4ht/*.4ht</i>
+</dt><dd>Macro files used by tex or latex when using tex4ht to generate HTML output.
+</dd><dt><i>/usr/share/tex4ht/*</i>
+</dt><dd>Shell scripts for generating different kinds of hypertext output from tex or latex sources.</dd></dl>
+<h2>See Also</h2>
+The use of the tex4ht macros is documented in the HTML documentation at the web site given
+below.
+<p><i><b><a href="http://linux.die.net/man/1/tex" rel="nofollow">tex</a></b>(1)</i>, <i><b><a href="http://linux.die.net/man/1/latex" rel="nofollow">latex</a></b>(1)</i>, <i><b><a href="http://linux.die.net/man/1/amstex">amstex</a></b>(1)</i>, <i><b><a href="http://linux.die.net/man/1/kpsewhich">kpsewhich</a></b>(1)</i>,
+<a href="http://www.cse.ohio-state.edu/%7Egurari/TeX4ht/mn.html">http://www.cse.ohio-state.edu/~gurari/TeX4ht/mn.html</a>
+</p><h2>Bugs</h2>
+This manual page is not complete. Users should refer to the HTML documentation for fuller details
+of the configuration options and for details of the use of the tex4ht style files. <b>tex4ht</b> is still a work in progress, so bug reports and requests are
+very welcome: contact Eitan Gurari &lt;<a href="mailto:gurari@cis.ohio-state.edu">gurari@cis.ohio-state.edu</a>&gt;.
+<h2>Author</h2>
+This manual page was originally written by Andrew Gray &lt;<a href="mailto:ajpg@debian.org">ajpg@debian.org</a>&gt; (and then modified
+by Kapil Paranjape), for the Debian GNU/Linux system (but it may be used by others).
+<p>The <b>tex4ht</b> programs and macro files were written by Eitan Gurari &lt;<a href="mailto:gurari@cis.ohio-state.edu">gurari@cis.ohio-state.edu</a>&gt;. The author maintains a home page at
+<a href="http://www.cse.ohio-state.edu/%7Egurari/TeX4ht/">http://www.cse.ohio-state.edu/~gurari/TeX4ht/</a>
+
+<!-- google_ad_section_end -->
+</p><div id="adbottom">
+<script async="" src="tex4ht%281%29%20-%20Linux%20man%20page_files/adsbygoogle.js"></script>
+<ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-5823754184406795" data-ad-slot="8789940313"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+</div>
+<div id="menu">
+<dl>
+<dt>Site Search</dt>
+<dd>
+<form id="cse-search-box-menu" action="http://www.die.net/search/">
+<input name="q" size="10" type="text">
+<input name="sa" value="Search" type="hidden">
+<input name="ie" value="ISO-8859-1" type="hidden">
+<input name="cx" value="partner-pub-5823754184406795:54htp1rtx5u" type="hidden">
+<input name="cof" value="FORID:9" type="hidden">
+</form>
+<script type="text/javascript">
+<!--
+document.forms["cse-search-box-menu"].action = "http://www.die.net/search/";
+// -->
+</script>
+</dd></dl>
+
+
+
+<dl>
+<dt>Library</dt>
+<dd><a href="http://linux.die.net/">linux docs</a></dd>
+<dd><a href="http://linux.die.net/man/">linux man pages</a></dd>
+<dd><a href="http://www.die.net/musings/page_load_time/">page load time</a></dd>
+</dl>
+<dl>
+<dt>Toys</dt>
+<dd><a href="http://www.die.net/earth/">world sunlight</a></dd>
+<dd><a href="http://www.die.net/moon/">moon phase</a></dd>
+<dd><a href="http://trace.die.net/">trace explorer</a></dd>
+</dl>
+
+
+<dl>
+<dt><a href="http://linux.die.net/man/1/"><img src="tex4ht%281%29%20-%20Linux%20man%20page_files/back.gif" alt="Back" height="22" width="20"></a></dt><dd></dd>
+</dl>
+</div></div>
+<script type="text/javascript">
+<!--
+if (top.location != self.location) top.location = self.location;
+if (/[?&][pq]=/.test(document.referrer)) document.write(unescape("%3Cscript src='/style/highlight.js' type='text/javascript'%3E%3C/script%3E"));
+function googleTranslateElementInit() {new google.translate.TranslateElement({pageLanguage: 'en', floatPosition: google.translate.TranslateElement.FloatPosition.TOP_RIGHT, gaTrack: true, gaId: 'UA-50820-6'});}
+if (!/^en/i.test(window.navigator.userLanguage||window.navigator.language)) document.write(unescape("%3Cscript src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit' type='text/javascript'%3E%3C/script%3E"));
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+// -->
+</script>
+
+
+<div style="display: none;" id="SL_balloon_obj"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/imtranslator-s.png&quot;) repeat scroll 0% 0%; display: block; width: 24px; height: 24px; position: absolute; cursor: pointer;" id="SL_button"></div><div style="display: none;" id="SL_shadow_translation_result2"></div><div id="SL_shadow_translator"><div id="SL_providers"><div id="SL_P0" title="Google" class="SL_BL_LABLE_ON">G</div><div id="SL_P1" title="Microsoft" class="SL_BL_LABLE_ON">M</div><div id="SL_P2" title="Translator" class="SL_BL_LABLE_ON">T</div></div><div style="background: rgb(244, 245, 245) url(&quot;chrome://imtranslator/content/img/util/bg2.png&quot;) repeat scroll 0% 0%;" id="SL_planshet"><div id="SL_arrow_up"></div><div id="SL_TB"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/imtranslator-s.png&quot;) repeat scroll 0% 0%; display: block; width: 24px; height: 24px; position: absolute;" id="bubblelogo"></div><table id="SL_tables"><tr><td align="right" width="10%"><input title="Lock-in language" id="SLloc" type="checkbox"></td><td align="left" width="20%"><select id="SL_lng_from"><option selected="selected" value="auto">Detect language</option><option value="af">Afrikaans</option><option value="sq">Albanian</option><option value="ar">Arabic</option><option value="hy">Armenian</option><option value="az">Azerbaijani</option><option value="eu">Basque</option><option value="be">Belarusian</option><option value="bn">Bengali</option><option value="bs">Bosnian</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="ceb">Cebuano</option><option value="ny">Chichewa</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="hr">Croatian</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="en">English</option><option value="eo">Esperanto</option><option value="et">Estonian</option><option value="tl">Filipino</option><option value="fi">Finnish</option><option value="fr">French</option><option value="gl">Galician</option><option value="ka">Georgian</option><option value="de">German</option><option value="el">Greek</option><option value="gu">Gujarati</option><option value="ht">Haitian Creole</option><option value="ha">Hausa</option><option value="iw">Hebrew</option><option value="hi">Hindi</option><option value="hmn">Hmong</option><option value="hu">Hungarian</option><option value="is">Icelandic</option><option value="ig">Igbo</option><option value="id">Indonesian</option><option value="ga">Irish</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="jw">Javanese</option><option value="kn">Kannada</option><option value="kk">Kazakh</option><option value="km">Khmer</option><option value="ko">Korean</option><option value="lo">Lao</option><option value="la">Latin</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="mk">Macedonian</option><option value="mg">Malagasy</option><option value="ms">Malay</option><option value="ml">Malayalam</option><option value="mt">Maltese</option><option value="mi">Maori</option><option value="mr">Marathi</option><option value="mn">Mongolian</option><option value="my">Myanmar (Burmese)</option><option value="ne">Nepali</option><option value="no">Norwegian</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pa">Punjabi</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sr">Serbian</option><option value="st">Sesotho</option><option value="si">Sinhala</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="so">Somali</option><option value="es">Spanish</option><option value="su">Sundanese</option><option value="sw">Swahili</option><option value="sv">Swedish</option><option value="tg">Tajik</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="ur">Urdu</option><option value="uz">Uzbek</option><option value="vi">Vietnamese</option><option value="cy">Welsh</option><option value="yi">Yiddish</option><option value="yo">Yoruba</option><option value="zu">Zulu</option></select></td><td align="center" width="5%"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/switchb.png&quot;) repeat scroll 0% 0%; display: block; width: 10px; height: 10px; cursor: pointer;" title="Switch languages" id="SL_switch_b" align="center"></div></td><td align="left" width="20%"><select id="SL_lng_to"><option value="af">Afrikaans</option><option value="sq">Albanian</option><option value="ar">Arabic</option><option value="hy">Armenian</option><option value="az">Azerbaijani</option><option value="eu">Basque</option><option value="be">Belarusian</option><option value="bn">Bengali</option><option value="bs">Bosnian</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="ceb">Cebuano</option><option value="ny">Chichewa</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="hr">Croatian</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="en">English</option><option value="eo">Esperanto</option><option value="et">Estonian</option><option value="tl">Filipino</option><option value="fi">Finnish</option><option value="fr">French</option><option value="gl">Galician</option><option value="ka">Georgian</option><option value="de">German</option><option value="el">Greek</option><option value="gu">Gujarati</option><option value="ht">Haitian Creole</option><option value="ha">Hausa</option><option value="iw">Hebrew</option><option value="hi">Hindi</option><option value="hmn">Hmong</option><option value="hu">Hungarian</option><option value="is">Icelandic</option><option value="ig">Igbo</option><option value="id">Indonesian</option><option value="ga">Irish</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="jw">Javanese</option><option value="kn">Kannada</option><option value="kk">Kazakh</option><option value="km">Khmer</option><option value="ko">Korean</option><option value="lo">Lao</option><option value="la">Latin</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="mk">Macedonian</option><option value="mg">Malagasy</option><option value="ms">Malay</option><option value="ml">Malayalam</option><option value="mt">Maltese</option><option value="mi">Maori</option><option value="mr">Marathi</option><option value="mn">Mongolian</option><option value="my">Myanmar (Burmese)</option><option value="ne">Nepali</option><option value="no">Norwegian</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pa">Punjabi</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sr">Serbian</option><option value="st">Sesotho</option><option value="si">Sinhala</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="so">Somali</option><option selected="selected" value="es">Spanish</option><option value="su">Sundanese</option><option value="sw">Swahili</option><option value="sv">Swedish</option><option value="tg">Tajik</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="ur">Urdu</option><option value="uz">Uzbek</option><option value="vi">Vietnamese</option><option value="cy">Welsh</option><option value="yi">Yiddish</option><option value="yo">Yoruba</option><option value="zu">Zulu</option></select></td><td align="center" width="5%"> </td><td align="center" width="6%"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/tts-voice.png&quot;) repeat scroll 0% 0%;" title="Listen" id="SL_TTS_voice"></div></td><td align="center" width="6%"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/copy_hand.png&quot;) repeat scroll 0% 0%;" title="Copy translation" id="SL_copy"></div></td><td align="center" width="6%"><div title="This function is disabled in Dictionary mode" id="SL_bbl_font_patch"></div><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/font-off.png&quot;) repeat scroll 0% 0%;" title="Font size" id="SL_bbl_font"></div></td><td align="center" width="6%"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/history.png&quot;) repeat scroll 0% 0%;" title="Translation History" id="SL_TH"></div></td><td width="10%"></td><td align="right" width="6%"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/pin-off.png&quot;) repeat scroll 0% 0%; display: block; width: 16px; height: 16px; cursor: pointer;" title="Pin pop-up bubble" id="SL_pin"></div></td></tr></table></div><div id="SL_alert_bbl"><div id="SLHKclose"></div><div id="SL_alert_cont"></div></div></div><div style="background: rgb(255, 255, 255) url(&quot;chrome://imtranslator/content/img/util/bg.png&quot;) repeat scroll 0% 0%;" id="SL_shadow_translation_result"></div><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/indicator.gif&quot;) repeat scroll 0% 0%; display: block; position: absolute; width: 35px; margin-left: 180px; margin-top: -40px; height: 35px;" id="SL_loading"></div><div id="SL_player2"></div><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/bg2.png&quot;) repeat scroll 0% 0%;" id="SL_alert100">Text-to-speech function is limited to 100 characters</div><div style="background: rgb(255, 255, 255) none repeat scroll 0% 0%;" id="SL_Balloon_options"><div id="SL_arrow_down"></div><table width="100%"><tr><td align="left" height="16" width="18%"><div style="background: transparent url(&quot;chrome://imtranslator/content/img/util/donate2.png&quot;) repeat scroll 0% 0%;" title="Make a small conribution" id="SL_bbl_donate"></div></td><td align="center" width="68%"><a title="Show options" id="OPlnk" href="#">Options</a> : <a title="Translation History" id="HISTlnk" href="#">History</a> : <a title="Help" id="HELPlnk" target="_blank" href="http://about.imtranslator.net/tutorials/presentations/imtranslator-translator-for-firefox/popup-bubble-application/">Help</a> : <a title="Feedback" id="FBlnk" href="#">Feedback</a></td><td align="right" width="15%"><a title="Close" href="#" id="SL_Balloon_Close">Close</a></td></tr></table></div></div></div></body></html>

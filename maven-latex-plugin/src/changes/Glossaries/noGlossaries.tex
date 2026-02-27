@@ -1,0 +1,38 @@
+\documentclass{article}
+
+% this document is just compiled with 
+% lualatex noGlossaries 
+
+\usepackage[acronym,symbols]{glossaries}
+
+
+
+% entries in default 'main' glossary:
+\newglossaryentry{sample}{name={sample},description={an example}}
+\newglossaryentry{function}{name={function},
+ symbol={\ensuremath{f}},
+ description={a function}}
+
+
+
+% entries in 'acronym' glossary:
+\newacronym{ex}{EX}{example}
+\newacronym{abbr}{abbr}{abbreviation}
+
+% entries in 'symbols' glossary:
+\newglossaryentry{fx}{name={\ensuremath{f(x)}},
+ description={a function of $x$},
+ type=symbols
+}
+
+\newglossaryentry{dfx}{name={\ensuremath{f'(x)}},
+ description={a derivative of the function $f(x)$},
+ type=symbols
+}
+
+\begin{document}
+A \gls{sample} document with an \gls{ex} derivative \gls{dfx}.
+There are two \glspl{abbr}: \gls{ex} and \gls{abbr}.
+
+
+\end{document}

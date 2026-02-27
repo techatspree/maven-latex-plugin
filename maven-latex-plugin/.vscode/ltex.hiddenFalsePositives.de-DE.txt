@@ -1,0 +1,1 @@
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qtexnische Komödie 2015/4 Mit LaTeX zum E-Book\\E$"}

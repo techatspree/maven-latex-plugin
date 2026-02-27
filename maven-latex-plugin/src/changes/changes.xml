@@ -1,0 +1,2293 @@
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+
+  <!-- https://maven.apache.org/plugins/maven-changes-plugin/changes.html -->
+  <!-- action types: 
+	 add: added functionality to the project.
+	 fix: bug fix for the project.
+	 update: updated some part of the project.
+	 remove: removed some functionnality from the project. -->
+  <properties>
+    <title>Latex-Maven-Plugin</title>
+    <author email="reissner@simuline.eu">Ernst Reissner</author>
+  </properties>
+  <body>
+    <!-- Release plan: 
+  For 1.6: minimal support of pythontex 
+      - minimal documentation concerning xdv for xelatex. 
+      - minimal documentation for best tested configuration (in readme)
+      - in readme: shortcut for people which do not want to read all. 
+
+  For 1.7: seems to be very much about xdv and dvi. 
+    What is not clear to me is how important dvi is, at least there is a mime type. 
+    Example: seemingly, there is no xdv viewer. 
+    Also not so clear, how much of dvi can be also done with xdv transparently. 
+    Only if dvi/xdv is important enough and enough can be done transparently with both formats 
+    it is worth supporting both. 
+    Some hints: https://en.wikipedia.org/wiki/Device_independent_file_format 
+    in particular the section on related software which is essentially viewers and converters. 
+    It is not at all clear that it is worth it. 
+    - xdv support for xelatex, 
+      in the course of this: check of options. 
+      document that with xelatex 
+      - there is no goal xdv. Instead, in conjunction with xelatex the goal dvi creates xdv. 
+      - so both mvn latex:dvi and mvn latex:cfg with config dvi create xdv. 
+      - in contrast mvn latex:xdi is not allowed. 
+      - when verifying, the latex converter xxxlatex is invoked as `xxxlatex -help`. 
+        This works for all. 
+        Then the patterns `^-?-output-format` and `^-no-pdf` are searched. 
+        An error is created if not exactly one of them is present. 
+        If `^-no-pdf` is present, it is xelatex like. 
+        LatexDev obtains a third device, called xdv. 
+      - mvn latex:cfg reading a configuration and there also xdi is not amo
+    - all the dvi to pdf converters at least of texlive are also xdv to pdf converters. 
+      If run with filename without ending, they work transparently. 
+      Only if both types are present, dvi and xdv, then the latter is preferred. 
+      
+    - rework on the readme: 
+      add a section on the configuration preferred: 
+      - suse tumbleweed linux
+      - TeX Live, at the moment the suse version, this shall change. 
+      - maven plugin, not ant task 
+      - config in the pom.xml
+      - only certain document classes 
+        currently all of the following are preferred: 
+        - book represented by the manual 
+        - article represented by most other supervised documents 
+        - beamer represented by useBeamerPres 
+        - (maybe we add some)
+      Details on xelatex: it works only for pdf created directly and this only 
+      because `-output-format=pdf` is not recognized and `-no-pdf` is not set. 
+      For dvi, it does not work for several reasons: 
+      - since `-output-format=dvi` is not recognized, a pdf is created. 
+        To overcome this, instead of `-output-format=dvi` the option `-no-pdf` must be issued. 
+      - if the correct option is given, then still the thing does not work, 
+        because instead of dvi an exteded file format, XDV is created. 
+        This is the extension which must be copied to the target folder. 
+      - If pdf shall be created via dvi, i.e. xdv, then the right converter must be chosen 
+        which can transform xdv into pdf. 
+
+  For 1.8: rework on graphics, e.g. mp: 
+    - more significant figure (state diagram)
+    - research on dependencies 
+    - Rework of according section in manual 
+    - integrated version with lualatex with package luamplib and advantages: 
+      use latex macros defined in the tex file 
+    - alternative tikz, in particular tikz-uml. 
+      Also: how is this installed. 
+    - there are significant problems with updating mp files input from within mp. 
+      In particular, direct in lualatex. 
+      Solution is either mp directly in the tex file or input tex file, 
+      but this looks bad in the editor because tex grammar expected. 
+      Here some research is required. 
+		xfig: rework on the description of the format xfigFormat.tex. 
+		I think, creating an example figure would be fine. 
+		Also listings shall be taken from this example file 
+		and the compiled version shall be included as a figure. 
+		Maybe a good idea to extend the .latexmkrc file already. 
+
+		Consider all in folder MetaPostInTex. 
+  
+  For 2.0: document development 
+      take also configuration of vscode into account. 
+      This comprises support for source code and previewer. 
+      write a config file for latexmk with all installations which allows to compile all documents 
+      in this project, in particular the manual. 
+      This includes basic latex support but also support of all graphic source formats. 
+      These must be worked into the manual. 
+
+use 
+https://inkscape.org/doc/inkscape-man.html#OPTIONS
+to export pages or pages of pdfs to include in the own document. 
+This is useful for citations or to get pics. 
+
+%\RequirePackage{pdfmanagement-testphase} % this will not be required in future. %\DocumentMetadata{pdfversion=1.7}
+\documentclass{article} 
+
+Literature: \cite{DocMetaDataSuppCode}
+Note also that vscode als knows about the keys. 
+
+Also metapost direct in lualatex via luamplib, cite {LuaMpLib}
+Es gibt die Frage nach der Art wie man mp files einbindet.
+Erst mal hat mpost auch eine -recorder option, die sich vielleicht auch die mit input inkludierten mp files bezieht, 
+das musste man mal schauen.
+Wenn man aber mit tex eine mplibcode Umgebung definiert und darin das eigentliche mp-file 
+(mit intput filename in metapost) inkludiert,
+dann erkennt lualatex die Abhaengigkeit nicht.
+Nur wenn man ein Tex-file inkludiert das die mplibcode Umgebung enthaelt.
+Dann aber passt das highlighting eben nicht, weil es ja zu tex passt und nicht zu mp.
+Aus meiner Sicht ist da eine Luecke.
+Die Frage ist auch, ob latex erkennt, dass eine Abhaengigkeit besteht, wenn man das mps-file mit includegraphics einbindet.
+Vermutlich auch nicht.
+Aehnliches Problem bei xfig mit eingebettetem jpg Bild. 
+
+Not recognizing dependencies is an issue at work but at home it works. 
+But there I have the problem, that all dependencies create extra files on the local folder.. 
+No idea why. 
+
+Example for all documentclasses to be supported: 
+- book: e.g. manual
+- report: not yet used 
+- article: e.g. dviFomat.tex
+- leaflet: missing but could contain a small marketing document 
+- letter: missing 
+- beamer: missing 
+  This is particularly interesting, e.g. because it is widely applicable 
+  and it is technically interesting: 
+  - has a very special header for presentation and for handout. 
+  - creates a lot of extensions: in particular xxx.<number>.vrb for pagew shich are fragile. 
+    The details can be read from the manual. 
+  - in beamer manual there is no hint on labels. 
+    They are \begin{frame}[label={frm:someName}]
+
+Lua in latex see: 
+https://tex.stackexchange.com/questions/464045/how-to-use-lua-code-from-external-file-in-lualatex
+Also mention vscode extension. 
+Relate with pythontex 
+
+Also: meta-uml, with documentation 
+
+  For 2.1: bib2gls                      From here on one can compile at least the twopagers 
+                                        in some private project
+  For 2.2: bibtex and biber
+  For 2.3: xindy                        From here on, the build process is based on modern tools 
+  For 3.0: source distributions (for details see according folder)
+    - dependencies check, maybe based only on TeX Live 
+    - depythontex if parametrized accordingly  From here on one can compile for papers 
+                                               and also a certain paper the author nees 
+
+
+  Note that build.xml is out of date: not all config is present. 
+  in html mode: \href and \url receive a kind of dummy. 
+
+  For 4.x: 
+    Besides distribution TeX Live, also support MiKTeX 
+    One has to install MiKTeX also and check comunities and options not only of tex engines 
+    but also of other tools. 
+    Deceicive is whether the same tools are supported. 
+    Also whether tools requiring double dash also understand single dash and the other way round. 
+    Also whether unknown options are really ignored. 
+    This would be important if options deviate. 
+    Then one can give just both variants that of texlive and that of miktex so one is understood the other not. 
+    Maybe before try TeX Live with Windows. 
+    transfer into maven central. 
+	For 4.x: 
+	 - further output formats: xml from latexml, epub. 
+	   in manual: flow oriented vs page oriented. 
+	   A lot is written in html.md
+	 - take pylatex into account: can there be a relation.
+	 - take pythontex into account: 
+	   maybe according support in separate release 
+	   The converter is added already, 
+	   but there is no ConverterCategory yet. 
+	   Take also cleaning into account. 
+	 For x.x: 
+	 - complete support for pythontex when pythontex is updated. 
+	 For 4.x:
+	 - make capabilities inspired by latexmk: 
+	   If latex is invoked with option -recorder it creates a file .fls
+	   containing all the files read during its run. 
+	   If this software runs latex, after that it looks for an .fls file 
+	   and if found stores an .lmk file 
+	   containing hashs for the files mentioned in .fls. 
+	   These hashs indicate potential changes. 
+	   As a first step we may use modification time. 
+	   In the next run, before invoking latex, 
+	   this software checks whether the .lmk file is present. 
+	   If not, latex is invoked. 
+	   If it is present, then it is invoked only 
+	   if files is modified, including the source. 
+	   We need a mechanism to know whether invoked as a maven plugin, 
+	   ant task or standalone. 
+	   The latter stores command line file reflecting command line options. 
+	   Then also the config, e.g. pom.xml, build.xml or command line file 
+	   is taken into account to detect changes. 
+	   Hm, no. If something changes in pom, that is no indication. 
+	   There must be a file, maybe in ~/.lmk, 
+	   reflecting the options of the last run. 
+	 For x.y: 
+	 - meta info for this software including own version 
+	   git interface 
+	 - this software offered also as a standalone application 
+	   and as an api to integrate everywhere. 
+	 - also for documentation, meta information 
+	   like version but also author email and so on are vital. 
+	   To that end, either git checkout script is needed 
+	   or maybe latex git package. 
+	   Note that there may be documentation not created through latex 
+	   and so git package may not be a generic solution. 
+   - version not only of converters but also on latex packages. 
+     An alternative: texlive and just the version of that, 
+     no additional packages or versioning only of those packages. 
+     This must be evaluated... maybe difficult to handle and overkill. 
+     Note that \listfiles (in current header.tex injected) 
+     displays the packages loaded and also mostly hm.. the version and date. 
+   - maybe version also of the classes used. 
+     Needed is a standardization of the supervised classes. 
+	 - include docs in site.
+	 - There must be a mojo for phase validate or initialize
+	   checking the most important things:
+	 - Whether the converters mentioned are registered.
+	   This refers to the commands to run and to the excluded converters.
+	 - make it into maven central. Adapt manual accordingly. 
+	   see https://maven.apache.org/repository/guide-central-repository-upload.html
+	 - have a look at https://github.com/apache/maven-clean-plugin/ 
+	   and adapt the own plugin: e.g. test harness. 
+	 - https://maven.apache.org/plugins/maven-docck-plugin/
+	 - The ant task cannot be created from source using ant alone, 
+	   still maven is needed. 
+	   One of the major problems is, that the class Settings 
+	   depends on maven annotations. 
+	 - bugfix: in ant task texPath cannot be used. 
+	   The problem seems in Commandexecutor line 250 around: 
+	   fig2dev is invoked as /home/ernst/...../fig2dev with complete path 
+	   but in ant task only. 
+	 - add latexmk to dependencies (because of cleaning)
+	   converter is already known. 
+	   TBD: add a category and maybe target clear with latexmk, 
+	   maybe also a parameter using latexmk. 
+	   Also, files created by latexmk shall be cleared. 
+	 - clean goal based on (categories of) coverters.
+    -->
+    <!-- the parameter latex2pdfCommand must be renamed: latex2devCommand, also the options and so on. -->
+    <!-- TBD: rework on Converter.cmd2conv: 
+	 Check also call hierarchy
+	 also endow with appropriate failure handling  -->
+    <!-- TBD: rework on ConverterCategories -->
+    <!-- TBD: allow to exclude files from being processed, even graphic files. -->
+    <!-- TBD: bugfix: readTexSrcProcDirRec=false not respected. -->
+    <!-- TBD: mention epsf like in my dissertation  -->
+    <!-- TBD: Bugfix: superfluous comma in: 
+	 WPP03: Skipped processing of files with suffixes [, .el]. -->
+
+    <!-- filters/defaultSettingsAs.properties: 
+		must be completed, must be used generally for creation of pom4pdf.xml and manual. 
+		In the long run, must also be used for code generation of Settings. 
+		For Settings it may be a good idea to use groovy instead of java. 
+
+		An alternative is, 
+		that Settings can create all this and the process goes in opposite direction. 
+	-->
+
+    <!-- goal inj: introduced @RuntimeParameter. 
+      Maybe in the long run back to @Parameter: write a feature request. 
+      Advisible: not add manually to @Parameter's in Settings, 
+    but by ASM or something. 
+    Here a lot of research is required still.  -->
+    <!-- reading parameters of Settings: 
+    Add a postprocessing of the class files: 
+    Whereever @Parameter is given, add @RuntimeParameter. 
+    Check whether parameter name is field name. 
+    This is necessary because @RuntimeParameter does not store parameter name. 
+    Of course this could be changed. 
+  -->
+
+    <!-- target vrs: still depends on texlive, shall also work for miktex. 
+	Also take whole lines into account (add more \R) -->
+
+    <!-- the bug in creating the jar for the ant task in the jar plugin 
+	comes from the fact, that we removed the sources. 
+	The approach with the sources is very bad. 
+	Instead one shall replace the jar plugin by the assembly plugin, 
+	find out the dependency containing all the relevant classes 
+	and then package those using an assembly descriptor. -->
+
+    <!-- maybe a good idea to turn this plugin into a report plugin. 
+	https://maven.apache.org/guides/plugin/guide-java-report-plugin-development.html
+	-->
+
+    <!-- Interesting to find out why goal vrs is executed 
+	even in site-deploy although tied to phase validate 
+	which is not part of site-deploy -->
+
+    <!-- TBD: allow for more restrictions in versions of converters. 
+		An application would be to ensure strict reproducibility 
+		which requires certain diff tools but also certain versions of e.g. pdflatex. 
+		Another application is that the version released by the author is not the one 
+		available to the user. 
+		Then (s)he should be able to use another version at own risk. 
+		Another application is using pythontex which works together with latexmk only in later versions. 
+		This is also a reason why also software not invoked directly could be vresion checked. 
+		Other candidates could be vs code or emacs or octave or ocular. 
+		To that end, expect a file named .versions.properties in the tex source directory overriding the default. 
+		As info add the file versions are actually read from. 
+		The rest is as now. -->
+
+    <!-- TBD: if mvn latex:vrs is commanded and there is one tool not installed, 
+			an error comes up. 
+			This is not very convenient. 
+			Instead, version shall be 'none'. -->
+
+    <!-- https://stackoverflow.com/questions/76996016/maven-plugin-parameter-as-field-in-object-does-not-work-properly
+      
+
+I have written a plugin for maven, https://github.com/Reissner/latex-maven-plugin. It uses one parameter in the InjectionMojo
+
+  @Parameter(name = "injections", defaultValue = "latexmkrc,chktexrc",
+      property = "latex.injections")
+  private Set<Injection> injections;`
+
+which works just fine. I can use the default and also he property from the command line. The command line setting overwrites all.
+
+Then I have another parameter which is part of the CfgLatexMojo:
+
+  @Parameter(name = "settings")
+  protected Settings settings;
+
+The class Settings itself has a parameter
+
+@Parameter(name = "targets", defaultValue = "chk,pdf,html", property = "latex.targets")//
+  //private SortedSet<Target> targets;
+  private String targets = "chk,pdf,html";
+
+And here I observe strange things: If I don't initialize targets = "chk,pdf,html" i get a NullPointerException, although defaultValue = "chk,pdf,html" should be sufficient.
+
+Also the property does not work.. Or maybe I don't know how to invoke properly.
+
+There are further strange effects, but let us concentrate on these first.
+
+Even worse, I wanted to replace the String by a SortedSet. 
+This yields even more problems. 
+
+-->
+
+    <!-- partially still in 
+	 https://www.simuline.eu/RepositoryMaven/
+	 de/akquinet/jbosscc/latex/latex-maven-plugin/1.5-SNAPSHOT/ 
+	 all with time stamp 2018-07-xx -->
+
+    <!-- "Bug report" on makeindex and xindy with consequences on makeglossaries: 
+		If a term is used in the glossary only, e.g. a term x is used in the text, 
+		but to explain x you need term u and this is used in the glossary only, 
+		e.g. to explain x, then the call sequence 
+			pdflatex, makeglossaries, pdflatex 
+		wont put y into the glossary. 
+		You have to use the sequence 
+			pdflatex, makeglossaries, pdflatex, makeglossaries, pdflatex 
+		in contrast would do. 
+		The task is to find out whether an additional `makeglossaries, pdflatex` 
+		is necessary and to it if needed only. 
+		Note that makeglossaries is based on makeindex or xindy. 
+		One has to check whether an according problem occurs with the index also. 
+		There is an email from Nicola Talbot, the author of makeglossaries 
+		which offers more detail information. 
+	 -->
+    <!-- TBD: in particular in conjunction with pythontex, 
+		latex requires a lot of memory and runs out of memory quickly. 
+		So far we use pdflatex, because we are conservative. This is also the default. 
+		In the long run I would like to switch to lualatex. 
+		Note that certain packages are needed no longer or are even to be abandoned. 
+		As a frist step I would like to specify lualatex in all internal projects 
+		including phd thesis. 
+		Then, if all turns out to be still working change the default value in the lnext release. 
+	 -->
+    <!-- document development: I think, that newly created files are removed after the run is a good thing: 
+		That way, if all is clean at the beginning, at the end it is clean also without further cleaning up. 
+		Also during document development intermediate files remain where they are. 
+		
+		On the other hand, this behavior is not so easily understood. 
+		It looks as some files persist while others disappear quite randomly. 
+		Thus in the manual in section on document development, 
+		we need the advise to command `mvn latex:grp` and `mvn latex:inj` 
+    if the graphics shall be needed for further development. 
+		The target `grp` is the sole target without cleanup. 
+		This shall be done in particular when using vscode/latexworkshop 
+		because otherwise, the build process fails. 
+		Another option is to set in the settings <cleanUp>false</cleanUp>. 
+		Check whether cleanup is skipped if an error occurs. 
+		This would be fine, because it integrates with document development. 
+
+		Maybe more thoughts on how to work in document development. 
+		Use case: sth went wrong with the latex plugin. 
+		Then it shall be seemless to switch to document development, 
+		all created files still present. 
+		Use case: changing some file triggers automatic rebuild of document development tool. 
+		This is assumed to be latexmk, maybe triggered by vscode/latexworkshop. 
+		Advised to use .latexmkrc file with settings consistent with those for this latex plugin. 
+		
+		
+		. I suspect, that mvn latex:pdf really moves the pdf file to the target, 
+		rather than copying it. 
+		Well, all other created files, the auxiliary ones, 
+		are not cleared also. 
+		This makes sense for document development. 
+		But then also copying the pdf instead of moving it would be more consistent. 
+	-->
+    <!-- TBD: seemingly, created image files are removed after successful creation, 
+		whereas created auxiliary files created by latex remain in the working directory. 
+		This is highly inconsistent. 
+		For sake of document development, all files shall remain unchanged. 
+	-->
+    <!-- TBD: add support for \include: 
+		Include adds aux files which this plugin does not eliminate through mvn latex:clr. 
+	-->
+    <!-- TBD: also  fdb_latexmk is deleted and this plugin shall do this also. -->
+    <!-- TBD: clarify whether package hyperref shall be loaded for pdf output only: 
+		with dvi with option [dvipdfmx]. 
+		This must be done in all documents. 
+	-->
+    <!-- TBD: eliminate letter size using package geometry (robustindex) -->
+    <!-- re-add links deactivated y { @ link ...} and by: // * @see ... -->
+    <!--
+here is a bug affecting goal odt: 
+/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
+89c89
+ \def\pgfsys@svg@newline{{?nl}} % replacement 
+- - -
+ \def\pgfsys@svg@newline{\Hnewline} % original 
+-->
+    <!-- Bugfix: WPP03: Skipped processing of files with suffixes [, .latexmkrc]. -->
+
+    <!-- gap: in pythontex package dont use \setpythontexoutputdir 
+	because this is not forseen in pattern patternCreatedFromLatexMain 
+also modification of working directory with \setpythontexworkingdir is not supported. 
+-->
+
+    <!-- speedup of tests: use html or epub instead of pdf. 
+This may be faster because not so many reruns are necessary. -->
+    <!-- speedup of creation: if -recorder switch is used, 
+rerun only if artifact is outdated. -->
+
+    <!-- with pythontexW and depythontexW, we need unregistered converters, 
+	and this is true for other converters also. 
+	So Exception TSS06 in Settings.java is not appropriate. 
+	We need a way to register a converter for a ConverterCategory. 
+	I think, we shall copy technique of javaoctave. -->
+
+    <!-- unlike other converters, pythontex does not always update its result files. 
+		Normally, there is a check that the result files changed. 
+		It must be possible to pypass that. 
+		A hack is to check the plg file. 
+		Better would be some switch on activation of update check. 
+		Best: tied to option -{}-rerun=always or -{}runall=true. 
+		The problem is, that package options override command line options, 
+		which is a bad idea. 
+		To overcome, just eliminate one result file. 
+		This forces pythontex to update all: a not documented feature shihc may hardlcy change. 
+	-->
+    <!-- TBD: full check of output: 
+		This requires reading the pytxcode file to find out the names of the stdout files. -->
+    <!-- 	Maybe one can eliminate package options rerun and runall. from pytxcode file. 
+		That way, rerun can be controlled via command line option 
+		and thus by this software invoking pythontex. -->
+    <!-- TBD: use std/err output to detect rerun information, not log files: 
+		this is much faster. -->
+
+    <!-- TBD: rerunfilecheck and out files created by hyperref -->
+    <!-- TBD: fix [WARNING] WPP03: Skipped processing of files with suffixes [, .latexmkrc, .log]. -->
+    <!-- TBD: consider https://tex.stackexchange.com/questions/7770/file-extensions-related-to-latex-etc -->
+    <!-- TBD: rework on glossaries: use `glossaries-extra` in conjunction with `bib2gls`. 
+		This is because 
+		- rerunfilecheck does not work with the traditional workflow. 
+		- it is not easy to treat the case of cross references of glossary entries explaining one with the other term 
+		- it is difficult to extend to more than one glossary 
+		- ABOVE ALL: explanations and that like shall be in a separate file accessible from more than one tex file. 
+		  This is like bibliographies. 
+			Thus it is a good idea to have a similar workflow: lualatex, bib2gls transforming aux and bib to glotex
+			one has just to replace loading `glossaries` by `glossaries-extra` with package option `record`. 
+
+			have a look at the src/site/doc/glossary folder containing 
+			- glossaries-extra and bib2gls: An Introductory Guide 
+			  in particular Section 7
+			- other literature is in the same folder 
+			Please extend the bibliography 
+
+			All problems mentioned above are solved: 
+			- since with option `record` info is written in aux file, `rerunfilecheck` can detect changes 
+			- bib2gls includes all entries referenced in the tex-file and all depending on it: 
+			  so also those required for explanations, and for explanations of explanations and so on. 
+			- \GlsXtrLoadResources allows to load a bib-file with entries. 
+			  It is possible to load more than one resource, consult the above reference, sections 1.2 and 1.3. 
+				Even with more than one index, bib2glo is invoked the same way. 
+
+			The according section in Chapter 5 must be extended: a subsection on the new way, 
+			and a section on the old way with criticism. 
+			A switch legacyGlossaries which is false by default. 
+	-->
+    <!-- support for document development: subfiles package -->
+    <!-- TBD: for xfig there is a way to convert to tikz. 
+		I think, this is a single target file only and has same quality at least as we have currently. 
+		I think it is worth moving from mixed tex-pdf to tikz in tex only. -->
+    <!-- TBD: rework on pythontexInOut.tex -->
+    <!-- .latexmkrc" 
+		https://mirror.las.iastate.edu/tex-archive/support/latexmk/example_rcfiles/mpost_latexmkrc -->
+    <!-- bib2gls: bib file shall start with line % Encoding: UTF-8 -->
+
+    <!-- TBD: if an error occurred (not for warning), skip cleanup, 
+			not so easy: typically more than one  latex main file -->
+    <!-- TBD: in tables for parameters and warnings and so 
+			frequently horizontal lines are missing. -->
+    <!-- terms.bib: 
+% Encoding: UTF-8
+
+For that file a feature request to the author: shall be mentioned. 
+
+ @entry{ME-SYSTEM, name={ME-System}, plural={ME-Systeme}, description={\cite{EN60601-1D}
+    Kombination von einzelnen Geräten, wie vom \gls{HERSTELLER} festgelegt, von denen mindestens eines ein
+\gls{ME-GERAET} sein muss und die durch eine \gls{FUNKTIONSVERBINDUNG}
+oder durch den Gebrauch einer Mehrfachsteckdose zusammengeschlossen sind}
+}
+% eliminate following warning:
+% warning  (pdf backend): ignoring duplicate destination with the name 'page.1'
+
+@acronym{ecgA, short={ECG}, long={Electrocardiogram}
+}
+-->
+
+    <!-- pythontex: improve error messages: 
+$ pythontex mainsFilterAndNorms |& tee mainsFilterAndNorms.plg
+
+This is PythonTeX 0.17
+ Messages for py:default:default  
+  Traceback (most recent call last):
+* PythonTeX stderr - error on line 249:
+    File "<outputdir>\py_default_default.py", line 61, in <module>
+      samplingDescMs = SamplingDesc.fromFreqHz(sampleFreqHz, TimeUnit.msec)# ms required to reneder 0.1s=100ms% chktex 36
+  NameError: name 'SamplingDesc' is not defined
+PythonTeX:  mainsFilterAndNorms - 1 error(s), 0 warning(s)
+		-->
+
+    <!-- pythontex: name of folder seemingly lowercase. python with errors: folder written wit 2 ifles no stout files. -->
+
+    <!-- besides traditional bibliography allow for biblatex. 
+			In this context in a second step 
+			also allow biber which is the default and is better than bibtex. 
+			For details see biber.md. 
+		-->
+
+    <!-- referring to support of biblatex: mention \printbibliography[heading=bibintoc]% -->
+
+
+
+    <!-- Bugfix for pythontex: if pythontex does not create plg file, 
+    this plugin does not recognize a problem. 
+    This can be done if we dont have python installed, just python3 as in modern distributions. 
+    Locally we need a link python->python3 -->
+
+    <!-- Bugfix: -shell-escape in texlive seems to be -enable-write18 in miktex. 
+      Question: are there further differences? 
+      If so this goes into various parts of the documentation 
+      and also the latex options must be adapted accordinly. 
+    -->
+
+
+    <!-- https://www.texifier.com/docs/tutorials/tex/advanced/tex-vs-latex -->
+    <!-- TBD: I feel I shall restrict myself to texlive distribution. 
+      Then one can use kpsewhich latex.ltex to locate the distribution. 
+      I suspect, that the result, in my case /usr/share/texmf/tex/latex/base/latex.ltx, 
+      indicates the base directory, here /usr/share/texmf. 
+      Note that also mktexlsr is available for texlive. 
+      versions can be found easily 
+      'kpsewhich -version' 'kpsewhere -version' and 'mktexlsr -version'. 
+      First line of answer is 'kpathsea version 6.3.4'
+      and 'mktexlsr version revision 62699 (2022-03-14 10:53:53 +0100)'. 
+      Location of the distribution may help to check reproducible results. 
+
+      Search also for other kpse commands. 
+      For miktex consider 'findtexmf'
+    -->
+
+    <!-- Check whether the following really works with mpost but not with lualatex 
+      included directly with luamplib: 
+
+      beginfig(2) z1=(0,0); z2=(10,20); z3=(10,0); z4=(0,10);
+        draw z1 - - z2;  draw z3 - - z4;
+        def
+          det(expr a,b) = (xpart a * ypart b - ypart a * xpart b)
+        enddef; l:=det(z3-z1,z3-z4)/det(z2-z1,z3-z4); z5=l[z1,z2];
+        %pickup pencircle scaled 4pt;
+        %drawdot z5;
+        drawdot z5 withpen pencircle scaled 4pt;
+      endfig;
+      end
+    -->
+
+    <!-- see DetermineTexMainFile -->
+
+    <!-- 
+    i know that %!TEX directives are meta data used by development requirements, 
+    % !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode 
+but maybe this can be taken into account when compiling. 
+e.g. by setting the latex compiler and some options. 
+It may also serve as mark for latex main files as suggested in detMainFile.md. 
+Maybe with warning that deviating from default. 
+
+According to the texworks manual the following magic comments are supported. 
+!TeX
+encoding, 26
+program, 26
+root, 17
+spellcheck, 27
+  -->
+
+    <!-- in pom we have config of latex plugin. 
+  We neither use for all of test pom, nor for all of latex nor for code generation at all. 
+  This could be changed. 
+  -->
+
+    <!-- xelatex support; better read available options -->
+
+    <!-- fig2dev: maybe output language mp (metapost) is superior to mixed latex and pdf -->
+
+    <!-- https://plantuml.com/command-line describes a command line tool, 
+    which may convert puml files into latex files using tikz. 
+    This would be a valuable feature since these files can also be used in markdown. 
+    Good idea would be if they offer that tool in an installable way. -->
+
+    <!-- https://stackoverflow.com/questions/76815594/maven-plugins-access-to-nested-configuration-in-help-plugin 
+  is on two subjects: help plugin and automatted site generation. 
+In both cases, it seems as if nested parameters are not so well supported. 
+So we have to defer using the techniques described there. 
+As a consequence, we made only a minimal site. 
+If this technique can be used, this offers the chance to make the manual shorter 
+and also to come close to single source principle as regards documentation of parameters. 
+Currently: pom, manual, apidoc, 
+whereas the techniques mentioned above all derive vital information from apidoc only.  -->
+
+    <!-- evaluate pdfinfo 
+provide a mechanism to create meta data maybe structure -->
+
+    <!-- the log file provides information about the packages loaded 
+  and about their versions. 
+  One could add a check whether the packges are registered 
+  and whether their versions are allowed. 
+  Maybe better check statically as for tools. -->
+
+    <!-- the site shall have a bibliography again and an index and a glossary -->
+
+    <!-- bug in chktex: \lstset{% escapeinside=`',% chktex 34 texcl=true}% chktex 34 needs chktex 34, 
+although in chkterc we have \lstset in WipeArg -->
+
+    <!-- in project java in octave document on filters 
+  a lot of svg files are created. 
+  Why? how to avoid, because svg is treated as source format. 
+-->
+
+    <!-- mention that fig2dev version 3.2.9 yields slightly different output 
+  than previous versions above all the fonts. 
+  Also the form of the fig file is a bit different. 
+This has impact of reproduction of pdf files 
+and should thus be mentioned at according place in the manual. -->
+
+    <!-- bugix: whereas version of fig2dev 3.2.8b is less than 3.2.9 
+  but this is less 3.2.9a. -->
+
+    <!-- add an index of used packages. 
+  Each element contains a short description, and a link to the reference. 
+  There it shall be also a link to the original document. 
+  Further details are in which injection it is loaded. -->
+
+    <!-- in 
+    https://mvnrepository.com/artifact/eu.simuline.m2latex/latex-maven-plugin
+    see e.g. vulnerabilities -->
+
+    <!-- getDocClassesToTargets: turn warnings into exceptions.    -->
+
+    <!-- bugfix: <targets>chk,dvi,pdf,html,odt,docx,rtf,txt</targets> 
+    also with clr: all files removed? -->
+
+    <!-- readTaaragetChecked: all these warnings may come up even in a rhird context: 
+    targets parameter, chunk in docClassToTarget or in a magic comment, which is new -->
+
+    <!-- magic comments of other tools: 
+      https://tex.stackexchange.com/questions/78101/when-and-why-should-i-use-tex-ts-program-and-tex-encoding/84687#84687 -->
+
+    <!-- Found out that xelatex never is in the then branch of \ifpdf. 
+      Having a look at header.tex: 
+      TBD: clarify why xetex does not require or accept dvipdfmx 
+    -->
+
+    <!-- command latexindent: research -->
+
+    <!-- consider supervising dvi2pdf also by writing a log file. 
+      xdvipdfmx:warning: Trying to include PDF file with version (1.7), which is newer than current output PDF setting (1.5).
+][69][70
+xdvipdfmx:warning: Unknown token "fcp"
+xdvipdfmx:warning: Errors occured while interpreting MPS file.
+xdvipdfmx:warning: Try again with the distiller.
+    -->
+
+    <!-- In header.tex it is not clear whether the branch with tex4ht is correct. -->
+    <!-- texput.log and texput.pdf if input is by stin. 
+    How to treat? remove although cannot be created by this software normally 
+  /usr/share/texmf/tex/latex/tools/ contains files 
+  e.tex (batchmode), 
+  h.tex (file not found)
+  q.tex (batchmode), 
+  r.tex (nonstopmode), 
+  s.tex (scrollmode), 
+  x.tex (error batchmode). 
+the according log files may occur in the working folder. 
+Shall it be cleated? -->
+
+    <!-- in testTargets.tex add target html again. 
+Currently this is deactivated because of warnings. -->
+
+    <!-- in headerSuppressMedaPDF.tex: are there warnings because of invalid (empty) trailerid? -->
+
+    <!-- see Settings.patternLatexMainFile: generalization of regular expressions. 
+This requires an entry in the manual. 
+-->
+
+    <!-- eliminate \versionDate -->
+
+    <!-- tests that all latex main files are recognized and created with correct settings. 
+Among these: the targets, the compiler, timeless or not, 
+well maybe via dvi also.. hm... to be extended. 
+
+Idea for realization: a logger class which can be written as xml file. 
+This is checked also versus an older version as PDF files are. 
+-->
+
+    <!-- in site: search for typical example -->
+
+    <!-- reproducibiliy check for PDF files for publication: 
+then the date must be correct. 
+Idea is to take the modification date of the PDF file used for comparison. 
+
+To go into more detail, if file.tex contains a date given by the command 
+\today which normally inserts the current time, 
+which which shall insert the modification date of file.pdf, 
+which is used for comparison with the PDF file created from file.tex. 
+
+It is quite hard to write such a command in tex. 
+Instead it is this plugin which writes the date into a configuration 
+when the latex main files are detected: 
+If src/site/tex/xx/.../file.tex is such a latex main file, 
+then the according artifact will be src/site/tex/xx/.../file.pdf 
+and it is easy to determine the path src/main/docCmp/xx/.../file.pdf 
+of the PDF file for comparison. 
+Its .... here one must think more carefully. 
+-->
+
+    <!-- in header.tex 
+  \usepackage{splitidx} withouth [split]
+  ok for lualatex but for pdflatex needed; for arithintoctave manual. 
+  maybe in the long run totally different
+-->
+
+    <!-- reconsider patternReRunLatex; eliminate hack. -->
+
+    <!-- \RequirePackage[aux]{rerunfilecheck} for beamer allows to add glossary and index. 
+Add this to documentation; where? search for beamer -->
+
+    <!-- in documentation search for beamer and add support for leaflet 
+must adapt header.tex -->
+
+    <!-- describe extensions for vs code briefly in documentation -->
+    <!-- add leaflet -->
+    <!-- add watermark -->
+
+    <!-- added documentation for injection headerGrp. 
+Dont forget to mention for all listings of injections 
+from which injection they stem. 
+
+Also update the set of allowed injections in apidoc and in manual. -->
+
+    <!-- in .github/texlive.packages 
+is a list of packages needed to test in CI pipeline of github. 
+In the long run, this is the base of what is to be installed. 
+Currently, .github/workflows/maven.yml does not specify a maven test. 
+This must be included, to ensure completeness of texlive.packages 
+and other packages. 
+Currently at least transfig is missing. 
+
+As a first step, we try to compile with `mvn validate` combined with latexmk. 
+Even this does not work for all tex files. 
+Before, `mvn validate latex:grp` must work. 
+Then finally tests with maven can be performed 
+and we have a complete list of packages. 
+If these at hand, we shall update also the documentation. 
+
+If this is all done, then texlive is preferred usage. 
+Currently strictly speaking it is the distribution in suse tumbleweed. 
+If this is done, it is not difficult to include also miktex. -->
+
+    <!-- try also teatimeguest/setup-texlive-action or https://github.com/zauguin/install-texlive-->
+
+    <!-- in maven.yml the test is merely absence of errors. 
+Using the proper pom with a diff does not work for a few documents. 
+I suspect, that this is due to different versions of ... whatsoever: tools or packages. 
+could be pythontex or something else. 
+To tests diffs reliable, one has to check the versions of packages. 
+Then there must be a mechanism to diff against the correct pdf files. 
+Maybe the same as in local tests. -->
+    <!-- also for sake of CI: add vmdiff to the injections. 
+also would be nice to have pyhtontexW added. -->
+
+    <!-- CI: try to cache also installations beyond texlive -->
+    <!-- discuss whether it is good to move away from texlive 
+provided by suse and head towards standard -->
+    <!-- CI: add pipeline for miktex maybe also for windoofs -->
+
+    <!--  
+  Unfortunately ltex does not adapt language 
+  if specified in documentclass. 
+  Then \selectlanguage{lang} is required, 
+  even in a one-language document. 
+  This is odd since the main language is selected 
+  from \begin{document} on. \DocumentMetadata{lang=de-DE} is suggested \usepackage[pdflang=es-MX]{hyperref} is not feasable. 
+  maybe the first replaces the second. 
+
+ -->
+
+
+
+    <!-- rework of Chapter 6: intro and section 6.1 are not separated clearly. -->
+    <!-- except for scrlttr2 this supports no KOMA-script classes. 
+According to the manual {KomaAnl23}, these are 
+scrbook, scrrprt, scrartcl, scrlettr, scrlttr2
+book, report, article, letter. 
+
+according to {KomaAnl23}, Section 4.20, 
+scrlettr has been removed long ago. 
+Thus we dont take it into acount any more. 
+The class letter is not preferred usage, 
+because it is really inferior to scrlttr2. 
+
+In contrast, we prefer th standard classes book, report and article 
+over the according KOMA-script variants. 
+Thus these are not part of the preferred usage. 
+There are arguments to define also scrbook, scrrprt, scrartcl also in docClassesToTargets, 
+although no preferred usage. 
+
+Note that report is not preferred usage, because not tested. 
+Nevertheless, in docClassesToTargets it is mentioned. 
+This is not really consequent. 
+To resolve, we shall add a report. 
+An idea would be to extract some esoteric part of the manual which is large enough 
+to justify something else but an article. 
+Or, maybe a better idea, to turn the manual in a report again, 
+and write a kind of user guide which is a book. 
+Means: separate current manual which is a book 
+into a manual which shall be a report, so to be readable quicker 
+and in a user guide which is more compehensive and is a book. 
+This requires extensive planning. 
+Maybe also, the authors shall wait until the description of the parameters 
+can be extracted. 
+
+https://ctan.org/topic/class refers to a lot of additional document classes. 
+
+
+rework preferred usage 
+
+rework on form of sources, including form of headers. 
+-->
+    <!-- include pdf figures with package pdfpages -->
+    <!-- research on package bookmark -->
+    <!-- \usepackage{eurosym} for euro sign official independent of the font -->
+    <!-- research etoolbox vs ifthen vs xifthen -->
+
+    <!-- do research on % % \usepackage{setspace}         % Zeilenabstand festlegen
+% % %\usepackage{showframe} -->
+
+    <!-- monitor what about files "(pdf|xe|lua)?latex\\d+\\.fls|" 
+  are cleared, whereas latexmk cannot be configured that like. 
+  An according notification is already sent. 
+  https://tex.stackexchange.com/questions/682509/latexmk-does-not-clean-lualatexnumber-fls -->
+
+    <!-- use make4ht instead of htlatex and htxelatex. 
+One reason is that htlualatex does not exist. 
+Other reason is that even if switching between pdflatex and xelatex, 
+there are two parameters specifying the compiler, one for pdf and another for html and related. 
+This breaks single source principle. 
+With make4ht, one can pass the compiler as an argument. 
+Another advantage is that make4th is faster as it does not require superfluous repetitions. 
+
+Note also that in manualLMP.tex there is a hack around \usepackage{luamplib} 
+which can be eliminated then. 
+-->
+
+    <!--
+Tried xhtml,uni-html4,5,pic-tabular but 5 seems to have no influence on the manual. 
+This must be clarified first.  
+
+It seems not appropriate to have this in the parameter, 
+as it is individual for any document. 
+
+Thus it shall be passed to the package tex4ht via \PassOptionsToPackage{5}{tex4ht}. 
+This proceeding shall be made mandatory if html or related is required. 
+
+As a consequence, the documentation must be changed: 
+correct default value, 
+document tht the number shall not be given., 
+added the passoptions... to the manual in section on main files. 
+-->
+
+    <!-- 
+I found that all the knowledge how to write documents of various classes is not very much accessible.
+http://simuline.eu/LatexMavenPlugin/intro.html shall have an overview of the document classes also.
+This shall be also part of the examples.
+To that end, link one article and representatives of classes to tex sources.
+Mention that book and report are like article. 
+-->
+
+    <!-- when including biblatex: add to header \PassOptionsToPackage{style=alphabetic}{biblatex}
+-->
+
+    <!-- from version 3.2.9 on, xfig, to be more precise fig2dev with the same version 
+can export into tikz. 
+Replacing current conversion combining tex and pdf would be advantageous: 
+faster and less created files around. 
+
+We have an example document src/site/tex/xfig/minTikz.tex in minimal documentclass 
+illustrating that conversion is lossless and 
+thus as good as our combination of pdf/eps and latex. 
+This must be checked in great detail: Are all possibilities of the fig format used? 
+
+Conversion is done as follows: 
+
+fig2dev -L tikz example.fig example.tikz
+
+(-L not needed because ending clarifies, but that way it is clearer. )
+
+The document minTikz.tex illustrates how the result is also scaleable. 
+Maybe here we shall extend headerGrp.tex by some according command, 
+also including tikz, color is present in header.tex already. 
+After some checking we shall make a transition to tikz, 
+but we shall before ensure that the results are really equivalent. 
+So check is on the manual step by step. 
+
+If conversion is done, adapt also clr goal 
+and adapt version of fig2dev which must be minimum 3.2.9. 
+
+One shall notify the developer of xfig, that in the xfig file 
+there shall be a way to specify the (last) export format if any, 
+e.g. in a comment. 
+This would enable this software to decide on the conversion, if supported. 
+Else warning. 
+-->
+
+    <!-- for chapter 4 various kinds of graphics are supported, 
+mp, fig, gp (gnuplot) and svg. 
+whereas mp is a special case, the other formats are currently converted into a combination 
+of latex fonts and pdf/eps graphics. 
+
+now fig2dev allows tikz output and this seems lossless. 
+gnuplot even in oldest version supported, 5.4 seems to have offered a tikz interface. 
+only inkscape used for converting svg seems not to offer tikz output. 
+For this there is a separate tool svg2tikz 
+described in https://github.com/xyz2tex/svg2tikz?tab=readme-ov-file
+
+In general one has to check how much conversion to tikz is lossless. 
+This is clarified for fig: it is lossless and we have an example document for this. 
+For the other formats, gp and svg this analysis is to be done. 
+
+In general tikz would be superior to current combination of latex (self invented ending ptx), 
+and, depending on the context pdf and eps. 
+All this would be replaced by a single tikz file with that ending. 
+Distinguish between hand made tikz and computed one. 
+This spares time and/or complexity because currently, eps and pdf are created, 
+which could be reduced to the format needed, but this is effort. 
+Even if we stick to a single case, we spare a single file, still two have to be created. 
+A closer look unveils that the latex file is created twice in some cases  without chance to change this. 
+With tikz we had a single file and in addition, this is much smaller 
+and it is likely that this can be created faster. 
+Let us check. 
+
+Another advantage would be fls file with dependencies. 
+Not clear: is tikz as mighty as the source format? 
+For combination pdf/eps with latex this is for sure the case. 
+-->
+<!-- Fix: -->
+
+<!-- documentclasses: standalone, exam, moderncv, hitec, cd 
+https://tex.stackexchange.com/questions/782/what-are-the-available-documentclass-types-and-their-uses
+think whether minimal shall not be standalone? 
+-->
+
+<!-- Section 3.2: {subsec:sourcesLatex} at its end 
+contains the idea of a magic comment 
+classMagic 
+
+This is a means to write latex main files with openings 
+not conforming with the current pattern, 
+i.e. the opening, i.e. section from start to 
+\documentclass[...]{...} does not match to the end, 
+so that the class is not matched. 
+one may use the pattern (\documentclass[...]{...})? 
+but then how to get the document class? by a magic including the line 
+
+% !LMP docClass=(docClassMagic)
+
+This shall not be preferred usage but a hot fix to get a TEX file declared as latex main file. 
+-->
+
+<!-- In particular in classes CommandExecutor and TexFileUtils, 
+a rework is needed when to do transition from File to Path class. 
+Currently it is mixed: Historically File, 
+and when needed Path which is generally superior. -->
+
+<!-- Whereas for manualLMP.pdf the timestamp from \today 
+is really the modification time of the file, 
+for testProgramLatexmk.pdf there is one day difference. 
+This is a bug. 
+The most likely reason is different counts in java and perl. -->
+
+<!-- In LatexProcessor.create use file.lastModified() to find out the timestamp to run the build with. 
+This shall be something like CommandExecutor.modTimeOrNull 
+as is used for setting according modification time in target files. -->
+
+<!-- Heavy bug: the test runs shall be configured with pom4pdf.xml 
+but it turns out this does not work. 
+There is no way to configure and it is needed. 
+So the workaround is to modify pom.xml so that it works roughly. 
+The details are in PdfMojoTest.java and the consequence for pom.xml is that chkDiff=true must be set -->
+
+<!-- bug? goal clean does not terminate with modified .latexmkrc file. -->
+
+<!-- bug in header.tex: hyperlinks in index do not work. -->
+
+<!-- eliminate warnings of chktex: 
+ see https://tex.stackexchange.com/questions/719624/chktex-warning-unable-to-open-the-tex-file-1 -->
+
+
+<!-- describe somewhere that a file can be deactivated as latex main file 
+by adding a comment or just by using the empty target magic comment. 
+The latter shall be tested beforehand. 
+It is a good alternative to with the settings \texttt{mainFilesExcluded} or \texttt{mainFilesIncluded}. 
+Please have a look where these two are used and add the possibility with magic comments there. 
+Also in \texttt{mainFilesExcluded} add a hint to the magic comment: 
+it can be frustrating if the file is not processed and it is not known why. 
+Better even: indicate that targets are overwritten.. make a check. -->
+
+
+<!-- perl -e '$a=("test"=~/(?<v>rest)|test/);print(defined($+{v}))' -->
+
+<!-- for speedup TexFileTuils.getMatchInFile: 
+ if tex file is no latex main file, the whole file is parsed. 
+ To avoid wrap all of the file in a CharSequence. 
+ A weaker solution is to check match linewise first. 
+ -->
+
+ <!-- currently in .latexmkrc preamble is matched against patterLatexMainFile linewise 
+  If match, we know that the whole preamble shall match. 
+  This requires a special form of the pattern which must be documented. 
+  On the other hand, maybe it is a good idea to refrain from this algorithm: 
+  the java side does not use either which is slow. 
+  But it is slowest when applying to a non-latex main file, which does not occur with perl. 
+  In java we have a better solution implementing a CharSequence based on the file. -->
+
+  <!-- document somewhere that with our .latexmkrc latexmk cannot be invoked as latexmk name.tex, 
+   but must do withouth extension. -->
+
+   <!-- https://www.xpdfreader.com/download.html offers command line tools for various OS. 
+    This is a general thing to do: provide also for mac and windoofs. 
+    linux tar shows the tools: 
+    pdfdetach, pdffonts, pdfimages, **pdfinfo**, **pdftohtml**, pdftopng, pdftoppm, pdftops, pdftotext 
+    
+    On pdftohtml one shall give some research. 
+
+    pdfinfo will be very important for reproducibility of dated documents. 
+    Thus is is very important, almost mandatory, that the tools needed are cross platform. 
+    Also a question is, what of all that is in the typical tex distributions. 
+
+
+    The alternative is exiftool. 
+    https://exiftool.org/install.html shows that it is cross platform as well. 
+
+    Neither of these tools are in texforlive. 
+    -->
+
+    <!-- ISO20, Section 7.9.4 Dates define raw dates as displayed by pdfinfo -rawdates xxx.pdf. 
+     This is used for metadata CreationDate and for ModDate
+     This must be used to reach reproducibility instead of the file modification date. 
+     The problem is that this must be parsed from output of pdfinfo. 
+     It must be parsed from java for direct processing and by perl for processing via latexmk. 
+     Maybe there is no java class and/or no perl code for that. 
+     
+     If so, one may use pdfinfo -isodate which displays in iso8601 format. 
+     But this is possible only, if the two formats are equivalent. 
+     
+     to parse iso in java see: 
+     https://docs.oracle.com/javase/tutorial/datetime/overview/index.html 
+     to parse iso in perl maybe good is: 
+     https://stackoverflow.com/questions/95492/how-do-i-convert-a-date-time-to-epoch-time-unix-time-seconds-since-1970-in-per 
+     maybe better: 
+     https://metacpan.org/pod/Date::Parse
+    Use $time = str2time($date);
+     -->
+
+     <!-- latexmk jobname withouth .tex. 
+      Both variants shall be possible: latexmk jobname and latexmk jobname.tex -->
+
+      <!-- evaluate whether package datetime2 shall be included in the general header. -->
+
+      <!-- TBD: document parameters pdfMetainfoCommand and pdfMetainfoOptions. -->
+
+      <!-- reproducibility check is based on the assumption, 
+       that two CreationTimes in raw format as specified in PDF2, Section 7.9.4 
+       are equal if and only if they are equal in string form. 
+       This is true only if there is no abbreviation and if timezone is given explicitly 
+       and if UTC is always represented as Z not as +00 or that like. 
+       Maybe one has to ask the compiler implementors to restrict specification accordinly. 
+       An alternative would be to parse time and display in canonical form. 
+       This shall be the long form and canonical forms shall be 1-1. 
+       
+       A way to implement this, is via exiftool which is able to write metadata. 
+       More performant is of course strict implementation of latex compiler. 
+       I think reproducibiliy is a good argument. 
+       Maybe even possible to talk to specifiers of PDF. 
+       -->
+
+       <!-- rework latexEngines.tex -->
+
+       <!-- We had a case where it was convenient to have the Fullbanner in the metadata not erased: 
+        it shows the version of the latex compiler, the kind of compiler, even if luatex or luahbtex, 
+        the distribution with year. 
+        One must analyze whether it is desirable to keep this kind of information. 
+        On the one hand, if the compiler version changes or the compiler changes, 
+        one can better detect the reason of other changes. 
+        On the other hand, very few pieces of information are stored in the PDF artifact to detect reasons for change. 
+        Also shall this be in the PDF? 
+        What about other formats? 
+        Maybe better to have separate mechanisms including e.g. version of packages and so on. 
+        On the other hand, other tools do write that kind of information.  -->
+
+        <!-- Even if no injection is specified in the pom, when cleaning there is a warning 
+         that the injection, e.g. .latexmkrc cannot be erased because not written. 
+         I wonder how to avoid this. 
+         Maybe in case of injection write a file mentioning all injections. 
+         If this file is missing: no delete of files. 
+         If this file is present: delete only the files which are specified in that file. -->
+
+         <!-- discussion: lmodern package in header? -->
+
+         <!-- as regards environments related with timestamps: 
+          in latexmk only latex compiler and dvi/xdv to pdf are endowed with environments. 
+          all other converters, e.g. for graphics are not. 
+          When invoking from java, policy is different: 
+          only meta-commands, to analyze not directly part of the build. 
+          
+          This must be unified. 
+          In fact, we need only for reproducibility 
+          and so one shall wait until more targets are included. 
+          Also some artifacts carry a timestamp. If no environment, this is inconsistent. 
+          We must analyze. 
+          -->
+
+    <!-- pythontex as such does not record dependencies of computations, 
+     typically data files. 
+     Folder PythonTeXdep contains code which adresses this issue. 
+     This is transmitted from John Collins, author of latexmk, 
+     which he worked out in conjunction with Goeffrey Poore, 
+     author of pythontex. 
+     In conjunction with complementary code in .latexmkrc 
+     (also copied into this software), latexmk recognizes dependencies 
+     and reruns certain auxiliary software. 
+     
+     In my opinion, this code shall be included 
+     in the latex package pythontex. 
+     
+     Currently, we dont take this into account. 
+     Thus pythontex shall consistently update its data files. 
+     When changing initial data files 
+     it must be ensured that pythontex is rerun -->
+
+
+    <!-- Deep conceptual problem(s) with initial run and rerun file check. 
+      This applies to rerunfilecheck for auxiliary tools, i.e. postprocessing 
+      Some overview LatexProcessor.preProcessLatex2dev and callers 
+      - bibtex is the sole which works well, 
+        because it transforms bib+aux->bbl 
+        and the target does not change because of *latex rerun 
+        and so no rerun is required. 
+        The only problem is, how to find out that bibtex shall be invoked initially: 
+        if aux file exists AND 
+        matches LatexProcessor.PATTERN_NEED_BIBTEX_RUN = "^\\\\bibdata";
+      - check for biber; I think quite analogous. 
+      - makeindex in contrast is to be invoked initially if idx is present, 
+        without further matching any pattern. 
+        As described in the manual, Section 5.3, this holds even for splitindex. 
+        A rerun is required if and only if the idx file changes. 
+        This can be caused by a *latex run because page numbers change. 
+        Currently this is checked (successfully) using package rerunfilecheck. 
+      - TBD: check for xindy also: I think quite analogous 
+      - makeglossaries is to be invoked initially if the glo file exists. 
+        A rerun is necessary if the glo file changes. 
+        As for indices, this may occur if page numbers change. 
+        This is not really realized by rerunfilecheck, 
+        although an according bug in rerunfilecheck had been fixed.. well almost... 
+        The entry in the log file is still wrong, 
+        There is a problem with overwriting makeglossaries/makeglossary.. 
+      - bib2gls is a newer and by far superior way to get glossaries. 
+        The drawback is, that it starts with the aux file also, 
+        like does bibtex and needs also a particular pattern. 
+        In contrst to bibtex but like makeglossaries, 
+        a *latex run may make a rerun of bib2gls necessary. 
+        One could be very raw and do that if the aux file changes, 
+        but one could be more specific, 
+        recording changes only of the lines referring to the glossary 
+        according to the pattern.  
+      - pythontex is run initially if SUFFIX_PYC = ".pytxcode" is present. 
+        CAUTION: it turned out, that, 
+        if code occurs in (captions of) floating objects, 
+        the pytxcode file may change, so the case is 
+        - not that of bibtex (no further invocation)
+        - but that of makeindex (possibly further invocation) 
+        Here, we would need an extension of rerunfilecheck. 
+        Note that typically the pytxcode becomes longer, 
+        because captions are added, 
+        but sometimes also the ordering changes as a caption moves. 
+      - Finally, rerunfilecheck is used to detect the need to rerun *latex. 
+        Of course, if one of the above postprocessing is done, 
+        *latex must be run after, 
+        but there are also cases where *latex must be run alone, 
+        e.g. in change in aux file, both of latex main 
+        and of included TEX files. 
+        It is obvious, that there are also cases where more files are written, 
+        like in the beamer class 
+        and if there is another class or package, 
+        no one can guarantee, that rerunfileckeck detects the need to rerun *latex. 
+        And it is at risk to get a correction at all or even quickly. 
+      - toc, lof, lot, lol: all could be hashed and could trigger rerun of *latex 
+        without further postprocessing 
+
+      All these observations led to the idea, 
+      to restrict rerunfilecheck to rerun of *latex in the first step. 
+      In the second one, using -recorder, one can detect also aux files 
+      of included files so rerunfilecheck is no longer needed at all. 
+
+      For rerunfilecheck of postprocessing we mimic rerunfilecheck 
+      and make it more flexible: 
+      Initial invocation is tied on presence of file (if not no rerun). 
+      If present, compute md5 sha-512 (fast, little collision) and filesize. 
+      Rerun is based on a change in filesize || md5. 
+      
+      This approach allows for a very much unified design. 
+
+      java.security.MessageDigest md = MessageDigest.getInstance("SHA-512");// is fastest
+      new org.apache.commons.codec.digest.DigestUtils(md);
+      String md5 = DigestUtils.md5Hex(InputStream data);// the according file 
+
+      The strategy is to reimplement for makeindex only. 
+      Then maybe for makeglossaries, just to fix bugs. 
+      Then add pythontex to be able to compile my paper on FIR notch filters. 
+      I know, after comes modernization of tools 
+      (biber, bib2gls and xindy replacing their old fashioned counterparts), 
+      but before, some redesign is in place. 
+
+      Design: Enums of postprocessors. 
+      This knows the file ending triggering the postprocessor 
+      and also the pattern to accept a line (possibly accept all). 
+      In LatexProcessor.preProcessLatex2dev, 
+      after initial invocation of *latex, 
+      loop through the postprocessors and trigger postprocessing by need. 
+      In parallel create lengh,md5 of files 
+      and store in a Map<PostProc,LenCredential>
+      
+      For rerun check, rerun is only done if postprocessing was executed. 
+      After at least one postprocessing, or if 
+     -->
+
+    <!-- maybe only a matter of documentation initially: 
+     whereas latexmk takes dependencies to bib files into account, 
+     but also data files pythontex computations depend on, 
+     This software does not. 
+     Latexmk is a tool for document development 
+     and so needs to rerun consistently if anything changes, 
+     in particular if invoked as `latexmk -pvc xxx`, 
+     whereas this latex builder is a build tool 
+     assuming that during its build step no external changes occur. -->
+
+    <!-- pythontex-files occurs literally in parameters 
+      patternCreatedFromLatexMain and -->
+
+    <!-- in TexFileUtils.deleteX an assertion does not work safely, 
+     when building with assertions enabled. 
+     The codepoint is documented there. -->
+
+    <!-- Eliminated patternRerunMakeIndex/Glossaries 
+      This must be reflected by manual. -->
+
+      <!-- Do research on alternative `makeglossaries-lite` of `makeglossaires` -->
+
+      <!-- \newglossary allows to let latex create files with arbitrary endings. 
+       Difficult to clean up. 
+
+       mayabe stick to the predefined ones: 
+
+       2.5 Acronym Options
+`acronym`: This creates a new glossary with the label acronym. This is equivalent to:
+
+      \newglossary[alg]{acronym}{acr}{acn}{\acronymname}
+
+`symbols`: This option defines a new glossary type with the label symbols via 
+
+      \newglossary[slg]{symbols}{sls}{slo}{\glssymbolsgroupname}
+      It also defines
+      \printsymbols
+      \printsymbols[h optionsi]
+      which is a synonym for
+      72
+
+      \printglossary[type=symbols,h options i]
+      If you use Option 1, you need to use:
+      \printnoidxglossary[type=symbols,hoptionsi]
+      to display the list of symbols.
+      Remember to use the nomain package option if you’re only
+      interested in using this symbols glossary and don’t intend to use
+      the main glossary.
+
+`numbers`: This option defines a new glossary type with the label numbers via
+      \newglossary[nlg]{numbers}{nls}{nlo}{\glsnumbersgroupname}
+    It also defines
+    \printnumbers
+    \printnumbers[h optionsi]
+    which is a synonym for
+    \printglossary[type=numbers,h options i]
+    If you use Option 1, you need to use:
+    \printnoidxglossary[type=numbers,hoptionsi]
+    to display the list of numbers.
+    Remember to use the nomain package option if you’re only
+    interested in using this numbers glossary and don’t intend to use
+    the main glossary.
+
+`index` This option defines a new glossary type with the label index via
+        \newglossary[ilg]{index}{ind}{idx}{\indexname}%
+
+      \newterm
+      \printindex
+      It also defines
+      2 Package Options
+      \newterm[hoptionsi]{ hterm i}
+      which is a synonym for
+      \newglossaryentry{hterm i}[type=index,name={hterm i},%
+      description=\nopostdesc,hoptionsi]
+      and
+      \printindex[hoptionsi ]
+      which is a synonym for
+      \printglossary[type=index,hoptionsi ]
+      If you use Option 1, you need to use:
+      \printnoidxglossary[type=index, hoptionsi]
+      to display this glossary.
+      Remember to use the nomain package option if you’re only
+      interested in using this index glossary and don’t intend to use the
+      main glossary. Note that you can’t mix this option with \index.
+      Either use glossaries for the indexing or use a custom indexing
+      package, such as makeidx, index or imakeidx. (You can, of course,
+      load one of those packages and load glossaries without the index
+      package option.)
+      Since the index isn’t designed for terms with descriptions, you might
+      also want to disable the hyperlinks for this glossary using the package
+      option nohypertypes=index or the command
+      \GlsDeclareNoHyperList{index}
+      The example file sample-index.tex illustrates the use of the index
+      package option.
+-->
+      <!-- some issues with makeglossaries: 
+       - restrict to a special usage in ./Glossaries/glossariesMake.tex and glossariesXindy.tex 
+       - no support for explicit \newglossary[alg]{acronym}{acr}{acn}{\acronymname} 
+         but only the options described in ./Glossaries/glossariesOverview.md 
+         That way the number of files created is limited. 
+         - this allows cleanup because finite set of files 
+           besides files related with special glossaries 
+           dont forget files `ist` for makeindex and `xdy` for xindy 
+         - parse log in a limited set of files 
+           "glg", "alg", "slg", "nlg", "ilg"
+           Not one of them but all. 
+           Note that the log files are written either by makeindex or by xindy. 
+           So no special pattern for makeglossaries: this must be eliminated. 
+           Instead: use one pattern for makeindex and other for xindy, 
+           which has to be added. 
+            -->
+
+
+    <!-- I suspect that neither bibliography, nor index nor a glossary is mandatory. 
+     This is even the case for article or book. 
+     Nevertheless, in header.tex there is a section 
+
+     \IfClassLoadedTF{scrlttr2}{%
+}{
+  % index and glossary
+  \IfPackageLoadedTF{tex4ht}{
+  }{
+    \usepackage{splitidx}%[split]
+    %  \usepackage{makeidx}
+    %  \usepackage{showidx}
+    \makeindex
+    % TBD: eliminate; loads amsmath!!! 
+    \usepackage[toc]{glossaries}%,automake
+    % , xindy or even [xindy={language=english,codepage=utf8}]
+    % mainly for index and glossaries 
+    %\makeglossaries% TBD: activate later
+  }
+}
+
+The glossaries are eliminated: \makeglossaries, because this causes a warning 
+if no according \printglossaries is present. 
+Note that this is unlike \makeindex which is calm even if there is no index. 
+
+We shall wait with rework until package glossaries-extra and tool bib2gls is introduced. 
+     
+     -->
+
+     <!-- .latexmkrc: splitindex/makeindex not yet ok. 
+      The algorithm when to choose what is not ok, 
+      and also in the long splitindex must be usable also with xindy. -->
+
+      <!-- glossaries: collect warnings from the various log files. -->
+
+    <release version="2.1" date="2023-08-28" 
+      description="build with latexmk and generalized reproducibility, readed glossary">
+      <action dev='reissner' type='fix'>
+        Based on new rerun algorithm could reliably re-add classical glossary to manual. 
+      </action>
+      <action dev='reissner' type='fix'>
+        Rerun algorithms now based on hash of files aux, idx, glo and pytxcode. 
+        The new algorithm is better in that it is correct for pytxcode, 
+        taking into account pythontex. 
+      </action>
+      <action dev='reissner' type='fix'>
+        Tried with enabled assertions through `export MAVEN_OPTS="-ea"`
+        Fixed certain points in code, deactivated and documented others in backlog. 
+      </action>
+      <action dev='reissner' type='fix'>
+        Using getter methods for filtering command names in injections instead of parameters directly, 
+        fixes the problem for commands without category, 
+        that the parameter is `name:category` but what is needed is `name` returned by the getter. 
+      </action>
+      <action dev='reissner' type='add'>
+        Feature that for filtering injections not only fields annotated @RuntimeParameters (parameters), 
+        but also getter methods (i.e. methods without parameters) annotated @RuntimeParameters. 
+        Apply this to injection latexmkrc fixes the problem with filtering names of commands without a category 
+        (see the according fix). 
+      </action>
+      <action dev='reissner' type='add'>
+        added parameter latexmkUsage on usage of latexmk: 
+        NotAtAll, AsBackend, Fully
+        added parameters latexmkCommand and latexmkOptions. 
+
+        All this is fully functional and integrates well with document development with latexmk
+      </action>
+      <action dev='reissner' type='add'>
+        added magic comment latexmk with latexmk short for latexmk=true but also latexmk=false is possible. 
+        Generalized magic comment chkDiff into chkDiff=true|false, 
+        where old chkDiff is short for chkDiff=true. 
+      </action>
+      <action dev='reissner' type='add'>
+        Injection .latexmkrc can now read magic comments and extract information from the opening. 
+        For example it reads chkDiff and program (compiler). 
+        This is used when invoking latexmk from this builder 
+        but also if invoking manually for document development. 
+        For example latexmk reading magic comments in comfortable when initiating reproducibiltiy checks. 
+        latexmk knows whether to create reproducible or not. 
+        Magic comments override settings in the pom and allow individual treatment of each document. 
+      </action>
+      <action dev='reissner' type='add'>
+        Unlike before when reproducibiliby checks worked only for files with restricted metadata, 
+        as e.g. data had to be always 1970-01-01, 
+        the only restriction is now the timezone UTC. 
+        This is a useful restriction as it allows reproducibility in time and space. 
+
+        The concept behind is that when an original PDF is present, 
+        the new PDF is compiled with the enviroment variables setting timestamp/timezone read from the original PDF 
+        ensuring that timezone is UTC. 
+        A third setting ensures that timestamp affects both metadata and visible data. 
+
+        This works also from within latexmk. 
+        To that end, injection latexmkrc is extended considerably, 
+        for example reading magic comments of TEX files but also metadata from PDF files. 
+      </action>
+      <action dev='reissner' type='add'>
+        reimplemented ntlatex which has functionality like invoking latexmk: 
+        - now adapts to the settings without need to reinstall. 
+        - reads magic comments 
+        This is now important as latexmk may not recompile in any case wanted. 
+      </action>
+      <action dev='reissner' type='add'>
+        Systematic logging of infos in processing (after preprocessing)
+        Essentially, the new system reflects the structure of the program: 
+        - in outer loop visit all latex main files 
+        accordingly display the name of the latex main file to be 'processed' 
+        The word process is the same as used for graphic files in preprocessing. 
+        If a magic comment overwrites the compiler given by configuration: display an info message. 
+        The compiler covers more than one target. 
+        - inside first adapt the targets 
+        according to the document class  (see docClassesToTargets), if present magic comments. 
+        Log when setting targets is overwritten that way. 
+        - inner loop: pass through the targets 
+        For special targets (currently pdf only) 
+        log if usage of latexmk or chkdiff are overwritten by magic comments. 
+        Finally, notify if chkdiff succeeded so we know it has been performed. 
+        (else the build fails anyway) 
+      </action>
+
+      <action dev='reissner' type='fix'>
+        In documentation added command \tool preparing a tools glossary. 
+      </action>
+      <action dev='reissner' type='add'>
+        from bibliography extracted bib on tools. 
+      </action>
+      <action dev='reissner' type='fix'>
+        logging: file are no longer absolute 
+        but relative to the project folder. 
+        This improves overview and is more secure, 
+        as the environment is no longer exposed. 
+      </action>
+      <action dev='reissner' type='fix'>
+        header.tex: patch for package listings: 
+        take into account that \makeatletter, \makeatother and \xpatchcmd 
+        don't work inside an argument
+      </action>
+      <action dev='reissner' type='fix'>
+        latexmk may be correct even if target is not updated. 
+        Took this into account as this is very special. 
+        Note also that ntlatex has been generalized accordingly. 
+      </action>
+      <action dev='reissner' type='fix'>
+        corrected default value for setting 'diffDirectory'
+      </action>
+      <action dev='reissner' type='fix'>
+        vmdiff: finds differences in both visual content and important metadata. 
+      </action>
+      <action dev='reissner' type='update'>
+        Versions of tools: gnuplot, exiftool, python, ...
+      </action>
+    </release>
+
+
+    <release version="2.0" date="2024-04-23" description="">
+      <action dev='reissner' type='add'>
+        added several document classes to general usage: 
+        beamer, leaflet, scrlttr2, minimal
+      </action>
+      <action dev='reissner' type='add'>
+        Low level addition: 
+
+        The pattern 'patternLatexMainFile' used to detect latex main files 
+        has been extended and offers now more functionality: 
+        
+        - PassOptionsToPackage is necessary 
+          because now crucial packages are loaded in a standardized header. 
+          But the options depend on the document, e.g. on its class 
+        - newbool, setbool is required e.g. for beamer clas 
+        - DocumentMetadata will have many usecases e.g. setting pdf version. 
+          To support it, even the class of regular expressions had been extended 
+          because structures may be nested in arbitrary depth 
+        - input is a fallback if even more specific patter would be needed 
+        - arguments are generalized in a subtile way 
+        - argument of documentclass/style is generalized 
+          This allows to define options influencing more than one package 
+          unlike PassOptionsToPackage 
+        Besides matching, also this pattern can extract pieces of information: 
+        - magic comments. In this version the latex compiler and the target. 
+          That way, both can be specified for the document individually 
+          overwriting the basic setting. 
+        - the documentclass which is also used to restrict the target. 
+          E.G. beamer, leaflet and letter are restricted to pdf.  
+      </action>
+      <action dev='reissner' type='add'>
+        High level addition: 
+        support of magic comments: this allows to treat particular documents individually, 
+        - compiling with pdflatex instead of default lualatex 
+        - setting targets individually 
+        This affects parameter patternCreatedFromLatexMain. 
+        Magic comments overwrite other settings. 
+      </action>
+      <action dev='reissner' type='add'>
+        High level addition: 
+        make output formats depend on document class 
+        (e.g. no html for beamer or letter). 
+        using parameter 'docClassesToTargets'. 
+        But as a consequence, need a defined set of document classes 
+        and let detect the document class via the 'patternLatexMainFile'. 
+        Others are processed with warning and targets cannot be restricted. 
+      </action>
+      <!-- inj and related-->
+      <action dev='reissner' type='add'>
+        goal inj with parameter: injecting files are 
+        - config files .latexmkrc, .chktexrc with lot of improvements 
+        - headers 
+          - header.tex intended to be input always 
+          - headerGrp for graphic 
+          - headerSuppressMetaPdf used in conjunction with reproducibility of PDFs
+        - instVScode4tex.sh, 
+        - ntlatex for support of monitoring reproducibility of PDFs
+        - pythontexW and depythontexW for including code into latex documents 
+
+        To that end, added @RuntimeParameter, which unlike @Parameter persists at runtime 
+        In Settings: toString now based on reflection. 
+        In Settings: introduced filtering omg. 
+        Also extended clr cleaning all what inj creates
+        added parameter injections and added property latex.injections for command line use 
+        Some injections are influenced by the config, some are executable. 
+      </action>
+      <action dev='reissner' type='add'>
+        some injections are set executable and this action is even supervised, 
+        so a warning indicates if that goes wrong. 
+      </action>
+      <action dev='reissner' type='add'>
+        injections as properties. 
+        In particular scripts are likely to be put in workspace that way, 
+        because this is done once. 
+        Injections to be updated each build run, are better injected classically 
+        via plugin config. 
+      </action>
+
+      <action dev='reissner' type='add'>
+        developped header.tex, which is intended as always to be included, further: 
+        added A4 opt ion to geometry, added option destlabel to hyperref, tocbibind, 
+        microtype, anyfontsize (e.g. for beamer), xurl, 
+        babel, csquote, ...
+        but also extracted includes related with graphics and meta info 
+        into separate headers or into the tex file itself. 
+        Eliminated also packages: 
+        ifthen replaced by \IfClassLoadedTF and \IfPackageLoadedTF.
+        Tricked about useful ordering. 
+        So far it is possible to include header.tex always 
+        preceeded or followed by other package loading. 
+      </action>
+
+      <action dev='reissner' type='add'>
+        concept for creating reproducible documents 
+        which allows dates. 
+        The core idea is to use SOURCE_DATE_EPOCH and FORCE_SOURCE_DATE. 
+        To create a document of diffing use ntlatex (no time latex) 
+        which is one of the new injections 
+      </action>
+
+      <action dev='reissner' type='add'>
+        To PDF documents created added meta info. 
+        This is disentangled now from headers. 
+        injection headerSuppressMetaPdf suppresses the rest 
+      </action>
+
+      <!-- misc but important -->
+      <action dev='reissner' type='add'>
+        For document development: support \include instead of \input 
+        and use this in the manual. 
+        That speeds up the pdf conversion 
+        and requires just removal of additional aux files. 
+      </action>
+      <action dev='reissner' type='add'>
+        XXXXXXXXXXpartial support for destlabel. 
+        Would be good for HMTL and docs there. 
+        Rest on backlog. 
+      </action>
+      <action dev='reissner' type='add'>
+        Weak CI: could compile all documents in a CI pipeline, 
+        but diff did not yet work. 
+        So the test consist in successful compilation. 
+      </action>
+      <action dev='reissner' type='add'>
+        to prepare place in maven central: added gpg plugin and issue management. 
+      </action>
+      <action dev='reissner' type='add'>
+        Updated and extended default string for setting patternCreatedFromLatexMain
+      </action>
+      <!-- misc minor importance-->
+      <action dev='reissner' type='add'>
+        added items to backlog. 
+      </action>
+      <action dev='reissner' type='add'>
+        undergo buildParams.tex and pom4pdf.xml 
+        a filter inserting settings of this plugin.
+      </action>
+       <!-- fixes -->
+       <action dev='reissner' type='fix'>
+        because of a bug in package hyperref 
+        disable loading of auxhook before loading hyperref 
+        and enable after in order not to affect package transparency
+      </action>
+      <action dev='reissner' type='fix'>
+        extended pattern 'patternWarnLatex' 
+        to detect warnings in log files. 
+      </action>
+      <action dev='reissner' type='fix'>
+        xelatex never enters if branch of \ifpdf! 
+        Take this into account for 
+        - suppression of meta info
+        - creation of html and related with 'tex4ht' 
+        that 
+      </action>
+      <action dev='reissner' type='fix'>
+        Design: e.g. 
+        - core package cannot depend on mojo package
+        - layered architecture with low level services TexFileUtils
+        - eliminated getTargetSet()
+      </action>
+      <action dev='reissner' type='fix'>
+        could update maven plugin framework because could find the critical code 
+        causing errors in class Target. 
+      </action>
+      <action dev='reissner' type='fix'>
+        eliminated lot of warnings, also from ltex, extended dictionary, 
+        reformatted tex files. 
+      </action>
+      <action dev='reissner' type='fix'>
+        in LatexProcessor.runDiffPdf concerning return values. 
+      </action>
+      <action dev='reissner' type='fix'>
+        interpretation of return code (triggered by fix with with runDiffPdf 
+        and by introducing chktex)
+      </action>
+      <action dev='reissner' type='fix'>
+        base LatexProcessor.needRun on both log AND aux file. 
+      </action>
+      <action dev='reissner' type='fix'>
+        fixed several default values in config of this maven plugin in pom. 
+      </action>
+      <action dev='reissner' type='fix'>
+        in headers replaced booleans by \IfPackageLoadedTF and \IfClassLoadedTF
+      </action>
+      <action dev='reissner' type='fix'>
+        in header.tex: options of package rerunfilecheck 
+        which corrects page numbers in index. 
+      </action>
+
+
+
+      <!-- pure documentation and in particuar site and bib -->
+      <action dev='reissner' type='add'>
+        in site: now use automatically generated site on goals. 
+      </action>
+      <action dev='reissner' type='add'>
+        documentation on the web site. before it was mainly the manual in PDF format. 
+        Now replace apt by md and md.vm 
+        unify. 
+        Used automatic generation of documentation. 
+        Had to adapt apidocs of Mojos. 
+        Added a lot of examples. 
+      </action>
+      <action dev='reissner' type='add'>
+        Added a lot of literature. 
+      </action>
+      <action dev='reissner' type='add'>
+        To manual added lots of material 
+        on document development and preferred usage 
+      </action>
+      <action dev='reissner' type='fix,add'>
+          updated literature. 
+          Now for the updated literature the reference name includes the date. 
+          This shall be now a general rule 
+          but this is realized only if something changes. 
+      </action>
+      <action dev='reissner' type='add'>
+        added litPub.bib to use in dependent projects 
+        like our quality management project https://github.com/Reissner/QMngMnt. 
+      </action>
+
+      <!-- latexmk -->
+      <action dev='reissner' type='add'>
+        added documentation on files fdb_latexmk. 
+        Strictly speaking, this is needed in later versions invoking latexmk. 
+      </action>
+      <action dev='reissner' type='add'>
+        modified .latexmkrc and the headers so 
+        that latexmk with that file yields the same result 
+        as this software with default settings. 
+        This is a bunch of changes. 
+        Also added bib2gls so that also with bib2gls this works 
+        as we want for this software 
+        (prepare release 2.1)
+        Turned .latexmkrc into a resource and added to pom accordingly. 
+        Let .latexmkrc undergo a filter inserting settings of this plugin.
+        This is to synchronize. 
+        Note that this is not completed. 
+        Correct .latexmkrc creating figures from mpost. 
+        Added to site 
+      </action>
+
+      <!-- chk -->
+      <action dev='reissner' type='add'>
+        took chktex into account; 
+        added also lots of warnings based on the return value 
+        in particular introduced .chktexrc as a resource 
+        added goal chk and added to targets and to the default set. 
+        Note that chk does not emit output files. 
+        Added link to .chktexrc injected to each folder containing tex files. 
+        Also .chktexrc is synchronized with header.tex: 
+        there are commands functionally equivalent with known commands 
+        but arguments not checked by chktex. They are named xxxNoChk{...}
+      </action>
+      <!-- vrs -->
+      <action dev='reissner' type='update'>
+        updated versions of converters, dependencies and plugins, java, ... 
+        parameterized a lot of versions. 
+        Replaced default pdflatex by lualatex 
+        updated logging mechanism. 
+      </action>
+      <action dev='reissner' type='fix'>
+        in goal vrs generalized patterns for versions 
+        to make correct for general texlive. 
+        and took into account that a tool may be never used and thus not installed. 
+      </action>
+      <action dev='reissner' type='fix'>
+        in goal vrs now take also languages java (this is a java plugin),
+        python for (de)pythontex and perl (for latexmk) into account 
+        and also built tools maven and ant. 
+      </action>
+
+      <!-- graphics -->
+      <action dev='reissner' type='add'>
+        document minTikz.tex showing that fig2dev can export 'everything' lossless in tikz format. 
+        Here, all kinds of objects can be exported, 
+        but still not clear whether this is true with all options. 
+
+        This illustrates documentclass 'minimal' and is preparatory for rework on fig files. 
+      </action>
+      <action dev='reissner' type='add'>
+        rework on mpost: much better and also simpler results and better documentation. 
+        In particular, read log files and scan for warnings and errors. 
+        luamplib, documentation 
+      </action>
+      <action dev='reissner' type='add'>
+        updated parameters of inkscape: long form. 
+      </action>
+      <action dev='reissner' type='add'>
+        for tool ebb: 
+        add parameter createBoundingBoxes 
+        and added explanation of fine type xbb and bb
+      </action>
+
+    </release>
+
+
+
+    <release version="1.8" date="2022-04-20" description="Essentially, added support for xdv format. ">
+      <action dev='reissner' type='fix'>
+        goal vrs works again. 
+      </action>
+      <action dev='reissner' type='add'>
+        support xdv format. 
+        In particular added warning WLP07. 
+      </action>
+    </release>
+    <release version="1.7" date="2022-04-19" description="Essentially, made all documents compilable with latexmk">
+      <action dev='reissner' type='fix'>
+        Extracted chapters from manual, renamed manual: 
+        shorter name, now pythontex works with latexmk. 
+        This is a workaround for a bug either in latexmk or in lualatex. 
+        All works fine for other latex engines. 
+      </action>
+      <action dev='reissner' type='fix'>
+        Corrected .latexmkrc. Now works at least for pythontexInOut, 
+        but not for the manual still... no idea why
+      </action>
+      <action dev='reissner' type='fix'>
+        Eliminated bad boxes
+      </action>
+      <action dev='reissner' type='update'>
+        In .gitignore eliminated files created by pythontex 
+        which were silently vital for success of tests. 
+        Not before now we have quality assured. 
+      </action>
+      <action dev='reissner' type='update'>
+        Eliminated dependency on emacs and auctex. 
+        This affects also .gitignore. 
+      </action>
+      <action dev='reissner' type='update'>
+        In pom now documentation is created with version 1.6 
+        including pythontex. 
+      </action>
+    </release>
+    <release version="1.6" date="2022-04-16" description="Main feature: minimum support for pythontex. 
+		Added support for unregistred converters. 
+		Added inclusion/exclusion of latex main files.">
+      <action dev='reissner' type='add'>
+      extracted new way to determine the latex main file 
+      from changex.xml into detMainFile.md. 
+      This preparatory for the next release. 
+      </action>
+      <action dev='reissner' type='update'>
+      pom: version updates
+      </action>
+      <action dev='reissner' type='add'>
+        metadata: tried on pdfversion and added documentation
+      </action>
+      <action dev='reissner' type='fix'>
+        reworked manuals so that they compile for any tex engine 
+        and also for htlatex. 
+      </action>
+      <action dev='reissner' type='add'>
+        extended and restructured backlog for further releases. 
+      </action>
+      <action dev='reissner' type='add'>
+      added config for vscode, the new editor. 
+      </action>
+      <action dev='reissner' type='add'>
+        added a lot of external documentation and also restructured. 
+        This affects also the literature file lit.bib. 
+        Focus is on engines, recorder option, distributions, metapost, ... 
+      </action>
+      <action dev='reissner' type='fix'>
+        including xdv alongside dvi on a minimum effort base. 
+        Still preparing a better support. 
+      </action>
+      <action dev='reissner' type='add'>
+			added document recorder.tex and its artifact. 
+      </action>
+      <action dev='reissner' type='add'>
+        added document latexEngines.tex and its artifact. 
+        Gained an overview over the tex engines above all xelatex
+      </action>
+      <action dev='reissner' type='add'>
+				added documentation for pythontex and depythontex 
+				going beyond the manual but needed for implementation of this software. 
+				Added references to original software by Poore
+      </action>
+      <action dev='reissner' type='add'>
+				added BuildFailureException TLP02
+      </action>
+      <action dev='reissner' type='add'>
+				added latexmkrc to support document development better. 
+      </action>
+      <action dev='reissner' type='add'>
+				added invocation of pythontex (depythontex not yet) 
+				including documentation. 
+				This is the core functionality for this release. 
+      </action>
+      <action dev='reissner' type='add'>
+				added converter depythontex (pythontex was added already.)
+      </action>
+      <action dev='reissner' type='fix'>
+				Generalized default value for patternLatexMainFile
+				taking package names into account which contain `-` in addition to letters.
+      </action>
+      <action dev='reissner' type='update'>
+				Turned lualatex into the default.
+				This is a kind of update because the former default pdflatex starts to outdate.
+				Nevertheless, a strong motivation is pythontex:
+				I want to create figures without memory restrictions, which is offered by lualatex.
+      </action>
+      <action dev='reissner' type='update'>
+				Updated versions, version patterns and strings, also form e.g. inkscape, pdftotext, pdfinfo, exiftool, gnuplot.
+      </action>
+      <action dev='reissner' type='add'>
+				Added support for unregistered converters specifying their category for safety.
+				This is needed for the moment for (de-)pythontex.
+				Although removed in later releases is useful in its own right.
+      </action>
+      <action dev='reissner' type='add'>
+				Added parameters 'mainFilesIncluded' and 'mainFilesExcluded' 
+				and added according warnings WPP05, WPP06 and WPP07. 
+      </action>
+    </release>
+
+    <release version="1.5" date="2022-05-03" description="First release with change management. 
+			  This includes version of this software 
+			  but also of the converters used.">
+      <action dev='reissner' type='add'>
+				 Added check for reproducibility. 
+				 This is a step towards a clean release management 
+				 as this shall remove the dependency of this plugin to itself, 
+				 potentially the same version. 
+      </action>
+      <action dev="reissner" type="add">
+	 Added VersionMojo to phase validate.
+	 To that end, added configuration versionsWarnOnly
+	 and convertersExcluded.
+      </action>
+      <action dev="reissner" type="add">
+         Added validity checks on converters: registered, in correct category.
+	 In the course of this, added a lot of exceptions:
+	 TSS05, TSS06, TSS07 and TSS08
+      </action>
+      <action dev="reissner" type="add">
+          Prepared for check in phase validate or initialize:
+	  Added a way to exclude converters.
+      </action>
+      <action dev="reissner" type="add">
+         Added rudimentary change management. 
+      </action>
+      <action dev="reissner" type="add">
+         Added a readme.md file. 
+      </action>
+      <action dev="reissner" type="update">
+         Converter gnuplot from gp to pdf changed version
+		 and command line interface.
+		 Likewise for inkscape, the converter from svn to pdf.
+		 Added according manuals.
+		 Updated converters again and again. 
+      </action>
+      <action dev="reissner" type="fix">
+         Aligned licenses: eliminated contradictions:
+		 License delivered is what is given top level on github. 
+      </action>
+      <action dev="reissner" type="add">
+         Handling of versions: now in a separate resource file
+		 for access from markdown, latex and java (the latter to come). 
+		 Also updated several times
+		 and proved for now that the format is useful.
+		 Among the changes: 
+      </action>
+      <action dev="reissner" type="update">
+         Updated a lot of versions in pom. 
+      </action>
+      <action dev="reissner" type="fix">
+         Eliminated most of the javadoc failures. 
+      </action>
+      <action dev="reissner" type="add">
+         Use maven enforcer plugin. 
+      </action>
+      <action dev="reissner" type="add">
+         added docs for various packages. 
+      </action>
+      <action dev="reissner" type="add">
+         added goal vrs displaying versions also of the converters 
+         and whether they are valid. 
+      </action>
+      <action dev="reissner" type="add">
+         added exception TSS04 checking validity of targets.
+      </action>
+      <!-- htlatex: label creates no ancor. 
+      The description is in https://www.tug.org/pipermail/tex4ht/2023q3/003377.html 
+      The related cfg file is in this folder. 
+      -->
+
+      <!-- Bug: if running htlatex and an error ocurs then the message is Running lualatex failed with return code 1. 
+      well, this is because lualatex is the default. 
+      The solution is just to replace htlatex and xhtlatex by make4ht. -->
+
+      <!-- somehwere in the intro of tikz manual, it is said that metafont is now part of luatex. 
+				This may mean that no two compilation steps are required. 
+				Please check -->
+      <!-- this package shall provide a default .latexmkrc file 
+			and also a default input file loading all required packages. 
+			Both shall be appropriate for the default config, i.e. using lualatex, biber... 
+			but also for all relevant documentclasses
+		See the twoPager in L2R for class leaflet: package geometry shall not be loaded. -->
+      <!-- in manual fix underfull boxes and pdf version -->
+      <!-- change name of plugin: latex-maven-plugin
+	    This is not completed. Shall be set up both in folder structure 
+	    and in github url given by pom.       -->
+      <!-- further actions are given in the Readme.md -->
+      <!-- TBD: include also hints in the manual. -->
+      <!-- to offer standalone application: 
+	    have a look at maven-jar-plugin documentation 
+	    still commented out to make the jar executable. -->
+      <!-- update to newer java version. e.g. define modules, packagedocs -->
+      <!-- on site http://www.simuline.eu/LatexMavenPlugin 
+	    set up a download area. 
+	    Some of them are written by myself as xfig and dvi. 
+	    For these the reference howpublished in lit.bib must be updated. 
+       -->
+      <!-- manual on dvi file format requires rework: 
+	    no word about version and no word about dvitype program. 
+	    Partially german english. -->
+      <!-- test pandoc - -bibliography - -toc -s -R
+	    s stands for standalone 
+	    R stands for resolve, also try without 
+	    and try to find a solution for indices and glossaries 
+	    seemingly, currently not supported, anyway 
+	    Try formulae with mathml and with mathjax 
+	    What about tables, listings, figures?
+       -->
+      <!-- take texnische komoedie into account 
+	    to evaluate the ways html export can be done -->
+      <!-- latexml is interesting not only for html export 
+	    but also for further analysis of tex files. 
+	    Desirable: a SAX like interface. 
+	    This could be interesting for all kinds of latex converters. -->
+      <!-- test latexml
+	    $ latexml -{}-dest beispiel.xml beispiel.tex
+	    $ latexmlpost -{}-format=html4 -{}-mathimages -dest=bsp.html bsp.xml
+       -->
+      <!-- evaluate biblatex to replace bibtex. 
+	    This also offers entry type @standard and rework bibliography -->
+      <!-- support epub -->
+      <!-- work through pdf: eine texnische kommödie -->
+      <!--  sources in package org.codehaus.plexus.util and subpackage 
+       are given explicitly. 
+       Maybe this shall be a dependency instead. 
+       On the other hand, for standalone application, 
+       this shall be included in the jar. 
+       But if another version of these sources come on the classpath, 
+       there is a version clash. 
+       TBD: research how this can be avoided.  -->
+      <!-- versions better in pom properties 
+       than in separate file i feel. 
+       But this would require improved maven-properties-plugin 
+       so this kind of solution is deferred but shall be resumed asap.  -->
+      <!-- TBD: update the site created by mvn site-deploy. 
+	    There are even still parts referring to acquinet. -->
+      <!-- TBD: the site docs is partially in apt 
+	    which seems close to markdown. 
+	    Maybe we can replace. 
+	    What is needed is an evaluation of the formats: 
+	    docbook, apt, xdoc, markdown. 
+	    Partially apt seems superior to markdown. 
+	    On the other hand, unification is necessary. 
+	    Also important: does the site plugin support markdown? -->
+      <!-- TBD: complete rework for ant users: 
+	    starting from how to google and how to find sites. 
+	    Are all references present? 
+	    Does the software work properly? -->
+      <!-- TBD: add this plugin to mavencentral 
+	    This allows some simplification, also to documentation -->
+      <!-- TBD: collect Todos given in manual -->
+      <!-- TBD: eliminate underfull \vbox es in manual -->
+      <!-- TBD: eliminate warning: pdflatex found version 1.7 
+	    allowed 1.5 only -->
+      <!-- TBD: goal vrs can give more than versioning info, 
+	    as e.g. vendor and things like that. -->
+      <!-- TBD: vrs may be tied to lifecycle phase 
+	    validate or better pre-site. 
+	    but then it must be possible to choose the converters active. -->
+      <!-- TBD: if the active converters are configurable, 
+	    then one has to ensure that only the configured are used. -->
+      <!-- TBD: fill in the gap given by tool makeindex: 
+	    does not allow to get its version without breaking it 
+	    or applying it on a file. 
+	    Maybe the solution is to replace it by upmendex -->
+      <!-- TBD: goal latex:vrs 
+	    shall work even if not all converters are installed. 
+	    Problem: MetaInfo.Version constructor: 
+	    executor then throws BuildFailureException -->
+      <!-- TBD: maybe vrs shall be included in phase validate. -->
+      <!-- TBD: ant-task: somehow synchronize coordinates with pom: 
+	    name, version -->
+
+      <!-- setting readTexSrcProcDirRec seems to refer to processing graphics only. 
+	    Check whether this is appropriate. -->
+      <!-- TBD: rework on Converter.java: diff-pdf has pseudo version only. -->
+      <!-- TBD: Converter.java: there is an unspecific ConverterCategory: eliminate. -->
+
+      <!-- TBD: reproducible runs: take other output formats into account also: 
+				at least html. -->
+    </release>
+
+
+
+    <!-- Here starts version 1.4 -->
+    <!-- Re-hosted in 
+	  https://www.simuline.eu/RepositoryMaven/
+	  de/akquinet/jbosscc/latex/latex-maven-plugin/ -->
+    <release version="1.4" date="2018-06-19" description="TBD">
+      <action dev="reissner" type="add">
+        added goal help
+      </action>
+      <action dev="reissner" type="update">
+        email address: ernst.reissner@simuline.eu,
+	site org.m2latex --> eu.simuline.m2latex also repo
+      </action>
+    </release>
+
+    <!-- 1.3 does not exist!!! -->
+    <!-- Re-hosted in 
+	  https://www.simuline.eu/RepositoryMaven/
+	  de/akquinet/jbosscc/latex/latex-maven-plugin/ -->
+    <release version="1.3" date="2016-09-09" description="Renamed plugin">
+      <action dev="reissner" type="update">
+         Renamed plugin due to new convention into latex-maven-plugin
+	 and changed version. (without release plugin)
+	 CAUTION: Thus no snapshot release was created
+	 and so there is more than one checkin with a release version,
+	 i.e. no snapshot. 
+      </action>
+      <action dev="reissner" type="update">
+         Updated java version to 1.5,
+	 replaced javadoc tags by annotations,
+	 updated junit to 4.12,
+	 replaced easymock by mockito,
+	 updated all to eu.simuline.m2latex
+      </action>
+      <action dev="reissner" type="add">
+	 Made rerun mechanism configurable:
+	 added parameter patternNeedAnotherLatexRun
+	 containing a pattern to regocnize need to rerun from log file
+	 and added parameter maxNumReruns signifying a maximum number of reruns.
+      </action>
+      <action dev="reissner" type="add">
+	 added parameter tex4htOutputDirectory
+      </action>
+      <action dev="reissner" type="add">
+	 added conversion to rtf via latex2rtf and parameter latex2rtfCommand
+      </action>
+      <action dev="reissner" type="add">
+	 added conversion to odt and docx also via htlatex and dot2doc
+	 adding parameter odt2docCommand
+      </action>
+      <action dev="reissner" type="add">
+	added conversion of document to dvi and ps and
+	conversion of graphic to eps besides pdf 
+      </action>
+      <action dev="reissner" type="add">
+	 added conversion to txt via pdftotext with parameter pdf2txtCommand
+      </action>
+      <action dev="reissner" type="add">
+	 added support for makeindes along the same lines as bibtex
+	 also multiple indices and split ones.
+	 added glossaries 
+	 adding parameters makeIndexCommand
+      </action>
+      <action dev="reissner" type="add">
+	 now in one run conversion in many formats can be done
+	 and made configurable through the parameter targets.
+	 There are goals to create a specified output format
+	 e.g running mvn latex:pdf
+	 or all formats configured by mvn latex:cfg
+      </action>
+      <action dev="reissner" type="add">
+	 added detection of failures and warnings for latex, htlatex
+	 auxiliary programs like bibtex.
+	 In particular added parameters patternErrLatex,
+	 patternErrMakeindex
+
+	 Made display of warnings and box-warnings over/underfull configurable
+	 adding parameters debugWarnings and debugBadBoxes
+	 Detected errors and warnings on conversions 
+	 due to monitoring of files to be created.
+	 TBD: just mere existence, but could be also modification time.
+
+	 Added warnings on files skipped. 
+      </action>
+      <action dev="reissner" type="add">
+	 added handling of toc, listoffigures, listoftables, listoflistings 
+      </action>
+
+      <action dev="reissner" type="add">
+	 added support for new graphic formats fig, gnuplot, jpg, png, svg 
+	 with parameters fig2devCommand, 
+      </action>
+      <action dev="reissner" type="add">
+	 added selection of latex documents from all files with ending .tex
+      </action>
+      <action dev="reissner" type="add">
+	 added javadoc plugin 
+      </action>
+      <action dev="reissner" type="add">
+	added ant tasks besides the maven plugin
+	dividing the software in mojos defining a mavan plugin,
+	ant tasks and core classes in separate packages. 
+      </action>
+      <action dev="reissner" type="add">
+       added a manual written in tex and to be compiled
+       by this plugin and by ant task defined  here. 
+      </action>
+      <action dev="reissner" type="add">
+       added documentation of latex pacakges, tools,
+       and file formats including self written ones on fig and dvi. 
+      </action>
+      <action dev="reissner" type="add">
+       processing in source directories
+       which is considered the working directory
+       and move of results into target directory.
+       Also clean goal and task to restore the source directory.
+       This eases development of latex files considerably
+       because one can invoke the needed tools directly
+       without using this plugin/task.
+       Also one can use forward/backward search between editor and viewer.
+       But the viewer has to be in the source directory then.
+       Nevertheless cleaning up works. 
+      </action>
+      <action dev="reissner" type="add">
+      added goal/task clear.
+      Added goals grp (graphics) and chk (check)
+      </action>
+
+    </release>
+
+
+    <!-- jars not in https://www.simuline.eu/RepositoryMaven/ but still in 
+	  https://repo.maven.apache.org/maven2/
+	  de/akquinet/jbosscc/latex/maven-latex-plugin/ -->
+    <!-- Sources in https://github.com/akquinet/maven-latex-plugin -->
+    <release version="1.2" date="2012-02-07" description="TBD">
+    </release>
+
+    <!-- TBD: added older changes -->
+  </body>
+</document>

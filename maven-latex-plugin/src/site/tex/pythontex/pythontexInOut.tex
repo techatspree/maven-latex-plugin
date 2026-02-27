@@ -1,0 +1,549 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+%\RequirePackage{pdfmanagement-testphase}
+% \DocumentMetadata{%
+% pdfversion=1.7,backend=,pdfstandard=,debug={options},
+% lang=,uncompress,testphase=,,colorprofiles={options},xmp
+% }
+\documentclass[a4paper, english]{article}%12pt, 
+
+\usepackage[keeptemps, depythontex, runall=false, fvextfile=55]{pythontex}%rerun=always, 
+
+
+\usepackage{listings}
+\input{../header.tex}
+\input{../headerGrp.tex}
+
+
+\input{../headerSuppressMetaPDF.tex}
+
+\hypersetup{
+  pdfinfo={
+    Author      ={Ernst Reissner},
+    Title       ={Files, errors and warnings of pythontex },
+    Subject     ={pythontex},
+    Keywords    ={LaTeX;pythontex}
+  }
+}
+
+
+
+%\usepackage{latex-bnf}
+\title{Files, Errors and Warnings of \texttt{pythontex} 0.18 }
+\author{Ernst Reissner (rei3ner@arcor.de)}
+\date{\today}
+
+\newcommand{\lualatex}{\texttt{lualatex}}
+\newcommand{\makeIndex}{\texttt{makeindex}}
+\newcommand{\pytex}{\texttt{pythontex}}
+\newcommand{\Ppytex}{package \texttt{pythontex}}
+\newcommand{\pytexP}{\texttt{pythontex} package}
+\newcommand{\dpytex}{\texttt{depythontex}}
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\listoffigures
+\listoftables
+\lstlistoflistings%
+
+\section{Introduction}
+
+This document is created with \lualatex{} or that like 
+with output format 
+\ifpdf%
+PDF%
+\else
+DVI% TBD: take XDV into account also 
+\fi.
+The package \texttt{tex4ht} 
+is \IfPackageLoadedTF{tex4ht}{}{not} loaded. 
+
+The \pytexP{} together with the auxiliary program with the same name \pytex{}, 
+allows including code, e.g.~in Python into a \LaTeX{} document. 
+This document describes the input/output behavior of the auxiliary program \pytex{}, version 0.18
+which includes all files read and written and uses pythontex. 
+For example, \texttt{\pys[sname]{1+1=!{1+1}}} has been computed by python. 
+% \begin{pycode}
+% import sys
+% sys.stdout.write("bla") 
+% \end{pycode}
+
+Interaction of \pytex{} with a \LaTeX-to-pdf converter like \lualatex{} 
+is comparable to that of other auxiliary programs like \makeIndex: 
+A latex package makes the \LaTeX-to-pdf converter extract information for the auxiliary program 
+into a separate file or more. 
+Then the auxiliary program is run which creates further files 
+which the \LaTeX-to-pdf converter reads in a second run. 
+
+Both, the package \texttt{pythontex} and the auxiliary programs \pytex{} and \dpytex{}, 
+are described in~\cite{PythonTexP}. 
+Moreover, there is an introduction~\cite{PythonTexQ} and a gallery~\cite{PythonTexG}. 
+For background on the intentions of package \texttt{pythontex}, consult~\cite{PythonTexRepr}. 
+
+The integration of \texttt{pythontex} into the latex maven plugin in this project 
+is given in~\cite{LatexPlugin}, Section 5.5. 
+
+Another source of knowledge on pythontex is the source code hosted at 
+\url{https://github.com/gpoore/pythontex}. 
+Note that \texttt{pythontex} is written in python and we only take into account the code for python3. 
+
+At least the following properties are special to \Ppytex: 
+%
+\begin{itemize}
+  \item The number of files \pytex{} may create is variable 
+  and so by default they are put into a subfolder. 
+  \item The output files generated are highly configurable. 
+  \item There is more than one auxiliary program tied to the package, besides \pytex{} also \dpytex{}. 
+  \item The errors and warnings of a \pytex{} run and of a \dpytex{} run are not written into a log file. 
+\end{itemize}
+
+In~\cite{LatexPlugin}, Section 5.5 a wrapper for \pytex{} is suggested 
+writing the errors and warnings normally coming at standard output or error output into a log file \texttt{xxx.plg}. 
+Nevertheless, currently no log file is written. 
+
+The \Ppytex{} is highly configurable, 
+more than this software allows. 
+Thus, also in this document 
+we assume that neither \cmd{setpythontexoutputdir} setting the output directory 
+nor \cmd{setpythontexworkingdir} setting the working directory are used, 
+because this software assumes the default that the working directory is the directory 
+containing the \LaTeX{} main file \texttt{xxx.tex}
+and the output directory is in the working directory 
+and its name is \texttt{pythontex-files-xxx}. 
+
+Note that we assume python 3.x is installed only. 
+
+
+\section{The converter \pytex}\label{sec:pytex}
+
+As already pointed out in the introduction, 
+we restrict ourselves to the default case 
+in which \pytex{} writes output files only in folder \texttt{pythontex-files-xxx}. 
+
+Under these assumptions, Figure~\ref{fig:py2dir} shows the input and output files of \pytex{}. 
+
+\begin{figure}[htb]
+  \centering
+  \IfPackageLoadedTF{tex4ht}{%
+  should be a picture
+  }{
+  \import{}{F5_07py2dir.ptx}
+  }
+  \caption{\label{fig:py2dir}Conversion of a \texttt{pytxcode}-file using \texttt{pythontex}}
+  \end{figure}
+
+  The input file is described in Section~\ref{subsec:pytexInFile} in full detail. 
+  Section~\ref{subsec:pytexOutFile} is devoted to the output files of \pytex{}. 
+  Note that unlike the wrapper \texttt{pythontexW}, the original \pytex{} 
+  just prints errors and warnings. 
+  These are all collected in Section~\ref{subsec:pytexErrWarn}. 
+  Finally, Section~\ref{subsec:pytexFCodes} is on the failure codes. 
+
+\subsection{The Input File \texttt{xxx.pytxcode}}\label{subsec:pytexInFile}
+
+
+If a file \texttt{xxx.tex} loading package \texttt{pythontex} is processed, 
+as is the case for this document, 
+a file \texttt{xxx.pytxcode} is created, 
+whether there is python code within \texttt{xxx.tex} or not. 
+This file contains a line 
+%
+\begin{verbatim}
+  =>PYTHONTEX:SETTINGS#
+\end{verbatim}
+%
+and below that are specified the package options in the form given by Listing~\ref{lst:pytxcodeSettings}. 
+
+
+
+\lstinputlisting%
+[basicstyle=\scriptsize,
+firstline=3, print=true,
+breaklines, showstringspaces=false,
+float,
+captionpos=b, label={lst:pytxcodeSettings},
+caption={The settings section of \texttt{pythontexInOut.pytxcode}}]
+{./pythontexInOut.pytxcode.cpy}
+
+
+% question: how is debug encoded? 
+
+There is one key which does not refer to a package option: it is \texttt{version} 
+which refers to the version of the \texttt{pythontex} package 
+which is also the expected version of \pytex. 
+If the versions deviate, running \pytex{} emits the fatal error with line number 491 in Table~\ref{tab:pytexFErr}. 
+
+Interesting: \texttt{runall} is a package option, but it is not a valid key in \texttt{xxx.pytxcode}: 
+instead, \texttt{runall=true/false} is converted into \texttt{rerun=always/default}. 
+Note that \texttt{pythontex} is not able to process the key \texttt{runall} 
+but emits a warning with line number 484 given in Table~\ref{tab:pytexWarn}. 
+This document is compiled with option \texttt{runall=false}. 
+
+For each python code in \texttt{xxx.tex}, there is a separate code section in \texttt{xxx.pytxcode}. 
+The code sections come in proper order and precede the settings section. 
+This document has a single section with python code, right at the beginning of the introduction. 
+The code is 
+%
+\begin{verbatim}
+  \pys[sname]{1+1=!{1+1}}
+\end{verbatim}
+
+Listing~\ref{lst:pytxcodeCode1} shows the according section in \texttt{xxx.pytxcode}. 
+As always there is a headline starting with \texttt{=>PYTHONTEX} 
+then follow, separated by \texttt\# symbols 
+%
+\begin{itemize}
+  \item the family, i.e.~the interpreter, here \texttt{py} representing python, 
+  coming from the command \cmd{pys}; 
+  accordingly for environments, 
+  \item the session, here \texttt{sname}, 
+  which is the optional parameter of the command, 
+  \item next suspected the restart identifier, seemingly always \texttt{default}
+  \item the command, here \texttt{s}, 
+  also determined by the command \cmd{pys}, 
+  \item the context which is empty, % TBD: clarify 
+  \item arguments which are empty here, 
+  \item the number of the instance, which runs from 0 to the number of commands minus one 
+  \item and the line number which is the line in the \LaTeX{} file, 
+  where the command or the according environment starts. 
+\end{itemize}
+% the following is in the generated file xxx.py: 
+% pytex.id = 'py_sname_default'
+% pytex.family = 'py'
+% pytex.session = 'sname'
+% pytex.restart = 'default'
+
+% pytex.command = 's'
+% pytex.set_context('')
+% pytex.args = ''
+% pytex.instance = '0'
+% pytex.line = '152'
+
+% LTeX: enabled=false
+\lstinputlisting%
+[basicstyle=\scriptsize,
+firstline=1, lastline=2, print=true,
+breaklines, showstringspaces=false,
+float,
+captionpos=b, label={lst:pytxcodeCode1},
+caption={The sole code section of \texttt{pythontexInOut.pytxcode}}]
+{./pythontexInOut.pytxcode.cpy}
+% LTeX: enabled=true
+
+
+If running \texttt{pythontex} on the job \texttt{xxx}, 
+we obtain for this manual with a trailing empty line. 
+%
+\begin{verbatim}
+  This is PythonTeX 0.18
+
+  --------------------------------------------------
+  PythonTeX:  manualLMP - 0 error(s), 0 warning(s)  
+\end{verbatim}
+
+The folder \texttt{pythontex-files-manualLMP} is created 
+but may be empty because there is no code. %TBD: clarify whether this is true. 
+
+% TBD: analyze whether also other sections may occur: 
+% =>PYTHONTEX:STDERR#
+% =>PYTHONTEX:STDOUT#
+% =>PYTHONTEX:DEPENDENCIES
+% =>PYTHONTEX:CREATED
+% =>PYTHONTEX:FIELD_DELIM
+
+
+\subsection{The Output Files}\label{subsec:pytexOutFile}
+
+  Figure~\ref{fig:py2dir} shows that the output files of \pytex{} 
+  are all in folder \texttt{pythontex-files-xxx}. 
+  Temporary files in dotted boxes, 
+  so these can be seen only if the \pytex{} run is interrupted, e.g.~by failure. 
+  The other files are called \emph{final}. 
+  The Figure also indicates, that the wrapper \texttt{pythontexW} writes a log file in addition. 
+  
+  Among the final files, there is \texttt{xxx.pytxmcr} 
+  which starts something like 
+%
+\begin{lstlisting}
+  %Last time of file creation:  1656851667.5282867
+\end{lstlisting}
+%
+and contains processed \texttt{pygments} code according to~\cite{PythonTexP}, page~107. 
+
+  Although indicates the time of the last \pytex{} wrote the file, 
+  seemingly, \pytex{} does not update if it is unchanged. 
+  So it does not indicate the last run. %run and is updated if it has been run. 
+
+
+\subsection{Errors and Warnings at standard/error output}\label{subsec:pytexErrWarn}
+
+{\small
+\begin{longtable}{|rlll|}
+\toprule
+Line No       & * & Message & RC \\
+\midrule
+\midrule
+\endfirsthead%
+\bottomrule
+\caption{\label{tab:pytexFErr} Fatal errors with number code of \texttt{pythontex}}
+\endlastfoot%
+ 219 & ---   & \texttt{Invalid --interpreter argument} & 2 \\
+ 246 & error & \texttt{You have launched PythonTeX using pythontex2/3.py directly.}   & 2 \\
+ 271 & error & \texttt{You have launched PythonTeX using pythontex2/3.py directly.}   & 2 \\
+ 292 & error & \texttt{Code file xxx.pytxcode does not exist. Run LaTeX \dots }       & 1 \\
+ 327 & error & \texttt{Directory naming collision between the following files:\dots}  & 1 \\
+ 362 & error & \texttt{Code file xxx.pytxcode does not exist. Run \LaTeX{} \dots }    & 1 \\
+ 370 & ---   & \texttt{The .pytxcode file appears to have an outdated format \dots}   & 1 \\% chktex 26
+     &       & \texttt{Run LaTeX to make sure the file is current }                   &   \\
+ 406 & error & \texttt{Unable to parse package option fvextfile.  }                   & 1 \\
+ 491 & error & \texttt{The version of the PythonTeX scripts does not match }          & 1 \\
+     &       & \texttt{ the last code saved by the document \dots}                    &   \\
+2864 & ---   & ---                                                                    & 1 \\
+\end{longtable}
+} %\small
+
+
+Fatal errors are understood to be those which exit via \texttt{sys.exit} 
+\emph{immediately} with an error code other than 0 or with a message. 
+Thus, at most one fatal error can occur. 
+This document doesn't treat fatal errors with error message. 
+% TBD: fatal errors with message but no error code. 
+Table~\ref{tab:pytexFErr} gives an overview of fatal errors with number code. 
+It gives the line number of the according \texttt{sys.exit} command, 
+whether the message is preceded by a line \texttt{* PythonTeX error}, 
+followed by an abbreviation of the proper message and finally the error code. 
+Of course, just the error code indicates that it is an error, 
+even if the message does not start with \texttt{* PythonTeX error}, 
+and for the cases with lines 219 and 370, 
+the missing indication in the message seems to be just a bug or a weakness. 
+% bug report already filed. 
+
+A special case is in line 2864: 
+\texttt{pythontex} has a counter for non-fatal errors and another counter for warnings. 
+Error code 1 is returned also, if at least one non-fatal error was counted 
+and if command line option \texttt{-{}-error-exit-code} is set to \texttt{true}, 
+which is the default according to~\cite{PythonTexP}, Section 3.2. 
+Fatal errors cannot be suppressed via that command line option. 
+Strictly speaking, the case of line 2864 is a fatal error itself, 
+but it shall not be treated as such, and it is appropriate that it has no message, 
+just an error code if configured so. 
+% TBD: the package documentation does not distinguish between fatal errors and non-fatal ones. 
+% As a consequence, the above option is not described properly. 
+% An according bug report is filed already. 
+
+In contrast, non-fatal errors, 
+are errors which do not immediately cause \texttt{pythontex} to exit. 
+Have a look at the messages collected in Table~\ref{tab:pytexNFErr}: 
+It is structured similar to Table~\ref{tab:pytexFErr} 
+except that the exit code (which non-fatal errors don't have) 
+is replaced by the line number of the increment of the error counter, 
+except in one case, where there is no increment at all. 
+In this case, the line number, which is 2422, refers to the error message. 
+The author considers this a bug in \texttt{pythontex}. 
+% bug report filed already. 
+% TBD: Check on reaction. 
+Observe that all these errors have messages starting with \texttt{* PythonTeX error}. 
+All entries in Table~\ref{tab:pytexNFErr} refer to non-fatal errors: 
+They are errors because of either the message or the increment of the error count. 
+Also, they are non-fatal because they don't lead to an immediate exit with failure code. 
+
+
+
+
+{\small
+\begin{longtable}{|rlll|}
+  \toprule
+  Line No       & * & Message & inc err/warn  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:pytexNFErr} Non-fatal errors of \texttt{pythontex}  }
+  \endlastfoot%
+   655 & error  & Cannot find dependency \dots                                   & e   \\%temp_data['errors'] += 1
+  1359 & error  & Currently, non-Python consoles are not supported               & e   \\%errors += 1
+  1605 & error  & Missing output file for \dots                                  & e   \\%errors += 1
+  1611 & error  & Running code for Julia console failed                          & e   \\%errors += 1
+  1696 & error  & Cannot find dependency. It belongs to \dots                    & e   \\%errors += 1
+  1765 & error  & Missing stderr file for \dots                                  & e   \\%errors += 1
+  1960 & error  & Line number xxx could not be synced with the document \dots    & e   \\%errors += 1
+  2343 & error  & An error occurred but no error messages were identified.~\dots & e   \\
+  2422 & error  & Could not find external file xxx The file was not pygmentized  & --- \\ % TBD: ask whether correct. 
+\end{longtable}
+} % \small 
+
+Table~\ref{tab:pytexIOErr} collects messages starting with \texttt{* PythonTeX stderr} 
+indicating that they are handed over from included code.  
+They are treated either as errors or warnings, 
+increasing exactly one of the according counters, 
+which is indicated by the last column of the table. 
+Note that the message gives no indication on whether it is counted as an error or as a warning: 
+One and the same message form can be both. 
+Distinction is just by the counter incremented. 
+Since there are at least two lines of code where the increments are performed, 
+at least one for an error and one for a warning, 
+the line number given in the table refers to the code where the message 
+\texttt{* PythonTeX stderr} is printed. 
+
+Without the irregularity given in Table~\ref{tab:pytexNFErr} line with number 2422, 
+a non-fatal error is just tied with messages for which the error count is incremented. 
+The irregularity can be included by specifying 
+that a non-fatal error is if the error counter is incremented 
+or the message starts with \texttt{* PythonTeX error}. 
+
+{\small
+\begin{longtable}{|rlll|}
+  \toprule
+  Line No       & * & Message & inc err/warn  \\
+  \midrule
+  \midrule
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:pytexIOErr} StdErr (non-fatal) errors of \texttt{pythontex}  }
+  \endlastfoot%
+  1899 & stderr & \dots on line \dots in ``\dots''                               & e/w \\
+  1899 & stderr & \dots on line \dots                                            & e/w \\
+  2061 & stderr & \dots near line \dots in ``\dots''                             & e/w \\
+  2063 & stderr & \dots near line \dots                                          & e/w \\
+  2164 & stderr & \dots near line \dots in ``\dots''                             & e/w \\
+  2166 & stderr & \dots near line \dots                                          & e/w \\
+  2654 & stderr & \dots in console startup code                                  & e/w \\
+  2677 & stderr & \dots near line \dots in custom code for console               & e/w \\
+  2679 & stderr & \dots near line \dots in console code                          & e/w \\
+\end{longtable}
+} % \small 
+
+Table~\ref{tab:pytexWarn} contains proper warnings 
+always incrementing the warnings counter. 
+So definition of warnings is simple: A warning is what increases the warning counter. 
+
+\begin{longtable}{|rlll|}
+  \toprule
+  Line No       & * & Message & inc warn \\
+  \endfirsthead%
+  \bottomrule
+  \caption{\label{tab:pytexWarn} Warnings of \texttt{pythontex}  }
+  \endlastfoot%
+   340 & warning & Potential directory naming collision \dots  & yes \\%temp_data['warnings'] += 1
+   413 & warning & Invalid value for package option fvextfile  & yes \\%temp_data['warnings'] += 1
+   484 & warning & Unknown option \dots                        & yes \\%temp_data['warnings'] += 1
+   685 & warning & Session xxx has rerun=never                 & yes \\%temp_data['warnings'] += 1
+       &   & But its code or dependencies have been modified & \\
+  1446 & warning & The following have dependencies that have been modified & yes \\%warnings += 1
+  1737 & warning & Custom code for xxx attempted to print or write to stdout & yes \\%ewarnings += 1
+   \end{longtable}
+
+
+Finally, Table~\ref{tab:pytexNotice} states notices, 
+seemingly mere info not directly tied to an error or a warning. 
+The according message is identified by its setart \texttt{* PythonTeX stderr}. 
+
+
+
+   \begin{longtable}{|rll|}
+    \toprule
+    Line Number       & * & Message  \\
+    \endfirsthead%
+    \bottomrule
+    \caption{\label{tab:pytexNotice} Notices of \texttt{pythontex}  }
+    \endlastfoot%
+  2276 & notice & Line number \dots could not be synced with the document \\
+  2336 & notice & x message(s) could not be classified          \\% chktex 36
+       &        & Interpreted as y, based on the return code(s) \\% chktex 36
+\end{longtable}
+
+It is difficult to analyze the code around line 2276, 
+but it seems as if synchronization of line numbers 
+occurs only in conjunction with non-fatal errors 
+and warnings, because synchronization is needed only to locate those in code text. 
+
+Analyzing the code preceding line 2336 shows that the according notice 
+comes up only if a stderr message could not be identified 
+as a non-fatal error or a warning, so both counters are increased 
+by the number of events which could not be classified. 
+So again, an error or a warning is indicated by a nonzero counter, 
+but one of the counters may be too high. 
+
+So also notices are recognized via error count and warning count. 
+
+At the end of the log, which is currently written to stdio, 
+\texttt{pythontex} summarizes the (non-fatal) errors and warnings which occurred. 
+So besides the proper messages, there is a summary. 
+It takes one of the following forms: 
+Either 
+%
+\begin{Verbatim}[showspaces=true]
+--------------------------------------------------
+PythonTeX:  pythontexInOut 
+    - Old:      0 error(s), 0 warning(s)
+    - Current:  0 error(s), 0 warning(s)
+\end{Verbatim}
+%
+or 
+%
+\begin{Verbatim}[showspaces=true]
+--------------------------------------------------
+PythonTeX:  pythontexInOut - 0 error(s), 0 warning(s)
+\end{Verbatim}
+%
+where of course \texttt{pythontexInOut} is to be replaced by the jobname 
+and the number of errors and warnings may be different from 0. 
+
+The pattern to match at least one non-fatal error in java style is 
+%
+\begin{Verbatim}[showspaces=true, fontsize=\small]
+(PythonTeX:  .+ -|    - Current: ) [1-9][0-9]* error\\(s\\), [0-9]+ warning\\(s\\)
+\end{Verbatim}
+%
+The last thing to do is to take into account the irregularity 
+of the non-fatal error in Table~\ref{tab:pytexNFErr}, line number 2422, 
+by adding the alternative \texttt{* PythonTeX error} to the regular expression, 
+which detects nothing additional but this case. 
+So we arrive at the following pattern, where the dots must be replaced by the above pattern 
+%
+\begin{Verbatim}[showspaces=true, fontsize=\small]
+\\* PythonTeX error|...
+\end{Verbatim}
+
+For warnings, we can use the same but do not need the bugfix. 
+The result is 
+%
+\begin{Verbatim}[showspaces=true, fontsize=\small]
+(PythonTeX:  .+ -|    - Current: ) [0-9]+ error\\(s\\), [1-9][0-9]* warning\\(s\\)
+\end{Verbatim}
+  
+
+
+\subsection{Failure codes}\label{subsec:pytexFCodes}
+
+\section{The converter \dpytex}\label{sec:dpytex}
+
+\begin{figure}[htb]
+  \centering
+  \IfPackageLoadedTF{tex4ht}{
+  should be a picture 
+  }{
+  \import{}{F5_08depy2out.ptx}
+  }
+  \caption{\label{fig:depy2out}Conversion of a \texttt{depytx}-file using \texttt{depythontex}}
+  \end{figure}
+
+
+\subsection{The Input File \texttt{xxx.dpytx}}\label{subsec:dpytexInFile}
+
+\subsection{The Output Files}\label{subsec:dpytexOutFile}
+
+\subsection{Errors and Warnings at standard/error output}\label{subsec:dpytexErrWarn}
+
+\subsection{Failure codes}\label{subsec:dpytexFCodes}
+
+
+\bibliographystyle{alpha}
+\bibliography{../lit,../litLMPpub}% chktex 11 
+
+
+\end{document}
+
+

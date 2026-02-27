@@ -1,0 +1,20 @@
+PWD /home/ernst/OpenSource/LatexMavenPluginGit/maven-latex-plugin/maven-latex-plugin/src/site/tex
+INPUT /var/lib/texmf/web2c/luahbtex/lualatex.fmt
+INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+
+INPUT /etc/texmf/web2c/mktex.cnf
+
+INPUT ../../main/resources/rawPoms/pom4pdf.xml
+INPUT ../../main/resources/rawPoms/pom4pdf.xml
+INPUT ../../main/resources/rawPoms/pom4pdf.xml
+INPUT ../../main/resources/version.properties
+INPUT ../../main/resources/version.properties
+INPUT ../../main/resources/version.properties
+INPUT ../../main/resources/rawPoms/pom4pdf.xml
+INPUT ../../main/resources/rawPoms/pom4pdf.xml
+INPUT ../../main/resources/rawPoms/pom4pdf.xml
+INPUT ../../../build.xml
+INPUT ../../../build.xml
+INPUT ../../../build.xml
+
+

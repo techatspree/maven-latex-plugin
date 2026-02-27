@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+
+use feature 'signatures';
+
+sub add_cus_dep() {
+  error("Never invoked");
+}
+
+{
+  do './.latexmkrc';
+  # invoke *latex on file $ARGV[0] 
+  # with options from config and magic comments 
+  # and additional option "-recorder" 
+  # because this is how latexmk invokes *latex also  
+  run_latex($ARGV[0],("-recorder"));
+}
+

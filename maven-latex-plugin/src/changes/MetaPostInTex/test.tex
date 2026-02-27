@@ -1,0 +1,29 @@
+\documentclass{article}
+\synctex=1
+\usepackage{fontspec}
+\usepackage{luamplib}
+\newcommand*\inputmpcode[1]{\begin{mplibcode}input #1.mp\end{mplibcode}}
+
+\begin{document}
+This works with lualatex only. 
+Modified \texttt{/usr/share/texmf/luatex/luamplib/luamplib.cfg} 
+to get rid of additional files. 
+What I hate on \texttt{luamplib} is that it does not provide the command 
+\texttt{\textbackslash{}inputmpcode} which I have to provide myself. 
+This command is important to provide standalone metapost files 
+and to get access to appropriate code highlighting. 
+
+\newcommand{\mytest}{\texttt{my newest test}}
+
+\inputmpcode{metapostOnMetaUml}
+% \begin{mplibcode}
+% input metauml;
+% beginfig(1);
+% draw btex \mytest etex;
+%   Note.xxx("Hello");
+%   drawObjects(xxx);
+%   endfig;
+%   end
+% bye
+% \end{mplibcode}
+\end{document}

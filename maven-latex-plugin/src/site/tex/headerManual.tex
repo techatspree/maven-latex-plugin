@@ -1,0 +1,23 @@
+\newcommand{\cmd}[1]{\texttt{\textbackslash #1}}
+
+% For tex4ht packages splitindex and glossaries is not loaded, makeindex is not invoked. 
+\IfPackageLoadedTF{tex4ht}{
+  \newcommand{\pkg}[1]{\texttt{#1}}% without indexing 
+}{
+  \newcommand{\pkg}[1]{\texttt{#1}\sindex[pkg]{#1}} % TBD: this must be extracted 
+}
+
+% the following 3 shall be replaced by \tool{...}
+\newcommand{\pdflatex}{\texttt{pdflatex}}
+\newcommand{\lualatex}{\texttt{lualatex}}
+\newcommand{\xelatex}{\texttt{xelatex}}
+% currently used for latexmk only 
+% but in the long shall be used for all tools 
+% this is the base for creating an index of tools. 
+\newcommand{\tool}[1]{\texttt{#1}}
+
+
+\newcommand{\texlive}{\TeX~Live}
+\newcommand{\miktex}{MiKTeX}
+\newcommand{\ltex}{L\TeX}% maybe also with \tool
+\newcommand{\auctex}{AUC\TeX}
